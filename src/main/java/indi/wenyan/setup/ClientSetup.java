@@ -1,4 +1,4 @@
-package indi.wenyan.event;
+package indi.wenyan.setup;
 
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;

@@ -16,8 +16,7 @@ import java.util.stream.Collectors;
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
 // Demonstrates how to use Neo's config APIs
 @EventBusSubscriber(modid = WenyanNature.MODID, bus = EventBusSubscriber.Bus.MOD)
-public class Config
-{
+public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     private static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
@@ -48,8 +47,6 @@ public class Config
     {
         return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));
     }
-
-
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
