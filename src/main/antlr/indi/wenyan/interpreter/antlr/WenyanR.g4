@@ -1,6 +1,6 @@
 grammar WenyanR;
 
-@header{package indi.wenyan;}
+@header{package indi.wenyan.interpreter.antlr;}
 
 program                     : statement* EOF;
 

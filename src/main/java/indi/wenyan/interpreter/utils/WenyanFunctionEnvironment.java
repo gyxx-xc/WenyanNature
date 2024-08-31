@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.WenyanRParser;
+import indi.wenyan.interpreter.antlr.WenyanRParser;
 
 import java.util.HashMap;
 import java.util.Stack;

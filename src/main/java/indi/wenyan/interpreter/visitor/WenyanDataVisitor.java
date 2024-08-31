@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.visitor;
 
-import indi.wenyan.WenyanRParser;
+import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
