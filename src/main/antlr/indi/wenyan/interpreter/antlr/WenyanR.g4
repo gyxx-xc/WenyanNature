@@ -6,8 +6,8 @@ program                     : statement* EOF;
 
 statement                   : candy_statement
                             | expr_statement
-                            | object_statement
                             | control_statement
+                            | object_statement
                             | import_statement
                             ;
 

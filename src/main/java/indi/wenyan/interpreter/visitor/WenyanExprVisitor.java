@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
+import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
@@ -291,18 +292,22 @@ public class WenyanExprVisitor extends WenyanVisitor{
         for (int i = 0; i < args.length; i ++) {
             args[i] = args[i].casting(sign.argTypes()[i]);
         }
-        WenyanFunctionEnvironment functionEnvironment = new WenyanFunctionEnvironment(this.functionEnvironment);
-        for (int i = 0; i < args.length; i ++) {
-            functionEnvironment.setVariable(func.id.get(i).getText(), WenyanValue.varOf(args[i]));
-        }
-        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment);
-        try {
-            for (WenyanRParser.StatementContext statementContext : func.statement()) {
-                visitor.visit(statementContext);
+        if (func instanceof JavacallHandler) {
+            return ((JavacallHandler) func).handle(args);
+        } else {
+            WenyanFunctionEnvironment functionEnvironment = new WenyanFunctionEnvironment(this.functionEnvironment);
+            for (int i = 0; i < args.length; i++) {
+                functionEnvironment.setVariable(func.id.get(i).getText(), WenyanValue.varOf(args[i]));
             }
-        } catch (WenyanControlVisitor.ReturnException e) {
-            return e.value;
+            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment);
+            try {
+                for (WenyanRParser.StatementContext statementContext : func.statement()) {
+                    visitor.visit(statementContext);
+                }
+            } catch (WenyanControlVisitor.ReturnException e) {
+                return e.value;
+            }
+            return null;
         }
-        return null;
     }
 }

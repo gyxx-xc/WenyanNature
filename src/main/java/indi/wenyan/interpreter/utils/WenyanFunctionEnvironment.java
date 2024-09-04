@@ -50,5 +50,10 @@ public class WenyanFunctionEnvironment {
         }
     }
 
+    public void importEnvironment(WenyanFunctionEnvironment environment) {
+        variables.putAll(environment.variables);
+        functions.putAll(environment.functions);
+    }
+
     public record FunctionSign(String name, WenyanValue.Type[] argTypes) {}
 }

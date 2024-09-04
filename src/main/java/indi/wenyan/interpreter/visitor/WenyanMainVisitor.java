@@ -2,7 +2,9 @@ package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.utils.WenyanValue;
+import org.antlr.v4.runtime.Token;
 
 public class WenyanMainVisitor extends WenyanVisitor {
     public WenyanMainVisitor(WenyanFunctionEnvironment functionEnvironment) {
@@ -26,5 +28,17 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public WenyanValue visitCandy_statement(WenyanRParser.Candy_statementContext ctx) {
         return new WenyanCandyVisitor(functionEnvironment).visit(ctx);
+    }
+
+    @Override
+    public WenyanValue visitImport_statement(WenyanRParser.Import_statementContext ctx) {
+        WenyanFunctionEnvironment importFunctionEnvironment =
+                WenyanPackages.PACKAGES.get(ctx.STRING_LITERAL().getText());
+        if (ctx.IDENTIFIER() == null) {
+            functionEnvironment.importEnvironment(importFunctionEnvironment);
+        } else {
+            throw new RuntimeException("not implemented");
+        }
+        return null;
     }
 }
