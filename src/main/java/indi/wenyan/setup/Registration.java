@@ -1,5 +1,6 @@
 package indi.wenyan.setup;
 
+import indi.wenyan.item.WenyanHandRunner;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
@@ -43,12 +44,16 @@ public class Registration {
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
 
+    public static final DeferredItem<Item> HAND_RUNNER = ITEMS.registerItem("hand_runner", WenyanHandRunner::new);
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.examplemod")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+
+                output.accept(HAND_RUNNER.get());
             }).build());
 
     private static void addCreative(BuildCreativeModeTabContentsEvent event) {
