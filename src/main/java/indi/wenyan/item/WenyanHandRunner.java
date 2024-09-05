@@ -2,6 +2,8 @@ package indi.wenyan.item;
 
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
+import indi.wenyan.interpreter.utils.WenyanException;
+import indi.wenyan.interpreter.visitor.WenyanExprVisitor;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
@@ -16,6 +18,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
+
 import static indi.wenyan.WenyanNature.LOGGER;
 
 public class WenyanHandRunner extends Item {
@@ -27,22 +32,28 @@ public class WenyanHandRunner extends Item {
     public @NotNull InteractionResultHolder<ItemStack>
     use(Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
+        if (level.isClientSide()) {
+            Minecraft.getInstance().setScreen(new BookEditScreen(player, itemstack, hand));
+        }
+        player.awardStat(Stats.ITEM_USED.get(this));
+        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(ItemStack item, Player player) {
         if (!player.isShiftKeyDown()){
-            if (level.isClientSide()) {
-                Minecraft.getInstance().setScreen(new BookEditScreen(player, itemstack, hand));
-            }
-            player.awardStat(Stats.ITEM_USED.get(this));
-        } else {
             try {
                 (new WenyanMainVisitor()).visit(
                         new WenyanRParser(
                                 new CommonTokenStream(
-                                        new WenyanRLexer(CharStreams.fromString("吾有一言。曰「「問天地好在。」」。書之。"))))
+                                        new WenyanRLexer(CharStreams.fromString("書「「問天地好在。」」。"))))
                                 .program());
-            } catch (Exception e) {
+            } catch (WenyanException e) {
                 LOGGER.info("Error: {}", e.getMessage());
             }
+            return false;
+        } else {
+            return super.onDroppedByPlayer(item, player);
         }
-        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 }

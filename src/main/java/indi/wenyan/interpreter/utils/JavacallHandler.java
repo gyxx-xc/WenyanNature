@@ -11,7 +11,7 @@ public abstract class JavacallHandler extends WenyanRParser.Function_define_stat
         super(null, 0);
     }
 
-    public WenyanValue handle(WenyanValue[] args) {
+    public WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException {
         return null;
     }
 }
