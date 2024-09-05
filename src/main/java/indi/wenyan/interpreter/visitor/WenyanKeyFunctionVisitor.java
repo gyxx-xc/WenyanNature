@@ -30,7 +30,7 @@ public class WenyanKeyFunctionVisitor extends
     private static WenyanFunction argsCheck(int n, WenyanFunction function) {
         return args -> {
             if (args.length != n)
-                throw new RuntimeException("number of arguments does not match");
+                throw new WenyanException.WenyanVarException("number of arguments does not match");
             return function.apply(args);
         };
     }
