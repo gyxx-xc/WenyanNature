@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -50,10 +51,28 @@ public class WenyanFunctionEnvironment {
         }
     }
 
-    public void importEnvironment(WenyanFunctionEnvironment environment) {
+    public WenyanFunctionEnvironment importEnvironment(WenyanFunctionEnvironment environment) {
         variables.putAll(environment.variables);
         functions.putAll(environment.functions);
+        return this;
     }
 
-    public record FunctionSign(String name, WenyanValue.Type[] argTypes) {}
+    public record FunctionSign(String name, WenyanValue.Type[] argTypes) {
+        public boolean equals(Object obj) {
+            if (obj instanceof FunctionSign sign) {
+                return name.equals(sign.name);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(functions.keySet().toArray());
+    }
 }

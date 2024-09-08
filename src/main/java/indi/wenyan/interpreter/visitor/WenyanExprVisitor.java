@@ -8,6 +8,7 @@ import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
 import indi.wenyan.interpreter.utils.WenyanValue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class WenyanExprVisitor extends WenyanVisitor{
     public WenyanExprVisitor(WenyanFunctionEnvironment functionEnvironment) {
@@ -144,34 +145,27 @@ public class WenyanExprVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitKey_function_call(WenyanRParser.Key_function_callContext ctx) {
-        ArrayList<WenyanValue> args = new ArrayList<>();
-        WenyanValue returnValue;
-        if (ctx.ZHI() != null) {
-            args.add(WenyanValue.constOf(functionEnvironment.resultStack.peek()));
-        }
-        for (WenyanRParser.DataContext d : ctx.data()) {
+        List<WenyanValue> args = new ArrayList<>();
+        if (ctx.ZHI() != null) args.add(WenyanValue.constOf(functionEnvironment.resultStack.peek()));
+        for (WenyanRParser.DataContext d : ctx.data())
             args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment).visit(d)));
-        }
-        try {
-            if (args.size() == 2) { // deal pp
-                returnValue = switch (ctx.pp.getFirst().getType()) {
-                    case WenyanRParser.PREPOSITION_RIGHT -> (new WenyanKeyFunctionVisitor()).visit(ctx.key_function())
-                            .apply(new WenyanValue[]{args.get(0), args.get(1)});
-                    case WenyanRParser.PREPOSITION_LEFT -> (new WenyanKeyFunctionVisitor()).visit(ctx.key_function())
-                            .apply(new WenyanValue[]{args.get(1), args.get(0)});
-                    default -> throw new WenyanException("unknown preposition", ctx);
-                };
-            } else { // ignore pp
-                returnValue = (new WenyanKeyFunctionVisitor()).visit(ctx.key_function())
-                        .apply(args.toArray(new WenyanValue[0]));
+        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(
+                ctx.key_function().op.getText(), new WenyanValue.Type[0]);
+        if (args.size() == 2) { // deal pp
+            switch (ctx.pp.getFirst().getType()) {
+                case WenyanRParser.PREPOSITION_RIGHT -> {}
+                case WenyanRParser.PREPOSITION_LEFT -> args = args.reversed();
+                default -> throw new WenyanException("unknown preposition", ctx);
             }
+        }
+
+        WenyanValue returnValue;
+        try {
+            returnValue = callFunction(sign, args.toArray(new WenyanValue[0]));
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
-        if (ctx.ZHI() != null) {
-            return null; // not change stack
-        }
-        return functionEnvironment.resultStack.push(returnValue);
+        return (ctx.ZHI() != null) ? null : functionEnvironment.resultStack.push(returnValue);
     }
 
     @Override
@@ -188,7 +182,9 @@ public class WenyanExprVisitor extends WenyanVisitor{
             values.add(functionEnvironment.resultStack.get(functionEnvironment.resultStack.size() - n + i));
         }
         try {
-            WenyanKeyFunctionVisitor.writeKeyFunction().apply(values.toArray(new WenyanValue[0]));
+            callFunction(new WenyanFunctionEnvironment.FunctionSign(
+                    ctx.WRITE_KEY_FUNCTION().getText(), new WenyanValue.Type[0]),
+                    values.toArray(new WenyanValue[0]));
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
@@ -221,75 +217,53 @@ public class WenyanExprVisitor extends WenyanVisitor{
     @Override
     public WenyanValue visitFunction_pre_call(WenyanRParser.Function_pre_callContext ctx) {
         ArrayList<WenyanValue> args = new ArrayList<>();
-        WenyanValue returnValue;
-        if (ctx.ZHI() != null) {
+        if (ctx.ZHI() != null)
             args.add(WenyanValue.constOf(functionEnvironment.resultStack.peek()));
-        }
-        for (WenyanRParser.DataContext d : ctx.args) {
+        for (WenyanRParser.DataContext d : ctx.args)
             args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment).visit(d)));
+
+        WenyanFunctionEnvironment.FunctionSign sign =
+                ctx.key_function() != null ?
+                new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
+                (WenyanFunctionEnvironment.FunctionSign)
+                        (new WenyanDataVisitor(functionEnvironment).visit(ctx.data(0)).getValue());
+        WenyanValue returnValue;
+        try {
+            returnValue = callFunction(sign, args.toArray(new WenyanValue[0]));
+        } catch (WenyanException.WenyanThrowException e) {
+            throw new WenyanException(e.getMessage(), ctx);
         }
-        if (ctx.key_function() != null) {
-            try {
-                returnValue = (new WenyanKeyFunctionVisitor()).visit(ctx.key_function())
-                        .apply(args.toArray(new WenyanValue[0]));
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx);
-            }
-        } else { // id function
-            WenyanFunctionEnvironment.FunctionSign sign =
-                    (WenyanFunctionEnvironment.FunctionSign)
-                            (new WenyanDataVisitor(functionEnvironment)
-                                    .visit(ctx.data(0)).getValue());
-            try {
-                returnValue = callFunction(sign, args.toArray(new WenyanValue[0]));
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx);
-            }
-        }
-        if (ctx.ZHI() != null) {
-            return null; // not change stack
-        }
-        return functionEnvironment.resultStack.push(returnValue);
+
+        return ctx.ZHI() != null ? null : functionEnvironment.resultStack.push(returnValue);
     }
 
     @Override
     public WenyanValue visitFunction_post_call(WenyanRParser.Function_post_callContext ctx) {
-        ArrayList<WenyanValue> args = new ArrayList<>();
         int n;
         try {
             n = WenyanDataPhaser.parseInt(ctx.INT_NUM().getText());
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
-        for (int i = 0; i < n; i ++) {
-            args.addFirst(WenyanValue.constOf(functionEnvironment.resultStack.pop()));
-        }
-        // Collections.reverse(args);
-        if (ctx.key_function() != null) {
-            try {
-                return functionEnvironment.resultStack.push(((new WenyanKeyFunctionVisitor()).visit(ctx.key_function())
-                        .apply(args.toArray(new WenyanValue[0]))));
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx);
-            }
-        } else { // id function
-            WenyanFunctionEnvironment.FunctionSign sign =
-                    (WenyanFunctionEnvironment.FunctionSign)
-                            (new WenyanDataVisitor(functionEnvironment)
-                                    .visit(ctx.data()).getValue());
-            try {
-                return functionEnvironment.resultStack.push(callFunction(sign, args.toArray(new WenyanValue[0])));
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx);
-            }
-        }
+        ArrayList<WenyanValue> args = new ArrayList<>();
+        for (int i = 0; i < n; i ++) args.addFirst(WenyanValue.constOf(functionEnvironment.resultStack.pop()));
 
+        WenyanFunctionEnvironment.FunctionSign sign =
+                ctx.key_function() != null ?
+                        new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
+                        (WenyanFunctionEnvironment.FunctionSign)
+                                (new WenyanDataVisitor(functionEnvironment).visit(ctx.data()).getValue());
+        try {
+            return functionEnvironment.resultStack.push(callFunction(sign, args.toArray(new WenyanValue[0])));
+        } catch (WenyanException.WenyanThrowException e) {
+            throw new WenyanException(e.getMessage(), ctx);
+        }
     }
 
     private WenyanValue callFunction(WenyanFunctionEnvironment.FunctionSign sign, WenyanValue[] args) throws WenyanException.WenyanThrowException {
         WenyanRParser.Function_define_statementContext func = functionEnvironment.getFunction(sign);
         // casting args
-        for (int i = 0; i < args.length; i ++) {
+        for (int i = 0; i < sign.argTypes().length; i ++) {
             args[i] = args[i].casting(sign.argTypes()[i]);
         }
         if (func instanceof JavacallHandler) {

@@ -1,9 +1,12 @@
 package indi.wenyan.item;
 
+import indi.wenyan.handler.OutputHandler;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.visitor.WenyanExprVisitor;
+import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
@@ -17,9 +20,6 @@ import net.minecraft.world.level.Level;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.jetbrains.annotations.NotNull;
-
-import java.sql.Time;
-import java.util.concurrent.TimeUnit;
 
 import static indi.wenyan.WenyanNature.LOGGER;
 
@@ -40,10 +40,20 @@ public class WenyanHandRunner extends Item {
     }
 
     @Override
-    public boolean onDroppedByPlayer(ItemStack item, Player player) {
+    public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
         if (!player.isShiftKeyDown()){
             try {
-                (new WenyanMainVisitor()).visit(
+                WenyanFunctionEnvironment environment = new WenyanFunctionEnvironment()
+                        .importEnvironment(
+                                WenyanPackageBuilder.create()
+                                        .environment(WenyanPackages.WENYAN_BASIC_PACKAGES)
+                                        .function("書", new OutputHandler(player))
+                                        .build()
+                        );
+                System.out.println(WenyanPackages.WENYAN_BASIC_PACKAGES);
+                (new WenyanMainVisitor(
+                        environment
+                )).visit(
                         new WenyanRParser(
                                 new CommonTokenStream(
                                         new WenyanRLexer(CharStreams.fromString("書「「問天地好在。」」。"))))
