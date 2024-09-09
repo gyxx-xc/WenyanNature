@@ -1,9 +1,11 @@
 package indi.wenyan.item;
 
+import indi.wenyan.WenyanNature;
 import indi.wenyan.gui.RunnerScreen;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
+import indi.wenyan.network.RunnerTextPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
@@ -42,15 +44,9 @@ public class WenyanHandRunner extends Item {
     @Override
     public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
         if (!player.isShiftKeyDown()){
-            item.get(DataComponents.WRITABLE_BOOK_CONTENT)
-                    .getPages(Minecraft.getInstance().isTextFilteringEnabled())
-                    .forEach(System.out::println);
+            String program = String.join("\n", ((WenyanHandRunner) item.getItem()).pages);
             try {
-                (new WenyanMainVisitor(WenyanPackages.handEnvironment(player))).run("""
-                        吾有一數。曰三。名之曰「甲」。
-                        為是「甲」遍。
-                        \t吾有一言。曰「「問天地好在。」」。書之。
-                        云云。""");
+                (new WenyanMainVisitor(WenyanPackages.handEnvironment(player))).run(program);
             } catch (WenyanException e) {
                 player.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
             } catch (Exception e) {
@@ -61,5 +57,9 @@ public class WenyanHandRunner extends Item {
         } else {
             return super.onDroppedByPlayer(item, player);
         }
+    }
+
+    public void test() {
+        LOGGER.info(pages.get(0));
     }
 }

@@ -1,6 +1,10 @@
 package indi.wenyan.setup;
 
+import indi.wenyan.WenyanNature;
 import indi.wenyan.item.WenyanHandRunner;
+import indi.wenyan.network.ProgramTextClientPayloadHandler;
+import indi.wenyan.network.ProgramTextServerPayloadHandler;
+import indi.wenyan.network.RunnerTextPacket;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
@@ -13,6 +17,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -32,6 +39,7 @@ public class Registration {
 
         // Register the item to a creative tab
         modEventBus.addListener(Registration::addCreative);
+        modEventBus.addListener(Registration::onRegisterPayloadHandler);
     }
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
@@ -61,5 +69,15 @@ public class Registration {
             event.accept(EXAMPLE_BLOCK_ITEM);
     }
 
-
+    private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
+                .versioned("1.0")
+                .optional();
+        registrar.playToServer(
+                RunnerTextPacket.TYPE,
+                RunnerTextPacket.STREAM_CODEC,
+                new DirectionalPayloadHandler<>(
+                        ProgramTextClientPayloadHandler::handleRunnerTextPacket,
+                        ProgramTextServerPayloadHandler::handleRunnerTextPacket));
+    }
 }

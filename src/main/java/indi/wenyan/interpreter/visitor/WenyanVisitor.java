@@ -15,11 +15,11 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<WenyanValue> {
         this.functionEnvironment = functionEnvironment;
     }
 
-    public WenyanValue run(String s) {
+    public WenyanValue run(String program) {
         return visit(new WenyanRParser(
                 new CommonTokenStream(
                         new WenyanRLexer(
-                                CharStreams.fromString(s)))).program()
+                                CharStreams.fromString(program)))).program()
         );
     }
 }
