@@ -1,5 +1,8 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.handler.OutputHandler;
+import net.minecraft.world.entity.player.Player;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +64,13 @@ public class WenyanPackages {
                 return value;
             })
             .build();
+
+    public static WenyanFunctionEnvironment handEnvironment(Player player) {
+        return WenyanPackageBuilder.create()
+                .environment(WENYAN_BASIC_PACKAGES)
+                .function("書", new OutputHandler(player))
+                .build();
+    }
 
     public static final Map<String, WenyanFunctionEnvironment> PACKAGES = new HashMap<>();
 }
