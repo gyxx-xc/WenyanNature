@@ -1,15 +1,12 @@
 package indi.wenyan.gui;
 
 import com.google.common.collect.Lists;
-import indi.wenyan.item.WenyanHandRunner;
 import indi.wenyan.network.RunnerTextPacket;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
@@ -31,7 +28,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.protocol.game.ServerboundEditBookPacket;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.InteractionHand;
@@ -70,16 +66,10 @@ public class RunnerScreen extends Screen {
         this.book = book;
         this.hand = hand;
 
-//        WritableBookContent writablebookcontent = book.get(DataComponents.WRITABLE_BOOK_CONTENT);
-//        if (writablebookcontent != null) {
-//            Stream var10000 = writablebookcontent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
-//            List var10001 = this.pages;
-//            Objects.requireNonNull(var10001);
-//            var10000.forEach(var10001::add);
-//        }
-
-        if (((WenyanHandRunner) book.getItem()).pages != null) {
-            this.pages.addAll(((WenyanHandRunner) book.getItem()).pages);
+        WritableBookContent writablebookcontent = book.get(DataComponents.WRITABLE_BOOK_CONTENT);
+        if (writablebookcontent != null) {
+            Stream<String> contentPages = writablebookcontent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
+            contentPages.forEach(this.pages::add);
         }
 
         if (this.pages.isEmpty()) {
@@ -155,7 +145,6 @@ public class RunnerScreen extends Screen {
             this.eraseEmptyTrailingPages();
 
             // local
-            ((WenyanHandRunner)this.book.getItem()).pages = this.pages;
             this.book.set(DataComponents.WRITABLE_BOOK_CONTENT, new WritableBookContent(this.pages.stream().map(Filterable::passThrough).toList()));
             // remote
             int slot = this.hand == InteractionHand.MAIN_HAND ? this.owner.getInventory().selected : 40;
