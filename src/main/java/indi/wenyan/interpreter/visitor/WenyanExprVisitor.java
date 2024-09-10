@@ -33,7 +33,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
         }
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
             System.out.println(ctx.getText());
-            throw new WenyanException(Component.translatable("error.wenyan_nature.number of variables does not match number of values").getString(), ctx);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_variables_does_not_match_number_of_values").getString(), ctx);
         }
         WenyanValue.Type type;
         try {
@@ -81,7 +81,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
     public WenyanValue visitAssign_data_statement(WenyanRParser.Assign_data_statementContext ctx) {
         WenyanValue var = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(0));
         if (var.isConst())
-            throw new WenyanException(Component.translatable("error.wenyan_nature.cannot assign to constant").getString(), ctx);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString(), ctx);
         WenyanValue value = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(1));
         // although the constOf do nothing here,
         // it is better to keep the code consistent
@@ -97,7 +97,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
     public WenyanValue visitAssign_null_statement(WenyanRParser.Assign_null_statementContext ctx) {
         WenyanValue var = new WenyanDataVisitor(functionEnvironment).visit(ctx.data());
         if (var.isConst())
-            throw new WenyanException(Component.translatable("error.wenyan_nature.cannot assign to constant").getString(), ctx);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString(), ctx);
         var.setValue(null);
         return functionEnvironment.resultStack.push(null);
     }
@@ -119,7 +119,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
                     (boolean) left.getValue() && (boolean) right.getValue(), true));
             case WenyanRParser.OR -> functionEnvironment.resultStack.push(new WenyanValue(WenyanValue.Type.BOOL,
                     (boolean) left.getValue() || (boolean) right.getValue(), true));
-            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown operator").getString(), ctx);
+            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_operator").getString(), ctx);
         };
     }
 
@@ -137,7 +137,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
             return switch (ctx.pp.getType()) {
                 case WenyanRParser.PREPOSITION_RIGHT -> functionEnvironment.resultStack.push(left.mod(right));
                 case WenyanRParser.PREPOSITION_LEFT -> functionEnvironment.resultStack.push(right.mod(left));
-                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown preposition").getString(), ctx);
+                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
             };
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
@@ -156,7 +156,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
             switch (ctx.pp.getFirst().getType()) {
                 case WenyanRParser.PREPOSITION_RIGHT -> {}
                 case WenyanRParser.PREPOSITION_LEFT -> args = args.reversed();
-                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown preposition").getString(), ctx);
+                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
             }
         }
 
@@ -195,7 +195,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
     @Override
     public WenyanValue visitFunction_define_statement(WenyanRParser.Function_define_statementContext ctx) {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
-            throw new WenyanException(Component.translatable("error.wenyan_nature.function name does not match").getString(), ctx);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
         ArrayList<WenyanValue.Type> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i ++) {

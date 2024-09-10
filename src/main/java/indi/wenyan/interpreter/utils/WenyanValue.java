@@ -131,7 +131,7 @@ public class WenyanValue {
                 return new WenyanValue(Type.BOOL, !((ArrayList<?>) value).isEmpty(), isConst);
             }
         }
-        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot cast ").getString() + this.type + Component.translatable("error.wenyan_nature. to ").getString() + type);
+        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 
     public Type widerType(Type type) {
@@ -154,7 +154,7 @@ public class WenyanValue {
                 this.value = ((WenyanValueArray) left.value).concat((WenyanValueArray) right.value);
                 yield this;
             }
-            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be added").getString());
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_added").getString());
         };
     }
 
@@ -166,7 +166,7 @@ public class WenyanValue {
         return switch (subType) {
             case INT -> new WenyanValue(subType, (int) left.value - (int) right.value, true);
             case DOUBLE -> new WenyanValue(subType, (double) left.value - (double) right.value, true);
-            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be subtracted").getString());
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_subtracted").getString());
         };
     }
 
@@ -178,7 +178,7 @@ public class WenyanValue {
         return switch (mulType) {
             case INT -> new WenyanValue(mulType, (int) left.value * (int) right.value, true);
             case DOUBLE -> new WenyanValue(mulType, (double) left.value * (double) right.value, true);
-            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be multiplied").getString());
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_multiplied").getString());
         };
     }
 
@@ -190,7 +190,7 @@ public class WenyanValue {
         if (divType == Type.DOUBLE) {
             return new WenyanValue(divType, (double) left.value / (double) right.value, true);
         } else {
-            throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be divided").getString());
+            throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_divided").getString());
         }
     }
 
@@ -208,7 +208,7 @@ public class WenyanValue {
         return switch (modType) {
             case INT -> new WenyanValue(modType, (int) left.value % (int) right.value, true);
             case DOUBLE -> new WenyanValue(modType, (double) left.value % (double) right.value, true);
-            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be mod").getString());
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_mod").getString());
         };
     }
 
@@ -234,7 +234,7 @@ public class WenyanValue {
             case DOUBLE -> (double) left.value == (double) right.value;
             case BOOL -> (boolean) left.value == (boolean) right.value;
             case STRING -> left.value.equals(right.value);
-            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be compared").getString());
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_compared").getString());
         };
     }
 
@@ -247,7 +247,7 @@ public class WenyanValue {
             case INT -> Integer.compare((int) left.value, (int) right.value);
             case DOUBLE -> Double.compare((double) left.value, (double) right.value);
             case STRING -> left.value.toString().compareTo(right.value.toString());
-            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be compared").getString());
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_compared").getString());
         };
     }
 

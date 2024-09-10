@@ -101,14 +101,14 @@ public class WenyanDataPhaser {
                 return result;
             }
         }
-        throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid float number").getString());
+        throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_float_number").getString());
     }
 
     public static boolean parseBool(String text) throws WenyanException.WenyanDataException {
         if (BOOL_MAP.containsKey(text))
             return BOOL_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid bool value").getString());
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid_bool_value").getString());
     }
 
     public static String parseString(String text) {
@@ -119,7 +119,7 @@ public class WenyanDataPhaser {
         if (TYPE_MAP.containsKey(text))
             return TYPE_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid data type").getString());
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
     }
 
     private static Num parseIntHelper(String num) throws WenyanException.WenyanNumberException {
@@ -194,7 +194,7 @@ public class WenyanDataPhaser {
 
         Num add(Num other) throws WenyanException.WenyanNumberException {
             if (exp - other.exp < other.num.length())
-                throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid number").getString());
+                throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_number").getString());
             return new Num(
                     num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
                     other.exp);

@@ -159,7 +159,7 @@ public class WenyanControlVisitor extends WenyanVisitor{
                     case WenyanRParser.GTE -> left.compareTo(right) >= 0;
                     case WenyanRParser.LT -> left.compareTo(right) < 0;
                     case WenyanRParser.LTE -> left.compareTo(right) <= 0;
-                    default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown operator").getString(), ctx);
+                    default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_operator").getString(), ctx);
                 };
             } catch (WenyanException.WenyanThrowException e) {
                 throw new WenyanException(e.getMessage(), ctx);
