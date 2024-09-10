@@ -10,16 +10,17 @@ import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class WenyanExprVisitor extends WenyanVisitor{
-    public WenyanExprVisitor(WenyanFunctionEnvironment functionEnvironment) {
-        super(functionEnvironment);
+    public WenyanExprVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore semaphore) {
+        super(functionEnvironment, semaphore);
     }
 
     // maybe it is better to use a function to push return value...
     @Override
     public WenyanValue visitReference_statement(WenyanRParser.Reference_statementContext ctx) {
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment).visit(ctx.data());
+        WenyanValue value = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data());
         return functionEnvironment.resultStack.push(value);
     }
 
@@ -44,7 +45,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
         for (int i = 0; i < n; i++) {
             try {
                 if (!ctx.d.isEmpty()) {
-                    WenyanValue value = (new WenyanDataVisitor(functionEnvironment)).visit(ctx.d.get(i));
+                    WenyanValue value = (new WenyanDataVisitor(functionEnvironment, semaphore)).visit(ctx.d.get(i));
                     functionEnvironment.resultStack.push(WenyanValue.constOf(value).casting(type));
                 } else {
                     functionEnvironment.resultStack.push(WenyanValue.emptyOf(WenyanDataPhaser.parseType(ctx.type().getText()), true));
@@ -58,7 +59,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitInit_declare_statement(WenyanRParser.Init_declare_statementContext ctx) {
-        WenyanValue value = (new WenyanDataVisitor(functionEnvironment)).visit(ctx.data());
+        WenyanValue value = (new WenyanDataVisitor(functionEnvironment, semaphore)).visit(ctx.data());
         try {
             return functionEnvironment.resultStack.push(WenyanValue.constOf(value)
                     .casting(WenyanDataPhaser.parseType(ctx.type().getText())));
@@ -79,10 +80,10 @@ public class WenyanExprVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitAssign_data_statement(WenyanRParser.Assign_data_statementContext ctx) {
-        WenyanValue var = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(0));
+        WenyanValue var = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(0));
         if (var.isConst())
             throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString(), ctx);
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(1));
+        WenyanValue value = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(1));
         // although the constOf do nothing here,
         // it is better to keep the code consistent
         try {
@@ -95,7 +96,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitAssign_null_statement(WenyanRParser.Assign_null_statementContext ctx) {
-        WenyanValue var = new WenyanDataVisitor(functionEnvironment).visit(ctx.data());
+        WenyanValue var = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data());
         if (var.isConst())
             throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString(), ctx);
         var.setValue(null);
@@ -104,8 +105,8 @@ public class WenyanExprVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitBoolean_algebra_statement(WenyanRParser.Boolean_algebra_statementContext ctx) {
-        WenyanValue left = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(0));
-        WenyanValue right = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(1));
+        WenyanValue left = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(0));
+        WenyanValue right = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(1));
         // although the constOf do nothing here,
         // it is better to keep the code consistent
         try {
@@ -129,8 +130,8 @@ public class WenyanExprVisitor extends WenyanVisitor{
         if (ctx.ZHI() != null)
             left = WenyanValue.constOf(functionEnvironment.resultStack.peek());
         else
-            left = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(0));
-        WenyanValue right = new WenyanDataVisitor(functionEnvironment).visit(ctx.data(1));
+            left = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(0));
+        WenyanValue right = new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(1));
         left = WenyanValue.constOf(left);
         right = WenyanValue.constOf(right);
         try {
@@ -149,7 +150,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
         List<WenyanValue> args = new ArrayList<>();
         if (ctx.ZHI() != null) args.add(WenyanValue.constOf(functionEnvironment.resultStack.peek()));
         for (WenyanRParser.DataContext d : ctx.data())
-            args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment).visit(d)));
+            args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment, semaphore).visit(d)));
         WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(
                 ctx.key_function().op.getText(), new WenyanValue.Type[0]);
         if (args.size() == 2) { // deal pp
@@ -221,13 +222,13 @@ public class WenyanExprVisitor extends WenyanVisitor{
         if (ctx.ZHI() != null)
             args.add(WenyanValue.constOf(functionEnvironment.resultStack.peek()));
         for (WenyanRParser.DataContext d : ctx.args)
-            args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment).visit(d)));
+            args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment, semaphore).visit(d)));
 
         WenyanFunctionEnvironment.FunctionSign sign =
                 ctx.key_function() != null ?
                 new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
                 (WenyanFunctionEnvironment.FunctionSign)
-                        (new WenyanDataVisitor(functionEnvironment).visit(ctx.data(0)).getValue());
+                        (new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(0)).getValue());
         WenyanValue returnValue;
         try {
             returnValue = callFunction(sign, args.toArray(new WenyanValue[0]));
@@ -253,7 +254,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
                 ctx.key_function() != null ?
                         new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
                         (WenyanFunctionEnvironment.FunctionSign)
-                                (new WenyanDataVisitor(functionEnvironment).visit(ctx.data()).getValue());
+                                (new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data()).getValue());
         try {
             return functionEnvironment.resultStack.push(callFunction(sign, args.toArray(new WenyanValue[0])));
         } catch (WenyanException.WenyanThrowException e) {
@@ -274,7 +275,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
             for (int i = 0; i < args.length; i++) {
                 functionEnvironment.setVariable(func.id.get(i).getText(), WenyanValue.varOf(args[i]));
             }
-            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment);
+            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, semaphore);
             try {
                 for (WenyanRParser.StatementContext statementContext : func.statement()) {
                     visitor.visit(statementContext);

@@ -3,7 +3,7 @@ package indi.wenyan.item;
 import indi.wenyan.gui.RunnerScreen;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
+import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
@@ -45,7 +45,7 @@ public class WenyanHandRunner extends Item {
                 Stream<String> pages = writableBookContent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
                 String program = pages.collect(Collectors.joining("\n"));
                 try {
-                    (new WenyanMainVisitor(WenyanPackages.handEnvironment(player))).run(program);
+                    WenyanVisitor.run(WenyanPackages.handEnvironment(player), program);
                 } catch (WenyanException e) {
                     player.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
                 } catch (Exception e) {

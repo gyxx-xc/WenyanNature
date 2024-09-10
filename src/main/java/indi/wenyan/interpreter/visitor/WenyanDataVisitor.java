@@ -7,9 +7,11 @@ import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
 import indi.wenyan.interpreter.utils.WenyanValue;
 import net.minecraft.network.chat.Component;
 
+import java.util.concurrent.Semaphore;
+
 public class WenyanDataVisitor extends WenyanVisitor {
-    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment) {
-        super(functionEnvironment);
+    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore semaphore) {
+        super(functionEnvironment, semaphore);
     }
 
     @Override
