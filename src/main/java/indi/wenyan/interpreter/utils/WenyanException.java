@@ -3,6 +3,11 @@ package indi.wenyan.interpreter.utils;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 public class WenyanException extends RuntimeException {
+    public WenyanException(String message) {
+        super(message);
+        System.out.println(message);
+    }
+
     public WenyanException(String message, ParserRuleContext ctx) {
         super(message);
         System.out.println(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine()+" "+ctx.getText()+"\n"+message);

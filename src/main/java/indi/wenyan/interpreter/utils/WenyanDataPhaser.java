@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
+import net.minecraft.network.chat.Component;
+
 import java.util.HashMap;
 import java.util.HashSet;
 

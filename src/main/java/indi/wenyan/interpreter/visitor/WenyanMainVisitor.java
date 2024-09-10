@@ -4,7 +4,6 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.utils.WenyanValue;
-import org.antlr.v4.runtime.Token;
 
 public class WenyanMainVisitor extends WenyanVisitor {
     public WenyanMainVisitor(WenyanFunctionEnvironment functionEnvironment) {
