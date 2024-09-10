@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.utils.WenyanValue;
+import net.minecraft.network.chat.Component;
 
 public class WenyanMainVisitor extends WenyanVisitor {
     public WenyanMainVisitor(WenyanFunctionEnvironment functionEnvironment) {
@@ -36,7 +37,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
         if (ctx.IDENTIFIER() == null) {
             functionEnvironment.importEnvironment(importFunctionEnvironment);
         } else {
-            throw new RuntimeException("not implemented");
+            throw new RuntimeException(Component.translatable("error.wenyan_nature.not_implemented").getString());
         }
         return null;
     }

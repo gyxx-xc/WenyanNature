@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -54,7 +56,7 @@ public class WenyanValue {
 
     public static WenyanValue emptyOf(Type type, boolean isConst) throws WenyanException.WenyanTypeException {
         Object value1 = switch (type) {
-            case NULL -> throw new WenyanException.WenyanTypeException("cannot create empty of null");
+            case NULL -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_create_empty_of_null").getString());
             case INT -> 0;
             case DOUBLE -> 0.0;
             case BOOL -> false;
@@ -129,7 +131,7 @@ public class WenyanValue {
                 return new WenyanValue(Type.BOOL, !((ArrayList<?>) value).isEmpty(), isConst);
             }
         }
-        throw new WenyanException.WenyanTypeException("cannot cast " + this.type + " to " + type);
+        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot cast ").getString() + this.type + Component.translatable("error.wenyan_nature. to ").getString() + type);
     }
 
     public Type widerType(Type type) {
@@ -152,7 +154,7 @@ public class WenyanValue {
                 this.value = ((WenyanValueArray) left.value).concat((WenyanValueArray) right.value);
                 yield this;
             }
-            default -> throw new WenyanException.WenyanTypeException("type cannot be added");
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be added").getString());
         };
     }
 
@@ -164,7 +166,7 @@ public class WenyanValue {
         return switch (subType) {
             case INT -> new WenyanValue(subType, (int) left.value - (int) right.value, true);
             case DOUBLE -> new WenyanValue(subType, (double) left.value - (double) right.value, true);
-            default -> throw new WenyanException.WenyanTypeException("type cannot be subtracted");
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be subtracted").getString());
         };
     }
 
@@ -176,7 +178,7 @@ public class WenyanValue {
         return switch (mulType) {
             case INT -> new WenyanValue(mulType, (int) left.value * (int) right.value, true);
             case DOUBLE -> new WenyanValue(mulType, (double) left.value * (double) right.value, true);
-            default -> throw new WenyanException.WenyanTypeException("type cannot be multiplied");
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be multiplied").getString());
         };
     }
 
@@ -188,7 +190,7 @@ public class WenyanValue {
         if (divType == Type.DOUBLE) {
             return new WenyanValue(divType, (double) left.value / (double) right.value, true);
         } else {
-            throw new WenyanException.WenyanTypeException("type cannot be divided");
+            throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be divided").getString());
         }
     }
 
@@ -206,7 +208,7 @@ public class WenyanValue {
         return switch (modType) {
             case INT -> new WenyanValue(modType, (int) left.value % (int) right.value, true);
             case DOUBLE -> new WenyanValue(modType, (double) left.value % (double) right.value, true);
-            default -> throw new WenyanException.WenyanTypeException("type cannot be mod");
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be mod").getString());
         };
     }
 
@@ -232,7 +234,7 @@ public class WenyanValue {
             case DOUBLE -> (double) left.value == (double) right.value;
             case BOOL -> (boolean) left.value == (boolean) right.value;
             case STRING -> left.value.equals(right.value);
-            default -> throw new WenyanException.WenyanTypeException("type cannot be compared");
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be compared").getString());
         };
     }
 
@@ -245,7 +247,7 @@ public class WenyanValue {
             case INT -> Integer.compare((int) left.value, (int) right.value);
             case DOUBLE -> Double.compare((double) left.value, (double) right.value);
             case STRING -> left.value.toString().compareTo(right.value.toString());
-            default -> throw new WenyanException.WenyanTypeException("type cannot be compared");
+            default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type cannot be compared").getString());
         };
     }
 
@@ -253,7 +255,7 @@ public class WenyanValue {
     @Override
     public String toString() {
         return switch (type) {
-            case NULL -> "null";
+            case NULL -> Component.translatable("error.wenyan_nature.null").getString();
             case INT -> Integer.toString((int) value);
             case DOUBLE -> Double.toString((double) value);
             case BOOL -> Boolean.toString((boolean) value);
@@ -265,8 +267,8 @@ public class WenyanValue {
                 }
                 yield result;
             }
-            case FUNCTION -> "function";
-            case OBJECT -> "object";
+            case FUNCTION -> Component.translatable("error.wenyan_nature.function").getString();
+            case OBJECT -> Component.translatable("error.wenyan_nature.object").getString();
         };
     }
 

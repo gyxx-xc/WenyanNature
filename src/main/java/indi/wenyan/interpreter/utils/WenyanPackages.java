@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.handler.OutputHandler;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
@@ -10,7 +11,7 @@ public class WenyanPackages {
     public static final WenyanFunctionEnvironment WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", args -> {
                 if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException("number of arguments does not match");
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanValue value = args[0];
                 for (int i = 1; i < args.length; i++) {
                     value = value.add(args[i]);
@@ -19,7 +20,7 @@ public class WenyanPackages {
             })
             .function("減", args -> {
                 if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException("number of arguments does not match");
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanValue value = args[0];
                 for (int i = 1; i < args.length; i++) {
                     value = value.sub(args[i]);
@@ -28,7 +29,7 @@ public class WenyanPackages {
             })
             .function("乘", args -> {
                 if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException("number of arguments does not match");
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanValue value = args[0];
                 for (int i = 1; i < args.length; i++) {
                     value = value.mul(args[i]);
@@ -37,7 +38,7 @@ public class WenyanPackages {
             })
             .function("除", args -> {
                 if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException("number of arguments does not match");
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanValue value = args[0];
                 for (int i = 1; i < args.length; i++) {
                     value = value.div(args[i]);
@@ -47,7 +48,7 @@ public class WenyanPackages {
             .function("變", args -> args[0].not())
             .function("銜", args -> {
                 if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException("number of arguments does not match");
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanValue value = args[0];
                 for (int i = 1; i < args.length; i++) {
                     value = value.add(args[i]);
@@ -56,7 +57,7 @@ public class WenyanPackages {
             })
             .function("充", args -> {
                 if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException("number of arguments does not match");
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanValue value = args[0];
                 for (int i = 1; i < args.length; i++) {
                     value = value.append(args[i]);
