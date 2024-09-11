@@ -34,7 +34,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
         }
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
             System.out.println(ctx.getText());
-            throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_variables_does_not_match_number_of_values").getString(), ctx);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.variables_not_match").getString(), ctx);
         }
         WenyanValue.Type type;
         try {
