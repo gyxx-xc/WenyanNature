@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
+import net.minecraft.network.chat.Component;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -84,7 +86,7 @@ public class WenyanDataPhaser {
             if (text.contains(div)) {
                 String[] parts = text.split(div);
                 if (parts.length != 2)
-                    throw new WenyanException.WenyanNumberException("invalid float number");
+                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_float_number").getString());
                 // parts 1
                 double result = parseInt(parts[0]);
                 // parts 2 (Int FLOAT_EXP)+
@@ -99,14 +101,14 @@ public class WenyanDataPhaser {
                 return result;
             }
         }
-        throw new WenyanException.WenyanNumberException("invalid float number");
+        throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_float_number").getString());
     }
 
     public static boolean parseBool(String text) throws WenyanException.WenyanDataException {
         if (BOOL_MAP.containsKey(text))
             return BOOL_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException("invalid bool value");
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid_bool_value").getString());
     }
 
     public static String parseString(String text) {
@@ -117,7 +119,7 @@ public class WenyanDataPhaser {
         if (TYPE_MAP.containsKey(text))
             return TYPE_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException("invalid data type");
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
     }
 
     private static Num parseIntHelper(String num) throws WenyanException.WenyanNumberException {
@@ -166,7 +168,7 @@ public class WenyanDataPhaser {
             boolean zero = true;
             for (int i = 0; i < num.length(); i++) {
                 if (!DIGIT.containsKey(num.substring(i, i+1)))
-                    throw new WenyanException.WenyanNumberException("unexpected character");
+                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.unexpected_character").getString());
                 if (zero && DIGIT.get(num.substring(i, i+1)) != 0)
                     zero = false;
                 if (!zero)
@@ -177,7 +179,7 @@ public class WenyanDataPhaser {
             else
                 return new Num(res.toString(), 0);
         } else {
-            throw new WenyanException.WenyanNumberException("unexpected character");
+            throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.unexpected_character").getString());
         }
     }
 
@@ -192,7 +194,7 @@ public class WenyanDataPhaser {
 
         Num add(Num other) throws WenyanException.WenyanNumberException {
             if (exp - other.exp < other.num.length())
-                throw new WenyanException.WenyanNumberException("invalid number");
+                throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_number").getString());
             return new Num(
                     num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
                     other.exp);

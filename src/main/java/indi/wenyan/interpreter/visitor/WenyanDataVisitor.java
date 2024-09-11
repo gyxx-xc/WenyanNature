@@ -5,10 +5,13 @@ import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
 import indi.wenyan.interpreter.utils.WenyanValue;
+import net.minecraft.network.chat.Component;
+
+import java.util.concurrent.Semaphore;
 
 public class WenyanDataVisitor extends WenyanVisitor {
-    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment) {
-        super(functionEnvironment);
+    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore semaphore) {
+        super(functionEnvironment, semaphore);
     }
 
     @Override
@@ -24,7 +27,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
                         true);
                 case WenyanRParser.STRING_LITERAL -> new WenyanValue(WenyanValue.Type.STRING,
                         WenyanDataPhaser.parseString(ctx.STRING_LITERAL().getText()), true);
-                default -> throw new WenyanException("unknown data type", ctx);
+                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_data_type").getString(), ctx);
             };
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
@@ -35,7 +38,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
     public WenyanValue visitId_last(WenyanRParser.Id_lastContext ctx) {
         WenyanValue value = this.functionEnvironment.resultStack.peek();
         if (value == null)
-            throw new WenyanException("last result is null", ctx);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.last_result_is_null").getString(), ctx);
         functionEnvironment.resultStack.empty();
         return value;
     }
@@ -46,7 +49,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         try {
             return functionEnvironment.getVariable(id);
         } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException("variable not found: " + id, ctx);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found:_").getString() + id, ctx);
         }
     }
 
@@ -71,14 +74,14 @@ public class WenyanDataVisitor extends WenyanVisitor {
                 case WenyanRParser.DATA_ID_LAST -> {
                     value = this.functionEnvironment.resultStack.peek().casting(WenyanValue.Type.INT);
                     if (value == null)
-                        throw new WenyanException("last result is null", ctx);
+                        throw new WenyanException(Component.translatable("error.wenyan_nature.last_result_is_null").getString(), ctx);
                     functionEnvironment.resultStack.empty();
                 }
                 case WenyanRParser.LONG -> {
                     return new WenyanValue(WenyanValue.Type.INT,
                             ((WenyanValue.WenyanValueArray) parent.getValue()).size(), true);
                 }
-                default -> throw new WenyanException("unknown data type", ctx);
+                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_data_type").getString(), ctx);
             }
             return ((WenyanValue.WenyanValueArray) parent.getValue()).get(value);
         } catch (WenyanException.WenyanThrowException e) {

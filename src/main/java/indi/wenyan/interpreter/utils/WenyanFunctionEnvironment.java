@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
+import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class WenyanFunctionEnvironment {
         } else if (parentEnvironment != null) {
             return parentEnvironment.getVariable(id);
         } else {
-            throw new WenyanException.WenyanVarException("variable not found");
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.variable_not_found").getString());
         }
     }
 
@@ -47,7 +48,7 @@ public class WenyanFunctionEnvironment {
         } else if (parentEnvironment != null) {
             return parentEnvironment.getFunction(sign);
         } else {
-            throw new WenyanException.WenyanVarException("function not found");
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.function_not_found").getString());
         }
     }
 
