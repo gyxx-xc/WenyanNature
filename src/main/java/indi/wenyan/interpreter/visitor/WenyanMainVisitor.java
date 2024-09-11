@@ -15,11 +15,11 @@ public class WenyanMainVisitor extends WenyanVisitor {
 
     @Override
     public WenyanValue visitExpr_statement(WenyanRParser.Expr_statementContext ctx) {
-        try {
-            semaphore.acquire(20);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            semaphore.acquire(20);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         return new WenyanExprVisitor(functionEnvironment, semaphore).visit(ctx);
     }
 

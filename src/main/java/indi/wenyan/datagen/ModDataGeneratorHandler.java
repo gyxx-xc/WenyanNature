@@ -13,11 +13,17 @@ public class ModDataGeneratorHandler {
     public static void gatherData(GatherDataEvent event){
         ExistingFileHelper efh = event.getExistingFileHelper();
 
-        // 语言文件
-//        event.getGenerator().addProvider(
-//                event.includeClient(),
-//                (DataProvider.Factory<ModLanguageProvider>) pOutput -> new ModLanguageProvider(pOutput,ExampleMod.MODID,"en_us")
-//        );
+         //语言文件 (zh_cn)
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModLanguageProvider>) pOutput -> new ModLanguageProvider(pOutput,WenyanNature.MODID,"zh_cn")
+        );
+        //语言文件 (en_us)
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModLanguageProvider>) pOutput -> new ModLanguageProvider(pOutput,WenyanNature.MODID,"en_us")
+        );
+
         // 物品模型
         event.getGenerator().addProvider(
                 event.includeClient(),
