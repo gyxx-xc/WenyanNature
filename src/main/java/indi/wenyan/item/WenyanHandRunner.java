@@ -47,18 +47,19 @@ public class WenyanHandRunner extends Item {
             if (writableBookContent != null) {
                 Stream<String> pages = writableBookContent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
                 String program = pages.collect(Collectors.joining("\n"));
-                try {
-                    Semaphore semaphore = WenyanVisitor.run(WenyanPackages.handEnvironment(player), program);
-                    HandRunnerEntity handRunnerEntity = new HandRunnerEntity(Registration.HAND_RUNNER_ENTITY.get(), player.level());
-                    handRunnerEntity.setSemaphore(semaphore);
-                    handRunnerEntity.moveTo(player.getEyePosition());
-                    player.level().addFreshEntity(handRunnerEntity);
-                } catch (WenyanException e) {
-                    player.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
-                } catch (Exception e) {
-                    player.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
-                    LOGGER.info("Error: {}", e.getMessage());
-                }
+                Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
+                    if (e instanceof WenyanException) {
+                        player.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
+                    } else {
+                        player.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
+                        LOGGER.info("Error: {}", e.getMessage());
+                    }
+                };
+                Semaphore semaphore = WenyanVisitor.run(WenyanPackages.handEnvironment(player), exceptionHandler, program);
+//                    HandRunnerEntity handRunnerEntity = new HandRunnerEntity(Registration.HAND_RUNNER_ENTITY.get(), player.level());
+//                    handRunnerEntity.setSemaphore(semaphore);
+//                    handRunnerEntity.moveTo(player.getEyePosition());
+//                    player.level().addFreshEntity(handRunnerEntity);
                 return false;
             }
             // else : go outside

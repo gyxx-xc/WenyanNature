@@ -48,7 +48,7 @@ public class Registration {
     public static final DeferredItem<Item> HAND_RUNNER = ITEMS.registerItem("hand_runner", WenyanHandRunner::new);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
-            .title(Component.translatable("Wen Yan Nature")) //The language key for the title of your CreativeModeTab
+            .title(Component.translatable("create_tab")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.get().getDefaultInstance())
             .displayItems((parameters, output) -> {

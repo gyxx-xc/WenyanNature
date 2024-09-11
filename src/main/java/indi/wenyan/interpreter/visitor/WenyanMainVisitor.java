@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
+import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.utils.WenyanValue;
@@ -15,11 +16,11 @@ public class WenyanMainVisitor extends WenyanVisitor {
 
     @Override
     public WenyanValue visitExpr_statement(WenyanRParser.Expr_statementContext ctx) {
-//        try {
-//            semaphore.acquire(20);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            semaphore.acquire(20);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return new WenyanExprVisitor(functionEnvironment, semaphore).visit(ctx);
     }
 
@@ -40,7 +41,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
         if (ctx.IDENTIFIER() == null) {
             functionEnvironment.importEnvironment(importFunctionEnvironment);
         } else {
-            throw new RuntimeException(Component.translatable("error.wenyan_nature.not_implemented").getString());
+            throw new WenyanException(Component.translatable("error.wenyan_nature.not_implemented").getString(), ctx);
         }
         return null;
     }
