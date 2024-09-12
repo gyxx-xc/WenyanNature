@@ -1,13 +1,10 @@
 package indi.wenyan.item;
 
+import indi.wenyan.entity.HandRunnerEntity;
 import indi.wenyan.gui.RunnerScreen;
-import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.visitor.WenyanVisitor;
-import net.minecraft.ChatFormatting;
+import indi.wenyan.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -17,11 +14,8 @@ import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static indi.wenyan.WenyanNature.LOGGER;
 
 public class WenyanHandRunner extends Item {
     public WenyanHandRunner(Properties properties) {
@@ -44,19 +38,13 @@ public class WenyanHandRunner extends Item {
             if (writableBookContent != null) {
                 Stream<String> pages = writableBookContent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
                 String program = pages.collect(Collectors.joining("\n"));
-                Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
-                    if (e instanceof WenyanException) {
-                        player.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
-                    } else {
-                        player.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
-                        LOGGER.info("Error: {}", e.getMessage());
-                    }
-                };
-                Semaphore semaphore = WenyanVisitor.run(WenyanPackages.handEnvironment(player), exceptionHandler, program);
-//                    HandRunnerEntity handRunnerEntity = new HandRunnerEntity(Registration.HAND_RUNNER_ENTITY.get(), player.level());
-//                    handRunnerEntity.setSemaphore(semaphore);
-//                    handRunnerEntity.moveTo(player.getEyePosition());
-//                    player.level().addFreshEntity(handRunnerEntity);
+                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(Registration.HAND_RUNNER_ENTITY.get(), player.level());
+                handRunnerEntity.moveTo(player.getEyePosition());
+                handRunnerEntity.code = program;
+                handRunnerEntity.holder = player;
+                player.level().addFreshEntity(handRunnerEntity);
+
+                item.shrink(1);
                 return false;
             }
             // else : go outside

@@ -14,13 +14,17 @@ public class WenyanMainVisitor extends WenyanVisitor {
         super(functionEnvironment, semaphore);
     }
 
+    private void waitTick() {
+        try {
+            semaphore.acquire(2);
+        } catch (InterruptedException e) {
+            throw new WenyanException("killed");
+        }
+    }
+
     @Override
     public WenyanValue visitExpr_statement(WenyanRParser.Expr_statementContext ctx) {
-        try {
-            semaphore.acquire(20);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        waitTick();
         return new WenyanExprVisitor(functionEnvironment, semaphore).visit(ctx);
     }
 
@@ -31,6 +35,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
 
     @Override
     public WenyanValue visitCandy_statement(WenyanRParser.Candy_statementContext ctx) {
+        waitTick();
         return new WenyanCandyVisitor(functionEnvironment, semaphore).visit(ctx);
     }
 
