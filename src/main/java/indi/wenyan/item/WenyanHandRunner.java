@@ -6,20 +6,23 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.WritableBookContent;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WenyanHandRunner extends Item {
+public class WenyanHandRunner extends BlockItem {
     public WenyanHandRunner(Properties properties) {
-        super(properties);
+        super(Registration.RUNNER_BLOCK.get(), properties);
     }
 
     @Override
@@ -50,5 +53,12 @@ public class WenyanHandRunner extends Item {
             // else : go outside
         }
         return super.onDroppedByPlayer(item, player);
+    }
+
+    @Override
+    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+        if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown())
+            return super.useOn(context);
+        return InteractionResult.PASS;
     }
 }
