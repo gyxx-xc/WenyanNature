@@ -67,17 +67,17 @@ public class HandRunnerEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
 
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compoundTag) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
 
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compoundTag) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
 
     }
 }
