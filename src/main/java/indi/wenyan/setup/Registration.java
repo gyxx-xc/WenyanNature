@@ -11,6 +11,7 @@ import indi.wenyan.network.RunnerTextPacket;
 import indi.wenyan.block.BlockRunner;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
@@ -53,7 +54,7 @@ public class Registration {
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY =
             ENTITY.register("hand_runner",
                     () -> EntityType.Builder
-                            .of(HandRunnerEntity::new, MobCategory.MISC)
+                            .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
                             .sized(0.25f, 0.25f)
                             .build("hand_runner"));
 
