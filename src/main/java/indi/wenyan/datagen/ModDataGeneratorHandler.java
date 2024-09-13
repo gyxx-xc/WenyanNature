@@ -16,24 +16,22 @@ public class ModDataGeneratorHandler {
          //语言文件 (zh_cn)
         event.getGenerator().addProvider(
                 event.includeClient(),
-                (DataProvider.Factory<ModLanguageProvider>) pOutput -> new ModLanguageProvider(pOutput,WenyanNature.MODID,"zh_cn")
-        );
-        //语言文件 (en_us)
-        event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModLanguageProvider>) pOutput -> new ModLanguageProvider(pOutput,WenyanNature.MODID,"en_us")
+                (DataProvider.Factory<ChineseLanguageProvider>) pOutput ->
+                        new ChineseLanguageProvider(pOutput,WenyanNature.MODID,"zh_cn")
         );
 
         // 物品模型
         event.getGenerator().addProvider(
                 event.includeClient(),
-                (DataProvider.Factory<ModItemModelProvider>) pOutput -> new ModItemModelProvider(pOutput,WenyanNature.MODID,efh)
+                (DataProvider.Factory<ModItemModelProvider>) pOutput ->
+                        new ModItemModelProvider(pOutput,WenyanNature.MODID,efh)
         );
-        // 方块state
-//        event.getGenerator().addProvider(
-//                event.includeClient(),
-//                (DataProvider.Factory<ModBlockStateProvider>) pOutput -> new ModBlockStateProvider(pOutput,ExampleMod.MODID,efh)
-//        );
+
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModBlockStateProvider>) pOutput ->
+                        new ModBlockStateProvider(pOutput,WenyanNature.MODID,efh)
+        );
 
     }
 }

@@ -32,5 +32,4 @@ public class ClientSetup {
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
     }
-
 }

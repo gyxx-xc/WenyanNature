@@ -11,10 +11,8 @@ import indi.wenyan.network.RunnerTextPacket;
 import indi.wenyan.block.BlockRunner;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -70,9 +68,7 @@ public class Registration {
             .title(Component.translatable("title.wenyan_nature.create_tab")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-                output.accept(HAND_RUNNER.get());
-            }).build());
+            .displayItems((parameters, output) -> output.accept(HAND_RUNNER.get())).build());
 
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
