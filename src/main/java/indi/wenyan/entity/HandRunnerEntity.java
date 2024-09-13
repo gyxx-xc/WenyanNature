@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
+import indi.wenyan.setup.Registration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,6 +26,13 @@ public class HandRunnerEntity extends Entity {
 
     public HandRunnerEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public HandRunnerEntity(Player holder, String code) {
+        super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
+        this.holder = holder;
+        this.code = code;
+        this.moveTo(holder.getEyePosition());
     }
 
     @Override

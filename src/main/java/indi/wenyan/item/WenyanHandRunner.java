@@ -41,10 +41,7 @@ public class WenyanHandRunner extends BlockItem {
             if (writableBookContent != null) {
                 Stream<String> pages = writableBookContent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
                 String program = pages.collect(Collectors.joining("\n"));
-                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(Registration.HAND_RUNNER_ENTITY.get(), player.level());
-                handRunnerEntity.moveTo(player.getEyePosition());
-                handRunnerEntity.code = program;
-                handRunnerEntity.holder = player;
+                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player, program);
                 player.level().addFreshEntity(handRunnerEntity);
 
                 item.shrink(1);
