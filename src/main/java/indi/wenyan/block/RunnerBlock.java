@@ -27,7 +27,7 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
             .strength(1.0F)
             .sound(SoundType.WOOL)
             .noOcclusion();
-    public static final VoxelShape SHAPE = Block.box(6,0,2,11,1,13);
+    public static final VoxelShape SHAPE = Block.box(6,0,3,11,1,13);
 
     @Override
     protected @NotNull MapCodec<RunnerBlock> codec() {
@@ -63,7 +63,4 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
                 BlockRunner.tick(level, pos, state1, (BlockRunner) entity);
         };
     }
-
-
 }
-
