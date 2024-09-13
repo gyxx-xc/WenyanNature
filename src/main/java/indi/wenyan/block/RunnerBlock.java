@@ -3,6 +3,7 @@ package indi.wenyan.block;
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -27,7 +28,18 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
             .strength(1.0F)
             .sound(SoundType.WOOL)
             .noOcclusion();
-    public static final VoxelShape SHAPE = Block.box(6,0,3,11,1,13);
+    public static final VoxelShape FLOOR_NORTH_AABB = Block.box(6,0,3,11,1,13);
+    public static final VoxelShape FLOOR_SOUTH_AABB = Block.box(5, 0, 3, 10, 1, 13);
+    public static final VoxelShape FLOOR_WEST_AABB = Block.box(3, 0, 5, 13, 1, 10);
+    public static final VoxelShape FLOOR_EAST_AABB = Block.box(3, 0, 6, 13, 1, 11);
+    public static final VoxelShape CEILING_NORTH_AABB = Block.box(5, 15, 3, 10, 16, 13);
+    public static final VoxelShape CEILING_SOUTH_AABB = Block.box(6, 15, 3, 11, 16, 13);
+    public static final VoxelShape CEILING_WEST_AABB = Block.box(3, 15, 6, 13, 16, 11);
+    public static final VoxelShape CEILING_EAST_AABB = Block.box(3, 15, 5, 13, 16, 10);
+    public static final VoxelShape NORTH_AABB = Block.box(6, 3, 15, 11, 13, 16);
+    public static final VoxelShape SOUTH_AABB = Block.box(5, 3, 0, 10, 13, 1);
+    public static final VoxelShape WEST_AABB = Block.box(15, 3, 5, 16, 13, 10);
+    public static final VoxelShape EAST_AABB = Block.box(0, 3, 6, 1, 13, 11);
 
     @Override
     protected @NotNull MapCodec<RunnerBlock> codec() {
@@ -40,7 +52,40 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
 
     @Override
     public @NotNull VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return SHAPE;
+        Direction direction = pState.getValue(FACING);
+        switch (pState.getValue(FACE)) {
+            case FLOOR:
+                switch (direction) {
+                    case NORTH:
+                        return FLOOR_NORTH_AABB;
+                    case SOUTH:
+                        return FLOOR_SOUTH_AABB;
+                    case WEST:
+                        return FLOOR_WEST_AABB;
+                    case EAST:
+                        return FLOOR_EAST_AABB;
+                }
+            case WALL:
+                return switch (direction) {
+                    case EAST -> EAST_AABB;
+                    case WEST -> WEST_AABB;
+                    case SOUTH -> SOUTH_AABB;
+                    case NORTH, UP, DOWN -> NORTH_AABB;
+                };
+            case CEILING:
+                switch (direction) {
+                    case NORTH:
+                        return CEILING_NORTH_AABB;
+                    case SOUTH:
+                        return CEILING_SOUTH_AABB;
+                    case WEST:
+                        return CEILING_WEST_AABB;
+                    case EAST:
+                        return CEILING_EAST_AABB;
+                }
+            default:
+                throw new MatchException(null, null);
+        }
     }
 
     @Override
