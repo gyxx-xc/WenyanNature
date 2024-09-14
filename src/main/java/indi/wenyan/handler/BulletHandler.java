@@ -22,7 +22,7 @@ public class BulletHandler extends JavacallHandler {
     @Override
     public WenyanValue handle(WenyanValue[] args) {
         Vec3 dir = new Vec3((double)args[0].getValue(), (double)args[1].getValue(), (double)args[2].getValue());
-        BulletEntity bullet = new BulletEntity(level, runner.getEyePosition(), dir, 0.1, (int)args[3].getValue());
+        BulletEntity bullet = new BulletEntity(level, runner.getPosition(0), dir, 0.1, (int)args[3].getValue());
         level.addFreshEntity(bullet);
         return null;
     }

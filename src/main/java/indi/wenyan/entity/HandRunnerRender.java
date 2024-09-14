@@ -27,6 +27,7 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
         super.render(entityIn, entityYaw, partialTicks, poseStackIn, bufferSourceIn, packedLightIn);
         poseStackIn.pushPose();
         poseStackIn.translate(0, 0.5, 0);
+        poseStackIn.scale(0.8F, 0.8F, 0.8F);
         Minecraft.getInstance().getItemRenderer().renderStatic(
                 new ItemStack(Registration.HAND_RUNNER.get()),
                 ItemDisplayContext.FIXED,

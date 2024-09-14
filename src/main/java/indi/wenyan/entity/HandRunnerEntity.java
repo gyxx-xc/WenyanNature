@@ -15,6 +15,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -22,13 +25,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Semaphore;
 
-public class HandRunnerEntity extends AbstractArrow {
+public class HandRunnerEntity extends ThrowableProjectile {
     public Semaphore semaphore;
     public Thread program;
     public String code;
     public Player holder;
 
-    public HandRunnerEntity(EntityType<? extends AbstractArrow> entityType, Level level) {
+    public HandRunnerEntity(EntityType<HandRunnerEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -36,9 +39,8 @@ public class HandRunnerEntity extends AbstractArrow {
         super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
         this.holder = holder;
         this.code = code;
-        setNoPhysics(true);
         Vec3 lookDirection = Vec3.directionFromRotation(holder.getXRot(), holder.getYRot()).normalize().scale(0.5);
-        this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.2, lookDirection.z));
+        this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));
         this.shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.05F, 0.1F);
     }
 
@@ -54,6 +56,11 @@ public class HandRunnerEntity extends AbstractArrow {
             if (!program.isAlive())
                 this.remove(RemovalReason.DISCARDED);
         }
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -91,12 +98,8 @@ public class HandRunnerEntity extends AbstractArrow {
     }
 
     @Override
-    protected @NotNull ItemStack getDefaultPickupItem() {
-        return new ItemStack(Registration.HAND_RUNNER.get());
-    }
-
-    @Override
     public boolean isPickable() {
         return false;
     }
+
 }

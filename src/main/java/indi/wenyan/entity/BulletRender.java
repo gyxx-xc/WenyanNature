@@ -21,9 +21,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class BulletRender extends EntityRenderer<BulletEntity> {
     private static final ResourceLocation TEXTURE_LOCATION =
-            ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "entity/bullet");
+            ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "block/runner_block");
     private static final RenderType RENDER_TYPE =
-            RenderType.translucent();
+            RenderType.entityTranslucent(TEXTURE_LOCATION);
 
     public BulletRender(EntityRendererProvider.Context context) {
         super(context);
