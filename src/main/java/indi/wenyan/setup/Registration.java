@@ -61,7 +61,7 @@ public class Registration {
             ENTITY.register("hand_runner",
                     () -> EntityType.Builder
                             .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
-                            .sized(0.25f, 0.25f)
+                            .sized(0.45f, 1f)
                             .build("hand_runner"));
 
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY =
