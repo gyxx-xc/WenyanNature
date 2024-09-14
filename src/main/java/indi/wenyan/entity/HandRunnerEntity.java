@@ -13,18 +13,22 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Semaphore;
 
-public class HandRunnerEntity extends Entity {
+public class HandRunnerEntity extends AbstractArrow {
     public Semaphore semaphore;
     public Thread program;
     public String code;
     public Player holder;
 
-    public HandRunnerEntity(EntityType<?> entityType, Level level) {
+    public HandRunnerEntity(EntityType<? extends AbstractArrow> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -32,11 +36,19 @@ public class HandRunnerEntity extends Entity {
         super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
         this.holder = holder;
         this.code = code;
-        this.moveTo(holder.getEyePosition());
+        setNoPhysics(true);
+        Vec3 lookDirection = Vec3.directionFromRotation(holder.getXRot(), holder.getYRot()).normalize().scale(0.5);
+        this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.2, lookDirection.z));
+        this.shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.05F, 0.1F);
     }
 
     @Override
     public void tick() {
+        if (getDeltaMovement().length() < 0.001)
+            setDeltaMovement(Vec3.ZERO);
+        else
+            setDeltaMovement(getDeltaMovement().scale(0.8
+            ));
         super.tick();
         if (!this.level().isClientSide() && semaphore != null) {
             semaphore.release(1);
@@ -75,17 +87,17 @@ public class HandRunnerEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-
+    public boolean isNoGravity() {
+        return true;
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
-
+    protected @NotNull ItemStack getDefaultPickupItem() {
+        return new ItemStack(Registration.HAND_RUNNER.get());
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
-
+    public boolean isPickable() {
+        return false;
     }
 }
