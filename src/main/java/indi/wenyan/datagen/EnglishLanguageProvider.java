@@ -4,8 +4,8 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
-public class ChineseLanguageProvider extends LanguageProvider {
-    public ChineseLanguageProvider(PackOutput output, String modid, String locale) {
+public class EnglishLanguageProvider extends LanguageProvider {
+    public EnglishLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
     }
 
@@ -22,9 +22,6 @@ public class ChineseLanguageProvider extends LanguageProvider {
         this.add("error.wenyan_nature.last_result_is_null","謬：末次結果為空");
         this.add("error.wenyan_nature.variable_not_found:_","謬：變數未尋得");
         this.add("error.wenyan_nature.not_implemented","謬：尚未實行");
-        this.add("type.wenyan_nature.null", "空無");
-        this.add("type.wenyan_nature.function", "術");
-        this.add("type.wenyan_nature.object", "物");
 
         this.add("title.wenyan_nature.create_tab","吾有一術");
     }

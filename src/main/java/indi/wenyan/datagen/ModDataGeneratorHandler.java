@@ -19,6 +19,11 @@ public class ModDataGeneratorHandler {
                 (DataProvider.Factory<ChineseLanguageProvider>) pOutput ->
                         new ChineseLanguageProvider(pOutput,WenyanNature.MODID,"zh_cn")
         );
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<EnglishLanguageProvider>) pOutput ->
+                        new EnglishLanguageProvider(pOutput,WenyanNature.MODID,"en_us")
+        );
 
         // 物品模型
         event.getGenerator().addProvider(
