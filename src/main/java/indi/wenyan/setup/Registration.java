@@ -3,6 +3,7 @@ package indi.wenyan.setup;
 import com.mojang.datafixers.DSL;
 import indi.wenyan.WenyanNature;
 import indi.wenyan.block.RunnerBlock;
+import indi.wenyan.entity.BulletEntity;
 import indi.wenyan.entity.HandRunnerEntity;
 import indi.wenyan.item.WenyanHandRunner;
 import indi.wenyan.network.ProgramTextClientPayloadHandler;
@@ -49,13 +50,6 @@ public class Registration {
     public static final DeferredRegister<EntityType<?>> ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
 
     public static final DeferredItem<Item> HAND_RUNNER = ITEMS.registerItem("hand_runner", WenyanHandRunner::new);
-    public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY =
-            ENTITY.register("hand_runner",
-                    () -> EntityType.Builder
-                            .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
-                            .sized(0.25f, 0.25f)
-                            .build("hand_runner"));
-
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK = BLOCKS.register("runner_block",
             () -> new RunnerBlock(RunnerBlock.PROPERTIES));
     public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER =
@@ -63,6 +57,19 @@ public class Registration {
             () -> BlockEntityType.Builder
                     .of(BlockRunner::new, RUNNER_BLOCK.get())
                     .build(DSL.remainderType()));
+    public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY =
+            ENTITY.register("hand_runner",
+                    () -> EntityType.Builder
+                            .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
+                            .sized(0.25f, 0.25f)
+                            .build("hand_runner"));
+
+    public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY =
+            ENTITY.register("bullet_entity",
+                    () -> EntityType.Builder
+                            .of(BulletEntity::new, MobCategory.MISC)
+                            .sized(0.25f, 0.25f)
+                            .build("bullet_entity"));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
             .title(Component.translatable("title.wenyan_nature.create_tab")) //The language key for the title of your CreativeModeTab

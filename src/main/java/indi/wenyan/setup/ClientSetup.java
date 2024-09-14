@@ -1,5 +1,6 @@
 package indi.wenyan.setup;
 
+import indi.wenyan.entity.BulletRender;
 import indi.wenyan.entity.HandRunnerModel;
 import indi.wenyan.entity.HandRunnerRender;
 import net.minecraft.client.Minecraft;
@@ -31,5 +32,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
+        event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
     }
 }
