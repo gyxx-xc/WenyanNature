@@ -26,8 +26,9 @@ public class BulletEntity extends AbstractArrow {
 
     @Override
     public void tick() {
-        if (this.tickCount++ > aliveTime)
-            this.remove(RemovalReason.DISCARDED);
+        if (!this.level().isClientSide())
+            if (this.tickCount++ > aliveTime)
+                this.remove(RemovalReason.DISCARDED);
         super.tick();
     }
 
