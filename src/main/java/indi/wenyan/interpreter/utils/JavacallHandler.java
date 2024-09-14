@@ -11,7 +11,6 @@ public class JavacallHandler extends WenyanRParser.Function_define_statementCont
     public interface WenyanFunction {
         WenyanValue apply(WenyanValue[] args) throws WenyanException.WenyanThrowException;
     }
-
     private final WenyanFunction function;
 
     public JavacallHandler() {

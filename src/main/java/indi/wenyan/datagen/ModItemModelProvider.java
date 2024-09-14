@@ -22,9 +22,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         this.basicItem(Registration.HAND_RUNNER.get());
     }
 
-
     public ResourceLocation getResourceLocation(Item item){
         return Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item));
     }
-
 }
