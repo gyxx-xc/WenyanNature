@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.entity.HandRunnerEntity;
+import indi.wenyan.handler.BulletHandler;
 import indi.wenyan.handler.OutputHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -66,10 +68,18 @@ public class WenyanPackages {
             })
             .build();
 
-    public static WenyanFunctionEnvironment handEnvironment(Player player) {
+    public static WenyanFunctionEnvironment handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
-                .function("書", new OutputHandler(player))
+                .function("書", new OutputHandler(holder))
+                .function("「射」", new BulletHandler(holder.level(), runner), BulletHandler.ARGS_TYPE)
+                .build();
+    }
+
+    public static WenyanFunctionEnvironment blockEnvironment(Player holder) {
+        return WenyanPackageBuilder.create()
+                .environment(WENYAN_BASIC_PACKAGES)
+                .function("書", new OutputHandler(holder))
                 .build();
     }
 

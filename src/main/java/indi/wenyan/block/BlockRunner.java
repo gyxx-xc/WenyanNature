@@ -74,7 +74,7 @@ public class BlockRunner extends BlockEntity {
         // ready to visit
         semaphore = new Semaphore(0);
         program = new Thread(() ->
-                new WenyanMainVisitor(WenyanPackages.handEnvironment(holder), semaphore)
+                new WenyanMainVisitor(WenyanPackages.blockEnvironment(holder), semaphore)
                         .visit(WenyanVisitor.program(code)));
         program.setUncaughtExceptionHandler(exceptionHandler);
         isRunning = true;

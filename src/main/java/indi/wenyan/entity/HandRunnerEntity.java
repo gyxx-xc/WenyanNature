@@ -47,8 +47,7 @@ public class HandRunnerEntity extends AbstractArrow {
         if (getDeltaMovement().length() < 0.001)
             setDeltaMovement(Vec3.ZERO);
         else
-            setDeltaMovement(getDeltaMovement().scale(0.8
-            ));
+            setDeltaMovement(getDeltaMovement().scale(0.8));
         super.tick();
         if (!this.level().isClientSide() && semaphore != null) {
             semaphore.release(1);
@@ -78,7 +77,7 @@ public class HandRunnerEntity extends AbstractArrow {
             // ready to visit
             semaphore = new Semaphore(0);
             program = new Thread(() ->
-                    new WenyanMainVisitor(WenyanPackages.handEnvironment(holder), semaphore)
+                    new WenyanMainVisitor(WenyanPackages.handEnvironment(holder, this), semaphore)
                             .visit(WenyanVisitor.program(code)));
             program.setUncaughtExceptionHandler(exceptionHandler);
             program.start();

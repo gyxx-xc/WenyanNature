@@ -17,17 +17,31 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler.WenyanFunction function) {
-        environment.setFunction(new WenyanFunctionEnvironment.FunctionSign(name, new WenyanValue.Type[0]), new JavacallHandler(function));
+        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(name, new WenyanValue.Type[0]);
+        environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        environment.setFunction(sign, new JavacallHandler(function));
         return this;
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler.WenyanFunction function, WenyanValue.Type[] argTypes) {
-        environment.setFunction(new WenyanFunctionEnvironment.FunctionSign(name, argTypes), new JavacallHandler(function));
+        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(name, argTypes);
+        environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        environment.setFunction(sign, new JavacallHandler(function));
         return this;
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler javacall) {
-        environment.setFunction(new WenyanFunctionEnvironment.FunctionSign(name, new WenyanValue.Type[0]), javacall);
+        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(name, new WenyanValue.Type[0]);
+        environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        environment.setFunction(sign, javacall);
         return this;
     }
+
+    public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanValue.Type[] argTypes) {
+        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(name, argTypes);
+        environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        environment.setFunction(sign, javacall);
+        return this;
+    }
+
 }

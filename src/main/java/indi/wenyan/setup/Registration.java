@@ -67,7 +67,7 @@ public class Registration {
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY =
             ENTITY.register("bullet_entity",
                     () -> EntityType.Builder
-                            .of(BulletEntity::new, MobCategory.MISC)
+                            .of((EntityType.EntityFactory<BulletEntity>) BulletEntity::new, MobCategory.MISC)
                             .sized(0.25f, 0.25f)
                             .build("bullet_entity"));
 
