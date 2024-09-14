@@ -251,27 +251,6 @@ public class WenyanValue {
         };
     }
 
-    // TODO
-    @Override
-    public String toString() {
-        return switch (type) {
-            case NULL -> Component.translatable("error.wenyan_nature.null").getString();
-            case INT -> Integer.toString((int) value);
-            case DOUBLE -> Double.toString((double) value);
-            case BOOL -> Boolean.toString((boolean) value);
-            case STRING -> (String) value;
-            case LIST -> {
-                String result = "";
-                for (WenyanValue wenyanValue : (WenyanValueArray) value) {
-                   result += (result.isEmpty()?"":" ") + wenyanValue.toString();
-                }
-                yield result;
-            }
-            case FUNCTION -> Component.translatable("error.wenyan_nature.function").getString();
-            case OBJECT -> Component.translatable("error.wenyan_nature.object").getString();
-        };
-    }
-
     public static class WenyanValueArray extends ArrayList<WenyanValue> {
         public WenyanValueArray concat(WenyanValueArray other) {
             addAll(other);
@@ -287,4 +266,46 @@ public class WenyanValue {
         }
     }
 
+    // TODO
+    @Override
+    public String toString() {
+
+        return switch (type) {
+            case NULL -> Component.translatable("type.wenyan_nature.null").getString();
+            case INT -> WenyanString((int) value);
+            case DOUBLE -> WenyanString((double) value);
+            case BOOL -> WenyanString((boolean) value);
+            case STRING -> (String) value;
+            case LIST -> {
+                String result = "";
+                for (WenyanValue wenyanValue : (WenyanValueArray) value) {
+                   result += (result.isEmpty()?"":" ") + wenyanValue.toString();
+                }
+                yield result;
+            }
+            case FUNCTION -> Component.translatable("type.wenyan_nature.function").getString();
+            case OBJECT -> Component.translatable("type.wenyan_nature.object").getString();
+        };
+    }
+
+    private static String WenyanString(int i) {
+        String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
+        StringBuilder result = new StringBuilder();
+        for (char digit : Integer.toString(i).toCharArray())
+            result.append(numerals[Character.getNumericValue(digit)]);
+        return result.toString();
+    }
+
+    private static String WenyanString(boolean b) {
+        return b ? "陽" : "陰";
+    }
+
+    private static String WenyanString(double d) {
+        String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
+        String dot = "又";
+        StringBuilder result = new StringBuilder();
+        for (char digit : Double.toString(d).toCharArray())
+            result.append(digit == '.' ? dot : numerals[Character.getNumericValue(digit)]);
+        return result.toString();
+    }
 }
