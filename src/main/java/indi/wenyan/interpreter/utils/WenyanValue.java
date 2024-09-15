@@ -15,7 +15,12 @@ public class WenyanValue {
         STRING,
         LIST,
         OBJECT, // not implemented
-        FUNCTION
+        FUNCTION;
+
+        @Override
+        public String toString() {
+            return Component.translatable("type.wenyan_nature." + name().toLowerCase()).getString();
+        }
     }
 
     public static final HashMap<Type, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
