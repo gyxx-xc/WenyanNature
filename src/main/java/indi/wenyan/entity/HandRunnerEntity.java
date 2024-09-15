@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,8 @@ import java.lang.reflect.AccessFlag;
 import java.util.concurrent.Semaphore;
 
 public class HandRunnerEntity extends Projectile {
-    public Semaphore semaphore;
+    public Semaphore entitySemaphore;
+    public Semaphore programSemaphore;
     public Thread program;
     public String code;
     public Player holder;
@@ -63,10 +65,16 @@ public class HandRunnerEntity extends Projectile {
         checkInsideBlocks();
         updateRotation();
         setPos(position().add(getDeltaMovement()));
-        if (!this.level().isClientSide() && semaphore != null) {
-            semaphore.release(1);
+        if (!this.level().isClientSide() && program != null) {
             if (!program.isAlive())
                 discard();
+            int size = 100;
+            programSemaphore.release(size);
+            try {
+                entitySemaphore.acquire(size);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         super.tick();
     }
@@ -94,12 +102,19 @@ public class HandRunnerEntity extends Projectile {
                 }
             };
             // ready to visit
-            semaphore = new Semaphore(0);
-            program = new Thread(() ->
-                    new WenyanMainVisitor(WenyanPackages.handEnvironment(holder, this), semaphore)
-                            .visit(WenyanVisitor.program(code)));
+            programSemaphore = new Semaphore(0);
+            entitySemaphore = new Semaphore(0);
+            program = new Thread(() -> {
+                new WenyanMainVisitor(WenyanPackages.handEnvironment(holder, this), programSemaphore, entitySemaphore)
+                        .visit(WenyanVisitor.program(code));
+                entitySemaphore.release(100000);});
             program.setUncaughtExceptionHandler(exceptionHandler);
             program.start();
+            try {
+                entitySemaphore.acquire(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         isRunning = true;
     }

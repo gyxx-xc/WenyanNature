@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.visitor;
 
+import com.sun.jna.platform.win32.OaIdl;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
@@ -10,13 +11,14 @@ import net.minecraft.network.chat.Component;
 import java.util.concurrent.Semaphore;
 
 public class WenyanMainVisitor extends WenyanVisitor {
-    public WenyanMainVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore semaphore) {
-        super(functionEnvironment, semaphore);
+    public WenyanMainVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
+        super(functionEnvironment, programSemaphore, entitySemaphore);
     }
 
     private void waitTick() {
+        entitySemaphore.release(1);
         try {
-            semaphore.acquire(1);
+            programSemaphore.acquire(1);
         } catch (InterruptedException e) {
             throw new WenyanException("killed");
         }
@@ -25,18 +27,18 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public WenyanValue visitExpr_statement(WenyanRParser.Expr_statementContext ctx) {
         waitTick();
-        return new WenyanExprVisitor(functionEnvironment, semaphore).visit(ctx);
+        return new WenyanExprVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx);
     }
 
     @Override
     public WenyanValue visitControl_statement(WenyanRParser.Control_statementContext ctx) {
-        return new WenyanControlVisitor(functionEnvironment, semaphore).visit(ctx);
+        return new WenyanControlVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx);
     }
 
     @Override
     public WenyanValue visitCandy_statement(WenyanRParser.Candy_statementContext ctx) {
         waitTick();
-        return new WenyanCandyVisitor(functionEnvironment, semaphore).visit(ctx);
+        return new WenyanCandyVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx);
     }
 
     @Override

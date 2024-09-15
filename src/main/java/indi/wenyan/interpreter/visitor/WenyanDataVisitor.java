@@ -10,8 +10,8 @@ import net.minecraft.network.chat.Component;
 import java.util.concurrent.Semaphore;
 
 public class WenyanDataVisitor extends WenyanVisitor {
-    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore semaphore) {
-        super(functionEnvironment, semaphore);
+    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
+        super(functionEnvironment, programSemaphore, entitySemaphore);
     }
 
     @Override

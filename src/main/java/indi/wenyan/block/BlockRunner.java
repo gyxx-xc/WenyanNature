@@ -35,7 +35,8 @@ import java.util.concurrent.Semaphore;
 @ParametersAreNonnullByDefault
 public class BlockRunner extends BlockEntity {
     public Boolean isRunning;
-    public Semaphore semaphore;
+    public Semaphore programSemaphore;
+    public Semaphore entitySemaphore;
     public Thread program;
     public List<String> pages;
 
@@ -46,8 +47,13 @@ public class BlockRunner extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, BlockRunner entity) {
         if (entity.isRunning) {
-            if (entity.semaphore != null) {
-                entity.semaphore.release(1);
+            assert entity.program != null;
+            int size = 100;
+            entity.programSemaphore.release(size);
+            try {
+                entity.entitySemaphore.acquire(size);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
             entity.isRunning = entity.program.isAlive();
         } else {
@@ -72,13 +78,21 @@ public class BlockRunner extends BlockEntity {
         };
 
         // ready to visit
-        semaphore = new Semaphore(0);
-        program = new Thread(() ->
-                new WenyanMainVisitor(WenyanPackages.blockEnvironment(holder), semaphore)
-                        .visit(WenyanVisitor.program(code)));
+        programSemaphore = new Semaphore(0);
+        entitySemaphore = new Semaphore(0);
+        program = new Thread(() -> {
+            new WenyanMainVisitor(WenyanPackages.blockEnvironment(holder), programSemaphore, entitySemaphore)
+                    .visit(WenyanVisitor.program(code));
+            entitySemaphore.release(100000);
+        });
         program.setUncaughtExceptionHandler(exceptionHandler);
         isRunning = true;
         program.start();
+        try {
+            entitySemaphore.acquire(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
