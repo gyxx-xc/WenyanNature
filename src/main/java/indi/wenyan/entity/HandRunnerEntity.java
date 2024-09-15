@@ -9,6 +9,8 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,13 +25,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.AccessFlag;
 import java.util.concurrent.Semaphore;
 
-public class HandRunnerEntity extends ThrowableProjectile {
+public class HandRunnerEntity extends Projectile {
     public Semaphore semaphore;
     public Thread program;
     public String code;
     public Player holder;
+    public boolean isRunning = false;
 
     public HandRunnerEntity(EntityType<HandRunnerEntity> entityType, Level level) {
         super(entityType, level);
@@ -41,26 +45,33 @@ public class HandRunnerEntity extends ThrowableProjectile {
         this.code = code;
         Vec3 lookDirection = Vec3.directionFromRotation(holder.getXRot(), holder.getYRot()).normalize().scale(0.5);
         this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));
-        this.shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.05F, 0.1F);
+        this.shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.1F, 10F);
+        addDeltaMovement(holder.getDeltaMovement());
     }
 
     @Override
     public void tick() {
-        if (getDeltaMovement().length() < 0.001)
-            setDeltaMovement(Vec3.ZERO);
-        else
-            setDeltaMovement(getDeltaMovement().scale(0.8));
-        super.tick();
+        if (!isRunning) {
+            if (getDeltaMovement().length() < 0.01) {
+                setDeltaMovement(Vec3.ZERO);
+                run();
+            } else {
+                setDeltaMovement(getDeltaMovement().scale(0.5));
+            }
+        }
+        checkInsideBlocks();
+        updateRotation();
+        setPos(position().add(getDeltaMovement()));
         if (!this.level().isClientSide() && semaphore != null) {
             semaphore.release(1);
             if (!program.isAlive())
-                this.remove(RemovalReason.DISCARDED);
+                discard();
         }
+        super.tick();
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
     }
 
     @Override
@@ -70,8 +81,7 @@ public class HandRunnerEntity extends ThrowableProjectile {
         super.remove(reason);
     }
 
-    @Override
-    public void onAddedToLevel() {
+    public void run() {
         if (!this.level().isClientSide()) {
             Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
                 if (e instanceof WenyanException) {
@@ -89,7 +99,7 @@ public class HandRunnerEntity extends ThrowableProjectile {
             program.setUncaughtExceptionHandler(exceptionHandler);
             program.start();
         }
-        super.onAddedToLevel();
+        isRunning = true;
     }
 
     @Override

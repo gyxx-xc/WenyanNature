@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BulletEntity extends Projectile {
     private int aliveTime;
-    private int tickCount = 0;
+    private int tickCount;
 
     public BulletEntity(EntityType<BulletEntity> entityType, Level level) {
         super(entityType, level);
@@ -23,6 +23,7 @@ public class BulletEntity extends Projectile {
 
     public BulletEntity(Level level, Vec3 pos, Vec3 direction, double speed, int aliveTime) {
         super(Registration.BULLET_ENTITY.get(), level);
+        tickCount = 0;
         this.aliveTime = aliveTime;
         this.moveTo(pos);
         this.shoot(direction.x, direction.y, direction.z, (float) speed, 0);
@@ -32,7 +33,9 @@ public class BulletEntity extends Projectile {
     public void tick() {
         if (!this.level().isClientSide())
             if (this.tickCount++ > aliveTime)
-                this.remove(RemovalReason.KILLED);
+                this.discard();
+        checkInsideBlocks();
+        updateRotation();
         setPos(position().add(getDeltaMovement()));
         super.tick();
     }

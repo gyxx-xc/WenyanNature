@@ -72,7 +72,7 @@ public class WenyanPackages {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
-                .function("「射」", new BulletHandler(holder.level(), runner), BulletHandler.ARGS_TYPE)
+                .function("「射」", new BulletHandler(runner.level(), runner.getPosition(0)), BulletHandler.ARGS_TYPE)
                 .build();
     }
 

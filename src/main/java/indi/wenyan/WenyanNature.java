@@ -10,10 +10,13 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
+import java.util.concurrent.Semaphore;
+
 @Mod(WenyanNature.MODID)
 public class WenyanNature {
     public static final String MODID = "wenyan_nature";
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Semaphore LEVEL_LOCK = new Semaphore(1);
 
     public WenyanNature(IEventBus modEventBus, ModContainer modContainer) {
         CommonSetup.setup(modEventBus);
