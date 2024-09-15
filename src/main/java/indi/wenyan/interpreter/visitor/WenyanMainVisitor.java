@@ -16,7 +16,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
 
     private void waitTick() {
         try {
-            semaphore.acquire(2);
+            semaphore.acquire(1);
         } catch (InterruptedException e) {
             throw new WenyanException("killed");
         }

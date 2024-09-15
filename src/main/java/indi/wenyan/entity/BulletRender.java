@@ -58,10 +58,8 @@ public class BulletRender extends EntityRenderer<BulletEntity> {
             float u, float v, int packedLight
     ) {
         consumer.addVertex(pose, x, y, 0.0F)
-                .setColor(255, 255, 255, 128)
-                .setUv(u, v)
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(packedLight)
+                .setColor(255, 255, 255, 128).setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight)
                 .setNormal(pose, 0.0F, 1.0F, 0.0F);
     }
 }
