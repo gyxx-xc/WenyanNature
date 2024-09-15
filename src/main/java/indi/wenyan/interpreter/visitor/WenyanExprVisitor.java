@@ -224,13 +224,14 @@ public class WenyanExprVisitor extends WenyanVisitor{
         for (WenyanRParser.DataContext d : ctx.args)
             args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment, semaphore).visit(d)));
 
-        WenyanFunctionEnvironment.FunctionSign sign =
-                ctx.key_function() != null ?
-                new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
-                (WenyanFunctionEnvironment.FunctionSign)
-                        (new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(0)).getValue());
         WenyanValue returnValue;
         try {
+            WenyanFunctionEnvironment.FunctionSign sign =
+                    ctx.key_function() != null ?
+                            new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
+                            (WenyanFunctionEnvironment.FunctionSign)
+                                    (new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data(0))
+                                            .casting(WenyanValue.Type.FUNCTION).getValue());
             returnValue = callFunction(sign, args.toArray(new WenyanValue[0]));
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
@@ -250,12 +251,13 @@ public class WenyanExprVisitor extends WenyanVisitor{
         ArrayList<WenyanValue> args = new ArrayList<>();
         for (int i = 0; i < n; i ++) args.addFirst(WenyanValue.constOf(functionEnvironment.resultStack.pop()));
 
+        try {
         WenyanFunctionEnvironment.FunctionSign sign =
                 ctx.key_function() != null ?
                         new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
                         (WenyanFunctionEnvironment.FunctionSign)
-                                (new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data()).getValue());
-        try {
+                                (new WenyanDataVisitor(functionEnvironment, semaphore).visit(ctx.data())
+                                        .casting(WenyanValue.Type.FUNCTION).getValue());
             return functionEnvironment.resultStack.push(callFunction(sign, args.toArray(new WenyanValue[0])));
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
