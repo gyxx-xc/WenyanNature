@@ -68,6 +68,36 @@ public class WenyanPackages {
             })
             .build();
 
+    public static final WenyanFunctionEnvironment MATH_PACKAGES = WenyanPackageBuilder.create()
+            .constant("「圓周率」", WenyanValue.Type.DOUBLE, Math.PI)
+            .constant("「倍圓周率」", WenyanValue.Type.DOUBLE, Math.TAU)
+            .constant("「半圓周率」", WenyanValue.Type.DOUBLE, Math.PI / 2)
+            .constant("「四分圓周率」", WenyanValue.Type.DOUBLE, Math.PI / 4)
+            .constant("「自然常數」", WenyanValue.Type.DOUBLE, Math.E)
+            .constant("「歐拉常數」", WenyanValue.Type.DOUBLE, 0.5772156649)
+            .constant("「黃金分割數」", WenyanValue.Type.DOUBLE, 1.6180339887)
+            .constant("「二之平方根」", WenyanValue.Type.DOUBLE, Math.sqrt(2))
+            .constant("「二之對數」", WenyanValue.Type.DOUBLE, Math.log(2))
+            .constant("「十之對數」", WenyanValue.Type.DOUBLE, Math.log(10))
+            .function("「正弦」", args -> Math.sin((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「餘弦」", args -> Math.cos((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「反正弦」", args -> Math.asin((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「反餘弦」", args -> Math.acos((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「正切」", args -> Math.tan((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「反正切」", args -> Math.atan((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「勾股求角」", args -> Math.atan2((double)args[0], (double)args[1]), WenyanValue.Type.DOUBLE)
+            .function("「勾股求弦」", args -> Math.hypot((double)args[0], (double)args[1]), WenyanValue.Type.DOUBLE)
+            .function("「對數」", args -> Math.log((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「指數」", args -> Math.exp((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「冪」", args -> Math.pow((double)args[0], (double)args[1]), WenyanValue.Type.DOUBLE)
+            .function("「平方根」", args -> Math.sqrt((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「絕對」", args -> Math.abs((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「取頂」", args -> Math.ceil((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「取底」", args -> Math.floor((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「取整」", args -> Math.round((double)args[0]), WenyanValue.Type.DOUBLE)
+            .function("「正負」", args -> Math.signum((double)args[0]), WenyanValue.Type.DOUBLE)
+            .build();
+
     public static WenyanFunctionEnvironment handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
@@ -83,5 +113,7 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static final Map<String, WenyanFunctionEnvironment> PACKAGES = new HashMap<>();
+    public static final Map<String, WenyanFunctionEnvironment> PACKAGES = new HashMap<>(){{
+        put("「「算經」」", MATH_PACKAGES);
+    }};
 }

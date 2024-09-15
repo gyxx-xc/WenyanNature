@@ -25,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.PrintWriter;
 import java.lang.reflect.AccessFlag;
 import java.util.concurrent.Semaphore;
 
@@ -89,6 +90,7 @@ public class HandRunnerEntity extends Projectile {
                 } else {
                     holder.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
                     WenyanNature.LOGGER.info("Error: {}", e.getMessage());
+                    e.printStackTrace((PrintWriter) WenyanNature.LOGGER);
                 }
             };
             // ready to visit
