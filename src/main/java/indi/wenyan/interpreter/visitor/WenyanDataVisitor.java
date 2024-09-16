@@ -39,7 +39,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         WenyanValue value = this.functionEnvironment.resultStack.peek();
         if (value == null)
             throw new WenyanException(Component.translatable("error.wenyan_nature.last_result_is_null").getString(), ctx);
-        functionEnvironment.resultStack.empty();
+        functionEnvironment.resultStack.pop();
         return value;
     }
 
