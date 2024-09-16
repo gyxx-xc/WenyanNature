@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.entity.HandRunnerEntity;
 import indi.wenyan.handler.BulletHandler;
+import indi.wenyan.handler.MoveHandler;
 import indi.wenyan.handler.OutputHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -102,7 +103,8 @@ public class WenyanPackages {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
-                .function("「射」", new BulletHandler(runner.level(), runner.getPosition(0)), BulletHandler.ARGS_TYPE)
+                .function("「射」", new BulletHandler(runner.level(), runner), BulletHandler.ARGS_TYPE)
+                .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .build();
     }
 

@@ -25,4 +25,11 @@ public class JavacallHandler extends WenyanRParser.Function_define_statementCont
     public WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException {
         return function.apply(args);
     }
+
+    protected static Object[] getArgs(WenyanValue[] args, WenyanValue.Type[] args_type) throws WenyanException.WenyanTypeException {
+        Object[] newArgs = new Object[args.length];
+        for (int i = 0; i < args.length; i++)
+            newArgs[i] = args[i].casting(args_type[i]).getValue();
+        return newArgs;
+    }
 }

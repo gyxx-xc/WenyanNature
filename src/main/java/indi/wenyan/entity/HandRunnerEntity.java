@@ -72,7 +72,7 @@ public class HandRunnerEntity extends Projectile {
             else {
                 if (!program.isAlive())
                     discard();
-                int size = 10;
+                int size = 100;
                 programSemaphore.release(size);
                 try {
                     entitySemaphore.acquire(size);
