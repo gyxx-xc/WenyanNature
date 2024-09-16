@@ -16,7 +16,6 @@ import java.util.concurrent.Semaphore;
 public class WenyanNature {
     public static final String MODID = "wenyan_nature";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final Semaphore LEVEL_LOCK = new Semaphore(1);
 
     public WenyanNature(IEventBus modEventBus, ModContainer modContainer) {
         CommonSetup.setup(modEventBus);

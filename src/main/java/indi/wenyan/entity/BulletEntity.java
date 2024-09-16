@@ -55,4 +55,8 @@ public class BulletEntity extends Projectile {
         return true;
     }
 
+    @Override
+    public boolean canUsePortal(boolean allowPassengers) {
+        return false;
+    }
 }

@@ -65,15 +65,20 @@ public class HandRunnerEntity extends Projectile {
         checkInsideBlocks();
         updateRotation();
         setPos(position().add(getDeltaMovement()));
-        if (!this.level().isClientSide() && program != null) {
-            if (!program.isAlive())
+        if (!this.level().isClientSide() && isRunning) {
+            if (program == null) {
                 discard();
-            int size = 100;
-            programSemaphore.release(size);
-            try {
-                entitySemaphore.acquire(size);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            }
+            else {
+                if (!program.isAlive())
+                    discard();
+                int size = 10;
+                programSemaphore.release(size);
+                try {
+                    entitySemaphore.acquire(size);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         super.tick();
@@ -85,7 +90,7 @@ public class HandRunnerEntity extends Projectile {
 
     @Override
     public void remove(@NotNull RemovalReason reason) {
-        if (reason.shouldDestroy() && program != null && program.isAlive())
+        if (reason.shouldDestroy() && program != null)
             program.interrupt();
         super.remove(reason);
     }
@@ -93,6 +98,7 @@ public class HandRunnerEntity extends Projectile {
     public void run() {
         if (!this.level().isClientSide()) {
             Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
+                entitySemaphore.release(100000);
                 if (e instanceof WenyanException) {
                     holder.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
                 } else {
@@ -110,11 +116,12 @@ public class HandRunnerEntity extends Projectile {
                 entitySemaphore.release(100000);});
             program.setUncaughtExceptionHandler(exceptionHandler);
             program.start();
-            try {
-                entitySemaphore.acquire(1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            if (program.isAlive())
+                try {
+                    entitySemaphore.acquire(1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
         }
         isRunning = true;
     }
@@ -129,4 +136,15 @@ public class HandRunnerEntity extends Projectile {
         return false;
     }
 
+    @Override
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        compound.putBoolean("isRunning", isRunning);
+        super.addAdditionalSaveData(compound);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        isRunning = compound.getBoolean("isRunning");
+        super.readAdditionalSaveData(compound);
+    }
 }
