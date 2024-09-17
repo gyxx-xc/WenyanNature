@@ -2,6 +2,8 @@ package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
 import indi.wenyan.WenyanNature;
+import indi.wenyan.block.CraftingBlock;
+import indi.wenyan.block.CraftingBlockEntity;
 import indi.wenyan.block.RunnerBlock;
 import indi.wenyan.entity.BulletEntity;
 import indi.wenyan.entity.HandRunnerEntity;
@@ -15,10 +17,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.CrafterBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
@@ -78,11 +83,24 @@ public class Registration {
                             .of(HandlerEntity::new, MobCategory.MISC)
                             .build("handler_entity"));
 
+    public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_ENTITY =
+            BLOCK_ENTITY.register("crafting_block",
+                    () -> BlockEntityType.Builder
+                            .of(CraftingBlockEntity::new, RUNNER_BLOCK.get())
+                            .build(DSL.remainderType()));
+    public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK = BLOCKS.register("crafting_block",
+            () -> new CraftingBlock(BlockBehaviour.Properties.of()));
+    public static final DeferredItem<Item> CRAFTING_BLOCK_ITEM =
+            ITEMS.registerItem("crafting_block", (p) -> new BlockItem(CRAFTING_BLOCK.get(), p));
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
-            .title(Component.translatable("title.wenyan_nature.create_tab")) //The language key for the title of your CreativeModeTab
+            .title(Component.translatable("title.wenyan_nature.create_tab")) // The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.get().getDefaultInstance())
-            .displayItems((parameters, output) -> output.accept(HAND_RUNNER.get())).build());
+            .displayItems((parameters, output) -> {
+                        output.accept(HAND_RUNNER.get());
+                        output.accept(CRAFTING_BLOCK_ITEM.get());
+                    }).build());
 
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)

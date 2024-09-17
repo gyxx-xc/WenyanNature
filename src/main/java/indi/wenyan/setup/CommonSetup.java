@@ -4,14 +4,16 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 import static indi.wenyan.WenyanNature.LOGGER;
 
 public class CommonSetup {
 
     public static void setup(IEventBus modEventBus) {
-        // Register the commonSetup method for modloading
         modEventBus.addListener(CommonSetup::commonSetup);
+        modEventBus.addListener(CommonSetup::registerCapabilities);
     }
 
     private static void commonSetup(final FMLCommonSetupEvent event) {
@@ -25,4 +27,10 @@ public class CommonSetup {
 
         Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
     }
+
+    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
+                Registration.CRAFTING_ENTITY.get(), (o, direction) -> o.getItemHandler());
+    }
+
 }
