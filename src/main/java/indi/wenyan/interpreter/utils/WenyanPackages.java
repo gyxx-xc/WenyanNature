@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.entity.HandRunnerEntity;
-import indi.wenyan.handler.*;
+import indi.wenyan.content.entity.HandRunnerEntity;
+import indi.wenyan.interpreter.handler.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

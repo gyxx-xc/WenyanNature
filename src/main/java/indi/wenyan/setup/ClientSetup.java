@@ -1,8 +1,8 @@
 package indi.wenyan.setup;
 
-import indi.wenyan.entity.BulletRender;
-import indi.wenyan.entity.HandRunnerRender;
-import indi.wenyan.entity.HandlerEntity;
+import indi.wenyan.content.entity.BulletRender;
+import indi.wenyan.content.entity.HandRunnerRender;
+import indi.wenyan.content.entity.HandlerEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
