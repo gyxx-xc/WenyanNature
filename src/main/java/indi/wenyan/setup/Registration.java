@@ -9,7 +9,6 @@ import indi.wenyan.entity.BulletEntity;
 import indi.wenyan.entity.HandRunnerEntity;
 import indi.wenyan.entity.HandlerEntity;
 import indi.wenyan.item.WenyanHandRunner;
-import indi.wenyan.network.ProgramTextClientPayloadHandler;
 import indi.wenyan.network.ProgramTextServerPayloadHandler;
 import indi.wenyan.network.RunnerTextPacket;
 import indi.wenyan.block.BlockRunner;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
@@ -55,8 +53,7 @@ public class Registration {
     public static final DeferredRegister<EntityType<?>> ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
 
     public static final DeferredItem<Item> HAND_RUNNER = ITEMS.registerItem("hand_runner", WenyanHandRunner::new);
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK = BLOCKS.register("runner_block",
-            () -> new RunnerBlock(RunnerBlock.PROPERTIES));
+    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK = BLOCKS.register("runner_block", RunnerBlock::new);
     public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER =
             BLOCK_ENTITY.register("block_runner",
             () -> BlockEntityType.Builder
@@ -82,15 +79,14 @@ public class Registration {
                             .of(HandlerEntity::new, MobCategory.MISC)
                             .build("handler_entity"));
 
+    public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
+    public static final DeferredItem<Item> CRAFTING_BLOCK_ITEM =
+            ITEMS.registerItem("crafting_block", (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
     public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_ENTITY =
             BLOCK_ENTITY.register("crafting_block",
                     () -> BlockEntityType.Builder
-                            .of(CraftingBlockEntity::new, RUNNER_BLOCK.get())
+                            .of(CraftingBlockEntity::new, CRAFTING_BLOCK.get())
                             .build(DSL.remainderType()));
-    public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK = BLOCKS.register("crafting_block",
-            () -> new CraftingBlock(BlockBehaviour.Properties.of()));
-    public static final DeferredItem<Item> CRAFTING_BLOCK_ITEM =
-            ITEMS.registerItem("crafting_block", (p) -> new BlockItem(CRAFTING_BLOCK.get(), p));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
             .title(Component.translatable("title.wenyan_nature.create_tab")) // The language key for the title of your CreativeModeTab
@@ -109,7 +105,7 @@ public class Registration {
                 RunnerTextPacket.TYPE,
                 RunnerTextPacket.STREAM_CODEC,
                 new DirectionalPayloadHandler<>(
-                        ProgramTextClientPayloadHandler::handleRunnerTextPacket,
+                        (a1, a2)->{},
                         ProgramTextServerPayloadHandler::handleRunnerTextPacket));
     }
 }

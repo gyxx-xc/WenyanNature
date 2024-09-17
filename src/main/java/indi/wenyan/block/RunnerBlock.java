@@ -31,7 +31,7 @@ import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
-    public static final MapCodec<RunnerBlock> CODEC = simpleCodec(RunnerBlock::new);
+    public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
     public static final Properties PROPERTIES;
     public static final VoxelShape FLOOR_NORTH_AABB;
     public static final VoxelShape FLOOR_SOUTH_AABB;
@@ -75,8 +75,8 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
         return CODEC;
     }
 
-    public RunnerBlock(Properties properties) {
-        super(properties);
+    public RunnerBlock() {
+        super(PROPERTIES);
     }
 
     @Override

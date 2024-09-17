@@ -2,8 +2,9 @@ package indi.wenyan.interpreter.utils;
 
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class WenyanPackageBuilder {
-    private final WenyanFunctionEnvironment environment = new WenyanFunctionEnvironment();
+    private final WenyanFunctionEnvironment environment = new WenyanFunctionEnvironment(null);
 
     public static WenyanPackageBuilder create() {
         return new WenyanPackageBuilder();

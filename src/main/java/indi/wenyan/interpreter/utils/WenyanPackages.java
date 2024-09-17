@@ -116,7 +116,7 @@ public class WenyanPackages {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
-                .function("「触」", new TouchHandler(holder.level(), pos, holder), TouchHandler.ARGS_TYPE)
+                .function("「触」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()
                         ,pos))

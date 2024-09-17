@@ -26,14 +26,11 @@ public class ChineseLanguageProvider extends LanguageProvider {
         this.add("type.wenyan_nature.function", "術");
         this.add("type.wenyan_nature.object", "物");
 
-        //WenyanDataPhaser
         this.add("error.wenyan_nature.invalid_float_number", "謬：非有效浮點數");
         this.add("error.wenyan_nature.invalid_bool_value", "謬：非有效布爾值");
         this.add("error.wenyan_nature.invalid_data_type", "謬：非有效數據型別");
         this.add("error.wenyan_nature.unexpected_character", "謬：有意外之字元");
         this.add("error.wenyan_nature.number_of_arguments_does_not_match", "謬：參數數目不合");
         this.add("error.wenyan_nature.cannot_create_empty_of_null", "謬：不能創造空或虛無");
-
-
     }
 }

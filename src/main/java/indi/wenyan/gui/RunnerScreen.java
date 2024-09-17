@@ -156,6 +156,7 @@ public abstract class RunnerScreen extends Screen {
         }
     }
 
+    @SuppressWarnings("unused")
     protected boolean bookKeyPressed(int keyCode, int scanCode, int modifiers) {
         if (Screen.isSelectAll(keyCode)) {
             this.pageEdit.selectAll();

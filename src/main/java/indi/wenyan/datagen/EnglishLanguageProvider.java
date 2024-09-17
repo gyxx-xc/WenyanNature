@@ -22,7 +22,15 @@ public class EnglishLanguageProvider extends LanguageProvider {
         this.add("error.wenyan_nature.last_result_is_null","謬：末次結果為空");
         this.add("error.wenyan_nature.variable_not_found:_","謬：變數未尋得");
         this.add("error.wenyan_nature.not_implemented","謬：尚未實行");
+        this.add("type.wenyan_nature.null", "空無");
+        this.add("type.wenyan_nature.function", "術");
+        this.add("type.wenyan_nature.object", "物");
 
-        this.add("title.wenyan_nature.create_tab","吾有一術");
+        this.add("error.wenyan_nature.invalid_float_number", "謬：非有效浮點數");
+        this.add("error.wenyan_nature.invalid_bool_value", "謬：非有效布爾值");
+        this.add("error.wenyan_nature.invalid_data_type", "謬：非有效數據型別");
+        this.add("error.wenyan_nature.unexpected_character", "謬：有意外之字元");
+        this.add("error.wenyan_nature.number_of_arguments_does_not_match", "謬：參數數目不合");
+        this.add("error.wenyan_nature.cannot_create_empty_of_null", "謬：不能創造空或虛無");
     }
 }
