@@ -117,9 +117,9 @@ public class WenyanPackages {
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
                 .function("「触」", new TouchHandler(holder.level(), pos, holder), TouchHandler.ARGS_TYPE)
-                .function("「放置」", new BlockPlaceHandler(holder.level(), holder,
-                        ((BlockItem) Items.ACACIA_LOG.asItem()).getBlock().defaultBlockState()
-                        ,pos, (BlockItem) Items.DIAMOND_BLOCK))
+                .function("「放置」", new BlockPlaceHandler(holder,
+                        (BlockItem) Items.ACACIA_LOG.asItem()
+                        ,pos))
                 .build();
     }
 
