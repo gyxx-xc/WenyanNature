@@ -1,11 +1,11 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.entity.HandRunnerEntity;
-import indi.wenyan.handler.BulletHandler;
-import indi.wenyan.handler.MoveHandler;
-import indi.wenyan.handler.OutputHandler;
+import indi.wenyan.handler.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +105,7 @@ public class WenyanPackages {
                 .function("書", new OutputHandler(holder))
                 .function("「射」", new BulletHandler(runner.level(), runner), BulletHandler.ARGS_TYPE)
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
+                .function("「爆」", new ExplosionHandler(runner, holder))
                 .build();
     }
 
