@@ -5,13 +5,10 @@ import indi.wenyan.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanValue;
-import indi.wenyan.setup.Registration;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 
 public class ThunderHandler extends JavacallHandler {
     public final HandRunnerEntity entity;
@@ -23,7 +20,7 @@ public class ThunderHandler extends JavacallHandler {
         this.holder = holder;
     }
     @Override
-    public WenyanValue handle(WenyanValue[] wenyan_args) throws WenyanException.WenyanTypeException {
+    public WenyanValue handle(WenyanValue[] wenyan_args) {
         HandlerEntity.levelRun(holder.level(), (level) -> {
             Entity e = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
             e.moveTo(entity.getX(), entity.getY(), entity.getZ());

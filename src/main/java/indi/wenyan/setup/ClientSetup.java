@@ -1,18 +1,11 @@
 package indi.wenyan.setup;
 
 import indi.wenyan.entity.BulletRender;
-import indi.wenyan.entity.HandRunnerModel;
 import indi.wenyan.entity.HandRunnerRender;
 import indi.wenyan.entity.HandlerEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.references.Blocks;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -32,11 +25,6 @@ public class ClientSetup {
         // Some client setup code
         LOGGER.info("HELLO FROM CLIENT SETUP");
         LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-    }
-
-    @SubscribeEvent
-    public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(HandRunnerModel.LAYER_LOCATION, HandRunnerModel::createBodyLayer);
     }
 
     @SubscribeEvent

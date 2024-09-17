@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class WenyanDataPhaser {
-    public static HashMap<String, Integer> DIGIT = new HashMap<>() {{
+    public static final HashMap<String, Integer> DIGIT = new HashMap<>() {{
         put("〇", 0);
         put("又", 0);
         put("零", 0);
@@ -21,7 +21,7 @@ public class WenyanDataPhaser {
         put("九", 9);
     }};
 
-    public static HashMap<String, Integer> EXP = new HashMap<>() {{
+    public static final HashMap<String, Integer> EXP = new HashMap<>() {{
         put("十", 1);
         put("百", 2);
         put("千", 3);
@@ -39,15 +39,15 @@ public class WenyanDataPhaser {
         put("極", 48);
     }};
 
-    public static HashSet<String> SIGN = new HashSet<>() {{
+    public static final HashSet<String> SIGN = new HashSet<>() {{
         add("負");
     }};
 
-    public static HashSet<String> FLOAT_DIVISION = new HashSet<>() {{
+    public static final HashSet<String> FLOAT_DIVISION = new HashSet<>() {{
         add("又");
     }};
 
-    public static HashMap<String, Integer> FLOAT_EXP = new HashMap<>() {{
+    public static final HashMap<String, Integer> FLOAT_EXP = new HashMap<>() {{
         put("分", -1);
         put("釐", -2);
         put("毫", -3);
@@ -184,8 +184,8 @@ public class WenyanDataPhaser {
     }
 
     private static class Num {
-        String num;
-        int exp;
+        final String num;
+        final int exp;
 
         Num(String num, int exp) {
             this.num = num;

@@ -4,7 +4,6 @@ import indi.wenyan.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanValue;
-import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
@@ -13,7 +12,6 @@ import net.minecraft.world.level.Level;
 public class TouchHandler extends JavacallHandler {
     public final Level level;
     public final BlockPos pos;
-    public final Player holder;
 
     public static final WenyanValue.Type[] ARGS_TYPE =
             {WenyanValue.Type.INT, WenyanValue.Type.INT, WenyanValue.Type.INT};
@@ -22,7 +20,6 @@ public class TouchHandler extends JavacallHandler {
         super();
         this.level = level;
         this.pos = pos;
-        this.holder = holder;
     }
 
     @Override

@@ -13,7 +13,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -27,8 +26,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class CraftingBlockEntity extends BlockEntity {
     public static final String ITEMS_TAG = "Inventory";
-    public static int SLOT_COUNT = 1;
-    public static int SLOT = 0;
+    public static final int SLOT_COUNT = 1;
+    public static final int SLOT = 0;
 
     private final ItemStackHandler items = createItemHandler();
     private final Lazy<IItemHandler> itemHandler = Lazy.of(() -> items);

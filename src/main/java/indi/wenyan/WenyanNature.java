@@ -10,8 +10,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
-import java.util.concurrent.Semaphore;
-
 @Mod(WenyanNature.MODID)
 public class WenyanNature {
     public static final String MODID = "wenyan_nature";

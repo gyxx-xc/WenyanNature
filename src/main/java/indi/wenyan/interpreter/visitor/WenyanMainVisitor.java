@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.visitor;
 
-import com.sun.jna.platform.win32.OaIdl;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;

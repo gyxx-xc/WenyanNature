@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class RunnerScreen extends Screen {
-    protected boolean isModified;
     protected final List<String> pages = Lists.newArrayList();
     protected int currentPage;
 
@@ -128,7 +127,6 @@ public abstract class RunnerScreen extends Screen {
     private void appendPageToBook() {
         if (this.getNumPages() < 100) {
             this.pages.add("");
-            this.isModified = true;
         }
     }
 
@@ -314,7 +312,6 @@ public abstract class RunnerScreen extends Screen {
     private void setCurrentPageText(String text) {
         if (this.currentPage >= 0 && this.currentPage < this.pages.size()) {
             this.pages.set(this.currentPage, text);
-            this.isModified = true;
             this.clearDisplayCache();
         }
     }

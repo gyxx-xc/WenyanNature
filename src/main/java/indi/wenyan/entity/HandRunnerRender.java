@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
     public HandRunnerRender(EntityRendererProvider.Context context) {
@@ -17,13 +18,13 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(HandRunnerEntity handRunnerEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull HandRunnerEntity handRunnerEntity) {
         return null;
     }
 
     @Override
-    public void render(HandRunnerEntity entityIn, float entityYaw, float partialTicks,
-                       PoseStack poseStackIn, MultiBufferSource bufferSourceIn, int packedLightIn) {
+    public void render(@NotNull HandRunnerEntity entityIn, float entityYaw, float partialTicks,
+                       @NotNull PoseStack poseStackIn, @NotNull MultiBufferSource bufferSourceIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, poseStackIn, bufferSourceIn, packedLightIn);
         poseStackIn.pushPose();
         poseStackIn.translate(0, 0.5, 0);

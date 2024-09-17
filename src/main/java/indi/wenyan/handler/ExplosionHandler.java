@@ -5,8 +5,6 @@ import indi.wenyan.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanValue;
-import indi.wenyan.setup.Registration;
-import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 

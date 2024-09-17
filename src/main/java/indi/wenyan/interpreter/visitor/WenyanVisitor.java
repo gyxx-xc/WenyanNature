@@ -12,9 +12,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import java.util.concurrent.Semaphore;
 
 public abstract class WenyanVisitor extends WenyanRBaseVisitor<WenyanValue> {
-    protected Semaphore entitySemaphore;
-    protected Semaphore programSemaphore;
-    protected WenyanFunctionEnvironment functionEnvironment;
+    protected final Semaphore entitySemaphore;
+    protected final Semaphore programSemaphore;
+    protected final WenyanFunctionEnvironment functionEnvironment;
 
     public WenyanVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
         this.functionEnvironment = functionEnvironment;

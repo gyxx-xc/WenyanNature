@@ -1,6 +1,5 @@
 package indi.wenyan.block;
 
-import com.sun.jna.platform.win32.OaIdl;
 import indi.wenyan.WenyanNature;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -45,6 +44,7 @@ public class BlockRunner extends BlockEntity {
         isRunning = false;
     }
 
+    @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, BlockRunner entity) {
         if (entity.isRunning) {
             assert entity.program != null;

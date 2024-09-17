@@ -130,9 +130,9 @@ public class WenyanControlVisitor extends WenyanVisitor{
     }
 
     private static class IfExprVisitor extends WenyanRBaseVisitor<Boolean> {
-        protected WenyanFunctionEnvironment functionEnvironment;
-        protected Semaphore entitySemaphore;
-        protected Semaphore programSemaphore;
+        protected final WenyanFunctionEnvironment functionEnvironment;
+        protected final Semaphore entitySemaphore;
+        protected final Semaphore programSemaphore;
 
         public IfExprVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
             this.functionEnvironment = functionEnvironment;
@@ -186,7 +186,7 @@ public class WenyanControlVisitor extends WenyanVisitor{
     }
 
     public static class ReturnException extends RuntimeException {
-        public WenyanValue value;
+        public final WenyanValue value;
 
         public ReturnException(WenyanValue value) {
             super("return");

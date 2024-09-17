@@ -7,7 +7,6 @@ import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import indi.wenyan.setup.Registration;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -23,7 +22,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.concurrent.Semaphore;
 
 public class HandRunnerEntity extends Projectile {
