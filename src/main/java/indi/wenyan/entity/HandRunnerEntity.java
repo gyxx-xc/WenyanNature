@@ -7,27 +7,23 @@ import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import indi.wenyan.setup.Registration;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.entity.projectile.ThrowableProjectile;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
-import java.lang.reflect.AccessFlag;
+import java.util.Iterator;
 import java.util.concurrent.Semaphore;
 
 public class HandRunnerEntity extends Projectile {
@@ -54,17 +50,6 @@ public class HandRunnerEntity extends Projectile {
 
     @Override
     public void tick() {
-        if (!isRunning) {
-            if (getDeltaMovement().length() < 0.01) {
-                setDeltaMovement(Vec3.ZERO);
-                run();
-            } else {
-                setDeltaMovement(getDeltaMovement().scale(0.5));
-            }
-        }
-        checkInsideBlocks();
-        updateRotation();
-        setPos(position().add(getDeltaMovement()));
         if (!this.level().isClientSide() && isRunning) {
             if (program == null) {
                 discard();
@@ -81,18 +66,21 @@ public class HandRunnerEntity extends Projectile {
                 }
             }
         }
+        if (!isRunning) {
+            if (getDeltaMovement().length() < 0.01) {
+                setDeltaMovement(Vec3.ZERO);
+                run();
+            } else {
+                setDeltaMovement(getDeltaMovement().scale(0.5));
+            }
+        } else {
+            setDeltaMovement(getDeltaMovement().length() < 0.01 ? Vec3.ZERO : getDeltaMovement().scale(0.95));
+        }
+        checkInsideBlocks();
+        updateRotation();
+        setPos(position().add(getDeltaMovement()));
+
         super.tick();
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-    }
-
-    @Override
-    public void remove(@NotNull RemovalReason reason) {
-        if (reason.shouldDestroy() && program != null)
-            program.interrupt();
-        super.remove(reason);
     }
 
     public void run() {
@@ -124,6 +112,38 @@ public class HandRunnerEntity extends Projectile {
                 }
         }
         isRunning = true;
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason reason) {
+        if (reason.shouldDestroy() && program != null)
+            program.interrupt();
+        super.remove(reason);
+    }
+
+    @Override
+    protected void onInsideBlock(@NotNull BlockState blockstate) {
+        if (!blockstate.isAir()) {
+            VoxelShape voxelshape = blockstate.getCollisionShape(level(), blockPosition());
+            if (!voxelshape.isEmpty()) {
+                for (AABB aabb : voxelshape.toAabbs()) {
+                    if (aabb.move(blockPosition()).contains(position())) {
+                        setDeltaMovement(Vec3.ZERO);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    }
+
+    @Override
+    public boolean ignoreExplosion(@NotNull Explosion explosion) {
+        return true;
     }
 
     @Override

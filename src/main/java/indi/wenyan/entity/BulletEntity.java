@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,12 @@ public class BulletEntity extends Projectile {
         updateRotation();
         setPos(position().add(getDeltaMovement()));
         super.tick();
+    }
+
+    @Override
+    protected void onInsideBlock(BlockState state) {
+        if (state.isCollisionShapeFullBlock(level(), blockPosition()))
+            this.discard();
     }
 
     @Override
