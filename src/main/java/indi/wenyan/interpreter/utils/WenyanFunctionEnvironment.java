@@ -20,10 +20,6 @@ public class WenyanFunctionEnvironment {
         this.resultStack = new Stack<>();
     }
 
-    public WenyanFunctionEnvironment() {
-        this(null);
-    }
-
     public WenyanValue getVariable(String id) throws WenyanException.WenyanVarException {
         if (variables.containsKey(id)) {
             return variables.get(id);

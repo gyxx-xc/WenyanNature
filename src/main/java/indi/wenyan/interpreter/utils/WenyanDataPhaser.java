@@ -183,28 +183,21 @@ public class WenyanDataPhaser {
         }
     }
 
-    private static class Num {
-        final String num;
-        final int exp;
-
-        Num(String num, int exp) {
-            this.num = num;
-            this.exp = exp;
-        }
+    private record Num(String num, int exp) {
 
         Num add(Num other) throws WenyanException.WenyanNumberException {
-            if (exp - other.exp < other.num.length())
-                throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_number").getString());
-            return new Num(
-                    num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
-                    other.exp);
-        }
+                if (exp - other.exp < other.num.length())
+                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_number").getString());
+                return new Num(
+                        num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
+                        other.exp);
+            }
 
-        Num shift(int exp) {
-            if (num.equals("0"))
-                return this;
-            else
-                return new Num(this.num, this.exp + exp);
+            Num shift(int exp) {
+                if (num.equals("0"))
+                    return this;
+                else
+                    return new Num(this.num, this.exp + exp);
+            }
         }
-    }
 }
