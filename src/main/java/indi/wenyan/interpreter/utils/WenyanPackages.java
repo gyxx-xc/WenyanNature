@@ -106,6 +106,7 @@ public class WenyanPackages {
                 .function("「射」", new BulletHandler(runner.level(), runner), BulletHandler.ARGS_TYPE)
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
+                .function("「雷」", new ThunderHandler(runner, holder))
                 .build();
     }
 

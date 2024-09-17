@@ -28,6 +28,8 @@ public class JavacallHandler extends WenyanRParser.Function_define_statementCont
 
     protected static Object[] getArgs(WenyanValue[] args, WenyanValue.Type[] args_type) throws WenyanException.WenyanTypeException {
         Object[] newArgs = new Object[args.length];
+        if (args.length != args_type.length)
+            throw new WenyanException.WenyanTypeException("Argument length not match");
         for (int i = 0; i < args.length; i++)
             newArgs[i] = args[i].casting(args_type[i]).getValue();
         return newArgs;
