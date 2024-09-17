@@ -19,7 +19,7 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull HandRunnerEntity handRunnerEntity) {
-        return null;
+        return ResourceLocation.fromNamespaceAndPath("wenyan", "item/hand_runner");
     }
 
     @Override

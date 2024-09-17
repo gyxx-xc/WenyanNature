@@ -3,7 +3,6 @@ package indi.wenyan.handler;
 import indi.wenyan.entity.HandRunnerEntity;
 import indi.wenyan.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
-import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanValue;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
