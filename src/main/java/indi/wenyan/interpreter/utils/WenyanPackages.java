@@ -109,10 +109,11 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static WenyanFunctionEnvironment blockEnvironment(Player holder) {
+    public static WenyanFunctionEnvironment blockEnvironment(BlockPos pos, BlockState block, Player holder) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
+                .function("「触」", new TouchHandler(holder.level(), pos, holder), TouchHandler.ARGS_TYPE)
                 .build();
     }
 

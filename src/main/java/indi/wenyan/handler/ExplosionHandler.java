@@ -1,15 +1,21 @@
 package indi.wenyan.handler;
 
 import indi.wenyan.entity.HandRunnerEntity;
+import indi.wenyan.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.utils.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.setup.Registration;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class ExplosionHandler extends JavacallHandler {
     public final HandRunnerEntity entity;
     public final Player holder;
+
+    public static final WenyanValue.Type[] ARGS_TYPE =
+            {WenyanValue.Type.DOUBLE};
 
     public ExplosionHandler(HandRunnerEntity entity, Player holder) {
         super();
@@ -18,10 +24,13 @@ public class ExplosionHandler extends JavacallHandler {
     }
 
     @Override
-    public WenyanValue handle(WenyanValue[] args) {
-        PrimedTnt tnt = new PrimedTnt(entity.level(), entity.getX(), entity.getY(), entity.getZ(), holder);
-        tnt.setFuse(0);
-        entity.level().addFreshEntity(tnt);
+    public WenyanValue handle(WenyanValue[] wenyan_args) throws WenyanException.WenyanTypeException {
+        Object[] args = getArgs(wenyan_args, ARGS_TYPE);
+        HandlerEntity.levelRun(holder.level(), (level) -> {
+            if (!level.isClientSide())
+                level.explode(holder, entity.getX(), entity.getY(), entity.getZ(),
+                        (float) (double) args[0], Level.ExplosionInteraction.MOB);
+        });
         return null;
     }
 }

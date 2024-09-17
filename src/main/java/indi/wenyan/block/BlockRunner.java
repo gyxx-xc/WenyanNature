@@ -75,13 +75,14 @@ public class BlockRunner extends BlockEntity {
                 holder.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
                 WenyanNature.LOGGER.info("Error: {}", e.getMessage());
             }
+            entitySemaphore.release(100000);
         };
 
         // ready to visit
         programSemaphore = new Semaphore(0);
         entitySemaphore = new Semaphore(0);
         program = new Thread(() -> {
-            new WenyanMainVisitor(WenyanPackages.blockEnvironment(holder), programSemaphore, entitySemaphore)
+            new WenyanMainVisitor(WenyanPackages.blockEnvironment(getBlockPos(), getBlockState(), holder), programSemaphore, entitySemaphore)
                     .visit(WenyanVisitor.program(code));
             entitySemaphore.release(100000);
         });
@@ -117,6 +118,7 @@ public class BlockRunner extends BlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         pages = tag.getList("pages", Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
+        isRunning = false;
     }
 
     @Override

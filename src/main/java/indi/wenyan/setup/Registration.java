@@ -5,6 +5,7 @@ import indi.wenyan.WenyanNature;
 import indi.wenyan.block.RunnerBlock;
 import indi.wenyan.entity.BulletEntity;
 import indi.wenyan.entity.HandRunnerEntity;
+import indi.wenyan.entity.HandlerEntity;
 import indi.wenyan.item.WenyanHandRunner;
 import indi.wenyan.network.ProgramTextClientPayloadHandler;
 import indi.wenyan.network.ProgramTextServerPayloadHandler;
@@ -70,6 +71,12 @@ public class Registration {
                             .of((EntityType.EntityFactory<BulletEntity>) BulletEntity::new, MobCategory.MISC)
                             .sized(0.25f, 0.25f)
                             .build("bullet_entity"));
+
+    public static final Supplier<EntityType<HandlerEntity>> HANDLER_ENTITY =
+            ENTITY.register("handler_entity",
+                    () -> EntityType.Builder
+                            .of(HandlerEntity::new, MobCategory.MISC)
+                            .build("handler_entity"));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
             .title(Component.translatable("title.wenyan_nature.create_tab")) //The language key for the title of your CreativeModeTab
