@@ -24,6 +24,11 @@ public class WenyanPackageBuilder {
         return this;
     }
 
+    public WenyanPackageBuilder constant(String name, WenyanValue value) {
+        environment.setVariable(name, value);
+        return this;
+    }
+
     public WenyanPackageBuilder function(String name, Function<Object[], Object> function,
                                          WenyanValue.Type returnType, WenyanValue.Type[] argTypes) {
         return function(name, args -> {

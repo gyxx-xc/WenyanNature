@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class WenyanPackages {
     public static final WenyanFunctionEnvironment WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
@@ -120,6 +121,19 @@ public class WenyanPackages {
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()
                         ,pos))
+                .build();
+    }
+
+    public static WenyanFunctionEnvironment craftingEnvironment(CraftingAnswerChecker checker) {
+        return WenyanPackageBuilder.create()
+                .environment(WENYAN_BASIC_PACKAGES)
+                .environment(checker.inputEnvironment())
+                .function("書", args -> {
+                    checker.add(args);
+                    return null;
+                })
+                .function("「sha-256」", args ->
+                        new WenyanValue(WenyanValue.Type.INT, 1, true))
                 .build();
     }
 

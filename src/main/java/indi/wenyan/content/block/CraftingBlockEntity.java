@@ -1,9 +1,10 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.WenyanNature;
+import indi.wenyan.content.checker.EchoChecker;
+import indi.wenyan.content.checker.MiningChecker;
 import indi.wenyan.content.item.WenyanHandRunner;
-import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanPackages;
+import indi.wenyan.interpreter.utils.*;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import indi.wenyan.setup.Registration;
@@ -55,6 +56,7 @@ public class CraftingBlockEntity extends BlockEntity {
     private Semaphore programSemaphore;
     private Semaphore entitySemaphore;
     private Player holder;
+    private CraftingAnswerChecker checker;
 
     public int runStep = 0;
     public boolean isRunning = false;
@@ -93,8 +95,11 @@ public class CraftingBlockEntity extends BlockEntity {
                 }
                 // if isAlive, 11 -> 11
                 // else 11 -> 10
-                entity.isRunning = entity.program.isAlive();
             } else { // 10. crafting
+                if (entity.program != null) {
+                    entity.program.interrupt();
+                    entity.program = null;
+                }
                 if (entity.runStep >= 8) { // is crafting end?
                     Block.popResource(level, pos.relative(Direction.UP), new ItemStack(Items.DIAMOND)); //TODO
                     entity.endCrafting(); // 10 -> 00
@@ -106,11 +111,20 @@ public class CraftingBlockEntity extends BlockEntity {
     }
 
     public void run(Player holder) {
-        if (isRunning) return;
+        if (isRunning) {
+            endCrafting();
+            return;
+        }
         ItemStack item = runner.getStackInSlot(RUNNER_SLOT);
-        if (item.isEmpty()) return;
+        if (item.isEmpty()) {
+            endCrafting();
+            return;
+        }
         WritableBookContent writableBookContent = item.get(DataComponents.WRITABLE_BOOK_CONTENT);
-        if (writableBookContent == null) return;
+        if (writableBookContent == null) {
+            endCrafting();
+            return;
+        }
 
         Stream<String> pages = writableBookContent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
         String code = pages.collect(Collectors.joining());
@@ -120,19 +134,25 @@ public class CraftingBlockEntity extends BlockEntity {
             } else {
                 holder.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
                 WenyanNature.LOGGER.info("Error: {}", e.getMessage());
+                e.printStackTrace();
             }
-            entitySemaphore.release(100000);
+            isRunning = false;
             endCrafting();
+            entitySemaphore.release(100000);
         };
 
         // ready to visit
         programSemaphore = new Semaphore(0);
         entitySemaphore = new Semaphore(0);
+        assert level != null;
+        checker = new MiningChecker(level.random);
         program = new Thread(() -> {
-            new WenyanMainVisitor(WenyanPackages.WENYAN_BASIC_PACKAGES,
+            new WenyanMainVisitor(WenyanPackages.craftingEnvironment(checker),
                     programSemaphore, entitySemaphore)
                     .visit(WenyanVisitor.program(code));
             runStep ++;
+            isRunning = false;
+            if (!checker.check()) endCrafting();
             entitySemaphore.release(100000);
         });
         program.setUncaughtExceptionHandler(exceptionHandler);
@@ -153,6 +173,24 @@ public class CraftingBlockEntity extends BlockEntity {
 
     public ItemStack insertItem(ItemStack stack) {
         return runner.insertItem(RUNNER_SLOT, stack, false);
+    }
+
+    public void endCrafting() {
+        runStep = 0;
+        holder = null;
+        isCrafting = false;
+    }
+
+    public void setHolder(Player holder) {
+        this.holder = holder;
+    }
+
+    public IItemHandler getRunnerItemHandler() {
+        return runnerItemHandler.get();
+    }
+
+    public IItemHandler getItemHandler() {
+        return itemHandler.get();
     }
 
     @Nonnull
@@ -187,14 +225,6 @@ public class CraftingBlockEntity extends BlockEntity {
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
         };
-    }
-
-    public IItemHandler getRunnerItemHandler() {
-        return runnerItemHandler.get();
-    }
-
-    public IItemHandler getItemHandler() {
-        return itemHandler.get();
     }
 
     private void saveData(CompoundTag tag, HolderLookup.Provider registries) {
@@ -241,15 +271,5 @@ public class CraftingBlockEntity extends BlockEntity {
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         CompoundTag tag = pkt.getTag();
         loadData(tag, lookupProvider);
-    }
-
-    public void setHolder(Player holder) {
-        this.holder = holder;
-    }
-
-    public void endCrafting() {
-        runStep = 0;
-        holder = null;
-        isCrafting = false;
     }
 }
