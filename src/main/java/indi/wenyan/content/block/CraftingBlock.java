@@ -1,5 +1,6 @@
 package indi.wenyan.content.block;
 
+import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -9,6 +10,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +40,23 @@ public class CraftingBlock extends Block implements EntityBlock {
         if (player.isShiftKeyDown()) {
             entity.ejectItem();
         } else {
-            stack.setCount(entity.insertItem(stack).getCount());
+            if (!stack.isEmpty()) {
+                stack.setCount(entity.insertItem(stack).getCount());
+            } else {
+                entity.setHolder(player);
+                entity.isCrafting = true;
+            }
         }
         return ItemInteractionResult.SUCCESS;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T>
+    getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide() ? null : (type, pos, state1, entity) -> {
+            if (blockEntityType == Registration.CRAFTING_ENTITY.get())
+                CraftingBlockEntity.tick(level, pos, state1, (CraftingBlockEntity) entity);
+        };
     }
 }
