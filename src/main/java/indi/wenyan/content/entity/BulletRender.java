@@ -19,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class BulletRender extends EntityRenderer<BulletEntity> {
     private static final ResourceLocation TEXTURE_LOCATION =
-            ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "block/runner_block");
+            ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "textures/entity/bullet.png");
     private static final RenderType RENDER_TYPE =
             RenderType.entityTranslucent(TEXTURE_LOCATION);
 
@@ -34,17 +34,15 @@ public class BulletRender extends EntityRenderer<BulletEntity> {
 
     public void render(BulletEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
-        TextureAtlasSprite sprite =
-                Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(TEXTURE_LOCATION);
         poseStack.translate(0, 0.1, 0);
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         poseStack.scale(0.3F, 0.3F, 0.3F);
         VertexConsumer vertexconsumer = buffer.getBuffer(RENDER_TYPE);
         PoseStack.Pose posestack$pose = poseStack.last();
-        vertex(vertexconsumer, posestack$pose, -0.5F, -0.25F, sprite.getU0(), sprite.getV0(), packedLight);
-        vertex(vertexconsumer, posestack$pose, 0.5F, -0.25F, sprite.getU0(), sprite.getV1(), packedLight);
-        vertex(vertexconsumer, posestack$pose, 0.5F, 0.75F, sprite.getU1(), sprite.getV1(), packedLight);
-        vertex(vertexconsumer, posestack$pose, -0.5F, 0.75F, sprite.getU1(), sprite.getV0(), packedLight);
+        vertex(vertexconsumer, posestack$pose, -0.5F, -0.25F, 0, 0, packedLight);
+        vertex(vertexconsumer, posestack$pose, 0.5F, -0.25F, 0, 1, packedLight);
+        vertex(vertexconsumer, posestack$pose, 0.5F, 0.75F, 1, 1, packedLight);
+        vertex(vertexconsumer, posestack$pose, -0.5F, 0.75F, 1, 0, packedLight);
         poseStack.popPose();
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
     }

@@ -122,6 +122,7 @@ public class WenyanPackages {
                         (BlockItem) Items.ACACIA_LOG.asItem()
                         ,pos))
                 .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
+                .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
                 .build();
     }
 

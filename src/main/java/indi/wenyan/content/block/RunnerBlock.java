@@ -137,7 +137,7 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T>
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : (type, pos, state1, entity) -> {
+        return (type, pos, state1, entity) -> {
             if (blockEntityType == Registration.BLOCK_RUNNER.get())
                 BlockRunner.tick(level, pos, state1, (BlockRunner) entity);
         };

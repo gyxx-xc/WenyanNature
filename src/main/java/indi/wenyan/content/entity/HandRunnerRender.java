@@ -1,6 +1,7 @@
 package indi.wenyan.content.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import indi.wenyan.WenyanNature;
 import indi.wenyan.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,7 +20,7 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull HandRunnerEntity handRunnerEntity) {
-        return ResourceLocation.fromNamespaceAndPath("wenyan", "item/hand_runner");
+        return ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "item/hand_runner");
     }
 
     @Override
