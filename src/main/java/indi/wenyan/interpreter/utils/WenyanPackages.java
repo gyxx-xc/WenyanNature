@@ -121,6 +121,7 @@ public class WenyanPackages {
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()
                         ,pos))
+                .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
                 .build();
     }
 
@@ -132,8 +133,6 @@ public class WenyanPackages {
                     checker.add(args);
                     return null;
                 })
-                .function("「sha-256」", args ->
-                        new WenyanValue(WenyanValue.Type.INT, 1, true))
                 .build();
     }
 

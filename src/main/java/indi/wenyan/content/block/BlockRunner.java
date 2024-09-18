@@ -96,6 +96,14 @@ public class BlockRunner extends BlockEntity {
         }
     }
 
+    public void copy(BlockRunner other) {
+        this.pages = other.pages;
+        this.program = other.program;
+        this.programSemaphore = other.programSemaphore;
+        this.entitySemaphore = other.entitySemaphore;
+        this.isRunning = other.isRunning;
+    }
+
     @Override
     public void setChanged() {
         WritableBookContent content = components().get(DataComponents.WRITABLE_BOOK_CONTENT);
