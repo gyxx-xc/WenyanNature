@@ -23,6 +23,11 @@ public class BulletHandler extends JavacallHandler {
     @Override
     public WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanTypeException {
         Object[] newArgs = getArgs(args, ARGS_TYPE);
+        newArgs[0] = Math.max(-10, Math.min(10, (double) newArgs[0]));
+        newArgs[1] = Math.max(-10, Math.min(10, (double) newArgs[1]));
+        newArgs[2] = Math.max(-10, Math.min(10, (double) newArgs[2]));
+        newArgs[4] = Math.max(1, Math.min(200, (int) newArgs[4]));
+        newArgs[3] = Math.max(1, Math.min(20, (double) newArgs[3]));
         Vec3 dir = new Vec3((double)newArgs[0], (double)newArgs[1], (double)newArgs[2]);
         BulletEntity bullet = new BulletEntity(level, entity.getPosition(0), dir, (double) newArgs[3]/10, (int)newArgs[4]);
         level.addFreshEntity(bullet);

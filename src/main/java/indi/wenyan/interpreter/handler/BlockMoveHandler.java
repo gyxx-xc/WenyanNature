@@ -33,6 +33,9 @@ public class BlockMoveHandler extends JavacallHandler {
     @Override
     public WenyanValue handle(WenyanValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = getArgs(wenyan_args, ARGS_TYPE);
+        args[0] = Math.max(-10, Math.min(10, (int) args[0]));
+        args[1] = Math.max(-10, Math.min(10, (int) args[1]));
+        args[2] = Math.max(-10, Math.min(10, (int) args[2]));
         HandlerEntity.levelRun(holder.level(), level -> {
             if (!level.getBlockState(pos).is(Registration.RUNNER_BLOCK.get())) return;
             BlockPos newPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);

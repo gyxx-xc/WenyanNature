@@ -1,5 +1,6 @@
 package indi.wenyan.setup;
 
+import indi.wenyan.content.block.RunnerBlockRender;
 import indi.wenyan.content.entity.BulletRender;
 import indi.wenyan.content.entity.HandRunnerRender;
 import indi.wenyan.content.entity.HandlerEntity;
@@ -19,6 +20,7 @@ public class ClientSetup {
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
         event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
+        event.registerBlockEntityRenderer(Registration.BLOCK_RUNNER.get(), RunnerBlockRender::new);
         event.registerEntityRenderer(Registration.HANDLER_ENTITY.get(), context -> new EntityRenderer<>(context) {
             @Override
             public @NotNull ResourceLocation getTextureLocation(@NotNull HandlerEntity handlerEntity) {

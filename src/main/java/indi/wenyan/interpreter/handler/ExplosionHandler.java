@@ -24,6 +24,7 @@ public class ExplosionHandler extends JavacallHandler {
     @Override
     public WenyanValue handle(WenyanValue[] wenyan_args) throws WenyanException.WenyanTypeException {
         Object[] args = getArgs(wenyan_args, ARGS_TYPE);
+        args[0] = Math.max(1, Math.min(20, (double) args[0]));
         HandlerEntity.levelRun(holder.level(), (level) -> {
             if (!level.isClientSide())
                 level.explode(holder, entity.getX(), entity.getY(), entity.getZ(),
