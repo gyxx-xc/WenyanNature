@@ -140,7 +140,7 @@ public class BlockRunner extends BlockEntity {
     public void setChanged() {
         WritableBookContent content = components().get(DataComponents.WRITABLE_BOOK_CONTENT);
         if (content != null)
-            pages = content.getPages(Minecraft.getInstance().isTextFilteringEnabled()).toList();
+            pages = content.getPages(false).toList();
         super.setChanged();
     }
 

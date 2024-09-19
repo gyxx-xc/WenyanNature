@@ -14,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -25,6 +27,7 @@ public class WenyanHandRunner extends BlockItem {
         super(Registration.RUNNER_BLOCK.get(), properties);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public @NotNull InteractionResultHolder<ItemStack>
     use(Level level, Player player, @NotNull InteractionHand hand) {
@@ -39,7 +42,7 @@ public class WenyanHandRunner extends BlockItem {
         if (!player.isShiftKeyDown()){
             WritableBookContent writableBookContent = item.get(DataComponents.WRITABLE_BOOK_CONTENT);
             if (writableBookContent != null) {
-                Stream<String> pages = writableBookContent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
+                Stream<String> pages = writableBookContent.getPages(false);
                 String program = pages.collect(Collectors.joining("\n"));
                 HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player, program);
                 player.level().addFreshEntity(handRunnerEntity);

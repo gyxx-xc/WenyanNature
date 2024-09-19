@@ -66,7 +66,7 @@ public abstract class RunnerScreen extends Screen {
         super(GameNarrator.NO_TITLE);
         this.displayCache = RunnerScreen.DisplayCache.EMPTY;
         if (writableBookContent != null) writableBookContent.pages().forEach(
-                (f) -> this.pages.add(f.get(Minecraft.getInstance().isTextFilteringEnabled())));
+                (f) -> this.pages.add(f.get(false)));
         if (this.pages.isEmpty()) this.pages.add("");
     }
 

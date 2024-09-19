@@ -126,7 +126,7 @@ public class CraftingBlockEntity extends BlockEntity {
             return;
         }
 
-        Stream<String> pages = writableBookContent.getPages(Minecraft.getInstance().isTextFilteringEnabled());
+        Stream<String> pages = writableBookContent.getPages(false);
         String code = pages.collect(Collectors.joining());
         Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
             if (e instanceof WenyanException) {

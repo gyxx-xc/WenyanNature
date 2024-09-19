@@ -26,6 +26,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,10 +54,7 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
     @Override
     protected @NotNull InteractionResult
     useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (player.isShiftKeyDown()) {
-            if (level.isClientSide())
-                Minecraft.getInstance().setScreen(new BlockRunnerScreen((BlockRunner) level.getBlockEntity(pos)));
-        } else {
+        if (!player.isShiftKeyDown()) {
             if (!level.isClientSide()) {
                 BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
                 Objects.requireNonNull(runner).run(player);
@@ -64,10 +63,12 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
         return InteractionResult.SUCCESS;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (player.isShiftKeyDown()) {
-            useWithoutItem(state, level, pos, player, hitResult);
+            if (level.isClientSide())
+                Minecraft.getInstance().setScreen(new BlockRunnerScreen((BlockRunner) level.getBlockEntity(pos)));
             return ItemInteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
