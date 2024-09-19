@@ -13,6 +13,6 @@ public class ServerEvent {
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        LOGGER.info("CIALLO~ from server starting");
     }
 }
