@@ -92,10 +92,7 @@ public class Registration {
             .title(Component.translatable("title.wenyan_nature.create_tab")) // The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-                        output.accept(HAND_RUNNER.get());
-                        output.accept(CRAFTING_BLOCK_ITEM.get());
-                    }).build());
+            .displayItems((parameters, output) -> output.accept(HAND_RUNNER.get())).build());
 
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
