@@ -31,12 +31,13 @@ public class HandRunnerEntity extends Projectile {
     public String code;
     public Player holder;
     public boolean isRunning = false;
+    public int speed;
 
     public HandRunnerEntity(EntityType<HandRunnerEntity> entityType, Level level) {
         super(entityType, level);
     }
 
-    public HandRunnerEntity(@NotNull Player holder, String code) {
+    public HandRunnerEntity(@NotNull Player holder, String code, int level) {
         super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
         this.holder = holder;
         this.code = code;
@@ -44,6 +45,7 @@ public class HandRunnerEntity extends Projectile {
         this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));
         this.shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.1F, 10F);
         addDeltaMovement(holder.getDeltaMovement());
+        speed = (int) Math.pow(10, level);
     }
 
     @Override
@@ -55,10 +57,9 @@ public class HandRunnerEntity extends Projectile {
             else {
                 if (!program.isAlive())
                     discard();
-                int size = 100;
-                programSemaphore.release(size);
+                programSemaphore.release(speed);
                 try {
-                    entitySemaphore.acquire(size);
+                    entitySemaphore.acquire(speed);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

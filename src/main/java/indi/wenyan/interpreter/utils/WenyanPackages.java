@@ -106,6 +106,7 @@ public class WenyanPackages {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
+                .function("「」", args -> null)
                 .function("「射」", new BulletHandler(runner.level(), runner, holder), BulletHandler.ARGS_TYPE)
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
@@ -117,6 +118,7 @@ public class WenyanPackages {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
+                .function("「」", args -> null)
                 .function("「触」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()

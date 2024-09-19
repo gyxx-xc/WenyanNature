@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -40,6 +41,7 @@ public class BlockRunner extends BlockEntity {
     public Semaphore entitySemaphore;
     public Thread program;
     public List<String> pages;
+    public int speed;
     public Vec3 communicate;
     public boolean isCommunicating;
 
@@ -53,10 +55,9 @@ public class BlockRunner extends BlockEntity {
         if (!level.isClientSide){
             if (entity.isRunning) {
                 assert entity.program != null;
-                int size = 2;
-                entity.programSemaphore.release(size);
+                entity.programSemaphore.release(entity.speed);
                 try {
-                    entity.entitySemaphore.acquire(size);
+                    entity.entitySemaphore.acquire(entity.speed);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -123,6 +124,7 @@ public class BlockRunner extends BlockEntity {
         tag.putDouble("communicate_x", communicate != null ? communicate.x : 0.0);
         tag.putDouble("communicate_y", communicate != null ? communicate.y : 0.0);
         tag.putDouble("communicate_z", communicate != null ? communicate.z : 0.0);
+        tag.putInt("speed", speed);
     }
 
     private void loadData(CompoundTag tag, HolderLookup.Provider registries) {
@@ -134,6 +136,7 @@ public class BlockRunner extends BlockEntity {
         } else {
             isCommunicating = false;
         }
+        speed = tag.getInt("speed");
     }
 
     @Override
@@ -141,6 +144,8 @@ public class BlockRunner extends BlockEntity {
         WritableBookContent content = components().get(DataComponents.WRITABLE_BOOK_CONTENT);
         if (content != null)
             pages = content.getPages(false).toList();
+        Object o = components().get(DataComponents.DAMAGE);
+        if (o != null) speed = (int)Math.pow(10, Math.min((int) o, 3));
         super.setChanged();
     }
 

@@ -52,13 +52,21 @@ public class Registration {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
 
-    public static final DeferredItem<Item> HAND_RUNNER = ITEMS.registerItem("hand_runner", WenyanHandRunner::new);
+    public static final DeferredItem<Item> HAND_RUNNER = ITEMS.registerItem("hand_runner_0",
+            (Item.Properties properties) -> new WenyanHandRunner(properties, 0));
+    public static final DeferredItem<Item> HAND_RUNNER_1 = ITEMS.registerItem("hand_runner",
+            (Item.Properties properties) -> new WenyanHandRunner(properties, 1));
+    public static final DeferredItem<Item> HAND_RUNNER_2 = ITEMS.registerItem("hand_runner_2",
+            (Item.Properties properties) -> new WenyanHandRunner(properties, 2));
+    public static final DeferredItem<Item> HAND_RUNNER_3 = ITEMS.registerItem("hand_runner_3",
+            (Item.Properties properties) -> new WenyanHandRunner(properties, 3));
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK = BLOCKS.register("runner_block", RunnerBlock::new);
     public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER =
             BLOCK_ENTITY.register("block_runner",
             () -> BlockEntityType.Builder
                     .of(BlockRunner::new, RUNNER_BLOCK.get())
                     .build(DSL.remainderType()));
+
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY =
             ENTITY.register("hand_runner",
                     () -> EntityType.Builder
@@ -92,7 +100,12 @@ public class Registration {
             .title(Component.translatable("title.wenyan_nature.create_tab")) // The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.get().getDefaultInstance())
-            .displayItems((parameters, output) -> output.accept(HAND_RUNNER.get())).build());
+            .displayItems((parameters, output) -> {
+                output.accept(HAND_RUNNER.get());
+                output.accept(HAND_RUNNER_1.get());
+                output.accept(HAND_RUNNER_2.get());
+                output.accept(HAND_RUNNER_3.get());
+            }).build());
 
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)

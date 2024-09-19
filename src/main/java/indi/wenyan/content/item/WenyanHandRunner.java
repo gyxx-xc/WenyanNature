@@ -23,8 +23,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WenyanHandRunner extends BlockItem {
-    public WenyanHandRunner(Properties properties) {
+    public final int runningLevel;
+
+    public WenyanHandRunner(Properties properties, int runningLevel) {
         super(Registration.RUNNER_BLOCK.get(), properties);
+        this.runningLevel = runningLevel;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -44,7 +47,7 @@ public class WenyanHandRunner extends BlockItem {
             if (writableBookContent != null) {
                 Stream<String> pages = writableBookContent.getPages(false);
                 String program = pages.collect(Collectors.joining("\n"));
-                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player, program);
+                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player, program, runningLevel);
                 player.level().addFreshEntity(handRunnerEntity);
 
                 item.shrink(1);
@@ -57,8 +60,10 @@ public class WenyanHandRunner extends BlockItem {
 
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
-        if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown())
+        if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown()) {
+            context.getItemInHand().set(DataComponents.DAMAGE, runningLevel);
             return super.useOn(context);
+        }
         return InteractionResult.PASS;
     }
 }
