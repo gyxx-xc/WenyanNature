@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
         poseStackIn.translate(0, 0.5, 0);
         poseStackIn.scale(0.8F, 0.8F, 0.8F);
         Minecraft.getInstance().getItemRenderer().renderStatic(
-                new ItemStack(Registration.HAND_RUNNER.get()),
+                new ItemStack(Registration.HAND_RUNNER_1.get()),
                 ItemDisplayContext.FIXED,
                 packedLightIn,
                 OverlayTexture.NO_OVERLAY,

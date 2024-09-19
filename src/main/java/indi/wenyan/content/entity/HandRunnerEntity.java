@@ -41,11 +41,11 @@ public class HandRunnerEntity extends Projectile {
         super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
         this.holder = holder;
         this.code = code;
+        speed = (int) Math.pow(10, level);
         Vec3 lookDirection = Vec3.directionFromRotation(holder.getXRot(), holder.getYRot()).normalize().scale(0.5);
         this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));
         this.shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.1F, 10F);
         addDeltaMovement(holder.getDeltaMovement());
-        speed = (int) Math.pow(10, level);
     }
 
     @Override

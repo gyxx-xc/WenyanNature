@@ -13,6 +13,9 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         this.basicItem(Registration.HAND_RUNNER.get());
+        this.basicItem(Registration.HAND_RUNNER_1.get());
+        this.basicItem(Registration.HAND_RUNNER_2.get());
+        this.basicItem(Registration.HAND_RUNNER_3.get());
     }
 
 }

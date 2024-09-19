@@ -99,7 +99,7 @@ public class Registration {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
             .title(Component.translatable("title.wenyan_nature.create_tab")) // The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> HAND_RUNNER.get().getDefaultInstance())
+            .icon(() -> HAND_RUNNER_1.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(HAND_RUNNER.get());
                 output.accept(HAND_RUNNER_1.get());
