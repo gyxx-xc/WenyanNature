@@ -111,6 +111,7 @@ public class WenyanPackages {
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
                 .function("「雷」", new ThunderHandler(runner, holder))
+                .function("「唤」", new MobSummonHandler(runner, holder))
                 .build();
     }
 
