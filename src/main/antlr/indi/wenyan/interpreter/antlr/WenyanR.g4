@@ -178,7 +178,7 @@ FLUSH                       : '噫' ;
 LONG                        : '長' ;
 
 STRING_LITERAL              : '「「' ( ~('」') )* '」」' ;
-IDENTIFIER                  : '「' ( ~('」') )+ '」' ;
+IDENTIFIER                  : '「' ( ~('」') )* '」' ;
 
 FLOAT_NUM                   : INT_NUM FLOAT_NUM_DIVISION (INT_NUM FLOAT_NUM_KEYWORDS)+ ;
 fragment
