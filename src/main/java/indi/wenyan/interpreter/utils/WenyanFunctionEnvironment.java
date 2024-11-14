@@ -27,7 +27,7 @@ public class WenyanFunctionEnvironment {
         } else if (parentEnvironment != null) {
             return parentEnvironment.getVariable(id);
         } else {
-            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.variable_not_found").getString());
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.variable_not_found:_").getString()+id);
         }
     }
 
@@ -45,7 +45,7 @@ public class WenyanFunctionEnvironment {
         } else if (parentEnvironment != null) {
             return parentEnvironment.getFunction(sign);
         } else {
-            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.function_not_found").getString());
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.function_not_found:_").getString()+sign.name());
         }
     }
 

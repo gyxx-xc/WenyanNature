@@ -11,6 +11,10 @@ public class WenyanException extends RuntimeException {
         super(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine()+" "+ctx.getText()+"\n"+message);
     }
 
+    public WenyanException(WenyanThrowException e, ParserRuleContext ctx) {
+        super(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine()+" "+ctx.getText()+"\n"+e.getMessage());
+    }
+
     public static class WenyanNumberException extends WenyanThrowException {
         public WenyanNumberException(String message) {
             super(message);

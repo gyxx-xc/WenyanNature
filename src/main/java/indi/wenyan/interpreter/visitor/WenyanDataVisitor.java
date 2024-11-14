@@ -27,10 +27,10 @@ public class WenyanDataVisitor extends WenyanVisitor {
                         true);
                 case WenyanRParser.STRING_LITERAL -> new WenyanValue(WenyanValue.Type.STRING,
                         WenyanDataPhaser.parseString(ctx.STRING_LITERAL().getText()), true);
-                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_data_type").getString(), ctx);
+                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
             };
         } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
+            throw new WenyanException(e, ctx);
         }
     }
 
@@ -49,7 +49,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         try {
             return functionEnvironment.getVariable(id);
         } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found:_").getString() + id, ctx);
+            throw new WenyanException(e, ctx);
         }
     }
 
@@ -68,7 +68,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
                                 .getVariable(ctx.IDENTIFIER().getText())
                                 .casting(WenyanValue.Type.INT);
                     } catch (WenyanException.WenyanThrowException e) {
-                        throw new WenyanException(e.getMessage(), ctx);
+                        throw new WenyanException(e, ctx);
                     }
                 }
                 case WenyanRParser.DATA_ID_LAST -> {
@@ -81,11 +81,11 @@ public class WenyanDataVisitor extends WenyanVisitor {
                     return new WenyanValue(WenyanValue.Type.INT,
                             ((WenyanValue.WenyanValueArray) parent.getValue()).size(), true);
                 }
-                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_data_type").getString(), ctx);
+                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
             }
             return ((WenyanValue.WenyanValueArray) parent.getValue()).get(value);
         } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
+            throw new WenyanException(e, ctx);
         }
     }
 }
