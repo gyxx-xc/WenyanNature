@@ -122,7 +122,7 @@ public class WenyanPackages {
                 .function("「触」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()
-                        ,pos))
+                        ,pos, block))
                 .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
                 .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
                 .build();

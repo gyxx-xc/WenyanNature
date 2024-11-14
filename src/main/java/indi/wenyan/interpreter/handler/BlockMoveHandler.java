@@ -39,7 +39,7 @@ public class BlockMoveHandler extends JavacallHandler {
         HandlerEntity.levelRun(holder.level(), level -> {
             if (!level.getBlockState(pos).is(Registration.RUNNER_BLOCK.get())) return;
             BlockPos newPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);
-            BlockPos attach = newPos.relative(blockState.getValue(RunnerBlock.FACING).getOpposite());
+            BlockPos attach = newPos.relative(RunnerBlock.getConnectedDirection(blockState).getOpposite());
             if (!level.getBlockState(attach).isCollisionShapeFullBlock(level, attach)) return;
             level.setBlockAndUpdate(newPos, blockState);
             level.neighborChanged(newPos, blockState.getBlock(), newPos);

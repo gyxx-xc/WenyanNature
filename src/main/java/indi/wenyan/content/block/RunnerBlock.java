@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -143,6 +144,15 @@ public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implemen
                 BlockRunner.tick(level, pos, state1, (BlockRunner) entity);
         };
     }
+
+    public static @NotNull Direction getConnectedDirection(BlockState state) {
+        return switch (state.getValue(FACE)) {
+            case CEILING -> Direction.DOWN;
+            case FLOOR -> Direction.UP;
+            default -> state.getValue(FACING);
+        };
+    }
+
 
     static {
         PROPERTIES = BlockBehaviour.Properties.of()
