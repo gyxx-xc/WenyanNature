@@ -87,9 +87,9 @@ public class HandRunnerEntity extends Projectile {
             Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
                 entitySemaphore.release(100000);
                 if (e instanceof WenyanException) {
-                    holder.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
+                    holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
                 } else {
-                    holder.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
+                    holder.displayClientMessage(Component.literal("Error").withStyle(ChatFormatting.RED), true);
                     WenyanNature.LOGGER.info("Error: {}", e.getMessage());
                     e.printStackTrace((PrintWriter) WenyanNature.LOGGER);
                 }

@@ -81,9 +81,9 @@ public class BlockRunner extends BlockEntity {
         String code = String.join("\n", pages);
         Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
             if (e instanceof WenyanException) {
-                holder.sendSystemMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
+                holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
             } else {
-                holder.sendSystemMessage(Component.literal("Error").withStyle(ChatFormatting.RED));
+                holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
                 WenyanNature.LOGGER.info("Error: {}", e.getMessage());
             }
             entitySemaphore.release(100000);

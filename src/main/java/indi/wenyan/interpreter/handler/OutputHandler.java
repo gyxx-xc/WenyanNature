@@ -17,7 +17,7 @@ public class OutputHandler extends JavacallHandler {
         for (WenyanValue arg : args) {
             result.append(result.isEmpty() ? "" : " ").append(arg.toString());
         }
-        player.sendSystemMessage(Component.literal(result.toString()));
+        player.displayClientMessage(Component.literal(result.toString()), true);
         return null;
     }
 }
