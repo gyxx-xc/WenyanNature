@@ -305,6 +305,8 @@ public class WenyanValue {
     }
 
     private static String WenyanString(double d) {
+        if (d == (int) d) // if it's an integer
+            return WenyanString((int) d);
         String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
         String dot = "又";
         StringBuilder result = new StringBuilder();

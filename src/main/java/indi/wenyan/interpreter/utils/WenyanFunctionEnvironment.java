@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
+import indi.wenyan.interpreter.visitor.WenyanStack;
 import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
@@ -11,13 +12,13 @@ public class WenyanFunctionEnvironment {
     private final WenyanFunctionEnvironment parentEnvironment;
     private final HashMap<String, WenyanValue> variables;
     private final HashMap<FunctionSign, WenyanRParser.Function_define_statementContext> functions;
-    public final Stack<WenyanValue> resultStack;
+    public final WenyanStack resultStack;
 
     public WenyanFunctionEnvironment(WenyanFunctionEnvironment parentEnvironment) {
         this.parentEnvironment = parentEnvironment;
         this.variables = new HashMap<>();
         this.functions = new HashMap<>();
-        this.resultStack = new Stack<>();
+        this.resultStack = new WenyanStack();
     }
 
     public WenyanValue getVariable(String id) throws WenyanException.WenyanVarException {

@@ -163,7 +163,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
-        return (ctx.ZHI() != null) ? null : functionEnvironment.resultStack.push(returnValue);
+        return functionEnvironment.resultStack.push(returnValue);
     }
 
     @Override
@@ -233,7 +233,7 @@ public class WenyanExprVisitor extends WenyanVisitor{
             throw new WenyanException(e.getMessage(), ctx);
         }
 
-        return ctx.ZHI() != null ? null : functionEnvironment.resultStack.push(returnValue);
+        return functionEnvironment.resultStack.push(returnValue);
     }
 
     @Override
