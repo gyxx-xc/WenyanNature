@@ -6,7 +6,6 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Stack;
 
 public class WenyanFunctionEnvironment {
     private final WenyanFunctionEnvironment parentEnvironment;
@@ -27,7 +26,7 @@ public class WenyanFunctionEnvironment {
         } else if (parentEnvironment != null) {
             return parentEnvironment.getVariable(id);
         } else {
-            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.variable_not_found:_").getString()+id);
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.variable_not_found_").getString()+id);
         }
     }
 
@@ -45,14 +44,13 @@ public class WenyanFunctionEnvironment {
         } else if (parentEnvironment != null) {
             return parentEnvironment.getFunction(sign);
         } else {
-            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.function_not_found:_").getString()+sign.name());
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.function_not_found_").getString()+sign.name());
         }
     }
 
-    public WenyanFunctionEnvironment importEnvironment(WenyanFunctionEnvironment environment) {
+    public void importEnvironment(WenyanFunctionEnvironment environment) {
         variables.putAll(environment.variables);
         functions.putAll(environment.functions);
-        return this;
     }
 
     public record FunctionSign(String name, WenyanValue.Type[] argTypes) {

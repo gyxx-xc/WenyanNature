@@ -7,7 +7,6 @@ import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import indi.wenyan.setup.Registration;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -30,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -84,7 +82,7 @@ public class BlockRunner extends BlockEntity {
                 holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
             } else {
                 holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
-                WenyanNature.LOGGER.info("Error: {}", e.getMessage());
+                WenyanNature.LOGGER.error("Error: {}", e.getMessage());
             }
             entitySemaphore.release(100000);
         };
@@ -115,6 +113,7 @@ public class BlockRunner extends BlockEntity {
         this.isRunning = other.isRunning;
     }
 
+    @SuppressWarnings("unused")
     private void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null) {
             ListTag pagesTag = new ListTag();
@@ -127,6 +126,7 @@ public class BlockRunner extends BlockEntity {
         tag.putInt("speed", speed);
     }
 
+    @SuppressWarnings("unused")
     private void loadData(CompoundTag tag, HolderLookup.Provider registries) {
         pages = tag.getList("pages", Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
         isRunning = false;

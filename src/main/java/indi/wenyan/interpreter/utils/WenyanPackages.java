@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class WenyanPackages {
     public static final WenyanFunctionEnvironment WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()

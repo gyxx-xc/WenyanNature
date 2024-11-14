@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.handler;
 
-import indi.wenyan.WenyanNature;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.content.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;

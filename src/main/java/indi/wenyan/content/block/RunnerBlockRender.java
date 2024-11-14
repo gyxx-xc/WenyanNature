@@ -9,29 +9,22 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.awt.*;
-import java.util.Objects;
 import java.util.Random;
 
 public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
-    ResourceLocation LIGHT = ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "textures/entity/bullet.png");
+    final ResourceLocation LIGHT = ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "textures/entity/bullet.png");
 
     public RunnerBlockRender(BlockEntityRendererProvider.Context ignoredContext) {
     }
 
     @Override
     public void render(@NotNull BlockRunner be, float partialTicks,
-                       PoseStack poseStack, MultiBufferSource bufferSource,
+                       @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource,
                        int combinedLight, int combinedOverlay) {
         Vec3 beam = be.communicate;
         if (beam == null) return;

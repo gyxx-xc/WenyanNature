@@ -21,7 +21,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.PrintWriter;
 import java.util.concurrent.Semaphore;
 
 public class HandRunnerEntity extends Projectile {
@@ -89,9 +88,8 @@ public class HandRunnerEntity extends Projectile {
                 if (e instanceof WenyanException) {
                     holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
                 } else {
-                    holder.displayClientMessage(Component.literal("Error").withStyle(ChatFormatting.RED), true);
-                    WenyanNature.LOGGER.info("Error: {}", e.getMessage());
-                    e.printStackTrace((PrintWriter) WenyanNature.LOGGER);
+                    holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
+                    WenyanNature.LOGGER.error("Error: {}", e.getMessage());
                 }
             };
             // ready to visit

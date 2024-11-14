@@ -1,6 +1,8 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.utils.*;
+import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
+import indi.wenyan.interpreter.utils.WenyanException;
+import indi.wenyan.interpreter.utils.WenyanValue;
 import net.minecraft.util.RandomSource;
 
 public class EchoChecker extends CraftingAnswerChecker {

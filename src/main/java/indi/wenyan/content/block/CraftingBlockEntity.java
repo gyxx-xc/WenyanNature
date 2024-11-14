@@ -1,15 +1,15 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.WenyanNature;
-import indi.wenyan.content.checker.EchoChecker;
 import indi.wenyan.content.checker.MiningChecker;
 import indi.wenyan.content.item.WenyanHandRunner;
-import indi.wenyan.interpreter.utils.*;
+import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
+import indi.wenyan.interpreter.utils.WenyanException;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import indi.wenyan.setup.Registration;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -133,8 +133,7 @@ public class CraftingBlockEntity extends BlockEntity {
                 holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
             } else {
                 holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
-                WenyanNature.LOGGER.info("Error: {}", e.getMessage());
-                e.printStackTrace();
+                WenyanNature.LOGGER.error("Error: {}", e.getMessage());
             }
             isRunning = false;
             endCrafting();
