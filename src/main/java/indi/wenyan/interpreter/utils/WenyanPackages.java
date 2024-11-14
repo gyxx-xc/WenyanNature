@@ -112,12 +112,12 @@ public class WenyanPackages {
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
                 .function("「雷」", new ThunderHandler(runner, holder))
-                .function("「己之上」", new SelfPositionHandler(holder, runner, Direction.UP))
-                .function("「己之下」", new SelfPositionHandler(holder, runner, Direction.DOWN))
-                .function("「己之東」", new SelfPositionHandler(holder, runner, Direction.EAST))
-                .function("「己之南」", new SelfPositionHandler(holder, runner, Direction.SOUTH))
-                .function("「己之西」", new SelfPositionHandler(holder, runner, Direction.WEST))
-                .function("「己之北」", new SelfPositionHandler(holder, runner, Direction.NORTH))
+                .function("「己於上」", new SelfPositionHandler(holder, runner, Direction.UP))
+                .function("「己於下」", new SelfPositionHandler(holder, runner, Direction.DOWN))
+                .function("「己於東」", new SelfPositionHandler(holder, runner, Direction.EAST))
+                .function("「己於南」", new SelfPositionHandler(holder, runner, Direction.SOUTH))
+                .function("「己於西」", new SelfPositionHandler(holder, runner, Direction.WEST))
+                .function("「己於北」", new SelfPositionHandler(holder, runner, Direction.NORTH))
                 .build();
     }
 
@@ -133,6 +133,12 @@ public class WenyanPackages {
                 .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
                 .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
                 .function("「紅石量」", new RedstoneSignalHandler(thread, runner))
+                .function("「己於上」", new SelfPositionBlockHandler(holder, runner, Direction.UP))
+                .function("「己於下」", new SelfPositionBlockHandler(holder, runner, Direction.DOWN))
+                .function("「己於東」", new SelfPositionBlockHandler(holder, runner, Direction.EAST))
+                .function("「己於南」", new SelfPositionBlockHandler(holder, runner, Direction.SOUTH))
+                .function("「己於西」", new SelfPositionBlockHandler(holder, runner, Direction.WEST))
+                .function("「己於北」", new SelfPositionBlockHandler(holder, runner, Direction.NORTH))
                 .build();
     }
 
