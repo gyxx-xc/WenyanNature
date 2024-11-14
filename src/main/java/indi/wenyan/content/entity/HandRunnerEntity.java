@@ -89,7 +89,7 @@ public class HandRunnerEntity extends Projectile {
                     holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
                 } else {
                     holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
-                    WenyanNature.LOGGER.error("Error: {}", e.getMessage());
+                    WenyanNature.LOGGER.error("Error: {}\n{}", e.getMessage(), e.getStackTrace());
                 }
             };
             // ready to visit

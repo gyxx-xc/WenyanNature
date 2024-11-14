@@ -35,7 +35,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
 @ParametersAreNonnullByDefault
-public class RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
+public class
+RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
     public static final Properties PROPERTIES;
     public static final VoxelShape FLOOR_NORTH_AABB;

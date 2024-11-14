@@ -1,8 +1,10 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.handler.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -110,20 +112,27 @@ public class WenyanPackages {
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
                 .function("「雷」", new ThunderHandler(runner, holder))
+                .function("「己之上」", new SelfPositionHandler(holder, runner, Direction.UP))
+                .function("「己之下」", new SelfPositionHandler(holder, runner, Direction.DOWN))
+                .function("「己之東」", new SelfPositionHandler(holder, runner, Direction.EAST))
+                .function("「己之南」", new SelfPositionHandler(holder, runner, Direction.SOUTH))
+                .function("「己之西」", new SelfPositionHandler(holder, runner, Direction.WEST))
+                .function("「己之北」", new SelfPositionHandler(holder, runner, Direction.NORTH))
                 .build();
     }
 
-    public static WenyanFunctionEnvironment blockEnvironment(BlockPos pos, BlockState block, Player holder) {
+    public static WenyanFunctionEnvironment blockEnvironment(BlockPos pos, BlockState block, Player holder, Thread thread, BlockRunner runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
                 .function("「」", args -> null)
-                .function("「触」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
+                .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()
                         ,pos, block))
                 .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
                 .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
+                .function("「紅石量」", new RedstoneSignalHandler(thread, runner))
                 .build();
     }
 

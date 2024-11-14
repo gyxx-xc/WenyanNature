@@ -42,6 +42,7 @@ public class BlockRunner extends BlockEntity {
     public int speed;
     public Vec3 communicate;
     public boolean isCommunicating;
+    public int reds;
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
         super(Registration.BLOCK_RUNNER.get(), pos, blockState);
@@ -54,10 +55,16 @@ public class BlockRunner extends BlockEntity {
             if (entity.isRunning) {
                 assert entity.program != null;
                 entity.programSemaphore.release(entity.speed);
-                try {
-                    entity.entitySemaphore.acquire(entity.speed);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                boolean flag = true;
+                while (flag) {
+                    try {
+                        flag = false;
+                        entity.entitySemaphore.acquire(entity.speed);
+                    } catch (InterruptedException e) {
+                        flag = true;
+                        entity.reds = level.getBestNeighborSignal(pos);
+                        entity.program.interrupt();
+                    }
                 }
                 entity.isRunning = entity.program.isAlive();
             } else {
@@ -90,8 +97,9 @@ public class BlockRunner extends BlockEntity {
         // ready to visit
         programSemaphore = new Semaphore(0);
         entitySemaphore = new Semaphore(0);
+        Thread thread = Thread.currentThread();
         program = new Thread(() -> {
-            new WenyanMainVisitor(WenyanPackages.blockEnvironment(getBlockPos(), getBlockState(), holder), programSemaphore, entitySemaphore)
+            new WenyanMainVisitor(WenyanPackages.blockEnvironment(getBlockPos(), getBlockState(), holder, thread, this), programSemaphore, entitySemaphore)
                     .visit(WenyanVisitor.program(code));
             entitySemaphore.release(100000);
         });

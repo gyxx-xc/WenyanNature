@@ -295,6 +295,10 @@ public class WenyanValue {
     private static String WenyanString(int i) {
         String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
         StringBuilder result = new StringBuilder();
+        if (i < 0) {
+            result.append("負");
+            i = -i;
+        }
         for (char digit : Integer.toString(i).toCharArray())
             result.append(numerals[Character.getNumericValue(digit)]);
         return result.toString();
@@ -310,6 +314,10 @@ public class WenyanValue {
         String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
         String dot = "又";
         StringBuilder result = new StringBuilder();
+        if (d < 0) {
+            result.append("負");
+            d = -d;
+        }
         for (char digit : Double.toString(d).toCharArray())
             result.append(digit == '.' ? dot : numerals[Character.getNumericValue(digit)]);
         return result.toString();
