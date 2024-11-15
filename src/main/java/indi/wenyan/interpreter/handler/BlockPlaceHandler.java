@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.handler;
 
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.content.entity.HandlerEntity;
-import indi.wenyan.interpreter.parent.JavacallHandler;
+import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.core.BlockPos;

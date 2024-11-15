@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.parent;
+package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.structure.WenyanValue;

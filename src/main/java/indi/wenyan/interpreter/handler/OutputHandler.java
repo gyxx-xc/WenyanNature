@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.handler;
 
-import indi.wenyan.interpreter.parent.JavacallHandler;
+import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

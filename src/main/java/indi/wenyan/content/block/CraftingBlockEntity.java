@@ -3,7 +3,7 @@ package indi.wenyan.content.block;
 import indi.wenyan.WenyanNature;
 import indi.wenyan.content.checker.MiningChecker;
 import indi.wenyan.content.item.WenyanHandRunner;
-import indi.wenyan.interpreter.parent.CraftingAnswerChecker;
+import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
 import indi.wenyan.interpreter.structure.WenyanControl;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
