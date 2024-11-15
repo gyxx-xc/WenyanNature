@@ -1,9 +1,9 @@
 package indi.wenyan.interpreter.handler;
 
 import indi.wenyan.content.block.BlockRunner;
-import indi.wenyan.interpreter.utils.JavacallHandler;
-import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.parent.JavacallHandler;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanValue;
 
 public class RedstoneSignalHandler extends JavacallHandler {
     private final Thread t;

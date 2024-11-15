@@ -1,17 +1,17 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.utils.WenyanDataPhaser;
-import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanControl;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.utils.*;
 import net.minecraft.network.chat.Component;
 
-import java.util.concurrent.Semaphore;
-
 public class WenyanDataVisitor extends WenyanVisitor {
-    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
-        super(functionEnvironment, programSemaphore, entitySemaphore);
+
+    public WenyanDataVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
+        super(functionEnvironment, control);
     }
 
     @Override

@@ -1,7 +1,8 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.WenyanNature;
-import indi.wenyan.interpreter.utils.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanControl;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
@@ -38,11 +39,13 @@ public class BlockRunner extends BlockEntity {
     public Semaphore programSemaphore;
     public Semaphore entitySemaphore;
     public Thread program;
-    public List<String> pages;
-    public int speed;
+
     public Vec3 communicate;
     public boolean isCommunicating;
+
     public int reds;
+    public List<String> pages;
+    public int speed;
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
         super(Registration.BLOCK_RUNNER.get(), pos, blockState);
@@ -99,7 +102,9 @@ public class BlockRunner extends BlockEntity {
         entitySemaphore = new Semaphore(0);
         Thread thread = Thread.currentThread();
         program = new Thread(() -> {
-            new WenyanMainVisitor(WenyanPackages.blockEnvironment(getBlockPos(), getBlockState(), holder, thread, this), programSemaphore, entitySemaphore)
+            new WenyanMainVisitor(
+                    WenyanPackages.blockEnvironment(getBlockPos(), getBlockState(), holder, thread, this),
+                    new WenyanControl(entitySemaphore, programSemaphore))
                     .visit(WenyanVisitor.program(code));
             entitySemaphore.release(100000);
         });

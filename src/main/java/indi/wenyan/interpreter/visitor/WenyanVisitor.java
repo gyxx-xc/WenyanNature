@@ -3,23 +3,20 @@ package indi.wenyan.interpreter.visitor;
 import indi.wenyan.interpreter.antlr.WenyanRBaseVisitor;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.utils.WenyanErrorListener;
-import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanControl;
+import indi.wenyan.interpreter.structure.WenyanErrorListener;
+import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import java.util.concurrent.Semaphore;
-
 public abstract class WenyanVisitor extends WenyanRBaseVisitor<WenyanValue> {
-    protected final Semaphore entitySemaphore;
-    protected final Semaphore programSemaphore;
+    protected final WenyanControl control;
     protected final WenyanFunctionEnvironment functionEnvironment;
 
-    public WenyanVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
+    public WenyanVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
         this.functionEnvironment = functionEnvironment;
-        this.entitySemaphore = entitySemaphore;
-        this.programSemaphore = programSemaphore;
+        this.control = control;
     }
 
     public static WenyanRParser.ProgramContext program(String program) {

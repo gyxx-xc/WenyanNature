@@ -1,7 +1,8 @@
 package indi.wenyan.content.entity;
 
 import indi.wenyan.WenyanNature;
-import indi.wenyan.interpreter.utils.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanControl;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
@@ -96,7 +97,8 @@ public class HandRunnerEntity extends Projectile {
             programSemaphore = new Semaphore(0);
             entitySemaphore = new Semaphore(0);
             program = new Thread(() -> {
-                new WenyanMainVisitor(WenyanPackages.handEnvironment(holder, this), programSemaphore, entitySemaphore)
+                new WenyanMainVisitor(WenyanPackages.handEnvironment(holder, this),
+                        new WenyanControl(entitySemaphore, programSemaphore))
                         .visit(WenyanVisitor.program(code));
                 entitySemaphore.release(100000);});
             program.setUncaughtExceptionHandler(exceptionHandler);

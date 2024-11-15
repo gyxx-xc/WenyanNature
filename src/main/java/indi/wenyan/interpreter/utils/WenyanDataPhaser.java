@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;

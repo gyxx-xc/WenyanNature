@@ -1,5 +1,8 @@
-package indi.wenyan.interpreter.utils;
+package indi.wenyan.interpreter.parent;
 
+import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;

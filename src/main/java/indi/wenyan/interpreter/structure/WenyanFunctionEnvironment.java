@@ -1,7 +1,6 @@
-package indi.wenyan.interpreter.utils;
+package indi.wenyan.interpreter.structure;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.visitor.WenyanStack;
 import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;

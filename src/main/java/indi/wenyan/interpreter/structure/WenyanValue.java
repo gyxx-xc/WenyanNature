@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.utils;
+package indi.wenyan.interpreter.structure;
 
 import net.minecraft.network.chat.Component;
 

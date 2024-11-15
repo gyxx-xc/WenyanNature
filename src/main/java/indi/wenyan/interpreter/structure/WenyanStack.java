@@ -1,6 +1,4 @@
-package indi.wenyan.interpreter.visitor;
-
-import indi.wenyan.interpreter.utils.WenyanValue;
+package indi.wenyan.interpreter.structure;
 
 import java.util.Stack;
 

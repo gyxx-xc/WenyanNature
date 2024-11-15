@@ -1,7 +1,7 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.parent.CraftingAnswerChecker;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.util.RandomSource;
 
 public class MiningChecker extends CraftingAnswerChecker {

@@ -1,43 +1,33 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
-import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanControl;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.utils.*;
 import net.minecraft.network.chat.Component;
 
-import java.util.concurrent.Semaphore;
-
 public class WenyanMainVisitor extends WenyanVisitor {
-    public WenyanMainVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
-        super(functionEnvironment, programSemaphore, entitySemaphore);
-    }
-
-    private void waitTick() {
-        entitySemaphore.release(1);
-        try {
-            programSemaphore.acquire(1);
-        } catch (InterruptedException e) {
-            throw new WenyanException("killed");
-        }
+    public WenyanMainVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
+        super(functionEnvironment, control);
     }
 
     @Override
     public WenyanValue visitExpr_statement(WenyanRParser.Expr_statementContext ctx) {
-        waitTick();
-        return new WenyanExprVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx);
+        control.wait_tick();
+        return new WenyanExprVisitor(functionEnvironment, control).visit(ctx);
     }
 
     @Override
     public WenyanValue visitControl_statement(WenyanRParser.Control_statementContext ctx) {
-        return new WenyanControlVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx);
+        return new WenyanControlVisitor(functionEnvironment, control).visit(ctx);
     }
 
     @Override
     public WenyanValue visitCandy_statement(WenyanRParser.Candy_statementContext ctx) {
-        waitTick();
-        return new WenyanCandyVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx);
+        control.wait_tick();
+        return new WenyanCandyVisitor(functionEnvironment, control).visit(ctx);
     }
 
     @Override
