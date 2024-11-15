@@ -18,7 +18,6 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 public class HandlerEntity extends Entity {
     public Consumer<Level> function;
-
     public HandlerEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -43,17 +42,9 @@ public class HandlerEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
-    }
-
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {}
     @Override
-    protected void readAdditionalSaveData(CompoundTag compoundTag) {
-
-    }
-
+    protected void readAdditionalSaveData(CompoundTag compoundTag) {}
     @Override
-    protected void addAdditionalSaveData(CompoundTag compoundTag) {
-
-    }
+    protected void addAdditionalSaveData(CompoundTag compoundTag) {}
 }

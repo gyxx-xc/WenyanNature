@@ -12,32 +12,22 @@ public class ModDataGeneratorHandler {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event){
         ExistingFileHelper efh = event.getExistingFileHelper();
-
-         //语言文件 (zh_cn)
         event.getGenerator().addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<ChineseLanguageProvider>) pOutput ->
-                        new ChineseLanguageProvider(pOutput,WenyanNature.MODID,"zh_cn")
-        );
+                        new ChineseLanguageProvider(pOutput,WenyanNature.MODID,"zh_cn"));
         event.getGenerator().addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<EnglishLanguageProvider>) pOutput ->
-                        new EnglishLanguageProvider(pOutput,WenyanNature.MODID,"en_us")
-        );
-
-        // 物品模型
+                        new EnglishLanguageProvider(pOutput,WenyanNature.MODID,"en_us"));
         event.getGenerator().addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<ModItemModelProvider>) pOutput ->
-                        new ModItemModelProvider(pOutput,WenyanNature.MODID,efh)
-        );
-
+                        new ModItemModelProvider(pOutput,WenyanNature.MODID,efh));
         event.getGenerator().addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<ModBlockStateProvider>) pOutput ->
-                        new ModBlockStateProvider(pOutput,WenyanNature.MODID,efh)
-        );
-
+                        new ModBlockStateProvider(pOutput,WenyanNature.MODID,efh));
     }
 }
 
