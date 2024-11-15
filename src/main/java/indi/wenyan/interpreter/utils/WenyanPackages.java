@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.handler.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class WenyanPackages {
     public static final WenyanFunctionEnvironment WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
@@ -71,6 +73,7 @@ public class WenyanPackages {
                 }
                 return value;
             })
+            .function("「」", args -> null)
             .build();
 
     public static final WenyanFunctionEnvironment MATH_PACKAGES = WenyanPackageBuilder.create()
@@ -103,11 +106,33 @@ public class WenyanPackages {
             .function("「正負」", args -> Math.signum((double)args[0]), WenyanValue.Type.DOUBLE)
             .build();
 
+    public static final WenyanFunctionEnvironment BIT_PACKAGES = WenyanPackageBuilder.create()
+            .function("「左移」", args -> (int)args[0]<<(int)args[1], WenyanValue.Type.INT)
+            .function("「右移」", args -> (int)args[0]>>(int)args[1], WenyanValue.Type.INT)
+            .function("「補零右移」", args -> (int)args[0]>>>(int)args[1], WenyanValue.Type.INT)
+            .function("「位與」", args -> (int)args[0]&(int)args[1], WenyanValue.Type.INT)
+            .function("「位或」", args -> (int)args[0]|(int)args[1], WenyanValue.Type.INT)
+            .function("「異或」", args -> (int)args[0]^(int)args[1], WenyanValue.Type.INT)
+            .function("「與非」", args -> ~((int)args[0]&(int)args[1]), WenyanValue.Type.INT)
+            .function("「位變」", args -> ~(int)args[0], WenyanValue.Type.INT)
+            .build();
+
+    public static final WenyanFunctionEnvironment RANDOM_PACKAGES = WenyanPackageBuilder.create()
+            .function("「占數」", args -> switch (args.length) {
+                case 0 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt();
+                case 1 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0]);
+                case 2 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0], (int)args[1]);
+                default -> 0;
+            }, WenyanValue.Type.INT)
+            .function("「占分」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble(), WenyanValue.Type.DOUBLE)
+            .function("「占偏」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle((double) args[0], (double) args[1]), WenyanValue.Type.DOUBLE)
+            .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanValue.Type.BOOL)
+            .build();
+
     public static WenyanFunctionEnvironment handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
-                .function("「」", args -> null)
                 .function("「射」", new BulletHandler(runner.level(), runner, holder), BulletHandler.ARGS_TYPE)
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
@@ -125,7 +150,6 @@ public class WenyanPackages {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
-                .function("「」", args -> null)
                 .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()
@@ -155,5 +179,7 @@ public class WenyanPackages {
 
     public static final Map<String, WenyanFunctionEnvironment> PACKAGES = new HashMap<>(){{
         put("「「算經」」", MATH_PACKAGES);
+        put("「「位經」」", BIT_PACKAGES);
+        put("「「易經」」", RANDOM_PACKAGES);
     }};
 }
