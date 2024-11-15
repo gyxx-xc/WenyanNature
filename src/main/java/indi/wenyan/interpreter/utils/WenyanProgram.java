@@ -18,7 +18,6 @@ public class WenyanProgram {
     public Thread program;
     public String code;
     public Player holder;
-    public boolean isRunning = false;
     public WenyanFunctionEnvironment baseEnvironment;
 
     public WenyanProgram(String code, Player holder, WenyanFunctionEnvironment baseEnvironment) {
@@ -28,7 +27,7 @@ public class WenyanProgram {
     }
 
     public void run() {
-        if (isRunning)
+        if (isRunning())
             return;
         // ready to visit
         programSemaphore = new Semaphore(0);
@@ -48,7 +47,6 @@ public class WenyanProgram {
             entitySemaphore.release(100000);
         });
 
-        isRunning = true;
         program.start();
         try {
             entitySemaphore.acquire(1);
@@ -56,10 +54,7 @@ public class WenyanProgram {
     }
 
     public void step(int num) {
-        if (program == null) {
-            isRunning = false;
-            return;
-        }
+        if (!isRunning()) return;
         boolean flag = true;
         programSemaphore.release(num);
         while (flag) {
@@ -71,10 +66,15 @@ public class WenyanProgram {
                 program.interrupt();
             }
         }
-        isRunning = program.isAlive();
+    }
+
+    public void stop() {
+        program.interrupt();
     }
 
     public boolean isRunning(){
-        return isRunning;
+        if (program == null)
+            return false;
+        return program.isAlive();
     }
 }
