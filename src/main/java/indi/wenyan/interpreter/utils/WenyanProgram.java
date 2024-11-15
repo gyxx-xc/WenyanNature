@@ -27,7 +27,7 @@ public class WenyanProgram {
     }
 
     public void run() {
-        if (isRunning())
+        if (isRunning(this))
             return;
         // ready to visit
         programSemaphore = new Semaphore(0);
@@ -54,7 +54,7 @@ public class WenyanProgram {
     }
 
     public void step(int num) {
-        if (!isRunning()) return;
+        if (!isRunning(this)) return;
         boolean flag = true;
         programSemaphore.release(num);
         while (flag) {
@@ -72,9 +72,9 @@ public class WenyanProgram {
         program.interrupt();
     }
 
-    public boolean isRunning(){
-        if (program == null)
+    public static boolean isRunning(WenyanProgram program){
+        if (program == null || program.program == null)
             return false;
-        return program.isAlive();
+        return program.program.isAlive();
     }
 }

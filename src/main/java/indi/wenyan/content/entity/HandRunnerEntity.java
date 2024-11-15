@@ -41,14 +41,15 @@ public class HandRunnerEntity extends Projectile {
         if (!hasRun) {
             if (getDeltaMovement().length() < 0.01) {
                 setDeltaMovement(Vec3.ZERO);
-                program.run();
+                if (!this.level().isClientSide())
+                    program.run();
                 hasRun = true;
             } else {
                 setDeltaMovement(getDeltaMovement().scale(0.5));
             }
         }
         if (!this.level().isClientSide() && hasRun) {
-            if (!program.isRunning()) {
+            if (!WenyanProgram.isRunning(program)) {
                 discard();
                 return;
             }
@@ -63,7 +64,7 @@ public class HandRunnerEntity extends Projectile {
 
     @Override
     public void remove(@NotNull RemovalReason reason) {
-        if (reason.shouldDestroy() && program.isRunning())
+        if (WenyanProgram.isRunning(program))
             program.stop();
         super.remove(reason);
     }
@@ -81,12 +82,10 @@ public class HandRunnerEntity extends Projectile {
                 }
             }
         }
-
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-    }
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {}
 
     @Override
     public boolean ignoreExplosion(@NotNull Explosion explosion) {
@@ -104,14 +103,11 @@ public class HandRunnerEntity extends Projectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
-        compound.putBoolean("isRunning", hasRun);
-        super.addAdditionalSaveData(compound);
-    }
+    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {}
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        hasRun = compound.getBoolean("isRunning");
+    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
+        hasRun = true;
         super.readAdditionalSaveData(compound);
     }
 }

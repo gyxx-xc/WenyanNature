@@ -42,6 +42,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         this.add("error.wenyan_nature.type_cannot_be_mod", "謬：類不可相餘");
         this.add("error.wenyan_nature.type_cannot_be_compared", "謬：類不可相比");
 
+        this.add("error.wenyan_nature.already_run", "已在運行");
+
         this.add("type.wenyan_nature.null", "空無");
         this.add("type.wenyan_nature.function", "術");
         this.add("type.wenyan_nature.object", "物");
