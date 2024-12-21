@@ -158,7 +158,7 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
         PROPERTIES = BlockBehaviour.Properties.of()
                 .strength(1.0F)
                 .sound(SoundType.WOOL)
-                .destroyTime(0)
+                .instabreak()
                 .noOcclusion();
         FLOOR_NORTH_AABB = Block.box(6, 0, 3, 11, 1, 13);
         FLOOR_SOUTH_AABB = Block.box(5, 0, 3, 10, 1, 13);
