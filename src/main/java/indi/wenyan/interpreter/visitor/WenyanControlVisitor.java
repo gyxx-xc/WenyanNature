@@ -20,6 +20,15 @@ public class WenyanControlVisitor extends WenyanVisitor{
         super(functionEnvironment, programSemaphore, entitySemaphore);
     }
 
+    private void waitTick() {
+        entitySemaphore.release(1);
+        try {
+            programSemaphore.acquire(1);
+        } catch (InterruptedException e) {
+            throw new WenyanException("killed");
+        }
+    }
+
     @Override
     public WenyanValue visitFlush_statement(WenyanRParser.Flush_statementContext ctx) {
         functionEnvironment.resultStack.empty();
@@ -52,6 +61,7 @@ public class WenyanControlVisitor extends WenyanVisitor{
         }
         WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
         for (WenyanValue item : (WenyanValue.WenyanValueArray) value.getValue()) {
+            waitTick();
             functionEnvironment.setVariable(ctx.IDENTIFIER().getText(), item);
             try {
                 for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
@@ -76,6 +86,7 @@ public class WenyanControlVisitor extends WenyanVisitor{
         int count = (int) value.getValue();
         WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
         for (int i = 0; i < count; i++) {
+            waitTick();
             try {
                 for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
                     visitor.visit(statementContext);
@@ -92,6 +103,7 @@ public class WenyanControlVisitor extends WenyanVisitor{
     public WenyanValue visitFor_while_statement(WenyanRParser.For_while_statementContext ctx) {
         WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
         while (true) {
+            waitTick();
             try {
                 for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
                     visitor.visit(statementContext);
