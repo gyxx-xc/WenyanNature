@@ -29,4 +29,20 @@ public class HandRunnerScreen extends RunnerScreen {
         int slot = this.hand == InteractionHand.MAIN_HAND ? this.owner.getInventory().selected : 40;
         PacketDistributor.sendToServer(new RunnerTextPacket(slot, this.pages));
     }
+
+    @Override
+    protected boolean bookKeyPressed(int keyCode, int scanCode, int modifiers) {
+        if (owner.hasPermissions(2))
+            return super.bookKeyPressed(keyCode, scanCode, modifiers);
+        else
+            return false;
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        if (owner.hasPermissions(2))
+            return super.charTyped(codePoint, modifiers);
+        else
+            return this.getFocused() != null && this.getFocused().charTyped(codePoint, modifiers);
+    }
 }
