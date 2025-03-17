@@ -52,8 +52,7 @@ public class WenyanHandRunner extends BlockItem {
 
                 item.shrink(1);
                 return false;
-            }
-            // else : go outside
+            } // else : go outside
         }
         return super.onDroppedByPlayer(item, player);
     }

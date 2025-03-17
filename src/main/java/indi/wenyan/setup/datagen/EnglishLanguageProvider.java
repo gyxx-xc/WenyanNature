@@ -47,6 +47,8 @@ public class EnglishLanguageProvider extends LanguageProvider {
         this.add("type.wenyan_nature.bool", "爻");
         this.add("type.wenyan_nature.string", "言");
         this.add("type.wenyan_nature.list", "列");
+
+        this.add("error.wenyan_nature.already_run", "已在運行");
         this.add("type.wenyan_nature.null", "空無");
         this.add("type.wenyan_nature.function", "術");
         this.add("type.wenyan_nature.object", "物");

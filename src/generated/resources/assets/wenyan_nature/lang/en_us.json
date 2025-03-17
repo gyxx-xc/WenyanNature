@@ -1,6 +1,7 @@
 {
   "block.wenyan_nature.runner_block": "符咒",
   "error.wenyan_nature._to_": "為",
+  "error.wenyan_nature.already_run": "已在運行",
   "error.wenyan_nature.cannot_assign_to_constant": "謬：常數者無變也",
   "error.wenyan_nature.cannot_cast_": "謬：不可轉",
   "error.wenyan_nature.cannot_create_empty_of_null": "謬：空或虛無所不能造也",

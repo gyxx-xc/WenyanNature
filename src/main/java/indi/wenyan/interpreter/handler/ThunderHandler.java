@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.handler;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;

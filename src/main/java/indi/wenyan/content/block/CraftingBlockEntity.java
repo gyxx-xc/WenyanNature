@@ -4,7 +4,8 @@ import indi.wenyan.WenyanNature;
 import indi.wenyan.content.checker.MiningChecker;
 import indi.wenyan.content.item.WenyanHandRunner;
 import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
-import indi.wenyan.interpreter.utils.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanControl;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
@@ -147,7 +148,7 @@ public class CraftingBlockEntity extends BlockEntity {
         checker = new MiningChecker(level.random);
         program = new Thread(() -> {
             new WenyanMainVisitor(WenyanPackages.craftingEnvironment(checker),
-                    programSemaphore, entitySemaphore)
+                    new WenyanControl(entitySemaphore, programSemaphore))
                     .visit(WenyanVisitor.program(code));
             runStep ++;
             isRunning = false;

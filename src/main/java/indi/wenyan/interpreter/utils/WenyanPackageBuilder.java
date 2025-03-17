@@ -1,5 +1,8 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanValue;
+
 import java.util.function.Function;
 
 @SuppressWarnings("unused")

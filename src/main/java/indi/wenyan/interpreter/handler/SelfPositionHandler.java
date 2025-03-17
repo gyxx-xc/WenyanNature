@@ -2,8 +2,8 @@ package indi.wenyan.interpreter.handler;
 
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
-import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 

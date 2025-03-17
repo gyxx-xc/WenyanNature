@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.utils;
+package indi.wenyan.interpreter.structure;
 
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;

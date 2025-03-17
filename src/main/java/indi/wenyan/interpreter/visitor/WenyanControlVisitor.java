@@ -2,12 +2,11 @@ package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRBaseVisitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.utils.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanFunctionEnvironment;
-import indi.wenyan.interpreter.utils.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanControl;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.network.chat.Component;
-
-import java.util.concurrent.Semaphore;
 
 // this class is for
 // flush_statement
@@ -16,8 +15,8 @@ import java.util.concurrent.Semaphore;
 // return_statement
 // BREAK
 public class WenyanControlVisitor extends WenyanVisitor{
-    public WenyanControlVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
-        super(functionEnvironment, programSemaphore, entitySemaphore);
+    public WenyanControlVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
+        super(functionEnvironment, control);
     }
 
     private void waitTick() {
@@ -37,13 +36,13 @@ public class WenyanControlVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitIf_statement(WenyanRParser.If_statementContext ctx) {
-        if (new IfExprVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx.if_expression())) {
-            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
+        if (new IfExprVisitor(functionEnvironment, control).visit(ctx.if_expression())) {
+            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
             for (WenyanRParser.StatementContext statementContext : ctx.if_) {
                 visitor.visit(statementContext);
             }
         } else if (!ctx.else_.isEmpty()) {
-            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
+            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
             for (WenyanRParser.StatementContext statementContext : ctx.else_) {
                 visitor.visit(statementContext);
             }
@@ -53,13 +52,13 @@ public class WenyanControlVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitFor_arr_statement(WenyanRParser.For_arr_statementContext ctx) {
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx.data());
+        WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
         try {
             value = WenyanValue.constOf(value).casting(WenyanValue.Type.LIST);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx.data());
         }
-        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
+        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
         for (WenyanValue item : (WenyanValue.WenyanValueArray) value.getValue()) {
             waitTick();
             functionEnvironment.setVariable(ctx.IDENTIFIER().getText(), item);
@@ -77,14 +76,14 @@ public class WenyanControlVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitFor_enum_statement(WenyanRParser.For_enum_statementContext ctx) {
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx.data());
+        WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
         try {
             value = WenyanValue.constOf(value).casting(WenyanValue.Type.INT);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx.data());
         }
         int count = (int) value.getValue();
-        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
+        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
         for (int i = 0; i < count; i++) {
             waitTick();
             try {
@@ -101,7 +100,7 @@ public class WenyanControlVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitFor_while_statement(WenyanRParser.For_while_statementContext ctx) {
-        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, programSemaphore, entitySemaphore);
+        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
         while (true) {
             waitTick();
             try {
@@ -128,7 +127,7 @@ public class WenyanControlVisitor extends WenyanVisitor{
 
     @Override
     public WenyanValue visitReturn_data_statement(WenyanRParser.Return_data_statementContext ctx) {
-        throw new ReturnException(new WenyanDataVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx.data()));
+        throw new ReturnException(new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data()));
     }
 
     @Override
@@ -143,18 +142,16 @@ public class WenyanControlVisitor extends WenyanVisitor{
 
     private static class IfExprVisitor extends WenyanRBaseVisitor<Boolean> {
         protected final WenyanFunctionEnvironment functionEnvironment;
-        protected final Semaphore entitySemaphore;
-        protected final Semaphore programSemaphore;
+        protected final WenyanControl control;
 
-        public IfExprVisitor(WenyanFunctionEnvironment functionEnvironment, Semaphore programSemaphore, Semaphore entitySemaphore) {
+        public IfExprVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
             this.functionEnvironment = functionEnvironment;
-            this.entitySemaphore = entitySemaphore;
-            this.programSemaphore = programSemaphore;
+            this.control = control;
         }
 
         @Override
         public Boolean visitIf_data(WenyanRParser.If_dataContext ctx) {
-            WenyanValue value = new WenyanDataVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx.data());
+            WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
             try {
                 value = WenyanValue.constOf(value).casting(WenyanValue.Type.BOOL);
             } catch (WenyanException.WenyanThrowException e) {
@@ -165,8 +162,9 @@ public class WenyanControlVisitor extends WenyanVisitor{
 
         @Override
         public Boolean visitIf_logic(WenyanRParser.If_logicContext ctx) {
-            WenyanValue left = new WenyanDataVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx.data(0));
-            WenyanValue right = new WenyanDataVisitor(functionEnvironment, programSemaphore, entitySemaphore).visit(ctx.data(1));
+            control.wait_tick();
+            WenyanValue left = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(0));
+            WenyanValue right = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(1));
             left = WenyanValue.constOf(left);
             right = WenyanValue.constOf(right);
             try {

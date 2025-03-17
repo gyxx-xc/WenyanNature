@@ -2,10 +2,14 @@ package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.gui.BlockRunnerScreen;
+import indi.wenyan.interpreter.utils.WenyanPackages;
+import indi.wenyan.interpreter.utils.WenyanProgram;
 import indi.wenyan.setup.Registration;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -58,7 +62,13 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
         if (!player.isShiftKeyDown()) {
             if (!level.isClientSide()) {
                 BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
-                Objects.requireNonNull(runner).run(player);
+                if (!WenyanProgram.isRunning(Objects.requireNonNull(runner).program)) {
+                    runner.program = new WenyanProgram(String.join("\n", runner.pages), player,
+                            WenyanPackages.blockEnvironment(pos, state, player, Thread.currentThread(), runner));
+                    runner.program.run();
+                } else {
+                    player.displayClientMessage(Component.translatable("error.wenyan_nature.already_run").withStyle(ChatFormatting.RED), true);
+                }
             }
         }
         return InteractionResult.SUCCESS;
