@@ -4,7 +4,10 @@
     <br>
 </h1>
 
-Wenyan Nature is a Minecraft mod that introduces new entities, items, and blocks inspired by the Wenyan language and culture. This mod allows players to interact with new mechanics and features, enhancing their gameplay experience.
+Wenyan Nature is a Minecraft mod that inspired by the [Wenyan language](https://github.com/wenyan-lang/wenyan).
+Using Wenyan language, this mod can let player create wonderful magic by handling complex logic of the magic.
+
+The mod is still in development.
 
 ## Installation
 
@@ -28,6 +31,10 @@ Wenyan Nature is a Minecraft mod that introduces new entities, items, and blocks
 
 4. **Add to Minecraft**:
    Copy the generated `.jar` file from `build/libs` to your Minecraft `mods` folder.
+
+## TODO
+
+- [ ] Add TODO (?)
 
 ## License
 
