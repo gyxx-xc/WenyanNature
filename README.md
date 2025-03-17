@@ -34,7 +34,7 @@ The mod is still in development.
 
 ## TODO
 
-- [ ] Add TODO (?)
+- [ ] Add TODO
 
 ## License
 
