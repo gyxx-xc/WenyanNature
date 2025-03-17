@@ -9,32 +9,9 @@ Using Wenyan language, this mod can let player create wonderful magic by handlin
 
 The mod is still in development.
 
-## Installation
-
-1. **Clone the Repository**:
-    ```sh
-    git clone https://github.com/gyxx-xc/wenyan-nature.git
-    cd wenyan-nature
-    ```
-
-2. **Set up the Development Environment**:
-   Ensure you have Java 21 and Gradle installed. Then, run:
-    ```sh
-    ./gradlew setupDecompWorkspace
-    ./gradlew eclipse
-    ```
-
-3. **Build the Mod**:
-    ```sh
-    ./gradlew build
-    ```
-
-4. **Add to Minecraft**:
-   Copy the generated `.jar` file from `build/libs` to your Minecraft `mods` folder.
-
 ## TODO
 
-- [ ] Add TODO
+- [ ] Add TODO (?)
 
 ## License
 
