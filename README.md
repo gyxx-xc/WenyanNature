@@ -1,7 +1,7 @@
 <p><img src="./title.png" alt="Logo" width="720"></p>
 
 <h1>Wenyan Nature  <br>
-    <br>
+	<a href="https://github.com/gyxx-xc/WenyanNature/blob/master/LICENSE"><img src="https://img.shields.io/github/license/gyxx-xc/WenyanNature?style=flat&color=900c3f" alt="License"></a>
 </h1>
 
 Wenyan Nature is a Minecraft mod that inspired by the [Wenyan language](https://github.com/wenyan-lang/wenyan).
