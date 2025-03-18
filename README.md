@@ -24,7 +24,3 @@ The mod is still in development.
 - [ ] **Craft Through Code**: Unlock items by designing code and solving mystical puzzles.
 - [ ] **Polished Fu GUI**: Enhanced code editing with auto-completion, syntax highlighting, and more.
 - [ ] **Expanded Minecraft Sorcery**: Deeper integration with the game’s mechanics.
-
-## License
-
-This project is licensed under the LGPL-3.0 license. See the `LICENSE` file for details.
