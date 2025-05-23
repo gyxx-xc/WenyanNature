@@ -2,16 +2,40 @@ grammar WenyanR;
 
 @header{package indi.wenyan.interpreter.antlr;}
 
-program                     : statement* EOF;
+// for sym table: const, id, label; others already int
+// to bytecode that has
+// jmp:label (->), branch_false:label (value -> value)
+// call:argc (arg2, arg1..., func_value -> ret), ret (value -> )
+// push:const (-> value), pop (value ->)
+// pushA (value ->), popA (-> value), peekA(-> value), empty
+// load:id (-> value), store:id (value ->), set_val(value2, value1 -> ) [v1 -> v2]
+// casting:type (value -> value)
+// import?
 
-statement                   : candy_statement
+
+program                     : statement*;
+
+statement                   : candy_statement // make the candy first
                             | expr_statement
                             | control_statement
                             | object_statement
                             | import_statement
                             ;
 
-candy_statement             : declare_write_candy_statement; // make the candy first
+candy_statement             : declare_write_candy_statement
+                            | boolean_algebra_statement
+                            | mod_math_statement
+                            ;
+
+expr_statement              : declare_statement
+                            | init_declare_statement
+                            | reference_statement
+                            | define_statement
+                            | assign_statement
+
+                            | function_define_statement
+                            | function_call_statement
+                            ;
 
 control_statement           : if_statement
                             | for_statement
@@ -21,21 +45,9 @@ control_statement           : if_statement
                             | continue_
                             ;
 
-expr_statement              : declare_statement
-                            | init_declare_statement
-                            | reference_statement
-                            | define_statement
-
-                            | assign_statement
-                            | boolean_algebra_statement
-                            | mod_math_statement
-
-                            | function_define_statement
-                            | function_call_statement
-                            ;
-
 data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT_NUM)            # data_primary
                             | DATA_ID_LAST                                                       # id_last
+                            | ZHI                                                                # id_last_remain
                             | IDENTIFIER                                                         # id
                             | data ZHI p=(STRING_LITERAL|IDENTIFIER|INT_NUM|DATA_ID_LAST|LONG)   # data_child
                             ;
@@ -45,21 +57,22 @@ declare_statement           : declare_op INT_NUM type (YUE d+=data)* ;
 init_declare_statement      : DECLARE_HAVE type data ;
 define_statement            : NAMING (YUE d+=IDENTIFIER)+ ;
 
-declare_write_candy_statement : declare_statement WRITE_KEY_FUNCTION ZHI ;
+declare_write_candy_statement : declare_statement WRITE_KEY_FUNCTION ZHI
+                              ;
 
-mod_math_statement          : DIV (data|ZHI) pp=(PREPOSITION_LEFT|PREPOSITION_RIGHT) data POST_MOD_MATH_OP ;
+mod_math_statement          : DIV data pp=(PREPOSITION_LEFT|PREPOSITION_RIGHT) data POST_MOD_MATH_OP ;
 boolean_algebra_statement   : FU data data op=(AND | OR) ;
 assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGHT_END   # assign_data_statement
                             | ASSIGN_LEFT data ZHE ASSIGN_RIGHT ASSIGN_RIGHT_NULL       # assign_null_statement;
 
 function_define_statement   : LOCAL_DECLARE_OP INT_NUM FUNCTION_TYPE NAMING YUE IDENTIFIER
                               (FUNCTION_ARGS_START FUNCTION_ARGS_GET (args+=INT_NUM type (YUE id+=IDENTIFIER)+)+)?
-                              FUNCTION_BODY_START statement* DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END ;
+                              FUNCTION_BODY_START program DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END ;
 
 function_call_statement     : CALLING_FUNCTION (data|key_function)
-                              (preposition (args+=data|ZHI))?
+                              (preposition (args+=data))?
                               (preposition args+=data)*                         # function_pre_call
-                            | key_function (data|ZHI)
+                            | key_function (data)
                               (pp+=(PREPOSITION_LEFT|PREPOSITION_RIGHT) data)*  # key_function_call
                             | FUNCTION_GET_ARGS INT_NUM PREPOSITION_RIGHT CALLING_FUNCTION
                               (data|key_function)                               # function_post_call
@@ -67,13 +80,13 @@ function_call_statement     : CALLING_FUNCTION (data|key_function)
 
 flush_statement             : FLUSH ;
 
-if_statement                : IF_ if_expression ZHE if_+=statement* (ELSE_ else_+=statement*)? FOR_IF_END ;
+if_statement                : IF_ if_expression ZHE if_=program (ELSE_ else_=program)? FOR_IF_END ;
 if_expression               : data                  # if_data
                             | data if_logic_op data # if_logic ;
 
-for_statement               : FOR_ARR_START data FOR_ARR_BELONG IDENTIFIER statement* FOR_IF_END  # for_arr_statement
-                            | FOR_ENUM_START data FOR_ENUM_TIMES statement* FOR_IF_END            # for_enum_statement
-                            | FOR_WHILE_SART statement* FOR_IF_END                                # for_while_statement
+for_statement               : FOR_ARR_START data FOR_ARR_BELONG IDENTIFIER program FOR_IF_END  # for_arr_statement
+                            | FOR_ENUM_START data FOR_ENUM_TIMES program FOR_IF_END            # for_enum_statement
+                            | FOR_WHILE_SART program FOR_IF_END                                # for_while_statement
                             ;
 
 return_statement            : RETURN data                     # return_data_statement

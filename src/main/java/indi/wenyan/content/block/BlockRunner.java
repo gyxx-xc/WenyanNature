@@ -41,7 +41,7 @@ public class BlockRunner extends BlockEntity {
 
     @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, BlockRunner entity) {
-        if (!level.isClientSide && WenyanProgram.isRunning(entity.program))
+        if (!level.isClientSide && entity.program.isRunning())
             entity.program.step(entity.speed);
 
         if (!entity.isCommunicating) {

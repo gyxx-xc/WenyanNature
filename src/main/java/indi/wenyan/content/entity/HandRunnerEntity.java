@@ -49,7 +49,7 @@ public class HandRunnerEntity extends Projectile {
             }
         }
         if (!this.level().isClientSide() && hasRun) {
-            if (!WenyanProgram.isRunning(program)) {
+            if (!program.isRunning()) {
                 discard();
                 return;
             }
@@ -64,7 +64,7 @@ public class HandRunnerEntity extends Projectile {
 
     @Override
     public void remove(@NotNull RemovalReason reason) {
-        if (WenyanProgram.isRunning(program))
+        if (program.isRunning())
             program.stop();
         super.remove(reason);
     }

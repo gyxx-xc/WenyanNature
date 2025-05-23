@@ -192,5 +192,5 @@ idea {
 }
 
 generateGrammarSource {
-    arguments += ["-visitor", "-no-listener"]
+    arguments += ["-no-listener", "-visitor", "-encoding", "UTF-8"]
 }
