@@ -1,11 +1,9 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.interpreter.executor.WenyanCode;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class WenyanBytecode {
+public class WenyanBytecode extends WenyanProgramCode {
     private final List<Code> bytecode = new ArrayList<>();
     private final List<WenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
@@ -18,14 +16,14 @@ public class WenyanBytecode {
         bytecode.set(index, new Code(code.code, arg));
     }
 
-    private record Code(WenyanCode code, int arg) {
+    private record Code(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
         @Override
         public String toString() {
             return code+" "+arg;
         }
     }
 
-    public void add(WenyanCode code, int arg) {
+    public void add(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
         bytecode.add(new Code(code, arg));
     }
 

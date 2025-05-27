@@ -1,9 +1,9 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.executor.*;
 import indi.wenyan.interpreter.structure.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.utils.WenyanCodes;
 
 // this class is for
 // flush_statement
@@ -29,17 +29,17 @@ public class WenyanControlVisitor extends WenyanVisitor {
     public Boolean visitIf_statement(WenyanRParser.If_statementContext ctx) {
         visit(ctx.if_expression());
         int ifEnds = bytecode.getNewLabel();
-        bytecode.add(WenyanCodes.BRANCH_FALSE, ifEnds);
-        bytecode.add(WenyanCodes.POP);
+        bytecode.add(WenyanCodes.BRANCH_POP_FALSE, ifEnds);
         bodyVisitor.visit(ctx.if_); // if body
         if (ctx.else_ == null) {
             bytecode.setLabel(ifEnds);
         } else {
             int elseEnds = bytecode.getNewLabel();
             bytecode.add(WenyanCodes.JMP, elseEnds);
+
             bytecode.setLabel(ifEnds);
-            bytecode.add(WenyanCodes.POP);
             bodyVisitor.visit(ctx.else_);
+
             bytecode.setLabel(elseEnds);
         }
         return true;
@@ -110,10 +110,13 @@ public class WenyanControlVisitor extends WenyanVisitor {
     public Boolean visitFor_while_statement(WenyanRParser.For_while_statementContext ctx) {
         bytecode.enterFor();
         int whileStart = bytecode.getNewLabel();
+
         bytecode.setLabel(whileStart);
         bodyVisitor.visit(ctx.program());
+
         bytecode.setProgEndLabel();
         bytecode.add(WenyanCodes.JMP, whileStart);
+
         bytecode.setForEndLabel();
         bytecode.exitFor();
         return true;

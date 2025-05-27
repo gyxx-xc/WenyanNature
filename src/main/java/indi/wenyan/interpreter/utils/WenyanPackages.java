@@ -4,15 +4,13 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.handler.*;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
@@ -20,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class WenyanPackages {
-    public static final WenyanFunctionEnvironment WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
@@ -79,7 +77,7 @@ public class WenyanPackages {
             .function("「」", args -> null)
             .build();
 
-    public static final WenyanFunctionEnvironment MATH_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
             .constant("「圓周率」", WenyanValue.Type.DOUBLE, Math.PI)
             .constant("「倍圓周率」", WenyanValue.Type.DOUBLE, Math.TAU)
             .constant("「半圓周率」", WenyanValue.Type.DOUBLE, Math.PI / 2)
@@ -109,7 +107,7 @@ public class WenyanPackages {
             .function("「正負」", args -> Math.signum((double)args[0]), WenyanValue.Type.DOUBLE)
             .build();
 
-    public static final WenyanFunctionEnvironment BIT_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime BIT_PACKAGES = WenyanPackageBuilder.create()
             .function("「左移」", args -> (int)args[0]<<(int)args[1], WenyanValue.Type.INT)
             .function("「右移」", args -> (int)args[0]>>(int)args[1], WenyanValue.Type.INT)
             .function("「補零右移」", args -> (int)args[0]>>>(int)args[1], WenyanValue.Type.INT)
@@ -120,7 +118,7 @@ public class WenyanPackages {
             .function("「位變」", args -> ~(int)args[0], WenyanValue.Type.INT)
             .build();
 
-    public static final WenyanFunctionEnvironment RANDOM_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime RANDOM_PACKAGES = WenyanPackageBuilder.create()
             .function("「占數」", args -> switch (args.length) {
                 case 0 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt();
                 case 1 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0]);
@@ -132,7 +130,7 @@ public class WenyanPackages {
             .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanValue.Type.BOOL)
             .build();
 
-    public static WenyanFunctionEnvironment handEnvironment(Player holder, HandRunnerEntity runner) {
+    public static WenyanRuntime handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
@@ -149,7 +147,7 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static WenyanFunctionEnvironment blockEnvironment(BlockPos pos, BlockState block, Player holder, Thread thread, BlockRunner runner) {
+    public static WenyanRuntime blockEnvironment(BlockPos pos, BlockState block, Player holder, Thread thread, BlockRunner runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
@@ -169,7 +167,7 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static WenyanFunctionEnvironment craftingEnvironment(CraftingAnswerChecker checker) {
+    public static WenyanRuntime craftingEnvironment(CraftingAnswerChecker checker) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .environment(checker.inputEnvironment())
@@ -180,7 +178,7 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static final Map<String, WenyanFunctionEnvironment> PACKAGES = new HashMap<>(){{
+    public static final Map<String, WenyanRuntime> PACKAGES = new HashMap<>(){{
         put("「「算經」」", MATH_PACKAGES);
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);

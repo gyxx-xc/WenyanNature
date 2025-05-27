@@ -1,24 +1,24 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanValue;
 
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class WenyanPackageBuilder {
-    private final WenyanFunctionEnvironment environment = new WenyanFunctionEnvironment(null);
+    private final WenyanRuntime environment = new WenyanRuntime(null);
 
     public static WenyanPackageBuilder create() {
         return new WenyanPackageBuilder();
     }
 
-    public WenyanPackageBuilder environment(WenyanFunctionEnvironment environment) {
+    public WenyanPackageBuilder environment(WenyanRuntime environment) {
         this.environment.importEnvironment(environment);
         return this;
     }
 
-    public WenyanFunctionEnvironment build() {
+    public WenyanRuntime build() {
         return environment;
     }
 
@@ -64,7 +64,7 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanValue.Type[] argTypes) {
-        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(name, argTypes);
+        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(name, argTypes);
         environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         environment.setFunction(sign, javacall);
         return this;

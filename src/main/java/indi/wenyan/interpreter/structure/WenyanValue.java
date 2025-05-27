@@ -322,4 +322,6 @@ public class WenyanValue {
             result.append(digit == '.' ? dot : numerals[Character.getNumericValue(digit)]);
         return result.toString();
     }
+
+    public record FunctionSign(String name, Type[] argTypes, WenyanProgramCode bytecode) {}
 }

@@ -1,8 +1,8 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.executor.*;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 import net.minecraft.network.chat.Component;
 
@@ -70,7 +70,6 @@ public class WenyanExprVisitor extends WenyanVisitor {
     public Boolean visitDefine_statement(WenyanRParser.Define_statementContext ctx) {
         int n = ctx.d.size();
         for (int i = 0; i < n; i++) {
-            bytecode.add(WenyanCodes.PEEK_ANS); // since store del one val in stack, we need two for one var
             bytecode.add(WenyanCodes.POP_ANS);
             bytecode.add(WenyanCodes.STORE, ctx.d.get(n - i - 1).getText());
         }
@@ -139,16 +138,16 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 throw new WenyanException(e.getMessage(), ctx);
             }
         }
-        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(
-                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanValue.Type[0]));
 
-        // TODO: store the func code (add a new list for bytecode)
-        new WenyanMainVisitor(bytecode).visit(ctx.program());
+        WenyanBytecode functionBytecode = new WenyanBytecode();
+        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(
+                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanValue.Type[0]), functionBytecode);
+
+        new WenyanMainVisitor(new WenyanCompilerEnvironment(functionBytecode)).visit(ctx.program());
 
         bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
-        bytecode.add(WenyanCodes.PUSH_ANS);
-        bytecode.add(WenyanCodes.PEEK_ANS);
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
+        bytecode.add(WenyanCodes.PUSH_ANS);
         return true;
     }
 
@@ -214,7 +213,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         return dataVisitor.visitData_primary(ctx);
     }
 
-//    private WenyanValue callFunction(WenyanFunctionEnvironment.FunctionSign sign, WenyanValue[] args) throws WenyanException.WenyanThrowException {
+//    private WenyanValue callFunction(WenyanRuntime.FunctionSign sign, WenyanValue[] args) throws WenyanException.WenyanThrowException {
 //        WenyanRParser.Function_define_statementContext func = functionEnvironment.getFunction(sign);
 //        // casting args
 //        for (int i = 0; i < sign.argTypes().length; i ++) {
@@ -223,7 +222,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
 //        if (func instanceof JavacallHandler) {
 //            return ((JavacallHandler) func).handle(args);
 //        } else {
-//            WenyanFunctionEnvironment functionEnvironment = new WenyanFunctionEnvironment(this.functionEnvironment);
+//            WenyanRuntime functionEnvironment = new WenyanRuntime(this.functionEnvironment);
 //            for (int i = 0; i < args.length; i++) {
 //                functionEnvironment.setVariable(func.id.get(i).getText(), WenyanValue.varOf(args[i]));
 //            }

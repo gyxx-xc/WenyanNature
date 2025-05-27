@@ -26,7 +26,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
 
 //    @Override
 //    public WenyanValue visitImport_statement(WenyanRParser.Import_statementContext ctx) {
-//        WenyanFunctionEnvironment importFunctionEnvironment =
+//        WenyanRuntime importFunctionEnvironment =
 //                WenyanPackages.PACKAGES.get(ctx.STRING_LITERAL().getText());
 //        if (ctx.IDENTIFIER().isEmpty()) {
 //            functionEnvironment.importEnvironment(importFunctionEnvironment);

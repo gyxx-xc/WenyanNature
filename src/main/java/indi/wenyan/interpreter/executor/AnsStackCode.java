@@ -1,7 +1,9 @@
 package indi.wenyan.interpreter.executor;
 
-public class AnsStackCode extends WenyanCode{
+import indi.wenyan.interpreter.structure.WenyanRuntime;
+import indi.wenyan.interpreter.utils.WenyanCode;
 
+public class AnsStackCode extends WenyanCode {
     private final Operation operation;
 
     public AnsStackCode(Operation o) {
@@ -10,8 +12,13 @@ public class AnsStackCode extends WenyanCode{
     }
 
     @Override
-    public void exec(int args) {
-
+    public void exec(int args, WenyanRuntime runtime) {
+        switch (operation) {
+            case PUSH -> runtime.resultStack.push(runtime.processStack.pop());
+            case POP -> runtime.processStack.push(runtime.resultStack.pop());
+            case PEEK -> runtime.processStack.push(runtime.resultStack.peek());
+            case FLUSH -> runtime.resultStack.clear();
+        }
     }
 
     public enum Operation {

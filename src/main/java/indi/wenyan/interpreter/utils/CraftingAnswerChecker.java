@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanValue;
-import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public abstract class CraftingAnswerChecker {
         ans.addAll(List.of(value));
     }
 
-    public WenyanFunctionEnvironment inputEnvironment() {
+    public WenyanRuntime inputEnvironment() {
         genInput();
         WenyanPackageBuilder builder = WenyanPackageBuilder.create();
         for (int i = 0; i < input.size(); i++)

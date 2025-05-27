@@ -8,10 +8,9 @@ grammar WenyanR;
 // call:argc (arg2, arg1..., func_value -> ret), ret (value -> )
 // push:const (-> value), pop (value ->)
 // pushA (value ->), popA (-> value), peekA(-> value), empty
-// load:id (-> value), store:id (value ->), set_val(value2, value1 -> ) [v1 -> v2]
+// load:id (-> value), store:id (value -> value), set_val(value2, value1 -> ) [v1 -> v2]
 // casting:type (value -> value)
 // import?
-
 
 program                     : statement*;
 

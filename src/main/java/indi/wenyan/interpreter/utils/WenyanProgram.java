@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanBytecode;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +13,7 @@ public class WenyanProgram {
     public final WenyanBytecode bytecode;
     public int programCounter;
 
-    public WenyanProgram(String code, Player holder, WenyanFunctionEnvironment baseEnvironment) {
+    public WenyanProgram(String code, Player holder, WenyanRuntime baseEnvironment) {
         this.code = code;
         this.bytecode = new WenyanBytecode();
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(bytecode));

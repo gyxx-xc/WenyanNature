@@ -1,7 +1,6 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.executor.*;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.*;
 import net.minecraft.network.chat.Component;
@@ -63,7 +62,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
 //                case WenyanRParser.IDENTIFIER -> {
 //                    try {
 //                        value = functionEnvironment
-//                                .getVariable(ctx.IDENTIFIER().getText())
+//                                .getVariableHelper(ctx.IDENTIFIER().getText())
 //                                .casting(WenyanValue.Type.INT);
 //                    } catch (WenyanException.WenyanThrowException e) {
 //                        throw new WenyanException(e, ctx);

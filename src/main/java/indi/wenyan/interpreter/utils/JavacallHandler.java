@@ -1,18 +1,14 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
+import indi.wenyan.interpreter.structure.WenyanProgramCode;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.interpreter.structure.WenyanException;
 
 /**
  * This class represents a Javacall context.
- * It makes itself as a fake statement context (program)
  */
-public class JavacallHandler extends WenyanRParser.Function_define_statementContext {
-    @FunctionalInterface
-    public interface WenyanFunction {
-        WenyanValue apply(WenyanValue[] args) throws WenyanException.WenyanThrowException;
-    }
+public class JavacallHandler extends WenyanProgramCode {
     private final WenyanFunction function;
 
     public JavacallHandler() {
@@ -20,7 +16,6 @@ public class JavacallHandler extends WenyanRParser.Function_define_statementCont
     }
 
     public JavacallHandler(WenyanFunction function) {
-        super(null, 0);
         this.function = function;
     }
 
@@ -35,5 +30,10 @@ public class JavacallHandler extends WenyanRParser.Function_define_statementCont
         for (int i = 0; i < args.length; i++)
             newArgs[i] = args[i].casting(args_type[i]).getValue();
         return newArgs;
+    }
+
+    @FunctionalInterface
+    public interface WenyanFunction {
+        WenyanValue apply(WenyanValue[] args) throws WenyanException.WenyanThrowException;
     }
 }
