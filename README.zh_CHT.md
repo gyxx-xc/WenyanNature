@@ -1,7 +1,9 @@
 [English](README.md) | [简体中文](README.zh_CHS.md) | [繁体中文](README.zh_CHT.md)<br>
 
-
 <p><img src="./title.png" alt="Logo" width="720"></p>
+<h1>吾有一術  <br>
+	<a href="https://github.com/gyxx-xc/WenyanNature/blob/master/LICENSE"><img src="https://img.shields.io/github/license/gyxx-xc/WenyanNature?style=flat&color=900c3f" alt="License"></a>
+</h1>
 
 Wenyan Nature 是一款受到 [文言](https://github.com/wenyan-lang/wenyan) 啟發的 Minecraft 模組。
 透過文言語言，此模組讓玩家能操控複雜的魔法邏輯，創造神奇的魔法效果。
