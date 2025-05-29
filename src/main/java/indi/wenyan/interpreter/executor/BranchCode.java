@@ -19,21 +19,27 @@ public class BranchCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanRuntime runtime) {
-        if (operation == Operation.POP) {
-            runtime.processStack.pop();
-        }
-        boolean jump;
+        boolean val = false;
         try {
-            jump = switch (condition) {
-                case FALSE -> !((boolean) runtime.processStack.pop().casting(WenyanValue.Type.BOOL).getValue());
-                case TRUE -> (boolean) runtime.processStack.pop().casting(WenyanValue.Type.BOOL).getValue();
-                case NONE -> true;
-            };
+            if (condition != Condition.NONE) {
+                if (operation == Operation.POP) {
+                    val = (boolean) runtime.processStack.pop().casting(WenyanValue.Type.BOOL).getValue();
+                } else {
+                    val = (boolean) runtime.processStack.peek().casting(WenyanValue.Type.BOOL).getValue();
+                }
+            }
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }
+
+        boolean jump = switch (condition) {
+                case FALSE -> !(val);
+                case TRUE -> val;
+                case NONE -> true;
+            };
         if (jump) {
-            runtime.programCounter = runtime.getLabel(args);
+            runtime.programCounter = runtime.bytecode.getLabel(args);
+            runtime.PCFlag = true;
         }
     }
 

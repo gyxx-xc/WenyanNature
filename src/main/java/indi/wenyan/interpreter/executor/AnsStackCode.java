@@ -17,6 +17,10 @@ public class AnsStackCode extends WenyanCode {
             case PUSH -> runtime.resultStack.push(runtime.processStack.pop());
             case POP -> runtime.processStack.push(runtime.resultStack.pop());
             case PEEK -> runtime.processStack.push(runtime.resultStack.peek());
+            case PEEK_N -> {
+                for (int i = 0; i < args; i ++)
+                    runtime.processStack.push(runtime.resultStack.get(runtime.resultStack.size()-i-1));
+            }
             case FLUSH -> runtime.resultStack.clear();
         }
     }
@@ -25,6 +29,7 @@ public class AnsStackCode extends WenyanCode {
         PUSH,
         POP,
         PEEK,
+        PEEK_N,
         FLUSH
     }
 
@@ -33,6 +38,7 @@ public class AnsStackCode extends WenyanCode {
             case PUSH -> "PUSH_ANS";
             case POP -> "POP_ANS";
             case PEEK -> "PEEK_ANS";
+            case PEEK_N -> "PEEK_ANS_N";
             case FLUSH -> "FLUSH_ANS";
         };
     }

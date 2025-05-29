@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 import net.minecraft.network.chat.Component;
+import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
 
@@ -101,12 +102,12 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (ctx.data().size() == 2) { // deal pp
             switch (ctx.pp.getFirst().getType()) {
                 case WenyanRParser.PREPOSITION_RIGHT -> {
-                    visit(ctx.data(0));
                     visit(ctx.data(1));
+                    visit(ctx.data(0));
                 }
                 case WenyanRParser.PREPOSITION_LEFT -> {
-                    visit(ctx.data(1));
                     visit(ctx.data(0));
+                    visit(ctx.data(1));
                 }
                 default ->
                         throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
@@ -143,7 +144,11 @@ public class WenyanExprVisitor extends WenyanVisitor {
         WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(
                 ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanValue.Type[0]), functionBytecode);
 
-        new WenyanMainVisitor(new WenyanCompilerEnvironment(functionBytecode)).visit(ctx.program());
+        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
+        for (Token i : ctx.id)
+            environment.getIdentifierIndex(i.getText()); // return should be indexOf(i)
+
+        new WenyanMainVisitor(environment).visit(ctx.program());
 
         bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());

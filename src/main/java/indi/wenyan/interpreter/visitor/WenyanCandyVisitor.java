@@ -21,8 +21,11 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     public Boolean visitDeclare_write_candy_statement(WenyanRParser.Declare_write_candy_statementContext ctx) {
         exprVisitor.visit(ctx.declare_statement());
         try {
+            int n = WenyanDataPhaser.parseInt(ctx.declare_statement().INT_NUM().getText());
+            bytecode.add(WenyanCodes.PEEK_ANS_N, n);
             bytecode.add(WenyanCodes.LOAD, ctx.WRITE_KEY_FUNCTION().getText());
-            bytecode.add(WenyanCodes.CALL, WenyanDataPhaser.parseInt(ctx.declare_statement().INT_NUM().getText()));
+            bytecode.add(WenyanCodes.CALL, n);
+            bytecode.add(WenyanCodes.PUSH_ANS);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
@@ -51,12 +54,12 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     public Boolean visitMod_math_statement(WenyanRParser.Mod_math_statementContext ctx) {
         switch (ctx.pp.getType()) {
             case WenyanRParser.PREPOSITION_RIGHT:
-                exprVisitor.visit(ctx.data(0));
                 exprVisitor.visit(ctx.data(1));
+                exprVisitor.visit(ctx.data(0));
                 break;
             case WenyanRParser.PREPOSITION_LEFT:
-                exprVisitor.visit(ctx.data(1));
                 exprVisitor.visit(ctx.data(0));
+                exprVisitor.visit(ctx.data(1));
                 break;
             default:
                 throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);

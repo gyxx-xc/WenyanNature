@@ -53,8 +53,8 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitIf_logic(WenyanRParser.If_logicContext ctx) {
-        exprVisitor.visit(ctx.data(0));
         exprVisitor.visit(ctx.data(1));
+        exprVisitor.visit(ctx.data(0));
         bytecode.add(WenyanCodes.LOAD, ctx.if_logic_op().op.getText());
         bytecode.add(WenyanCodes.CALL, 2);
         return true;
@@ -85,6 +85,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitFor_enum_statement(WenyanRParser.For_enum_statementContext ctx) {
+        bytecode.enterFor();
         exprVisitor.visit(ctx.data());
         int forEnd = bytecode.getNewLabel();
         int progStart = bytecode.getNewLabel();
@@ -94,10 +95,10 @@ public class WenyanControlVisitor extends WenyanVisitor {
         bodyVisitor.visit(ctx.program());
 
         bytecode.setProgEndLabel();
-        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.INT, 1, true));
-        bytecode.add(WenyanCodes.LOAD, "減");
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.INT, -1, true));
+        bytecode.add(WenyanCodes.LOAD, "加");
         bytecode.add(WenyanCodes.CALL, 2);
-        bytecode.add(WenyanCodes.BRANCH_FALSE, progStart);
+        bytecode.add(WenyanCodes.BRANCH_TRUE, progStart);
 
         bytecode.setForEndLabel();
         bytecode.setLabel(forEnd);

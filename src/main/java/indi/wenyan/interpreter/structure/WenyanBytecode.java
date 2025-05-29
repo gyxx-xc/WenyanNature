@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.utils.WenyanCode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +11,7 @@ public class WenyanBytecode extends WenyanProgramCode {
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
 
-    public void setArg(int index, int arg) {
-        if (index < 0 || index >= bytecode.size())
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-        Code code = bytecode.get(index);
-        bytecode.set(index, new Code(code.code, arg));
-    }
-
-    private record Code(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
+    public record Code(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
         @Override
         public String toString() {
             return code+" "+arg;
@@ -25,6 +20,10 @@ public class WenyanBytecode extends WenyanProgramCode {
 
     public void add(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
         bytecode.add(new Code(code, arg));
+    }
+
+    public Code get(int index) {
+        return bytecode.get(index);
     }
 
     public WenyanValue getConst(int index) {
@@ -64,8 +63,13 @@ public class WenyanBytecode extends WenyanProgramCode {
 
     @Override
     public String toString() {
-        return "bytecode=" + bytecode +
-                "\nconstTable=" + constTable +
-                "\nidentifierTable=" + identifierTable;
+        StringBuilder sb = new StringBuilder();
+        sb.append("constTable=").append(constTable).append("\n");
+        sb.append("identifierTable=").append(identifierTable).append("\n");
+        sb.append("labelTable=").append(labelTable).append("\n");
+        for (int i = 0; i < bytecode.size(); i++) {
+            sb.append(i).append(": ").append(bytecode.get(i)).append("\n");
+        }
+        return sb.toString();
     }
 }

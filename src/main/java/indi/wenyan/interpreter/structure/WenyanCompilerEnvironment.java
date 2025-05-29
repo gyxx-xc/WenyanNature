@@ -77,7 +77,7 @@ public class WenyanCompilerEnvironment implements Serializable {
         return index;
     }
 
-    private int getIdentifierIndex(String identifier) {
+    public int getIdentifierIndex(String identifier) {
         Integer index = identifierTable.get(identifier);
         if (index == null) {
             index = bytecode.addIdentifier(identifier);

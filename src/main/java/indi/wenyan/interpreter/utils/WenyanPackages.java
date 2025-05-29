@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -74,7 +75,65 @@ public class WenyanPackages {
                 }
                 return value;
             })
+            // 模, 且, 或
+            .function("模", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return args[0].mod(args[1]);
+            })
+            .function("且", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL,
+                        (boolean) args[0].casting(WenyanValue.Type.BOOL).getValue() &&
+                                (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue(),
+                        true);
+            })
+            .function("或", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL,
+                        (boolean) args[0].casting(WenyanValue.Type.BOOL).getValue() ||
+                                (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue(),
+                        true);
+            })
+            .function("不等於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, !args[0].equals(args[1]), true);
+            })
+            .function("不大於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) <= 0, true);
+            })
+            .function("不小於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) >= 0, true);
+            })
+            .function("等於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].equals(args[1]), true);
+            })
+            .function("大於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) > 0, true);
+            })
+            .function("小於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) < 0, true);
+            })
             .function("「」", args -> null)
+
+            .function("書", args -> {
+                System.out.println(Arrays.toString(args));
+                return null;
+            })
+
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()

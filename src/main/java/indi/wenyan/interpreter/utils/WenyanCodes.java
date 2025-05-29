@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.executor.*;
 public class WenyanCodes {
     public static final WenyanCode BRANCH_POP_FALSE = new BranchCode(BranchCode.Condition.FALSE, BranchCode.Operation.POP);
     public static final WenyanCode BRANCH_FALSE = new BranchCode(BranchCode.Condition.FALSE, BranchCode.Operation.NONE);
+    public static final WenyanCode BRANCH_TRUE = new BranchCode(BranchCode.Condition.TRUE, BranchCode.Operation.NONE);
     public static final WenyanCode JMP = new BranchCode(BranchCode.Condition.NONE, BranchCode.Operation.NONE);
 
     public static final WenyanCode CALL = new FunctionCode(FunctionCode.Operation.CALL);
@@ -14,6 +15,7 @@ public class WenyanCodes {
     public static final WenyanCode POP = new StackCode(StackCode.Operation.POP);
 
     public static final WenyanCode PEEK_ANS = new AnsStackCode(AnsStackCode.Operation.PEEK);
+    public static final WenyanCode PEEK_ANS_N = new AnsStackCode(AnsStackCode.Operation.PEEK_N);
     public static final WenyanCode POP_ANS = new AnsStackCode(AnsStackCode.Operation.POP);
     public static final WenyanCode PUSH_ANS = new AnsStackCode(AnsStackCode.Operation.PUSH);
     public static final WenyanCode FLUSH = new AnsStackCode(AnsStackCode.Operation.FLUSH);

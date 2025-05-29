@@ -17,31 +17,37 @@ public class FunctionCode extends WenyanCode {
         switch (operation) {
             case CALL -> {
                 // setup new Runtime
-                WenyanProgramCode code;
+                WenyanValue.FunctionSign sign;
+                WenyanValue[] argsList = new WenyanValue[args];
+
                 try {
-                    code = ((WenyanValue.FunctionSign)runtime.processStack.pop().casting(WenyanValue.Type.FUNCTION).getValue()).bytecode();
+                    sign = ((WenyanValue.FunctionSign)runtime.processStack.pop().casting(WenyanValue.Type.FUNCTION).getValue());
+                    for (int i = 0; i < args; i++)
+                        argsList[i] = runtime.processStack.pop();
                 } catch (WenyanException.WenyanTypeException e) {
                     throw new WenyanException(e.getMessage());
                 }
-                if (code instanceof JavacallHandler) {
+
+
+                if (sign.bytecode() instanceof JavacallHandler) {
                     try {
-                        WenyanValue[] argsList = new WenyanValue[args];
-                        for (int i = 0; i < args; i++)
-                            argsList[i] = runtime.processStack.pop();
-                        ((JavacallHandler) code).handle(argsList);
-                        return;
+                        WenyanValue value = ((JavacallHandler) sign.bytecode()).handle(argsList);
+                        runtime.processStack.push(value);
                     } catch (WenyanException.WenyanThrowException e) {
                         throw new WenyanException(e.getMessage());
                     }
+                } else {
+                    runtime.nextRuntime = new WenyanRuntime(runtime, (WenyanBytecode) sign.bytecode());
+                    for (int i = 0; i < args; i ++) {
+                        runtime.nextRuntime.setVariable(((WenyanBytecode) sign.bytecode()).getIdentifier(i), WenyanValue.varOf(argsList[i]));
+                    }
+                    runtime.changeRuntimeFlag = true;
                 }
-                WenyanRuntime newRuntime = new WenyanRuntime(runtime, (WenyanBytecode) code);
-                // change control
             }
             case RETURN -> {
-                WenyanValue returnValue = runtime.processStack.pop();
-                // TODO: change control
-
-                runtime.processStack.push(returnValue);
+                runtime.parentEnvironment.processStack.push(runtime.processStack.pop());
+                runtime.nextRuntime = runtime.parentEnvironment;
+                runtime.changeRuntimeFlag = true;
             }
         }
     }

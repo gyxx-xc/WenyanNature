@@ -17,13 +17,13 @@ public class VariableCode extends WenyanCode {
     @Override
     public void exec(int args, WenyanRuntime runtime) {
         switch (operation) {
-            case LOAD -> runtime.processStack.push(runtime.getVariable(args));
-            case STORE -> runtime.setVariable(runtime.getVariableId(args), runtime.processStack.peek());
+            case LOAD -> runtime.processStack.push(runtime.getVariable(runtime.bytecode.getIdentifier(args)));
+            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanValue.varOf(runtime.processStack.peek()));
             case SET_VALUE -> {
+                WenyanValue value = runtime.processStack.pop();
                 WenyanValue var =  runtime.processStack.pop();
                 if (var.isConst())
                     throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString());
-                WenyanValue value = runtime.processStack.pop();
                 try {
                     var.setValue(value.casting(var.getType()).getValue());
                 } catch (WenyanException.WenyanTypeException e) {
@@ -41,6 +41,7 @@ public class VariableCode extends WenyanCode {
                         case 5 -> var.casting(WenyanValue.Type.LIST);
                         default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_cast_type").getString());
                     }
+                    runtime.processStack.push(var);
                 } catch (WenyanException.WenyanTypeException e) {
                     throw new WenyanException(e.getMessage());
                 }

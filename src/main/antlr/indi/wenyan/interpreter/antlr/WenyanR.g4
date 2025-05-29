@@ -7,7 +7,7 @@ grammar WenyanR;
 // jmp:label (->), branch_false:label (value -> value)
 // call:argc (arg2, arg1..., func_value -> ret), ret (value -> )
 // push:const (-> value), pop (value ->)
-// pushA (value ->), popA (-> value), peekA(-> value), empty
+// pushA (value ->), popA (-> value), peekA(-> value), peekA_N:cnt (-> cnt*val) empty
 // load:id (-> value), store:id (value -> value), set_val(value2, value1 -> ) [v1 -> v2]
 // casting:type (value -> value)
 // import?
