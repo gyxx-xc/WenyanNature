@@ -37,6 +37,8 @@ public class WenyanValue {
     private Object value;
     private final boolean isConst;
 
+    public static final WenyanValue NULL = new WenyanValue(Type.NULL, null, true);
+
     public WenyanValue(Type type, Object value, boolean isConst) {
         this.type = type;
         this.value = value;

@@ -150,6 +150,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         new WenyanMainVisitor(environment).visit(ctx.program());
 
+        // add a return null at end
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        environment.add(WenyanCodes.RET);
+
         bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
         bytecode.add(WenyanCodes.PUSH_ANS);

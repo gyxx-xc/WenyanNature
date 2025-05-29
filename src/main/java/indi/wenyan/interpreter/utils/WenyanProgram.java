@@ -14,6 +14,8 @@ public class WenyanProgram {
     public final WenyanRuntime baseEnvironment;
     public WenyanRuntime runtime;
 
+    private boolean isRunning = false;
+
     public WenyanProgram(String code, Player holder, WenyanRuntime baseEnvironment) {
         this.code = code;
         this.baseBytecode = new WenyanBytecode();
@@ -24,12 +26,18 @@ public class WenyanProgram {
 
     public void run() {
         runtime = new WenyanRuntime(baseEnvironment, baseBytecode);
+        isRunning = true;
     }
 
     public void step() {
 //        System.out.println(runtime.processStack);
 //        System.out.println(runtime.resultStack);
 //        System.out.println(runtime.programCounter + ": " + runtime.bytecode.get(runtime.programCounter));
+
+        if (runtime.programCounter >= runtime.bytecode.size()) {
+            isRunning = false;
+            return;
+        }
 
         WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
         code.code().exec(code.arg(), runtime);
@@ -45,7 +53,10 @@ public class WenyanProgram {
 
     public void step(int steps) {
         for (int i = 0; i < steps; i++) {
-            step();
+            if (isRunning)
+                step();
+            else
+                break;
         }
     }
 
@@ -53,7 +64,7 @@ public class WenyanProgram {
     }
 
     public boolean isRunning() {
-        return false;
+        return isRunning;
     }
 
     public static void main(String[] args) {
@@ -94,6 +105,6 @@ public class WenyanProgram {
         }
         System.out.println(a);
         program.run();
-        while (true) program.step();
+        program.step(2147483647); // 2^31 - 1
     }
 }

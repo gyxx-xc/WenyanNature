@@ -11,6 +11,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
@@ -131,7 +133,7 @@ public class WenyanPackages {
 
             .function("書", args -> {
                 System.out.println(Arrays.toString(args));
-                return null;
+                return WenyanValue.NULL;
             })
 
             .build();
@@ -211,11 +213,11 @@ public class WenyanPackages {
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
                 .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
-                // .function("「放置」", new BlockPlaceHandler(holder,
-                //         (BlockItem) Items.ACACIA_LOG.asItem()
-                //         ,pos, block))
-                // .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
-                // .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
+                 .function("「放置」", new BlockPlaceHandler(holder,
+                         (BlockItem) Items.ACACIA_LOG.asItem()
+                         ,pos, block))
+                 .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
+                 .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
                 .function("「紅石量」", new RedstoneSignalHandler(thread, runner))
                 .function("「己於上」", new SelfPositionBlockHandler(holder, runner, Direction.UP))
                 .function("「己於下」", new SelfPositionBlockHandler(holder, runner, Direction.DOWN))
@@ -232,7 +234,7 @@ public class WenyanPackages {
                 .environment(checker.inputEnvironment())
                 .function("書", args -> {
                     checker.add(args);
-                    return null;
+                    return WenyanValue.NULL;
                 })
                 .build();
     }

@@ -4,5 +4,5 @@ import java.util.Stack;
 
 public class WenyanStack extends Stack<WenyanValue> {
     @Override
-    public WenyanValue push(WenyanValue item) {return item == null ? null : super.push(item);}
+    public WenyanValue push(WenyanValue item) {return  item.getType() == WenyanValue.Type.NULL ? null : super.push(item);}
 }

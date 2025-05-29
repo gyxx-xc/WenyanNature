@@ -37,6 +37,6 @@ public class CommunicateHandler extends JavacallHandler {
             blockRunner.isCommunicating = true;
             level.sendBlockUpdated(pos, state, state, 3);
         });
-        return null;
+        return WenyanValue.NULL;
     }
 }

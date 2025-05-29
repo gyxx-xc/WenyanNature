@@ -34,6 +34,6 @@ public class BulletHandler extends JavacallHandler {
         Vec3 dir = new Vec3((double)newArgs[0], (double)newArgs[1], (double)newArgs[2]);
         BulletEntity bullet = new BulletEntity(level, entity.getPosition(0), dir, (double) newArgs[3]/10, (int)newArgs[4], holder);
         level.addFreshEntity(bullet);
-        return null;
+        return WenyanValue.NULL;
     }
 }

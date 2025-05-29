@@ -151,7 +151,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitReturn_void_statement(WenyanRParser.Return_void_statementContext ctx) {
-        bytecode.add(WenyanCodes.PUSH, (WenyanValue) null);
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
         bytecode.add(WenyanCodes.RET);
         return true;
     }

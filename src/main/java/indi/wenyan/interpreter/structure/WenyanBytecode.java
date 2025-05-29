@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.interpreter.utils.WenyanCode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class WenyanBytecode extends WenyanProgramCode {
 
     public record Code(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return code+" "+arg;
         }
     }
