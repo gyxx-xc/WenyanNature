@@ -15,6 +15,8 @@ public class WenyanRuntime {
     public WenyanRuntime nextRuntime = null;
     public boolean changeRuntimeFlag = false;
 
+    public boolean noReturnFlag = false;
+
     private final HashMap<String, WenyanValue> variables = new HashMap<>();
     public final WenyanStack resultStack = new WenyanStack();
     public final Stack<WenyanValue> processStack = new Stack<>();

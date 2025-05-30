@@ -9,6 +9,7 @@ public class WenyanCodes {
     public static final WenyanCode JMP = new BranchCode(BranchCode.Condition.NONE, BranchCode.Operation.NONE);
 
     public static final WenyanCode CALL = new FunctionCode(FunctionCode.Operation.CALL);
+    public static final WenyanCode CALL_ATTR = new FunctionCode(FunctionCode.Operation.CALL_ATTR);
     public static final WenyanCode RET = new FunctionCode(FunctionCode.Operation.RETURN);
 
     public static final WenyanCode PUSH = new StackCode(StackCode.Operation.PUSH);
@@ -28,5 +29,8 @@ public class WenyanCodes {
     public static final WenyanCode LOAD_ATTR = new ObjectCode(ObjectCode.Operation.ATTR);
     public static final WenyanCode LOAD_ATTR_REMAIN = new ObjectCode(ObjectCode.Operation.ATTR_REMAIN);
     public static final WenyanCode STORE_ATTR = new ObjectCode(ObjectCode.Operation.STORE_ATTR);
+    public static final WenyanCode STORE_STATIC_ATTR = new ObjectCode(ObjectCode.Operation.STORE_STATIC_ATTR);
+    public static final WenyanCode STORE_FUNCTION_ATTR = new ObjectCode(ObjectCode.Operation.STORE_FUNCTION_ATTR);
     public static final WenyanCode CREATE_TYPE = new ObjectCode(ObjectCode.Operation.CREATE_TYPE);
+    public static final WenyanCode CREATE_OBJECT = new ObjectCode(ObjectCode.Operation.CREATE_OBJECT);
 }

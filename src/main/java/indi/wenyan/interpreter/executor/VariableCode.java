@@ -39,7 +39,7 @@ public class VariableCode extends WenyanCode {
                         case 3 -> var.casting(WenyanValue.Type.BOOL);
                         case 4 -> var.casting(WenyanValue.Type.STRING);
                         case 5 -> var.casting(WenyanValue.Type.LIST);
-                        default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_cast_type").getString());
+                        default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
                     }
                     runtime.processStack.push(var);
                 } catch (WenyanException.WenyanTypeException e) {

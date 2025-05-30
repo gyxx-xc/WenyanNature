@@ -6,12 +6,14 @@ grammar WenyanR;
 // to bytecode that has
 // jmp:label (->), branch_false:label (value -> value)
 // call:argc (arg2, arg1..., func_value -> ret), ret (value -> )
+// call_attr:argc (arg..., self/ignore, func -> ret)
 // push:const (-> value), pop (value ->)
 // pushA (value ->), popA (-> value), peekA(-> value), peekA_N:cnt (-> cnt*val), empty
 // load:id (-> value), store:id (value -> ), set_val(value2, value1 -> ) [v1 -> v2]
 // casting:type (value -> value)
-// load_attr:id (self -> attr), load_attr_remain:id (self -> self, attr), store_attr:id (self, attr -> self)
-// create_type:id (-> self)
+// load_attr:id (self -> attr), load_attr_remain:id (self -> self, attr),
+// store_attr:id (attr, self -> ), store_a_meth:id (self, m -> self), s_a_prop:id (self, p -> self)
+// create_type:id (parent -> self), create_object:argc (arg..., obj_type -> obj_ins)
 // import?
 
 program                     : statement*;
@@ -19,7 +21,6 @@ program                     : statement*;
 statement                   : candy_statement // make the candy first
                             | expr_statement
                             | control_statement
-                            | object_statement
                             | import_statement
                             ;
 
@@ -36,6 +37,8 @@ expr_statement              : declare_statement
 
                             | function_define_statement
                             | function_call_statement
+
+                            | object_statement
                             ;
 
 control_statement           : if_statement
@@ -50,6 +53,7 @@ data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT
                             | DATA_ID_LAST                                              # id_last
                             | ZHI                                                       # id_last_remain
                             | IDENTIFIER                                                # id
+                            | SELF                                                      # self
                             | data ZHI p=(IDENTIFIER|INT_NUM|DATA_ID_LAST)              # array_index
                             | data ZHI p=(STRING_LITERAL|LONG)                          # data_child
                             ;
@@ -57,7 +61,8 @@ data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT
 reference_statement         : FU data ;
 declare_statement           : declare_op INT_NUM type (YUE d+=data)* ;
 init_declare_statement      : DECLARE_HAVE type data ;
-define_statement            : NAMING (YUE d+=IDENTIFIER)+ ;
+define_statement            : NAMING (YUE definable_value)+ ;
+definable_value             : IDENTIFIER | (SELF ZHI STRING_LITERAL) ;
 
 declare_write_candy_statement : declare_statement WRITE_KEY_FUNCTION ZHI
                               ;
@@ -96,12 +101,12 @@ return_statement            : RETURN data                     # return_data_stat
                             | RETURN_NULL                     # return_void_statement
                             ;
 
-object_statement            : LOCAL_DECLARE_OP INT_NUM OBJECT_TYPE NAMING YUE IDENTIFIER
+object_statement            : LOCAL_DECLARE_OP INT_NUM OBJECT_TYPE (EXTENDS data)? NAMING YUE IDENTIFIER
                               OBJECT_BODY_START (object_property_define | object_method_define)+
                               DEFINE_CLOSURE IDENTIFIER OBJECT_DEFINE_END ;
-object_method_define        : OBJECT_STATIC_DECLARE STRING_LITERAL ZHE FUNCTION_TYPE
+object_method_define        : OBJECT_STATIC_DECLARE (STRING_LITERAL | CREATE_OBJECT) ZHE FUNCTION_TYPE
                               (FUNCTION_ARGS_START FUNCTION_ARGS_GET (args+=INT_NUM type (YUE id+=IDENTIFIER)+)+ )?
-                              FUNCTION_BODY_START program DEFINE_CLOSURE STRING_LITERAL FUNCTION_DEFINE_END ;
+                              FUNCTION_BODY_START program DEFINE_CLOSURE (STRING_LITERAL | CREATE_OBJECT) FUNCTION_DEFINE_END ;
 object_property_define      : OBJECT_STATIC_DECLARE STRING_LITERAL ZHE type YUE data ;
 
 import_statement            : '吾嘗觀' STRING_LITERAL '之書' ('方悟' IDENTIFIER+ '之義')? ;
@@ -138,7 +143,7 @@ CONTINUE_                    : '乃止是遍' ;
 BREAK_                       : '乃止' ;
 DATA_ID_LAST                : '其' ;
 
-RETURN_NULL                 : '乃歸空無' ;
+RETURN_NULL                 : '乃歸空無' | '乃歸' ;
 RETURN_LAST                 : '乃得矣' ;
 RETURN                      : '乃得' ;
 
@@ -177,7 +182,7 @@ PREPOSITION_LEFT            : '於' ;
 PREPOSITION_RIGHT           : '以' ;
 CALLING_FUNCTION            : '施' ;
 CREATE_OBJECT               : '造' ;
-
+EXTENDS                     : '繼' ;
 
 ZHE                         : '者' ;
 FU                          : '夫' ;
@@ -202,6 +207,7 @@ ARRAY_ADD_OP                : '充' ;
 WRITE_KEY_FUNCTION          : '書' ;
 FLUSH                       : '噫' ;
 
+SELF                        : '己' ;
 LONG                        : '長' ;
 
 STRING_LITERAL              : '「「' ( ~('」') )* '」」' ;

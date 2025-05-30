@@ -138,6 +138,11 @@ public class WenyanValue {
                 return ((WenyanObjectType) this.value).staticVariable.get("建"); // TODO: change name
             }
         }
+        if (type == Type.OBJECT) {
+            if (this.type == Type.LIST) {
+                return this;
+            }
+        }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 

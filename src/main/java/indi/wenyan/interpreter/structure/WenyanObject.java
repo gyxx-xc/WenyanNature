@@ -4,10 +4,9 @@ import java.util.HashMap;
 
 public class WenyanObject {
     public final WenyanObjectType type;
-    public final HashMap<String, WenyanValue> variable;
+    public final HashMap<String, WenyanValue> variable = new HashMap<>();
 
-    public WenyanObject(WenyanObjectType type, HashMap<String, WenyanValue> variable) {
+    public WenyanObject(WenyanObjectType type) {
         this.type = type;
-        this.variable = variable;
     }
 }
