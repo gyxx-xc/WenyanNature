@@ -18,7 +18,7 @@ public class VariableCode extends WenyanCode {
     public void exec(int args, WenyanRuntime runtime) {
         switch (operation) {
             case LOAD -> runtime.processStack.push(runtime.getVariable(runtime.bytecode.getIdentifier(args)));
-            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanValue.varOf(runtime.processStack.peek()));
+            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanValue.varOf(runtime.processStack.pop()));
             case SET_VALUE -> {
                 WenyanValue value = runtime.processStack.pop();
                 WenyanValue var =  runtime.processStack.pop();

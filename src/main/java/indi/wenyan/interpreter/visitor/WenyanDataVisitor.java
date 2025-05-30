@@ -50,39 +50,39 @@ public class WenyanDataVisitor extends WenyanVisitor {
         return true;
     }
 
-//    // TODO: refactor this
-//    @Override
-//    public WenyanValue visitData_child(WenyanRParser.Data_childContext ctx) {
-//        WenyanValue parent = visit(ctx.data());
-//        WenyanValue value;
-//        try {
-//            switch (ctx.p.getType()) {
-//                case WenyanRParser.INT_NUM -> value = new WenyanValue(WenyanValue.Type.INT,
-//                        WenyanDataPhaser.parseInt(ctx.INT_NUM().getText()), true);
-//                case WenyanRParser.IDENTIFIER -> {
-//                    try {
-//                        value = functionEnvironment
-//                                .getVariableHelper(ctx.IDENTIFIER().getText())
-//                                .casting(WenyanValue.Type.INT);
-//                    } catch (WenyanException.WenyanThrowException e) {
-//                        throw new WenyanException(e, ctx);
-//                    }
-//                }
-//                case WenyanRParser.DATA_ID_LAST -> {
-//                    value = this.functionEnvironment.resultStack.peek().casting(WenyanValue.Type.INT);
-//                    if (value == null)
-//                        throw new WenyanException(Component.translatable("error.wenyan_nature.last_result_is_null").getString(), ctx);
-//                    functionEnvironment.resultStack.empty();
-//                }
-//                case WenyanRParser.LONG -> {
-//                    return new WenyanValue(WenyanValue.Type.INT,
-//                            ((WenyanValue.WenyanValueArray) parent.getValue()).size(), true);
-//                }
-//                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
-//            }
-//            return ((WenyanValue.WenyanValueArray) parent.getValue()).get(value);
-//        } catch (WenyanException.WenyanThrowException e) {
-//            throw new WenyanException(e, ctx);
-//        }
-//    }
+    @Override
+    public Boolean visitArray_index(WenyanRParser.Array_indexContext ctx) {
+        switch (ctx.p.getType()) {
+            case WenyanRParser.INT_NUM -> {
+                try {
+                    bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.INT,
+                            WenyanDataPhaser.parseInt(ctx.INT_NUM().getText()), true));
+                } catch (WenyanException.WenyanNumberException e) {
+                    throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_number").getString(), ctx);
+                }
+            }
+            case WenyanRParser.IDENTIFIER ->
+                    bytecode.add(WenyanCodes.LOAD, ctx.IDENTIFIER().getText());
+            case WenyanRParser.DATA_ID_LAST ->
+                    bytecode.add(WenyanCodes.POP_ANS);
+            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
+        }
+        visit(ctx.data());
+        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, "GET"); // TODO: replace GET
+        bytecode.add(WenyanCodes.CALL, 2);
+        return true;
+    }
+
+    @Override
+    public Boolean visitData_child(WenyanRParser.Data_childContext ctx) {
+        boolean flag = bytecode.functionAttrFlag;
+        bytecode.functionAttrFlag = false;
+        visit(ctx.data());
+        switch (ctx.p.getType()) {
+            case WenyanRParser.LONG -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.LONG().getText());
+            case WenyanRParser.STRING_LITERAL -> bytecode.add(flag ? WenyanCodes.LOAD_ATTR_REMAIN : WenyanCodes.LOAD_ATTR, ctx.STRING_LITERAL().getText());
+            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
+        }
+        return true;
+    }
 }

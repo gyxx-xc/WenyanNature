@@ -10,6 +10,8 @@ public class WenyanCompilerEnvironment implements Serializable {
     private final HashMap<String, Integer> identifierTable = new HashMap<>();
     private final Stack<ForEnvironment> forStack = new Stack<>();
 
+    public boolean functionAttrFlag = false;
+
     private record ForEnvironment(int forEndLabel, int progEndLabel) {}
 
     private record Constant(WenyanValue.Type t, Object o) {}

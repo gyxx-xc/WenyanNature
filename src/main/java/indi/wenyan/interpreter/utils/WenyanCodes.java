@@ -24,4 +24,9 @@ public class WenyanCodes {
     public static final WenyanCode STORE = new VariableCode(VariableCode.Operation.STORE);
     public static final WenyanCode SET_VAR = new VariableCode(VariableCode.Operation.SET_VALUE);
     public static final WenyanCode CAST = new VariableCode(VariableCode.Operation.CAST);
+
+    public static final WenyanCode LOAD_ATTR = new ObjectCode(ObjectCode.Operation.ATTR);
+    public static final WenyanCode LOAD_ATTR_REMAIN = new ObjectCode(ObjectCode.Operation.ATTR_REMAIN);
+    public static final WenyanCode STORE_ATTR = new ObjectCode(ObjectCode.Operation.STORE_ATTR);
+    public static final WenyanCode CREATE_TYPE = new ObjectCode(ObjectCode.Operation.CREATE_TYPE);
 }

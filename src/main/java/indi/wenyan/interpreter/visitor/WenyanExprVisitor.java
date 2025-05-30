@@ -70,12 +70,9 @@ public class WenyanExprVisitor extends WenyanVisitor {
     @Override
     public Boolean visitDefine_statement(WenyanRParser.Define_statementContext ctx) {
         int n = ctx.d.size();
+        bytecode.add(WenyanCodes.PEEK_ANS_N, n);
         for (int i = 0; i < n; i++) {
-            bytecode.add(WenyanCodes.POP_ANS);
             bytecode.add(WenyanCodes.STORE, ctx.d.get(n - i - 1).getText());
-        }
-        for (int i = 0; i < n; i++) {
-            bytecode.add(WenyanCodes.PUSH_ANS);
         }
         return true;
     }
@@ -151,12 +148,11 @@ public class WenyanExprVisitor extends WenyanVisitor {
         new WenyanMainVisitor(environment).visit(ctx.program());
 
         // add a return null at end
-        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        environment.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
         environment.add(WenyanCodes.RET);
 
         bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
-        bytecode.add(WenyanCodes.PUSH_ANS);
         return true;
     }
 
@@ -167,8 +163,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         if (ctx.key_function() != null)
             bytecode.add(WenyanCodes.LOAD, ctx.key_function().op.getText());
-        else
+        else {
+            bytecode.functionAttrFlag = true;
             visit(ctx.data(0));
+        }
+
+        if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
+            bytecode.add(WenyanCodes.CAST, WenyanValue.Type.OBJECT_TYPE.ordinal());
 
         bytecode.add(WenyanCodes.CALL, ctx.args.size());
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -186,12 +187,79 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         for (int i = 0; i < count; i++)
             bytecode.add(WenyanCodes.POP_ANS);
+
         if (ctx.key_function() != null)
             bytecode.add(WenyanCodes.LOAD, ctx.key_function().op.getText());
-        else
+        else {
+            bytecode.functionAttrFlag = true;
             visit(ctx.data());
+        }
+
+        if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
+            bytecode.add(WenyanCodes.CAST, WenyanValue.Type.OBJECT_TYPE.ordinal());
+
         bytecode.add(WenyanCodes.CALL, count);
         bytecode.add(WenyanCodes.PUSH_ANS);
+        return true;
+    }
+
+    @Override
+    public Boolean visitObject_statement(WenyanRParser.Object_statementContext ctx) {
+        if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
+            throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
+        }
+        bytecode.add(WenyanCodes.CREATE_TYPE);
+
+        try {
+            for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
+                visit(var.data());
+                bytecode.add(WenyanCodes.CAST, WenyanDataPhaser.parseType(var.type().getText()).ordinal());
+                bytecode.add(WenyanCodes.STORE_ATTR, var.STRING_LITERAL().getText());
+            }
+        } catch (WenyanException.WenyanDataException e) {
+            throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
+        }
+
+        for (WenyanRParser.Object_method_defineContext func : ctx.object_method_define()) {
+            visit(func);
+            bytecode.add(WenyanCodes.STORE_ATTR, func.STRING_LITERAL(0).getText());
+        }
+
+        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
+        return true;
+    }
+
+    @Override
+    public Boolean visitObject_method_define(WenyanRParser.Object_method_defineContext ctx) {
+        if (!ctx.STRING_LITERAL(0).getText().equals(ctx.STRING_LITERAL(1).getText())) {
+            throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
+        }
+        ArrayList<WenyanValue.Type> argsType = new ArrayList<>();
+        for (int i = 0; i < ctx.args.size(); i ++) {
+            try {
+                int n = WenyanDataPhaser.parseInt(ctx.args.get(i).getText());
+                for (int j = 0; j < n; j++)
+                    argsType.add(WenyanDataPhaser.parseType(ctx.type(i).getText()));
+            } catch (WenyanException.WenyanThrowException e) {
+                throw new WenyanException(e.getMessage(), ctx);
+            }
+        }
+
+        WenyanBytecode functionBytecode = new WenyanBytecode();
+        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(
+                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanValue.Type[0]), functionBytecode);
+
+        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
+        for (Token i : ctx.id)
+            environment.getIdentifierIndex(i.getText()); // return should be indexOf(i)
+
+        new WenyanMainVisitor(environment).visit(ctx.program());
+
+        // add a return null at end
+        environment.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        environment.add(WenyanCodes.RET);
+
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         return true;
     }
 
@@ -203,22 +271,32 @@ public class WenyanExprVisitor extends WenyanVisitor {
     }
 
     @Override
+    public Boolean visitArray_index(WenyanRParser.Array_indexContext ctx) {
+        bytecode.functionAttrFlag = false;
+        return dataVisitor.visitArray_index(ctx);
+    }
+
+    @Override
     public Boolean visitId_last(WenyanRParser.Id_lastContext ctx) {
+        bytecode.functionAttrFlag = false;
         return dataVisitor.visitId_last(ctx);
     }
 
     @Override
     public Boolean visitId_last_remain(WenyanRParser.Id_last_remainContext ctx) {
+        bytecode.functionAttrFlag = false;
         return dataVisitor.visitId_last_remain(ctx);
     }
 
     @Override
     public Boolean visitId(WenyanRParser.IdContext ctx) {
+        bytecode.functionAttrFlag = false;
         return dataVisitor.visitId(ctx);
     }
 
     @Override
     public Boolean visitData_primary(WenyanRParser.Data_primaryContext ctx) {
+        bytecode.functionAttrFlag = false;
         return dataVisitor.visitData_primary(ctx);
     }
 

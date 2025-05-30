@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.handler.*;
+import indi.wenyan.interpreter.structure.WenyanArrayObject;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -71,9 +72,10 @@ public class WenyanPackages {
             .function("充", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0];
+                WenyanValue value = args[0].casting(WenyanValue.Type.LIST);
                 for (int i = 1; i < args.length; i++) {
-                    value = value.append(args[i]);
+                    WenyanArrayObject list = (WenyanArrayObject) value.getValue();
+                    list.add(WenyanValue.varOf(args[i]));
                 }
                 return value;
             })
