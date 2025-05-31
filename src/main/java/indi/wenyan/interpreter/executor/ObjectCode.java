@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.executor;
 
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.WenyanCode;
+import indi.wenyan.interpreter.structure.WenyanCode;
 
 public class ObjectCode extends WenyanCode {
     private final Operation operation;
@@ -41,7 +41,7 @@ public class ObjectCode extends WenyanCode {
                     runtime.processStack.push(object.type.getFunction(id));
                 }
                 case STORE_STATIC_ATTR -> {
-                    WenyanValue value = runtime.processStack.pop();
+                    WenyanValue value = WenyanValue.varOf(runtime.processStack.pop());
                     WenyanObjectType type = (WenyanObjectType) runtime.processStack.peek().casting(WenyanValue.Type.OBJECT_TYPE).getValue();
                     type.staticVariable.put(id, value);
                 }
@@ -53,12 +53,13 @@ public class ObjectCode extends WenyanCode {
                 case STORE_ATTR -> {
                     // currently only used at define (mzy SELF ZHI STRING)
                     WenyanObject self = (WenyanObject) runtime.processStack.pop().casting(WenyanValue.Type.OBJECT).getValue();
-                    WenyanValue value = runtime.processStack.pop();
+                    WenyanValue value = WenyanValue.varOf(runtime.processStack.pop());
                     self.variable.put(id, value);
                 }
                 case CREATE_TYPE -> {
                     WenyanValue type = new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
-                            new WenyanObjectType(null, id), true);
+                            new WenyanObjectType((WenyanObjectType) runtime.processStack.pop()
+                                    .casting(WenyanValue.Type.OBJECT_TYPE).getValue(), id), true);
                     runtime.processStack.push(type);
                 }
                 case CREATE_OBJECT -> {

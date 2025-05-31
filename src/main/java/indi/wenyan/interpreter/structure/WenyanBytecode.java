@@ -11,14 +11,14 @@ public class WenyanBytecode extends WenyanProgramCode {
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
 
-    public record Code(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
+    public record Code(WenyanCode code, int arg) {
         @Override
         public @NotNull String toString() {
             return code+" "+arg;
         }
     }
 
-    public void add(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
+    public void add(WenyanCode code, int arg) {
         bytecode.add(new Code(code, arg));
     }
 

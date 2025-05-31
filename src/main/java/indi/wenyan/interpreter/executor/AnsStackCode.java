@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.executor;
 
 import indi.wenyan.interpreter.structure.WenyanRuntime;
-import indi.wenyan.interpreter.utils.WenyanCode;
+import indi.wenyan.interpreter.structure.WenyanCode;
 
 public class AnsStackCode extends WenyanCode {
     private final Operation operation;

@@ -20,21 +20,21 @@ public class WenyanCompilerEnvironment implements Serializable {
         this.bytecode = bytecode;
     }
 
-    public void add(indi.wenyan.interpreter.utils.WenyanCode code, WenyanValue value) {
+    public void add(WenyanCode code, WenyanValue value) {
         int index = getConstIndex(value);
         bytecode.add(code, index);
     }
 
-    public void add(indi.wenyan.interpreter.utils.WenyanCode code, String identifier) {
+    public void add(WenyanCode code, String identifier) {
         int index = getIdentifierIndex(identifier);
         bytecode.add(code, index);
     }
 
-    public void add(indi.wenyan.interpreter.utils.WenyanCode code, int arg) {
+    public void add(WenyanCode code, int arg) {
         bytecode.add(code, arg);
     }
 
-    public void add(indi.wenyan.interpreter.utils.WenyanCode code) {
+    public void add(WenyanCode code) {
         bytecode.add(code, 0);
     }
 

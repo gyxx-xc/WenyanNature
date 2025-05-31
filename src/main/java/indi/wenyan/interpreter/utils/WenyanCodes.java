@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.executor.*;
+import indi.wenyan.interpreter.structure.WenyanCode;
 
 public class WenyanCodes {
     public static final WenyanCode BRANCH_POP_FALSE = new BranchCode(BranchCode.Condition.FALSE, BranchCode.Operation.POP);

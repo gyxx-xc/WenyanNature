@@ -87,13 +87,8 @@ public class WenyanProgram {
                 昔之「戊」之「「丁」」者。今五是矣。書「戊」。
                 昔之「戊」之「「丁」」者。今不復存矣。書「戊」。
                 """, null, WenyanPackages.WENYAN_BASIC_PACKAGES);
-        int a = 1;
-        for (int i = 0; i < 10000000; i++) {
-            a = 1;
-            a += i;
-        }
         System.out.println(program.baseBytecode);
         program.run();
-        program.step(2147483647); // 2^31 - 1
+        while (program.isRunning) program.step();
     }
 }

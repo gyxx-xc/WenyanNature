@@ -1,6 +1,4 @@
-package indi.wenyan.interpreter.utils;
-
-import indi.wenyan.interpreter.structure.WenyanRuntime;
+package indi.wenyan.interpreter.structure;
 
 public abstract class WenyanCode {
     public final String name;

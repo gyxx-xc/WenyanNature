@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.executor;
 
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavacallHandler;
-import indi.wenyan.interpreter.utils.WenyanCode;
+import indi.wenyan.interpreter.structure.WenyanCode;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 
 public class FunctionCode extends WenyanCode {
@@ -65,14 +65,13 @@ public class FunctionCode extends WenyanCode {
         } else {
             runtime.nextRuntime = new WenyanRuntime(runtime, (WenyanBytecode) sign.bytecode());
             if (isInstanceCall) runtime.nextRuntime.setVariable("己", argsList[0]);
-            for (int i = 1; i < args; i ++)
+            for (int i = isInstanceCall ? 1 : 0; i < args; i ++)
                 runtime.nextRuntime.setVariable(
                         ((WenyanBytecode) sign.bytecode()).getIdentifier(i),
                         WenyanValue.varOf(argsList[i]));
             runtime.changeRuntimeFlag = true;
         }
     }
-
 
     public enum Operation {
         CALL,

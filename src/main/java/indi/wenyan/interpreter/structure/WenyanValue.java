@@ -100,6 +100,8 @@ public class WenyanValue {
     public WenyanValue casting(Type type) throws WenyanException.WenyanTypeException {
         if (this.type == type)
             return this;
+        if (this.type == Type.NULL)
+            return this;
         if (type == Type.INT) {
             if (this.type == Type.DOUBLE) {
                 return new WenyanValue(Type.INT, (int) (double) value, isConst);

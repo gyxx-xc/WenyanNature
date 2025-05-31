@@ -11,7 +11,7 @@ public class WenyanArrayObject extends WenyanObject {
     private final WenyanValue length = new WenyanValue(WenyanValue.Type.INT, 0, true);
 
     public WenyanArrayObject() {
-        super(new WenyanArrayObjectType(), new HashMap<>());
+        super(new WenyanArrayObjectType());
         variable.put("長", length);
     }
 
