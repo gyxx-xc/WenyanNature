@@ -35,6 +35,6 @@ public class TouchHandler extends JavacallHandler {
                             1.0f, false, Explosion.BlockInteraction.TRIGGER_BLOCK), (a1, a2) -> {});
             level.getProfiler().pop();
         });
-        return null;
+        return WenyanValue.NULL;
     }
 }

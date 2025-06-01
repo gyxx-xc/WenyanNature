@@ -1,18 +1,11 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.structure.WenyanValue;
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.*;
 
 /**
  * This class represents a Javacall context.
- * It makes itself as a fake statement context (program)
  */
-public class JavacallHandler extends WenyanRParser.Function_define_statementContext {
-    @FunctionalInterface
-    public interface WenyanFunction {
-        WenyanValue apply(WenyanValue[] args) throws WenyanException.WenyanThrowException;
-    }
+public class JavacallHandler extends WenyanCode {
     private final WenyanFunction function;
 
     public JavacallHandler() {
@@ -20,7 +13,7 @@ public class JavacallHandler extends WenyanRParser.Function_define_statementCont
     }
 
     public JavacallHandler(WenyanFunction function) {
-        super(null, 0);
+        super("JAVA_CALL");
         this.function = function;
     }
 
@@ -35,5 +28,28 @@ public class JavacallHandler extends WenyanRParser.Function_define_statementCont
         for (int i = 0; i < args.length; i++)
             newArgs[i] = args[i].casting(args_type[i]).getValue();
         return newArgs;
+    }
+
+    @Override
+    public void exec(int args, WenyanProgram program) {
+        getStep(args, program);
+        WenyanRuntime runtime = program.runtimes.peek();
+        WenyanValue[] functionArgs = new WenyanValue[args];
+        for(int i = 0; i < args; i++) {
+            functionArgs[i] = runtime.processStack.pop();
+        }
+        WenyanValue value;
+        try {
+            value = function.apply(functionArgs);
+        } catch (WenyanException.WenyanThrowException e) {
+            throw new WenyanException(e.getMessage());
+        }
+        if (!runtime.noReturnFlag)
+            runtime.processStack.push(value);
+    }
+
+    @FunctionalInterface
+    public interface WenyanFunction {
+        WenyanValue apply(WenyanValue[] args) throws WenyanException.WenyanThrowException;
     }
 }

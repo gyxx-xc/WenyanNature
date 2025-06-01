@@ -30,6 +30,6 @@ public class ExplosionHandler extends JavacallHandler {
                 level.explode(holder, entity.getX(), entity.getY(), entity.getZ(),
                         (float) (double) args[0], Level.ExplosionInteraction.MOB);
         });
-        return null;
+        return WenyanValue.NULL;
     }
 }

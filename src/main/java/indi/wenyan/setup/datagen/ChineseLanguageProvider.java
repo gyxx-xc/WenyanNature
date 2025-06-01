@@ -52,6 +52,7 @@ public class ChineseLanguageProvider extends LanguageProvider {
         this.add("type.wenyan_nature.null", "空無");
         this.add("type.wenyan_nature.function", "術");
         this.add("type.wenyan_nature.object", "物");
+        this.add("type.wenyan_nature.object_type", "類");
 
         this.add("title.wenyan_nature.create_tab", "吾有一術");
     }

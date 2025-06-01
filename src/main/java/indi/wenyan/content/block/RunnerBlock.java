@@ -62,8 +62,8 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
         if (!player.isShiftKeyDown()) {
             if (!level.isClientSide()) {
                 BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
-                if (!WenyanProgram.isRunning(Objects.requireNonNull(runner).program)) {
-                    runner.program = new WenyanProgram(String.join("\n", runner.pages), player,
+                if (!Objects.requireNonNull(runner).program.isRunning()) {
+                    runner.program = new WenyanProgram(String.join("\n", runner.pages),
                             WenyanPackages.blockEnvironment(pos, state, player, Thread.currentThread(), runner));
                     runner.program.run();
                 } else {

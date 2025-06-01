@@ -80,7 +80,13 @@ public class WenyanDataPhaser {
         if (SIGN.contains(text.substring(0, 1)))
             return -parseInt(text.substring(1));
         Num num = parseIntHelper(text);
-        return Integer.parseInt(num.num + "0".repeat(num.exp));
+        int n;
+        try{
+            n = Integer.parseInt(num.num + "0".repeat(num.exp));
+        } catch (NumberFormatException e) {
+            throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_number").getString());
+        }
+        return n;
     }
 
     public static double parseFloat(String text) throws WenyanException.WenyanNumberException, NumberFormatException {

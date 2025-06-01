@@ -25,6 +25,6 @@ public class ThunderHandler extends JavacallHandler {
             e.moveTo(entity.getX(), entity.getY(), entity.getZ());
             level.addFreshEntity(e);
         });
-        return null;
+        return WenyanValue.NULL;
     }
 }

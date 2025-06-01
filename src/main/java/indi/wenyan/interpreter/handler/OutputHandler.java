@@ -18,6 +18,6 @@ public class OutputHandler extends JavacallHandler {
             result.append(result.isEmpty() ? "" : " ").append(arg.toString());
         }
         player.displayClientMessage(Component.literal(result.toString()), true);
-        return null;
+        return WenyanValue.NULL;
     }
 }

@@ -23,6 +23,6 @@ public class MoveHandler extends JavacallHandler {
         newArgs[1] = Math.max(-20, Math.min(20, (double) newArgs[1]));
         newArgs[2] = Math.max(-20, Math.min(20, (double) newArgs[2]));
         entity.setDeltaMovement(new Vec3((double) newArgs[0]/10, (double) newArgs[1]/10, (double) newArgs[2]/10));
-        return null;
+        return WenyanValue.NULL;
     }
 }

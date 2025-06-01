@@ -1,32 +1,29 @@
 package indi.wenyan.interpreter.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.utils.JavacallHandler;
-import indi.wenyan.interpreter.structure.WenyanControl;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
-import indi.wenyan.interpreter.structure.WenyanValue;
-import indi.wenyan.interpreter.utils.*;
+import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.utils.WenyanCodes;
+import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 import net.minecraft.network.chat.Component;
+import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class WenyanExprVisitor extends WenyanVisitor{
+public class WenyanExprVisitor extends WenyanVisitor {
 
-    public WenyanExprVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
-        super(functionEnvironment, control);
-    }
-
-    // maybe it is better to use a function to push return value...
-    @Override
-    public WenyanValue visitReference_statement(WenyanRParser.Reference_statementContext ctx) {
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
-        return functionEnvironment.resultStack.push(value);
+    public WenyanExprVisitor(WenyanCompilerEnvironment bytecode) {
+        super(bytecode);
     }
 
     @Override
-    public WenyanValue visitDeclare_statement(WenyanRParser.Declare_statementContext ctx) {
+    public Boolean visitReference_statement(WenyanRParser.Reference_statementContext ctx) {
+        visit(ctx.data());
+        bytecode.add(WenyanCodes.PUSH_ANS);
+        return true;
+    }
+
+    @Override
+    public Boolean visitDeclare_statement(WenyanRParser.Declare_statementContext ctx) {
         int n;
         try {
             n = WenyanDataPhaser.parseInt(ctx.INT_NUM().getText());
@@ -34,7 +31,6 @@ public class WenyanExprVisitor extends WenyanVisitor{
             throw new WenyanException(e.getMessage(), ctx);
         }
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
-            System.out.println(ctx.getText());
             throw new WenyanException(Component.translatable("error.wenyan_nature.variables_not_match").getString(), ctx);
         }
         WenyanValue.Type type;
@@ -43,159 +39,75 @@ public class WenyanExprVisitor extends WenyanVisitor{
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
+        if (n > 100) { // STUB: change to variable
+            throw new WenyanException(Component.translatable("error.wenyan_nature.too_many_variables").getString(), ctx);
+        }
         for (int i = 0; i < n; i++) {
             try {
                 if (!ctx.d.isEmpty()) {
-                    WenyanValue value = (new WenyanDataVisitor(functionEnvironment, control)).visit(ctx.d.get(i));
-                    functionEnvironment.resultStack.push(WenyanValue.constOf(value).casting(type));
+                    visit(ctx.d.get(i));
+                    bytecode.add(WenyanCodes.CAST, type.ordinal()); // STUB type
                 } else {
-                    functionEnvironment.resultStack.push(WenyanValue.emptyOf(WenyanDataPhaser.parseType(ctx.type().getText()), true));
+                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(type, true));
                 }
+                bytecode.add(WenyanCodes.PUSH_ANS);
             } catch (WenyanException.WenyanThrowException e) {
                 throw new WenyanException(e.getMessage(), ctx);
             }
         }
-        return functionEnvironment.resultStack.peek();
+        return true;
     }
 
     @Override
-    public WenyanValue visitInit_declare_statement(WenyanRParser.Init_declare_statementContext ctx) {
-        WenyanValue value = (new WenyanDataVisitor(functionEnvironment, control)).visit(ctx.data());
+    public Boolean visitInit_declare_statement(WenyanRParser.Init_declare_statementContext ctx) {
         try {
-            return functionEnvironment.resultStack.push(WenyanValue.constOf(value)
-                    .casting(WenyanDataPhaser.parseType(ctx.type().getText())));
+            visit(ctx.data());
+            bytecode.add(WenyanCodes.CAST, WenyanDataPhaser.parseType(ctx.type().getText()).ordinal());
+            bytecode.add(WenyanCodes.PUSH_ANS);
+            return true;
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
     }
 
     @Override
-    public WenyanValue visitDefine_statement(WenyanRParser.Define_statementContext ctx) {
-        int n = ctx.d.size();
-        for (int i = 0; i < n; i ++) {
-            functionEnvironment.setVariable(ctx.d.get(i).getText(),
-                    WenyanValue.varOf(functionEnvironment.resultStack.get(functionEnvironment.resultStack.size() - n + i)));
-        }
-        return functionEnvironment.resultStack.peek();
+    public Boolean visitDefine_statement(WenyanRParser.Define_statementContext ctx) {
+        int n = ctx.definable_value().size();
+        bytecode.add(WenyanCodes.PEEK_ANS_N, n);
+        for (WenyanRParser.Definable_valueContext i : ctx.definable_value())
+            visit(i);
+        return true;
     }
 
     @Override
-    public WenyanValue visitAssign_data_statement(WenyanRParser.Assign_data_statementContext ctx) {
-        WenyanValue var = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(0));
-        if (var.isConst())
-            throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString(), ctx);
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(1));
-        // although the constOf do nothing here,
-        // it is better to keep the code consistent
-        try {
-            var.setValue(WenyanValue.constOf(value).casting(var.getType()).getValue());
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
+    public Boolean visitDefinable_value(WenyanRParser.Definable_valueContext ctx) {
+        if (ctx.ZHI() != null) {
+            bytecode.add(WenyanCodes.LOAD, ctx.SELF().getText());
+            bytecode.add(WenyanCodes.STORE_ATTR, ctx.STRING_LITERAL().getText());
+        } else {
+            bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER().getText());
         }
-        return functionEnvironment.resultStack.push(var);
+        return true;
     }
 
     @Override
-    public WenyanValue visitAssign_null_statement(WenyanRParser.Assign_null_statementContext ctx) {
-        WenyanValue var = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
-        if (var.isConst())
-            throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString(), ctx);
-        var.setValue(null);
-        return functionEnvironment.resultStack.push(null);
+    public Boolean visitAssign_data_statement(WenyanRParser.Assign_data_statementContext ctx) {
+        visit(ctx.data(0)); // -> var
+        visit(ctx.data(1)); // -> value
+        bytecode.add(WenyanCodes.SET_VAR);
+        return true;
     }
 
     @Override
-    public WenyanValue visitBoolean_algebra_statement(WenyanRParser.Boolean_algebra_statementContext ctx) {
-        WenyanValue left = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(0));
-        WenyanValue right = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(1));
-        // although the constOf do nothing here,
-        // it is better to keep the code consistent
-        try {
-            left = WenyanValue.constOf(left).casting(WenyanValue.Type.BOOL);
-            right = WenyanValue.constOf(right).casting(WenyanValue.Type.BOOL);
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-        return switch (ctx.op.getType()) {
-            case WenyanRParser.AND -> functionEnvironment.resultStack.push(new WenyanValue(WenyanValue.Type.BOOL,
-                    (boolean) left.getValue() && (boolean) right.getValue(), true));
-            case WenyanRParser.OR -> functionEnvironment.resultStack.push(new WenyanValue(WenyanValue.Type.BOOL,
-                    (boolean) left.getValue() || (boolean) right.getValue(), true));
-            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_operator").getString(), ctx);
-        };
+    public Boolean visitAssign_null_statement(WenyanRParser.Assign_null_statementContext ctx) {
+        visit(ctx.data());
+        bytecode.add(WenyanCodes.PUSH, WenyanValue.NULL);
+        bytecode.add(WenyanCodes.SET_VAR);
+        return true;
     }
 
     @Override
-    public WenyanValue visitMod_math_statement(WenyanRParser.Mod_math_statementContext ctx) {
-        WenyanValue left;
-        if (ctx.ZHI() != null)
-            left = WenyanValue.constOf(functionEnvironment.resultStack.peek());
-        else
-            left = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(0));
-        WenyanValue right = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(1));
-        left = WenyanValue.constOf(left);
-        right = WenyanValue.constOf(right);
-        try {
-            return switch (ctx.pp.getType()) {
-                case WenyanRParser.PREPOSITION_RIGHT -> functionEnvironment.resultStack.push(left.mod(right));
-                case WenyanRParser.PREPOSITION_LEFT -> functionEnvironment.resultStack.push(right.mod(left));
-                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
-            };
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-    }
-
-    @Override
-    public WenyanValue visitKey_function_call(WenyanRParser.Key_function_callContext ctx) {
-        List<WenyanValue> args = new ArrayList<>();
-        if (ctx.ZHI() != null) args.add(WenyanValue.constOf(functionEnvironment.resultStack.peek()));
-        for (WenyanRParser.DataContext d : ctx.data())
-            args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment, control).visit(d)));
-        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(
-                ctx.key_function().op.getText(), new WenyanValue.Type[0]);
-        if (args.size() == 2) { // deal pp
-            switch (ctx.pp.getFirst().getType()) {
-                case WenyanRParser.PREPOSITION_RIGHT -> {}
-                case WenyanRParser.PREPOSITION_LEFT -> args = args.reversed();
-                default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
-            }
-        }
-
-        WenyanValue returnValue;
-        try {
-            returnValue = callFunction(sign, args.toArray(new WenyanValue[0]));
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-        return functionEnvironment.resultStack.push(returnValue);
-    }
-
-    @Override
-    public WenyanValue visitDeclare_write_candy_statement(WenyanRParser.Declare_write_candy_statementContext ctx) {
-        visit(ctx.declare_statement());
-        int n;
-        try {
-            n = WenyanDataPhaser.parseInt(ctx.declare_statement().INT_NUM().getText());
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-        ArrayList<WenyanValue> values = new ArrayList<>();
-        for (int i = 0; i < n; i ++) {
-            values.add(functionEnvironment.resultStack.get(functionEnvironment.resultStack.size() - n + i));
-        }
-        try {
-            callFunction(new WenyanFunctionEnvironment.FunctionSign(
-                    ctx.WRITE_KEY_FUNCTION().getText(), new WenyanValue.Type[0]),
-                    values.toArray(new WenyanValue[0]));
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-        return functionEnvironment.resultStack.peek();
-    }
-
-    @Override
-    public WenyanValue visitFunction_define_statement(WenyanRParser.Function_define_statementContext ctx) {
+    public Boolean visitFunction_define_statement(WenyanRParser.Function_define_statementContext ctx) {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
@@ -209,84 +121,259 @@ public class WenyanExprVisitor extends WenyanVisitor{
                 throw new WenyanException(e.getMessage(), ctx);
             }
         }
-        WenyanFunctionEnvironment.FunctionSign sign = new WenyanFunctionEnvironment.FunctionSign(
-                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanValue.Type[0]));
-        functionEnvironment.setFunction(sign, ctx);
-        WenyanValue func = new WenyanValue(WenyanValue.Type.FUNCTION, sign, true);
-        functionEnvironment.setVariable(ctx.IDENTIFIER(0).getText(), func);
-        return functionEnvironment.resultStack.push(func);
+
+        WenyanBytecode functionBytecode = new WenyanBytecode();
+        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(
+                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanValue.Type[0]), functionBytecode);
+
+        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
+        for (Token i : ctx.id)
+            environment.getIdentifierIndex(i.getText()); // return should be indexOf(i)
+
+        new WenyanMainVisitor(environment).visit(ctx.statements());
+
+        // add a return null at end
+        environment.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        environment.add(WenyanCodes.RET);
+
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
+        return true;
     }
 
     @Override
-    public WenyanValue visitFunction_pre_call(WenyanRParser.Function_pre_callContext ctx) {
-        ArrayList<WenyanValue> args = new ArrayList<>();
-        if (ctx.ZHI() != null)
-            args.add(WenyanValue.constOf(functionEnvironment.resultStack.peek()));
-        for (WenyanRParser.DataContext d : ctx.args)
-            args.add(WenyanValue.constOf(new WenyanDataVisitor(functionEnvironment, control).visit(d)));
-
-        WenyanValue returnValue;
-        try {
-            WenyanFunctionEnvironment.FunctionSign sign =
-                    ctx.key_function() != null ?
-                            new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
-                            (WenyanFunctionEnvironment.FunctionSign)
-                                    (new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(0))
-                                            .casting(WenyanValue.Type.FUNCTION).getValue());
-            returnValue = callFunction(sign, args.toArray(new WenyanValue[0]));
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-
-        return functionEnvironment.resultStack.push(returnValue);
-    }
-
-    @Override
-    public WenyanValue visitFunction_post_call(WenyanRParser.Function_post_callContext ctx) {
-        int n;
-        try {
-            n = WenyanDataPhaser.parseInt(ctx.INT_NUM().getText());
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-        ArrayList<WenyanValue> args = new ArrayList<>();
-        for (int i = 0; i < n; i ++) args.addFirst(WenyanValue.constOf(functionEnvironment.resultStack.pop()));
-
-        try {
-        WenyanFunctionEnvironment.FunctionSign sign =
-                ctx.key_function() != null ?
-                        new WenyanFunctionEnvironment.FunctionSign(ctx.key_function().op.getText(), new WenyanValue.Type[0]) :
-                        (WenyanFunctionEnvironment.FunctionSign)
-                                (new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data())
-                                        .casting(WenyanValue.Type.FUNCTION).getValue());
-            return functionEnvironment.resultStack.push(callFunction(sign, args.toArray(new WenyanValue[0])));
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
-        }
-    }
-
-    private WenyanValue callFunction(WenyanFunctionEnvironment.FunctionSign sign, WenyanValue[] args) throws WenyanException.WenyanThrowException {
-        WenyanRParser.Function_define_statementContext func = functionEnvironment.getFunction(sign);
-        // casting args
-        for (int i = 0; i < sign.argTypes().length; i ++) {
-            args[i] = args[i].casting(sign.argTypes()[i]);
-        }
-        if (func instanceof JavacallHandler) {
-            return ((JavacallHandler) func).handle(args);
-        } else {
-            WenyanFunctionEnvironment functionEnvironment = new WenyanFunctionEnvironment(this.functionEnvironment);
-            for (int i = 0; i < args.length; i++) {
-                functionEnvironment.setVariable(func.id.get(i).getText(), WenyanValue.varOf(args[i]));
-            }
-            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-            try {
-                for (WenyanRParser.StatementContext statementContext : func.statement()) {
-                    visitor.visit(statementContext);
+    public Boolean visitKey_function_call(WenyanRParser.Key_function_callContext ctx) {
+        // args
+        if (ctx.data().size() == 2) { // deal pp
+            switch (ctx.pp.getFirst().getType()) {
+                case WenyanRParser.PREPOSITION_RIGHT -> {
+                    visit(ctx.data(1));
+                    visit(ctx.data(0));
                 }
-            } catch (WenyanControlVisitor.ReturnException e) {
-                return e.value;
+                case WenyanRParser.PREPOSITION_LEFT -> {
+                    visit(ctx.data(0));
+                    visit(ctx.data(1));
+                }
+                default ->
+                        throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
             }
-            return null;
+        } else {
+            for (int i = ctx.data().size()-1; i >= 0; i--) {
+                visit(ctx.data(i));
+            }
         }
+
+        // run
+        bytecode.add(WenyanCodes.LOAD, ctx.key_function().op.getText());
+        bytecode.add(WenyanCodes.CALL, ctx.data().size());
+        bytecode.add(WenyanCodes.PUSH_ANS);
+        return true;
     }
+
+    @Override
+    public Boolean visitFunction_pre_call(WenyanRParser.Function_pre_callContext ctx) {
+        for (int i = ctx.args.size() - 1; i >= 0; i--) {
+            visit(ctx.args.get(i));
+        }
+
+        if (ctx.data(0) instanceof WenyanRParser.Data_childContext context) {
+            visit(context.data());
+            if (context.STRING_LITERAL() != null)
+                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.STRING_LITERAL().getText());
+            else
+                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.CREATE_OBJECT().getText());
+            bytecode.add(WenyanCodes.CALL_ATTR, ctx.args.size());
+        } else {
+            if (ctx.key_function() != null)
+                bytecode.add(WenyanCodes.LOAD, ctx.key_function().op.getText());
+            else
+                visit(ctx.data(0));
+
+            if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
+                bytecode.add(WenyanCodes.CAST, WenyanValue.Type.OBJECT_TYPE.ordinal());
+            bytecode.add(WenyanCodes.CALL, ctx.args.size());
+        }
+        bytecode.add(WenyanCodes.PUSH_ANS);
+        return true;
+    }
+
+    @Override
+    public Boolean visitFunction_post_call(WenyanRParser.Function_post_callContext ctx) {
+        int count;
+        try {
+            count = WenyanDataPhaser.parseInt(ctx.INT_NUM().getText());
+        } catch (WenyanException.WenyanThrowException e) {
+            throw new WenyanException(e.getMessage(), ctx);
+        }
+
+        if (count > 100) { // STUB: change to variable
+            throw new WenyanException(Component.translatable("error.wenyan_nature.too_many_variables").getString(), ctx);
+        }
+        for (int i = 0; i < count; i++)
+            bytecode.add(WenyanCodes.POP_ANS);
+
+        if (ctx.data() instanceof WenyanRParser.Data_childContext context) {
+            visit(context.data());
+            bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.STRING_LITERAL().getText());
+            bytecode.add(WenyanCodes.CALL_ATTR, count);
+        } else {
+            if (ctx.key_function() != null)
+                bytecode.add(WenyanCodes.LOAD, ctx.key_function().op.getText());
+            else
+                visit(ctx.data());
+
+            if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
+                bytecode.add(WenyanCodes.CAST, WenyanValue.Type.OBJECT_TYPE.ordinal());
+            bytecode.add(WenyanCodes.CALL, count);
+        }
+        bytecode.add(WenyanCodes.PUSH_ANS);
+        return true;
+    }
+
+    @Override
+    public Boolean visitObject_statement(WenyanRParser.Object_statementContext ctx) {
+        if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
+            throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
+        }
+
+        if (ctx.data() != null) visit(ctx.data());
+        else bytecode.add(WenyanCodes.PUSH, WenyanValue.NULL);
+        bytecode.add(WenyanCodes.CREATE_TYPE, ctx.IDENTIFIER(0).getText());
+
+        try {
+            for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
+                if (var.data() != null) {
+                    visit(var.data());
+                    bytecode.add(WenyanCodes.CAST, WenyanDataPhaser.parseType(var.type().getText()).ordinal());
+                } else {
+                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataPhaser.parseType(var.type().getText()), true));
+                }
+                bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
+            }
+        } catch (WenyanException.WenyanThrowException e) {
+            throw new WenyanException(e.getMessage(), ctx);
+        }
+
+        for (WenyanRParser.Object_method_defineContext func : ctx.object_method_define()) {
+            visit(func);
+            if (func.STRING_LITERAL().isEmpty())
+                bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.CREATE_OBJECT(0).getText());
+            else
+                bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.STRING_LITERAL(0).getText());
+        }
+
+        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
+        return true;
+    }
+
+    @Override
+    public Boolean visitObject_method_define(WenyanRParser.Object_method_defineContext ctx) {
+        String id;
+        if (ctx.CREATE_OBJECT().size() == 2) {
+            id = ctx.CREATE_OBJECT(0).getText();
+        } else if (ctx.CREATE_OBJECT().isEmpty()) {
+            if (ctx.STRING_LITERAL(0).getText().equals(ctx.STRING_LITERAL(1).getText())) {
+                id = ctx.STRING_LITERAL(0).getText();
+            } else {
+                throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
+            }
+        } else {
+            throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
+        }
+
+        ArrayList<WenyanValue.Type> argsType = new ArrayList<>();
+        for (int i = 0; i < ctx.args.size(); i++) {
+            try {
+                int n = WenyanDataPhaser.parseInt(ctx.args.get(i).getText());
+                for (int j = 0; j < n; j++)
+                    argsType.add(WenyanDataPhaser.parseType(ctx.type(i).getText()));
+            } catch (WenyanException.WenyanThrowException e) {
+                throw new WenyanException(e.getMessage(), ctx);
+            }
+        }
+
+        WenyanBytecode functionBytecode = new WenyanBytecode();
+        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(
+                id, argsType.toArray(new WenyanValue.Type[0]), functionBytecode);
+
+        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
+        for (Token i : ctx.id)
+            environment.getIdentifierIndex(i.getText()); // return should be indexOf(i)
+
+        new WenyanMainVisitor(environment).visit(ctx.statements());
+
+            // add a return null at end
+        environment.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        environment.add(WenyanCodes.RET);
+
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        return true;
+    }
+
+    private final WenyanDataVisitor dataVisitor = new WenyanDataVisitor(bytecode);
+
+    @Override
+    public Boolean visitData_child(WenyanRParser.Data_childContext ctx) {
+        return dataVisitor.visitData_child(ctx);
+    }
+
+    @Override
+    public Boolean visitArray_index(WenyanRParser.Array_indexContext ctx) {
+        return dataVisitor.visitArray_index(ctx);
+    }
+
+    @Override
+    public Boolean visitId_last(WenyanRParser.Id_lastContext ctx) {
+        return dataVisitor.visitId_last(ctx);
+    }
+
+    @Override
+    public Boolean visitId_last_remain(WenyanRParser.Id_last_remainContext ctx) {
+        return dataVisitor.visitId_last_remain(ctx);
+    }
+
+    @Override
+    public Boolean visitId(WenyanRParser.IdContext ctx) {
+        return dataVisitor.visitId(ctx);
+    }
+
+    @Override
+    public Boolean visitData_primary(WenyanRParser.Data_primaryContext ctx) {
+        return dataVisitor.visitData_primary(ctx);
+    }
+
+    @Override
+    public Boolean visitSelf(WenyanRParser.SelfContext ctx) {
+        return dataVisitor.visitSelf(ctx);
+    }
+
+    @Override
+    public Boolean visitParent(WenyanRParser.ParentContext ctx) {
+        return dataVisitor.visitParent(ctx);
+    }
+
+    //    private WenyanValue callFunction(WenyanRuntime.FunctionSign sign, WenyanValue[] args) throws WenyanException.WenyanThrowException {
+//        WenyanRParser.Function_define_statementContext func = functionEnvironment.getFunction(sign);
+//        // casting args
+//        for (int i = 0; i < sign.argTypes().length; i ++) {
+//            args[i] = args[i].casting(sign.argTypes()[i]);
+//        }
+//        if (func instanceof JavacallHandler) {
+//            return ((JavacallHandler) func).handle(args);
+//        } else {
+//            WenyanRuntime functionEnvironment = new WenyanRuntime(this.functionEnvironment);
+//            for (int i = 0; i < args.length; i++) {
+//                functionEnvironment.setVariable(func.id.get(i).getText(), WenyanValue.varOf(args[i]));
+//            }
+//            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
+//            try {
+//                for (WenyanRParser.StatementContext statementContext : func.statement()) {
+//                    visitor.visit(statementContext);
+//                }
+//            } catch (WenyanControlVisitor.ReturnException e) {
+//                return e.value;
+//            }
+//            return null;
+//        }
+//    }
 }

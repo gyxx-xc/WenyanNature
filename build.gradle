@@ -19,6 +19,7 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    mavenCentral()
 }
 
 base {
@@ -136,6 +137,10 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     antlr "org.antlr:antlr4:4.13.1"
+
+    testImplementation platform('org.junit:junit-bom:5.13.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -192,5 +197,12 @@ idea {
 }
 
 generateGrammarSource {
-    arguments += ["-visitor", "-no-listener"]
+    arguments += ["-no-listener", "-visitor", "-encoding", "UTF-8"]
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }

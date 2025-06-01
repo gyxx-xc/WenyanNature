@@ -47,6 +47,6 @@ public class BlockMoveHandler extends JavacallHandler {
             level.removeBlockEntity(pos);
 
         });
-        return null;
+        return WenyanValue.NULL;
     }
 }

@@ -40,7 +40,7 @@ public class BlockPlaceHandler extends JavacallHandler {
         args[2] = Math.max(-10, Math.min(10, (int) args[2]));
         BlockPos blockPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);
         HandlerEntity.levelRun(holder.level(), (level) -> placeBlock(level, holder, block, blockPos, attach));
-        return null;
+        return WenyanValue.NULL;
     }
 
     private static void placeBlock(Level world, Player player, BlockState block, BlockPos pos, BlockPos attach) {

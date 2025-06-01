@@ -1,30 +1,19 @@
 package indi.wenyan.content.block;
 
-import indi.wenyan.WenyanNature;
-import indi.wenyan.content.checker.MiningChecker;
 import indi.wenyan.content.item.WenyanHandRunner;
 import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
-import indi.wenyan.interpreter.structure.WenyanControl;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
-import indi.wenyan.interpreter.visitor.WenyanVisitor;
 import indi.wenyan.setup.Registration;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -38,8 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 // Item -> recipe -> checker
 @ParametersAreNonnullByDefault
@@ -112,57 +99,57 @@ public class CraftingBlockEntity extends BlockEntity {
     }
 
     public void run(Player holder) {
-        if (isRunning) {
-            endCrafting();
-            return;
-        }
-        ItemStack item = runner.getStackInSlot(RUNNER_SLOT);
-        if (item.isEmpty()) {
-            endCrafting();
-            return;
-        }
-        WritableBookContent writableBookContent = item.get(DataComponents.WRITABLE_BOOK_CONTENT);
-        if (writableBookContent == null) {
-            endCrafting();
-            return;
-        }
-
-        Stream<String> pages = writableBookContent.getPages(false);
-        String code = pages.collect(Collectors.joining());
-        Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
-            if (e instanceof WenyanException) {
-                holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
-            } else {
-                holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
-                WenyanNature.LOGGER.error("Error: {}", e.getMessage());
-            }
-            isRunning = false;
-            endCrafting();
-            entitySemaphore.release(100000);
-        };
-
-        // ready to visit
-        programSemaphore = new Semaphore(0);
-        entitySemaphore = new Semaphore(0);
-        assert level != null;
-        checker = new MiningChecker(level.random);
-        program = new Thread(() -> {
-            new WenyanMainVisitor(WenyanPackages.craftingEnvironment(checker),
-                    new WenyanControl(entitySemaphore, programSemaphore))
-                    .visit(WenyanVisitor.program(code));
-            runStep ++;
-            isRunning = false;
-            if (!checker.check()) endCrafting();
-            entitySemaphore.release(100000);
-        });
-        program.setUncaughtExceptionHandler(exceptionHandler);
-        isRunning = true;
-        program.start();
-        try {
-            entitySemaphore.acquire(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        if (isRunning) {
+//            endCrafting();
+//            return;
+//        }
+//        ItemStack item = runner.getStackInSlot(RUNNER_SLOT);
+//        if (item.isEmpty()) {
+//            endCrafting();
+//            return;
+//        }
+//        WritableBookContent writableBookContent = item.get(DataComponents.WRITABLE_BOOK_CONTENT);
+//        if (writableBookContent == null) {
+//            endCrafting();
+//            return;
+//        }
+//
+//        Stream<String> pages = writableBookContent.getPages(false);
+//        String code = pages.collect(Collectors.joining());
+//        Thread.UncaughtExceptionHandler exceptionHandler = (t, e) -> {
+//            if (e instanceof WenyanException) {
+//                holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
+//            } else {
+//                holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
+//                WenyanNature.LOGGER.error("Error: {}", e.getMessage());
+//            }
+//            isRunning = false;
+//            endCrafting();
+//            entitySemaphore.release(100000);
+//        };
+//
+//        // ready to visit
+//        programSemaphore = new Semaphore(0);
+//        entitySemaphore = new Semaphore(0);
+//        assert level != null;
+//        checker = new MiningChecker(level.random);
+//        program = new Thread(() -> {
+//            new WenyanMainVisitor(WenyanPackages.craftingEnvironment(checker),
+//                    new WenyanControl(entitySemaphore, programSemaphore))
+//                    .visit(WenyanVisitor.program(code));
+//            runStep ++;
+//            isRunning = false;
+//            if (!checker.check()) endCrafting();
+//            entitySemaphore.release(100000);
+//        });
+//        program.setUncaughtExceptionHandler(exceptionHandler);
+//        isRunning = true;
+//        program.start();
+//        try {
+//            entitySemaphore.acquire(1);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public void ejectItem() {

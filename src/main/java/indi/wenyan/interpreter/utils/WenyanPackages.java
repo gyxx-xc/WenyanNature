@@ -3,8 +3,9 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.handler.*;
+import indi.wenyan.interpreter.structure.WenyanArrayObject;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -15,12 +16,13 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class WenyanPackages {
-    public static final WenyanFunctionEnvironment WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
@@ -70,16 +72,75 @@ public class WenyanPackages {
             .function("充", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0];
+                WenyanValue value = args[0].casting(WenyanValue.Type.LIST);
                 for (int i = 1; i < args.length; i++) {
-                    value = value.append(args[i]);
+                    WenyanArrayObject list = (WenyanArrayObject) value.getValue();
+                    list.add(WenyanValue.varOf(args[i]));
                 }
                 return value;
             })
+            // 模, 且, 或
+            .function("模", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return args[0].mod(args[1]);
+            })
+            .function("且", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL,
+                        (boolean) args[0].casting(WenyanValue.Type.BOOL).getValue() &&
+                                (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue(),
+                        true);
+            })
+            .function("或", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL,
+                        (boolean) args[0].casting(WenyanValue.Type.BOOL).getValue() ||
+                                (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue(),
+                        true);
+            })
+            .function("不等於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, !args[0].equals(args[1]), true);
+            })
+            .function("不大於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) <= 0, true);
+            })
+            .function("不小於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) >= 0, true);
+            })
+            .function("等於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].equals(args[1]), true);
+            })
+            .function("大於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) > 0, true);
+            })
+            .function("小於", args -> {
+                if (args.length != 2)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) < 0, true);
+            })
             .function("「」", args -> null)
+
+            .function("書", args -> {
+                System.out.println(Arrays.toString(args));
+                return WenyanValue.NULL;
+            })
+
             .build();
 
-    public static final WenyanFunctionEnvironment MATH_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
             .constant("「圓周率」", WenyanValue.Type.DOUBLE, Math.PI)
             .constant("「倍圓周率」", WenyanValue.Type.DOUBLE, Math.TAU)
             .constant("「半圓周率」", WenyanValue.Type.DOUBLE, Math.PI / 2)
@@ -109,7 +170,7 @@ public class WenyanPackages {
             .function("「正負」", args -> Math.signum((double)args[0]), WenyanValue.Type.DOUBLE)
             .build();
 
-    public static final WenyanFunctionEnvironment BIT_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime BIT_PACKAGES = WenyanPackageBuilder.create()
             .function("「左移」", args -> (int)args[0]<<(int)args[1], WenyanValue.Type.INT)
             .function("「右移」", args -> (int)args[0]>>(int)args[1], WenyanValue.Type.INT)
             .function("「補零右移」", args -> (int)args[0]>>>(int)args[1], WenyanValue.Type.INT)
@@ -120,7 +181,7 @@ public class WenyanPackages {
             .function("「位變」", args -> ~(int)args[0], WenyanValue.Type.INT)
             .build();
 
-    public static final WenyanFunctionEnvironment RANDOM_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanRuntime RANDOM_PACKAGES = WenyanPackageBuilder.create()
             .function("「占數」", args -> switch (args.length) {
                 case 0 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt();
                 case 1 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0]);
@@ -132,7 +193,7 @@ public class WenyanPackages {
             .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanValue.Type.BOOL)
             .build();
 
-    public static WenyanFunctionEnvironment handEnvironment(Player holder, HandRunnerEntity runner) {
+    public static WenyanRuntime handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
@@ -149,16 +210,16 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static WenyanFunctionEnvironment blockEnvironment(BlockPos pos, BlockState block, Player holder, Thread thread, BlockRunner runner) {
+    public static WenyanRuntime blockEnvironment(BlockPos pos, BlockState block, Player holder, Thread thread, BlockRunner runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
                 .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
-                // .function("「放置」", new BlockPlaceHandler(holder,
-                //         (BlockItem) Items.ACACIA_LOG.asItem()
-                //         ,pos, block))
-                // .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
-                // .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
+                 .function("「放置」", new BlockPlaceHandler(holder,
+                         (BlockItem) Items.ACACIA_LOG.asItem()
+                         ,pos, block))
+                 .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
+                 .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
                 .function("「紅石量」", new RedstoneSignalHandler(thread, runner))
                 .function("「己於上」", new SelfPositionBlockHandler(holder, runner, Direction.UP))
                 .function("「己於下」", new SelfPositionBlockHandler(holder, runner, Direction.DOWN))
@@ -169,18 +230,18 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static WenyanFunctionEnvironment craftingEnvironment(CraftingAnswerChecker checker) {
+    public static WenyanRuntime craftingEnvironment(CraftingAnswerChecker checker) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .environment(checker.inputEnvironment())
                 .function("書", args -> {
                     checker.add(args);
-                    return null;
+                    return WenyanValue.NULL;
                 })
                 .build();
     }
 
-    public static final Map<String, WenyanFunctionEnvironment> PACKAGES = new HashMap<>(){{
+    public static final Map<String, WenyanRuntime> PACKAGES = new HashMap<>(){{
         put("「「算經」」", MATH_PACKAGES);
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);

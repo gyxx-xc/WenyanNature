@@ -1,80 +1,106 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.WenyanNature;
-import indi.wenyan.interpreter.structure.WenyanControl;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanBytecode;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 
-import java.util.concurrent.Semaphore;
+import java.util.Stack;
 
 public class WenyanProgram {
-    public Semaphore entitySemaphore;
-    public Semaphore programSemaphore;
-    public Thread program;
-    public String code;
-    public Player holder;
-    public WenyanFunctionEnvironment baseEnvironment;
 
-    public WenyanProgram(String code, Player holder, WenyanFunctionEnvironment baseEnvironment) {
+    public String code;
+
+    public final WenyanBytecode baseBytecode = new WenyanBytecode();
+    public final WenyanRuntime baseEnvironment;
+    public Stack<WenyanRuntime> runtimes = new Stack<>();
+
+    private boolean isRunning = false;
+
+    public WenyanProgram(String code, WenyanRuntime baseEnvironment) {
         this.code = code;
-        this.holder = holder;
+        WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
+        visitor.visit(WenyanVisitor.program(code));
         this.baseEnvironment = baseEnvironment;
+        runtimes.push(baseEnvironment);
     }
 
     public void run() {
-        if (isRunning(this))
-            return;
-        // ready to visit
-        programSemaphore = new Semaphore(0);
-        entitySemaphore = new Semaphore(0);
-        program = new Thread(() -> {
-            new WenyanMainVisitor(baseEnvironment, new WenyanControl(entitySemaphore, programSemaphore))
-                    .visit(WenyanVisitor.program(code));
-            entitySemaphore.release(100000);
-        });
-        program.setUncaughtExceptionHandler((t, e) -> {
-            if (e instanceof WenyanException) {
-                holder.displayClientMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED), true);
-            } else {
-                holder.displayClientMessage(Component.literal("Unknown Error, Check server log to show more").withStyle(ChatFormatting.RED), true);
-                WenyanNature.LOGGER.error("Error: {}", e.getMessage());
-            }
-            entitySemaphore.release(100000);
-        });
-
-        program.start();
-        try {
-            entitySemaphore.acquire(1);
-        } catch (InterruptedException ignore) {}
+        runtimes.push(new WenyanRuntime(baseBytecode));
+        isRunning = true;
     }
 
-    public void step(int num) {
-        if (!isRunning(this)) return;
-        boolean flag = true;
-        programSemaphore.release(num);
-        while (flag) {
-            try {
-                flag = false;
-                entitySemaphore.acquire(num);
-            } catch (InterruptedException e) {
-                flag = true;
-                program.interrupt();
-            }
+    public void step() {
+        WenyanRuntime runtime = runtimes.peek();
+
+        if (runtime.programCounter >= runtime.bytecode.size()) {
+            isRunning = false;
+            return;
+        }
+
+        WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
+        code.code().exec(code.arg(), this);
+
+//        System.out.println(runtime.processStack);
+//        System.out.println(runtime.resultStack);
+//        System.out.println(runtime.programCounter + ": " + code);
+
+        if (!runtime.PCFlag)
+            runtime.programCounter++;
+        runtime.PCFlag = false;
+    }
+
+    public void step(int steps) {
+        for (int i = 0; i < steps; i++) {
+            if (isRunning)
+                step();
+            else
+                break;
         }
     }
 
     public void stop() {
-        program.interrupt();
     }
 
-    public static boolean isRunning(WenyanProgram program){
-        if (program == null || program.program == null)
-            return false;
-        return program.program.isAlive();
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public static void main(String[] args) {
+        WenyanProgram program = new WenyanProgram("""
+吾有一物。名之曰「a」。其物如是。
+	物之造者術是術曰。
+		夫一名之曰己之「「a 」」
+	是謂造之術也。
+是謂「a」之物也。
+
+吾有一物繼「a」。名之曰「b」。其物如是。
+	物之造者術是術曰。
+		施父之造
+		夫二名之曰己之「「a 」」
+		夫一名之曰己之「「b 」」
+	是謂造之術也。
+是謂「b」之物也。
+
+造「a」名之曰「a 」
+施「a」名之曰「a1 」
+造「b」名之曰「b 」
+施「b」名之曰「b1 」
+
+書「a 」之「「a 」」
+書「a1 」之「「a 」」
+書「b 」之「「a 」」
+書「b1 」之「「a 」」
+書「b 」之「「b 」」
+書「b1 」之「「b 」」
+
+昔之「b 」之「「a 」」者今三是矣
+
+書「a 」之「「a 」」
+書「b 」之「「a 」」
+                """, WenyanPackages.WENYAN_BASIC_PACKAGES);
+        System.out.println(program.baseBytecode);
+        program.run();
+        while (program.isRunning) program.step();
     }
 }

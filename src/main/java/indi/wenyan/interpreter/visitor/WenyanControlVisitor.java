@@ -1,12 +1,9 @@
 package indi.wenyan.interpreter.visitor;
 
-import indi.wenyan.interpreter.antlr.WenyanRBaseVisitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
-import indi.wenyan.interpreter.structure.WenyanControl;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanFunctionEnvironment;
+import indi.wenyan.interpreter.structure.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanValue;
-import net.minecraft.network.chat.Component;
+import indi.wenyan.interpreter.utils.WenyanCodes;
 
 // this class is for
 // flush_statement
@@ -14,193 +11,148 @@ import net.minecraft.network.chat.Component;
 // for_statement
 // return_statement
 // BREAK
-public class WenyanControlVisitor extends WenyanVisitor{
-    public WenyanControlVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
-        super(functionEnvironment, control);
+public class WenyanControlVisitor extends WenyanVisitor {
+    public WenyanControlVisitor(WenyanCompilerEnvironment bytecode) {
+        super(bytecode);
     }
 
-    private void waitTick() {
-        entitySemaphore.release(1);
-        try {
-            programSemaphore.acquire(1);
-        } catch (InterruptedException e) {
-            throw new WenyanException("killed");
-        }
+    private final WenyanExprVisitor exprVisitor = new WenyanExprVisitor(bytecode);
+    private final WenyanMainVisitor bodyVisitor = new WenyanMainVisitor(bytecode);
+
+    @Override
+    public Boolean visitFlush_statement(WenyanRParser.Flush_statementContext ctx) {
+        bytecode.add(WenyanCodes.FLUSH);
+        return true;
     }
 
     @Override
-    public WenyanValue visitFlush_statement(WenyanRParser.Flush_statementContext ctx) {
-        functionEnvironment.resultStack.empty();
+    public Boolean visitIf_statement(WenyanRParser.If_statementContext ctx) {
+        visit(ctx.if_expression());
+        int ifEnds = bytecode.getNewLabel();
+        bytecode.add(WenyanCodes.BRANCH_POP_FALSE, ifEnds);
+        bodyVisitor.visit(ctx.if_); // if body
+        if (ctx.else_ == null) {
+            bytecode.setLabel(ifEnds);
+        } else {
+            int elseEnds = bytecode.getNewLabel();
+            bytecode.add(WenyanCodes.JMP, elseEnds);
+
+            bytecode.setLabel(ifEnds);
+            bodyVisitor.visit(ctx.else_);
+
+            bytecode.setLabel(elseEnds);
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean visitIf_data(WenyanRParser.If_dataContext ctx) {
+        exprVisitor.visit(ctx.data());
+        return true;
+    }
+
+    @Override
+    public Boolean visitIf_logic(WenyanRParser.If_logicContext ctx) {
+        exprVisitor.visit(ctx.data(1));
+        exprVisitor.visit(ctx.data(0));
+        bytecode.add(WenyanCodes.LOAD, ctx.if_logic_op().op.getText());
+        bytecode.add(WenyanCodes.CALL, 2);
+        return true;
+    }
+
+//    @Override
+//    public WenyanValue visitFor_arr_statement(WenyanRParser.For_arr_statementContext ctx) {
+//        WenyanValue value = new WenyanDataVisitor(bytecode).visit(ctx.data());
+//        try {
+//            value = WenyanValue.constOf(value).casting(WenyanValue.Type.LIST);
+//        } catch (WenyanException.WenyanThrowException e) {
+//            throw new WenyanException(e.getMessage(), ctx.data());
+//        }
+//        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
+//        for (WenyanValue item : (WenyanValue.WenyanValueArray) value.getValue()) {
+//            functionEnvironment.setVariable(ctx.IDENTIFIER().getText(), item);
+//            try {
+//                for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
+//                    visitor.visit(statementContext);
+//                }
+//            } catch (BreakException e) {
+//                break;
+//            } catch (ContinueException ignored) { // i.e. continue
+//            }
+//        }
+//        return null;
+//    }
+
+    @Override
+    public Boolean visitFor_enum_statement(WenyanRParser.For_enum_statementContext ctx) {
+        bytecode.enterFor();
+        exprVisitor.visit(ctx.data());
+        int forEnd = bytecode.getNewLabel();
+        int progStart = bytecode.getNewLabel();
+        bytecode.add(WenyanCodes.BRANCH_FALSE, forEnd);
+
+        bytecode.setLabel(progStart);
+        bodyVisitor.visit(ctx.statements());
+
+        bytecode.setProgEndLabel();
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.INT, -1, true));
+        bytecode.add(WenyanCodes.LOAD, "加");
+        bytecode.add(WenyanCodes.CALL, 2);
+        bytecode.add(WenyanCodes.BRANCH_TRUE, progStart);
+
+        bytecode.setForEndLabel();
+        bytecode.setLabel(forEnd);
+        bytecode.add(WenyanCodes.POP);
+        bytecode.exitFor();
         return null;
     }
 
     @Override
-    public WenyanValue visitIf_statement(WenyanRParser.If_statementContext ctx) {
-        if (new IfExprVisitor(functionEnvironment, control).visit(ctx.if_expression())) {
-            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-            for (WenyanRParser.StatementContext statementContext : ctx.if_) {
-                visitor.visit(statementContext);
-            }
-        } else if (!ctx.else_.isEmpty()) {
-            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-            for (WenyanRParser.StatementContext statementContext : ctx.else_) {
-                visitor.visit(statementContext);
-            }
-        }
-        return null;
+    public Boolean visitFor_while_statement(WenyanRParser.For_while_statementContext ctx) {
+        bytecode.enterFor();
+        int whileStart = bytecode.getNewLabel();
+
+        bytecode.setLabel(whileStart);
+        bodyVisitor.visit(ctx.statements());
+
+        bytecode.setProgEndLabel();
+        bytecode.add(WenyanCodes.JMP, whileStart);
+
+        bytecode.setForEndLabel();
+        bytecode.exitFor();
+        return true;
     }
 
     @Override
-    public WenyanValue visitFor_arr_statement(WenyanRParser.For_arr_statementContext ctx) {
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
-        try {
-            value = WenyanValue.constOf(value).casting(WenyanValue.Type.LIST);
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx.data());
-        }
-        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-        for (WenyanValue item : (WenyanValue.WenyanValueArray) value.getValue()) {
-            waitTick();
-            functionEnvironment.setVariable(ctx.IDENTIFIER().getText(), item);
-            try {
-                for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
-                    visitor.visit(statementContext);
-                }
-            } catch (BreakException e) {
-                break;
-            } catch (ContinueException ignored) { // i.e. continue
-            }
-        }
-        return null;
+    public Boolean visitBreak_(WenyanRParser.Break_Context ctx) {
+        bytecode.add(WenyanCodes.JMP, bytecode.getForEndLabel());
+        return true;
     }
 
     @Override
-    public WenyanValue visitFor_enum_statement(WenyanRParser.For_enum_statementContext ctx) {
-        WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
-        try {
-            value = WenyanValue.constOf(value).casting(WenyanValue.Type.INT);
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx.data());
-        }
-        int count = (int) value.getValue();
-        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-        for (int i = 0; i < count; i++) {
-            waitTick();
-            try {
-                for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
-                    visitor.visit(statementContext);
-                }
-            } catch (BreakException e) {
-                break;
-            } catch (ContinueException ignored) { // i.e. continue
-            }
-        }
-        return null;
+    public Boolean visitContinue_(WenyanRParser.Continue_Context ctx) {
+        bytecode.add(WenyanCodes.JMP, bytecode.getProgEndLabel());
+        return true;
     }
 
     @Override
-    public WenyanValue visitFor_while_statement(WenyanRParser.For_while_statementContext ctx) {
-        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-        while (true) {
-            waitTick();
-            try {
-                for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
-                    visitor.visit(statementContext);
-                }
-            } catch (BreakException e) {
-                break;
-            } catch (ContinueException ignored) { // i.e. continue
-            }
-        }
-        return null;
+    public Boolean visitReturn_data_statement(WenyanRParser.Return_data_statementContext ctx) {
+        exprVisitor.visit(ctx.data());
+        bytecode.add(WenyanCodes.RET);
+        return true;
     }
 
     @Override
-    public WenyanValue visitBreak_(WenyanRParser.Break_Context ctx) {
-        throw new BreakException();
+    public Boolean visitReturn_last_statement(WenyanRParser.Return_last_statementContext ctx) {
+        bytecode.add(WenyanCodes.POP_ANS);
+        bytecode.add(WenyanCodes.RET);
+        return true;
     }
 
     @Override
-    public WenyanValue visitContinue_(WenyanRParser.Continue_Context ctx) {
-        throw new ContinueException();
-    }
-
-    @Override
-    public WenyanValue visitReturn_data_statement(WenyanRParser.Return_data_statementContext ctx) {
-        throw new ReturnException(new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data()));
-    }
-
-    @Override
-    public WenyanValue visitReturn_last_statement(WenyanRParser.Return_last_statementContext ctx) {
-        throw new ReturnException(functionEnvironment.resultStack.peek());
-    }
-
-    @Override
-    public WenyanValue visitReturn_void_statement(WenyanRParser.Return_void_statementContext ctx) {
-        throw new ReturnException(null);
-    }
-
-    private static class IfExprVisitor extends WenyanRBaseVisitor<Boolean> {
-        protected final WenyanFunctionEnvironment functionEnvironment;
-        protected final WenyanControl control;
-
-        public IfExprVisitor(WenyanFunctionEnvironment functionEnvironment, WenyanControl control) {
-            this.functionEnvironment = functionEnvironment;
-            this.control = control;
-        }
-
-        @Override
-        public Boolean visitIf_data(WenyanRParser.If_dataContext ctx) {
-            WenyanValue value = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data());
-            try {
-                value = WenyanValue.constOf(value).casting(WenyanValue.Type.BOOL);
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx.data());
-            }
-            return (Boolean) value.getValue();
-        }
-
-        @Override
-        public Boolean visitIf_logic(WenyanRParser.If_logicContext ctx) {
-            control.wait_tick();
-            WenyanValue left = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(0));
-            WenyanValue right = new WenyanDataVisitor(functionEnvironment, control).visit(ctx.data(1));
-            left = WenyanValue.constOf(left);
-            right = WenyanValue.constOf(right);
-            try {
-                return switch (ctx.if_logic_op().op.getType()) {
-                    case WenyanRParser.EQ -> left.equals(right);
-                    case WenyanRParser.NEQ -> !left.equals(right);
-                    case WenyanRParser.GT -> left.compareTo(right) > 0;
-                    case WenyanRParser.GTE -> left.compareTo(right) >= 0;
-                    case WenyanRParser.LT -> left.compareTo(right) < 0;
-                    case WenyanRParser.LTE -> left.compareTo(right) <= 0;
-                    default -> throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_operator").getString(), ctx);
-                };
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx);
-            }
-        }
-    }
-
-    public static class BreakException extends RuntimeException {
-        public BreakException() {
-            super("break");
-        }
-    }
-
-    public static class ContinueException extends RuntimeException {
-        public ContinueException() {
-            super("continue");
-        }
-    }
-
-    public static class ReturnException extends RuntimeException {
-        public final WenyanValue value;
-
-        public ReturnException(WenyanValue value) {
-            super("return");
-            this.value = value;
-        }
+    public Boolean visitReturn_void_statement(WenyanRParser.Return_void_statementContext ctx) {
+        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        bytecode.add(WenyanCodes.RET);
+        return true;
     }
 }

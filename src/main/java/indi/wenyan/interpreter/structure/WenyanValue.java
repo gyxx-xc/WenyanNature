@@ -15,6 +15,7 @@ public class WenyanValue {
         STRING,
         LIST,
         OBJECT, // not implemented
+        OBJECT_TYPE,
         FUNCTION;
 
         @Override
@@ -28,6 +29,7 @@ public class WenyanValue {
         put(Type.LIST, 1);
         put(Type.FUNCTION, 1);
         put(Type.OBJECT, 1);
+        put(Type.OBJECT_TYPE, 1);
         put(Type.DOUBLE, 2);
         put(Type.INT, 3);
         put(Type.BOOL, 4);
@@ -36,6 +38,8 @@ public class WenyanValue {
     private final Type type;
     private Object value;
     private final boolean isConst;
+
+    public static final WenyanValue NULL = new WenyanValue(Type.NULL, null, true);
 
     public WenyanValue(Type type, Object value, boolean isConst) {
         this.type = type;
@@ -66,8 +70,8 @@ public class WenyanValue {
             case DOUBLE -> 0.0;
             case BOOL -> false;
             case STRING -> "";
-            case LIST -> new WenyanValueArray();
-            case OBJECT, FUNCTION -> null;
+            case LIST -> new WenyanArrayObject();
+            case OBJECT, OBJECT_TYPE, FUNCTION -> null;
         };
         return new WenyanValue(type, value1, isConst);
     }
@@ -79,14 +83,6 @@ public class WenyanValue {
     public static WenyanValue varOf(WenyanValue value) {
         return new WenyanValue(value.type, value.value, false);
     }
-
-    // our purpose: auto casting
-    // when?
-    // all operator
-    // function call
-    // what to consider
-    // required type != current type
-    // narrow with wide -> auto cast to wide
 
     // what we need to do these function?
     // 1. wide link
@@ -100,8 +96,11 @@ public class WenyanValue {
     // downgrade + wide link
     // double -> int
     // ~list -> bool
+    // obj -> function (constructor)
     public WenyanValue casting(Type type) throws WenyanException.WenyanTypeException {
         if (this.type == type)
+            return this;
+        if (this.type == Type.NULL)
             return this;
         if (type == Type.INT) {
             if (this.type == Type.DOUBLE) {
@@ -136,6 +135,16 @@ public class WenyanValue {
                 return new WenyanValue(Type.BOOL, !((ArrayList<?>) value).isEmpty(), isConst);
             }
         }
+        if (type == Type.FUNCTION) {
+            if (this.type == Type.OBJECT_TYPE) {
+                return ((WenyanObjectType) this.value).staticVariable.get("造"); // TODO: change name
+            }
+        }
+        if (type == Type.OBJECT) {
+            if (this.type == Type.LIST) {
+                return this;
+            }
+        }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 
@@ -156,7 +165,7 @@ public class WenyanValue {
             case STRING -> new WenyanValue(addType, left.value.toString() + right.value.toString(), true);
             // change self if it is a list
             case LIST -> {
-                this.value = ((WenyanValueArray) left.value).concat((WenyanValueArray) right.value);
+                this.value = ((WenyanArrayObject) left.value).concat((WenyanArrayObject) right.value);
                 yield this;
             }
             default -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_added").getString());
@@ -217,14 +226,6 @@ public class WenyanValue {
         };
     }
 
-    public WenyanValue append(WenyanValue other) throws WenyanException.WenyanTypeException {
-        // require type this list, other any
-        casting(Type.LIST); // throw exception if not (or can't cast to) list
-        WenyanValueArray list = (WenyanValueArray) value;
-        list.add(WenyanValue.varOf(other));
-        return this;
-    }
-
     public boolean equals(WenyanValue other) throws WenyanException.WenyanTypeException {
         Type eqType = widerType(other.type);
         WenyanValue left, right;
@@ -256,21 +257,6 @@ public class WenyanValue {
         };
     }
 
-    public static class WenyanValueArray extends ArrayList<WenyanValue> {
-        public WenyanValueArray concat(WenyanValueArray other) {
-            addAll(other);
-            return this;
-        }
-
-        public WenyanValue get(WenyanValue index) throws WenyanException.WenyanThrowException {
-            try {
-                return get((int) index.casting(Type.INT).getValue() - 1);
-            } catch (RuntimeException e) {
-                throw new WenyanException.WenyanDataException(e.getMessage());
-            }
-        }
-    }
-
     @Override
     public String toString() {
 
@@ -280,15 +266,10 @@ public class WenyanValue {
             case DOUBLE -> WenyanString((double) value);
             case BOOL -> WenyanString((boolean) value);
             case STRING -> (String) value;
-            case LIST -> {
-                String result = "";
-                for (WenyanValue wenyanValue : (WenyanValueArray) value) {
-                   result += (result.isEmpty()?"":" ") + wenyanValue.toString();
-                }
-                yield result;
-            }
-            case FUNCTION -> Component.translatable("type.wenyan_nature.function").getString();
+            case LIST -> value.toString();
+            case FUNCTION -> WenyanString((FunctionSign) value);
             case OBJECT -> Component.translatable("type.wenyan_nature.object").getString();
+            case OBJECT_TYPE -> Component.translatable("type.wenyan_nature.object_type").getString();
         };
     }
 
@@ -322,4 +303,19 @@ public class WenyanValue {
             result.append(digit == '.' ? dot : numerals[Character.getNumericValue(digit)]);
         return result.toString();
     }
+
+    private static String WenyanString(FunctionSign functionSign) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(functionSign.name).append("(");
+        for (int i = 0; i < functionSign.argTypes.length; i++) {
+            sb.append(functionSign.argTypes[i].toString());
+            if (i < functionSign.argTypes.length - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    public record FunctionSign(String name, Type[] argTypes, WenyanProgramCode bytecode) {}
 }
