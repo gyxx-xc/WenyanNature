@@ -4,35 +4,34 @@ import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.WenyanBytecode;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
-import net.minecraft.world.entity.player.Player;
+
+import java.util.Stack;
 
 public class WenyanProgram {
 
     public String code;
 
-    public final WenyanBytecode baseBytecode;
+    public final WenyanBytecode baseBytecode = new WenyanBytecode();
     public final WenyanRuntime baseEnvironment;
-    public WenyanRuntime runtime;
+    public Stack<WenyanRuntime> runtimes = new Stack<>();
 
     private boolean isRunning = false;
 
-    public WenyanProgram(String code, Player holder, WenyanRuntime baseEnvironment) {
+    public WenyanProgram(String code, WenyanRuntime baseEnvironment) {
         this.code = code;
-        this.baseBytecode = new WenyanBytecode();
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
         visitor.visit(WenyanVisitor.program(code));
         this.baseEnvironment = baseEnvironment;
+        runtimes.push(baseEnvironment);
     }
 
     public void run() {
-        runtime = new WenyanRuntime(baseEnvironment, baseBytecode);
+        runtimes.push(new WenyanRuntime(baseBytecode));
         isRunning = true;
     }
 
     public void step() {
-//        System.out.println(runtime.processStack);
-//        System.out.println(runtime.resultStack);
-//        System.out.println(runtime.programCounter + ": " + runtime.bytecode.get(runtime.programCounter));
+        WenyanRuntime runtime = runtimes.peek();
 
         if (runtime.programCounter >= runtime.bytecode.size()) {
             isRunning = false;
@@ -40,15 +39,15 @@ public class WenyanProgram {
         }
 
         WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
-        code.code().exec(code.arg(), runtime);
+        code.code().exec(code.arg(), this);
+
+//        System.out.println(runtime.processStack);
+//        System.out.println(runtime.resultStack);
+//        System.out.println(runtime.programCounter + ": " + code);
 
         if (!runtime.PCFlag)
             runtime.programCounter++;
         runtime.PCFlag = false;
-
-        if (runtime.changeRuntimeFlag)
-            runtime = runtime.nextRuntime;
-        runtime.changeRuntimeFlag = false;
     }
 
     public void step(int steps) {
@@ -69,24 +68,37 @@ public class WenyanProgram {
 
     public static void main(String[] args) {
         WenyanProgram program = new WenyanProgram("""
-                吾有一物。名之曰「精衛」。其物如是。
-                	物之「「名」」者。言曰「「女娃」」。
-                	物之「「足數」」者。數曰二。
-                	物之「「喙數」」者。數曰一。
-                是謂「精衛」之物也。
-                
-                吾有一術。名之曰「造物之術」。欲行是術。必先得一言。曰「甲」。乃行是術曰。
-                	吾有一物。名之曰「乙」。其物如是。
-                		物之「「丙」」者。言曰「甲」。
-                		物之「「丁」」者。數曰四。
-                	是謂「乙」之物也。
-                	乃得「乙」。
-                是謂「造物之術」之術也。
-                
-                施「造物之術」於「「某甲」」。名之曰「戊」。
-                昔之「戊」之「「丁」」者。今五是矣。書「戊」。
-                昔之「戊」之「「丁」」者。今不復存矣。書「戊」。
-                """, null, WenyanPackages.WENYAN_BASIC_PACKAGES);
+吾有一物。名之曰「a」。其物如是。
+	物之造者術是術曰。
+		夫一名之曰己之「「a 」」
+	是謂造之術也。
+是謂「a」之物也。
+
+吾有一物繼「a」。名之曰「b」。其物如是。
+	物之造者術是術曰。
+		施父之造
+		夫二名之曰己之「「a 」」
+		夫一名之曰己之「「b 」」
+	是謂造之術也。
+是謂「b」之物也。
+
+造「a」名之曰「a 」
+施「a」名之曰「a1 」
+造「b」名之曰「b 」
+施「b」名之曰「b1 」
+
+書「a 」之「「a 」」
+書「a1 」之「「a 」」
+書「b 」之「「a 」」
+書「b1 」之「「a 」」
+書「b 」之「「b 」」
+書「b1 」之「「b 」」
+
+昔之「b 」之「「a 」」者今三是矣
+
+書「a 」之「「a 」」
+書「b 」之「「a 」」
+                """, WenyanPackages.WENYAN_BASIC_PACKAGES);
         System.out.println(program.baseBytecode);
         program.run();
         while (program.isRunning) program.step();

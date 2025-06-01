@@ -1,10 +1,10 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.utils.JavaCallCodeWarper;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class WenyanArrayObject extends WenyanObject {
     private final ArrayList<WenyanValue> values = new ArrayList<>();
@@ -36,25 +36,22 @@ public class WenyanArrayObject extends WenyanObject {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (WenyanValue wenyanValue : values)
-            result.append(result.isEmpty() ? "" : " ").append(wenyanValue.toString());
-        return result.toString();
+        return values.toString();
     }
 
     public static class WenyanArrayObjectType extends WenyanObjectType {
         public WenyanArrayObjectType() {
             super(null, "列");
-            staticVariable.put("GET", new WenyanValue(WenyanValue.Type.FUNCTION,
+            functions.put("GET", new WenyanValue(WenyanValue.Type.FUNCTION,
                     new WenyanValue.FunctionSign("GET", // TODO: change names
                             new WenyanValue.Type[]{WenyanValue.Type.LIST, WenyanValue.Type.INT},
-                            new JavacallHandler(args -> {
+                            new JavaCallCodeWarper(new JavacallHandler(args -> {
                                 if (args.length != 2)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                                 args[0].casting(WenyanValue.Type.LIST);
                                 args[1].casting(WenyanValue.Type.INT);
                                 return ((WenyanArrayObject) args[0].getValue()).get(args[1]);
-                            })), true));
+                            }))), true));
         }
     }
 }

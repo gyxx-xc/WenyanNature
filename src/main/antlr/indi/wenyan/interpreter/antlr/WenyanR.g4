@@ -6,7 +6,7 @@ grammar WenyanR;
 // to bytecode that has
 // jmp:label (->), branch_false:label (value -> value)
 // call:argc (arg2, arg1..., func_value -> ret), ret (value -> )
-// call_attr:argc (arg..., self/ignore, func -> ret)
+// call_attr:argc (arg..., self/ignore, func -> ret), handle(h):argc (args... -> ret)
 // push:const (-> value), pop (value ->)
 // pushA (value ->), popA (-> value), peekA(-> value), peekA_N:cnt (-> cnt*val), empty
 // load:id (-> value), store:id (value -> ), set_val(value2, value1 -> ) [v1 -> v2]
@@ -16,7 +16,9 @@ grammar WenyanR;
 // create_type:id (parent -> self), create_object:argc (arg..., obj_type -> obj_ins)
 // import?
 
-program                     : statement*;
+program                     : statements EOF;
+
+statements                  : statement* ;
 
 statement                   : candy_statement // make the candy first
                             | expr_statement
@@ -54,8 +56,9 @@ data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT
                             | ZHI                                                       # id_last_remain
                             | IDENTIFIER                                                # id
                             | SELF                                                      # self
+                            | PARENT                                                    # parent
                             | data ZHI p=(IDENTIFIER|INT_NUM|DATA_ID_LAST)              # array_index
-                            | data ZHI p=(STRING_LITERAL|LONG)                          # data_child
+                            | data ZHI p=(STRING_LITERAL|LONG|CREATE_OBJECT)            # data_child
                             ;
 
 reference_statement         : FU data ;
@@ -70,11 +73,11 @@ declare_write_candy_statement : declare_statement WRITE_KEY_FUNCTION ZHI
 mod_math_statement          : DIV data pp=(PREPOSITION_LEFT|PREPOSITION_RIGHT) data POST_MOD_MATH_OP ;
 boolean_algebra_statement   : FU data data op=(AND | OR) ;
 assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGHT_END   # assign_data_statement
-                            | ASSIGN_LEFT data ZHE ASSIGN_RIGHT ASSIGN_RIGHT_NULL       # assign_null_statement;
+                            | ASSIGN_LEFT data ZHE (ASSIGN_RIGHT)? ASSIGN_RIGHT_NULL       # assign_null_statement;
 
 function_define_statement   : LOCAL_DECLARE_OP INT_NUM FUNCTION_TYPE NAMING YUE IDENTIFIER
                               (FUNCTION_ARGS_START FUNCTION_ARGS_GET (args+=INT_NUM type (YUE id+=IDENTIFIER)+)+)?
-                              FUNCTION_BODY_START program DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END ;
+                              FUNCTION_BODY_START statements DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END ;
 
 function_call_statement     : call=(CALLING_FUNCTION|CREATE_OBJECT) (data|key_function)
                               (preposition (args+=data))?
@@ -87,13 +90,13 @@ function_call_statement     : call=(CALLING_FUNCTION|CREATE_OBJECT) (data|key_fu
 
 flush_statement             : FLUSH ;
 
-if_statement                : IF_ if_expression ZHE if_=program (ELSE_ else_=program)? FOR_IF_END ;
+if_statement                : IF_ if_expression ZHE if_=statements (ELSE_ else_=statements)? FOR_IF_END ;
 if_expression               : data                  # if_data
                             | data if_logic_op data # if_logic ;
 
-for_statement               : FOR_ARR_START data FOR_ARR_BELONG IDENTIFIER program FOR_IF_END  # for_arr_statement
-                            | FOR_ENUM_START data FOR_ENUM_TIMES program FOR_IF_END            # for_enum_statement
-                            | FOR_WHILE_SART program FOR_IF_END                                # for_while_statement
+for_statement               : FOR_ARR_START data FOR_ARR_BELONG IDENTIFIER statements FOR_IF_END  # for_arr_statement
+                            | FOR_ENUM_START data FOR_ENUM_TIMES statements FOR_IF_END            # for_enum_statement
+                            | FOR_WHILE_SART statements FOR_IF_END                                # for_while_statement
                             ;
 
 return_statement            : RETURN data                     # return_data_statement
@@ -102,12 +105,12 @@ return_statement            : RETURN data                     # return_data_stat
                             ;
 
 object_statement            : LOCAL_DECLARE_OP INT_NUM OBJECT_TYPE (EXTENDS data)? NAMING YUE IDENTIFIER
-                              OBJECT_BODY_START (object_property_define | object_method_define)+
+                              OBJECT_BODY_START (object_property_define | object_method_define)*
                               DEFINE_CLOSURE IDENTIFIER OBJECT_DEFINE_END ;
 object_method_define        : OBJECT_STATIC_DECLARE (STRING_LITERAL | CREATE_OBJECT) ZHE FUNCTION_TYPE
                               (FUNCTION_ARGS_START FUNCTION_ARGS_GET (args+=INT_NUM type (YUE id+=IDENTIFIER)+)+ )?
-                              FUNCTION_BODY_START program DEFINE_CLOSURE (STRING_LITERAL | CREATE_OBJECT) FUNCTION_DEFINE_END ;
-object_property_define      : OBJECT_STATIC_DECLARE STRING_LITERAL ZHE type YUE data ;
+                              FUNCTION_BODY_START statements DEFINE_CLOSURE (STRING_LITERAL | CREATE_OBJECT) FUNCTION_DEFINE_END ;
+object_property_define      : OBJECT_STATIC_DECLARE STRING_LITERAL ZHE type (YUE data)? ;
 
 import_statement            : '吾嘗觀' STRING_LITERAL '之書' ('方悟' IDENTIFIER+ '之義')? ;
 
@@ -208,6 +211,7 @@ WRITE_KEY_FUNCTION          : '書' ;
 FLUSH                       : '噫' ;
 
 SELF                        : '己' ;
+PARENT                      : '父' ;
 LONG                        : '長' ;
 
 STRING_LITERAL              : '「「' ( ~('」') )* '」」' ;

@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.interpreter.structure.WenyanCode;
+import indi.wenyan.interpreter.utils.WenyanProgram;
 
 import java.util.Objects;
 
@@ -18,14 +19,17 @@ public class BranchCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanRuntime runtime) {
+    public void exec(int args, WenyanProgram program) {
+        WenyanRuntime runtime = program.runtimes.peek();
         boolean val = false;
         try {
             if (condition != Condition.NONE) {
                 if (operation == Operation.POP) {
-                    val = (boolean) runtime.processStack.pop().casting(WenyanValue.Type.BOOL).getValue();
+                    val = (boolean) runtime.processStack.pop()
+                            .casting(WenyanValue.Type.BOOL).getValue();
                 } else {
-                    val = (boolean) runtime.processStack.peek().casting(WenyanValue.Type.BOOL).getValue();
+                    val = (boolean) runtime.processStack.peek()
+                            .casting(WenyanValue.Type.BOOL).getValue();
                 }
             }
         } catch (WenyanException.WenyanTypeException e) {

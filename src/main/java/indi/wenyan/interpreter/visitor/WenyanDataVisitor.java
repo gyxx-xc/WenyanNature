@@ -57,6 +57,12 @@ public class WenyanDataVisitor extends WenyanVisitor {
     }
 
     @Override
+    public Boolean visitParent(WenyanRParser.ParentContext ctx) {
+        bytecode.add(WenyanCodes.LOAD, ctx.PARENT().getText());
+        return true;
+    }
+
+    @Override
     public Boolean visitArray_index(WenyanRParser.Array_indexContext ctx) {
         switch (ctx.p.getType()) {
             case WenyanRParser.INT_NUM -> {

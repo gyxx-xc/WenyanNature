@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.utils.WenyanProgram;
+
 public abstract class WenyanCode {
     public final String name;
 
@@ -7,7 +9,11 @@ public abstract class WenyanCode {
         this.name = name;
     }
 
-    public abstract void exec(int args, WenyanRuntime runtime);
+    public abstract void exec(int args, WenyanProgram program);
+
+    public int getStep(int args, WenyanProgram program) {
+        return 1;
+    }
 
     @Override
     public String toString() {

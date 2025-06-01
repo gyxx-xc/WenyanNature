@@ -137,7 +137,7 @@ public class WenyanValue {
         }
         if (type == Type.FUNCTION) {
             if (this.type == Type.OBJECT_TYPE) {
-                return ((WenyanObjectType) this.value).staticVariable.get("建"); // TODO: change name
+                return ((WenyanObjectType) this.value).staticVariable.get("造"); // TODO: change name
             }
         }
         if (type == Type.OBJECT) {
@@ -267,7 +267,7 @@ public class WenyanValue {
             case BOOL -> WenyanString((boolean) value);
             case STRING -> (String) value;
             case LIST -> value.toString();
-            case FUNCTION -> Component.translatable("type.wenyan_nature.function").getString();
+            case FUNCTION -> WenyanString((FunctionSign) value);
             case OBJECT -> Component.translatable("type.wenyan_nature.object").getString();
             case OBJECT_TYPE -> Component.translatable("type.wenyan_nature.object_type").getString();
         };
@@ -302,6 +302,19 @@ public class WenyanValue {
         for (char digit : Double.toString(d).toCharArray())
             result.append(digit == '.' ? dot : numerals[Character.getNumericValue(digit)]);
         return result.toString();
+    }
+
+    private static String WenyanString(FunctionSign functionSign) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(functionSign.name).append("(");
+        for (int i = 0; i < functionSign.argTypes.length; i++) {
+            sb.append(functionSign.argTypes[i].toString());
+            if (i < functionSign.argTypes.length - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
     }
 
     public record FunctionSign(String name, Type[] argTypes, WenyanProgramCode bytecode) {}

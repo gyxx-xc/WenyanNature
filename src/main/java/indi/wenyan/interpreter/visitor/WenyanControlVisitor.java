@@ -92,7 +92,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.BRANCH_FALSE, forEnd);
 
         bytecode.setLabel(progStart);
-        bodyVisitor.visit(ctx.program());
+        bodyVisitor.visit(ctx.statements());
 
         bytecode.setProgEndLabel();
         bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.INT, -1, true));
@@ -113,7 +113,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
         int whileStart = bytecode.getNewLabel();
 
         bytecode.setLabel(whileStart);
-        bodyVisitor.visit(ctx.program());
+        bodyVisitor.visit(ctx.statements());
 
         bytecode.setProgEndLabel();
         bytecode.add(WenyanCodes.JMP, whileStart);

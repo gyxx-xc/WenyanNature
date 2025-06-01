@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class WenyanPackageBuilder {
-    private final WenyanRuntime environment = new WenyanRuntime(null, null);
+    private final WenyanRuntime environment = new WenyanRuntime(null);
 
     public static WenyanPackageBuilder create() {
         return new WenyanPackageBuilder();
@@ -64,7 +64,7 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanValue.Type[] argTypes) {
-        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(name, argTypes, javacall);
+        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(name, argTypes, new JavaCallCodeWarper(javacall));
         environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         return this;
     }
