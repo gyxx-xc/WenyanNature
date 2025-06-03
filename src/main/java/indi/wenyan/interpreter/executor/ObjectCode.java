@@ -14,7 +14,7 @@ public class ObjectCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.cur();
+        WenyanRuntime runtime = program.curThreads.cur();
         try {
             String id = runtime.bytecode.getIdentifier(args);
             switch (operation) {

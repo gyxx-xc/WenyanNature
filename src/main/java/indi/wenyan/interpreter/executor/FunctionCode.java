@@ -22,7 +22,7 @@ public class FunctionCode extends WenyanCode {
     @Override
     public void exec(int args, WenyanProgram program) {
         try {
-            WenyanRuntime runtime = program.runtimes.cur();
+            WenyanRuntime runtime = program.curThreads.cur();
             WenyanValue func = runtime.processStack.pop();
             WenyanValue self = null;
             if (operation == Operation.CALL_ATTR)
@@ -65,7 +65,7 @@ public class FunctionCode extends WenyanCode {
              WenyanProgram program, int args, boolean noReturn)
             throws WenyanException.WenyanThrowException {
 
-        WenyanRuntime runtime = program.runtimes.cur();
+        WenyanRuntime runtime = program.curThreads.cur();
         if (sign.bytecode() instanceof JavaCallCodeWarper warper) {
             List<WenyanValue> argsList = new ArrayList<>(args);
             if (self != null)
@@ -95,7 +95,7 @@ public class FunctionCode extends WenyanCode {
                         ((WenyanBytecode) sign.bytecode()).getIdentifier(i),
                         WenyanValue.varOf(argsList[i]));
             newRuntime.noReturnFlag = noReturn;
-            program.runtimes.add(newRuntime);
+            program.curThreads.add(newRuntime);
         }
     }
 

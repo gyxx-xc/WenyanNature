@@ -16,21 +16,11 @@ public class VariableCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.cur();
+        WenyanRuntime runtime = program.curThreads.cur();
         switch (operation) {
             case LOAD -> {
-                Stack<WenyanRuntime> runtimeStack = program.runtimes.runtimes;
                 String id = runtime.bytecode.getIdentifier(args);
-                WenyanValue value = null;
-                for (int i = runtimeStack.size()-1; i >= 0; i --) {
-                    if (runtimeStack.get(i).variables.containsKey(id)) {
-                        value = runtimeStack.get(i).variables.get(id);
-                        break;
-                    }
-                }
-                if (value == null)
-                    throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString()+id);
-                runtime.processStack.push(value);
+                runtime.processStack.push(program.curThreads.getGlobalVariable(id));
             }
             case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanValue.varOf(runtime.processStack.pop()));
             case SET_VALUE -> {
@@ -69,7 +59,7 @@ public class VariableCode extends WenyanCode {
     @Override
     public int getStep(int args, WenyanProgram program) {
         if (operation == Operation.LOAD) {
-            return program.runtimes.runtimes.size();
+            return program.curThreads.runtimes.size();
         }
         return super.getStep(args, program);
     }

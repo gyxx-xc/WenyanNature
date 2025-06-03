@@ -14,7 +14,7 @@ public class StackCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.cur();
+        WenyanRuntime runtime = program.curThreads.cur();
         switch (operation) {
             case PUSH -> runtime.processStack.push(runtime.bytecode.getConst(args));
             case POP -> runtime.processStack.pop();

@@ -11,9 +11,9 @@ public class ReturnCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.cur();
-        program.runtimes.ret();
+        WenyanRuntime runtime = program.curThreads.cur();
+        program.curThreads.ret();
         if (!runtime.noReturnFlag)
-            program.runtimes.cur().processStack.push(runtime.processStack.pop());
+            program.curThreads.cur().processStack.push(runtime.processStack.pop());
     }
 }

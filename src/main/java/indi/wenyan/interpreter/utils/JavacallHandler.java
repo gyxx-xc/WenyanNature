@@ -5,7 +5,7 @@ import indi.wenyan.interpreter.structure.*;
 /**
  * This class represents a Javacall context.
  */
-public class JavacallHandler extends WenyanCode {
+public class JavacallHandler {
     private final WenyanFunction function;
 
     public JavacallHandler() {
@@ -13,7 +13,6 @@ public class JavacallHandler extends WenyanCode {
     }
 
     public JavacallHandler(WenyanFunction function) {
-        super("JAVA_CALL");
         this.function = function;
     }
 
@@ -28,10 +27,6 @@ public class JavacallHandler extends WenyanCode {
         for (int i = 0; i < args.length; i++)
             newArgs[i] = args[i].casting(args_type[i]).getValue();
         return newArgs;
-    }
-
-    @Override
-    public void exec(int args, WenyanProgram program) {
     }
 
     @FunctionalInterface

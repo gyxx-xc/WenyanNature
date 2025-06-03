@@ -5,13 +5,18 @@ import indi.wenyan.interpreter.structure.WenyanBytecode;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class WenyanProgram {
 
     public String code;
 
     public final WenyanBytecode baseBytecode = new WenyanBytecode();
     public final WenyanRuntime baseEnvironment;
-    public WenyanThread runtimes = new WenyanThread();
+
+    public WenyanThread curThreads = new WenyanThread();
+    public Queue<WenyanThread> readyThreads = new LinkedList<>();
     private boolean isRunning = false;
     private int accumulatedSteps = 0;
 
@@ -20,11 +25,11 @@ public class WenyanProgram {
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
         visitor.visit(WenyanVisitor.program(code));
         this.baseEnvironment = baseEnvironment;
-        runtimes.add(baseEnvironment);
     }
 
     public void run() {
-        runtimes.add(new WenyanRuntime(baseBytecode));
+        curThreads.add(new WenyanRuntime(baseBytecode));
+        readyThreads.add(curThreads);
         isRunning = true;
     }
 
@@ -35,7 +40,7 @@ public class WenyanProgram {
     public void step(int steps) {
         accumulatedSteps += steps;
         while (accumulatedSteps > 0 && isRunning) {
-            WenyanRuntime runtime = runtimes.cur();
+            WenyanRuntime runtime = curThreads.cur();
 
             if (runtime.programCounter >= runtime.bytecode.size()) {
                 isRunning = false;
