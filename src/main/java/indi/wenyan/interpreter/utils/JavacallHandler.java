@@ -32,20 +32,6 @@ public class JavacallHandler extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        getStep(args, program);
-        WenyanRuntime runtime = program.runtimes.peek();
-        WenyanValue[] functionArgs = new WenyanValue[args];
-        for(int i = 0; i < args; i++) {
-            functionArgs[i] = runtime.processStack.pop();
-        }
-        WenyanValue value;
-        try {
-            value = function.apply(functionArgs);
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage());
-        }
-        if (!runtime.noReturnFlag)
-            runtime.processStack.push(value);
     }
 
     @FunctionalInterface

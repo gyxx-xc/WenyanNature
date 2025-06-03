@@ -3,9 +3,11 @@ package indi.wenyan.interpreter.executor;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavaCallCodeWarper;
 import indi.wenyan.interpreter.structure.WenyanCode;
-import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanProgram;
 import net.minecraft.network.chat.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FunctionCode extends WenyanCode {
     private final Operation operation;
@@ -15,98 +17,102 @@ public class FunctionCode extends WenyanCode {
         this.operation = o;
     }
 
+    // func / create_obj
+    // -> ori_func / javacall
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.peek();
-        if (operation == Operation.RETURN) {
-            program.runtimes.pop();
-            if (!runtime.noReturnFlag)
-                program.runtimes.peek().processStack.push(runtime.processStack.pop());
-            return;
-        }
-
-        if (runtime.processStack.peek().getType() == WenyanValue.Type.OBJECT_TYPE) {
-            if (operation == Operation.CALL_ATTR) {
-                WenyanValue value = runtime.processStack.pop();
-                runtime.processStack.pop();
-                runtime.processStack.push(value);
-            }
-
-            // override the call to create object
-            runtime.bytecode.setTemp(runtime.programCounter, WenyanCodes.CREATE_OBJECT, args);
-            runtime.PCFlag = true;
-            return;
-        }
-
-        // setup new Runtime
-        WenyanValue.FunctionSign sign;
-        WenyanValue self = null; // for call attr
-
         try {
-            sign = ((WenyanValue.FunctionSign)runtime.processStack.pop()
-                    .casting(WenyanValue.Type.FUNCTION).getValue());
-        } catch (WenyanException.WenyanTypeException e) {
+            WenyanRuntime runtime = program.runtimes.cur();
+            WenyanValue func = runtime.processStack.pop();
+            WenyanValue self = null;
+            if (operation == Operation.CALL_ATTR)
+                self = runtime.processStack.pop();
+
+            // object_type
+            if (func.getType() == WenyanValue.Type.OBJECT_TYPE) {
+                // create empty, run constructor, return self
+                self = new WenyanValue(WenyanValue.Type.OBJECT,
+                        new WenyanObject((WenyanObjectType)
+                                func.casting(WenyanValue.Type.OBJECT_TYPE).getValue()), true);
+                WenyanValue.FunctionSign sign = (WenyanValue.FunctionSign)
+                        func.casting(WenyanValue.Type.FUNCTION).getValue();
+
+                callFunction(sign, self, program, args, true);
+                runtime.processStack.push(self);
+            } else { // function
+                // handle self first
+                if (operation == Operation.CALL_ATTR) {
+                    // try casting to object (might be list)
+                    try { self = self.casting(WenyanValue.Type.OBJECT);
+                    } catch (WenyanException.WenyanTypeException ignore) {}
+
+                    // ignore
+                    if (self.getType() != WenyanValue.Type.OBJECT)
+                        self = null;
+                }
+
+                WenyanValue.FunctionSign sign = ((WenyanValue.FunctionSign)
+                        func.casting(WenyanValue.Type.FUNCTION).getValue());
+                callFunction(sign, self, program, args, false);
+            }
+        } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage());
         }
-        if (operation == Operation.CALL_ATTR) {
-            // depend on the types to choose call with self or not
-            if (runtime.processStack.peek().getType() != WenyanValue.Type.OBJECT) {
-                runtime.processStack.pop();
-            } else {
-                self = runtime.processStack.pop();
-            }
-        }
+    }
 
-        WenyanValue[] argsList = new WenyanValue[args];
+    private void callFunction
+            (WenyanValue.FunctionSign sign, WenyanValue self,
+             WenyanProgram program, int args, boolean noReturn)
+            throws WenyanException.WenyanThrowException {
+
+        WenyanRuntime runtime = program.runtimes.cur();
         if (sign.bytecode() instanceof JavaCallCodeWarper warper) {
-            runtime.bytecode.setTemp(runtime.programCounter, warper.handler, args);
-            runtime.PCFlag = true;
-            return;
-        }
+            List<WenyanValue> argsList = new ArrayList<>(args);
+            if (self != null)
+                argsList.add(self);
+            for (int i = 0; i < args; i++)
+                argsList.add(runtime.processStack.pop());
 
-        if (sign.argTypes().length != args)
-            throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-        try {
+            WenyanValue value = warper.handler.handle(argsList.toArray(new WenyanValue[0]));
+            if (!noReturn)
+                runtime.processStack.push(value);
+        } else {
+            WenyanValue[] argsList = new WenyanValue[args];
+            if (sign.argTypes().length != args)
+                throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
             for (int i = 0; i < args; i++)
                 argsList[i] = runtime.processStack.pop().casting(sign.argTypes()[i]);
-        } catch (WenyanException.WenyanTypeException e) {
-            throw new WenyanException(e.getMessage());
-        }
 
-        program.runtimes.push(new WenyanRuntime((WenyanBytecode) sign.bytecode()));
-        runtime = program.runtimes.peek();
-        if (self != null) {
-            runtime.setVariable("己", self);
-            runtime.setVariable("父", new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
-                    ((WenyanObject) self.getValue()).type.parent, true));
+            WenyanRuntime newRuntime = new WenyanRuntime((WenyanBytecode) sign.bytecode());
+            if (self != null) {
+                newRuntime.setVariable("己", self);
+                newRuntime.setVariable("父", new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
+                        ((WenyanObject) self.getValue()).type.parent, true));
+            }
+            // STUB: assume the first n id is the args
+            for (int i = 0; i < args; i++)
+                newRuntime.setVariable(
+                        ((WenyanBytecode) sign.bytecode()).getIdentifier(i),
+                        WenyanValue.varOf(argsList[i]));
+            newRuntime.noReturnFlag = noReturn;
+            program.runtimes.add(newRuntime);
         }
-        // STUB: assume the first n id is the args
-        for (int i = 0; i < args; i ++)
-            runtime.setVariable(
-                    ((WenyanBytecode) sign.bytecode()).getIdentifier(i),
-                    WenyanValue.varOf(argsList[i]));
     }
 
     @Override
     public int getStep(int args, WenyanProgram program) {
-        if (operation != Operation.RETURN) {
-            return args;
-        }
         return super.getStep(args, program);
     }
 
     public enum Operation {
         CALL,
-        RETURN,
         CALL_ATTR
     }
 
     private static String name(Operation op) {
         return switch (op) {
             case CALL -> "CALL";
-            case RETURN -> "RETURN";
             case CALL_ATTR -> "CALL_ATTR";
         };
     }
-
 }

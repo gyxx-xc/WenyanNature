@@ -14,7 +14,7 @@ public class AnsStackCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.peek();
+        WenyanRuntime runtime = program.runtimes.cur();
         switch (operation) {
             case PUSH -> runtime.resultStack.push(runtime.processStack.pop());
             case POP -> runtime.processStack.push(runtime.resultStack.pop());

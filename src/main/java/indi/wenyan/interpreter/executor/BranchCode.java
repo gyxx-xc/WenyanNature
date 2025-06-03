@@ -20,7 +20,7 @@ public class BranchCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.peek();
+        WenyanRuntime runtime = program.runtimes.cur();
         boolean val = false;
         try {
             if (condition != Condition.NONE) {

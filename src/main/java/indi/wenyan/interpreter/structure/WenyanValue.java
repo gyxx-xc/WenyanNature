@@ -137,7 +137,7 @@ public class WenyanValue {
         }
         if (type == Type.FUNCTION) {
             if (this.type == Type.OBJECT_TYPE) {
-                return ((WenyanObjectType) this.value).staticVariable.get("造"); // TODO: change name
+                return ((WenyanObjectType) this.value).functions.get("造"); // TODO: change name
             }
         }
         if (type == Type.OBJECT) {

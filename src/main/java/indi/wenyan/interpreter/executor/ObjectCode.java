@@ -3,7 +3,6 @@ package indi.wenyan.interpreter.executor;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.WenyanCode;
 import indi.wenyan.interpreter.utils.WenyanProgram;
-import net.minecraft.network.chat.Component;
 
 public class ObjectCode extends WenyanCode {
     private final Operation operation;
@@ -15,7 +14,7 @@ public class ObjectCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.runtimes.peek();
+        WenyanRuntime runtime = program.runtimes.cur();
         try {
             String id = runtime.bytecode.getIdentifier(args);
             switch (operation) {
@@ -85,32 +84,6 @@ public class ObjectCode extends WenyanCode {
                                     .casting(WenyanValue.Type.OBJECT_TYPE).getValue(), id), true);
                     runtime.processStack.push(type);
                 }
-                case CREATE_OBJECT -> {
-                    // create empty, run constructor, return self
-                    WenyanValue instance = new WenyanValue(WenyanValue.Type.OBJECT,
-                            new WenyanObject((WenyanObjectType) runtime.processStack.pop()
-                                    .casting(WenyanValue.Type.OBJECT_TYPE).getValue()), false);
-                    // copy from functionCode's call
-                    WenyanValue[] argsList = new WenyanValue[args];
-                    WenyanValue.FunctionSign sign = (WenyanValue.FunctionSign)
-                            ((WenyanObject) instance.getValue())
-                            .type.getFunction("造").getValue();
-                    if (sign.argTypes().length != args)
-                        throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                    for (int i = 0; i < args; i++) // although here's a O(n), the function is already paid for it
-                        argsList[i] = runtime.processStack.pop().casting(sign.argTypes()[i]);
-                    WenyanRuntime constructorRuntime = new WenyanRuntime((WenyanBytecode) sign.bytecode());
-                    constructorRuntime.setVariable("己", instance);
-                    constructorRuntime.setVariable("父", new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
-                                    ((WenyanObject) instance.getValue()).type.parent, true));
-                    for (int i = 0; i < args; i ++)
-                        constructorRuntime.setVariable(
-                                ((WenyanBytecode) sign.bytecode()).getIdentifier(i),
-                                WenyanValue.varOf(argsList[i]));
-                    constructorRuntime.noReturnFlag = true;
-                    program.runtimes.push(constructorRuntime);
-                    runtime.processStack.push(instance);
-                }
             }
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
@@ -125,7 +98,6 @@ public class ObjectCode extends WenyanCode {
             case STORE_FUNCTION_ATTR -> "STORE_FUNCTION_ATTR";
             case STORE_ATTR -> "STORE_ATTR";
             case CREATE_TYPE -> "CREATE_TYPE";
-            case CREATE_OBJECT -> "CREATE_OBJECT";
         };
     }
 
@@ -135,7 +107,6 @@ public class ObjectCode extends WenyanCode {
         STORE_ATTR,
         STORE_STATIC_ATTR,
         STORE_FUNCTION_ATTR,
-        CREATE_TYPE,
-        CREATE_OBJECT
+        CREATE_TYPE
     }
 }

@@ -11,7 +11,7 @@ public class WenyanCodes {
 
     public static final WenyanCode CALL = new FunctionCode(FunctionCode.Operation.CALL);
     public static final WenyanCode CALL_ATTR = new FunctionCode(FunctionCode.Operation.CALL_ATTR);
-    public static final WenyanCode RET = new FunctionCode(FunctionCode.Operation.RETURN);
+    public static final WenyanCode RET = new ReturnCode();
 
     public static final WenyanCode PUSH = new StackCode(StackCode.Operation.PUSH);
     public static final WenyanCode POP = new StackCode(StackCode.Operation.POP);
@@ -33,5 +33,4 @@ public class WenyanCodes {
     public static final WenyanCode STORE_STATIC_ATTR = new ObjectCode(ObjectCode.Operation.STORE_STATIC_ATTR);
     public static final WenyanCode STORE_FUNCTION_ATTR = new ObjectCode(ObjectCode.Operation.STORE_FUNCTION_ATTR);
     public static final WenyanCode CREATE_TYPE = new ObjectCode(ObjectCode.Operation.CREATE_TYPE);
-    public static final WenyanCode CREATE_OBJECT = new ObjectCode(ObjectCode.Operation.CREATE_OBJECT);
 }
