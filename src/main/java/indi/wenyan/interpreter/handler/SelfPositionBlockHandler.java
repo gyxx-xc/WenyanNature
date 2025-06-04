@@ -29,4 +29,8 @@ public class SelfPositionBlockHandler extends JavacallHandler {
             case NORTH -> holder.position().z - runner.getBlockPos().getCenter().z;
         }, true);
     }
+    @Override
+    public boolean isLocal() {
+        return false;
+    }
 }

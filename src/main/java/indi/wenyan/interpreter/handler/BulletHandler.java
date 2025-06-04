@@ -36,4 +36,8 @@ public class BulletHandler extends JavacallHandler {
         level.addFreshEntity(bullet);
         return WenyanValue.NULL;
     }
+    @Override
+    public boolean isLocal() {
+        return false;
+    }
 }

@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.handler;
 
-import indi.wenyan.content.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -28,13 +27,15 @@ public class TouchHandler extends JavacallHandler {
         args[1] = Math.max(-10, Math.min(10, (int) args[1]));
         args[2] = Math.max(-10, Math.min(10, (int) args[2]));
         BlockPos blockPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);
-        HandlerEntity.levelRun(level, (level) -> {
             level.getProfiler().push("explosion_blocks");
             level.getBlockState(blockPos).onExplosionHit(level, blockPos,
                     new Explosion(level, null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
                             1.0f, false, Explosion.BlockInteraction.TRIGGER_BLOCK), (a1, a2) -> {});
             level.getProfiler().pop();
-        });
         return WenyanValue.NULL;
+    }
+    @Override
+    public boolean isLocal() {
+        return false;
     }
 }

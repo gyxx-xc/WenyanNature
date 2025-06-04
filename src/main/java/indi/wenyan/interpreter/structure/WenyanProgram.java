@@ -21,8 +21,8 @@ public class WenyanProgram {
     public Queue<JavaCallCodeWarper.Request> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
-    private static final int SWITCH_COST = 1;
-    private static final int SWITCH_STEP = 1000;
+    private static final int SWITCH_COST = 5;
+    private static final int SWITCH_STEP = 10;
 
     public WenyanProgram(String code, WenyanRuntime baseEnvironment) {
         this.code = code;
@@ -84,25 +84,6 @@ public class WenyanProgram {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        }
-    }
-
-    public static void main(String[] args) {
-        WenyanProgram program = new WenyanProgram("""
-恆為是
-書一
-云云
-                """, WenyanPackages.WENYAN_BASIC_PACKAGES);
-        System.out.println(program.baseBytecode);
-        program.run();
-        while (program.isRunning()) {
-            program.step(10);
-            program.handle();
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
     }
 }

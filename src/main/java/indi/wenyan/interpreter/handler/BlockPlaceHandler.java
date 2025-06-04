@@ -1,7 +1,6 @@
 package indi.wenyan.interpreter.handler;
 
 import indi.wenyan.content.block.RunnerBlock;
-import indi.wenyan.content.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -39,7 +38,7 @@ public class BlockPlaceHandler extends JavacallHandler {
         args[1] = Math.max(-10, Math.min(10, (int) args[1]));
         args[2] = Math.max(-10, Math.min(10, (int) args[2]));
         BlockPos blockPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);
-        HandlerEntity.levelRun(holder.level(), (level) -> placeBlock(level, holder, block, blockPos, attach));
+        placeBlock(holder.level(), holder, block, blockPos, attach);
         return WenyanValue.NULL;
     }
 
@@ -65,5 +64,9 @@ public class BlockPlaceHandler extends JavacallHandler {
         // Call OnBlockPlaced method
         ItemStack stack = new ItemStack(block.getBlock().asItem());
         block.getBlock().setPlacedBy(world, pos, block, player, stack);
+    }
+    @Override
+    public boolean isLocal() {
+        return false;
     }
 }

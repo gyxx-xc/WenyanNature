@@ -1,24 +1,28 @@
 package indi.wenyan.interpreter.handler;
 
+import indi.wenyan.WenyanNature;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
 
 public class RedstoneSignalHandler extends JavacallHandler {
-    private final Thread t;
     private final BlockRunner runner;
-    public RedstoneSignalHandler(Thread t, BlockRunner runner) {
-        this.t = t;
+    public RedstoneSignalHandler(BlockRunner runner) {
         this.runner = runner;
     }
 
     @Override
     public WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException {
-        t.interrupt();
-        try {
-            Thread.sleep(Long.MAX_VALUE);
-        } catch (InterruptedException ignored) {}
-        return new WenyanValue(WenyanValue.Type.INT, runner.reds, true);
+        int value = 0;
+        if (runner.getLevel() != null) {
+            WenyanNature.LOGGER.info("1111");
+             value = runner.getLevel().getBestNeighborSignal(runner.getBlockPos());
+        }
+        return new WenyanValue(WenyanValue.Type.INT, value, true);
+    }
+    @Override
+    public boolean isLocal() {
+        return false;
     }
 }

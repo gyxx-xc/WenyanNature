@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.interpreter.handler.LocalCallHandler;
 import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanValue;
 
@@ -56,7 +57,7 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler.WenyanFunction function, WenyanValue.Type[] argTypes) {
-        return function(name, new JavacallHandler(function), argTypes);
+        return function(name, new LocalCallHandler(function), argTypes);
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler javacall) {

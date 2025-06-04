@@ -31,7 +31,6 @@ public class BlockRunner extends BlockEntity {
     public Vec3 communicate;
     public boolean isCommunicating;
 
-    public int reds;
     public List<String> pages;
     public int speed;
 
@@ -41,8 +40,10 @@ public class BlockRunner extends BlockEntity {
 
     @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, BlockRunner entity) {
-        if (!level.isClientSide && entity.program.isRunning())
+        if (!level.isClientSide && entity.program != null && entity.program.isRunning()) {
             entity.program.step(entity.speed);
+            entity.program.handle();
+        }
 
         if (!entity.isCommunicating) {
             entity.communicate = null;

@@ -53,6 +53,7 @@ public class HandRunnerEntity extends Projectile {
                 discard();
                 return;
             }
+            program.handle();
             program.step(speed);
         }
         checkInsideBlocks();

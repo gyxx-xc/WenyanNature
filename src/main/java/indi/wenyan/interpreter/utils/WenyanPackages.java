@@ -206,7 +206,7 @@ public class WenyanPackages {
                 .build();
     }
 
-    public static WenyanRuntime blockEnvironment(BlockPos pos, BlockState block, Player holder, Thread thread, BlockRunner runner) {
+    public static WenyanRuntime blockEnvironment(BlockPos pos, BlockState block, Player holder, BlockRunner runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("書", new OutputHandler(holder))
@@ -216,7 +216,7 @@ public class WenyanPackages {
                          ,pos, block))
                  .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
                  .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
-                .function("「紅石量」", new RedstoneSignalHandler(thread, runner))
+                .function("「紅石量」", new RedstoneSignalHandler(runner))
                 .function("「己於上」", new SelfPositionBlockHandler(holder, runner, Direction.UP))
                 .function("「己於下」", new SelfPositionBlockHandler(holder, runner, Direction.DOWN))
                 .function("「己於東」", new SelfPositionBlockHandler(holder, runner, Direction.EAST))

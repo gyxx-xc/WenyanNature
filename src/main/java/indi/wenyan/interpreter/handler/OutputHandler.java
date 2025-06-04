@@ -20,4 +20,9 @@ public class OutputHandler extends JavacallHandler {
         player.displayClientMessage(Component.literal(result.toString()), true);
         return WenyanValue.NULL;
     }
+
+    @Override
+    public boolean isLocal() {
+        return false;
+    }
 }

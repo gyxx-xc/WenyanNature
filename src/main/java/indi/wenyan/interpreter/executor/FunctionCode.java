@@ -23,7 +23,8 @@ public class FunctionCode extends WenyanCode {
         try {
             WenyanRuntime runtime = thread.currentRuntime();
             WenyanValue func = runtime.processStack.pop();
-            WenyanValue.FunctionSign sign;
+            WenyanValue.FunctionSign sign = (WenyanValue.FunctionSign)
+                    func.casting(WenyanValue.Type.FUNCTION).getValue();
             WenyanValue self = null;
             boolean noReturn;
             if (operation == Operation.CALL_ATTR)
@@ -35,8 +36,6 @@ public class FunctionCode extends WenyanCode {
                 self = new WenyanValue(WenyanValue.Type.OBJECT,
                         new WenyanObject((WenyanObjectType)
                                 func.casting(WenyanValue.Type.OBJECT_TYPE).getValue()), true);
-                sign = (WenyanValue.FunctionSign)
-                        func.casting(WenyanValue.Type.FUNCTION).getValue();
                 runtime.processStack.push(self);
                 noReturn = true;
             } else { // function
@@ -50,9 +49,6 @@ public class FunctionCode extends WenyanCode {
                     if (self.getType() != WenyanValue.Type.OBJECT)
                         self = null;
                 }
-
-                sign = ((WenyanValue.FunctionSign)
-                        func.casting(WenyanValue.Type.FUNCTION).getValue());
                 noReturn = false;
             }
 
@@ -111,7 +107,19 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public int getStep(int args, WenyanThread thread) {
-        return super.getStep(args, thread);
+        WenyanValue.FunctionSign sign;
+        try {
+            sign = (WenyanValue.FunctionSign)
+                    thread.currentRuntime().processStack.peek()
+                            .casting(WenyanValue.Type.FUNCTION).getValue();
+        } catch (WenyanException.WenyanTypeException e) {
+            throw new WenyanException(e.getMessage());
+        }
+        if (sign.bytecode() instanceof JavaCallCodeWarper warper) {
+            return warper.handler.getStep(args, thread);
+        } else {
+            return args;
+        }
     }
 
     public enum Operation {

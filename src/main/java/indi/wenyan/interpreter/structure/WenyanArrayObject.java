@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.handler.LocalCallHandler;
 import indi.wenyan.interpreter.utils.JavaCallCodeWarper;
-import indi.wenyan.interpreter.utils.JavacallHandler;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class WenyanArrayObject extends WenyanObject {
             functions.put("GET", new WenyanValue(WenyanValue.Type.FUNCTION,
                     new WenyanValue.FunctionSign("GET", // TODO: change names
                             new WenyanValue.Type[]{WenyanValue.Type.LIST, WenyanValue.Type.INT},
-                            new JavaCallCodeWarper(new JavacallHandler(args -> {
+                            new JavaCallCodeWarper(new LocalCallHandler(args -> {
                                 if (args.length != 2)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                                 args[0].casting(WenyanValue.Type.LIST);

@@ -1,7 +1,6 @@
 package indi.wenyan.interpreter.handler;
 
 import indi.wenyan.content.block.BlockRunner;
-import indi.wenyan.content.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -30,13 +29,15 @@ public class CommunicateHandler extends JavacallHandler {
         args[0] = Math.max(-10, Math.min(10, (int) args[0]));
         args[1] = Math.max(-10, Math.min(10, (int) args[1]));
         args[2] = Math.max(-10, Math.min(10, (int) args[2]));
-        HandlerEntity.levelRun(level, level -> {
             BlockRunner blockRunner = (BlockRunner) level.getBlockEntity(pos);
             assert blockRunner != null;
             blockRunner.communicate = new Vec3((int) args[0], (int) args[1], (int) args[2]);
             blockRunner.isCommunicating = true;
             level.sendBlockUpdated(pos, state, state, 3);
-        });
         return WenyanValue.NULL;
+    }
+    @Override
+    public boolean isLocal() {
+        return false;
     }
 }

@@ -8,7 +8,6 @@ import indi.wenyan.content.block.CraftingBlockEntity;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
-import indi.wenyan.content.entity.HandlerEntity;
 import indi.wenyan.content.item.WenyanHandRunner;
 import indi.wenyan.setup.network.ProgramTextServerPayloadHandler;
 import indi.wenyan.setup.network.RunnerTextPacket;
@@ -65,9 +64,6 @@ public class Registration {
 
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
-    // virtual entities
-    public static final Supplier<EntityType<HandlerEntity>> HANDLER_ENTITY;
-
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
                 .versioned("1.0")
@@ -120,10 +116,6 @@ public class Registration {
                         .of((EntityType.EntityFactory<BulletEntity>) BulletEntity::new, MobCategory.MISC)
                         .sized(0.25f, 0.25f)
                         .build("bullet_entity"));
-        HANDLER_ENTITY = ENTITY.register("handler_entity",
-                () -> EntityType.Builder
-                        .of(HandlerEntity::new, MobCategory.MISC)
-                        .build("handler_entity"));
 
         CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
                 .title(Component.translatable("title.wenyan_nature.create_tab"))

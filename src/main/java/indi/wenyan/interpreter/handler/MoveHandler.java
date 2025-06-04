@@ -25,4 +25,8 @@ public class MoveHandler extends JavacallHandler {
         entity.setDeltaMovement(new Vec3((double) newArgs[0]/10, (double) newArgs[1]/10, (double) newArgs[2]/10));
         return WenyanValue.NULL;
     }
+    @Override
+    public boolean isLocal() {
+        return false;
+    }
 }

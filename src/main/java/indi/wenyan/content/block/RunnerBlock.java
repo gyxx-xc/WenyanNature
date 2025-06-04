@@ -62,9 +62,9 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
         if (!player.isShiftKeyDown()) {
             if (!level.isClientSide()) {
                 BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
-                if (!Objects.requireNonNull(runner).program.isRunning()) {
+                if (Objects.requireNonNull(runner).program == null || !runner.program.isRunning()) {
                     runner.program = new WenyanProgram(String.join("\n", runner.pages),
-                            WenyanPackages.blockEnvironment(pos, state, player, Thread.currentThread(), runner));
+                            WenyanPackages.blockEnvironment(pos, state, player, runner));
                     runner.program.run();
                 } else {
                     player.displayClientMessage(Component.translatable("error.wenyan_nature.already_run").withStyle(ChatFormatting.RED), true);

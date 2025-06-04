@@ -1,7 +1,6 @@
 package indi.wenyan.interpreter.handler;
 
 import indi.wenyan.content.entity.HandRunnerEntity;
-import indi.wenyan.content.entity.HandlerEntity;
 import indi.wenyan.interpreter.utils.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -25,11 +24,12 @@ public class ExplosionHandler extends JavacallHandler {
     public WenyanValue handle(WenyanValue[] wenyan_args) throws WenyanException.WenyanTypeException {
         Object[] args = getArgs(wenyan_args, ARGS_TYPE);
         args[0] = Math.max(1, Math.min(20, (double) args[0]));
-        HandlerEntity.levelRun(holder.level(), (level) -> {
-            if (!level.isClientSide())
-                level.explode(holder, entity.getX(), entity.getY(), entity.getZ(),
-                        (float) (double) args[0], Level.ExplosionInteraction.MOB);
-        });
+        holder.level().explode(holder, entity.getX(), entity.getY(), entity.getZ(),
+                (float) (double) args[0], Level.ExplosionInteraction.MOB);
         return WenyanValue.NULL;
+    }
+    @Override
+    public boolean isLocal() {
+        return false;
     }
 }
