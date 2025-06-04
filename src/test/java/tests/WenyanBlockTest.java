@@ -1,7 +1,7 @@
 package tests;
 
 import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.utils.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanProgram;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

@@ -1,10 +1,7 @@
 package indi.wenyan.interpreter.executor;
 
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.WenyanProgram;
 import net.minecraft.network.chat.Component;
-
-import java.util.Stack;
 
 public class VariableCode extends WenyanCode {
     private final Operation operation;
@@ -15,12 +12,12 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.curThreads.cur();
+    public void exec(int args, WenyanThread thread) {
+        WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case LOAD -> {
                 String id = runtime.bytecode.getIdentifier(args);
-                runtime.processStack.push(program.curThreads.getGlobalVariable(id));
+                runtime.processStack.push(thread.getGlobalVariable(id));
             }
             case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanValue.varOf(runtime.processStack.pop()));
             case SET_VALUE -> {
@@ -57,11 +54,11 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, WenyanProgram program) {
+    public int getStep(int args, WenyanThread thread) {
         if (operation == Operation.LOAD) {
-            return program.curThreads.runtimes.size();
+            return thread.runtimes.size();
         }
-        return super.getStep(args, program);
+        return super.getStep(args, thread);
     }
 
     public enum Operation {

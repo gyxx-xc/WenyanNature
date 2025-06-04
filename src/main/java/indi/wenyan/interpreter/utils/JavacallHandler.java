@@ -20,6 +20,12 @@ public class JavacallHandler {
         return function.apply(args);
     }
 
+    public void handle(WenyanThread thread, WenyanValue[] args, boolean noReturn) throws WenyanException.WenyanThrowException {
+        WenyanValue value = handle(args);
+        if (!noReturn)
+            thread.currentRuntime().processStack.push(value);
+    }
+
     protected static Object[] getArgs(WenyanValue[] args, WenyanValue.Type[] args_type) throws WenyanException.WenyanTypeException {
         Object[] newArgs = new Object[args.length];
         if (args.length != args_type.length)
@@ -27,6 +33,10 @@ public class JavacallHandler {
         for (int i = 0; i < args.length; i++)
             newArgs[i] = args[i].casting(args_type[i]).getValue();
         return newArgs;
+    }
+
+    public boolean isLocal() {
+        return true;
     }
 
     @FunctionalInterface

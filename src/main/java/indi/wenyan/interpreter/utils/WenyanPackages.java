@@ -16,7 +16,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -133,10 +132,7 @@ public class WenyanPackages {
             })
             .function("「」", args -> null)
 
-            .function("書", args -> {
-                System.out.println(Arrays.toString(args));
-                return WenyanValue.NULL;
-            })
+            .function("書", new TestHandler())
 
             .build();
 

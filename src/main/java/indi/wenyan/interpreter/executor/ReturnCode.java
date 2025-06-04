@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.executor;
 
 import indi.wenyan.interpreter.structure.WenyanCode;
 import indi.wenyan.interpreter.structure.WenyanRuntime;
-import indi.wenyan.interpreter.utils.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanThread;
 
 public class ReturnCode extends WenyanCode {
     public ReturnCode() {
@@ -10,10 +10,10 @@ public class ReturnCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.curThreads.cur();
-        program.curThreads.ret();
+    public void exec(int args, WenyanThread thread) {
+        WenyanRuntime runtime = thread.currentRuntime();
+        thread.ret();
         if (!runtime.noReturnFlag)
-            program.curThreads.cur().processStack.push(runtime.processStack.pop());
+            thread.currentRuntime().processStack.push(runtime.processStack.pop());
     }
 }

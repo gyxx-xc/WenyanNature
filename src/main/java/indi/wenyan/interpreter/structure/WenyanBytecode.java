@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.structure;
 
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -11,9 +10,6 @@ public class WenyanBytecode extends WenyanProgramCode {
     private final List<WenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
-    private boolean changed = false;
-    private int changedIndex = -1;
-    private Code changedCode = null;
 
     public record Code(WenyanCode code, int arg) {
         @Override
@@ -27,21 +23,7 @@ public class WenyanBytecode extends WenyanProgramCode {
     }
 
     public Code get(int index) {
-        if (changed && index == changedIndex) {
-            changed = false;
-            changedIndex = -1;
-            return changedCode;
-        }
         return bytecode.get(index);
-    }
-
-    public void setTemp(int index, WenyanCode code, int arg) {
-        if (changed) {
-            throw new WenyanException(Component.translatable("wenyan.error.bytecode.temp_change").getString());
-        }
-        changed = true;
-        changedIndex = index;
-        changedCode = new Code(code, arg);
     }
 
     public WenyanValue getConst(int index) {

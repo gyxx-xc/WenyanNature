@@ -1,10 +1,6 @@
 package indi.wenyan.interpreter.executor;
 
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanRuntime;
-import indi.wenyan.interpreter.structure.WenyanValue;
-import indi.wenyan.interpreter.structure.WenyanCode;
-import indi.wenyan.interpreter.utils.WenyanProgram;
+import indi.wenyan.interpreter.structure.*;
 
 import java.util.Objects;
 
@@ -19,8 +15,8 @@ public class BranchCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.curThreads.cur();
+    public void exec(int args, WenyanThread thread) {
+        WenyanRuntime runtime = thread.currentRuntime();
         boolean val = false;
         try {
             if (condition != Condition.NONE) {

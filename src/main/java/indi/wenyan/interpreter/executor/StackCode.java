@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.executor;
 
 import indi.wenyan.interpreter.structure.WenyanCode;
 import indi.wenyan.interpreter.structure.WenyanRuntime;
-import indi.wenyan.interpreter.utils.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanThread;
 
 public class StackCode extends WenyanCode {
     private final Operation operation;
@@ -13,8 +13,8 @@ public class StackCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.curThreads.cur();
+    public void exec(int args, WenyanThread thread) {
+        WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case PUSH -> runtime.processStack.push(runtime.bytecode.getConst(args));
             case POP -> runtime.processStack.pop();

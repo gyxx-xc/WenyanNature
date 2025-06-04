@@ -2,7 +2,6 @@ package indi.wenyan.interpreter.executor;
 
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.WenyanCode;
-import indi.wenyan.interpreter.utils.WenyanProgram;
 
 public class ObjectCode extends WenyanCode {
     private final Operation operation;
@@ -13,8 +12,8 @@ public class ObjectCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanProgram program) {
-        WenyanRuntime runtime = program.curThreads.cur();
+    public void exec(int args, WenyanThread thread) {
+        WenyanRuntime runtime = thread.currentRuntime();
         try {
             String id = runtime.bytecode.getIdentifier(args);
             switch (operation) {

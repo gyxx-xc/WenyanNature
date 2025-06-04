@@ -1,6 +1,6 @@
 package indi.wenyan.content.block;
 
-import indi.wenyan.interpreter.utils.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanProgram;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

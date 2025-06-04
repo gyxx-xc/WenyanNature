@@ -1,7 +1,5 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.interpreter.utils.WenyanProgram;
-
 public abstract class WenyanCode {
     public final String name;
 
@@ -9,9 +7,9 @@ public abstract class WenyanCode {
         this.name = name;
     }
 
-    public abstract void exec(int args, WenyanProgram program);
+    public abstract void exec(int args, WenyanThread thread);
 
-    public int getStep(int args, WenyanProgram program) {
+    public int getStep(int args, WenyanThread thread) {
         return 1;
     }
 

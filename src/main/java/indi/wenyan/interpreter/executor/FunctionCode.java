@@ -3,7 +3,6 @@ package indi.wenyan.interpreter.executor;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavaCallCodeWarper;
 import indi.wenyan.interpreter.structure.WenyanCode;
-import indi.wenyan.interpreter.utils.WenyanProgram;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -20,11 +19,13 @@ public class FunctionCode extends WenyanCode {
     // func / create_obj
     // -> ori_func / javacall
     @Override
-    public void exec(int args, WenyanProgram program) {
+    public void exec(int args, WenyanThread thread) {
         try {
-            WenyanRuntime runtime = program.curThreads.cur();
+            WenyanRuntime runtime = thread.currentRuntime();
             WenyanValue func = runtime.processStack.pop();
+            WenyanValue.FunctionSign sign;
             WenyanValue self = null;
+            boolean noReturn;
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
 
@@ -34,11 +35,10 @@ public class FunctionCode extends WenyanCode {
                 self = new WenyanValue(WenyanValue.Type.OBJECT,
                         new WenyanObject((WenyanObjectType)
                                 func.casting(WenyanValue.Type.OBJECT_TYPE).getValue()), true);
-                WenyanValue.FunctionSign sign = (WenyanValue.FunctionSign)
+                sign = (WenyanValue.FunctionSign)
                         func.casting(WenyanValue.Type.FUNCTION).getValue();
-
-                callFunction(sign, self, program, args, true);
                 runtime.processStack.push(self);
+                noReturn = true;
             } else { // function
                 // handle self first
                 if (operation == Operation.CALL_ATTR) {
@@ -51,10 +51,15 @@ public class FunctionCode extends WenyanCode {
                         self = null;
                 }
 
-                WenyanValue.FunctionSign sign = ((WenyanValue.FunctionSign)
+                sign = ((WenyanValue.FunctionSign)
                         func.casting(WenyanValue.Type.FUNCTION).getValue());
-                callFunction(sign, self, program, args, false);
+                noReturn = false;
             }
+
+            // must make the callF at end, because it may block thread
+            // which is a fake block, it will still run the rest command before blocked
+            // it will only block the next WenyanCode being executed
+            callFunction(sign, self, thread, args, noReturn);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage());
         }
@@ -62,10 +67,10 @@ public class FunctionCode extends WenyanCode {
 
     private void callFunction
             (WenyanValue.FunctionSign sign, WenyanValue self,
-             WenyanProgram program, int args, boolean noReturn)
+             WenyanThread thread, int args, boolean noReturn)
             throws WenyanException.WenyanThrowException {
 
-        WenyanRuntime runtime = program.curThreads.cur();
+        WenyanRuntime runtime = thread.currentRuntime();
         if (sign.bytecode() instanceof JavaCallCodeWarper warper) {
             List<WenyanValue> argsList = new ArrayList<>(args);
             if (self != null)
@@ -73,9 +78,14 @@ public class FunctionCode extends WenyanCode {
             for (int i = 0; i < args; i++)
                 argsList.add(runtime.processStack.pop());
 
-            WenyanValue value = warper.handler.handle(argsList.toArray(new WenyanValue[0]));
-            if (!noReturn)
-                runtime.processStack.push(value);
+            if (warper.handler.isLocal()) {
+                warper.handler.handle(thread, argsList.toArray(new WenyanValue[0]), noReturn);
+            } else {
+                JavaCallCodeWarper.Request request = new JavaCallCodeWarper.Request(
+                        thread, argsList.toArray(new WenyanValue[0]), noReturn, warper.handler);
+                thread.program.requestThreads.add(request);
+                thread.block();
+            }
         } else {
             WenyanValue[] argsList = new WenyanValue[args];
             if (sign.argTypes().length != args)
@@ -95,13 +105,13 @@ public class FunctionCode extends WenyanCode {
                         ((WenyanBytecode) sign.bytecode()).getIdentifier(i),
                         WenyanValue.varOf(argsList[i]));
             newRuntime.noReturnFlag = noReturn;
-            program.curThreads.add(newRuntime);
+            thread.add(newRuntime);
         }
     }
 
     @Override
-    public int getStep(int args, WenyanProgram program) {
-        return super.getStep(args, program);
+    public int getStep(int args, WenyanThread thread) {
+        return super.getStep(args, thread);
     }
 
     public enum Operation {

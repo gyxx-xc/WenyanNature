@@ -3,7 +3,7 @@ package indi.wenyan.content.block;
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.gui.BlockRunnerScreen;
 import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.utils.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanProgram;
 import indi.wenyan.setup.Registration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
