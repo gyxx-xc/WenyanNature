@@ -14,6 +14,7 @@ grammar WenyanR;
 // load_attr:id (self -> attr), load_attr_remain:id (self -> self, attr),
 // store_attr:id (attr, self -> ), store_a_meth:id (self, m -> self), s_a_prop:id (self, p -> self)
 // create_type:id (parent -> self), create_object:argc (arg..., obj_type -> obj_ins)
+// FOR_ITER:label_end (iter -> iter+1, i), FOR_NUM:label_end (i -> i - 1) [remove if jump out]
 // import:id (->), import_attr:id (STUB package_name(const string) -> remain)
 
 program                     : statements EOF;

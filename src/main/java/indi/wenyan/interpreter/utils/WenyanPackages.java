@@ -16,6 +16,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -25,9 +26,6 @@ public class WenyanPackages {
     public static final String AND_ID = "且";
     public static final String OR_ID = "或";
     public static final String MOD_ID = "模";
-
-    // for control visitor
-    public static final String ADD_ID = "加";
 
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", args -> {
@@ -139,6 +137,10 @@ public class WenyanPackages {
                 return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) < 0, true);
             })
             .function("「」", args -> WenyanValue.NULL)
+            .function("書", args -> {
+                System.out.println(Arrays.toString(args));
+                return WenyanValue.NULL;
+            })
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()

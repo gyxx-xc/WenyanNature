@@ -29,6 +29,5 @@ public class EchoChecker extends CraftingAnswerChecker {
             return false;
         }
         return true;
-
     }
 }

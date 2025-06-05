@@ -43,12 +43,12 @@ public class FunctionCode extends WenyanCode {
                 // handle self first
                 if (operation == Operation.CALL_ATTR) {
                     // try casting to object (might be list)
-                    try { self = self.casting(WenyanValue.Type.OBJECT);
-                    } catch (WenyanException.WenyanTypeException ignore) {}
-
-                    // ignore
-                    if (self.getType() != WenyanValue.Type.OBJECT)
+                    try {
+                        self = self.casting(WenyanValue.Type.OBJECT);
+                    } catch (WenyanException.WenyanTypeException e) {
+                        // ignore self then
                         self = null;
+                    }
                 }
                 noReturn = false;
             }

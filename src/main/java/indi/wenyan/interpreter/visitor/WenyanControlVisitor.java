@@ -4,7 +4,7 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.structure.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.interpreter.utils.WenyanCodes;
-import indi.wenyan.interpreter.utils.WenyanPackages;
+import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 
 // this class is for
 // flush_statement
@@ -61,28 +61,28 @@ public class WenyanControlVisitor extends WenyanVisitor {
         return true;
     }
 
-//    @Override
-//    public WenyanValue visitFor_arr_statement(WenyanRParser.For_arr_statementContext ctx) {
-//        WenyanValue value = new WenyanDataVisitor(bytecode).visit(ctx.data());
-//        try {
-//            value = WenyanValue.constOf(value).casting(WenyanValue.Type.LIST);
-//        } catch (WenyanException.WenyanThrowException e) {
-//            throw new WenyanException(e.getMessage(), ctx.data());
-//        }
-//        WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-//        for (WenyanValue item : (WenyanValue.WenyanValueArray) value.getValue()) {
-//            functionEnvironment.setVariable(ctx.IDENTIFIER().getText(), item);
-//            try {
-//                for (WenyanRParser.StatementContext statementContext : ctx.statement()) {
-//                    visitor.visit(statementContext);
-//                }
-//            } catch (BreakException e) {
-//                break;
-//            } catch (ContinueException ignored) { // i.e. continue
-//            }
-//        }
-//        return null;
-//    }
+    @Override
+    public Boolean visitFor_arr_statement(WenyanRParser.For_arr_statementContext ctx) {
+        bytecode.enterFor();
+        exprVisitor.visit(ctx.data());
+        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanDataPhaser.ITER_ID);
+        bytecode.add(WenyanCodes.CALL_ATTR, 0);
+        int forEnd = bytecode.getNewLabel();
+        int progStart = bytecode.getNewLabel();
+
+        bytecode.setLabel(progStart);
+        bytecode.add(WenyanCodes.FOR_ITER, forEnd);
+        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER().getText());
+        bodyVisitor.visit(ctx.statements());
+
+        bytecode.setProgEndLabel();
+        bytecode.add(WenyanCodes.JMP, progStart);
+
+        bytecode.setForEndLabel();
+        bytecode.setLabel(forEnd);
+        bytecode.exitFor();
+        return true;
+    }
 
     @Override
     public Boolean visitFor_enum_statement(WenyanRParser.For_enum_statementContext ctx) {
@@ -90,22 +90,18 @@ public class WenyanControlVisitor extends WenyanVisitor {
         exprVisitor.visit(ctx.data());
         int forEnd = bytecode.getNewLabel();
         int progStart = bytecode.getNewLabel();
-        bytecode.add(WenyanCodes.BRANCH_FALSE, forEnd);
 
         bytecode.setLabel(progStart);
+        bytecode.add(WenyanCodes.FOR_NUM, forEnd);
         bodyVisitor.visit(ctx.statements());
 
         bytecode.setProgEndLabel();
-        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.INT, -1, true));
-        bytecode.add(WenyanCodes.LOAD, WenyanPackages.ADD_ID);
-        bytecode.add(WenyanCodes.CALL, 2);
-        bytecode.add(WenyanCodes.BRANCH_TRUE, progStart);
+        bytecode.add(WenyanCodes.JMP, progStart);
 
         bytecode.setForEndLabel();
         bytecode.setLabel(forEnd);
-        bytecode.add(WenyanCodes.POP);
         bytecode.exitFor();
-        return null;
+        return true;
     }
 
     @Override

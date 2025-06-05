@@ -53,6 +53,16 @@ public class WenyanArrayObject extends WenyanObject {
                                 args[1].casting(WenyanValue.Type.INT);
                                 return ((WenyanArrayObject) args[0].getValue()).get(args[1]);
                             }))), true));
+            functions.put(WenyanDataPhaser.ITER_ID, new WenyanValue(WenyanValue.Type.FUNCTION,
+                    new WenyanValue.FunctionSign(WenyanDataPhaser.ITER_ID,
+                            new WenyanValue.Type[]{WenyanValue.Type.LIST},
+                            new JavaCallCodeWarper(new LocalCallHandler(args -> {
+                                if (args.length != 1)
+                                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                                args[0].casting(WenyanValue.Type.LIST);
+                                return new WenyanValue(WenyanValue.Type.OBJECT,
+                                        ((WenyanArrayObject) args[0].getValue()).values.iterator(), true);
+                            }))), true));
         }
     }
 }

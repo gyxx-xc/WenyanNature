@@ -99,6 +99,16 @@ public class WenyanProgram {
     public static void main(String[] args) {
         WenyanProgram program = new WenyanProgram(
                 """
+                        吾有一列名之曰「a 」
+                        充「a 」以一以二以三以四
+                        凡「a 」中之「i 」
+                        書「i 」
+                        昔之「i 」者今一是矣
+                        云云
+                        
+                        凡「a 」中之「i 」
+                        書「i 」
+                        云云
                         """,
                 WenyanPackages.WENYAN_BASIC_PACKAGES
         , null);

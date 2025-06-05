@@ -36,4 +36,7 @@ public class WenyanCodes {
 
     public static final WenyanCode IMPORT = new ImportCode(ImportCode.Operation.IMPORT);
     public static final WenyanCode IMPORT_FROM = new ImportCode(ImportCode.Operation.IMPORT_FROM);
+
+    public static final WenyanCode FOR_ITER = new ForCode(ForCode.Operation.FOR_ITER);
+    public static final WenyanCode FOR_NUM = new ForCode(ForCode.Operation.FOR_NUM);
 }
