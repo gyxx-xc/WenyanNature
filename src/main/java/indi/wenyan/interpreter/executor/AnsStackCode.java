@@ -3,6 +3,10 @@ package indi.wenyan.interpreter.executor;
 import indi.wenyan.interpreter.structure.WenyanCode;
 import indi.wenyan.interpreter.structure.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanThread;
+import indi.wenyan.interpreter.structure.WenyanValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnsStackCode extends WenyanCode {
     private final Operation operation;
@@ -20,9 +24,14 @@ public class AnsStackCode extends WenyanCode {
             case POP -> runtime.processStack.push(runtime.resultStack.pop());
             case PEEK -> runtime.processStack.push(runtime.resultStack.peek());
             case PEEK_N -> {
-                for (int i = 0; i < args; i ++)
-                    runtime.processStack.push(runtime.
-                            resultStack.get(runtime.resultStack.size()-i-1));
+                List<WenyanValue> list = new ArrayList<>();
+                for (int i = 0; i < args; i ++) {
+                    list.add(runtime.resultStack.pop());
+                    runtime.processStack.push(list.getLast());
+                }
+                for (var i : list) {
+                    runtime.resultStack.push(i);
+                }
             }
             case FLUSH -> runtime.resultStack.clear();
         }

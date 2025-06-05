@@ -1,19 +1,48 @@
 package indi.wenyan.interpreter.structure;
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
-public class WenyanStack extends Stack<WenyanValue> {
-    @Override
-    public WenyanValue push(WenyanValue item) {
-        return item.getType() == WenyanValue.Type.NULL ? null : super.push(item);
+public class WenyanStack {
+    private final Deque<WenyanValue> stack = new LinkedList<>();
+    public static final int MAX_SIZE = 64;
+
+    public void push(WenyanValue item) {
+        if (item.getType() != WenyanValue.Type.NULL)
+            stack.addLast(item);
+        while (stack.size() > MAX_SIZE) {
+            stack.removeFirst();
+        }
     }
 
-    @Override
     public WenyanValue peek() {
-        int len = this.size();
+        int len = stack.size();
         if (len == 0) {
             throw new WenyanException("error.wenyan_nature.stack_empty");
         }
-        return super.peek();
+        return stack.getLast();
+    }
+
+    public WenyanValue pop() {
+        int len = stack.size();
+        if (len == 0) {
+            throw new WenyanException("error.wenyan_nature.stack_empty");
+        }
+        return stack.removeLast();
+    }
+
+    public void clear() {
+        stack.clear();
+    }
+
+    public int size() {
+        return stack.size();
+    }
+
+    public WenyanValue get(int index) {
+        if (index < 0 || index >= stack.size()) {
+            throw new WenyanException("error.wenyan_nature.stack_index_out_of_bounds");
+        }
+        return ((LinkedList<WenyanValue>) stack).get(stack.size() - index - 1);
     }
 }

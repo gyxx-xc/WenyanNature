@@ -206,7 +206,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanException(e.getMessage(), ctx);
         }
 
-        if (count > 100) { // STUB: change to variable
+        if (count > WenyanStack.MAX_SIZE) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.too_many_variables").getString(), ctx);
         }
         for (int i = 0; i < count; i++)
@@ -214,7 +214,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         if (ctx.data() instanceof WenyanRParser.Data_childContext context) {
             visit(context.data());
-            bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.STRING_LITERAL().getText());
+            if (context.STRING_LITERAL() != null)
+                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.STRING_LITERAL().getText());
+            else
+                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.CREATE_OBJECT().getText());
             bytecode.add(WenyanCodes.CALL_ATTR, count);
         } else {
             if (ctx.key_function() != null)
@@ -351,29 +354,4 @@ public class WenyanExprVisitor extends WenyanVisitor {
     public Boolean visitParent(WenyanRParser.ParentContext ctx) {
         return dataVisitor.visitParent(ctx);
     }
-
-    //    private WenyanValue callFunction(WenyanRuntime.FunctionSign sign, WenyanValue[] args) throws WenyanException.WenyanThrowException {
-//        WenyanRParser.Function_define_statementContext func = functionEnvironment.getFunction(sign);
-//        // casting args
-//        for (int i = 0; i < sign.argTypes().length; i ++) {
-//            args[i] = args[i].casting(sign.argTypes()[i]);
-//        }
-//        if (func instanceof JavacallHandler) {
-//            return ((JavacallHandler) func).handle(args);
-//        } else {
-//            WenyanRuntime functionEnvironment = new WenyanRuntime(this.functionEnvironment);
-//            for (int i = 0; i < args.length; i++) {
-//                functionEnvironment.setVariable(func.id.get(i).getText(), WenyanValue.varOf(args[i]));
-//            }
-//            WenyanMainVisitor visitor = new WenyanMainVisitor(functionEnvironment, control);
-//            try {
-//                for (WenyanRParser.StatementContext statementContext : func.statement()) {
-//                    visitor.visit(statementContext);
-//                }
-//            } catch (WenyanControlVisitor.ReturnException e) {
-//                return e.value;
-//            }
-//            return null;
-//        }
-//    }
 }
