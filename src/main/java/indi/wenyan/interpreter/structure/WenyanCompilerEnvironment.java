@@ -9,12 +9,15 @@ public class WenyanCompilerEnvironment implements Serializable {
     private final HashMap<Constant, Integer> constTable = new HashMap<>();
     private final HashMap<String, Integer> identifierTable = new HashMap<>();
     private final Stack<ForEnvironment> forStack = new Stack<>();
+    private final Stack<Context> debugContextStack = new Stack<>();
+    private int lastContextStart = 0;
 
     public boolean functionAttrFlag = false;
 
     private record ForEnvironment(int forEndLabel, int progEndLabel) {}
 
     private record Constant(WenyanValue.Type t, Object o) {}
+    private record Context(int line, int column) {}
 
     public WenyanCompilerEnvironment(WenyanBytecode bytecode) {
         this.bytecode = bytecode;
@@ -86,5 +89,24 @@ public class WenyanCompilerEnvironment implements Serializable {
             identifierTable.put(identifier, index);
         }
         return index;
+    }
+
+    public void enterContext(int line, int column) {
+        if (!debugContextStack.isEmpty()) {
+            Context curContext = debugContextStack.peek();
+            if (bytecode.size() != lastContextStart)
+                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size());
+        }
+        lastContextStart = bytecode.size();
+        debugContextStack.push(new Context(line, column));
+    }
+
+    public void exitContext() {
+        if (!debugContextStack.isEmpty()) {
+            Context curContext = debugContextStack.pop();
+            if (bytecode.size() != lastContextStart)
+                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size());
+            lastContextStart = bytecode.size();
+        }
     }
 }

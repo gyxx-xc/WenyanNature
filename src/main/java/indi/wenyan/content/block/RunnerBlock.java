@@ -2,10 +2,10 @@ package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.gui.BlockRunnerScreen;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.structure.WenyanProgram;
 import indi.wenyan.setup.Registration;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -64,10 +64,10 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
                 BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
                 if (Objects.requireNonNull(runner).program == null || !runner.program.isRunning()) {
                     runner.program = new WenyanProgram(String.join("\n", runner.pages),
-                            WenyanPackages.blockEnvironment(pos, state, player, runner));
+                            WenyanPackages.blockEnvironment(pos, state, player, runner), player);
                     runner.program.run();
                 } else {
-                    player.displayClientMessage(Component.translatable("error.wenyan_nature.already_run").withStyle(ChatFormatting.RED), true);
+                    WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
                 }
             }
         }

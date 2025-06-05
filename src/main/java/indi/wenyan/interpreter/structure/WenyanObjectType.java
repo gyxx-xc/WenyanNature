@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.structure;
 
+import net.minecraft.network.chat.Component;
+
 import java.util.HashMap;
 
 public class WenyanObjectType {
@@ -19,7 +21,7 @@ public class WenyanObjectType {
         } else if (parent != null) {
             return parent.getFunction(id);
         } else {
-            throw new WenyanException("Function not found: " + id);
+            throw new WenyanException(Component.translatable("error.wenyan_nature.function_not_found_") + id);
         }
     }
 }

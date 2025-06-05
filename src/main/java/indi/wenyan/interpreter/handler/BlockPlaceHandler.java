@@ -48,8 +48,7 @@ public class BlockPlaceHandler extends JavacallHandler {
         block = world.getBlockState(attach);
 
         if(!world.setBlockAndUpdate(pos, block)) {
-            player.displayClientMessage(Component.literal("Failed to place block"), true);
-            return;
+            throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
         }
 
         // Remove block if placeEvent is canceled

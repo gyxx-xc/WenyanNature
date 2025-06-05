@@ -7,14 +7,14 @@ import java.util.concurrent.Semaphore;
 
 public class WenyanThread {
     public final Stack<WenyanRuntime> runtimes = new Stack<>();
-    public boolean isRunning = true;
     public int assignedSteps = 0;
     public final WenyanProgram program;
     public State state = State.READY;
 
     public enum State {
         READY,
-        BLOCKED
+        BLOCKED,
+        DYING
     }
 
     public WenyanThread(WenyanProgram program) {
@@ -26,7 +26,7 @@ public class WenyanThread {
             WenyanRuntime runtime = currentRuntime();
 
             if (runtime.programCounter >= runtime.bytecode.size()) {
-                isRunning = false;
+                state = State.DYING;
                 return;
             }
 
@@ -39,7 +39,19 @@ public class WenyanThread {
             assignedSteps -= needStep;
             accumulatedSteps.acquire(needStep);
 
-            code.code().exec(code.arg(), this);
+            try {
+                code.code().exec(code.arg(), this);
+            } catch (WenyanException e) {
+                state = State.DYING;
+                WenyanBytecode.Context context = runtime.bytecode.getContext(runtime.programCounter);
+
+                WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
+            } catch (RuntimeException e) {
+                // for debug only
+                state = State.DYING;
+                WenyanBytecode.Context context = runtime.bytecode.getContext(runtime.programCounter);
+                throw new RuntimeException(Component.translatable("error.wenyan_nature.runtime_error_").getString() + context.line() + ":" + context.column() + " " + e.getMessage());
+            }
 
 //        System.out.println(runtime.programCounter + ": " + code);
 //        System.out.println(runtime.processStack);

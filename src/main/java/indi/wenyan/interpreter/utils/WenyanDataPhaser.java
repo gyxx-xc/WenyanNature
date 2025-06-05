@@ -8,6 +8,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class WenyanDataPhaser {
+    public static final String PARENT_ID = "父";
+    public static final String SELF_ID = "己";
+    public static final String LONG_ID = "長";
+    public static final String ARRAY_GET_ID = "取";
+    public static final String CONSTRUCTOR_ID = "造";
+
     public static final HashMap<String, Integer> DIGIT = new HashMap<>() {{
         put("〇", 0);
         put("又", 0);

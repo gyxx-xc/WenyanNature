@@ -6,12 +6,26 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.structure.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
     protected final WenyanCompilerEnvironment bytecode;
 
     public WenyanVisitor(WenyanCompilerEnvironment bytecode) {
         this.bytecode = bytecode;
+    }
+
+    @Override
+    public Boolean visit(ParseTree tree) {
+        if (tree instanceof ParserRuleContext ctx) {
+            bytecode.enterContext(ctx.start.getLine(), ctx.start.getCharPositionInLine());
+        }
+        Boolean result = super.visit(tree);
+        if (tree instanceof ParserRuleContext) {
+            bytecode.exitContext();
+        }
+        return result;
     }
 
     public static WenyanRParser.ProgramContext program(String program) {

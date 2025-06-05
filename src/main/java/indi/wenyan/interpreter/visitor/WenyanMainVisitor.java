@@ -40,16 +40,4 @@ public class WenyanMainVisitor extends WenyanVisitor {
         }
         return true;
     }
-
-    //    @Override
-//    public WenyanValue visitImport_statement(WenyanRParser.Import_statementContext ctx) {
-//        WenyanRuntime importFunctionEnvironment =
-//                WenyanPackages.PACKAGES.get(ctx.STRING_LITERAL().getText());
-//        if (ctx.IDENTIFIER().isEmpty()) {
-//            functionEnvironment.importEnvironment(importFunctionEnvironment);
-//        } else {
-//            throw new WenyanException(Component.translatable("error.wenyan_nature.not_implemented").getString(), ctx);
-//        }
-//        return null;
-//    }
 }

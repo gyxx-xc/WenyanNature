@@ -17,7 +17,11 @@ public class VariableCode extends WenyanCode {
         switch (operation) {
             case LOAD -> {
                 String id = runtime.bytecode.getIdentifier(args);
-                runtime.processStack.push(thread.getGlobalVariable(id));
+                WenyanValue value = thread.getGlobalVariable(id);
+                if (value == null) {
+                    throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + id);
+                }
+                runtime.processStack.push(value);
             }
             case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanValue.varOf(runtime.processStack.pop()));
             case SET_VALUE -> {

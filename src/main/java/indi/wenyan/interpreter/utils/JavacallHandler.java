@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.structure.*;
+import net.minecraft.network.chat.Component;
 
 /**
  * This class represents a Javacall context.
@@ -44,7 +45,7 @@ public abstract class JavacallHandler {
     protected static Object[] getArgs(WenyanValue[] args, WenyanValue.Type[] args_type) throws WenyanException.WenyanTypeException {
         Object[] newArgs = new Object[args.length];
         if (args.length != args_type.length)
-            throw new WenyanException.WenyanTypeException("Argument length not match");
+            throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
         for (int i = 0; i < args.length; i++)
             newArgs[i] = args[i].casting(args_type[i]).getValue();
         return newArgs;

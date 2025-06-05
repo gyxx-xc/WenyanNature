@@ -28,7 +28,7 @@ public class HandRunnerEntity extends Projectile {
     public HandRunnerEntity(@NotNull Player holder, String code, int level) {
         super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
         speed = (int) Math.pow(10, level);
-        program = new WenyanProgram(code, WenyanPackages.handEnvironment(holder, this));
+        program = new WenyanProgram(code, WenyanPackages.handEnvironment(holder, this), holder);
 
         Vec3 lookDirection = Vec3.directionFromRotation(holder.getXRot(), holder.getYRot()).normalize().scale(0.5);
         this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));
@@ -49,7 +49,7 @@ public class HandRunnerEntity extends Projectile {
             }
         }
         if (!this.level().isClientSide() && hasRun) {
-            if (!program.isRunning()) {
+            if (program == null || !program.isRunning()) {
                 discard();
                 return;
             }

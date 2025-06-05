@@ -80,7 +80,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
             default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
         }
         visit(ctx.data());
-        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, "GET"); // TODO: replace GET
+        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanDataPhaser.ARRAY_GET_ID);
         bytecode.add(WenyanCodes.CALL, 2);
         return true;
     }

@@ -1,5 +1,8 @@
 package indi.wenyan.interpreter.structure;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 public class WenyanException extends RuntimeException {
@@ -43,5 +46,9 @@ public class WenyanException extends RuntimeException {
         public WenyanThrowException(String message) {
             super(message);
         }
+    }
+
+    public static void handleException(Player player, String message) {
+        player.displayClientMessage(Component.literal(message).withStyle(ChatFormatting.RED), true);
     }
 }

@@ -6,6 +6,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataPhaser;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.network.chat.Component;
 
 public class WenyanCandyVisitor extends WenyanVisitor {
@@ -40,8 +41,8 @@ public class WenyanCandyVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.CAST, WenyanValue.Type.BOOL.ordinal());
 
         switch (ctx.op.getType()) {
-            case WenyanRParser.AND -> bytecode.add(WenyanCodes.LOAD, "且");
-            case WenyanRParser.OR -> bytecode.add(WenyanCodes.LOAD, "或");
+            case WenyanRParser.AND -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.AND_ID);
+            case WenyanRParser.OR -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.OR_ID);
             default ->
                     throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_operator").getString(), ctx);
         }
@@ -64,7 +65,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             default:
                 throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
         }
-        bytecode.add(WenyanCodes.LOAD, "模");
+        bytecode.add(WenyanCodes.LOAD, WenyanPackages.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
         return null;

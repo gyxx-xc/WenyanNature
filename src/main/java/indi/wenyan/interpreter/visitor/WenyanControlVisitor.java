@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.structure.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.interpreter.utils.WenyanCodes;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 
 // this class is for
 // flush_statement
@@ -96,7 +97,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
         bytecode.setProgEndLabel();
         bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.INT, -1, true));
-        bytecode.add(WenyanCodes.LOAD, "加");
+        bytecode.add(WenyanCodes.LOAD, WenyanPackages.ADD_ID);
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.BRANCH_TRUE, progStart);
 

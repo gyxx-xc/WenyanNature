@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.utils.JavaCallCodeWarper;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.visitor.WenyanVisitor;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -21,21 +22,28 @@ public class WenyanProgram {
     public Queue<JavaCallCodeWarper.Request> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
+    private Thread programJavaThread;
+
+    // STUB: used in error handler, might changed
+    public Player holder;
+
     private static final int SWITCH_COST = 5;
     private static final int SWITCH_STEP = 10;
 
-    public WenyanProgram(String code, WenyanRuntime baseEnvironment) {
+    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder) {
         this.code = code;
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
         visitor.visit(WenyanVisitor.program(code));
         this.baseEnvironment = baseEnvironment;
+        this.holder = holder;
     }
 
     public void run() {
         mainThread.add(baseEnvironment);
         mainThread.add(new WenyanRuntime(baseBytecode));
         readyQueue.add(mainThread);
-        new Thread(() -> scheduler(this)).start();
+        programJavaThread = new Thread(() -> scheduler(this));
+        programJavaThread.start();
     }
 
     public void handle() {
@@ -58,16 +66,17 @@ public class WenyanProgram {
     }
 
     public void stop() {
+        programJavaThread.interrupt();
     }
 
     public boolean isRunning() {
-        return mainThread.isRunning;
+        return mainThread.state != WenyanThread.State.DYING;
     }
 
     // this on other thread
     public static void scheduler(WenyanProgram program) {
         try {
-            while (program.mainThread.isRunning) {
+            while (program.mainThread.state != WenyanThread.State.DYING) {
                 program.accumulatedSteps.acquire(SWITCH_COST);
                 if (program.readyQueue.isEmpty()) {
                     program.accumulatedSteps.drainPermits();
@@ -84,6 +93,20 @@ public class WenyanProgram {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        }
+    }
+
+    public static void main(String[] args) {
+        WenyanProgram program = new WenyanProgram(
+                """
+                        """,
+                WenyanPackages.WENYAN_BASIC_PACKAGES
+        , null);
+        System.out.println(program.baseBytecode);
+        program.run();
+        while (program.isRunning()) {
+            program.step();
+            program.handle();
         }
     }
 }

@@ -21,6 +21,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class WenyanPackages {
+    // these string for candy visitor
+    public static final String AND_ID = "且";
+    public static final String OR_ID = "或";
+    public static final String MOD_ID = "模";
+
+    // for control visitor
+    public static final String ADD_ID = "加";
+
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", args -> {
                 if (args.length <= 1)
@@ -130,10 +138,7 @@ public class WenyanPackages {
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) < 0, true);
             })
-            .function("「」", args -> null)
-
-            .function("書", new TestHandler())
-
+            .function("「」", args -> WenyanValue.NULL)
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()

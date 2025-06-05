@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.structure;
 
 import indi.wenyan.interpreter.handler.LocalCallHandler;
 import indi.wenyan.interpreter.utils.JavaCallCodeWarper;
+import indi.wenyan.interpreter.utils.WenyanDataPhaser;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class WenyanArrayObject extends WenyanObject {
 
     public WenyanArrayObject() {
         super(new WenyanArrayObjectType());
-        variable.put("長", length);
+        variable.put(WenyanDataPhaser.LONG_ID, length);
     }
 
     public WenyanArrayObject concat(WenyanArrayObject other) {
@@ -42,8 +43,8 @@ public class WenyanArrayObject extends WenyanObject {
     public static class WenyanArrayObjectType extends WenyanObjectType {
         public WenyanArrayObjectType() {
             super(null, "列");
-            functions.put("GET", new WenyanValue(WenyanValue.Type.FUNCTION,
-                    new WenyanValue.FunctionSign("GET", // TODO: change names
+            functions.put(WenyanDataPhaser.ARRAY_GET_ID, new WenyanValue(WenyanValue.Type.FUNCTION,
+                    new WenyanValue.FunctionSign(WenyanDataPhaser.ARRAY_GET_ID,
                             new WenyanValue.Type[]{WenyanValue.Type.LIST, WenyanValue.Type.INT},
                             new JavaCallCodeWarper(new LocalCallHandler(args -> {
                                 if (args.length != 2)
