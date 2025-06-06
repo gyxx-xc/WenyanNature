@@ -5,7 +5,6 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,8 +43,8 @@ public class CraftingBlock extends Block implements EntityBlock {
         CraftingBlockEntity entity = (CraftingBlockEntity) level.getBlockEntity(pos);
         assert entity != null;
         if (player.isShiftKeyDown()) {
-            entity.setHolder(player);
-            entity.isCrafting = true;
+            entity.setHolder();
+//            entity.isCrafting = true;
         } else {
             if (!level.isClientSide()) {
                 MenuProvider provider = new MenuProvider() {

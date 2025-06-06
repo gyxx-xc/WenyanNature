@@ -21,6 +21,8 @@ public class HandRunnerEntity extends Projectile {
     public boolean hasRun = false;
     public int speed;
 
+    public String output = "";
+
     public HandRunnerEntity(EntityType<HandRunnerEntity> entityType, Level level) {
         super(entityType, level);
     }

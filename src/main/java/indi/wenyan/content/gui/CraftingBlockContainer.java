@@ -27,7 +27,7 @@ public class CraftingBlockContainer extends AbstractContainerMenu {
         addPlayerInventory(inventory);
 
         if (blockEntity instanceof CraftingBlockEntity entity) {
-            addSlot(new SlotItemHandler(entity.getItemHandler(), 0, 80, 20));
+//            addSlot(new SlotItemHandler(entity.getItemHandler(), 0, 80, 20));
         }
     }
 

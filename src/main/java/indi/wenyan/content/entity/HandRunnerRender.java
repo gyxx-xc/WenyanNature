@@ -52,7 +52,7 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
 
         poseStack.scale(-0.025F, -0.025F, -0.25F);
         poseStack.translate(0.0, 0.0, 0.2);
-        font.drawInBatch("aaaaaa", -15, 0, 255*256*256+255*256+255, true, poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, packedLightIn);
+        font.drawInBatch(entityIn.output, -15, 0, 255*256*256+255*256+255, true, poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, packedLightIn);
         poseStack.popPose();
     }
 }

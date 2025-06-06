@@ -10,9 +10,9 @@ public class CommonSetup {
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
-                Registration.CRAFTING_ENTITY.get(), (o, direction) -> o.getRunnerItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
-                Registration.CRAFTING_ENTITY.get(), (o, direction) -> o.getItemHandler());
+//        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
+//                Registration.CRAFTING_ENTITY.get(), (o, direction) -> o.getRunnerItemHandler());
+//        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
+//                Registration.CRAFTING_ENTITY.get(), (o, direction) -> o.getItemHandler());
     }
 }
