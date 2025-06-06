@@ -1,12 +1,11 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.handler.LocalCallHandler;
-import indi.wenyan.interpreter.structure.WenyanRuntime;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.*;
 
 import java.util.function.Function;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class WenyanPackageBuilder {
     private final WenyanRuntime environment = new WenyanRuntime(null);
 
@@ -84,5 +83,8 @@ public class WenyanPackageBuilder {
         return this;
     }
 
-
+    public WenyanPackageBuilder object(WenyanObjectType objectType) {
+        environment.setVariable(objectType.name, new WenyanValue(WenyanValue.Type.OBJECT_TYPE, objectType, true));
+        return this;
+    }
 }

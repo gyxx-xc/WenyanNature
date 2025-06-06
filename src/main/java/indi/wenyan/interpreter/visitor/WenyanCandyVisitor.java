@@ -5,7 +5,7 @@ import indi.wenyan.interpreter.structure.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.interpreter.utils.WenyanCodes;
-import indi.wenyan.interpreter.utils.WenyanDataPhaser;
+import indi.wenyan.interpreter.utils.WenyanDataParser;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.network.chat.Component;
 
@@ -22,7 +22,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     public Boolean visitDeclare_write_candy_statement(WenyanRParser.Declare_write_candy_statementContext ctx) {
         exprVisitor.visit(ctx.declare_statement());
         try {
-            int n = WenyanDataPhaser.parseInt(ctx.declare_statement().INT_NUM().getText());
+            int n = WenyanDataParser.parseInt(ctx.declare_statement().INT_NUM().getText());
             bytecode.add(WenyanCodes.PEEK_ANS_N, n);
             bytecode.add(WenyanCodes.LOAD, ctx.WRITE_KEY_FUNCTION().getText());
             bytecode.add(WenyanCodes.CALL, n);

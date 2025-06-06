@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class WenyanDataPhaser {
+public class WenyanDataParser {
     //Todo: translate to CHS
     public static final String PARENT_ID = "父";
     public static final String SELF_ID = "己";
