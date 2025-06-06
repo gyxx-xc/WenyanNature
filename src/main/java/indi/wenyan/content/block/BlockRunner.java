@@ -1,6 +1,8 @@
 package indi.wenyan.content.block;
 
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanProgram;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -10,9 +12,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,6 +37,7 @@ public class BlockRunner extends BlockEntity {
 
     public List<String> pages;
     public int speed;
+    public String output = "";
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
         super(Registration.BLOCK_RUNNER.get(), pos, blockState);
@@ -50,6 +55,16 @@ public class BlockRunner extends BlockEntity {
         } else {
             entity.isCommunicating = false;
         }
+    }
+
+    public void run(Player player) {
+        if (program != null && program.isRunning()) {
+            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
+            return;
+        }
+        program = new WenyanProgram(String.join("\n", pages),
+                WenyanPackages.blockEnvironment(getBlockPos(), getBlockState(), player, this), player);
+        program.run();
     }
 
     public void copy(BlockRunner other) {

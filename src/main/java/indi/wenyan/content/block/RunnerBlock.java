@@ -1,6 +1,7 @@
 package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
+import indi.wenyan.content.checker.EchoChecker;
 import indi.wenyan.content.gui.BlockRunnerScreen;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -80,9 +81,22 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
                 Minecraft.getInstance().setScreen(new BlockRunnerScreen((BlockRunner) level.getBlockEntity(pos)));
-            return ItemInteractionResult.SUCCESS;
+        } else {
+            if (!level.isClientSide()) {
+                BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
+                var maybeCrafting = level.getBlockEntity(
+                        pos.relative(state.getValue(FACING).getOpposite()));
+
+                assert runner != null;
+                if (maybeCrafting instanceof CraftingBlockEntity cb) {
+                    cb.run(runner, player);
+                } else {
+                    runner.run(player);
+                }
+            }
         }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return ItemInteractionResult.SUCCESS;
+
     }
 
     @Override
