@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class WenyanDataPhaser {
+    //Todo: translate to CHS
     public static final String PARENT_ID = "父";
     public static final String SELF_ID = "己";
     public static final String LONG_ID = "長";
@@ -46,10 +47,20 @@ public class WenyanDataPhaser {
         put("正", 40);
         put("載", 44);
         put("極", 48);
+
+        //CHS
+        put("万", 4);
+        put("亿", 8);
+        put("沟", 32);
+        put("涧", 36);
+        put("载", 44);
+        put("极", 48);
+
     }};
 
     public static final HashSet<String> SIGN = new HashSet<>() {{
         add("負");
+        add("负");
     }};
 
     public static final HashSet<String> FLOAT_DIVISION = new HashSet<>() {{
@@ -69,11 +80,20 @@ public class WenyanDataPhaser {
         put("埃", -10);
         put("渺", -11);
         put("漠", -12);
+
+        put("厘", -2);
+        put("丝", -4);
+        put("纤", -7);
+        put("尘", -9);
+
     }};
 
     private static final HashMap<String, Boolean> BOOL_MAP = new HashMap<>() {{
         put("陰", false);
         put("陽", true);
+
+        put("阴", false);
+        put("阳", true);
     }};
 
     private static final HashMap<String, WenyanValue.Type> TYPE_MAP = new HashMap<>() {{
@@ -81,6 +101,8 @@ public class WenyanDataPhaser {
         put("數", WenyanValue.Type.DOUBLE);
         put("言", WenyanValue.Type.STRING);
         put("列", WenyanValue.Type.LIST);
+
+        put("数", WenyanValue.Type.DOUBLE);
     }};
 
     public static int parseInt(String text) throws WenyanException.WenyanNumberException {

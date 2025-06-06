@@ -28,52 +28,12 @@ public class WenyanPackages {
     public static final String MOD_ID = "模";
 
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
-            .function("加", args -> {
-                if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0];
-                for (int i = 1; i < args.length; i++) {
-                    value = value.add(args[i]);
-                }
-                return value;
-            })
-            .function("減", args -> {
-                if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0];
-                for (int i = 1; i < args.length; i++) {
-                    value = value.sub(args[i]);
-                }
-                return value;
-            })
-            .function("乘", args -> {
-                if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0];
-                for (int i = 1; i < args.length; i++) {
-                    value = value.mul(args[i]);
-                }
-                return value;
-            })
-            .function("除", args -> {
-                if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0];
-                for (int i = 1; i < args.length; i++) {
-                    value = value.div(args[i]);
-                }
-                return value;
-            })
-            .function("變", args -> args[0].not())
-            .function("銜", args -> {
-                if (args.length <= 1)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0];
-                for (int i = 1; i < args.length; i++) {
-                    value = value.add(args[i]);
-                }
-                return value;
-            })
+            .function("加", LocalCallHandler.withArgs(WenyanValue::add))
+            .function(new String[]{"減","减"}, LocalCallHandler.withArgs(WenyanValue::sub))
+            .function("乘", LocalCallHandler.withArgs(WenyanValue::mul))
+            .function("除", LocalCallHandler.withArgs(WenyanValue::div))
+            .function(new String[]{"銜","衔"}, LocalCallHandler.withArgs(WenyanValue::add))
+            .function(new String[]{"變","变"}, args -> args[0].not())
             .function("充", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
@@ -106,27 +66,27 @@ public class WenyanPackages {
                                 (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue(),
                         true);
             })
-            .function("不等於", args -> {
+            .function(new String [] {"不等於","不等于"}, args -> {
                 if (args.length != 2)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 return new WenyanValue(WenyanValue.Type.BOOL, !args[0].equals(args[1]), true);
             })
-            .function("不大於", args -> {
+            .function(new String [] {"不大於","不大于"}, args -> {
                 if (args.length != 2)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) <= 0, true);
             })
-            .function("不小於", args -> {
+            .function(new String[] {"不小於","不小于"}, args -> {
                 if (args.length != 2)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) >= 0, true);
             })
-            .function("等於", args -> {
+            .function(new String[] {"等於","等于"}, args -> {
                 if (args.length != 2)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 return new WenyanValue(WenyanValue.Type.BOOL, args[0].equals(args[1]), true);
             })
-            .function("大於", args -> {
+            .function(new String[] {"大於","大于"}, args -> {
                 if (args.length != 2)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) > 0, true);
@@ -199,7 +159,7 @@ public class WenyanPackages {
     public static WenyanRuntime handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
-                .function("書", new OutputHandler(holder))
+                .function(new String[] {"書","书"}, new OutputHandler(holder))
                 .function("「射」", new BulletHandler(runner.level(), runner, holder), BulletHandler.ARGS_TYPE)
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
@@ -216,7 +176,7 @@ public class WenyanPackages {
     public static WenyanRuntime blockEnvironment(BlockPos pos, BlockState block, Player holder, BlockRunner runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
-                .function("書", new OutputHandler(holder))
+                .function(new String[] {"書","书"}, new OutputHandler(holder))
                 .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                  .function("「放置」", new BlockPlaceHandler(holder,
                          (BlockItem) Items.ACACIA_LOG.asItem()
