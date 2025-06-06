@@ -198,7 +198,7 @@ public class WenyanPackages {
                 .environment(WENYAN_BASIC_PACKAGES)
                 .environment(checker.inputEnvironment())
                 .function("書", args -> {
-                    checker.add(args);
+                    checker.accept(args);
                     return WenyanValue.NULL;
                 })
                 .build();

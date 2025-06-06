@@ -5,27 +5,45 @@ import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class CraftingAnswerChecker {
-    protected final ArrayList<WenyanValue> ans = new ArrayList<>();
     protected final ArrayList<WenyanValue> input = new ArrayList<>();
     protected final ArrayList<String> inputName = new ArrayList<>();
     protected final RandomSource random;
 
+    private Result result = Result.WRONG_ANSWER;
+
+    public enum Result {
+        ANSWER_CORRECT,
+        WRONG_ANSWER,
+        RUNTIME_ERROR,
+        COMPILE_ERROR,
+        TIME_LIMIT_EXCEEDED,
+    }
+
     private static final String[] DEFAULT_INPUT_NAME =
             {"「甲」", "「乙」", "「丙」", "「丁」", "「戊」", "「己」", "「庚」", "「辛」", "「壬」", "「癸」"};
+
+    abstract protected void genInput();
+
+    abstract public void accept(WenyanValue value);
+
+    protected void setStatus(Result result) {
+        this.result = result;
+    }
+
+    public Result getResult() {
+        // TODO: if tle: return tle
+        return result;
+    }
 
     public CraftingAnswerChecker(RandomSource random) {
         this.random = random;
     }
 
-    public void add(WenyanValue value) {
-        ans.add(value);
-    }
-
-    public void add(WenyanValue[] value) {
-        ans.addAll(List.of(value));
+    public void accept(WenyanValue[] value) {
+        for (var v : value)
+            accept(v);
     }
 
     public WenyanRuntime inputEnvironment() {
@@ -36,7 +54,4 @@ public abstract class CraftingAnswerChecker {
         return builder.build();
     }
 
-    abstract protected void genInput();
-
-    abstract public boolean check();
 }

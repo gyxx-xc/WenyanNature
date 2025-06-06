@@ -6,26 +6,28 @@ import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.util.RandomSource;
 
 public class EchoChecker extends CraftingAnswerChecker {
+    private WenyanValue ans;
+
     public EchoChecker(RandomSource random) {
         super(random);
     }
 
     @Override
     protected void genInput() {
-        input.add(new WenyanValue(WenyanValue.Type.INT, random.nextInt(), true));
+        ans = new WenyanValue(WenyanValue.Type.INT, random.nextInt(), true);
+        input.add(ans);
     }
 
     @Override
-    public boolean check() {
+    public void accept(WenyanValue value) {
         try {
-            if (ans.size() != input.size()) return false;
-            for (int i = 0; i < input.size(); i++) {
-                if (!ans.get(i).equals(input.get(i)))
-                    return false;
+            if (value.equals(ans)){
+                setStatus(Result.ANSWER_CORRECT);
+                return;
             }
         } catch (WenyanException.WenyanTypeException e) {
-            return false;
+            setStatus(Result.RUNTIME_ERROR);
         }
-        return true;
+        setStatus(Result.WRONG_ANSWER);
     }
 }

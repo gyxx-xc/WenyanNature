@@ -1,7 +1,6 @@
 package indi.wenyan.setup;
 
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class CommonSetup {
