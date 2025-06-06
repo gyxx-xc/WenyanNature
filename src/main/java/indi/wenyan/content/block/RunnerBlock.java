@@ -1,7 +1,6 @@
 package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
-import indi.wenyan.content.checker.EchoChecker;
 import indi.wenyan.content.gui.BlockRunnerScreen;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
