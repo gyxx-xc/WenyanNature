@@ -8,6 +8,7 @@ import indi.wenyan.content.block.CraftingBlockEntity;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
+import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.WenyanHandRunner;
 import indi.wenyan.setup.network.ProgramTextServerPayloadHandler;
 import indi.wenyan.setup.network.RunnerTextPacket;
@@ -15,12 +16,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -40,6 +43,7 @@ public class Registration {
         BLOCK_ENTITY.register(modEventBus);
         ENTITY.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        MENU_TYPE.register(modEventBus);
 
         modEventBus.addListener(Registration::onRegisterPayloadHandler);
     }
@@ -49,6 +53,7 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY;
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS;
     public static final DeferredRegister<EntityType<?>> ENTITY;
+    public static final DeferredRegister<MenuType<?>> MENU_TYPE;
 
     public static final DeferredItem<Item> HAND_RUNNER;
     public static final DeferredItem<Item> HAND_RUNNER_1;
@@ -63,6 +68,8 @@ public class Registration {
     public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_ENTITY;
 
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
+
+    public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER;
 
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
@@ -80,6 +87,7 @@ public class Registration {
         CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
         ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
         BLOCK_ENTITY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
+        MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
         ITEMS = DeferredRegister.createItems(MODID);
         BLOCKS = DeferredRegister.createBlocks(MODID);
 
@@ -110,6 +118,8 @@ public class Registration {
                 () -> BlockEntityType.Builder
                         .of(CraftingBlockEntity::new, CRAFTING_BLOCK.get())
                         .build(DSL.remainderType()));
+        CRAFTING_CONTAINER = MENU_TYPE.register("crafting_block",
+                () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
 
         BULLET_ENTITY = ENTITY.register("bullet_entity",
                 () -> EntityType.Builder

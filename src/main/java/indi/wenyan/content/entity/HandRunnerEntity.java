@@ -65,7 +65,7 @@ public class HandRunnerEntity extends Projectile {
 
     @Override
     public void remove(@NotNull RemovalReason reason) {
-        if (program.isRunning())
+        if (program != null && program.isRunning())
             program.stop();
         super.remove(reason);
     }
