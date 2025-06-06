@@ -56,6 +56,13 @@ public class WenyanPackageBuilder {
         return function(name, function, new WenyanValue.Type[0]);
     }
 
+    public WenyanPackageBuilder function(String[] name, JavacallHandler.WenyanFunction function) {
+        for (String n : name) {
+            function(n, function);
+        }
+        return this;
+    }
+
     public WenyanPackageBuilder function(String name, JavacallHandler.WenyanFunction function, WenyanValue.Type[] argTypes) {
         return function(name, new LocalCallHandler(function), argTypes);
     }
@@ -64,9 +71,18 @@ public class WenyanPackageBuilder {
         return function(name, javacall, new WenyanValue.Type[0]);
     }
 
+    public WenyanPackageBuilder function(String[] name, JavacallHandler javacall) {
+        for (String n : name) {
+            function(n, javacall);
+        }
+        return this;
+    }
+
     public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanValue.Type[] argTypes) {
         WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(name, argTypes, new JavaCallCodeWarper(javacall));
         environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         return this;
     }
+
+
 }
