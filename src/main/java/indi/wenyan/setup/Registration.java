@@ -38,6 +38,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 import static indi.wenyan.WenyanNature.MODID;
+import static net.neoforged.neoforge.common.NeoForge.EVENT_BUS;
 
 public class Registration {
 
@@ -48,7 +49,7 @@ public class Registration {
         ENTITY.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         MENU_TYPE.register(modEventBus);
-        NeoForge.EVENT_BUS.register(new BookCommand());
+        EVENT_BUS.register(new BookCommand());
     }
 
     public static final DeferredRegister.Blocks BLOCKS;
