@@ -29,9 +29,10 @@ import java.util.List;
 
 public class FileLoader {
 
-    private static final Logger LOGGER = LogManager.getLogger("BookLoader");
-    public static final DeferredItem<Item> HAND_RUNNER= Registration.HAND_RUNNER;
-    public static ItemStack createWritableBookFromTxt(Path txtPath, CommandSourceStack source) {
+    private static final Logger LOGGER = LogManager.getLogger("[WenyanNature] ");
+    public static DeferredItem<Item> runnerItem;
+
+    public static ItemStack createWritableBookFromTxt(Path txtPath, CommandSourceStack source, Integer level) {
         int maxCharsPerPage = 130;
         int maxCharPerLine = 130;
         int lineCounter = 1;
@@ -53,12 +54,22 @@ public class FileLoader {
             LOGGER.error("[WenyanNature] 无法读取文件: {}", txtPath.getFileName(), e);
             source.sendSystemMessage(Component.literal("§c[WenyanNature] 无法读取文件: " + txtPath.getFileName()));
             source.sendSystemMessage(Component.literal("§c[WenyanNature] 请检查文件是否存在或位于/config/WenyanNature/scripts目录下"));
-            fullText = "§c[错误] 无法读取文件: " + txtPath.getFileName();
+            fullText = "§c[WenyanNature] 错误:无法读取文件 " + txtPath.getFileName();
         }
         //Separate String
         List<String> lines = Arrays.asList(fullText.split("\\r?\\n"));
         //Create empty book item
-        WenyanHandRunner bookItem = (WenyanHandRunner) HAND_RUNNER.get();
+
+        switch (level) {
+            case 1 -> runnerItem = Registration.HAND_RUNNER_1;
+            case 2 -> runnerItem = Registration.HAND_RUNNER_2;
+            case 3 -> runnerItem = Registration.HAND_RUNNER_3;
+
+            default -> runnerItem = Registration.HAND_RUNNER;
+        }
+
+
+        WenyanHandRunner bookItem = (WenyanHandRunner) runnerItem.get();
         ItemStack handRunnerStack = new ItemStack(bookItem, 1);
         //Create pages
         List<Filterable<String>> pages = new ArrayList<>();
