@@ -19,9 +19,12 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent; // ← 注意：这是通用事件
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static net.neoforged.neoforge.common.NeoForge.EVENT_BUS;
+import static net.neoforged.neoforgespi.ILaunchContext.LOGGER;
 
 /**
  * 通过 /givebook [filename] 命令，从 config/ 下的 TXT 读取并生成可写书。
@@ -65,9 +68,17 @@ public class BookCommand {
             return Command.SINGLE_SUCCESS;
         }
 
-        // 1. 拼出 config/filename.txt 的路径
-        Path configDir = FMLPaths.CONFIGDIR.get();
-        Path txtPath = configDir.resolve(filename);
+        Path configDir  = FMLPaths.CONFIGDIR.get();                              // config/
+        Path scriptsDir = configDir.resolve("WenyanNature").resolve("scripts"); // config/WenyanNature/scripts
+        // 如果目录不存在，先创建它
+        try {
+            Files.createDirectories(scriptsDir);
+        } catch (IOException e) {
+            LOGGER.error("[BookLoader] 无法创建脚本目录: {}", scriptsDir, e);
+        }
+
+        Path txtPath = scriptsDir.resolve(filename); // 最终指向 config/WenyanNature/scripts/filename
+
 
         // 2. 调用 BookLoader 生成可写书（需要传 source 以获取 provider）
         ItemStack book = BookLoader.createWritableBookFromTxt(txtPath, source);

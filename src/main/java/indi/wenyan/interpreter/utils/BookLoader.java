@@ -67,30 +67,66 @@ public class BookLoader {
             // 读取失败时，打印异常堆栈并通知玩家
             LOGGER.error("[BookLoader] 无法读取文件: {}", txtPath.getFileName(), e);
             source.sendSystemMessage(Component.literal("§c[BookLoader] 无法读取文件: " + txtPath.getFileName()));
+            source.sendSystemMessage(Component.literal("§c[BookLoader] 请检查文件是否存在或位于/config/WenyanNature/scripts目录下"));
             // 用一条错误提示作为“唯一一页”文字
             fullText = "§c[错误] 无法读取文件: " + txtPath.getFileName();
         }
 
         // —— 3. 按行拆分文本 ——
-        // 这里我们举例：按换行符拆，每行当一页
+        // 这里我们举例：按换行符拆
+        // 3. 按行拆分文本
         List<String> lines = Arrays.asList(fullText.split("\\r?\\n"));
-        // 在日志中打印拆分后的每一行，并且在聊天里也给玩家打出示例
 
-        // —— 4. 创建一个空白“可写书” ——
+// 4. 创建一个空白“可写书”
         WenyanHandRunner bookItem = (WenyanHandRunner) HAND_RUNNER.get();
         ItemStack handRunnerStack = new ItemStack(bookItem, 1);
 
+// 5. 按页累积，254 字符为阈值（可按需调整）
+        int maxCharsPerPage = 130;
+        int maxCharPerLine = 130;
+        int lineCounter = 1;
+        int maxLinePerPage = 12;
         List<Filterable<String>> pages = new ArrayList<>();
+        StringBuilder pageBuilder = new StringBuilder();
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
-            LOGGER.info("[BookLoader] 第{}行: {}", i+1, line);
-            pages.add(Filterable.passThrough(line));
-            source.sendSystemMessage(Component.literal("§c[BookLoader] 第" + (i+1) + "行: " + line));
+            LOGGER.info("[BookLoader] 第{}行: {}", i + 1, line);
+            if (line.length() > maxCharPerLine) {
+                source.sendSystemMessage(Component.literal("§c：第" + i + 1 + "行超出95字符限制, 无法导入。请检查文件内容。"));
+                return ItemStack.EMPTY;
+            }
+            source.sendSystemMessage(
+                    Component.literal("§c[BookLoader] 第" + (i + 1) + "行: " + line)
+            );
+
+            // 如果加入本行后超过阈值，就先“翻页”
+            if (pageBuilder.length() + line.length() + 1 > maxCharsPerPage || lineCounter > maxLinePerPage) {
+                // 去掉末尾可能多余的换行符
+                if (pageBuilder.length() > 0 && pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
+                    pageBuilder.setLength(pageBuilder.length() - 1);
+                }
+                pages.add(Filterable.passThrough(pageBuilder.toString()));
+                pageBuilder.setLength(0);
+            }
+
+            // 把本行累积到当前页，并添加换行
+            pageBuilder.append(line).append('\n');
+            lineCounter++;
         }
-    // 可以继续添加，最多100页
+
+// 最后一页（如果还有内容）
+            if (pageBuilder.length() > 0) {
+                if (pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
+                    pageBuilder.setLength(pageBuilder.length() - 1);
+                }
+                pages.add(Filterable.passThrough(pageBuilder.toString()));
+            }
+
+// 写入可写书内容
         WritableBookContent content = new WritableBookContent(pages);
         handRunnerStack.set(DataComponents.WRITABLE_BOOK_CONTENT, content);
 
         return handRunnerStack;
+
     }
 }
