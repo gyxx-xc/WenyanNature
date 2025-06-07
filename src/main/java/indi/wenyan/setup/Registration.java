@@ -2,10 +2,7 @@ package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
 import indi.wenyan.WenyanNature;
-import indi.wenyan.content.block.BlockRunner;
-import indi.wenyan.content.block.CraftingBlock;
-import indi.wenyan.content.block.CraftingBlockEntity;
-import indi.wenyan.content.block.RunnerBlock;
+import indi.wenyan.content.block.*;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
@@ -66,6 +63,8 @@ public class Registration {
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK;
     public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_ENTITY;
+    public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
+    public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
 
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
@@ -126,6 +125,12 @@ public class Registration {
                         .of((EntityType.EntityFactory<BulletEntity>) BulletEntity::new, MobCategory.MISC)
                         .sized(0.25f, 0.25f)
                         .build("bullet_entity"));
+        PEDESTAL_BLOCK = BLOCKS.register("pedestal_block", PedestalBlock::new);
+        ITEMS.registerItem("pedestal_block", (properties) -> new BlockItem(PEDESTAL_BLOCK.get(), properties));
+        PEDESTAL_ENTITY = BLOCK_ENTITY.register("pedestal_block",
+                () -> BlockEntityType.Builder
+                        .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
+                        .build(DSL.remainderType()));
 
         CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
                 .title(Component.translatable("title.wenyan_nature.create_tab"))

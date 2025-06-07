@@ -1,7 +1,9 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.content.checker.EchoChecker;
+import indi.wenyan.content.checker.PlusChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanProgram;
 import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -23,10 +25,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 
 // Item -> recipe -> checker
 @ParametersAreNonnullByDefault
@@ -39,8 +43,10 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     // for gui
     public CraftingAnswerChecker.Result result;
     public int round = 0;
-    public final int maxRound = 80;
+    public final int maxRound = 16;
     protected final ContainerData data;
+    private static final int RANGE = 3; // the offset to search for pedestals
+    private final ItemStackHandler itemStackHandler = createItemHandler();
 
     public CraftingBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.CRAFTING_ENTITY.get(), pos, blockState);
@@ -66,11 +72,6 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         };
     }
 
-    // consider it as a State Machine
-    // with isCrafting and isRunning as the state
-    // 00. idle
-    // 10. crafting
-    // 11. running
     @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, CraftingBlockEntity entity) {
         if (!level.isClientSide()) {
@@ -83,10 +84,17 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                     entity.isCrafting = false;
                     entity.ejectItem();
                 } else {
-                    entity.checker = new EchoChecker(level.getRandom());
                     entity.runner.program = new WenyanProgram(String.join("\n", entity.runner.pages),
                             WenyanPackages.craftingEnvironment(entity.checker), null);
                     entity.runner.program.run();
+                }
+                if (!entity.isCrafting) {
+                    entity.round = 0;
+                    for (BlockPos b : BlockPos.betweenClosed(pos.offset(RANGE, -RANGE, RANGE), pos.offset(-RANGE, RANGE, -RANGE))) {
+                        if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && pedestal.getItem() != null && !pedestal.getItem().isEmpty()) {
+                            pedestal.setInteract(true);
+                        }
+                    }
                 }
             }
         }
@@ -95,11 +103,26 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     public void run(BlockRunner runner, Player player) {
         assert level != null;
         if (isCrafting) {
-            return;
+            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
         }
+
+        ArrayList<ItemStack> pedestalItems = new ArrayList<>();
+        BlockPos blockPos = getBlockPos();
+        for (BlockPos b : BlockPos.betweenClosed(blockPos.offset(RANGE, -RANGE, RANGE), blockPos.offset(-RANGE, RANGE, -RANGE))) {
+            if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && pedestal.getItem() != null && !pedestal.getItem().isEmpty()) {
+                pedestalItems.add(pedestal.getItem());
+                pedestal.setInteract(false);
+            }
+        }
+
         // TODO: change checker according to the recipe
-        checker = new EchoChecker(level.getRandom());
-        round = 0;
+        if (pedestalItems.size() == 1) {
+            checker = new EchoChecker(level.getRandom());
+        } else if (pedestalItems.size() == 2) {
+            checker = new PlusChecker(level.getRandom());
+        } else {
+            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.function_not_found_").getString());
+        }
 
         this.runner = runner;
         runner.program = new WenyanProgram(String.join("\n", runner.pages),
@@ -111,10 +134,12 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     public void ejectItem() {
         BlockPos pos = worldPosition.relative(Direction.UP);
         assert level != null;
-//        Block.popResource(level, pos, runner.extractItem(RUNNER_SLOT, 1, false));
         Block.popResource(level, pos, new ItemStack(Items.PAPER, 1));
     }
 
+    private ItemStackHandler createItemHandler() {
+        return null;
+    }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {

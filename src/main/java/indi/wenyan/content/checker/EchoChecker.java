@@ -15,6 +15,7 @@ public class EchoChecker extends CraftingAnswerChecker {
     @Override
     protected void genInput() {
         ans = new WenyanValue(WenyanValue.Type.INT, random.nextInt(), true);
+        input.clear();
         input.add(ans);
     }
 
