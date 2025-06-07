@@ -1,6 +1,7 @@
 package indi.wenyan.setup.event;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import indi.wenyan.interpreter.utils.FileLoader;
 import net.minecraft.commands.CommandSourceStack;
@@ -33,16 +34,27 @@ public class ServerEvent {
         event.getDispatcher().register(
                 Commands.literal("wenyan")
                         .then(Commands.literal("import")
-                                // parameter <filename>
                                 .then(Commands.argument("filename", StringArgumentType.word())
+                                        // 如果只写到这里，就执行，level 默认为 0
                                         .executes(ctx -> importFile(
                                                 ctx.getSource(),
-                                                StringArgumentType.getString(ctx, "filename"))))));
+                                                StringArgumentType.getString(ctx, "filename"),
+                                                0  // 默认 level
+                                        ))
+                                        // 第二个参数：level
+                                        .then(Commands.argument("level", IntegerArgumentType.integer())
+                                                // 写了 level，就执行这个分支
+                                                .executes(ctx -> importFile(
+                                                        ctx.getSource(),
+                                                        StringArgumentType.getString(ctx, "filename"),
+                                                        IntegerArgumentType.getInteger(ctx, "level")
+                                                ))
+                                        ))));
     }
 
-    private static int importFile(CommandSourceStack source, String filename) {
+    private static int importFile(CommandSourceStack source, String filename, Integer level) {
         if (!(source.getEntity() instanceof ServerPlayer player)) {
-            source.sendSystemMessage(Component.literal("§c只有玩家能使用此命令"));
+            source.sendSystemMessage(Component.literal("§c[WenyanNature] 只有玩家能使用此命令"));
             return Command.SINGLE_SUCCESS;
         }
 
@@ -59,7 +71,7 @@ public class ServerEvent {
 
 
         // Spawn Writable book
-        ItemStack book = FileLoader.createWritableBookFromTxt(txtPath, source);
+        ItemStack book = FileLoader.createWritableBookFromTxt(txtPath, source, level);
         if (book.isEmpty()) {
             source.sendSystemMessage(Component.literal("§c[WenyanNature] 无法生成书籍，请检查文件内容或格式"));
             return Command.SINGLE_SUCCESS;
