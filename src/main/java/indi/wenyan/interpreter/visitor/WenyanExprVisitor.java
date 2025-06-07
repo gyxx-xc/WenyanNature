@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.visitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.WenyanCodes;
-import indi.wenyan.interpreter.utils.WenyanDataPhaser;
+import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 import org.antlr.v4.runtime.Token;
 
@@ -26,7 +26,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     public Boolean visitDeclare_statement(WenyanRParser.Declare_statementContext ctx) {
         int n;
         try {
-            n = WenyanDataPhaser.parseInt(ctx.INT_NUM().getText());
+            n = WenyanDataParser.parseInt(ctx.INT_NUM().getText());
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
@@ -35,7 +35,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
         WenyanValue.Type type;
         try {
-            type = WenyanDataPhaser.parseType(ctx.type().getText());
+            type = WenyanDataParser.parseType(ctx.type().getText());
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
@@ -62,7 +62,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     public Boolean visitInit_declare_statement(WenyanRParser.Init_declare_statementContext ctx) {
         try {
             visit(ctx.data());
-            bytecode.add(WenyanCodes.CAST, WenyanDataPhaser.parseType(ctx.type().getText()).ordinal());
+            bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(ctx.type().getText()).ordinal());
             bytecode.add(WenyanCodes.PUSH_ANS);
             return true;
         } catch (WenyanException.WenyanThrowException e) {
@@ -114,9 +114,9 @@ public class WenyanExprVisitor extends WenyanVisitor {
         ArrayList<WenyanValue.Type> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i ++) {
             try {
-                int n = WenyanDataPhaser.parseInt(ctx.args.get(i).getText());
+                int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
                 for (int j = 0; j < n; j++)
-                    argsType.add(WenyanDataPhaser.parseType(ctx.type(i).getText()));
+                    argsType.add(WenyanDataParser.parseType(ctx.type(i).getText()));
             } catch (WenyanException.WenyanThrowException e) {
                 throw new WenyanException(e.getMessage(), ctx);
             }
@@ -201,7 +201,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     public Boolean visitFunction_post_call(WenyanRParser.Function_post_callContext ctx) {
         int count;
         try {
-            count = WenyanDataPhaser.parseInt(ctx.INT_NUM().getText());
+            count = WenyanDataParser.parseInt(ctx.INT_NUM().getText());
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
@@ -247,9 +247,9 @@ public class WenyanExprVisitor extends WenyanVisitor {
             for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
                 if (var.data() != null) {
                     visit(var.data());
-                    bytecode.add(WenyanCodes.CAST, WenyanDataPhaser.parseType(var.type().getText()).ordinal());
+                    bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataPhaser.parseType(var.type().getText()), true));
+                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText()), true));
                 }
                 bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
             }
@@ -287,9 +287,9 @@ public class WenyanExprVisitor extends WenyanVisitor {
         ArrayList<WenyanValue.Type> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i++) {
             try {
-                int n = WenyanDataPhaser.parseInt(ctx.args.get(i).getText());
+                int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
                 for (int j = 0; j < n; j++)
-                    argsType.add(WenyanDataPhaser.parseType(ctx.type(i).getText()));
+                    argsType.add(WenyanDataParser.parseType(ctx.type(i).getText()));
             } catch (WenyanException.WenyanThrowException e) {
                 throw new WenyanException(e.getMessage(), ctx);
             }

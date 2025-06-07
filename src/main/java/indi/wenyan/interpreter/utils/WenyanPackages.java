@@ -3,10 +3,7 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.handler.*;
-import indi.wenyan.interpreter.structure.WenyanArrayObject;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanRuntime;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,10 +13,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class WenyanPackages {
     // these string for candy visitor
@@ -164,12 +158,8 @@ public class WenyanPackages {
                 .function("「移」", new MoveHandler(runner), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler(runner, holder))
                 .function("「雷」", new ThunderHandler(runner, holder))
-                .function("「己於上」", new SelfPositionHandler(holder, runner, Direction.UP))
-                .function("「己於下」", new SelfPositionHandler(holder, runner, Direction.DOWN))
-                .function("「己於東」", new SelfPositionHandler(holder, runner, Direction.EAST))
-                .function("「己於南」", new SelfPositionHandler(holder, runner, Direction.SOUTH))
-                .function("「己於西」", new SelfPositionHandler(holder, runner, Direction.WEST))
-                .function("「己於北」", new SelfPositionHandler(holder, runner, Direction.NORTH))
+                .object(WenyanObjectTypes.VECTOR3)
+                .function("「己方位」", new SelfPositionHandler(holder, runner))
                 .build();
     }
 
@@ -178,11 +168,11 @@ public class WenyanPackages {
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function(new String[] {"書","书"}, new OutputHandler(holder))
                 .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
-                 .function("「放置」", new BlockPlaceHandler(holder,
-                         (BlockItem) Items.ACACIA_LOG.asItem()
-                         ,pos, block))
-                 .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
-                 .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
+                .function("「放置」", new BlockPlaceHandler(holder,
+                        (BlockItem) Items.ACACIA_LOG.asItem()
+                        ,pos, block))
+                .function("「移」", new BlockMoveHandler(holder, pos, block), BlockMoveHandler.ARGS_TYPE)
+                .function("「放」", new CommunicateHandler(pos, block, holder.level()), CommunicateHandler.ARG_TYPES)
                 .function("「紅石量」", new RedstoneSignalHandler(runner))
                 .function("「己於上」", new SelfPositionBlockHandler(holder, runner, Direction.UP))
                 .function("「己於下」", new SelfPositionBlockHandler(holder, runner, Direction.DOWN))
@@ -209,4 +199,17 @@ public class WenyanPackages {
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);
     }};
+
+    public static class WenyanObjectTypes {
+        public static final JavacallObjectType VECTOR3 = new JavacallObjectType(null, "「方位」",
+                ConstructorBuilder.builder()
+                        .var("「「上下」」")
+                        .var("「「東西」」")
+                        .var("「「南北」」")
+                        .makeConstructor())
+                .addStatic("「「零」」", Arrays.asList(new WenyanValue(WenyanValue.Type.INT, 0, true),
+                        new WenyanValue(WenyanValue.Type.INT, 0, true),
+                        new WenyanValue(WenyanValue.Type.INT, 0, true))
+                        .toArray(WenyanValue[]::new));
+    }
 }

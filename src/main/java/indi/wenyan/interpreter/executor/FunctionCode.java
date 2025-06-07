@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.executor;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavaCallCodeWarper;
 import indi.wenyan.interpreter.structure.WenyanCode;
-import indi.wenyan.interpreter.utils.WenyanDataPhaser;
+import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -92,8 +92,8 @@ public class FunctionCode extends WenyanCode {
 
             WenyanRuntime newRuntime = new WenyanRuntime((WenyanBytecode) sign.bytecode());
             if (self != null) {
-                newRuntime.setVariable(WenyanDataPhaser.SELF_ID, self);
-                newRuntime.setVariable(WenyanDataPhaser.PARENT_ID, new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
+                newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
+                newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
                         ((WenyanObject) self.getValue()).type.parent, true));
             }
             // STUB: assume the first n id is the args

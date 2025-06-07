@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.interpreter.utils.WenyanDataPhaser;
+import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -138,7 +138,7 @@ public class WenyanValue {
         }
         if (type == Type.FUNCTION) {
             if (this.type == Type.OBJECT_TYPE) {
-                return ((WenyanObjectType) this.value).getFunction(WenyanDataPhaser.CONSTRUCTOR_ID);
+                return ((WenyanObjectType) this.value).getFunction(WenyanDataParser.CONSTRUCTOR_ID);
             }
         }
         if (type == Type.OBJECT) {
