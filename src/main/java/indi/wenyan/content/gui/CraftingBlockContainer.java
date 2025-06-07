@@ -22,7 +22,7 @@ public class CraftingBlockContainer extends AbstractContainerMenu {
     private final ContainerData data;
 
     public CraftingBlockContainer(int windowId, Inventory inventory, RegistryFriendlyByteBuf buf) {
-        this(windowId, Objects.requireNonNull(inventory.player.level().getBlockEntity(buf.readBlockPos())), new SimpleContainerData(2));
+        this(windowId, Objects.requireNonNull(inventory.player.level().getBlockEntity(buf.readBlockPos())), new SimpleContainerData(4));
     }
 
     public CraftingBlockContainer(int windowId, BlockEntity blockEntity, ContainerData data) {
@@ -35,7 +35,13 @@ public class CraftingBlockContainer extends AbstractContainerMenu {
     public int getProgress(int length) {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);
+        if (this.data.get(2) == 0) // not crafting
+            return length;
         return maxProgress == 0 ? 0 : progress * length / maxProgress;
+    }
+
+    public int getResult() {
+        return this.data.get(3);
     }
 
     @Override

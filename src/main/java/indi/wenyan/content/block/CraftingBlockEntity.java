@@ -25,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,6 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     public final int maxRound = 16;
     protected final ContainerData data;
     private static final int RANGE = 3; // the offset to search for pedestals
-    private final ItemStackHandler itemStackHandler = createItemHandler();
 
     public CraftingBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.CRAFTING_ENTITY.get(), pos, blockState);
@@ -56,6 +54,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 return switch (i) {
                     case 0 -> CraftingBlockEntity.this.round;
                     case 1 -> CraftingBlockEntity.this.maxRound;
+                    case 2 -> CraftingBlockEntity.this.isCrafting ? 1 : 0;
+                    case 3 -> CraftingBlockEntity.this.result != null ? CraftingBlockEntity.this.result.ordinal() : -1;
                     default -> 0;
                 };
             }
@@ -67,7 +67,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
 
             @Override
             public int getCount() {
-                return 2;
+                return 4;
             }
         };
     }
@@ -89,7 +89,6 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                     entity.runner.program.run();
                 }
                 if (!entity.isCrafting) {
-                    entity.round = 0;
                     for (BlockPos b : BlockPos.betweenClosed(pos.offset(RANGE, -RANGE, RANGE), pos.offset(-RANGE, RANGE, -RANGE))) {
                         if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && pedestal.getItem() != null && !pedestal.getItem().isEmpty()) {
                             pedestal.setInteract(true);
@@ -125,6 +124,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         }
 
         this.runner = runner;
+        round = 0;
         runner.program = new WenyanProgram(String.join("\n", runner.pages),
                 WenyanPackages.craftingEnvironment(checker), player);
         runner.program.run();
@@ -135,10 +135,6 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         BlockPos pos = worldPosition.relative(Direction.UP);
         assert level != null;
         Block.popResource(level, pos, new ItemStack(Items.PAPER, 1));
-    }
-
-    private ItemStackHandler createItemHandler() {
-        return null;
     }
 
     @Override
