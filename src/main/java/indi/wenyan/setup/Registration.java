@@ -7,10 +7,8 @@ import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.WenyanHandRunner;
-import indi.wenyan.interpreter.handler.ImportFileHandler;
 import indi.wenyan.setup.network.ProgramTextServerPayloadHandler;
 import indi.wenyan.setup.network.RunnerTextPacket;
-
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -30,11 +28,9 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-
 import java.util.function.Supplier;
 
 import static indi.wenyan.WenyanNature.MODID;
-import static net.neoforged.neoforge.common.NeoForge.EVENT_BUS;
 
 public class Registration {
 
@@ -45,7 +41,8 @@ public class Registration {
         ENTITY.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         MENU_TYPE.register(modEventBus);
-        EVENT_BUS.register(new ImportFileHandler());
+
+        modEventBus.addListener(Registration::onRegisterPayloadHandler);
     }
 
     public static final DeferredRegister.Blocks BLOCKS;
