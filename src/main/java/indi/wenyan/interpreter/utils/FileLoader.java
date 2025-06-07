@@ -154,16 +154,16 @@ public class FileLoader {
         // Spawn Writable book
         ItemStack book = createWritableBookFromTxt(txtPath, source, level);
         if (book.isEmpty()) {
-            source.sendSystemMessage(Component.literal("§c[WenyanNature] 无法生成书籍，请检查文件内容或格式"));
+            source.sendSystemMessage(Component.literal("§c[WenyanNature] 无法生成符咒，请检查文件内容或格式"));
             return Command.SINGLE_SUCCESS;
         }
         // Give to player or drop on ground
         boolean added = player.getInventory().add(book);
         if (!added) {
             player.drop(book, false);
-            source.sendSystemMessage(Component.literal("§e[WenyanNature] 背包已满，书籍已丢在地上：" + filename));
+            source.sendSystemMessage(Component.literal("§e[WenyanNature] 背包已满，符咒已丢在地上：" + filename));
         } else {
-            source.sendSystemMessage(Component.literal("§a[WenyanNature] 已将可写书发送给你：" + filename));
+            source.sendSystemMessage(Component.literal("§a[WenyanNature] 已将符咒发送给你：" + filename));
         }
 
         return Command.SINGLE_SUCCESS;
