@@ -1,21 +1,22 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.setup.Registration;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import indi.wenyan.content.item.WenyanHandRunner;
-
+import indi.wenyan.setup.Registration;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.WritableBookContent;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.Component;
-
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.registries.DeferredItem;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -25,12 +26,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static indi.wenyan.WenyanNature.LOGGER;
 
 
 public class FileLoader {
 
-    private static final Logger LOGGER = LogManager.getLogger("[WenyanNature] ");
     public static DeferredItem<Item> runnerItem;
+
+    public static final LiteralArgumentBuilder<CommandSourceStack> FILE_COMMAND = Commands.literal("wenyan")
+            .then(Commands.literal("import")
+                    .then(Commands.argument("filename", StringArgumentType.word())
+                            // 如果只写到这里，就执行，level 默认为 0
+                            .executes(ctx -> FileLoader.importFile(
+                                    ctx.getSource(),
+                                    StringArgumentType.getString(ctx, "filename"),
+                                    0  // 默认 level
+                            ))
+                            // 第二个参数：level
+                            .then(Commands.argument("level", IntegerArgumentType.integer())
+                                    // 写了 level，就执行这个分支
+                                    .executes(ctx -> FileLoader.importFile(
+                                            ctx.getSource(),
+                                            StringArgumentType.getString(ctx, "filename"),
+                                            IntegerArgumentType.getInteger(ctx, "level")
+                                    ))
+                            )));
 
     public static ItemStack createWritableBookFromTxt(Path txtPath, CommandSourceStack source, Integer level) {
         int maxCharsPerPage = 130;
@@ -111,5 +131,41 @@ public class FileLoader {
         source.sendSystemMessage(Component.literal("§a[WenyanNature] 加载成功！"));
         return handRunnerStack;
 
+    }
+
+    public static int importFile(CommandSourceStack source, String filename, Integer level) {
+        if (!(source.getEntity() instanceof ServerPlayer player)) {
+            source.sendSystemMessage(Component.literal("§c[WenyanNature] 只有玩家能使用此命令"));
+            return Command.SINGLE_SUCCESS;
+        }
+
+        Path configDir  = FMLPaths.CONFIGDIR.get();
+        Path scriptsDir = configDir.resolve("WenyanNature").resolve("scripts"); // config/WenyanNature/scripts
+        // Create script directory
+        try {
+            Files.createDirectories(scriptsDir);
+        } catch (IOException e) {
+            LOGGER.error("[WenyanNature] 无法创建脚本目录: {}", scriptsDir, e);
+        }
+
+        Path txtPath = scriptsDir.resolve(filename);
+
+
+        // Spawn Writable book
+        ItemStack book = createWritableBookFromTxt(txtPath, source, level);
+        if (book.isEmpty()) {
+            source.sendSystemMessage(Component.literal("§c[WenyanNature] 无法生成书籍，请检查文件内容或格式"));
+            return Command.SINGLE_SUCCESS;
+        }
+        // Give to player or drop on ground
+        boolean added = player.getInventory().add(book);
+        if (!added) {
+            player.drop(book, false);
+            source.sendSystemMessage(Component.literal("§e[WenyanNature] 背包已满，书籍已丢在地上：" + filename));
+        } else {
+            source.sendSystemMessage(Component.literal("§a[WenyanNature] 已将可写书发送给你：" + filename));
+        }
+
+        return Command.SINGLE_SUCCESS;
     }
 }
