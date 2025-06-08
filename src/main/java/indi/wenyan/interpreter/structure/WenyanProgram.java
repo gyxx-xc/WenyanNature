@@ -51,8 +51,8 @@ public class WenyanProgram {
             JavaCallCodeWarper.Request request = requestThreads.poll();
             try {
                 request.handle();
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage());
+            } catch (WenyanException.WenyanThrowException | WenyanException e) {
+                WenyanException.handleException(holder, e.getMessage());
             }
         }
     }
