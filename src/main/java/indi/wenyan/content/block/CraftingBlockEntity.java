@@ -90,8 +90,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 }
                 if (!entity.isCrafting) {
                     for (BlockPos b : BlockPos.betweenClosed(pos.offset(RANGE, -RANGE, RANGE), pos.offset(-RANGE, RANGE, -RANGE))) {
-                        if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && pedestal.getItem() != null && !pedestal.getItem().isEmpty()) {
-                            pedestal.setInteract(true);
+                        if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && !pedestal.getItem(0).isEmpty()) {
+//                            pedestal.setInteract(true);
                         }
                     }
                 }
@@ -108,9 +108,9 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         BlockPos blockPos = getBlockPos();
         for (BlockPos b : BlockPos.betweenClosed(blockPos.offset(RANGE, -RANGE, RANGE), blockPos.offset(-RANGE, RANGE, -RANGE))) {
-            if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && pedestal.getItem() != null && !pedestal.getItem().isEmpty()) {
-                pedestalItems.add(pedestal.getItem());
-                pedestal.setInteract(false);
+            if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && !pedestal.getItem(0).isEmpty()) {
+                pedestalItems.add(pedestal.getItem(0));
+//                pedestal.setInteract(false);
             }
         }
 
@@ -149,8 +149,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = super.getUpdateTag(registries);
-        return tag;
+        return super.getUpdateTag(registries);
     }
 
     @Override

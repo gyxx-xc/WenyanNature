@@ -19,6 +19,7 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
         event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
         event.registerBlockEntityRenderer(Registration.BLOCK_RUNNER.get(), RunnerBlockRender::new);
+        event.registerBlockEntityRenderer(Registration.PEDESTAL_ENTITY.get(), indi.wenyan.content.block.PedestalBlockRender::new);
     }
 
     @SubscribeEvent
