@@ -1,15 +1,12 @@
 package indi.wenyan.interpreter.runtime.executor;
 
 import indi.wenyan.content.handler.JavacallHandler;
-import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.WenyanDataParser;
-import net.minecraft.network.chat.Component;
-
-import java.util.ArrayList;
-import java.util.List;
+import indi.wenyan.interpreter.structure.WenyanDictObject;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanObjectType;
+import indi.wenyan.interpreter.structure.WenyanValue;
 
 public class FunctionCode extends WenyanCode {
     private final Operation operation;
@@ -58,53 +55,9 @@ public class FunctionCode extends WenyanCode {
             // must make the callF at end, because it may block thread
             // which is a fake block, it will still run the rest command before blocked
             // it will only block the next WenyanCode being executed
-            callFunction(sign, self, thread, args, noReturn);
+            sign.function().call(sign, self, thread, args, noReturn);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage());
-        }
-    }
-
-    private void callFunction
-            (WenyanValue.FunctionSign sign, WenyanValue self,
-             WenyanThread thread, int args, boolean noReturn)
-            throws WenyanException.WenyanThrowException {
-
-        WenyanRuntime runtime = thread.currentRuntime();
-        if (sign.bytecode() instanceof JavacallHandler javacall) {
-            List<WenyanValue> argsList = new ArrayList<>(args);
-            if (self != null)
-                argsList.add(self);
-            for (int i = 0; i < args; i++)
-                argsList.add(runtime.processStack.pop());
-
-            if (javacall.isLocal()) {
-                javacall.handle(thread, argsList.toArray(new WenyanValue[0]), noReturn);
-            } else {
-                JavacallHandler.Request request = new JavacallHandler.Request(
-                        thread, argsList.toArray(new WenyanValue[0]), noReturn, javacall);
-                thread.program.requestThreads.add(request);
-                thread.block();
-            }
-        } else {
-            WenyanValue[] argsList = new WenyanValue[args];
-            if (sign.argTypes().length != args)
-                throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-            for (int i = 0; i < args; i++)
-                argsList[i] = runtime.processStack.pop().casting(sign.argTypes()[i]);
-
-            WenyanRuntime newRuntime = new WenyanRuntime((WenyanBytecode) sign.bytecode());
-            if (self != null) {
-                newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
-                newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
-                        ((WenyanObject) self.getValue()).getType().parent, true));
-            }
-            // STUB: assume the first n id is the args
-            for (int i = 0; i < args; i++)
-                newRuntime.setVariable(
-                        ((WenyanBytecode) sign.bytecode()).getIdentifier(i),
-                        WenyanValue.varOf(argsList[i]));
-            newRuntime.noReturnFlag = noReturn;
-            thread.add(newRuntime);
         }
     }
 
@@ -118,7 +71,7 @@ public class FunctionCode extends WenyanCode {
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }
-        if (sign.bytecode() instanceof JavacallHandler javacall) {
+        if (sign.function() instanceof JavacallHandler javacall) {
             return javacall.getStep(args, thread);
         } else {
             return args;

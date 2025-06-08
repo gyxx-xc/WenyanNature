@@ -1,10 +1,14 @@
 package indi.wenyan.content.handler;
 
+import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanFunction;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.network.chat.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public interface JavacallHandler extends WenyanFunction {
     WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException;
@@ -48,6 +52,27 @@ public interface JavacallHandler extends WenyanFunction {
         WenyanValue value = handle(args);
         if (!noReturn)
             thread.currentRuntime().processStack.push(value);
+    }
+
+    @Override
+    default void call(WenyanValue.FunctionSign sign, WenyanValue self,
+                      WenyanThread thread, int args, boolean noReturn)
+            throws WenyanException.WenyanThrowException{
+        List<WenyanValue> argsList = new ArrayList<>(args);
+        if (self != null)
+            argsList.add(self);
+        WenyanRuntime runtime = thread.currentRuntime();
+        for (int i = 0; i < args; i++)
+            argsList.add(runtime.processStack.pop());
+
+        if (isLocal()) {
+            handle(thread, argsList.toArray(new WenyanValue[0]), noReturn);
+        } else {
+            JavacallHandler.Request request = new JavacallHandler.Request(
+                    thread, argsList.toArray(new WenyanValue[0]), noReturn, this);
+            thread.program.requestThreads.add(request);
+            thread.block();
+        }
     }
 
     @FunctionalInterface

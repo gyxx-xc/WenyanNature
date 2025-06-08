@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public final class WenyanPackageBuilder {
+public class WenyanPackageBuilder {
     private final WenyanRuntime environment = new WenyanRuntime(null);
 
     public static WenyanPackageBuilder create() {
