@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.interpreter.handler.LocalCallHandler;
+import indi.wenyan.content.handler.LocalCallHandler;
+import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanObject;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -9,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConstructorBuilder {
+class ConstructorBuilder {
     private final List<String> variable = new ArrayList<>();
 
     public static ConstructorBuilder builder() {
@@ -28,7 +29,7 @@ public class ConstructorBuilder {
                     }
                     WenyanObject self = (WenyanObject) args[0].casting(WenyanValue.Type.OBJECT).getValue();
                     for (int i = 0; i < variable.size(); i++) {
-                        self.variable.put(variable.get(i), args[i + 1]);
+                        self.setVariable(variable.get(i), args[i + 1]);
                     }
                     return WenyanValue.NULL;
                 });

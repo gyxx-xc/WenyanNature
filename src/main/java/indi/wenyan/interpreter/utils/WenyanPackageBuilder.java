@@ -1,7 +1,13 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.interpreter.handler.LocalCallHandler;
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.content.handler.JavacallHandler;
+import indi.wenyan.content.handler.LocalCallHandler;
+import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.structure.JavaCallCodeWarper;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanObjectType;
+import indi.wenyan.interpreter.structure.WenyanValue;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Function;
 
@@ -86,5 +92,47 @@ public class WenyanPackageBuilder {
     public WenyanPackageBuilder object(WenyanObjectType objectType) {
         environment.setVariable(objectType.name, new WenyanValue(WenyanValue.Type.OBJECT_TYPE, objectType, true));
         return this;
+    }
+
+    public static JavacallHandler.WenyanFunction reduceWith(ReduceFunction function) {
+        return args -> {
+            if (args.length <= 1)
+                throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+            WenyanValue value = args[0];
+            for (int i = 1; i < args.length; i++) {
+                value = function.apply(value, args[i]);
+            }
+            return value;
+        };
+    }
+
+    public static JavacallHandler.WenyanFunction boolBinaryOperation(java.util.function.BiFunction<Boolean, Boolean, Boolean> function) {
+        return args -> {
+            if (args.length != 2)
+                throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+            return new WenyanValue(WenyanValue.Type.BOOL,
+                    function.apply((boolean) args[0].casting(WenyanValue.Type.BOOL).getValue(),
+                            (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue()),
+                    true);
+        };
+    }
+
+    public static JavacallHandler.WenyanFunction compareOperation(CompareFunction function) {
+        return args -> {
+            if (args.length != 2)
+                throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+            return new WenyanValue(WenyanValue.Type.BOOL,
+                    function.apply(args[0], args[1]), true);
+        };
+    }
+
+    @FunctionalInterface
+    public interface ReduceFunction {
+        WenyanValue apply(WenyanValue a, WenyanValue b) throws WenyanException.WenyanThrowException;
+    }
+
+    @FunctionalInterface
+    public interface CompareFunction {
+        boolean apply(WenyanValue a, WenyanValue b) throws WenyanException.WenyanThrowException;
     }
 }

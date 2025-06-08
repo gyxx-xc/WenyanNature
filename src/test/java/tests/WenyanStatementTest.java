@@ -1,10 +1,10 @@
 package tests;
 
-import indi.wenyan.interpreter.structure.WenyanBytecode;
-import indi.wenyan.interpreter.structure.WenyanCompilerEnvironment;
+import indi.wenyan.interpreter.compiler.WenyanBytecode;
+import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.visitor.WenyanMainVisitor;
-import indi.wenyan.interpreter.visitor.WenyanVisitor;
+import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
+import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

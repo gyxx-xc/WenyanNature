@@ -1,7 +1,6 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.structure.WenyanValue;
-import indi.wenyan.interpreter.utils.CraftingAnswerChecker;
 import net.minecraft.util.RandomSource;
 
 public class PlusChecker extends CraftingAnswerChecker {

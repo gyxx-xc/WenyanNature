@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.gui.BlockRunnerScreen;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.structure.WenyanProgram;
+import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

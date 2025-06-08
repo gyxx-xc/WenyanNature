@@ -29,7 +29,8 @@ import java.util.List;
 import static indi.wenyan.WenyanNature.LOGGER;
 
 
-public class FileLoader {
+public final class FileLoader {
+    private FileLoader(){}
 
     public static DeferredItem<Item> runnerItem;
 

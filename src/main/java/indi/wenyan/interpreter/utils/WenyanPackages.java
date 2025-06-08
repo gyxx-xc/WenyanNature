@@ -1,8 +1,10 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
-import indi.wenyan.interpreter.handler.*;
+import indi.wenyan.content.handler.*;
+import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -15,81 +17,45 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
-public class WenyanPackages {
+public final class WenyanPackages {
+    private WenyanPackages(){}
+
     // these string for candy visitor
     public static final String AND_ID = "且";
     public static final String OR_ID = "或";
     public static final String MOD_ID = "模";
 
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
-            .function("加", LocalCallHandler.withArgs(WenyanValue::add))
-            .function(new String[]{"減","减"}, LocalCallHandler.withArgs(WenyanValue::sub))
-            .function("乘", LocalCallHandler.withArgs(WenyanValue::mul))
-            .function("除", LocalCallHandler.withArgs(WenyanValue::div))
-            .function(new String[]{"銜","衔"}, LocalCallHandler.withArgs(WenyanValue::add))
+            .function("加", WenyanPackageBuilder.reduceWith(WenyanValue::add))
+            .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(WenyanValue::sub))
+            .function("乘", WenyanPackageBuilder.reduceWith(WenyanValue::mul))
+            .function("除", WenyanPackageBuilder.reduceWith(WenyanValue::div))
+            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanValue::add))
+
             .function(new String[]{"變","变"}, args -> args[0].not())
             .function("充", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanValue value = args[0].casting(WenyanValue.Type.LIST);
+                WenyanArrayObject list = (WenyanArrayObject) value.getValue();
                 for (int i = 1; i < args.length; i++) {
-                    WenyanArrayObject list = (WenyanArrayObject) value.getValue();
                     list.add(WenyanValue.varOf(args[i]));
                 }
                 return value;
             })
+
             // 模, 且, 或
-            .function("模", args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return args[0].mod(args[1]);
-            })
-            .function("且", args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL,
-                        (boolean) args[0].casting(WenyanValue.Type.BOOL).getValue() &&
-                                (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue(),
-                        true);
-            })
-            .function("或", args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL,
-                        (boolean) args[0].casting(WenyanValue.Type.BOOL).getValue() ||
-                                (boolean) args[1].casting(WenyanValue.Type.BOOL).getValue(),
-                        true);
-            })
-            .function(new String [] {"不等於","不等于"}, args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL, !args[0].equals(args[1]), true);
-            })
-            .function(new String [] {"不大於","不大于"}, args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) <= 0, true);
-            })
-            .function(new String[] {"不小於","不小于"}, args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) >= 0, true);
-            })
-            .function(new String[] {"等於","等于"}, args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL, args[0].equals(args[1]), true);
-            })
-            .function(new String[] {"大於","大于"}, args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) > 0, true);
-            })
-            .function("小於", args -> {
-                if (args.length != 2)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                return new WenyanValue(WenyanValue.Type.BOOL, args[0].compareTo(args[1]) < 0, true);
-            })
+            .function("模", WenyanPackageBuilder.reduceWith(WenyanValue::mod))
+            .function("且", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalAnd))
+            .function("或", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalOr))
+
+            .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !a.equals(b)))
+            .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) <= 0))
+            .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) >= 0))
+            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation(WenyanValue::equals))
+            .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) > 0))
+            .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) < 0))
+
             .function("「」", args -> WenyanValue.NULL)
             .function("書", args -> {
                 System.out.println(Arrays.toString(args));

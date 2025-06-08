@@ -1,7 +1,7 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanProgram;
+import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;

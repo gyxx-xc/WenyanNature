@@ -1,7 +1,5 @@
 package tests;
 
-import indi.wenyan.interpreter.utils.WenyanPackages;
-import indi.wenyan.interpreter.structure.WenyanProgram;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -137,14 +135,14 @@ public class WenyanBlockTest {
                         """);
     }
 
-//    @ParameterizedTest
-//    @MethodSource("getTestCases")
-//    public void testWenyanBlock(String s) {
+    @ParameterizedTest
+    @MethodSource("getTestCases")
+    public void testWenyanBlock(String s) {
 //        WenyanProgram program = new WenyanProgram(s, WenyanPackages.WENYAN_BASIC_PACKAGES, null);
 //        program.run();
 //        while (program.isRunning()) {
 //            program.step();
 //            program.handle();
 //        }
-//    }
+    }
 }

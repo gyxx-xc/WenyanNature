@@ -1,12 +1,11 @@
 package indi.wenyan.interpreter.structure;
 
-import java.util.HashMap;
+public interface WenyanObject {
+    WenyanValue getVariable(String name);
 
-public class WenyanObject {
-    public final WenyanObjectType type;
-    public final HashMap<String, WenyanValue> variable = new HashMap<>();
+    void setVariable(String name, WenyanValue value);
 
-    public WenyanObject(WenyanObjectType type) {
-        this.type = type;
-    }
+    WenyanValue getFunction(String name);
+
+    WenyanObjectType getType();
 }
