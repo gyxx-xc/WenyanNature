@@ -89,7 +89,7 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder object(WenyanObjectType objectType) {
-        environment.setVariable(objectType.name, new WenyanValue(WenyanValue.Type.OBJECT_TYPE, objectType, true));
+        environment.setVariable(objectType.getName(), new WenyanValue(WenyanValue.Type.OBJECT_TYPE, objectType, true));
         return this;
     }
 

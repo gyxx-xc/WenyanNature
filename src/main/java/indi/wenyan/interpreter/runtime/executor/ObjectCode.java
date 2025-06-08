@@ -24,7 +24,7 @@ public class ObjectCode extends WenyanCode {
                     if (value.getType() == WenyanValue.Type.OBJECT_TYPE) { // static
                         WenyanObjectType type = (WenyanObjectType) value
                                 .casting(WenyanValue.Type.OBJECT_TYPE).getValue();
-                        attr = type.staticVariable.get(id);
+                        attr = type.getStaticVariable(id);
                         if (attr == null) {
                             attr = type.getFunction(id);
                         }
@@ -45,7 +45,7 @@ public class ObjectCode extends WenyanCode {
                     if (value.getType() == WenyanValue.Type.OBJECT_TYPE) { // static
                         WenyanObjectType type = (WenyanObjectType) value
                                 .casting(WenyanValue.Type.OBJECT_TYPE).getValue();
-                        attr = type.staticVariable.get(id);
+                        attr = type.getStaticVariable(id);
                         if (attr == null) {
                             attr = type.getFunction(id);
                         }
@@ -63,13 +63,13 @@ public class ObjectCode extends WenyanCode {
                     WenyanValue value = WenyanValue.varOf(runtime.processStack.pop());
                     WenyanObjectType type = (WenyanObjectType) runtime.processStack.peek()
                             .casting(WenyanValue.Type.OBJECT_TYPE).getValue();
-                    type.staticVariable.put(id, value);
+                    type.addStaticVariable(id, value);
                 }
                 case STORE_FUNCTION_ATTR -> {
                     WenyanValue value = runtime.processStack.pop();
                     WenyanObjectType type = (WenyanObjectType) runtime.processStack.peek()
                             .casting(WenyanValue.Type.OBJECT_TYPE).getValue();
-                    type.functions.put(id, value);
+                    type.addFunction(id, value);
                 }
                 case STORE_ATTR -> {
                     // currently only used at define (mzy SELF ZHI STRING)
@@ -80,7 +80,7 @@ public class ObjectCode extends WenyanCode {
                 }
                 case CREATE_TYPE -> {
                     WenyanValue type = new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
-                            new WenyanObjectType((WenyanObjectType) runtime.processStack.pop()
+                            new WenyanDictObjectType((WenyanObjectType) runtime.processStack.pop()
                                     .casting(WenyanValue.Type.OBJECT_TYPE).getValue(), id), true);
                     runtime.processStack.push(type);
                 }

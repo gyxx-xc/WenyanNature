@@ -8,7 +8,7 @@ import indi.wenyan.interpreter.utils.WenyanDataParser;
  * This make the Object can be created by java in an easier way.
  */
 @Deprecated
-public class JavacallObjectType extends WenyanObjectType {
+public class JavacallObjectType extends WenyanDictObjectType {
     private final JavacallHandler constructor;
 
     public JavacallObjectType(WenyanObjectType parent, String name, JavacallHandler constructor) {
@@ -16,7 +16,7 @@ public class JavacallObjectType extends WenyanObjectType {
         if (!constructor.isLocal())
             throw new RuntimeException("cannot use JavacallObjectType with non-local constructor");
         this.constructor = constructor;
-        functions.put(WenyanDataParser.CONSTRUCTOR_ID, new WenyanValue(WenyanValue.Type.FUNCTION,
+        addFunction(WenyanDataParser.CONSTRUCTOR_ID, new WenyanValue(WenyanValue.Type.FUNCTION,
                 new WenyanValue.FunctionSign(WenyanDataParser.CONSTRUCTOR_ID,
                         new WenyanValue.Type[0],
                         constructor), true));
@@ -34,7 +34,7 @@ public class JavacallObjectType extends WenyanObjectType {
 
     public JavacallObjectType addStatic(String name, WenyanValue[] args) {
         try {
-            staticVariable.put(name, newObject(args));
+            addStaticVariable(name, newObject(args));
         } catch (WenyanException.WenyanThrowException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +42,7 @@ public class JavacallObjectType extends WenyanObjectType {
     }
 
     public JavacallObjectType addStatic(String name, WenyanValue value) {
-        staticVariable.put(name, value);
+        addStaticVariable(name, value);
         return this;
     }
 }

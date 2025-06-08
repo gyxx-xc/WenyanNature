@@ -15,7 +15,7 @@ public class WenyanValue {
         BOOL,
         STRING,
         LIST,
-        OBJECT, // not implemented
+        OBJECT,
         OBJECT_TYPE,
         FUNCTION;
 

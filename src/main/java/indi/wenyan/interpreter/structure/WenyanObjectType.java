@@ -1,27 +1,15 @@
 package indi.wenyan.interpreter.structure;
 
-import net.minecraft.network.chat.Component;
+public interface WenyanObjectType {
+    String getName();
 
-import java.util.HashMap;
+    WenyanObjectType getParent();
 
-public class WenyanObjectType {
-    public final WenyanObjectType parent;
-    public final String name;
-    public final HashMap<String, WenyanValue> staticVariable = new HashMap<>();
-    public final HashMap<String, WenyanValue> functions = new HashMap<>();
+    WenyanValue getFunction(String id);
 
-    public WenyanObjectType(WenyanObjectType parent, String name) {
-        this.parent = parent;
-        this.name = name;
-    }
+    void addFunction(String id, WenyanValue function);
 
-    public WenyanValue getFunction(String id) {
-        if (functions.containsKey(id)) {
-            return functions.get(id);
-        } else if (parent != null) {
-            return parent.getFunction(id);
-        } else {
-            throw new WenyanException(Component.translatable("error.wenyan_nature.function_not_found_") + id);
-        }
-    }
+    WenyanValue getStaticVariable(String id);
+
+    void addStaticVariable(String id, WenyanValue value);
 }
