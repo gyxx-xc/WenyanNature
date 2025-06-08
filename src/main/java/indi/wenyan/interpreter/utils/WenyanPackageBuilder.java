@@ -3,7 +3,6 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.structure.JavaCallCodeWarper;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanObjectType;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -12,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public class WenyanPackageBuilder {
+public final class WenyanPackageBuilder {
     private final WenyanRuntime environment = new WenyanRuntime(null);
 
     public static WenyanPackageBuilder create() {
@@ -84,7 +83,7 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanValue.Type[] argTypes) {
-        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(name, argTypes, new JavaCallCodeWarper(javacall));
+        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(name, argTypes, javacall);
         environment.setVariable(name, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
         return this;
     }

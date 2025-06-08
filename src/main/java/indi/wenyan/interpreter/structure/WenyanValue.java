@@ -318,5 +318,5 @@ public class WenyanValue {
         return sb.toString();
     }
 
-    public record FunctionSign(String name, Type[] argTypes, WenyanProgramCode bytecode) {}
+    public record FunctionSign(String name, Type[] argTypes, WenyanFunction bytecode) {}
 }

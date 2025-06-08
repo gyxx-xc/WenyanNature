@@ -48,23 +48,23 @@ public class WenyanArrayObject implements WenyanObject {
             case WenyanDataParser.ARRAY_GET_ID -> new WenyanValue(WenyanValue.Type.FUNCTION,
                     new WenyanValue.FunctionSign(WenyanDataParser.ARRAY_GET_ID,
                             new WenyanValue.Type[]{WenyanValue.Type.LIST, WenyanValue.Type.INT},
-                            new JavaCallCodeWarper(new LocalCallHandler(args -> {
+                            new LocalCallHandler(args -> {
                                 if (args.length != 2)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                                 args[0].casting(WenyanValue.Type.LIST);
                                 args[1].casting(WenyanValue.Type.INT);
                                 return ((WenyanArrayObject) args[0].getValue()).get(args[1]);
-                            }))), true);
+                            })), true);
             case WenyanDataParser.ITER_ID -> new WenyanValue(WenyanValue.Type.FUNCTION,
                     new WenyanValue.FunctionSign(WenyanDataParser.ITER_ID,
                             new WenyanValue.Type[]{WenyanValue.Type.LIST},
-                            new JavaCallCodeWarper(new LocalCallHandler(args -> {
+                            new LocalCallHandler(args -> {
                                 if (args.length != 1)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                                 args[0].casting(WenyanValue.Type.LIST);
                                 return new WenyanValue(WenyanValue.Type.OBJECT,
                                         ((WenyanArrayObject) args[0].getValue()).values.iterator(), true);
-                            }))), true);
+                            })), true);
             default -> throw new WenyanException(Component.translatable("error.wenyan_nature.function_not_found_").getString() + name);
         };
     }

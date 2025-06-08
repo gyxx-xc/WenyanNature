@@ -2,10 +2,11 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanFunction;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.network.chat.Component;
 
-public interface JavacallHandler {
+public interface JavacallHandler extends WenyanFunction {
     WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException;
 
     /**
@@ -52,5 +53,18 @@ public interface JavacallHandler {
     @FunctionalInterface
     interface WenyanFunction {
         WenyanValue apply(WenyanValue[] args) throws WenyanException.WenyanThrowException;
+    }
+
+    record Request(
+            WenyanThread thread,
+            WenyanValue[] args,
+            boolean noReturn,
+            JavacallHandler handler
+    ) {
+        public void handle() throws WenyanException.WenyanThrowException {
+            handler.handle(thread, args, noReturn);
+            thread.program.readyQueue.add(thread);
+            thread.state = WenyanThread.State.READY;
+        }
     }
 }

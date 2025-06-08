@@ -1,14 +1,14 @@
 package indi.wenyan.interpreter.compiler;
 
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
-import indi.wenyan.interpreter.structure.WenyanProgramCode;
+import indi.wenyan.interpreter.structure.WenyanFunction;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WenyanBytecode extends WenyanProgramCode {
+public class WenyanBytecode implements WenyanFunction {
     private final List<Code> bytecode = new ArrayList<>();
     private final List<WenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();

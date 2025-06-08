@@ -7,6 +7,7 @@ import indi.wenyan.interpreter.utils.WenyanDataParser;
  * This class is a warper for WenyanObjectType, which use javacall as the constructor.
  * This make the Object can be created by java in an easier way.
  */
+@Deprecated
 public class JavacallObjectType extends WenyanObjectType {
     private final JavacallHandler constructor;
 
@@ -18,7 +19,7 @@ public class JavacallObjectType extends WenyanObjectType {
         functions.put(WenyanDataParser.CONSTRUCTOR_ID, new WenyanValue(WenyanValue.Type.FUNCTION,
                 new WenyanValue.FunctionSign(WenyanDataParser.CONSTRUCTOR_ID,
                         new WenyanValue.Type[0],
-                        new JavaCallCodeWarper(constructor)), true));
+                        constructor), true));
     }
 
     public WenyanValue newObject(WenyanValue[] args) throws WenyanException.WenyanThrowException {

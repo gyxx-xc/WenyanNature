@@ -1,10 +1,10 @@
 package indi.wenyan.interpreter.runtime.executor;
 
+import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.structure.JavaCallCodeWarper;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
@@ -70,18 +70,18 @@ public class FunctionCode extends WenyanCode {
             throws WenyanException.WenyanThrowException {
 
         WenyanRuntime runtime = thread.currentRuntime();
-        if (sign.bytecode() instanceof JavaCallCodeWarper warper) {
+        if (sign.bytecode() instanceof JavacallHandler javacall) {
             List<WenyanValue> argsList = new ArrayList<>(args);
             if (self != null)
                 argsList.add(self);
             for (int i = 0; i < args; i++)
                 argsList.add(runtime.processStack.pop());
 
-            if (warper.handler.isLocal()) {
-                warper.handler.handle(thread, argsList.toArray(new WenyanValue[0]), noReturn);
+            if (javacall.isLocal()) {
+                javacall.handle(thread, argsList.toArray(new WenyanValue[0]), noReturn);
             } else {
-                JavaCallCodeWarper.Request request = new JavaCallCodeWarper.Request(
-                        thread, argsList.toArray(new WenyanValue[0]), noReturn, warper.handler);
+                JavacallHandler.Request request = new JavacallHandler.Request(
+                        thread, argsList.toArray(new WenyanValue[0]), noReturn, javacall);
                 thread.program.requestThreads.add(request);
                 thread.block();
             }
@@ -118,8 +118,8 @@ public class FunctionCode extends WenyanCode {
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }
-        if (sign.bytecode() instanceof JavaCallCodeWarper warper) {
-            return warper.handler.getStep(args, thread);
+        if (sign.bytecode() instanceof JavacallHandler javacall) {
+            return javacall.getStep(args, thread);
         } else {
             return args;
         }

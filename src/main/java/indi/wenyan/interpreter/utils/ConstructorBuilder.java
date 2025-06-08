@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 class ConstructorBuilder {
     private final List<String> variable = new ArrayList<>();
 
