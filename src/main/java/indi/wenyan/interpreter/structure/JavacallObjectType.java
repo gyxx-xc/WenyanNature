@@ -16,23 +16,23 @@ public class JavacallObjectType extends WenyanDictObjectType {
         if (!constructor.isLocal())
             throw new RuntimeException("cannot use JavacallObjectType with non-local constructor");
         this.constructor = constructor;
-        addFunction(WenyanDataParser.CONSTRUCTOR_ID, new WenyanValue(WenyanValue.Type.FUNCTION,
-                new WenyanValue.FunctionSign(WenyanDataParser.CONSTRUCTOR_ID,
-                        new WenyanValue.Type[0],
+        addFunction(WenyanDataParser.CONSTRUCTOR_ID, new WenyanNativeValue(WenyanNativeValue.Type.FUNCTION,
+                new WenyanNativeValue.FunctionSign(WenyanDataParser.CONSTRUCTOR_ID,
+                        new WenyanNativeValue.Type[0],
                         constructor), true));
     }
 
-    public WenyanValue newObject(WenyanValue[] args) throws WenyanException.WenyanThrowException {
-        WenyanValue object = new WenyanValue(WenyanValue.Type.OBJECT,
+    public WenyanNativeValue newObject(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException {
+        WenyanNativeValue object = new WenyanNativeValue(WenyanNativeValue.Type.OBJECT,
                 new WenyanDictObject(this), true);
-        WenyanValue[] newArgs = new WenyanValue[args.length + 1];
+        WenyanNativeValue[] newArgs = new WenyanNativeValue[args.length + 1];
         newArgs[0] = object;
         System.arraycopy(args, 0, newArgs, 1, args.length);
         constructor.handle(newArgs);
         return object;
     }
 
-    public JavacallObjectType addStatic(String name, WenyanValue[] args) {
+    public JavacallObjectType addStatic(String name, WenyanNativeValue[] args) {
         try {
             addStaticVariable(name, newObject(args));
         } catch (WenyanException.WenyanThrowException e) {
@@ -41,7 +41,7 @@ public class JavacallObjectType extends WenyanDictObjectType {
         return this;
     }
 
-    public JavacallObjectType addStatic(String name, WenyanValue value) {
+    public JavacallObjectType addStatic(String name, WenyanNativeValue value) {
         addStaticVariable(name, value);
         return this;
     }

@@ -1,7 +1,7 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 
 public class LocalCallHandler implements JavacallHandler {
     private final WenyanFunction function;
@@ -10,7 +10,7 @@ public class LocalCallHandler implements JavacallHandler {
         this.function = function;
     }
 
-    public WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException {
         return function.apply(args);
     }
 

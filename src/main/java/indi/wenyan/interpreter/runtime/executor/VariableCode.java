@@ -19,16 +19,16 @@ public class VariableCode extends WenyanCode {
         switch (operation) {
             case LOAD -> {
                 String id = runtime.bytecode.getIdentifier(args);
-                WenyanValue value = thread.getGlobalVariable(id);
+                WenyanNativeValue value = thread.getGlobalVariable(id);
                 if (value == null) {
                     throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + id);
                 }
                 runtime.processStack.push(value);
             }
-            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanValue.varOf(runtime.processStack.pop()));
+            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanNativeValue.varOf(runtime.processStack.pop()));
             case SET_VALUE -> {
-                WenyanValue value = runtime.processStack.pop();
-                WenyanValue var =  runtime.processStack.pop();
+                WenyanNativeValue value = runtime.processStack.pop();
+                WenyanNativeValue var =  runtime.processStack.pop();
                 if (var.isConst())
                     throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString());
                 try {
@@ -38,17 +38,17 @@ public class VariableCode extends WenyanCode {
                 }
             }
             case CAST -> {
-                WenyanValue var = runtime.processStack.pop();
+                WenyanNativeValue var = runtime.processStack.pop();
                 try {
                     switch (args) {
-                        case 1 -> var.casting(WenyanValue.Type.INT);
-                        case 2 -> var.casting(WenyanValue.Type.DOUBLE);
-                        case 3 -> var.casting(WenyanValue.Type.BOOL);
-                        case 4 -> var.casting(WenyanValue.Type.STRING);
-                        case 5 -> var.casting(WenyanValue.Type.LIST);
-                        case 6 -> var.casting(WenyanValue.Type.OBJECT);
-                        case 7 -> var.casting(WenyanValue.Type.OBJECT_TYPE);
-                        case 8 -> var.casting(WenyanValue.Type.FUNCTION);
+                        case 1 -> var.casting(WenyanNativeValue.Type.INT);
+                        case 2 -> var.casting(WenyanNativeValue.Type.DOUBLE);
+                        case 3 -> var.casting(WenyanNativeValue.Type.BOOL);
+                        case 4 -> var.casting(WenyanNativeValue.Type.STRING);
+                        case 5 -> var.casting(WenyanNativeValue.Type.LIST);
+                        case 6 -> var.casting(WenyanNativeValue.Type.OBJECT);
+                        case 7 -> var.casting(WenyanNativeValue.Type.OBJECT_TYPE);
+                        case 8 -> var.casting(WenyanNativeValue.Type.FUNCTION);
                         default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
                     }
                     runtime.processStack.push(var);

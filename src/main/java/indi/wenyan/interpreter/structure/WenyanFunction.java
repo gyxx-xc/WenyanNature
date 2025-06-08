@@ -7,7 +7,7 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
  * we define an empty interface to represent a function in Wenyan
  */
 public interface WenyanFunction {
-    void call(WenyanValue.FunctionSign sign, WenyanValue self,
+    void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self,
               WenyanThread thread, int args, boolean noReturn)
             throws WenyanException.WenyanThrowException;
 }

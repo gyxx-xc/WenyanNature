@@ -2,7 +2,7 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -20,8 +20,8 @@ public class BlockPlaceHandler implements JavacallHandler {
     private final Player holder;
     private final BlockState block;
 
-    public static final WenyanValue.Type[] ARGS_TYPE =
-            {WenyanValue.Type.INT, WenyanValue.Type.INT, WenyanValue.Type.INT};
+    public static final WenyanNativeValue.Type[] ARGS_TYPE =
+            {WenyanNativeValue.Type.INT, WenyanNativeValue.Type.INT, WenyanNativeValue.Type.INT};
 
     public BlockPlaceHandler(Player player, BlockItem block, BlockPos pos, BlockState self) {
         this.holder = player;
@@ -31,14 +31,14 @@ public class BlockPlaceHandler implements JavacallHandler {
     }
 
     @Override
-    public  WenyanValue handle(WenyanValue[] wenyan_args) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = JavacallHandler.getArgs(wenyan_args, ARGS_TYPE);
         args[0] = Math.max(-10, Math.min(10, (int) args[0]));
         args[1] = Math.max(-10, Math.min(10, (int) args[1]));
         args[2] = Math.max(-10, Math.min(10, (int) args[2]));
         BlockPos blockPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);
         placeBlock(holder.level(), holder, block, blockPos, attach);
-        return WenyanValue.NULL;
+        return WenyanNativeValue.NULL;
     }
 
     private static void placeBlock(Level world, Player player, BlockState block, BlockPos pos, BlockPos attach) {

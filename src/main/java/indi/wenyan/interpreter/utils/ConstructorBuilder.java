@@ -4,7 +4,7 @@ import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanObject;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -28,11 +28,11 @@ class ConstructorBuilder {
                     if (args.length != variable.size() + 1) {
                         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                     }
-                    WenyanObject self = (WenyanObject) args[0].casting(WenyanValue.Type.OBJECT).getValue();
+                    WenyanObject self = (WenyanObject) args[0].casting(WenyanNativeValue.Type.OBJECT).getValue();
                     for (int i = 0; i < variable.size(); i++) {
                         self.setVariable(variable.get(i), args[i + 1]);
                     }
-                    return WenyanValue.NULL;
+                    return WenyanNativeValue.NULL;
                 });
     }
 }

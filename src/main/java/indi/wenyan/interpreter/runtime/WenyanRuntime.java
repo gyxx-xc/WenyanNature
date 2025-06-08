@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 
 import java.util.HashMap;
 import java.util.Stack;
@@ -9,9 +9,9 @@ import java.util.Stack;
 public class WenyanRuntime {
     public final WenyanBytecode bytecode;
 
-    public final HashMap<String, WenyanValue> variables = new HashMap<>();
+    public final HashMap<String, WenyanNativeValue> variables = new HashMap<>();
     public final WenyanStack resultStack = new WenyanStack();
-    public final Stack<WenyanValue> processStack = new Stack<>();
+    public final Stack<WenyanNativeValue> processStack = new Stack<>();
 
     public int programCounter = 0;
     public boolean PCFlag = false;
@@ -21,7 +21,7 @@ public class WenyanRuntime {
         this.bytecode = bytecode;
     }
 
-    public void setVariable(String id, WenyanValue value) {
+    public void setVariable(String id, WenyanNativeValue value) {
         variables.put(id, value);
     }
 

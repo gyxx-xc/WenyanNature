@@ -7,8 +7,8 @@ import java.util.HashMap;
 public class WenyanDictObjectType implements WenyanObjectType {
     private final WenyanObjectType parent;
     private final String name;
-    private final HashMap<String, WenyanValue> staticVariable = new HashMap<>();
-    private final HashMap<String, WenyanValue> functions = new HashMap<>();
+    private final HashMap<String, WenyanNativeValue> staticVariable = new HashMap<>();
+    private final HashMap<String, WenyanNativeValue> functions = new HashMap<>();
 
     public WenyanDictObjectType(WenyanObjectType parent, String name) {
         this.parent = parent;
@@ -26,7 +26,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     }
 
     @Override
-    public WenyanValue getFunction(String id) {
+    public WenyanNativeValue getFunction(String id) {
         if (functions.containsKey(id)) {
             return functions.get(id);
         } else if (parent != null) {
@@ -37,7 +37,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     }
 
     @Override
-    public void addFunction(String id, WenyanValue function) {
+    public void addFunction(String id, WenyanNativeValue function) {
         if (functions.containsKey(id)) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_already_exists_") + id);
         }
@@ -45,7 +45,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     }
 
     @Override
-    public WenyanValue getStaticVariable(String id) {
+    public WenyanNativeValue getStaticVariable(String id) {
         if (staticVariable.containsKey(id)) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_") + id);
         }
@@ -53,7 +53,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     }
 
     @Override
-    public void addStaticVariable(String id, WenyanValue value) {
+    public void addStaticVariable(String id, WenyanNativeValue value) {
         if (staticVariable.containsKey(id)) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.variable_already_exists_") + id);
         }

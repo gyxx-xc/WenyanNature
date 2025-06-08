@@ -19,10 +19,10 @@ public class ForCode extends WenyanCode {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case FOR_ITER -> {
-                WenyanValue value = runtime.processStack.peek();
+                WenyanNativeValue value = runtime.processStack.peek();
                 if (value.getValue() instanceof Iterator<?> iter) {
                     if (iter.hasNext()) {
-                        runtime.processStack.push((WenyanValue) iter.next());
+                        runtime.processStack.push((WenyanNativeValue) iter.next());
                     } else {
                         runtime.processStack.pop();
                         runtime.programCounter = runtime.bytecode.getLabel(args);
@@ -33,11 +33,11 @@ public class ForCode extends WenyanCode {
                 }
             }
             case FOR_NUM -> {
-                WenyanValue value = runtime.processStack.pop();
-                if (value.getType() == WenyanValue.Type.INT) {
+                WenyanNativeValue value = runtime.processStack.pop();
+                if (value.getType() == WenyanNativeValue.Type.INT) {
                     int num = (int) value.getValue();
                     if (num > 0) {
-                        runtime.processStack.push(new WenyanValue(WenyanValue.Type.INT, num - 1, true));
+                        runtime.processStack.push(new WenyanNativeValue(WenyanNativeValue.Type.INT, num - 1, true));
                     } else {
                         runtime.programCounter = runtime.bytecode.getLabel(args);
                         runtime.PCFlag = true;

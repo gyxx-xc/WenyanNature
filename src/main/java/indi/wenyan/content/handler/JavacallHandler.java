@@ -4,14 +4,14 @@ import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanFunction;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface JavacallHandler extends WenyanFunction {
-    WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException;
+    WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException;
 
     /**
      * Decided if this handler is running at program thread.
@@ -39,7 +39,7 @@ public interface JavacallHandler extends WenyanFunction {
         return 1;
     }
 
-    static Object[] getArgs(WenyanValue[] args, WenyanValue.Type[] args_type) throws WenyanException.WenyanTypeException {
+    static Object[] getArgs(WenyanNativeValue[] args, WenyanNativeValue.Type[] args_type) throws WenyanException.WenyanTypeException {
         Object[] newArgs = new Object[args.length];
         if (args.length != args_type.length)
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
@@ -48,17 +48,17 @@ public interface JavacallHandler extends WenyanFunction {
         return newArgs;
     }
 
-    default void handle(WenyanThread thread, WenyanValue[] args, boolean noReturn) throws WenyanException.WenyanThrowException {
-        WenyanValue value = handle(args);
+    default void handle(WenyanThread thread, WenyanNativeValue[] args, boolean noReturn) throws WenyanException.WenyanThrowException {
+        WenyanNativeValue value = handle(args);
         if (!noReturn)
             thread.currentRuntime().processStack.push(value);
     }
 
     @Override
-    default void call(WenyanValue.FunctionSign sign, WenyanValue self,
+    default void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self,
                       WenyanThread thread, int args, boolean noReturn)
             throws WenyanException.WenyanThrowException{
-        List<WenyanValue> argsList = new ArrayList<>(args);
+        List<WenyanNativeValue> argsList = new ArrayList<>(args);
         if (self != null)
             argsList.add(self);
         WenyanRuntime runtime = thread.currentRuntime();
@@ -66,10 +66,10 @@ public interface JavacallHandler extends WenyanFunction {
             argsList.add(runtime.processStack.pop());
 
         if (isLocal()) {
-            handle(thread, argsList.toArray(new WenyanValue[0]), noReturn);
+            handle(thread, argsList.toArray(new WenyanNativeValue[0]), noReturn);
         } else {
             JavacallHandler.Request request = new JavacallHandler.Request(
-                    thread, argsList.toArray(new WenyanValue[0]), noReturn, this);
+                    thread, argsList.toArray(new WenyanNativeValue[0]), noReturn, this);
             thread.program.requestThreads.add(request);
             thread.block();
         }
@@ -77,12 +77,12 @@ public interface JavacallHandler extends WenyanFunction {
 
     @FunctionalInterface
     interface WenyanFunction {
-        WenyanValue apply(WenyanValue[] args) throws WenyanException.WenyanThrowException;
+        WenyanNativeValue apply(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException;
     }
 
     record Request(
             WenyanThread thread,
-            WenyanValue[] args,
+            WenyanNativeValue[] args,
             boolean noReturn,
             JavacallHandler handler
     ) {

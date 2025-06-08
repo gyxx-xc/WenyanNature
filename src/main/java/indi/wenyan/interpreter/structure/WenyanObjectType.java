@@ -5,11 +5,11 @@ public interface WenyanObjectType {
 
     WenyanObjectType getParent();
 
-    WenyanValue getFunction(String id);
+    WenyanNativeValue getFunction(String id);
 
-    void addFunction(String id, WenyanValue function);
+    void addFunction(String id, WenyanNativeValue function);
 
-    WenyanValue getStaticVariable(String id);
+    WenyanNativeValue getStaticVariable(String id);
 
-    void addStaticVariable(String id, WenyanValue value);
+    void addStaticVariable(String id, WenyanNativeValue value);
 }

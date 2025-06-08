@@ -1,11 +1,11 @@
 package indi.wenyan.interpreter.structure;
 
 public interface WenyanObject {
-    WenyanValue getVariable(String name);
+    WenyanNativeValue getVariable(String name);
 
-    void setVariable(String name, WenyanValue value);
+    void setVariable(String name, WenyanNativeValue value);
 
-    WenyanValue getFunction(String name);
+    WenyanNativeValue getFunction(String name);
 
     WenyanObjectType getType();
 }

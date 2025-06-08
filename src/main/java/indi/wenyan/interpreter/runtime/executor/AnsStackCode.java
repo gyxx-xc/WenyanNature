@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.runtime.executor;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class AnsStackCode extends WenyanCode {
             case POP -> runtime.processStack.push(runtime.resultStack.pop());
             case PEEK -> runtime.processStack.push(runtime.resultStack.peek());
             case PEEK_N -> {
-                List<WenyanValue> list = new ArrayList<>();
+                List<WenyanNativeValue> list = new ArrayList<>();
                 for (int i = 0; i < args; i ++) {
                     list.add(runtime.resultStack.pop());
                     runtime.processStack.push(list.getLast());

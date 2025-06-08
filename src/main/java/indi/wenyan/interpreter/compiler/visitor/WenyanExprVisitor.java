@@ -36,7 +36,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.variables_not_match").getString(), ctx);
         }
-        WenyanValue.Type type;
+        WenyanNativeValue.Type type;
         try {
             type = WenyanDataParser.parseType(ctx.type().getText());
         } catch (WenyanException.WenyanThrowException e) {
@@ -51,7 +51,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                     visit(ctx.d.get(i));
                     bytecode.add(WenyanCodes.CAST, type.ordinal()); // STUB type
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(type, true));
+                    bytecode.add(WenyanCodes.PUSH, WenyanNativeValue.emptyOf(type, true));
                 }
                 bytecode.add(WenyanCodes.PUSH_ANS);
             } catch (WenyanException.WenyanThrowException e) {
@@ -104,7 +104,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     @Override
     public Boolean visitAssign_null_statement(WenyanRParser.Assign_null_statementContext ctx) {
         visit(ctx.data());
-        bytecode.add(WenyanCodes.PUSH, WenyanValue.NULL);
+        bytecode.add(WenyanCodes.PUSH, WenyanNativeValue.NULL);
         bytecode.add(WenyanCodes.SET_VAR);
         return true;
     }
@@ -114,7 +114,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
-        ArrayList<WenyanValue.Type> argsType = new ArrayList<>();
+        ArrayList<WenyanNativeValue.Type> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i ++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
@@ -126,8 +126,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
 
         WenyanBytecode functionBytecode = new WenyanBytecode();
-        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(
-                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanValue.Type[0]), functionBytecode);
+        WenyanNativeValue.FunctionSign sign = new WenyanNativeValue.FunctionSign(
+                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanNativeValue.Type[0]), functionBytecode);
 
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
         for (Token i : ctx.id)
@@ -136,10 +136,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
         new WenyanMainVisitor(environment).visit(ctx.statements());
 
         // add a return null at end
-        environment.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        environment.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanNativeValue.Type.NULL, null, true));
         environment.add(WenyanCodes.RET);
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanNativeValue.Type.FUNCTION, sign, true));
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
         return true;
     }
@@ -193,7 +193,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 visit(ctx.data(0));
 
             if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
-                bytecode.add(WenyanCodes.CAST, WenyanValue.Type.OBJECT_TYPE.ordinal());
+                bytecode.add(WenyanCodes.CAST, WenyanNativeValue.Type.OBJECT_TYPE.ordinal());
             bytecode.add(WenyanCodes.CALL, ctx.args.size());
         }
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -229,7 +229,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 visit(ctx.data());
 
             if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
-                bytecode.add(WenyanCodes.CAST, WenyanValue.Type.OBJECT_TYPE.ordinal());
+                bytecode.add(WenyanCodes.CAST, WenyanNativeValue.Type.OBJECT_TYPE.ordinal());
             bytecode.add(WenyanCodes.CALL, count);
         }
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -243,7 +243,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
 
         if (ctx.data() != null) visit(ctx.data());
-        else bytecode.add(WenyanCodes.PUSH, WenyanValue.NULL);
+        else bytecode.add(WenyanCodes.PUSH, WenyanNativeValue.NULL);
         bytecode.add(WenyanCodes.CREATE_TYPE, ctx.IDENTIFIER(0).getText());
 
         try {
@@ -252,7 +252,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                     visit(var.data());
                     bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText()), true));
+                    bytecode.add(WenyanCodes.PUSH, WenyanNativeValue.emptyOf(WenyanDataParser.parseType(var.type().getText()), true));
                 }
                 bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
             }
@@ -287,7 +287,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
 
-        ArrayList<WenyanValue.Type> argsType = new ArrayList<>();
+        ArrayList<WenyanNativeValue.Type> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
@@ -299,8 +299,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
 
         WenyanBytecode functionBytecode = new WenyanBytecode();
-        WenyanValue.FunctionSign sign = new WenyanValue.FunctionSign(
-                id, argsType.toArray(new WenyanValue.Type[0]), functionBytecode);
+        WenyanNativeValue.FunctionSign sign = new WenyanNativeValue.FunctionSign(
+                id, argsType.toArray(new WenyanNativeValue.Type[0]), functionBytecode);
 
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
         for (Token i : ctx.id)
@@ -309,10 +309,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
         new WenyanMainVisitor(environment).visit(ctx.statements());
 
             // add a return null at end
-        environment.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.NULL, null, true));
+        environment.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanNativeValue.Type.NULL, null, true));
         environment.add(WenyanCodes.RET);
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanValue(WenyanValue.Type.FUNCTION, sign, true));
+        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanNativeValue.Type.FUNCTION, sign, true));
         return true;
     }
 

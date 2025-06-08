@@ -6,7 +6,7 @@ import indi.wenyan.interpreter.runtime.executor.WenyanCode;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanFunction;
 import indi.wenyan.interpreter.structure.WenyanObject;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class WenyanBytecode implements WenyanFunction {
     private final List<Code> bytecode = new ArrayList<>();
-    private final List<WenyanValue> constTable = new ArrayList<>();
+    private final List<WenyanNativeValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
     private final List<Context> debugTable = new ArrayList<>();
@@ -36,11 +36,11 @@ public class WenyanBytecode implements WenyanFunction {
         return bytecode.get(index);
     }
 
-    public WenyanValue getConst(int index) {
+    public WenyanNativeValue getConst(int index) {
         return constTable.get(index);
     }
 
-    public int addConst(WenyanValue value) {
+    public int addConst(WenyanNativeValue value) {
         constTable.add(value);
         return constTable.size() - 1;
     }
@@ -105,8 +105,8 @@ public class WenyanBytecode implements WenyanFunction {
     public record Context(int line, int column, int start, int end){}
 
     @Override
-    public void call(WenyanValue.FunctionSign sign, WenyanValue self, WenyanThread thread, int args, boolean noReturn) throws WenyanException.WenyanThrowException {
-        WenyanValue[] argsList = new WenyanValue[args];
+    public void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self, WenyanThread thread, int args, boolean noReturn) throws WenyanException.WenyanThrowException {
+        WenyanNativeValue[] argsList = new WenyanNativeValue[args];
         if (sign.argTypes().length != args)
             throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
         WenyanRuntime runtime = thread.currentRuntime();
@@ -116,12 +116,12 @@ public class WenyanBytecode implements WenyanFunction {
         WenyanRuntime newRuntime = new WenyanRuntime(this);
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
-            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanValue(WenyanValue.Type.OBJECT_TYPE,
+            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanNativeValue.Type.OBJECT_TYPE,
                     ((WenyanObject) self.getValue()).getType().getParent(), true));
         }
         // STUB: assume the first n id is the args
         for (int i = 0; i < args; i++)
-            newRuntime.setVariable(getIdentifier(i), WenyanValue.varOf(argsList[i]));
+            newRuntime.setVariable(getIdentifier(i), WenyanNativeValue.varOf(argsList[i]));
         newRuntime.noReturnFlag = noReturn;
         thread.add(newRuntime);
     }

@@ -1,7 +1,7 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -10,8 +10,8 @@ public class TouchHandler implements JavacallHandler {
     public final Level level;
     public final BlockPos pos;
 
-    public static final WenyanValue.Type[] ARGS_TYPE =
-            {WenyanValue.Type.INT, WenyanValue.Type.INT, WenyanValue.Type.INT};
+    public static final WenyanNativeValue.Type[] ARGS_TYPE =
+            {WenyanNativeValue.Type.INT, WenyanNativeValue.Type.INT, WenyanNativeValue.Type.INT};
 
     public TouchHandler(Level level, BlockPos pos) {
         super();
@@ -20,7 +20,7 @@ public class TouchHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanValue handle(WenyanValue[] wenyan_args) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = JavacallHandler.getArgs(wenyan_args, ARGS_TYPE);
         args[0] = Math.max(-10, Math.min(10, (int) args[0]));
         args[1] = Math.max(-10, Math.min(10, (int) args[1]));
@@ -31,7 +31,7 @@ public class TouchHandler implements JavacallHandler {
                     new Explosion(level, null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
                             1.0f, false, Explosion.BlockInteraction.TRIGGER_BLOCK), (a1, a2) -> {});
             level.getProfiler().pop();
-        return WenyanValue.NULL;
+        return WenyanNativeValue.NULL;
     }
     @Override
     public boolean isLocal() {

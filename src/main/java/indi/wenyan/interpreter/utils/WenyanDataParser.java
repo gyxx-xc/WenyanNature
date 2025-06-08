@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
@@ -98,13 +98,13 @@ public final class WenyanDataParser {
         put("阳", true);
     }};
 
-    private static final HashMap<String, WenyanValue.Type> TYPE_MAP = new HashMap<>() {{
-        put("爻", WenyanValue.Type.BOOL);
-        put("數", WenyanValue.Type.DOUBLE);
-        put("言", WenyanValue.Type.STRING);
-        put("列", WenyanValue.Type.LIST);
+    private static final HashMap<String, WenyanNativeValue.Type> TYPE_MAP = new HashMap<>() {{
+        put("爻", WenyanNativeValue.Type.BOOL);
+        put("數", WenyanNativeValue.Type.DOUBLE);
+        put("言", WenyanNativeValue.Type.STRING);
+        put("列", WenyanNativeValue.Type.LIST);
 
-        put("数", WenyanValue.Type.DOUBLE);
+        put("数", WenyanNativeValue.Type.DOUBLE);
     }};
 
     public static int parseInt(String text) throws WenyanException.WenyanNumberException {
@@ -154,7 +154,7 @@ public final class WenyanDataParser {
         return text.substring(2, text.length() - 2);
     }
 
-    public static WenyanValue.Type parseType(String text) throws WenyanException.WenyanDataException {
+    public static WenyanNativeValue.Type parseType(String text) throws WenyanException.WenyanDataException {
         if (TYPE_MAP.containsKey(text))
             return TYPE_MAP.get(text);
         else

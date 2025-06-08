@@ -26,82 +26,82 @@ public final class WenyanPackages {
     public static final String MOD_ID = "模";
 
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
-            .function("加", WenyanPackageBuilder.reduceWith(WenyanValue::add))
-            .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(WenyanValue::sub))
-            .function("乘", WenyanPackageBuilder.reduceWith(WenyanValue::mul))
-            .function("除", WenyanPackageBuilder.reduceWith(WenyanValue::div))
-            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanValue::add))
+            .function("加", WenyanPackageBuilder.reduceWith(WenyanNativeValue::add))
+            .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(WenyanNativeValue::sub))
+            .function("乘", WenyanPackageBuilder.reduceWith(WenyanNativeValue::mul))
+            .function("除", WenyanPackageBuilder.reduceWith(WenyanNativeValue::div))
+            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanNativeValue::add))
 
             .function(new String[]{"變","变"}, args -> args[0].not())
             .function("充", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanValue value = args[0].casting(WenyanValue.Type.LIST);
+                WenyanNativeValue value = args[0].casting(WenyanNativeValue.Type.LIST);
                 WenyanArrayObject list = (WenyanArrayObject) value.getValue();
                 for (int i = 1; i < args.length; i++) {
-                    list.add(WenyanValue.varOf(args[i]));
+                    list.add(WenyanNativeValue.varOf(args[i]));
                 }
                 return value;
             })
 
             // 模, 且, 或
-            .function("模", WenyanPackageBuilder.reduceWith(WenyanValue::mod))
+            .function("模", WenyanPackageBuilder.reduceWith(WenyanNativeValue::mod))
             .function("且", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalAnd))
             .function("或", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalOr))
 
             .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !a.equals(b)))
             .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) <= 0))
             .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) >= 0))
-            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation(WenyanValue::equals))
+            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation(WenyanNativeValue::equals))
             .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) > 0))
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) < 0))
 
-            .function("「」", args -> WenyanValue.NULL)
+            .function("「」", args -> WenyanNativeValue.NULL)
             .function("書", args -> {
                 System.out.println(Arrays.toString(args));
-                return WenyanValue.NULL;
+                return WenyanNativeValue.NULL;
             })
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
-            .constant("「圓周率」", WenyanValue.Type.DOUBLE, Math.PI)
-            .constant("「倍圓周率」", WenyanValue.Type.DOUBLE, Math.TAU)
-            .constant("「半圓周率」", WenyanValue.Type.DOUBLE, Math.PI / 2)
-            .constant("「四分圓周率」", WenyanValue.Type.DOUBLE, Math.PI / 4)
-            .constant("「自然常數」", WenyanValue.Type.DOUBLE, Math.E)
-            .constant("「歐拉常數」", WenyanValue.Type.DOUBLE, 0.5772156649)
-            .constant("「黃金分割數」", WenyanValue.Type.DOUBLE, 1.6180339887)
-            .constant("「二之平方根」", WenyanValue.Type.DOUBLE, Math.sqrt(2))
-            .constant("「二之對數」", WenyanValue.Type.DOUBLE, Math.log(2))
-            .constant("「十之對數」", WenyanValue.Type.DOUBLE, Math.log(10))
-            .function("「正弦」", args -> Math.sin((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「餘弦」", args -> Math.cos((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「反正弦」", args -> Math.asin((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「反餘弦」", args -> Math.acos((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「正切」", args -> Math.tan((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「反正切」", args -> Math.atan((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「勾股求角」", args -> Math.atan2((double)args[0], (double)args[1]), WenyanValue.Type.DOUBLE)
-            .function("「勾股求弦」", args -> Math.hypot((double)args[0], (double)args[1]), WenyanValue.Type.DOUBLE)
-            .function("「對數」", args -> Math.log((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「指數」", args -> Math.exp((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「冪」", args -> Math.pow((double)args[0], (double)args[1]), WenyanValue.Type.DOUBLE)
-            .function("「平方根」", args -> Math.sqrt((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「絕對」", args -> Math.abs((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「取頂」", args -> Math.ceil((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「取底」", args -> Math.floor((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「取整」", args -> Math.round((double)args[0]), WenyanValue.Type.DOUBLE)
-            .function("「正負」", args -> Math.signum((double)args[0]), WenyanValue.Type.DOUBLE)
+            .constant("「圓周率」", WenyanNativeValue.Type.DOUBLE, Math.PI)
+            .constant("「倍圓周率」", WenyanNativeValue.Type.DOUBLE, Math.TAU)
+            .constant("「半圓周率」", WenyanNativeValue.Type.DOUBLE, Math.PI / 2)
+            .constant("「四分圓周率」", WenyanNativeValue.Type.DOUBLE, Math.PI / 4)
+            .constant("「自然常數」", WenyanNativeValue.Type.DOUBLE, Math.E)
+            .constant("「歐拉常數」", WenyanNativeValue.Type.DOUBLE, 0.5772156649)
+            .constant("「黃金分割數」", WenyanNativeValue.Type.DOUBLE, 1.6180339887)
+            .constant("「二之平方根」", WenyanNativeValue.Type.DOUBLE, Math.sqrt(2))
+            .constant("「二之對數」", WenyanNativeValue.Type.DOUBLE, Math.log(2))
+            .constant("「十之對數」", WenyanNativeValue.Type.DOUBLE, Math.log(10))
+            .function("「正弦」", args -> Math.sin((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「餘弦」", args -> Math.cos((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「反正弦」", args -> Math.asin((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「反餘弦」", args -> Math.acos((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「正切」", args -> Math.tan((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「反正切」", args -> Math.atan((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「勾股求角」", args -> Math.atan2((double)args[0], (double)args[1]), WenyanNativeValue.Type.DOUBLE)
+            .function("「勾股求弦」", args -> Math.hypot((double)args[0], (double)args[1]), WenyanNativeValue.Type.DOUBLE)
+            .function("「對數」", args -> Math.log((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「指數」", args -> Math.exp((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「冪」", args -> Math.pow((double)args[0], (double)args[1]), WenyanNativeValue.Type.DOUBLE)
+            .function("「平方根」", args -> Math.sqrt((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「絕對」", args -> Math.abs((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「取頂」", args -> Math.ceil((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「取底」", args -> Math.floor((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「取整」", args -> Math.round((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .function("「正負」", args -> Math.signum((double)args[0]), WenyanNativeValue.Type.DOUBLE)
             .build();
 
     public static final WenyanRuntime BIT_PACKAGES = WenyanPackageBuilder.create()
-            .function("「左移」", args -> (int)args[0]<<(int)args[1], WenyanValue.Type.INT)
-            .function("「右移」", args -> (int)args[0]>>(int)args[1], WenyanValue.Type.INT)
-            .function("「補零右移」", args -> (int)args[0]>>>(int)args[1], WenyanValue.Type.INT)
-            .function("「位與」", args -> (int)args[0]&(int)args[1], WenyanValue.Type.INT)
-            .function("「位或」", args -> (int)args[0]|(int)args[1], WenyanValue.Type.INT)
-            .function("「異或」", args -> (int)args[0]^(int)args[1], WenyanValue.Type.INT)
-            .function("「與非」", args -> ~((int)args[0]&(int)args[1]), WenyanValue.Type.INT)
-            .function("「位變」", args -> ~(int)args[0], WenyanValue.Type.INT)
+            .function("「左移」", args -> (int)args[0]<<(int)args[1], WenyanNativeValue.Type.INT)
+            .function("「右移」", args -> (int)args[0]>>(int)args[1], WenyanNativeValue.Type.INT)
+            .function("「補零右移」", args -> (int)args[0]>>>(int)args[1], WenyanNativeValue.Type.INT)
+            .function("「位與」", args -> (int)args[0]&(int)args[1], WenyanNativeValue.Type.INT)
+            .function("「位或」", args -> (int)args[0]|(int)args[1], WenyanNativeValue.Type.INT)
+            .function("「異或」", args -> (int)args[0]^(int)args[1], WenyanNativeValue.Type.INT)
+            .function("「與非」", args -> ~((int)args[0]&(int)args[1]), WenyanNativeValue.Type.INT)
+            .function("「位變」", args -> ~(int)args[0], WenyanNativeValue.Type.INT)
             .build();
 
     public static final WenyanRuntime RANDOM_PACKAGES = WenyanPackageBuilder.create()
@@ -110,10 +110,10 @@ public final class WenyanPackages {
                 case 1 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0]);
                 case 2 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0], (int)args[1]);
                 default -> 0;
-            }, WenyanValue.Type.INT)
-            .function("「占分」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble(), WenyanValue.Type.DOUBLE)
-            .function("「占偏」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle((double) args[0], (double) args[1]), WenyanValue.Type.DOUBLE)
-            .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanValue.Type.BOOL)
+            }, WenyanNativeValue.Type.INT)
+            .function("「占分」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble(), WenyanNativeValue.Type.DOUBLE)
+            .function("「占偏」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle((double) args[0], (double) args[1]), WenyanNativeValue.Type.DOUBLE)
+            .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanNativeValue.Type.BOOL)
             .build();
 
     public static WenyanRuntime handEnvironment(Player holder, HandRunnerEntity runner) {
@@ -155,7 +155,7 @@ public final class WenyanPackages {
                 .environment(checker.inputEnvironment())
                 .function("書", args -> {
                     checker.accept(args);
-                    return WenyanValue.NULL;
+                    return WenyanNativeValue.NULL;
                 })
                 .build();
     }
@@ -173,9 +173,9 @@ public final class WenyanPackages {
                         .var("「「東西」」")
                         .var("「「南北」」")
                         .makeConstructor())
-                .addStatic("「「零」」", Arrays.asList(new WenyanValue(WenyanValue.Type.INT, 0, true),
-                        new WenyanValue(WenyanValue.Type.INT, 0, true),
-                        new WenyanValue(WenyanValue.Type.INT, 0, true))
-                        .toArray(WenyanValue[]::new));
+                .addStatic("「「零」」", Arrays.asList(new WenyanNativeValue(WenyanNativeValue.Type.INT, 0, true),
+                        new WenyanNativeValue(WenyanNativeValue.Type.INT, 0, true),
+                        new WenyanNativeValue(WenyanNativeValue.Type.INT, 0, true))
+                        .toArray(WenyanNativeValue[]::new));
     }
 }

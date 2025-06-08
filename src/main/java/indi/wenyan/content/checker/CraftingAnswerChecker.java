@@ -1,14 +1,14 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 
 public abstract class CraftingAnswerChecker {
-    protected final ArrayList<WenyanValue> input = new ArrayList<>();
+    protected final ArrayList<WenyanNativeValue> input = new ArrayList<>();
     protected final ArrayList<String> inputName = new ArrayList<>();
     protected final RandomSource random;
 
@@ -27,7 +27,7 @@ public abstract class CraftingAnswerChecker {
 
     abstract protected void genInput();
 
-    abstract public void accept(WenyanValue value);
+    abstract public void accept(WenyanNativeValue value);
 
     protected void setStatus(Result result) {
         this.result = result;
@@ -42,7 +42,7 @@ public abstract class CraftingAnswerChecker {
         this.random = random;
     }
 
-    public void accept(WenyanValue[] value) {
+    public void accept(WenyanNativeValue[] value) {
         for (var v : value)
             accept(v);
     }

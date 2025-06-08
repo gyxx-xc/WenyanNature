@@ -2,7 +2,7 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -19,13 +19,13 @@ public class SelfPositionHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanValue handle(WenyanValue[] args) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException {
         Vec3 vec = runner.position().subtract(holder.position());
         return WenyanPackages.WenyanObjectTypes.VECTOR3.newObject(
-                Arrays.asList(new WenyanValue(WenyanValue.Type.DOUBLE, vec.y, true)
-                        , new WenyanValue(WenyanValue.Type.DOUBLE, vec.x, true)
-                        , new WenyanValue(WenyanValue.Type.DOUBLE, vec.z, true))
-                        .toArray(WenyanValue[]::new));
+                Arrays.asList(new WenyanNativeValue(WenyanNativeValue.Type.DOUBLE, vec.y, true)
+                        , new WenyanNativeValue(WenyanNativeValue.Type.DOUBLE, vec.x, true)
+                        , new WenyanNativeValue(WenyanNativeValue.Type.DOUBLE, vec.z, true))
+                        .toArray(WenyanNativeValue[]::new));
     }
     @Override
     public boolean isLocal() {
