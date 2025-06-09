@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
-public interface WenyanObject {
+public interface WenyanObject extends WenyanValue {
     WenyanNativeValue getVariable(String name);
 
     void setVariable(String name, WenyanNativeValue value);
