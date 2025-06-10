@@ -3,12 +3,17 @@ package indi.wenyan.setup;
 import com.mojang.datafixers.DSL;
 import indi.wenyan.WenyanNature;
 import indi.wenyan.content.block.*;
+import indi.wenyan.content.data.OutputData;
+import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.WenyanHandRunner;
+import indi.wenyan.setup.network.OutputInformationHandler;
+import indi.wenyan.setup.network.OutputInformationPacket;
 import indi.wenyan.setup.network.ProgramTextServerPayloadHandler;
 import indi.wenyan.setup.network.RunnerTextPacket;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -22,9 +27,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -41,6 +46,7 @@ public class Registration {
         ENTITY.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         MENU_TYPE.register(modEventBus);
+        DATA.register(modEventBus);
 
         modEventBus.addListener(Registration::onRegisterPayloadHandler);
     }
@@ -51,6 +57,7 @@ public class Registration {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS;
     public static final DeferredRegister<EntityType<?>> ENTITY;
     public static final DeferredRegister<MenuType<?>> MENU_TYPE;
+    public static final DeferredRegister<DataComponentType<?>> DATA;
 
     public static final DeferredItem<Item> HAND_RUNNER;
     public static final DeferredItem<Item> HAND_RUNNER_1;
@@ -70,6 +77,9 @@ public class Registration {
 
     public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER;
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<RunnerTierData>> TIER_DATA;
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<OutputData>> OUTPUT_DATA;
+
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
                 .versioned("1.0")
@@ -77,9 +87,12 @@ public class Registration {
         registrar.playToServer(
                 RunnerTextPacket.TYPE,
                 RunnerTextPacket.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        (a1, a2)->{},
-                        ProgramTextServerPayloadHandler::handleRunnerTextPacket));
+                new ProgramTextServerPayloadHandler());
+        registrar.commonToClient(
+                OutputInformationPacket.TYPE,
+                OutputInformationPacket.STREAM_CODEC,
+                new OutputInformationHandler()
+        );
     }
 
     static {
@@ -89,6 +102,7 @@ public class Registration {
         MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
         ITEMS = DeferredRegister.createItems(MODID);
         BLOCKS = DeferredRegister.createBlocks(MODID);
+        DATA = DeferredRegister.createDataComponents(MODID);
 
         HAND_RUNNER = ITEMS.registerItem("hand_runner_0",
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 0));
@@ -131,6 +145,16 @@ public class Registration {
                 () -> BlockEntityType.Builder
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
                         .build(DSL.remainderType()));
+
+        TIER_DATA = DATA.register("runner_tier_data",
+                () -> DataComponentType.<RunnerTierData>builder()
+                        .persistent(RunnerTierData.CODEC)
+                        .build());
+        OUTPUT_DATA = DATA.register("output_data",
+                () -> DataComponentType.<OutputData>builder()
+                        .persistent(OutputData.CODEC)
+                        .networkSynchronized(OutputData.STREAM_CODEC)
+                        .build());
 
         CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
                 .title(Component.translatable("title.wenyan_nature.create_tab"))

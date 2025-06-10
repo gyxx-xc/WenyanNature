@@ -132,7 +132,7 @@ public final class WenyanPackages {
     public static WenyanRuntime blockEnvironment(BlockPos pos, BlockState block, Player holder, BlockRunner runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
-                .function(new String[] {"書","书"}, new OutputHandler(holder))
+                .function(new String[] {"書","书"}, new NewOutputHandler(runner))
                 .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()

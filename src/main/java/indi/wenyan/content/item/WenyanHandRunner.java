@@ -1,5 +1,6 @@
 package indi.wenyan.content.item;
 
+import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.HandRunnerScreen;
 import indi.wenyan.setup.Registration;
@@ -19,6 +20,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,7 +62,8 @@ public class WenyanHandRunner extends BlockItem {
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
         if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown()) {
-            context.getItemInHand().set(DataComponents.DAMAGE, runningLevel);
+            context.getItemInHand().set(Registration.TIER_DATA.get(),
+                    new RunnerTierData(runningLevel));
             return super.useOn(context);
         }
         return InteractionResult.PASS;

@@ -1,5 +1,6 @@
 package indi.wenyan.content.block;
 
+import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -37,7 +38,7 @@ public class BlockRunner extends BlockEntity {
 
     public List<String> pages;
     public int speed;
-    public String output = "";
+    private final StringBuilder output = new StringBuilder();
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
         super(Registration.BLOCK_RUNNER.get(), pos, blockState);
@@ -72,6 +73,20 @@ public class BlockRunner extends BlockEntity {
         this.program = other.program;
     }
 
+    public void addOutput(String text) {
+        if (!output.isEmpty()) {
+            output.append("\n");
+        }
+        output.append(text);
+    }
+
+    public List<String> getOutput() {
+        if (output.isEmpty()) {
+            return List.of();
+        }
+        return List.of(output.toString().split("\n")).reversed();
+    }
+
     @SuppressWarnings("unused")
     private void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null) {
@@ -102,8 +117,16 @@ public class BlockRunner extends BlockEntity {
         WritableBookContent content = components().get(DataComponents.WRITABLE_BOOK_CONTENT);
         if (content != null)
             pages = content.getPages(false).toList();
-        Object o = components().get(DataComponents.DAMAGE);
-        if (o != null) speed = (int)Math.pow(10, Math.min((int) o, 3));
+        Object o = components().get(Registration.TIER_DATA.get());
+        int speedTier;
+        if (o instanceof RunnerTierData(int tier)) {
+            speedTier = tier;
+        } else {
+//            WenyanException.handleException(null, "BlockRunner does not have a valid tier data component.");
+            return;
+        }
+
+        speed = (int)Math.pow(10, Math.min(speedTier, 3));
         super.setChanged();
     }
 

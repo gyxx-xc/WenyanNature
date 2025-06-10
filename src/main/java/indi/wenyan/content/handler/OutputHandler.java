@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
+@Deprecated
 public class OutputHandler implements JavacallHandler {
     private final Player player;
     public OutputHandler(Player player) {
