@@ -4,6 +4,7 @@ import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -24,7 +25,7 @@ public class BulletHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanTypeException {
-        Object[] newArgs = JavacallHandler.getArgs(args, ARGS_TYPE);
+        Object[] newArgs = JavacallHandlers.getArgs(args, ARGS_TYPE);
         newArgs[0] = Math.max(-10, Math.min(10, (double) newArgs[0]));
         newArgs[1] = Math.max(-10, Math.min(10, (double) newArgs[1]));
         newArgs[2] = Math.max(-10, Math.min(10, (double) newArgs[2]));

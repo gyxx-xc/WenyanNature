@@ -4,6 +4,7 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -25,7 +26,7 @@ public class BlockMoveHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
-        Object[] args = JavacallHandler.getArgs(wenyan_args, ARGS_TYPE);
+        Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
         args[0] = Math.max(-10, Math.min(10, (int) args[0]));
         args[1] = Math.max(-10, Math.min(10, (int) args[1]));
         args[2] = Math.max(-10, Math.min(10, (int) args[2]));

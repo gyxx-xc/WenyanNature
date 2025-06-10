@@ -1,9 +1,9 @@
 package indi.wenyan.interpreter.runtime;
 
-import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.utils.JavacallHandlers;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
@@ -22,7 +22,7 @@ public class WenyanProgram {
 
     public WenyanThread mainThread = new WenyanThread(this);
     public Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
-    public Queue<JavacallHandler.Request> requestThreads = new ConcurrentLinkedQueue<>();
+    public Queue<JavacallHandlers.Request> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
     private Thread programJavaThread;
@@ -51,7 +51,7 @@ public class WenyanProgram {
 
     public void handle() {
         while (!requestThreads.isEmpty()) {
-            JavacallHandler.Request request = requestThreads.poll();
+            JavacallHandlers.Request request = requestThreads.poll();
             try {
                 request.handle();
             } catch (WenyanException.WenyanThrowException | WenyanException e) {
