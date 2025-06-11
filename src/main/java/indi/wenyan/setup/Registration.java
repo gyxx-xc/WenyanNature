@@ -9,6 +9,7 @@ import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.WenyanHandRunner;
+import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.setup.network.OutputInformationHandler;
 import indi.wenyan.setup.network.OutputInformationPacket;
 import indi.wenyan.setup.network.ProgramTextServerPayloadHandler;
@@ -23,6 +24,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -58,6 +61,8 @@ public class Registration {
     public static final DeferredRegister<EntityType<?>> ENTITY;
     public static final DeferredRegister<MenuType<?>> MENU_TYPE;
     public static final DeferredRegister<DataComponentType<?>> DATA;
+    public static final DeferredRegister<RecipeSerializer<?>> SERIALIZER;
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE;
 
     public static final DeferredItem<Item> HAND_RUNNER;
     public static final DeferredItem<Item> HAND_RUNNER_1;
@@ -79,6 +84,9 @@ public class Registration {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<RunnerTierData>> TIER_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<OutputData>> OUTPUT_DATA;
+
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
 
     private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
@@ -103,6 +111,8 @@ public class Registration {
         ITEMS = DeferredRegister.createItems(MODID);
         BLOCKS = DeferredRegister.createBlocks(MODID);
         DATA = DeferredRegister.createDataComponents(MODID);
+        SERIALIZER = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
+        RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
 
         HAND_RUNNER = ITEMS.registerItem("hand_runner_0",
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 0));
@@ -155,6 +165,16 @@ public class Registration {
                         .persistent(OutputData.CODEC)
                         .networkSynchronized(OutputData.STREAM_CODEC)
                         .build());
+
+        ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register("answering_recipe",
+                AnsweringRecipe.Serializer::new);
+        ANSWERING_RECIPE_TYPE = RECIPE_TYPE.register("answering_recipe",
+                () -> new RecipeType<>() {
+                    @Override
+                    public String toString() {
+                        return "answering_recipe";
+                    }
+                });
 
         CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
                 .title(Component.translatable("title.wenyan_nature.create_tab"))
