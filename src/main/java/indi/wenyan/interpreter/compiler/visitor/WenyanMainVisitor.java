@@ -34,7 +34,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
             bytecode.add(WenyanCodes.IMPORT, ctx.STRING_LITERAL().getText());
         } else {
             bytecode.add(WenyanCodes.PUSH,
-                    new WenyanNativeValue(WenyanNativeValue.Type.STRING, ctx.STRING_LITERAL().getText(), true));
+                    new WenyanNativeValue(WenyanType.STRING, ctx.STRING_LITERAL().getText(), true));
             for (TerminalNode id : ctx.IDENTIFIER())
                 bytecode.add(WenyanCodes.IMPORT_FROM, id.getText());
             bytecode.add(WenyanCodes.POP);

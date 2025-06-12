@@ -4,6 +4,8 @@ import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -14,8 +16,8 @@ public class BulletHandler implements JavacallHandler {
     public final HandRunnerEntity entity;
     public final Player holder;
 
-    public static final WenyanNativeValue.Type[] ARGS_TYPE =
-            {WenyanNativeValue.Type.DOUBLE, WenyanNativeValue.Type.DOUBLE, WenyanNativeValue.Type.DOUBLE, WenyanNativeValue.Type.DOUBLE, WenyanNativeValue.Type.INT};
+    public static final WenyanType[] ARGS_TYPE =
+            {WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.INT};
 
     public BulletHandler(Level level, HandRunnerEntity entity, Player holder) {
         this.level = level;
@@ -34,7 +36,7 @@ public class BulletHandler implements JavacallHandler {
         Vec3 dir = new Vec3((double)newArgs[0], (double)newArgs[1], (double)newArgs[2]);
         BulletEntity bullet = new BulletEntity(level, entity.getPosition(0), dir, (double) newArgs[3]/10, (int)newArgs[4], holder);
         level.addFreshEntity(bullet);
-        return WenyanNativeValue.NULL;
+        return WenyanValue.NULL;
     }
     @Override
     public boolean isLocal() {

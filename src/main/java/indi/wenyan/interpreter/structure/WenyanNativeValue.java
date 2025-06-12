@@ -8,47 +8,29 @@ import java.util.HashMap;
 
 // about to Deprecated and change to WenyanValue
 public class WenyanNativeValue implements WenyanValue {
-    public enum Type {
-        NULL,
-        INT, // used as default number type
-        DOUBLE,
-        BOOL,
-        STRING,
-        LIST,
-        OBJECT,
-        OBJECT_TYPE,
-        FUNCTION;
 
-        @Override
-        public String toString() {
-            return Component.translatable("type.wenyan_nature." + name().toLowerCase()).getString();
-        }
-    }
-
-    public static final HashMap<Type, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
-        put(Type.STRING, 0);
-        put(Type.LIST, 1);
-        put(Type.FUNCTION, 1);
-        put(Type.OBJECT, 1);
-        put(Type.OBJECT_TYPE, 1);
-        put(Type.DOUBLE, 2);
-        put(Type.INT, 3);
-        put(Type.BOOL, 4);
+    public static final HashMap<WenyanType, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
+        put(WenyanType.STRING, 0);
+        put(WenyanType.LIST, 1);
+        put(WenyanType.FUNCTION, 1);
+        put(WenyanType.OBJECT, 1);
+        put(WenyanType.OBJECT_TYPE, 1);
+        put(WenyanType.DOUBLE, 2);
+        put(WenyanType.INT, 3);
+        put(WenyanType.BOOL, 4);
     }};
 
-    private final Type type;
+    private final WenyanType type;
     private Object value;
     private final boolean isConst;
 
-    public static final WenyanNativeValue NULL = new WenyanNativeValue(Type.NULL, null, true);
-
-    public WenyanNativeValue(Type type, Object value, boolean isConst) {
+    public WenyanNativeValue(WenyanType type, Object value, boolean isConst) {
         this.type = type;
         this.value = value;
         this.isConst = isConst;
     }
 
-    public Type getType() {
+    public WenyanType type() {
         return type;
     }
 
@@ -64,7 +46,7 @@ public class WenyanNativeValue implements WenyanValue {
         return isConst;
     }
 
-    public static WenyanNativeValue emptyOf(Type type, boolean isConst) throws WenyanException.WenyanTypeException {
+    public static WenyanNativeValue emptyOf(WenyanType type, boolean isConst) throws WenyanException.WenyanTypeException {
         Object value1 = switch (type) {
             case NULL -> throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_create_empty_of_null").getString());
             case INT -> 0;
@@ -98,58 +80,58 @@ public class WenyanNativeValue implements WenyanValue {
     // double -> int
     // ~list -> bool
     // obj -> function (constructor)
-    public WenyanNativeValue casting(Type type) throws WenyanException.WenyanTypeException {
+    public WenyanNativeValue casting(WenyanType type) throws WenyanException.WenyanTypeException {
         if (this.type == type)
             return this;
-        if (this.type == Type.NULL)
+        if (this.type == WenyanType.NULL)
             return this;
-        if (type == Type.INT) {
-            if (this.type == Type.DOUBLE) {
-                return new WenyanNativeValue(Type.INT, (int) (double) value, isConst);
+        if (type == WenyanType.INT) {
+            if (this.type == WenyanType.DOUBLE) {
+                return new WenyanNativeValue(WenyanType.INT, (int) (double) value, isConst);
             }
-            if (this.type == Type.BOOL) {
-                return new WenyanNativeValue(Type.INT, (boolean) value ? 1 : 0, isConst);
-            }
-        }
-        if (type == Type.DOUBLE) {
-            if (this.type == Type.INT) {
-                return new WenyanNativeValue(Type.DOUBLE, (double) (int) value, isConst);
-            }
-            if (this.type == Type.BOOL) {
-                return new WenyanNativeValue(Type.DOUBLE, (boolean) value ? 1.0 : 0.0, isConst);
+            if (this.type == WenyanType.BOOL) {
+                return new WenyanNativeValue(WenyanType.INT, (boolean) value ? 1 : 0, isConst);
             }
         }
-        if (type == Type.STRING) {
-            return new WenyanNativeValue(Type.STRING, this.toString(), isConst);
-        }
-        if (type == Type.BOOL) {
-            if (this.type == Type.INT) {
-                return new WenyanNativeValue(Type.BOOL, (int) value != 0, isConst);
+        if (type == WenyanType.DOUBLE) {
+            if (this.type == WenyanType.INT) {
+                return new WenyanNativeValue(WenyanType.DOUBLE, (double) (int) value, isConst);
             }
-            if (this.type == Type.DOUBLE) {
-                return new WenyanNativeValue(Type.BOOL, (double) value != 0.0, isConst);
-            }
-            if (this.type == Type.STRING) {
-                return new WenyanNativeValue(Type.BOOL, !((String) value).isEmpty(), isConst);
-            }
-            if (this.type == Type.LIST) {
-                return new WenyanNativeValue(Type.BOOL, !((ArrayList<?>) value).isEmpty(), isConst);
+            if (this.type == WenyanType.BOOL) {
+                return new WenyanNativeValue(WenyanType.DOUBLE, (boolean) value ? 1.0 : 0.0, isConst);
             }
         }
-        if (type == Type.FUNCTION) {
-            if (this.type == Type.OBJECT_TYPE) {
+        if (type == WenyanType.STRING) {
+            return new WenyanNativeValue(WenyanType.STRING, this.toString(), isConst);
+        }
+        if (type == WenyanType.BOOL) {
+            if (this.type == WenyanType.INT) {
+                return new WenyanNativeValue(WenyanType.BOOL, (int) value != 0, isConst);
+            }
+            if (this.type == WenyanType.DOUBLE) {
+                return new WenyanNativeValue(WenyanType.BOOL, (double) value != 0.0, isConst);
+            }
+            if (this.type == WenyanType.STRING) {
+                return new WenyanNativeValue(WenyanType.BOOL, !((String) value).isEmpty(), isConst);
+            }
+            if (this.type == WenyanType.LIST) {
+                return new WenyanNativeValue(WenyanType.BOOL, !((ArrayList<?>) value).isEmpty(), isConst);
+            }
+        }
+        if (type == WenyanType.FUNCTION) {
+            if (this.type == WenyanType.OBJECT_TYPE) {
                 return ((WenyanObjectType) this.value).getFunction(WenyanDataParser.CONSTRUCTOR_ID);
             }
         }
-        if (type == Type.OBJECT) {
-            if (this.type == Type.LIST) {
+        if (type == WenyanType.OBJECT) {
+            if (this.type == WenyanType.LIST) {
                 return this;
             }
         }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 
-    public Type widerType(Type type) {
+    public WenyanType widerType(WenyanType type) {
         if (TYPE_CASTING_ORDER.get(this.type) < TYPE_CASTING_ORDER.get(type))
             return this.type;
         return type;
@@ -157,7 +139,7 @@ public class WenyanNativeValue implements WenyanValue {
 
     public WenyanNativeValue add(WenyanNativeValue other) throws WenyanException.WenyanTypeException {
         // require type >int
-        Type addType = widerType(other.widerType(Type.INT)); // widest type in three
+        WenyanType addType = widerType(other.widerType(WenyanType.INT)); // widest type in three
         WenyanNativeValue left = this.casting(addType);
         WenyanNativeValue right = other.casting(addType);
         return switch (addType) {
@@ -175,7 +157,7 @@ public class WenyanNativeValue implements WenyanValue {
 
     public WenyanNativeValue sub(WenyanNativeValue other) throws WenyanException.WenyanTypeException {
         // require type >int
-        Type subType = widerType(other.widerType(Type.INT)); // widest type in three
+        WenyanType subType = widerType(other.widerType(WenyanType.INT)); // widest type in three
         WenyanNativeValue left = this.casting(subType);
         WenyanNativeValue right = other.casting(subType);
         return switch (subType) {
@@ -187,7 +169,7 @@ public class WenyanNativeValue implements WenyanValue {
 
     public WenyanNativeValue mul(WenyanNativeValue other) throws WenyanException.WenyanTypeException {
         // require type >int
-        Type mulType = widerType(other.widerType(Type.INT)); // widest type in three
+        WenyanType mulType = widerType(other.widerType(WenyanType.INT)); // widest type in three
         WenyanNativeValue left = this.casting(mulType);
         WenyanNativeValue right = other.casting(mulType);
         return switch (mulType) {
@@ -199,10 +181,10 @@ public class WenyanNativeValue implements WenyanValue {
 
     public WenyanNativeValue div(WenyanNativeValue other) throws WenyanException.WenyanTypeException {
         // require type double
-        Type divType = widerType(other.widerType(Type.DOUBLE)); // widest type in three
+        WenyanType divType = widerType(other.widerType(WenyanType.DOUBLE)); // widest type in three
         WenyanNativeValue left = this.casting(divType);
         WenyanNativeValue right = other.casting(divType);
-        if (divType == Type.DOUBLE) {
+        if (divType == WenyanType.DOUBLE) {
             return new WenyanNativeValue(divType, (double) left.value / (double) right.value, true);
         } else {
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.type_cannot_be_divided").getString());
@@ -211,13 +193,13 @@ public class WenyanNativeValue implements WenyanValue {
 
     public WenyanNativeValue not() throws WenyanException.WenyanTypeException {
         // require type bool
-        WenyanNativeValue wenyanValue = this.casting(Type.BOOL);
-        return new WenyanNativeValue(Type.BOOL, !(boolean) wenyanValue.value, true);
+        WenyanNativeValue wenyanValue = this.casting(WenyanType.BOOL);
+        return new WenyanNativeValue(WenyanType.BOOL, !(boolean) wenyanValue.value, true);
     }
 
     public WenyanNativeValue mod(WenyanNativeValue other) throws WenyanException.WenyanTypeException {
         // require type >int
-        Type modType = widerType(other.widerType(Type.INT)); // widest type in three
+        WenyanType modType = widerType(other.widerType(WenyanType.INT)); // widest type in three
         WenyanNativeValue left = this.casting(modType);
         WenyanNativeValue right = other.casting(modType);
         return switch (modType) {
@@ -228,7 +210,7 @@ public class WenyanNativeValue implements WenyanValue {
     }
 
     public boolean equals(WenyanNativeValue other) throws WenyanException.WenyanTypeException {
-        Type eqType = widerType(other.type);
+        WenyanType eqType = widerType(other.type);
         WenyanNativeValue left, right;
         try {
             left = this.casting(eqType);
@@ -247,7 +229,7 @@ public class WenyanNativeValue implements WenyanValue {
 
     public int compareTo(WenyanNativeValue other) throws WenyanException.WenyanTypeException {
         // require type >int
-        Type cmpType = widerType(other.widerType(Type.INT)); // widest type in three
+        WenyanType cmpType = widerType(other.widerType(WenyanType.INT)); // widest type in three
         WenyanNativeValue left = this.casting(cmpType);
         WenyanNativeValue right = other.casting(cmpType);
         return switch (cmpType) {
@@ -318,5 +300,5 @@ public class WenyanNativeValue implements WenyanValue {
         return sb.toString();
     }
 
-    public record FunctionSign(String name, Type[] argTypes, WenyanFunction function) {}
+    public record FunctionSign(String name, WenyanType[] argTypes, WenyanFunction function) {}
 }

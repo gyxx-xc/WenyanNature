@@ -4,12 +4,13 @@ import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanType;
 import net.minecraft.network.chat.Component;
 
 public final class JavacallHandlers {
     private JavacallHandlers() {}
 
-    public static Object[] getArgs(WenyanNativeValue[] args, WenyanNativeValue.Type[] args_type) throws WenyanException.WenyanTypeException {
+    public static Object[] getArgs(WenyanNativeValue[] args, WenyanType[] args_type) throws WenyanException.WenyanTypeException {
         Object[] newArgs = new Object[args.length];
         if (args.length != args_type.length)
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());

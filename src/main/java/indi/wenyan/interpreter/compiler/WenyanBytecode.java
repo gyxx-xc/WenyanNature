@@ -3,10 +3,7 @@ package indi.wenyan.interpreter.compiler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanFunction;
-import indi.wenyan.interpreter.structure.WenyanObject;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -116,7 +113,7 @@ public class WenyanBytecode implements WenyanFunction {
         WenyanRuntime newRuntime = new WenyanRuntime(this);
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
-            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanNativeValue.Type.OBJECT_TYPE,
+            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanType.OBJECT_TYPE,
                     ((WenyanObject) self.getValue()).getType().getParent(), true));
         }
         // STUB: assume the first n id is the args

@@ -15,14 +15,14 @@ public class WenyanDataVisitor extends WenyanVisitor {
     public Boolean visitData_primary(WenyanRParser.Data_primaryContext ctx) {
         try {
             WenyanNativeValue value = switch (ctx.data_type.getType()) {
-                case WenyanRParser.BOOL_VALUE -> new WenyanNativeValue(WenyanNativeValue.Type.BOOL,
+                case WenyanRParser.BOOL_VALUE -> new WenyanNativeValue(WenyanType.BOOL,
                         WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()), true);
-                case WenyanRParser.INT_NUM -> new WenyanNativeValue(WenyanNativeValue.Type.INT,
+                case WenyanRParser.INT_NUM -> new WenyanNativeValue(WenyanType.INT,
                         WenyanDataParser.parseInt(ctx.INT_NUM().getText()), true);
-                case WenyanRParser.FLOAT_NUM -> new WenyanNativeValue(WenyanNativeValue.Type.DOUBLE,
+                case WenyanRParser.FLOAT_NUM -> new WenyanNativeValue(WenyanType.DOUBLE,
                         WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()),
                         true);
-                case WenyanRParser.STRING_LITERAL -> new WenyanNativeValue(WenyanNativeValue.Type.STRING,
+                case WenyanRParser.STRING_LITERAL -> new WenyanNativeValue(WenyanType.STRING,
                         WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()), true);
                 default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
             };
@@ -68,7 +68,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         switch (ctx.p.getType()) {
             case WenyanRParser.INT_NUM -> {
                 try {
-                    bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanNativeValue.Type.INT,
+                    bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.INT,
                             WenyanDataParser.parseInt(ctx.INT_NUM().getText()), true));
                 } catch (WenyanException.WenyanNumberException e) {
                     throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_number").getString(), ctx);

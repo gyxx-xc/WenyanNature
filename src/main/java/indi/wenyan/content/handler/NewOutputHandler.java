@@ -3,6 +3,7 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.setup.network.OutputInformationPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -24,7 +25,7 @@ public class NewOutputHandler implements JavacallHandler {
         if (runner.getLevel() instanceof ServerLevel sl)
             PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(runner.getBlockPos()),
                     new OutputInformationPacket(runner.getBlockPos(), result.toString()));
-        return WenyanNativeValue.NULL;
+        return WenyanValue.NULL;
     }
 
     @Override

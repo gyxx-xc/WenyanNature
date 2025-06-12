@@ -3,10 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.WenyanDictObject;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanObjectType;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.*;
 
 public class FunctionCode extends WenyanCode {
     private final Operation operation;
@@ -24,18 +21,18 @@ public class FunctionCode extends WenyanCode {
             WenyanRuntime runtime = thread.currentRuntime();
             WenyanNativeValue func = runtime.processStack.pop();
             WenyanNativeValue.FunctionSign sign = (WenyanNativeValue.FunctionSign)
-                    func.casting(WenyanNativeValue.Type.FUNCTION).getValue();
+                    func.casting(WenyanType.FUNCTION).getValue();
             WenyanNativeValue self = null;
             boolean noReturn;
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
 
             // object_type
-            if (func.getType() == WenyanNativeValue.Type.OBJECT_TYPE) {
+            if (func.type() == WenyanType.OBJECT_TYPE) {
                 // create empty, run constructor, return self
-                self = new WenyanNativeValue(WenyanNativeValue.Type.OBJECT,
+                self = new WenyanNativeValue(WenyanType.OBJECT,
                         new WenyanDictObject((WenyanObjectType)
-                                func.casting(WenyanNativeValue.Type.OBJECT_TYPE).getValue()), true);
+                                func.casting(WenyanType.OBJECT_TYPE).getValue()), true);
                 runtime.processStack.push(self);
                 noReturn = true;
             } else { // function
@@ -43,7 +40,7 @@ public class FunctionCode extends WenyanCode {
                 if (operation == Operation.CALL_ATTR) {
                     // try casting to object (might be list)
                     try {
-                        self = self.casting(WenyanNativeValue.Type.OBJECT);
+                        self = self.casting(WenyanType.OBJECT);
                     } catch (WenyanException.WenyanTypeException e) {
                         // ignore self then
                         self = null;
@@ -67,7 +64,7 @@ public class FunctionCode extends WenyanCode {
         try {
             sign = (WenyanNativeValue.FunctionSign)
                     thread.currentRuntime().processStack.peek()
-                            .casting(WenyanNativeValue.Type.FUNCTION).getValue();
+                            .casting(WenyanType.FUNCTION).getValue();
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }

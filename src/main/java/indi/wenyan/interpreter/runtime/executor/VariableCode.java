@@ -32,7 +32,7 @@ public class VariableCode extends WenyanCode {
                 if (var.isConst())
                     throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString());
                 try {
-                    var.setValue(value.casting(var.getType()).getValue());
+                    var.setValue(value.casting(var.type()).getValue());
                 } catch (WenyanException.WenyanTypeException e) {
                     throw new WenyanException(e.getMessage());
                 }
@@ -41,14 +41,14 @@ public class VariableCode extends WenyanCode {
                 WenyanNativeValue var = runtime.processStack.pop();
                 try {
                     switch (args) {
-                        case 1 -> var.casting(WenyanNativeValue.Type.INT);
-                        case 2 -> var.casting(WenyanNativeValue.Type.DOUBLE);
-                        case 3 -> var.casting(WenyanNativeValue.Type.BOOL);
-                        case 4 -> var.casting(WenyanNativeValue.Type.STRING);
-                        case 5 -> var.casting(WenyanNativeValue.Type.LIST);
-                        case 6 -> var.casting(WenyanNativeValue.Type.OBJECT);
-                        case 7 -> var.casting(WenyanNativeValue.Type.OBJECT_TYPE);
-                        case 8 -> var.casting(WenyanNativeValue.Type.FUNCTION);
+                        case 1 -> var.casting(WenyanType.INT);
+                        case 2 -> var.casting(WenyanType.DOUBLE);
+                        case 3 -> var.casting(WenyanType.BOOL);
+                        case 4 -> var.casting(WenyanType.STRING);
+                        case 5 -> var.casting(WenyanType.LIST);
+                        case 6 -> var.casting(WenyanType.OBJECT);
+                        case 7 -> var.casting(WenyanType.OBJECT_TYPE);
+                        case 8 -> var.casting(WenyanType.FUNCTION);
                         default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
                     }
                     runtime.processStack.push(var);

@@ -12,7 +12,7 @@ public class WenyanDictObject implements WenyanObject {
 
     @Override
     public WenyanNativeValue getVariable(String name) {
-        return variable.getOrDefault(name, WenyanNativeValue.NULL);
+        return variable.getOrDefault(name, WenyanValue.NULL);
     }
 
     @Override

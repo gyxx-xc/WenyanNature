@@ -8,4 +8,8 @@ public interface WenyanObject extends WenyanValue {
     WenyanNativeValue getFunction(String name);
 
     WenyanObjectType getType();
+
+    default WenyanType type() {
+        return WenyanType.OBJECT;
+    }
 }

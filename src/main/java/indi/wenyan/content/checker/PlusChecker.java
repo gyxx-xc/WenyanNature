@@ -1,6 +1,7 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanType;
 import net.minecraft.util.RandomSource;
 
 public class PlusChecker extends CraftingAnswerChecker {
@@ -15,9 +16,9 @@ public class PlusChecker extends CraftingAnswerChecker {
         int a = random.nextInt(100);
         int b = random.nextInt(100);
         input.clear();
-        input.add(new WenyanNativeValue(WenyanNativeValue.Type.INT, a, true));
-        input.add(new WenyanNativeValue(WenyanNativeValue.Type.INT, b, true));
-        ans = new WenyanNativeValue(WenyanNativeValue.Type.INT, a + b, true);
+        input.add(new WenyanNativeValue(WenyanType.INT, a, true));
+        input.add(new WenyanNativeValue(WenyanType.INT, b, true));
+        ans = new WenyanNativeValue(WenyanType.INT, a + b, true);
     }
 
     @Override
