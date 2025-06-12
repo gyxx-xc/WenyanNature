@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
+import net.minecraft.network.chat.Component;
 
 public class ObjectCode extends WenyanCode {
     private final Operation operation;
@@ -18,44 +19,21 @@ public class ObjectCode extends WenyanCode {
         try {
             String id = runtime.bytecode.getIdentifier(args);
             switch (operation) {
-                case ATTR -> {
+                case ATTR, ATTR_REMAIN -> {
                     WenyanNativeValue attr;
-                    WenyanNativeValue value = runtime.processStack.pop();
-                    if (value.type() == WenyanType.OBJECT_TYPE) { // static
-                        WenyanObjectType type = (WenyanObjectType) value
+                    WenyanNativeValue value;
+                    if (operation == Operation.ATTR)
+                        value = runtime.processStack.pop();
+                    else
+                        value = runtime.processStack.peek();
+                    if (value.type() == WenyanType.OBJECT_TYPE) {
+                        WenyanObjectType object = (WenyanObjectType) value
                                 .casting(WenyanType.OBJECT_TYPE).getValue();
-                        attr = type.getStaticVariable(id);
-                        if (attr == null) {
-                            attr = type.getFunction(id);
-                        }
-                    } else { // object or other(casting to object)
+                        attr = object.getAttribute(id);
+                    } else {
                         WenyanObject object = (WenyanObject) value
                                 .casting(WenyanType.OBJECT).getValue();
-                        attr = object.getVariable(id);
-                        if (attr == null) {
-                            attr = object.getFunction(id);
-                        }
-                    }
-                    runtime.processStack.push(attr);
-                }
-                case ATTR_REMAIN -> {
-                    WenyanNativeValue attr;
-                    WenyanNativeValue value = runtime.processStack.peek();
-                    // copy from ATTR
-                    if (value.type() == WenyanType.OBJECT_TYPE) { // static
-                        WenyanObjectType type = (WenyanObjectType) value
-                                .casting(WenyanType.OBJECT_TYPE).getValue();
-                        attr = type.getStaticVariable(id);
-                        if (attr == null) {
-                            attr = type.getFunction(id);
-                        }
-                    } else { // object or other(casting to object)
-                        WenyanObject object = (WenyanObject) value
-                                .casting(WenyanType.OBJECT).getValue();
-                        attr = object.getVariable(id);
-                        if (attr == null) {
-                            attr = object.getFunction(id);
-                        }
+                        attr = object.getAttribute(id);
                     }
                     runtime.processStack.push(attr);
                 }

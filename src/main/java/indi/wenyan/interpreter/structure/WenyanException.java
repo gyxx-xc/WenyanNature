@@ -49,6 +49,7 @@ public class WenyanException extends RuntimeException {
     }
 
     public static void handleException(Player player, String message) {
+        System.out.println(message);
         player.displayClientMessage(Component.literal(message).withStyle(ChatFormatting.RED), true);
     }
 }

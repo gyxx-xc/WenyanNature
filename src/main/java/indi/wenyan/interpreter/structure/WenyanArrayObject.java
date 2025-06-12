@@ -9,8 +9,7 @@ import java.util.ArrayList;
 public class WenyanArrayObject implements WenyanObject {
     private final ArrayList<WenyanNativeValue> values = new ArrayList<>();
 
-    public WenyanArrayObject() {
-    }
+    public WenyanArrayObject() {}
 
     public WenyanArrayObject concat(WenyanArrayObject other) {
         values.addAll(other.values);
@@ -34,7 +33,7 @@ public class WenyanArrayObject implements WenyanObject {
         if (name.equals(WenyanDataParser.LONG_ID)) {
             return new WenyanNativeValue(WenyanType.INT, values.size(), true);
         }
-        throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
+        return null;
     }
 
     @Override
@@ -65,7 +64,7 @@ public class WenyanArrayObject implements WenyanObject {
                                 return new WenyanNativeValue(WenyanType.OBJECT,
                                         ((WenyanArrayObject) args[0].getValue()).values.iterator(), true);
                             })), true);
-            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.function_not_found_").getString() + name);
+            default -> null;
         };
     }
 
