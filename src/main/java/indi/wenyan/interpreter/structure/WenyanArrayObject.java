@@ -75,6 +75,11 @@ public class WenyanArrayObject implements WenyanObject {
     }
 
     @Override
+    public WenyanType type() {
+        return WenyanType.LIST;
+    }
+
+    @Override
     public String toString() {
         return values.toString();
     }
