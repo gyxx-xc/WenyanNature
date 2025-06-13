@@ -25,3 +25,6 @@ The mod is still in development.
 - [ ]  **Craft Through Code**: Unlock items by designing code and solving mystical puzzles.
 - [ ]  **Polished Fu GUI**: Enhanced code editing with auto-completion, syntax highlighting, and more.
 - [ ]  **Expanded Minecraft Sorcery**: Deeper integration with the game’s mechanics.
+
+## Docs
+Currently under construction, you can view the [syntax](docs/syntax.md) and [syntax in Chinese](docs/syntax_CHS.md).
