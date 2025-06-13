@@ -11,8 +11,12 @@ public class WenyanDictObject implements WenyanObject {
     }
 
     @Override
-    public WenyanNativeValue getVariable(String name) {
-        return variable.get(name);
+    public WenyanNativeValue getAttribute(String name) {
+        var value = variable.get(name);
+        if (value == null) {
+            value = type.getFunction(name);
+        }
+        return value;
     }
 
     @Override
@@ -21,12 +25,7 @@ public class WenyanDictObject implements WenyanObject {
     }
 
     @Override
-    public WenyanNativeValue getFunction(String name) {
-        return type.getFunction(name);
-    }
-
-    @Override
-    public WenyanObjectType getType() {
-        return type;
+    public WenyanObjectType getParent() {
+        return type.getParent();
     }
 }

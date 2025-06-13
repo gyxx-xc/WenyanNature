@@ -1,23 +1,36 @@
 package indi.wenyan.interpreter.structure;
 
-import net.minecraft.network.chat.Component;
+import javax.annotation.Nullable;
 
 public interface WenyanObject extends WenyanValue {
-    default WenyanNativeValue getAttribute(String name) {
-        var attr = getVariable(name);
-        if (attr == null) attr = getFunction(name);
-        if (attr == null)
-            throw new WenyanException(Component.translatable("error.wenyan_nature.function_not_found_").getString() + name);
-        return attr;
-    }
+    /**
+     * Get the attribute of this object.
+     * <p>
+     * Contains all variables and functions
+     * in form of 'this' zhi ''name''.
+     *
+     * @param name the name of the attribute
+     * @return the value of the attribute
+     */
+    WenyanNativeValue getAttribute(String name);
 
-    WenyanNativeValue getVariable(String name);
-
+    /**
+     * Set a variable in this object.
+     *
+     * @param name  the name of the variable
+     * @param value the value to set
+     */
     void setVariable(String name, WenyanNativeValue value);
 
-    WenyanNativeValue getFunction(String name);
-
-    WenyanObjectType getType();
+    /**
+     * Get the parent type of this object.
+     * <p>
+     * Just returns null if you are not sure
+     *
+     * @return the parent WenyanObjectType
+     */
+    @Nullable
+    WenyanObjectType getParent();
 
     default WenyanType type() {
         return WenyanType.OBJECT;

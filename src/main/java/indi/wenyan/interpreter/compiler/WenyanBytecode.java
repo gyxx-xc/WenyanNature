@@ -114,7 +114,7 @@ public class WenyanBytecode implements WenyanFunction {
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
             newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanType.OBJECT_TYPE,
-                    ((WenyanObject) self.getValue()).getType().getParent(), true));
+                    ((WenyanObject) self.getValue()).getParent(), true));
         }
         // STUB: assume the first n id is the args
         for (int i = 0; i < args; i++)

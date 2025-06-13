@@ -29,20 +29,12 @@ public class WenyanArrayObject implements WenyanObject {
     }
 
     @Override
-    public WenyanNativeValue getVariable(String name) {
-        if (name.equals(WenyanDataParser.LONG_ID)) {
-            return new WenyanNativeValue(WenyanType.INT, values.size(), true);
-        }
-        return null;
-    }
-
-    @Override
     public void setVariable(String name, WenyanNativeValue value) {
         throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
     }
 
     @Override
-    public WenyanNativeValue getFunction(String name) {
+    public WenyanNativeValue getAttribute(String name) {
         return switch (name) {
             case WenyanDataParser.ARRAY_GET_ID -> new WenyanNativeValue(WenyanType.FUNCTION,
                     new WenyanNativeValue.FunctionSign(WenyanDataParser.ARRAY_GET_ID,
@@ -64,12 +56,13 @@ public class WenyanArrayObject implements WenyanObject {
                                 return new WenyanNativeValue(WenyanType.OBJECT,
                                         ((WenyanArrayObject) args[0].getValue()).values.iterator(), true);
                             })), true);
-            default -> null;
+            case WenyanDataParser.LONG_ID -> new WenyanNativeValue(WenyanType.INT, values.size(), true);
+            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
         };
     }
 
     @Override
-    public WenyanObjectType getType() {
+    public WenyanObjectType getParent() {
         return null;
     }
 
