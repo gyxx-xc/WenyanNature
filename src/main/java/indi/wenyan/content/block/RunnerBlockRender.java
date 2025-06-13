@@ -63,12 +63,13 @@ public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
         poseStack.mulPose(Axis.YP.rotationDegrees(-dispatcher.camera.getYRot()));
-        poseStack.scale(-0.025F, -0.025F, -0.25F);
-        int n = be.getOutput().size();
-        for (int i = 0; i < n; i++) {
-            font.drawInBatch(be.getOutput().get(i), -15, -i*10, (255-i*50) * 256 * 256 + (255-i*50) * 256 + (255-i*50), true,
+        poseStack.scale(-0.015F, -0.015F, -0.15F);
+        var out = be.getOutput().reversed();
+        for (String s : out) {
+            poseStack.translate(0.0, -10, 0.0);
+            poseStack.scale(0.9F, 0.9F, 0.9F);
+            font.drawInBatch(s, -font.width(s) >> 1, 0, 0xFFFFFF, true,
                     poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLight);
-            if (i >= 5) break;
         }
         poseStack.popPose();
     }

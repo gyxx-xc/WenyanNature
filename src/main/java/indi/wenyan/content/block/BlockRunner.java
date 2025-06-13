@@ -1,8 +1,8 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.content.data.RunnerTierData;
-import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.LinkedList;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
@@ -38,7 +39,7 @@ public class BlockRunner extends BlockEntity {
 
     public List<String> pages;
     public int speed;
-    private final StringBuilder output = new StringBuilder();
+    private final List<String> output = new LinkedList<>();
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
         super(Registration.BLOCK_RUNNER.get(), pos, blockState);
@@ -74,17 +75,14 @@ public class BlockRunner extends BlockEntity {
     }
 
     public void addOutput(String text) {
-        if (!output.isEmpty()) {
-            output.append("\n");
+        output.addLast(text);
+        if (output.size() > 10) {
+            output.removeFirst();
         }
-        output.append(text);
     }
 
     public List<String> getOutput() {
-        if (output.isEmpty()) {
-            return List.of();
-        }
-        return List.of(output.toString().split("\n")).reversed();
+        return output;
     }
 
     @SuppressWarnings("unused")
