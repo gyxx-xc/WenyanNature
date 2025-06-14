@@ -1,11 +1,11 @@
 package indi.wenyan.content.block;
 
-import indi.wenyan.content.checker.EchoChecker;
-import indi.wenyan.content.checker.PlusChecker;
-import indi.wenyan.content.gui.CraftingBlockContainer;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.gui.CraftingBlockContainer;
+import indi.wenyan.content.recipe.AnsweringRecipeInput;
+import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -114,13 +114,18 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
             }
         }
 
-        // TODO: change checker according to the recipe
-        if (pedestalItems.size() == 1) {
-            checker = new EchoChecker(level.getRandom());
-        } else if (pedestalItems.size() == 2) {
-            checker = new PlusChecker(level.getRandom());
-        } else {
+        var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
+                new AnsweringRecipeInput(pedestalItems), level);
+
+        if (recipeHolder.isEmpty()) {
             WenyanException.handleException(player, Component.translatable("error.wenyan_nature.function_not_found_").getString());
+            return;
+        }
+        var question = recipeHolder.get().value().question();
+        checker = CheckerFactory.produce(question, level.getRandom());
+        if (checker == null) {
+            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.function_not_found_").getString());
+            return;
         }
 
         this.runner = runner;

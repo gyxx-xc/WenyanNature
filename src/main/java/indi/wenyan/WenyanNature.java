@@ -12,12 +12,6 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static net.neoforged.neoforgespi.ILaunchContext.LOGGER;
-
 @Mod(WenyanNature.MODID)
 public class WenyanNature {
     public static final String MODID = "wenyan_nature";

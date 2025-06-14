@@ -27,6 +27,7 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
 
     @Override
     public boolean matches(AnsweringRecipeInput answeringRecipeInput, Level level) {
+System.out.println(answeringRecipeInput.input());
         if (level.isClientSide() || input.size() != answeringRecipeInput.size()){
             return false;
         }

@@ -12,22 +12,28 @@ public class ModDataGeneratorHandler {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event){
         ExistingFileHelper efh = event.getExistingFileHelper();
-        event.getGenerator().addProvider(
+        var generator = event.getGenerator();
+        generator.addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<ChineseLanguageProvider>) pOutput ->
                         new ChineseLanguageProvider(pOutput,WenyanNature.MODID,"zh_cn"));
-        event.getGenerator().addProvider(
+        generator.addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<EnglishLanguageProvider>) pOutput ->
                         new EnglishLanguageProvider(pOutput,WenyanNature.MODID,"en_us"));
-        event.getGenerator().addProvider(
+        generator.addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<ModItemModelProvider>) pOutput ->
                         new ModItemModelProvider(pOutput,WenyanNature.MODID,efh));
-        event.getGenerator().addProvider(
+        generator.addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<ModBlockStateProvider>) pOutput ->
                         new ModBlockStateProvider(pOutput,WenyanNature.MODID,efh));
+        generator.addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<CheckerRecipeProvider>) pOutput ->
+                        new CheckerRecipeProvider(pOutput,event.getLookupProvider())
+        );
     }
 }
 
