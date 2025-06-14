@@ -1,9 +1,11 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
+@Deprecated
 public class OutputHandler implements JavacallHandler {
     private final Player player;
     public OutputHandler(Player player) {
@@ -17,7 +19,7 @@ public class OutputHandler implements JavacallHandler {
             result.append(result.isEmpty() ? "" : " ").append(arg.toString());
         }
         player.displayClientMessage(Component.literal(result.toString()), true);
-        return WenyanNativeValue.NULL;
+        return WenyanValue.NULL;
     }
 
     @Override

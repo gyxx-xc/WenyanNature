@@ -24,10 +24,10 @@ public class BranchCode extends WenyanCode {
             if (condition != Condition.NONE) {
                 if (operation == Operation.POP) {
                     val = (boolean) runtime.processStack.pop()
-                            .casting(WenyanNativeValue.Type.BOOL).getValue();
+                            .casting(WenyanType.BOOL).getValue();
                 } else {
                     val = (boolean) runtime.processStack.peek()
-                            .casting(WenyanNativeValue.Type.BOOL).getValue();
+                            .casting(WenyanType.BOOL).getValue();
                 }
             }
         } catch (WenyanException.WenyanTypeException e) {

@@ -1,6 +1,6 @@
-[English](README.md) | [简体中文](README.zh_CHS.md) | [繁体中文](README.zh_CHT.md)
+[English](../README.md) | [简体中文](README.zh_CHS.md) | [繁体中文](README.zh_CHT.md)
 
-<p><img src="./title.png" alt="Logo" width="720"></p>
+<p><img src="title.png" alt="Logo" width="720"></p>
 
 <h1>吾有一术  <br>
 	<a href="https://github.com/gyxx-xc/WenyanNature/blob/master/LICENSE"><img src="https://img.shields.io/github/license/gyxx-xc/WenyanNature?style=flat&color=900c3f" alt="License"></a>

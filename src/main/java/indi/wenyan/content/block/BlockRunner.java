@@ -1,7 +1,8 @@
 package indi.wenyan.content.block;
 
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.LinkedList;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
@@ -37,7 +39,7 @@ public class BlockRunner extends BlockEntity {
 
     public List<String> pages;
     public int speed;
-    public String output = "";
+    private final List<String> output = new LinkedList<>();
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
         super(Registration.BLOCK_RUNNER.get(), pos, blockState);
@@ -72,6 +74,17 @@ public class BlockRunner extends BlockEntity {
         this.program = other.program;
     }
 
+    public void addOutput(String text) {
+        output.addLast(text);
+        if (output.size() > 10) {
+            output.removeFirst();
+        }
+    }
+
+    public List<String> getOutput() {
+        return output;
+    }
+
     @SuppressWarnings("unused")
     private void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null) {
@@ -102,8 +115,16 @@ public class BlockRunner extends BlockEntity {
         WritableBookContent content = components().get(DataComponents.WRITABLE_BOOK_CONTENT);
         if (content != null)
             pages = content.getPages(false).toList();
-        Object o = components().get(DataComponents.DAMAGE);
-        if (o != null) speed = (int)Math.pow(10, Math.min((int) o, 3));
+        Object o = components().get(Registration.TIER_DATA.get());
+        int speedTier;
+        if (o instanceof RunnerTierData(int tier)) {
+            speedTier = tier;
+        } else {
+//            WenyanException.handleException(null, "BlockRunner does not have a valid tier data component.");
+            return;
+        }
+
+        speed = (int)Math.pow(10, Math.min(speedTier, 3));
         super.setChanged();
     }
 

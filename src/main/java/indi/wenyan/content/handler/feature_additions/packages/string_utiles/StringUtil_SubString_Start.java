@@ -1,0 +1,33 @@
+package indi.wenyan.content.handler.feature_additions.packages.string_utiles;
+
+import indi.wenyan.content.handler.JavacallHandler;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.utils.JavacallHandlers;
+
+/**
+ * @author I_am_a_lolikong
+ * @version 1.0
+ * @className StringUtil_SubString_Start
+ * @Description TODO
+ * @date 2025/6/15 0:20
+ */
+public class StringUtil_SubString_Start implements JavacallHandler {
+    public static final WenyanType[] ARGS_TYPE =
+            {WenyanType.STRING, WenyanType.STRING};
+    @Override
+    public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
+        Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
+        String original=(String)args[0];
+        int start=(Integer)args[1];
+        start=Math.min(start,original.length());
+
+        return new WenyanNativeValue(WenyanType.STRING,original.substring(start),false);
+    }
+
+    @Override
+    public boolean isLocal() {
+        return false;
+    }
+}

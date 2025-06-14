@@ -34,10 +34,10 @@ public class ForCode extends WenyanCode {
             }
             case FOR_NUM -> {
                 WenyanNativeValue value = runtime.processStack.pop();
-                if (value.getType() == WenyanNativeValue.Type.INT) {
+                if (value.type() == WenyanType.INT) {
                     int num = (int) value.getValue();
                     if (num > 0) {
-                        runtime.processStack.push(new WenyanNativeValue(WenyanNativeValue.Type.INT, num - 1, true));
+                        runtime.processStack.push(new WenyanNativeValue(WenyanType.INT, num - 1, true));
                     } else {
                         runtime.programCounter = runtime.bytecode.getLabel(args);
                         runtime.PCFlag = true;

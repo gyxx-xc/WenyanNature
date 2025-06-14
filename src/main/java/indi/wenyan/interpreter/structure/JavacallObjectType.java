@@ -16,14 +16,14 @@ public class JavacallObjectType extends WenyanDictObjectType {
         if (!constructor.isLocal())
             throw new RuntimeException("cannot use JavacallObjectType with non-local constructor");
         this.constructor = constructor;
-        addFunction(WenyanDataParser.CONSTRUCTOR_ID, new WenyanNativeValue(WenyanNativeValue.Type.FUNCTION,
+        addFunction(WenyanDataParser.CONSTRUCTOR_ID, new WenyanNativeValue(WenyanType.FUNCTION,
                 new WenyanNativeValue.FunctionSign(WenyanDataParser.CONSTRUCTOR_ID,
-                        new WenyanNativeValue.Type[0],
+                        new WenyanType[0],
                         constructor), true));
     }
 
     public WenyanNativeValue newObject(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException {
-        WenyanNativeValue object = new WenyanNativeValue(WenyanNativeValue.Type.OBJECT,
+        WenyanNativeValue object = new WenyanNativeValue(WenyanType.OBJECT,
                 new WenyanDictObject(this), true);
         WenyanNativeValue[] newArgs = new WenyanNativeValue[args.length + 1];
         newArgs[0] = object;

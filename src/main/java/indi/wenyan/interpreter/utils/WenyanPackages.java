@@ -4,6 +4,10 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.*;
+import indi.wenyan.content.handler.feature_additions.TeleportHandler;
+import indi.wenyan.content.handler.feature_additions.find_entity_handler.*;
+import indi.wenyan.content.handler.feature_additions.packages.FeatureAdditionsPackages;
+import indi.wenyan.content.handler.feature_additions.string_handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.*;
 import net.minecraft.client.Minecraft;
@@ -15,7 +19,10 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public final class WenyanPackages {
     private WenyanPackages(){}
@@ -36,7 +43,7 @@ public final class WenyanPackages {
             .function("充", args -> {
                 if (args.length <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanNativeValue value = args[0].casting(WenyanNativeValue.Type.LIST);
+                WenyanNativeValue value = args[0].casting(WenyanType.LIST);
                 WenyanArrayObject list = (WenyanArrayObject) value.getValue();
                 for (int i = 1; i < args.length; i++) {
                     list.add(WenyanNativeValue.varOf(args[i]));
@@ -56,52 +63,52 @@ public final class WenyanPackages {
             .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) > 0))
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) < 0))
 
-            .function("「」", args -> WenyanNativeValue.NULL)
+            .function("「」", args -> WenyanValue.NULL)
             .function("書", args -> {
                 System.out.println(Arrays.toString(args));
-                return WenyanNativeValue.NULL;
+                return WenyanValue.NULL;
             })
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
-            .constant("「圓周率」", WenyanNativeValue.Type.DOUBLE, Math.PI)
-            .constant("「倍圓周率」", WenyanNativeValue.Type.DOUBLE, Math.TAU)
-            .constant("「半圓周率」", WenyanNativeValue.Type.DOUBLE, Math.PI / 2)
-            .constant("「四分圓周率」", WenyanNativeValue.Type.DOUBLE, Math.PI / 4)
-            .constant("「自然常數」", WenyanNativeValue.Type.DOUBLE, Math.E)
-            .constant("「歐拉常數」", WenyanNativeValue.Type.DOUBLE, 0.5772156649)
-            .constant("「黃金分割數」", WenyanNativeValue.Type.DOUBLE, 1.6180339887)
-            .constant("「二之平方根」", WenyanNativeValue.Type.DOUBLE, Math.sqrt(2))
-            .constant("「二之對數」", WenyanNativeValue.Type.DOUBLE, Math.log(2))
-            .constant("「十之對數」", WenyanNativeValue.Type.DOUBLE, Math.log(10))
-            .function("「正弦」", args -> Math.sin((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「餘弦」", args -> Math.cos((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「反正弦」", args -> Math.asin((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「反餘弦」", args -> Math.acos((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「正切」", args -> Math.tan((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「反正切」", args -> Math.atan((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「勾股求角」", args -> Math.atan2((double)args[0], (double)args[1]), WenyanNativeValue.Type.DOUBLE)
-            .function("「勾股求弦」", args -> Math.hypot((double)args[0], (double)args[1]), WenyanNativeValue.Type.DOUBLE)
-            .function("「對數」", args -> Math.log((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「指數」", args -> Math.exp((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「冪」", args -> Math.pow((double)args[0], (double)args[1]), WenyanNativeValue.Type.DOUBLE)
-            .function("「平方根」", args -> Math.sqrt((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「絕對」", args -> Math.abs((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「取頂」", args -> Math.ceil((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「取底」", args -> Math.floor((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「取整」", args -> Math.round((double)args[0]), WenyanNativeValue.Type.DOUBLE)
-            .function("「正負」", args -> Math.signum((double)args[0]), WenyanNativeValue.Type.DOUBLE)
+            .constant("「圓周率」", WenyanType.DOUBLE, Math.PI)
+            .constant("「倍圓周率」", WenyanType.DOUBLE, Math.TAU)
+            .constant("「半圓周率」", WenyanType.DOUBLE, Math.PI / 2)
+            .constant("「四分圓周率」", WenyanType.DOUBLE, Math.PI / 4)
+            .constant("「自然常數」", WenyanType.DOUBLE, Math.E)
+            .constant("「歐拉常數」", WenyanType.DOUBLE, 0.5772156649)
+            .constant("「黃金分割數」", WenyanType.DOUBLE, 1.6180339887)
+            .constant("「二之平方根」", WenyanType.DOUBLE, Math.sqrt(2))
+            .constant("「二之對數」", WenyanType.DOUBLE, Math.log(2))
+            .constant("「十之對數」", WenyanType.DOUBLE, Math.log(10))
+            .function("「正弦」", args -> Math.sin((double)args[0]), WenyanType.DOUBLE)
+            .function("「餘弦」", args -> Math.cos((double)args[0]), WenyanType.DOUBLE)
+            .function("「反正弦」", args -> Math.asin((double)args[0]), WenyanType.DOUBLE)
+            .function("「反餘弦」", args -> Math.acos((double)args[0]), WenyanType.DOUBLE)
+            .function("「正切」", args -> Math.tan((double)args[0]), WenyanType.DOUBLE)
+            .function("「反正切」", args -> Math.atan((double)args[0]), WenyanType.DOUBLE)
+            .function("「勾股求角」", args -> Math.atan2((double)args[0], (double)args[1]), WenyanType.DOUBLE)
+            .function("「勾股求弦」", args -> Math.hypot((double)args[0], (double)args[1]), WenyanType.DOUBLE)
+            .function("「對數」", args -> Math.log((double)args[0]), WenyanType.DOUBLE)
+            .function("「指數」", args -> Math.exp((double)args[0]), WenyanType.DOUBLE)
+            .function("「冪」", args -> Math.pow((double)args[0], (double)args[1]), WenyanType.DOUBLE)
+            .function("「平方根」", args -> Math.sqrt((double)args[0]), WenyanType.DOUBLE)
+            .function("「絕對」", args -> Math.abs((double)args[0]), WenyanType.DOUBLE)
+            .function("「取頂」", args -> Math.ceil((double)args[0]), WenyanType.DOUBLE)
+            .function("「取底」", args -> Math.floor((double)args[0]), WenyanType.DOUBLE)
+            .function("「取整」", args -> Math.round((double)args[0]), WenyanType.DOUBLE)
+            .function("「正負」", args -> Math.signum((double)args[0]), WenyanType.DOUBLE)
             .build();
 
     public static final WenyanRuntime BIT_PACKAGES = WenyanPackageBuilder.create()
-            .function("「左移」", args -> (int)args[0]<<(int)args[1], WenyanNativeValue.Type.INT)
-            .function("「右移」", args -> (int)args[0]>>(int)args[1], WenyanNativeValue.Type.INT)
-            .function("「補零右移」", args -> (int)args[0]>>>(int)args[1], WenyanNativeValue.Type.INT)
-            .function("「位與」", args -> (int)args[0]&(int)args[1], WenyanNativeValue.Type.INT)
-            .function("「位或」", args -> (int)args[0]|(int)args[1], WenyanNativeValue.Type.INT)
-            .function("「異或」", args -> (int)args[0]^(int)args[1], WenyanNativeValue.Type.INT)
-            .function("「與非」", args -> ~((int)args[0]&(int)args[1]), WenyanNativeValue.Type.INT)
-            .function("「位變」", args -> ~(int)args[0], WenyanNativeValue.Type.INT)
+            .function("「左移」", args -> (int)args[0]<<(int)args[1], WenyanType.INT)
+            .function("「右移」", args -> (int)args[0]>>(int)args[1], WenyanType.INT)
+            .function("「補零右移」", args -> (int)args[0]>>>(int)args[1], WenyanType.INT)
+            .function("「位與」", args -> (int)args[0]&(int)args[1], WenyanType.INT)
+            .function("「位或」", args -> (int)args[0]|(int)args[1], WenyanType.INT)
+            .function("「異或」", args -> (int)args[0]^(int)args[1], WenyanType.INT)
+            .function("「與非」", args -> ~((int)args[0]&(int)args[1]), WenyanType.INT)
+            .function("「位變」", args -> ~(int)args[0], WenyanType.INT)
             .build();
 
     public static final WenyanRuntime RANDOM_PACKAGES = WenyanPackageBuilder.create()
@@ -110,11 +117,12 @@ public final class WenyanPackages {
                 case 1 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0]);
                 case 2 -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextInt((int)args[0], (int)args[1]);
                 default -> 0;
-            }, WenyanNativeValue.Type.INT)
-            .function("「占分」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble(), WenyanNativeValue.Type.DOUBLE)
-            .function("「占偏」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle((double) args[0], (double) args[1]), WenyanNativeValue.Type.DOUBLE)
-            .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanNativeValue.Type.BOOL)
+            }, WenyanType.INT)
+            .function("「占分」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble(), WenyanType.DOUBLE)
+            .function("「占偏」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle((double) args[0], (double) args[1]), WenyanType.DOUBLE)
+            .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanType.BOOL)
             .build();
+
 
     public static WenyanRuntime handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
@@ -126,13 +134,36 @@ public final class WenyanPackages {
                 .function("「雷」", new ThunderHandler(runner, holder))
                 .object(WenyanObjectTypes.VECTOR3)
                 .function("「己方位」", new SelfPositionHandler(holder, runner))
+                .function("「密语」", new SetChatHideFilterHandler(holder))
+                .function("「阅简」", new GetSignAndLecternMsgHandler(runner.level(),holder))
+                .function("「题篆」", new SetSignAndLecternMsgHandler(runner.level(),holder))
+                .function("「赋名」", new SetEntityCustomNameHanlder())
+                .function("「显名」", new GetEntityNameHandler())
+                .function("「物之隐名」", new GetItemInternalNameHandler())
+                .function("「瞬」", new TeleportHandler(runner.level()))
+                .function("「寻」", new EntityFinderHandler(runner.level()))
+                .function("「大寻」", new EntitysFinderHandler(runner.level()))
+                .function("「器象」", new ItemEntityFinderHandler(runner.level()))
+                .function("「器象之大寻」", new ItemEntitysFinderHandler(runner.level()))
+                .function("「灵察」", new LivingEntityFinderHandler(runner.level()))
+                .function("「灵察之大寻」", new LivingEntitysFinderHandler(runner.level()))
+                .function("「煞觅」", new MonsterFinderHandler(runner.level()))
+                .function("「煞觅之大寻」", new MonstersFinderHandler(runner.level()))
+                .function("「气踪」", new ProjectileFinderHandler(runner.level()))
+                .function("「气踪之大寻」", new ProjectilesFinderHandler(runner.level()))
+                .function("「天工」", new VehicleFinderHandler(runner.level()))
+                .function("「天工之大寻」", new VehiclesFinderHandler(runner.level()))
+                .function("「真觅」", new PlayerFinderHandler(runner.level()))
+                .function("「真觅之大寻」", new PlayersFinderHandler(runner.level()))
+                .function("「兽觅」", new AnimalFinderHandler(runner.level()))
+                .function("「兽觅之大寻」", new AnimalsFinderHandler(runner.level()))
                 .build();
     }
 
     public static WenyanRuntime blockEnvironment(BlockPos pos, BlockState block, Player holder, BlockRunner runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
-                .function(new String[] {"書","书"}, new OutputHandler(holder))
+                .function(new String[] {"書","书"}, new NewOutputHandler(runner))
                 .function("「觸」", new TouchHandler(holder.level(), pos), TouchHandler.ARGS_TYPE)
                 .function("「放置」", new BlockPlaceHandler(holder,
                         (BlockItem) Items.ACACIA_LOG.asItem()
@@ -146,6 +177,31 @@ public final class WenyanPackages {
                 .function("「己於南」", new SelfPositionBlockHandler(holder, runner, Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(holder, runner, Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(holder, runner, Direction.NORTH))
+                .function("「万言感」", new GetLastMsgHandler())
+                .function("「感言」", new GetMeMsgHandler(holder))
+                .function("「阅简」", new GetSignAndLecternMsgHandler(runner.getLevel(),holder))
+                .function("「题篆」", new SetSignAndLecternMsgHandler(runner.getLevel(),holder))
+                .function("「赋名」", new SetEntityCustomNameHanlder())
+                .function("「显名」", new GetEntityNameHandler())
+                .function("「物之隐名」", new GetItemInternalNameHandler())
+                .function("「瞬」", new TeleportHandler(runner.getLevel()))
+                .function("「寻」", new EntityFinderHandler(runner.getLevel()))
+                .function("「大寻」", new EntitysFinderHandler(runner.getLevel()))
+                .function("「器象」", new ItemEntityFinderHandler(runner.getLevel()))
+                .function("「器象之大寻」", new ItemEntitysFinderHandler(runner.getLevel()))
+                .function("「灵察」", new LivingEntityFinderHandler(runner.getLevel()))
+                .function("「灵察之大寻」", new LivingEntitysFinderHandler(runner.getLevel()))
+                .function("「煞觅」", new MonsterFinderHandler(runner.getLevel()))
+                .function("「煞觅之大寻」", new MonstersFinderHandler(runner.getLevel()))
+                .function("「气踪」", new ProjectileFinderHandler(runner.getLevel()))
+                .function("「气踪之大寻」", new ProjectilesFinderHandler(runner.getLevel()))
+                .function("「天工」", new VehicleFinderHandler(runner.getLevel()))
+                .function("「天工之大寻」", new VehiclesFinderHandler(runner.getLevel()))
+                .function("「真觅」", new PlayerFinderHandler(runner.getLevel()))
+                .function("「真觅之大寻」", new PlayersFinderHandler(runner.getLevel()))
+                .function("「兽觅」", new AnimalFinderHandler(runner.getLevel()))
+                .function("「兽觅之大寻」", new AnimalsFinderHandler(runner.getLevel()))
+
                 .build();
     }
 
@@ -155,7 +211,7 @@ public final class WenyanPackages {
                 .environment(checker.inputEnvironment())
                 .function("書", args -> {
                     checker.accept(args);
-                    return WenyanNativeValue.NULL;
+                    return WenyanValue.NULL;
                 })
                 .build();
     }
@@ -164,7 +220,11 @@ public final class WenyanPackages {
         put("「「算經」」", MATH_PACKAGES);
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);
+        put("「「玄文库」」", FeatureAdditionsPackages.STRING_UTILS_PACKAGES);
     }};
+
+
+
 
     public static class WenyanObjectTypes {
         public static final JavacallObjectType VECTOR3 = new JavacallObjectType(null, "「方位」",
@@ -173,9 +233,9 @@ public final class WenyanPackages {
                         .var("「「東西」」")
                         .var("「「南北」」")
                         .makeConstructor())
-                .addStatic("「「零」」", Arrays.asList(new WenyanNativeValue(WenyanNativeValue.Type.INT, 0, true),
-                        new WenyanNativeValue(WenyanNativeValue.Type.INT, 0, true),
-                        new WenyanNativeValue(WenyanNativeValue.Type.INT, 0, true))
+                .addStatic("「「零」」", Arrays.asList(new WenyanNativeValue(WenyanType.INT, 0, true),
+                        new WenyanNativeValue(WenyanType.INT, 0, true),
+                        new WenyanNativeValue(WenyanType.INT, 0, true))
                         .toArray(WenyanNativeValue[]::new));
     }
 }

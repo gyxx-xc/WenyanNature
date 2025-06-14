@@ -3,6 +3,7 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanType;
 
 public class RedstoneSignalHandler implements JavacallHandler {
     private final BlockRunner runner;
@@ -16,7 +17,7 @@ public class RedstoneSignalHandler implements JavacallHandler {
         if (runner.getLevel() != null) {
              value = runner.getLevel().getBestNeighborSignal(runner.getBlockPos());
         }
-        return new WenyanNativeValue(WenyanNativeValue.Type.INT, value, true);
+        return new WenyanNativeValue(WenyanType.INT, value, true);
     }
     @Override
     public boolean isLocal() {

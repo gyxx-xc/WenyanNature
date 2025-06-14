@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.compiler.visitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -36,9 +36,9 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     @Override
     public Boolean visitBoolean_algebra_statement(WenyanRParser.Boolean_algebra_statementContext ctx) {
         exprVisitor.visit(ctx.data(0));
-        bytecode.add(WenyanCodes.CAST, WenyanNativeValue.Type.BOOL.ordinal());
+        bytecode.add(WenyanCodes.CAST, WenyanType.BOOL.ordinal());
         exprVisitor.visit(ctx.data(1));
-        bytecode.add(WenyanCodes.CAST, WenyanNativeValue.Type.BOOL.ordinal());
+        bytecode.add(WenyanCodes.CAST, WenyanType.BOOL.ordinal());
 
         switch (ctx.op.getType()) {
             case WenyanRParser.AND -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.AND_ID);

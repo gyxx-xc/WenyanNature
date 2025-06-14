@@ -1,9 +1,9 @@
 package indi.wenyan.interpreter.runtime;
 
-import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.utils.JavacallHandlers;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
@@ -22,7 +22,7 @@ public class WenyanProgram {
 
     public WenyanThread mainThread = new WenyanThread(this);
     public Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
-    public Queue<JavacallHandler.Request> requestThreads = new ConcurrentLinkedQueue<>();
+    public Queue<JavacallHandlers.Request> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
     private Thread programJavaThread;
@@ -51,7 +51,7 @@ public class WenyanProgram {
 
     public void handle() {
         while (!requestThreads.isEmpty()) {
-            JavacallHandler.Request request = requestThreads.poll();
+            JavacallHandlers.Request request = requestThreads.poll();
             try {
                 request.handle();
             } catch (WenyanException.WenyanThrowException | WenyanException e) {
@@ -102,17 +102,11 @@ public class WenyanProgram {
     public static void main(String[] args) {
         WenyanProgram program = new WenyanProgram(
                 """
-                        吾有一列名之曰「a 」
-                        充「a 」以一以二以三以四
-                        凡「a 」中之「i 」
-                        書「i 」
-                        昔之「i 」者今一是矣
-                        云云
-                        
-                        凡「a 」中之「i 」
-                        書「i 」
-                        云云
-                        """,
+吾有一列名之曰「a 」
+充「a 」以一以一以一以一以一以一
+凡「a 」中之「b 」
+書「b 」
+云云                        """,
                 WenyanPackages.WENYAN_BASIC_PACKAGES
         , null);
         System.out.println(program.baseBytecode);

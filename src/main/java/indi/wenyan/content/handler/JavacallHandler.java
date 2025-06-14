@@ -5,7 +5,7 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanFunction;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import net.minecraft.network.chat.Component;
+import indi.wenyan.interpreter.utils.JavacallHandlers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +39,6 @@ public interface JavacallHandler extends WenyanFunction {
         return 1;
     }
 
-    static Object[] getArgs(WenyanNativeValue[] args, WenyanNativeValue.Type[] args_type) throws WenyanException.WenyanTypeException {
-        Object[] newArgs = new Object[args.length];
-        if (args.length != args_type.length)
-            throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-        for (int i = 0; i < args.length; i++)
-            newArgs[i] = args[i].casting(args_type[i]).getValue();
-        return newArgs;
-    }
-
     default void handle(WenyanThread thread, WenyanNativeValue[] args, boolean noReturn) throws WenyanException.WenyanThrowException {
         WenyanNativeValue value = handle(args);
         if (!noReturn)
@@ -68,28 +59,10 @@ public interface JavacallHandler extends WenyanFunction {
         if (isLocal()) {
             handle(thread, argsList.toArray(new WenyanNativeValue[0]), noReturn);
         } else {
-            JavacallHandler.Request request = new JavacallHandler.Request(
+            JavacallHandlers.Request request = new JavacallHandlers.Request(
                     thread, argsList.toArray(new WenyanNativeValue[0]), noReturn, this);
             thread.program.requestThreads.add(request);
             thread.block();
-        }
-    }
-
-    @FunctionalInterface
-    interface WenyanFunction {
-        WenyanNativeValue apply(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException;
-    }
-
-    record Request(
-            WenyanThread thread,
-            WenyanNativeValue[] args,
-            boolean noReturn,
-            JavacallHandler handler
-    ) {
-        public void handle() throws WenyanException.WenyanThrowException {
-            handler.handle(thread, args, noReturn);
-            thread.program.readyQueue.add(thread);
-            thread.state = WenyanThread.State.READY;
         }
     }
 }

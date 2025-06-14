@@ -2,6 +2,7 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.WenyanType;
 import net.minecraft.util.RandomSource;
 
 public class EchoChecker extends CraftingAnswerChecker {
@@ -13,7 +14,7 @@ public class EchoChecker extends CraftingAnswerChecker {
 
     @Override
     protected void genInput() {
-        ans = new WenyanNativeValue(WenyanNativeValue.Type.INT, random.nextInt(), true);
+        ans = new WenyanNativeValue(WenyanType.INT, random.nextInt(), true);
         input.clear();
         input.add(ans);
     }

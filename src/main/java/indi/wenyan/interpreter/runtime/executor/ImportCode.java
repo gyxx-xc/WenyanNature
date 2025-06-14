@@ -23,7 +23,7 @@ public class ImportCode extends WenyanCode {
             case IMPORT_FROM -> {
                 try {
                     String name = (String) runtime.processStack.peek()
-                            .casting(WenyanNativeValue.Type.STRING).getValue();
+                            .casting(WenyanType.STRING).getValue();
                     runtime.setVariable(id,
                             WenyanPackages.PACKAGES.get(name).variables.get(id));
                 } catch (WenyanException.WenyanTypeException e) {

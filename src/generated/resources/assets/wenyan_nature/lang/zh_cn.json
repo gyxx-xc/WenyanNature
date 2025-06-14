@@ -34,5 +34,18 @@
   "type.wenyan_nature.null": "空無",
   "type.wenyan_nature.object": "物",
   "type.wenyan_nature.object_type": "類",
-  "type.wenyan_nature.string": "言"
+  "type.wenyan_nature.string": "言",
+
+  "config.wenyan_nature.main.title": "吾有一术 参数板",
+  "config.wenyan_nature.general.title": "通用",
+  "config.wenyan_nature.general.test": "测试",
+
+
+  "config.wenyan_nature.performance.title": "性能设置",
+  "config.wenyan_nature.performance.thread_limit": "线程限制",
+  "config.wenyan_nature.performance.thread_limit.description": "同时能够执行符咒的最大线程数。",
+
+  "config.wenyan_nature.advanced.title": "进阶设置",
+  "config.wenyan_nature.advanced.debug_mode": "调试模式",
+  "config.wenyan_nature.advanced.debug_mode.description": "启用此选项以在控制台中输出调试信息。"
 }
