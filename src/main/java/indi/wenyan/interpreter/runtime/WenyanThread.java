@@ -53,7 +53,6 @@ public class WenyanThread {
                 // for debug only
                 state = State.DYING;
                 WenyanException.handleException(program.holder, "Reporting a issue");
-                // throw new RuntimeException(Component.translatable("error.wenyan_nature.runtime_error_").getString() + context.line() + ":" + context.column() + " " + e.getMessage());
             }
 
 //        System.out.println(runtime.programCounter + ": " + code);
