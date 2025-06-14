@@ -20,6 +20,7 @@ group = mod_group_id
 repositories {
     mavenLocal()
     mavenCentral()
+    maven { url "https://maven.shedaniel.me/" }
 }
 
 base {
@@ -136,6 +137,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
+
     antlr "org.antlr:antlr4:4.13.1"
 
     testImplementation platform('org.junit:junit-bom:5.13.0')
@@ -178,9 +181,7 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url "file://${project.projectDir}/repo"
-        }
+        maven { url "file://${project.projectDir}/repo" }
     }
 }
 
