@@ -29,8 +29,8 @@ public class WenyanNature {
 
         modEventBus.addListener(this::clientSetup);
     }
-    public void clientSetup(FMLClientSetupEvent event) {
 
+    public void clientSetup(FMLClientSetupEvent event) {
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (client, parent) -> {
             return WenyanConfig.createConfigScreen(parent);
         });
