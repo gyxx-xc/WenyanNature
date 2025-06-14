@@ -4,6 +4,9 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.*;
+import indi.wenyan.content.handler.feature_additions.TeleportHandler;
+import indi.wenyan.content.handler.feature_additions.find_entity_handler.*;
+import indi.wenyan.content.handler.feature_additions.string_handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.*;
 import net.minecraft.client.Minecraft;
@@ -15,7 +18,10 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public final class WenyanPackages {
     private WenyanPackages(){}
@@ -126,6 +132,28 @@ public final class WenyanPackages {
                 .function("「雷」", new ThunderHandler(runner, holder))
                 .object(WenyanObjectTypes.VECTOR3)
                 .function("「己方位」", new SelfPositionHandler(holder, runner))
+                .function("「阅简」", new GetSignAndLecternMsgHandler(runner.level(),holder))
+                .function("「题篆」", new SetSignAndLecternMsgHandler(runner.level(),holder))
+                .function("「赋名」", new SetEntityCustomNameHanlder())
+                .function("「显名」", new GetEntityNameHandler())
+                .function("「物之隐名」", new GetItemInternalNameHandler())
+                .function("「瞬」", new TeleportHandler(runner.level()))
+                .function("「寻」", new EntityFinderHandler(runner.level()))
+                .function("「大寻」", new EntitysFinderHandler(runner.level()))
+                .function("「器象」", new ItemEntityFinderHandler(runner.level()))
+                .function("「器象之大寻」", new ItemEntitysFinderHandler(runner.level()))
+                .function("「灵察」", new LivingEntityFinderHandler(runner.level()))
+                .function("「灵察之大寻」", new LivingEntitysFinderHandler(runner.level()))
+                .function("「煞觅」", new MonsterFinderHandler(runner.level()))
+                .function("「煞觅之大寻」", new MonstersFinderHandler(runner.level()))
+                .function("「气踪」", new ProjectileFinderHandler(runner.level()))
+                .function("「气踪之大寻」", new ProjectilesFinderHandler(runner.level()))
+                .function("「天工」", new VehicleFinderHandler(runner.level()))
+                .function("「天工之大寻」", new VehiclesFinderHandler(runner.level()))
+                .function("「真觅」", new PlayerFinderHandler(runner.level()))
+                .function("「真觅之大寻」", new PlayersFinderHandler(runner.level()))
+                .function("「兽觅」", new AnimalFinderHandler(runner.level()))
+                .function("「兽觅之大寻」", new AnimalsFinderHandler(runner.level()))
                 .build();
     }
 
@@ -146,6 +174,28 @@ public final class WenyanPackages {
                 .function("「己於南」", new SelfPositionBlockHandler(holder, runner, Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(holder, runner, Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(holder, runner, Direction.NORTH))
+                .function("「阅简」", new GetSignAndLecternMsgHandler(runner.getLevel(),holder))
+                .function("「题篆」", new SetSignAndLecternMsgHandler(runner.getLevel(),holder))
+                .function("「赋名」", new SetEntityCustomNameHanlder())
+                .function("「显名」", new GetEntityNameHandler())
+                .function("「物之隐名」", new GetItemInternalNameHandler())
+                .function("「瞬」", new TeleportHandler(runner.getLevel()))
+                .function("「寻」", new EntityFinderHandler(runner.getLevel()))
+                .function("「大寻」", new EntitysFinderHandler(runner.getLevel()))
+                .function("「器象」", new ItemEntityFinderHandler(runner.getLevel()))
+                .function("「器象之大寻」", new ItemEntitysFinderHandler(runner.getLevel()))
+                .function("「灵察」", new LivingEntityFinderHandler(runner.getLevel()))
+                .function("「灵察之大寻」", new LivingEntitysFinderHandler(runner.getLevel()))
+                .function("「煞觅」", new MonsterFinderHandler(runner.getLevel()))
+                .function("「煞觅之大寻」", new MonstersFinderHandler(runner.getLevel()))
+                .function("「气踪」", new ProjectileFinderHandler(runner.getLevel()))
+                .function("「气踪之大寻」", new ProjectilesFinderHandler(runner.getLevel()))
+                .function("「天工」", new VehicleFinderHandler(runner.getLevel()))
+                .function("「天工之大寻」", new VehiclesFinderHandler(runner.getLevel()))
+                .function("「真觅」", new PlayerFinderHandler(runner.getLevel()))
+                .function("「真觅之大寻」", new PlayersFinderHandler(runner.getLevel()))
+                .function("「兽觅」", new AnimalFinderHandler(runner.getLevel()))
+                .function("「兽觅之大寻」", new AnimalsFinderHandler(runner.getLevel()))
                 .build();
     }
 
