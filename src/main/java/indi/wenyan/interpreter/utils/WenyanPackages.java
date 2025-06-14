@@ -6,6 +6,7 @@ import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.*;
 import indi.wenyan.content.handler.feature_additions.TeleportHandler;
 import indi.wenyan.content.handler.feature_additions.find_entity_handler.*;
+import indi.wenyan.content.handler.feature_additions.packages.FeatureAdditionsPackages;
 import indi.wenyan.content.handler.feature_additions.string_handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.*;
@@ -122,6 +123,7 @@ public final class WenyanPackages {
             .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanType.BOOL)
             .build();
 
+
     public static WenyanRuntime handEnvironment(Player holder, HandRunnerEntity runner) {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
@@ -132,6 +134,7 @@ public final class WenyanPackages {
                 .function("「雷」", new ThunderHandler(runner, holder))
                 .object(WenyanObjectTypes.VECTOR3)
                 .function("「己方位」", new SelfPositionHandler(holder, runner))
+                .function("「密语」", new SetChatHideFilterHandler(holder))
                 .function("「阅简」", new GetSignAndLecternMsgHandler(runner.level(),holder))
                 .function("「题篆」", new SetSignAndLecternMsgHandler(runner.level(),holder))
                 .function("「赋名」", new SetEntityCustomNameHanlder())
@@ -174,6 +177,8 @@ public final class WenyanPackages {
                 .function("「己於南」", new SelfPositionBlockHandler(holder, runner, Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(holder, runner, Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(holder, runner, Direction.NORTH))
+                .function("「万言感」", new GetLastMsgHandler())
+                .function("「感言」", new GetMeMsgHandler(holder))
                 .function("「阅简」", new GetSignAndLecternMsgHandler(runner.getLevel(),holder))
                 .function("「题篆」", new SetSignAndLecternMsgHandler(runner.getLevel(),holder))
                 .function("「赋名」", new SetEntityCustomNameHanlder())
@@ -196,6 +201,7 @@ public final class WenyanPackages {
                 .function("「真觅之大寻」", new PlayersFinderHandler(runner.getLevel()))
                 .function("「兽觅」", new AnimalFinderHandler(runner.getLevel()))
                 .function("「兽觅之大寻」", new AnimalsFinderHandler(runner.getLevel()))
+
                 .build();
     }
 
@@ -214,7 +220,11 @@ public final class WenyanPackages {
         put("「「算經」」", MATH_PACKAGES);
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);
+        put("「「玄文库」」", FeatureAdditionsPackages.STRING_UTILS_PACKAGES);
     }};
+
+
+
 
     public static class WenyanObjectTypes {
         public static final JavacallObjectType VECTOR3 = new JavacallObjectType(null, "「方位」",
