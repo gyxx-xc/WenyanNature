@@ -15,7 +15,7 @@ import indi.wenyan.interpreter.utils.JavacallHandlers;
  */
 public class StringUtil_SubString_Start implements JavacallHandler {
     public static final WenyanType[] ARGS_TYPE =
-            {WenyanType.STRING, WenyanType.STRING};
+            {WenyanType.STRING, WenyanType.INT};
     @Override
     public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
