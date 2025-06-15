@@ -2,16 +2,16 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanFunction;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.utils.JavacallHandlers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface JavacallHandler extends WenyanFunction {
-    WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException;
+    WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
     /**
      * Decided if this handler is running at program thread.
@@ -39,10 +39,10 @@ public interface JavacallHandler extends WenyanFunction {
         return 1;
     }
 
-    default void handle(WenyanThread thread, WenyanNativeValue[] args, boolean noReturn) throws WenyanException.WenyanThrowException {
-        WenyanNativeValue value = handle(args);
-        if (!noReturn)
-            thread.currentRuntime().processStack.push(value);
+    default void handleWarper(JavacallContext context) throws WenyanException.WenyanThrowException {
+        WenyanNativeValue value = handle(context);
+        if (!context.noReturn())
+            context.thread().currentRuntime().processStack.push(value);
     }
 
     @Override
@@ -56,12 +56,12 @@ public interface JavacallHandler extends WenyanFunction {
         for (int i = 0; i < args; i++)
             argsList.add(runtime.processStack.pop());
 
+        JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
+                noReturn, thread, this, thread.program.holder);
         if (isLocal()) {
-            handle(thread, argsList.toArray(new WenyanNativeValue[0]), noReturn);
+            handleWarper(context);
         } else {
-            JavacallHandlers.Request request = new JavacallHandlers.Request(
-                    thread, argsList.toArray(new WenyanNativeValue[0]), noReturn, this);
-            thread.program.requestThreads.add(request);
+            thread.program.requestThreads.add(context);
             thread.block();
         }
     }

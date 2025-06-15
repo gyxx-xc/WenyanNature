@@ -1,5 +1,6 @@
 package indi.wenyan.content.entity;
 
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.setup.Registration;
@@ -30,7 +31,7 @@ public class HandRunnerEntity extends Projectile {
     public HandRunnerEntity(@NotNull Player holder, String code, int level) {
         super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
         speed = (int) Math.pow(10, level);
-        program = new WenyanProgram(code, WenyanPackages.handEnvironment(holder, this), holder);
+        program = new WenyanProgram(code, WenyanPackages.HAND_ENVIRONMENT, holder, this);
 
         Vec3 lookDirection = Vec3.directionFromRotation(holder.getXRot(), holder.getYRot()).normalize().scale(0.5);
         this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));

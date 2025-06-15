@@ -6,7 +6,7 @@ grammar WenyanR;
 // to bytecode that has
 // jmp:label (->), branch_false:label (value -> value)
 // call:argc (arg2, arg1..., func_value -> ret), ret (value -> )
-// call_attr:argc (arg..., self/ignore, func -> ret), handle(h):argc (args... -> ret)
+// call_attr:argc (arg..., self/ignore, func -> ret), handleWarper(h):argc (args... -> ret)
 // push:const (-> value), pop (value ->)
 // pushA (value ->), popA (-> value), peekA(-> value), peekA_N:cnt (-> cnt*val), empty
 // load:id (-> value), store:id (value -> ), set_val(value2, value1 -> ) [v1 -> v2]

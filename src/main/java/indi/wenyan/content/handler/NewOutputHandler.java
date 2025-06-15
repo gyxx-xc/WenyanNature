@@ -1,6 +1,7 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.WenyanValue;
@@ -10,21 +11,21 @@ import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class NewOutputHandler implements JavacallHandler {
-    private final BlockRunner runner;
 
-    public NewOutputHandler(BlockRunner runner) {
-        this.runner = runner;
+    public NewOutputHandler() {
     }
 
     @Override
-    public WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         StringBuilder result = new StringBuilder();
-        for (WenyanNativeValue arg : args) {
+        for (WenyanNativeValue arg : context.args()) {
             result.append(result.isEmpty() ? "" : " ").append(arg.toString());
         }
-        if (runner.getLevel() instanceof ServerLevel sl)
+
+        if (context.runner().runner() instanceof BlockRunner runner && runner.getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(runner.getBlockPos()),
                     new OutputInformationPacket(runner.getBlockPos(), result.toString()));
+        }
         return WenyanValue.NULL;
     }
 

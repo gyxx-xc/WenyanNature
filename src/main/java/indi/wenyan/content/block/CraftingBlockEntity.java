@@ -84,9 +84,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                     entity.isCrafting = false;
                     entity.ejectItem();
                 } else {
-                    entity.runner.program = new WenyanProgram(String.join("\n", entity.runner.pages),
-                            WenyanPackages.craftingEnvironment(entity.checker), null);
-                    entity.runner.program.run();
+                    // TODO
+                    entity.runner.run(null);
                 }
                 if (!entity.isCrafting) {
                     for (BlockPos b : BlockPos.betweenClosed(pos.offset(RANGE, -RANGE, RANGE), pos.offset(-RANGE, RANGE, -RANGE))) {
@@ -130,9 +129,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
 
         this.runner = runner;
         round = 0;
-        runner.program = new WenyanProgram(String.join("\n", runner.pages),
-                WenyanPackages.craftingEnvironment(checker), player);
-        runner.program.run();
+        runner.run(player);
         isCrafting = true;
     }
 

@@ -65,7 +65,7 @@ public class BlockRunner extends BlockEntity {
             return;
         }
         program = new WenyanProgram(String.join("\n", pages),
-                WenyanPackages.blockEnvironment(getBlockPos(), getBlockState(), player, this), player);
+                WenyanPackages.BLOCK_ENVIRONMENT, player, this);
         program.run();
     }
 

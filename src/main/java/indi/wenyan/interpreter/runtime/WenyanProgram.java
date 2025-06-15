@@ -1,7 +1,10 @@
 package indi.wenyan.interpreter.runtime;
 
+import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -22,7 +25,7 @@ public class WenyanProgram {
 
     public WenyanThread mainThread = new WenyanThread(this);
     public Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
-    public Queue<JavacallHandlers.Request> requestThreads = new ConcurrentLinkedQueue<>();
+    public Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
     private Thread programJavaThread;
@@ -30,11 +33,32 @@ public class WenyanProgram {
     // STUB: used in error handler, might changed
     public Player holder;
 
+    public final JavacallContext.RunnerWarper<?> warper;
+
     private static final int SWITCH_COST = 5;
     private static final int SWITCH_STEP = 10;
 
     public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder) {
+        this(code, baseEnvironment, holder,
+                new JavacallContext.NullRunnerWarper(null));
+    }
+
+    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
+                         HandRunnerEntity runner) {
+        this(code, baseEnvironment, holder,
+                new JavacallContext.HandRunnerWarper(runner));
+    }
+
+    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
+                         BlockRunner runner) {
+        this(code, baseEnvironment, holder,
+                new JavacallContext.BlockRunnerWarper(runner));
+    }
+
+    private WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
+                         JavacallContext.RunnerWarper<?> warper) {
         this.code = code;
+        this.warper = warper;
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
         visitor.visit(WenyanVisitor.program(code));
         this.baseEnvironment = baseEnvironment;
@@ -51,10 +75,13 @@ public class WenyanProgram {
 
     public void handle() {
         while (!requestThreads.isEmpty()) {
-            JavacallHandlers.Request request = requestThreads.poll();
+            JavacallContext request = requestThreads.poll();
             try {
-                request.handle();
+                request.handler().handleWarper(request);
+                request.thread().state = WenyanThread.State.READY;
+                request.thread().program.readyQueue.add(request.thread());
             } catch (WenyanException.WenyanThrowException | WenyanException e) {
+                request.thread().state = WenyanThread.State.DYING;
                 WenyanException.handleException(holder, e.getMessage());
             }
         }
@@ -106,7 +133,7 @@ public class WenyanProgram {
 充「a 」以一以一以一以一以一以一
 凡「a 」中之「b 」
 書「b 」
-云云                        """,
+云云""",
                 WenyanPackages.WENYAN_BASIC_PACKAGES
         , null);
         System.out.println(program.baseBytecode);

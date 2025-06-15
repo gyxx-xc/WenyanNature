@@ -2,10 +2,7 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.block.RunnerBlock;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -13,38 +10,41 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlockMoveHandler implements JavacallHandler {
-    private final Player holder;
-    private final BlockPos pos;
-    private final BlockState blockState;
+import java.util.List;
 
+public class BlockMoveHandler implements JavacallHandler {
     public static final WenyanType[] ARGS_TYPE = {WenyanType.INT, WenyanType.INT, WenyanType.INT};
 
-    public BlockMoveHandler(Player holder, BlockPos pos, BlockState blockState) {
-        this.holder = holder;
-        this.pos = pos;
-        this.blockState = blockState;
+    public BlockMoveHandler() {
     }
 
     @Override
-    public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
-        Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
-        args[0] = Math.max(-10, Math.min(10, (int) args[0]));
-        args[1] = Math.max(-10, Math.min(10, (int) args[1]));
-        args[2] = Math.max(-10, Math.min(10, (int) args[2]));
-        Level level = holder.level();
-            BlockPos newPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);
-            BlockPos attach = newPos.relative(RunnerBlock.getConnectedDirection(blockState).getOpposite());
+    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
+        args.set(0, Math.max(-10, Math.min(10, (int) args.get(0))));
+        args.set(1, Math.max(-10, Math.min(10, (int) args.get(1))));
+        args.set(2, Math.max(-10, Math.min(10, (int) args.get(2))));
+
+        if (context.runner().runner() instanceof BlockRunner runner) {
+            Level level = runner.getLevel();
+            BlockPos newPos = runner.getBlockPos().offset((int) args.get(0), (int) args.get(1), (int) args.get(2));
+            BlockPos attach = newPos.relative(RunnerBlock.getConnectedDirection(runner.getBlockState()).getOpposite());
+            assert level != null;
             if (!level.getBlockState(attach).isCollisionShapeFullBlock(level, attach)) return WenyanValue.NULL;
-            level.setBlockAndUpdate(newPos, blockState);
-            level.neighborChanged(newPos, blockState.getBlock(), newPos);
+            level.setBlockAndUpdate(newPos, runner.getBlockState());
+            level.neighborChanged(newPos, runner.getBlockState().getBlock(), newPos);
             BlockRunner entity = (BlockRunner) level.getBlockEntity(newPos);
             assert entity != null;
-            entity.copy((BlockRunner) level.getBlockEntity(pos));
+            entity.copy((BlockRunner) level.getBlockEntity(runner.getBlockPos()));
 
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            level.neighborChanged(pos, blockState.getBlock(), pos);
-            level.removeBlockEntity(pos);
+            level.setBlockAndUpdate(runner.getBlockPos(), Blocks.AIR.defaultBlockState());
+            level.neighborChanged(runner.getBlockPos(), runner.getBlockState().getBlock(), runner.getBlockPos());
+            level.removeBlockEntity(runner.getBlockPos());
+        } else {
+            // TODO translatable
+            throw new WenyanException.WenyanTypeException("BlockMoveHandler can only be used with BlockRunner.");
+        }
+
         return WenyanValue.NULL;
     }
 

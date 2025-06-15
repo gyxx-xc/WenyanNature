@@ -1,39 +1,37 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 
-public class TouchHandler implements JavacallHandler {
-    public final Level level;
-    public final BlockPos pos;
+import java.util.List;
 
+public class TouchHandler implements JavacallHandler {
     public static final WenyanType[] ARGS_TYPE =
             {WenyanType.INT, WenyanType.INT, WenyanType.INT};
 
-    public TouchHandler(Level level, BlockPos pos) {
+    public TouchHandler() {
         super();
-        this.level = level;
-        this.pos = pos;
     }
 
     @Override
-    public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
-        Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
-        args[0] = Math.max(-10, Math.min(10, (int) args[0]));
-        args[1] = Math.max(-10, Math.min(10, (int) args[1]));
-        args[2] = Math.max(-10, Math.min(10, (int) args[2]));
-        BlockPos blockPos = pos.offset((int) args[0], (int) args[1], (int) args[2]);
-            level.getProfiler().push("explosion_blocks");
-            level.getBlockState(blockPos).onExplosionHit(level, blockPos,
-                    new Explosion(level, null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-                            1.0f, false, Explosion.BlockInteraction.TRIGGER_BLOCK), (a1, a2) -> {});
-            level.getProfiler().pop();
+    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
+        int dx = Math.max(-10, Math.min(10, (int) args.get(0)));
+        int dy = Math.max(-10, Math.min(10, (int) args.get(1)));
+        int dz = Math.max(-10, Math.min(10, (int) args.get(2)));
+        if (context.runner().runner() instanceof BlockRunner runner) {
+            BlockPos blockPos = runner.getBlockPos().offset(dx, dy, dz);
+            context.holder().level().getProfiler().push("explosion_blocks");
+            context.holder().level().getBlockState(blockPos).onExplosionHit(context.holder().level(), blockPos,
+                    new Explosion(context.holder().level(), null, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
+                            1.0f, false, Explosion.BlockInteraction.TRIGGER_BLOCK), (a1, a2) -> {
+                    });
+            context.holder().level().getProfiler().pop();
+        }
         return WenyanValue.NULL;
     }
     @Override

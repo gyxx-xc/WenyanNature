@@ -6,6 +6,7 @@ import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CraftingAnswerChecker {
     protected final ArrayList<WenyanNativeValue> input = new ArrayList<>();
@@ -42,7 +43,7 @@ public abstract class CraftingAnswerChecker {
         this.random = random;
     }
 
-    public void accept(WenyanNativeValue[] value) {
+    public void accept(List<WenyanNativeValue> value) {
         for (var v : value)
             accept(v);
     }

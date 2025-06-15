@@ -41,18 +41,18 @@ public class WenyanPackageBuilder {
     public WenyanPackageBuilder function(String name, Function<Object[], Object> function,
                                          WenyanType returnType, WenyanType[] argTypes) {
         return function(name, args -> {
-            Object[] newArgs = new Object[args.length];
+            Object[] newArgs = new Object[args.size()];
             for (int i = 0; i < argTypes.length; i++)
-                newArgs[i] = args[i].casting(argTypes[i]).getValue();
+                newArgs[i] = args.get(i).casting(argTypes[i]).getValue();
             return new WenyanNativeValue(returnType, function.apply(newArgs), true);
         }, new WenyanType[0]);
     }
 
     public WenyanPackageBuilder function(String name, Function<Object[], Object> function, WenyanType valueType) {
         return function(name, args -> {
-            Object[] newArgs = new Object[args.length];
-            for (int i = 0; i < args.length; i++)
-                newArgs[i] = args[i].casting(valueType).getValue();
+            Object[] newArgs = new Object[args.size()];
+            for (int i = 0; i < args.size(); i++)
+                newArgs[i] = args.get(i).casting(valueType).getValue();
             return new WenyanNativeValue(valueType, function.apply(newArgs), true);
         }, new WenyanType[0]);
     }
@@ -96,11 +96,11 @@ public class WenyanPackageBuilder {
 
     public static JavacallHandlers.WenyanFunction reduceWith(ReduceFunction function) {
         return args -> {
-            if (args.length <= 1)
+            if (args.size() <= 1)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-            WenyanNativeValue value = args[0];
-            for (int i = 1; i < args.length; i++) {
-                value = function.apply(value, args[i]);
+            WenyanNativeValue value = args.getFirst();
+            for (int i = 1; i < args.size(); i++) {
+                value = function.apply(value, args.get(i));
             }
             return value;
         };
@@ -108,21 +108,21 @@ public class WenyanPackageBuilder {
 
     public static JavacallHandlers.WenyanFunction boolBinaryOperation(java.util.function.BiFunction<Boolean, Boolean, Boolean> function) {
         return args -> {
-            if (args.length != 2)
+            if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
             return new WenyanNativeValue(WenyanType.BOOL,
-                    function.apply((boolean) args[0].casting(WenyanType.BOOL).getValue(),
-                            (boolean) args[1].casting(WenyanType.BOOL).getValue()),
+                    function.apply((boolean) args.get(0).casting(WenyanType.BOOL).getValue(),
+                            (boolean) args.get(1).casting(WenyanType.BOOL).getValue()),
                     true);
         };
     }
 
     public static JavacallHandlers.WenyanFunction compareOperation(CompareFunction function) {
         return args -> {
-            if (args.length != 2)
+            if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
             return new WenyanNativeValue(WenyanType.BOOL,
-                    function.apply(args[0], args[1]), true);
+                    function.apply(args.get(0), args.get(1)), true);
         };
     }
 

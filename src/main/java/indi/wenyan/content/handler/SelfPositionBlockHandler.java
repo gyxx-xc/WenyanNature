@@ -1,33 +1,33 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
 
 public class SelfPositionBlockHandler implements JavacallHandler {
-    private final Player holder;
-    private final BlockRunner runner;
     private final Direction direction;
 
-    public SelfPositionBlockHandler(Player holder, BlockRunner runner, Direction direction) {
-        this.holder = holder;
-        this.runner = runner;
+    public SelfPositionBlockHandler(Direction direction) {
         this.direction = direction;
     }
 
     @Override
-    public WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException {
-        return new WenyanNativeValue(WenyanType.DOUBLE, switch (direction) {
-            case DOWN -> runner.getBlockPos().getCenter().y - holder.position().y;
-            case UP -> holder.position().y - runner.getBlockPos().getCenter().y;
-            case WEST -> runner.getBlockPos().getCenter().x - holder.position().x;
-            case EAST -> holder.position().x - runner.getBlockPos().getCenter().x;
-            case SOUTH -> runner.getBlockPos().getCenter().z - holder.position().z;
-            case NORTH -> holder.position().z - runner.getBlockPos().getCenter().z;
-        }, true);
+    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        if (context.runner().runner() instanceof BlockRunner runner) {
+            return new WenyanNativeValue(WenyanType.DOUBLE, switch (direction) {
+                case DOWN -> runner.getBlockPos().getCenter().y - context.holder().position().y;
+                case UP -> context.holder().position().y - runner.getBlockPos().getCenter().y;
+                case WEST -> runner.getBlockPos().getCenter().x - context.holder().position().x;
+                case EAST -> context.holder().position().x - runner.getBlockPos().getCenter().x;
+                case SOUTH -> runner.getBlockPos().getCenter().z - context.holder().position().z;
+                case NORTH -> context.holder().position().z - runner.getBlockPos().getCenter().z;
+            }, true);
+        } else {
+            // TODO thr
+            return WenyanValue.NULL;
+        }
     }
     @Override
     public boolean isLocal() {
