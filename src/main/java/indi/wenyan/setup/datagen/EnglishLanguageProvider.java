@@ -53,7 +53,18 @@ public class EnglishLanguageProvider extends LanguageProvider {
         this.add("type.wenyan_nature.function", "術");
         this.add("type.wenyan_nature.object", "物");
 
-        this.add("title.wenyan_nature.create_tab", "吾有一術");
-        
+        this.add("title.wenyan_nature.create_tab", "WenyanNature");
+
+        this.add("config.wenyan_nature.main.title", "WenyanNature Configuration Panel");
+        this.add("config.wenyan_nature.general.title", "General Settings");
+        this.add("config.wenyan_nature.general.test", "Test");
+
+        this.add("config.wenyan_nature.performance.title", "Performance Settings");
+        this.add("config.wenyan_nature.performance.thread_limit", "Thread Limit");
+        this.add("config.wenyan_nature.performance.thread_limit.description", "Set the maximum number of threads for WenyanNature. A higher value may improve performance, but also cause instability.");
+
+        this.add("config.wenyan_nature.advanced.title", "进阶设置");
+        this.add("config.wenyan_nature.advanced.debug_mode", "调试模式");
+        this.add("config.wenyan_nature.advanced.debug_mode.description", "启用此选项以在控制台中输出调试信息。");
     }
 }

@@ -56,5 +56,17 @@ public class ChineseLanguageProvider extends LanguageProvider {
 
         this.add("title.wenyan_nature.create_tab", "吾有一術");
 
+        this.add("config.wenyan_nature.main.title", "吾有一术 参数板");
+        this.add("config.wenyan_nature.general.title", "通用");
+        this.add("config.wenyan_nature.general.test", "测试");
+
+        this.add("config.wenyan_nature.performance.title", "性能设置");
+        this.add("config.wenyan_nature.performance.thread_limit", "线程限制");
+        this.add("config.wenyan_nature.performance.thread_limit.description", "同时能够执行符咒的最大线程数。");
+
+        this.add("config.wenyan_nature.advanced.title", "进阶设置");
+        this.add("config.wenyan_nature.advanced.debug_mode", "调试模式");
+        this.add("config.wenyan_nature.advanced.debug_mode.description", "启用此选项以在控制台中输出调试信息。");
+
     }
 }
