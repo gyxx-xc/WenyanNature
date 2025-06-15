@@ -19,7 +19,7 @@ public class StringUtil_StartWith implements JavacallHandler {
     @Override
     public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
-        String original=(String)args[0], target=(String)args[1];
+        String original=args[0].toString(), target=args[1].toString();
 
         return new WenyanNativeValue(WenyanType.BOOL,original.startsWith(target),false);
     }

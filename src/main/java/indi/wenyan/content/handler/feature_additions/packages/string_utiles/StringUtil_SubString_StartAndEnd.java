@@ -19,9 +19,9 @@ public class StringUtil_SubString_StartAndEnd implements JavacallHandler {
     @Override
     public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
-        String original=(String)args[0];
-        int end=Math.min((Integer)args[2],original.length());
-        int start=(Integer)args[1];
+        String original=args[0].toString();
+        int end=Math.min(Integer.parseInt(args[2].toString()),original.length());
+        int start=Integer.parseInt(args[1].toString());
         start=Math.max(0,Math.min(start,end));
 
         return new WenyanNativeValue(WenyanType.STRING,original.substring(start,end),false);

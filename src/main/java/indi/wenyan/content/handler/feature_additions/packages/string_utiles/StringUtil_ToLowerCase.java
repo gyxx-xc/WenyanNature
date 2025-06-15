@@ -19,7 +19,7 @@ public class StringUtil_ToLowerCase implements JavacallHandler {
     @Override
     public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
-        String original=(String)args[0];
+        String original=args[0].toString();
 
         return new WenyanNativeValue(WenyanType.STRING,original.toLowerCase(),false);
     }

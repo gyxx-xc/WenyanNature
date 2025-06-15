@@ -20,7 +20,7 @@ public class StringUtil_SubString_Start implements JavacallHandler {
     public WenyanNativeValue handle(WenyanNativeValue[] wenyan_args) throws WenyanException.WenyanThrowException {
         Object[] args = JavacallHandlers.getArgs(wenyan_args, ARGS_TYPE);
         String original=(String)args[0];
-        int start=(Integer)args[1];
+        int start=Integer.parseInt(args[1].toString());
         start=Math.min(start,original.length());
 
         return new WenyanNativeValue(WenyanType.STRING,original.substring(start),false);
