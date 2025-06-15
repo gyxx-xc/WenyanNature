@@ -4,26 +4,26 @@ import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.setup.event.GetChatMsgEvent;
+import indi.wenyan.setup.event.GetChatMessageEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 
 /**
  * @author I_am_a_lolikong
  * @version 1.0
- * @className GetMeMsgHandler
+ * @className GetMyMessageHandler
  * @Description TODO 感言
  * @date 2025/6/14 20:29
  */
-public class GetMeMsgHandler implements JavacallHandler {
+public class GetMyMessageHandler implements JavacallHandler {
     private Player player;
-    public GetMeMsgHandler(Player player) {
+    public GetMyMessageHandler(Player player) {
         this.player = player;
     }
     @Override
     public WenyanNativeValue handle(WenyanNativeValue[] args) throws WenyanException.WenyanThrowException {
         CompoundTag modData = player.getPersistentData().getCompound("wenyan_data");
-        String playerLastMessage = GetChatMsgEvent.getPlayerLastMessage(player);
+        String playerLastMessage = GetChatMessageEvent.getPlayerLastMessage(player);
         //检测是否包含过滤规则
         if (modData.contains("MyChatHideFilter")){
             //如果包含则仅输出包含信息

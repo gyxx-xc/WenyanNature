@@ -1,4 +1,4 @@
-package indi.wenyan.content.handler.feature_additions.packages.string_utiles;
+package indi.wenyan.content.handler.feature_additions.packages.string_util_handler;
 
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -9,11 +9,11 @@ import indi.wenyan.interpreter.utils.JavacallHandlers;
 /**
  * @author I_am_a_lolikong
  * @version 1.0
- * @className StringUtil_ToLowerCase
+ * @className StringUtilToLowerCaseHandler
  * @Description TODO
  * @date 2025/6/15 0:20
  */
-public class StringUtil_ToLowerCase implements JavacallHandler {
+public class StringUtilToLowerCaseHandler implements JavacallHandler {
     public static final WenyanType[] ARGS_TYPE =
             {WenyanType.STRING};
     @Override
@@ -26,6 +26,6 @@ public class StringUtil_ToLowerCase implements JavacallHandler {
 
     @Override
     public boolean isLocal() {
-        return false;
+        return true;
     }
 }
