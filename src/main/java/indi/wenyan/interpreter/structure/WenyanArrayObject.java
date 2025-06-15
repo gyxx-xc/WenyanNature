@@ -7,9 +7,14 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 
 public class WenyanArrayObject implements WenyanObject {
-    private final ArrayList<WenyanNativeValue> values = new ArrayList<>();
+    private final ArrayList<WenyanNativeValue> values;
 
-    public WenyanArrayObject() {}
+    public WenyanArrayObject() {
+        values = new ArrayList<>();
+    }
+    public WenyanArrayObject(ArrayList<WenyanNativeValue> values) {
+        this.values = values;
+    }
 
     public WenyanArrayObject concat(WenyanArrayObject other) {
         values.addAll(other.values);
