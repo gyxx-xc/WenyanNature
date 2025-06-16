@@ -1,7 +1,5 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.content.handler.JavacallHandler;
-import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.WenyanType;
@@ -17,8 +15,9 @@ public final class JavacallHandlers {
         List<Object> newArgs = new ArrayList<>(args.size());
         if (args.size() != args_type.length)
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-        for (int i = 0; i < args.size(); i++)
-            newArgs.set(i, args.get(i).casting(args_type[i]).getValue());
+        for (int i = 0; i < args.size(); i++){
+            newArgs.add(i,args.get(i).casting(args_type[i]).getValue());
+        }
         return newArgs;
     }
 

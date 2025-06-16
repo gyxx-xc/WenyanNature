@@ -2,14 +2,26 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.handler.*;
+import indi.wenyan.content.handler.feature_additions.entity_handler.EntityFinderHandler;
+import indi.wenyan.content.handler.feature_additions.string_util_handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public final class WenyanPackages {
     private WenyanPackages(){}
@@ -110,6 +122,25 @@ public final class WenyanPackages {
             .function("「占爻」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean(), WenyanType.BOOL)
             .build();
 
+    public static final WenyanRuntime STRING_UTILS_PACKAGES = WenyanPackageBuilder.create()
+            .function("「观字位」", new StringUtilIndexOfHandler())
+            .function("「契首字」", new StringUtilStartWithHandler())
+            .function("「合尾字」", new StringUtilEndWithHandler())
+            .function("「蕴字象」", new StringUtilContainsHandler())
+            .function("「截首爻」",new StringUtilSubStringStartHandler())
+            .function("「截全爻」",new StringUtilSubStringStartAndEndHandler())
+            .function("「易篆文」",new StringUtilReplaceHandler())
+            .function("「升阳文」", new StringUtilToUpperCaseHandler())
+            .function("「化阴文」", new StringUtilToLowerCaseHandler())
+            .function("「去芜文」", new StringUtilTrimHandler())
+            .function("「分文炁」", new StringUtilSplitHandler())
+            .function("「合谶文」", new StringUtilMatchesHandler())
+            .function("「验谶文」", new StringUtilValidateProphecyHandler())
+            .function("「辨谶凶」", new StringUtilDiagnoseProphecyHandler())
+            .function("「蕴谶骨」", new StringUtilContainsProphecyCharactersHandler())
+            .function("「虚室文」", new StringUtilIsEmptyHandler())
+            .build();
+
     public static final WenyanRuntime HAND_ENVIRONMENT = WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function(new String[] {"書","书"}, new OutputHandler())
@@ -119,8 +150,16 @@ public final class WenyanPackages {
                 .function("「雷」", new ThunderHandler())
                 .object(WenyanObjectTypes.VECTOR3)
                 .function("「己方位」", new SelfPositionHandler())
-                .build();
+                .function("「大寻」", new EntityFinderHandler<>(Entity.class))
+                .function("「器象」", new EntityFinderHandler<>(ItemEntity.class))
+                .function("「灵察」", new EntityFinderHandler<>(LivingEntity.class))
+                .function("「煞觅」", new EntityFinderHandler<>(Monster.class))
+                .function("「气踪」", new EntityFinderHandler<>(Projectile.class))
+                .function("「天工」", new EntityFinderHandler<>(VehicleEntity.class))
+                .function("「真觅」", new EntityFinderHandler<>(Player.class))
+                .function("「兽觅」", new EntityFinderHandler<>(Animal.class))
 
+                .build();
 
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
@@ -138,6 +177,14 @@ public final class WenyanPackages {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
+                .function("「大寻」", new EntityFinderHandler<>(Entity.class))
+                .function("「器象」", new EntityFinderHandler<>(ItemEntity.class))
+                .function("「灵察」", new EntityFinderHandler<>(LivingEntity.class))
+                .function("「煞觅」", new EntityFinderHandler<>(Monster.class))
+                .function("「气踪」", new EntityFinderHandler<>(Projectile.class))
+                .function("「天工」", new EntityFinderHandler<>(VehicleEntity.class))
+                .function("「真觅」", new EntityFinderHandler<>(Player.class))
+                .function("「兽觅」", new EntityFinderHandler<>(Animal.class))
                 .build();
 
     public static WenyanRuntime craftingEnvironment(CraftingAnswerChecker checker) {
@@ -155,6 +202,7 @@ public final class WenyanPackages {
         put("「「算經」」", MATH_PACKAGES);
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);
+        put("「「玄文库」」", STRING_UTILS_PACKAGES);
     }};
 
     public static class WenyanObjectTypes {
