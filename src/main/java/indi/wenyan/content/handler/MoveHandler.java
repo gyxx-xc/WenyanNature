@@ -21,7 +21,7 @@ public class MoveHandler implements JavacallHandler {
         newArgs.set(0, Math.max(-20, Math.min(20, (double) newArgs.get(0))));
         newArgs.set(1, Math.max(-20, Math.min(20, (double) newArgs.get(1))));
         newArgs.set(2, Math.max(-20, Math.min(20, (double) newArgs.get(2))));
-        if (context.runner().runner() instanceof HandRunnerEntity entity)
+        if (context.runnerWarper().runner() instanceof HandRunnerEntity entity)
             entity.setDeltaMovement(new Vec3((double) newArgs.get(0)/10,
                     (double) newArgs.get(1)/10, (double) newArgs.get(2)/10));
         return WenyanValue.NULL;

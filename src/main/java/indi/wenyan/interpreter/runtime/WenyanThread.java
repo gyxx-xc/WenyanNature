@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.runtime;
 
+import indi.wenyan.WenyanNature;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
@@ -49,10 +50,14 @@ public class WenyanThread {
                 WenyanBytecode.Context context = runtime.bytecode.getContext(runtime.programCounter);
 
                 WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
+                return;
             } catch (RuntimeException e) {
                 // for debug only
                 state = State.DYING;
-                WenyanException.handleException(program.holder, "Reporting a issue");
+
+                WenyanNature.LOGGER.error(e.getMessage());
+                WenyanException.handleException(program.holder, "killed");
+                return;
             }
 
 //        System.out.println(runtime.programCounter + ": " + code);

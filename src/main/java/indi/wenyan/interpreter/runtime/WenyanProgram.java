@@ -1,15 +1,15 @@
 package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.JavacallContext;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.utils.JavacallHandlers;
-import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
+import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Queue;
@@ -53,6 +53,12 @@ public class WenyanProgram {
                          BlockRunner runner) {
         this(code, baseEnvironment, holder,
                 new JavacallContext.BlockRunnerWarper(runner));
+    }
+
+    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
+                         CraftingAnswerChecker checker) {
+        this(code, baseEnvironment, holder,
+                new JavacallContext.CraftingAnswerWarper(checker));
     }
 
     private WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,

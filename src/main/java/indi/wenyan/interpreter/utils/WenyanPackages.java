@@ -1,15 +1,16 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public final class WenyanPackages {
     private WenyanPackages(){}
@@ -51,10 +52,6 @@ public final class WenyanPackages {
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) < 0))
 
             .function("「」", args -> WenyanValue.NULL)
-            .function("書", args -> {
-                System.out.println(args);
-                return WenyanValue.NULL;
-            })
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
@@ -121,10 +118,9 @@ public final class WenyanPackages {
                 .function("「己方位」", new SelfPositionHandler())
                 .build();
 
-
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
-                .function(new String[] {"書","书"}, new NewOutputHandler())
+                .function(new String[] {"書","书"}, new OutputHandler())
                 .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
 //                .function("「放置」", new BlockPlaceHandler(holder,
 //                        (BlockItem) Items.ACACIA_LOG.asItem()
@@ -140,16 +136,10 @@ public final class WenyanPackages {
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
                 .build();
 
-    public static WenyanRuntime craftingEnvironment(CraftingAnswerChecker checker) {
-        return WenyanPackageBuilder.create()
-                .environment(WENYAN_BASIC_PACKAGES)
-                .environment(checker.inputEnvironment())
-                .function("書", args -> {
-                    checker.accept(args);
-                    return WenyanValue.NULL;
-                })
-                .build();
-    }
+    public static final WenyanRuntime CRAFTING_BASE_ENVIRONMENT = WenyanPackageBuilder.create()
+            .environment(WENYAN_BASIC_PACKAGES)
+            .function("書", new OutputHandler())
+            .build();
 
     public static final Map<String, WenyanRuntime> PACKAGES = new HashMap<>(){{
         put("「「算經」」", MATH_PACKAGES);

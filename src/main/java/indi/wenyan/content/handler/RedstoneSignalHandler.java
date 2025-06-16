@@ -13,7 +13,7 @@ public class RedstoneSignalHandler implements JavacallHandler {
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         int value = 0;
-        if (context.runner().runner() instanceof BlockRunner runner)
+        if (context.runnerWarper().runner() instanceof BlockRunner runner)
             if (runner.getLevel() != null) {
                 value = runner.getLevel().getBestNeighborSignal(runner.getBlockPos());
             }

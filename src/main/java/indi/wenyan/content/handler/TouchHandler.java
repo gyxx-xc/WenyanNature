@@ -5,7 +5,6 @@ import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class TouchHandler implements JavacallHandler {
         int dx = Math.max(-10, Math.min(10, (int) args.get(0)));
         int dy = Math.max(-10, Math.min(10, (int) args.get(1)));
         int dz = Math.max(-10, Math.min(10, (int) args.get(2)));
-        if (context.runner().runner() instanceof BlockRunner runner) {
+        if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             BlockPos blockPos = runner.getBlockPos().offset(dx, dy, dz);
             context.holder().level().getProfiler().push("explosion_blocks");
             context.holder().level().getBlockState(blockPos).onExplosionHit(context.holder().level(), blockPos,

@@ -5,10 +5,8 @@ import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class BlockMoveHandler implements JavacallHandler {
         args.set(1, Math.max(-10, Math.min(10, (int) args.get(1))));
         args.set(2, Math.max(-10, Math.min(10, (int) args.get(2))));
 
-        if (context.runner().runner() instanceof BlockRunner runner) {
+        if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             Level level = runner.getLevel();
             BlockPos newPos = runner.getBlockPos().offset((int) args.get(0), (int) args.get(1), (int) args.get(2));
             BlockPos attach = newPos.relative(RunnerBlock.getConnectedDirection(runner.getBlockState()).getOpposite());

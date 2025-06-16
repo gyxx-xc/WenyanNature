@@ -3,7 +3,6 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.WenyanPackages;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Arrays;
@@ -14,7 +13,7 @@ public class SelfPositionHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        if (context.runner().runner() instanceof HandRunnerEntity runner) {
+        if (context.runnerWarper().runner() instanceof HandRunnerEntity runner) {
             Vec3 vec = runner.position().subtract(context.holder().position());
             return WenyanPackages.WenyanObjectTypes.VECTOR3.newObject(
                     Arrays.asList(new WenyanNativeValue(WenyanType.DOUBLE, vec.y, true)

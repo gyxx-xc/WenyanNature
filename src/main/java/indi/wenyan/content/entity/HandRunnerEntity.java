@@ -1,8 +1,7 @@
 package indi.wenyan.content.entity;
 
-import indi.wenyan.interpreter.structure.JavacallContext;
-import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;

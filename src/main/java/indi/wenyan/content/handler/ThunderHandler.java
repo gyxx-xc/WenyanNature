@@ -7,7 +7,6 @@ import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.player.Player;
 
 public class ThunderHandler implements JavacallHandler {
     public ThunderHandler() {
@@ -16,7 +15,7 @@ public class ThunderHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(JavacallContext context) {
-        if (context.runner().runner() instanceof HandRunnerEntity entity) {
+        if (context.runnerWarper().runner() instanceof HandRunnerEntity entity) {
             Entity e = new LightningBolt(EntityType.LIGHTNING_BOLT, entity.level());
             e.moveTo(entity.getX(), entity.getY(), entity.getZ());
             entity.level().addFreshEntity(e);

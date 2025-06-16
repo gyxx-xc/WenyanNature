@@ -4,8 +4,6 @@ import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class BulletHandler implements JavacallHandler {
@@ -24,7 +22,7 @@ public class BulletHandler implements JavacallHandler {
                 Math.max(-10, Math.min(10, (double) newArgs.get(1))),
                 Math.max(-10, Math.min(10, (double) newArgs.get(2))));
 
-        if (context.runner().runner() instanceof HandRunnerEntity entity) {
+        if (context.runnerWarper().runner() instanceof HandRunnerEntity entity) {
             BulletEntity bullet = new BulletEntity(entity.level(), entity.getPosition(0), dir,
                     Math.max(1, Math.min(20, (double) newArgs.get(3))) / 10,
                     Math.max(1, Math.min(200, (int) newArgs.get(4))), context.holder());
