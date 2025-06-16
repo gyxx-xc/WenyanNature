@@ -5,7 +5,6 @@ import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -17,13 +16,8 @@ import java.util.List;
  * @date 2025/6/5 22:29
  */
 public class TeleportHandler implements JavacallHandler {
-    private final Level level;
     public static final WenyanType[] ARGS_TYPE =
             {WenyanType.OBJECT,WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE};
-    public TeleportHandler(Level level) {
-        this.level = level;
-    }
-
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);

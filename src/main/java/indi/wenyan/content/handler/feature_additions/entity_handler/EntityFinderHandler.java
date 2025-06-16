@@ -19,7 +19,6 @@ import java.util.List;
  * @date 2025/6/6 15:56
  */
 public class EntityFinderHandler<T extends Entity> implements JavacallHandler {
-    private Level level;
     public static final WenyanType[] ARGS_TYPE = //搜寻单个实体
             {WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE};
     public static final WenyanType[] ARGS_TYPE2=//范围搜寻所有实体 并尝试设置半径
@@ -33,9 +32,11 @@ public class EntityFinderHandler<T extends Entity> implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        Level level;
         if (context.runner().runner() instanceof HandRunnerEntity runner) {
             level=runner.level();
-        }else if (context.runner().runner() instanceof BlockRunner runner) {
+        }else{
+            BlockRunner runner= (BlockRunner) context.runner().runner();
             level=runner.getLevel();
         }
         List<Object> args;

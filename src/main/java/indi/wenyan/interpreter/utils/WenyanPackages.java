@@ -3,6 +3,8 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.handler.*;
 import indi.wenyan.content.handler.feature_additions.entity_handler.EntityFinderHandler;
+import indi.wenyan.content.handler.feature_additions.magic_handler.TeleportHandler;
+import indi.wenyan.content.handler.feature_additions.string_handler.*;
 import indi.wenyan.content.handler.feature_additions.string_util_handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.*;
@@ -150,6 +152,12 @@ public final class WenyanPackages {
                 .function("「雷」", new ThunderHandler())
                 .object(WenyanObjectTypes.VECTOR3)
                 .function("「己方位」", new SelfPositionHandler())
+                .function("「密语」", new SetChatHideFilterHandler())
+                .function("「阅简」", new GetSignAndLecternMsgHandler())
+                .function("「题篆」", new SetSignAndLecternMsgHandler())
+                .function("「赋名」", new SetEntityCustomNameHanlder())
+                .function("「显名」", new GetEntityNameHandler())
+                .function("「物之隐名」", new GetItemInternalNameHandler())
                 .function("「大寻」", new EntityFinderHandler<>(Entity.class))
                 .function("「器象」", new EntityFinderHandler<>(ItemEntity.class))
                 .function("「灵察」", new EntityFinderHandler<>(LivingEntity.class))
@@ -177,6 +185,14 @@ public final class WenyanPackages {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
+                .function("「万言感」", new GetLastMessageHandler())
+                .function("「感言」", new GetMyMessageHandler())
+                .function("「阅简」", new GetSignAndLecternMsgHandler())
+                .function("「题篆」", new SetSignAndLecternMsgHandler())
+                .function("「赋名」", new SetEntityCustomNameHanlder())
+                .function("「显名」", new GetEntityNameHandler())
+                .function("「物之隐名」", new GetItemInternalNameHandler())
+                .function("「瞬」", new TeleportHandler())
                 .function("「大寻」", new EntityFinderHandler<>(Entity.class))
                 .function("「器象」", new EntityFinderHandler<>(ItemEntity.class))
                 .function("「灵察」", new EntityFinderHandler<>(LivingEntity.class))

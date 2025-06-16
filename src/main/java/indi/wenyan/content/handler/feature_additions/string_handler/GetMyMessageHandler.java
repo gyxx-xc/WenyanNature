@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 public class GetMyMessageHandler implements JavacallHandler {
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        Player player=context.holder();
+        Player player = context.holder();
         CompoundTag modData = player.getPersistentData().getCompound("wenyan_data");
         String playerLastMessage = GetChatMessageEvent.getPlayerLastMessage(player);
         //检测是否包含过滤规则
