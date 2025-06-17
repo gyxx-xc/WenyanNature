@@ -11,7 +11,7 @@ import java.util.List;
 public final class JavacallHandlers {
     private JavacallHandlers() {}
 
-    public static List<Object> getArgs(List<WenyanNativeValue> args, WenyanType[] args_type) throws WenyanException.WenyanTypeException {
+    public static List<Object> getArgs(List<WenyanNativeValue> args, WenyanType<?>[] args_type) throws WenyanException.WenyanTypeException {
         List<Object> newArgs = new ArrayList<>();
         if (args.size() != args_type.length)
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());

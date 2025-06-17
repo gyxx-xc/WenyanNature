@@ -36,7 +36,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.variables_not_match").getString(), ctx);
         }
-        WenyanType type;
+        WenyanType<?> type;
         try {
             type = WenyanDataParser.parseType(ctx.type().getText());
         } catch (WenyanException.WenyanThrowException e) {
@@ -114,7 +114,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
-        ArrayList<WenyanType> argsType = new ArrayList<>();
+        ArrayList<WenyanType<?>> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i ++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
@@ -287,7 +287,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
 
-        ArrayList<WenyanType> argsType = new ArrayList<>();
+        ArrayList<WenyanType<?>> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());

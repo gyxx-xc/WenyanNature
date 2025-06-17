@@ -72,7 +72,7 @@ public class WenyanArrayObject implements WenyanObject {
     }
 
     @Override
-    public WenyanType type() {
+    public WenyanType<?> type() {
         return WenyanType.LIST;
     }
 

@@ -20,7 +20,7 @@ public class WenyanCompilerEnvironment implements Serializable {
 
     private record ForEnvironment(int forEndLabel, int progEndLabel) {}
 
-    private record Constant(WenyanType t, Object o) {}
+    private record Constant(WenyanType<?> t, Object o) {}
     private record Context(int line, int column) {}
 
     public WenyanCompilerEnvironment(WenyanBytecode bytecode) {

@@ -24,7 +24,7 @@ public interface WenyanObjectType {
 
     void addStaticVariable(String id, WenyanNativeValue value);
 
-    default WenyanType type() {
+    default WenyanType<?> type() {
         return WenyanType.OBJECT_TYPE;
     }
 }

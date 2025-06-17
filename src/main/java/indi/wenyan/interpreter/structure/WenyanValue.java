@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public interface WenyanValue {
     WenyanNativeValue NULL = new WenyanNativeValue(WenyanType.NULL, null, true);
-    HashMap<WenyanType, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
+    HashMap<WenyanType<?>, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
         put(WenyanType.STRING, 0);
         put(WenyanType.LIST, 1);
         put(WenyanType.FUNCTION, 1);
@@ -15,7 +15,7 @@ public interface WenyanValue {
         put(WenyanType.BOOL, 4);
     }};
 
-    WenyanType type();
+    WenyanType<?> type();
 
-    record FunctionSign(String name, WenyanType[] argTypes, WenyanFunction function) {}
+    record FunctionSign(String name, WenyanType<?>[] argTypes, WenyanFunction function) {}
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public class MoveHandler implements JavacallHandler {
-    public static final WenyanType[] ARGS_TYPE =
+    public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE};
 
     public MoveHandler() {

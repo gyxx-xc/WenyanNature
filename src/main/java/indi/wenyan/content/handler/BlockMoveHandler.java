@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.List;
 
 public class BlockMoveHandler implements JavacallHandler {
-    public static final WenyanType[] ARGS_TYPE = {WenyanType.INT, WenyanType.INT, WenyanType.INT};
+    public static final WenyanType<?>[] ARGS_TYPE = {WenyanType.INT, WenyanType.INT, WenyanType.INT};
 
     public BlockMoveHandler() {
     }

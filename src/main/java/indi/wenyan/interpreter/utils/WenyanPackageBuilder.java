@@ -28,7 +28,7 @@ public class WenyanPackageBuilder {
         return environment;
     }
 
-    public WenyanPackageBuilder constant(String name, WenyanType type, Object value) {
+    public WenyanPackageBuilder constant(String name, WenyanType<?> type, Object value) {
         environment.setVariable(name, new WenyanNativeValue(type, value, true));
         return this;
     }
@@ -39,7 +39,7 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, Function<Object[], Object> function,
-                                         WenyanType returnType, WenyanType[] argTypes) {
+                                         WenyanType<?> returnType, WenyanType<?>[] argTypes) {
         return function(name, args -> {
             Object[] newArgs = new Object[args.size()];
             for (int i = 0; i < argTypes.length; i++)
@@ -48,7 +48,7 @@ public class WenyanPackageBuilder {
         }, new WenyanType[0]);
     }
 
-    public WenyanPackageBuilder function(String name, Function<Object[], Object> function, WenyanType valueType) {
+    public WenyanPackageBuilder function(String name, Function<Object[], Object> function, WenyanType<?> valueType) {
         return function(name, args -> {
             Object[] newArgs = new Object[args.size()];
             for (int i = 0; i < args.size(); i++)
@@ -68,7 +68,7 @@ public class WenyanPackageBuilder {
         return this;
     }
 
-    public WenyanPackageBuilder function(String name, JavacallHandlers.WenyanFunction function, WenyanType[] argTypes) {
+    public WenyanPackageBuilder function(String name, JavacallHandlers.WenyanFunction function, WenyanType<?>[] argTypes) {
         return function(name, new LocalCallHandler(function), argTypes);
     }
 
@@ -83,7 +83,7 @@ public class WenyanPackageBuilder {
         return this;
     }
 
-    public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanType[] argTypes) {
+    public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanType<?>[] argTypes) {
         WenyanNativeValue.FunctionSign sign = new WenyanNativeValue.FunctionSign(name, argTypes, javacall);
         environment.setVariable(name, new WenyanNativeValue(WenyanType.FUNCTION, sign, true));
         return this;

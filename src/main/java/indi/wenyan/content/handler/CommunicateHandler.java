@@ -6,7 +6,7 @@ import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.world.phys.Vec3;
 
 public class CommunicateHandler implements JavacallHandler {
-    public static final WenyanType[] ARG_TYPES =
+    public static final WenyanType<?>[] ARG_TYPES =
             {WenyanType.INT, WenyanType.INT, WenyanType.INT};
 
     public CommunicateHandler() {

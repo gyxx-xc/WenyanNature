@@ -8,7 +8,7 @@ import java.util.ArrayList;
 // about to Deprecated and change to WenyanValue
 public class WenyanNativeValue implements WenyanValue {
 
-    private final WenyanType type;
+    private final WenyanType<?> type;
     private Object value;
     private final boolean isConst;
 
@@ -18,7 +18,7 @@ public class WenyanNativeValue implements WenyanValue {
         this.isConst = isConst;
     }
 
-    public WenyanType type() {
+    public WenyanType<?> type() {
         return type;
     }
 
@@ -119,7 +119,7 @@ public class WenyanNativeValue implements WenyanValue {
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 
-    public WenyanType widerType(WenyanType type) {
+    public WenyanType<?> widerType(WenyanType type) {
         if (TYPE_CASTING_ORDER.get(this.type) < TYPE_CASTING_ORDER.get(type))
             return this.type;
         return type;

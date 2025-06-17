@@ -9,7 +9,7 @@ import net.minecraft.world.level.Explosion;
 import java.util.List;
 
 public class TouchHandler implements JavacallHandler {
-    public static final WenyanType[] ARGS_TYPE =
+    public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanType.INT, WenyanType.INT, WenyanType.INT};
 
     public TouchHandler() {

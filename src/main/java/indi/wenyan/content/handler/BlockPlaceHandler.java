@@ -20,7 +20,7 @@ public class BlockPlaceHandler implements JavacallHandler {
     private final Player holder;
     private final BlockState block;
 
-    public static final WenyanType[] ARGS_TYPE =
+    public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanType.INT, WenyanType.INT, WenyanType.INT};
 
     public BlockPlaceHandler(Player player, BlockItem block, BlockPos pos, BlockState self) {

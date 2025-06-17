@@ -6,7 +6,7 @@ import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.world.level.Level;
 
 public class ExplosionHandler implements JavacallHandler {
-    public static final WenyanType[] ARGS_TYPE =
+    public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanType.DOUBLE};
 
     public ExplosionHandler() {

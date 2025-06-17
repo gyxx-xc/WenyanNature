@@ -98,7 +98,7 @@ public final class WenyanDataParser {
         put("阳", true);
     }};
 
-    private static final HashMap<String, WenyanType> TYPE_MAP = new HashMap<>() {{
+    private static final HashMap<String, WenyanType<?>> TYPE_MAP = new HashMap<>() {{
         put("爻", WenyanType.BOOL);
         put("數", WenyanType.DOUBLE);
         put("言", WenyanType.STRING);

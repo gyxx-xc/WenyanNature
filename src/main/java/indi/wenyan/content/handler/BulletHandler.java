@@ -7,7 +7,7 @@ import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.world.phys.Vec3;
 
 public class BulletHandler implements JavacallHandler {
-    public static final WenyanType[] ARGS_TYPE =
+    public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.INT};
 
     public BulletHandler() {
