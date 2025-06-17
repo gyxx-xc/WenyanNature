@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.content.block.BlockRunner;
-import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.AnsweringChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
@@ -56,7 +56,7 @@ public class WenyanProgram {
     }
 
     public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
-                         CraftingAnswerChecker checker) {
+                         AnsweringChecker checker) {
         this(code, baseEnvironment, holder,
                 new JavacallContext.CraftingAnswerWarper(checker));
     }

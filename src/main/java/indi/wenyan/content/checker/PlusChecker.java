@@ -12,7 +12,7 @@ public class PlusChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    protected void genInput() {
+    public void init() {
         int a = random.nextInt(100);
         int b = random.nextInt(100);
         input.clear();

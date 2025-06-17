@@ -13,7 +13,7 @@ public class EchoChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    protected void genInput() {
+    public void init() {
         ans = new WenyanNativeValue(WenyanType.INT, random.nextInt(), true);
         input.clear();
         input.add(ans);
