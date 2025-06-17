@@ -3,6 +3,7 @@ package indi.wenyan.content.checker;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.WenyanValue;
 import net.minecraft.util.RandomSource;
 
 public class EchoChecker extends CraftingAnswerChecker {
@@ -22,7 +23,7 @@ public class EchoChecker extends CraftingAnswerChecker {
     @Override
     public void accept(WenyanNativeValue value) {
         try {
-            if (WenyanNativeValue.equals(value, ans)){
+            if (WenyanValue.equals(value, ans)){
                 setStatus(Result.ANSWER_CORRECT);
                 return;
             }

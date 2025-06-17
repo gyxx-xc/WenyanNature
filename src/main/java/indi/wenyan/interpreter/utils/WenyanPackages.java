@@ -21,11 +21,11 @@ public final class WenyanPackages {
     public static final String MOD_ID = "模";
 
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
-            .function("加", WenyanPackageBuilder.reduceWith(WenyanNativeValue::add))
-            .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(WenyanNativeValue::sub))
-            .function("乘", WenyanPackageBuilder.reduceWith(WenyanNativeValue::mul))
-            .function("除", WenyanPackageBuilder.reduceWith(WenyanNativeValue::div))
-            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanNativeValue::add))
+            .function("加", WenyanPackageBuilder.reduceWith(WenyanValue::add))
+            .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(WenyanValue::sub))
+            .function("乘", WenyanPackageBuilder.reduceWith(WenyanValue::mul))
+            .function("除", WenyanPackageBuilder.reduceWith(WenyanValue::div))
+            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanValue::add))
 
             .function(new String[]{"變","变"}, args -> args.getFirst().not())
             .function("充", args -> {
@@ -40,16 +40,16 @@ public final class WenyanPackages {
             })
 
             // 模, 且, 或
-            .function("模", WenyanPackageBuilder.reduceWith(WenyanNativeValue::mod))
+            .function("模", WenyanPackageBuilder.reduceWith(WenyanValue::mod))
             .function("且", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalAnd))
             .function("或", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalOr))
 
-            .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !WenyanNativeValue.equals(a, b)))
-            .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) <= 0))
-            .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) >= 0))
-            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation((value, other) -> WenyanNativeValue.equals(value, other)))
-            .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) > 0))
-            .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) < 0))
+            .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !WenyanValue.equals(a, b)))
+            .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) <= 0))
+            .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) >= 0))
+            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation((value, other) -> WenyanValue.equals(value, other)))
+            .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) > 0))
+            .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) < 0))
 
             .function("「」", args -> WenyanValue.NULL)
             .build();
