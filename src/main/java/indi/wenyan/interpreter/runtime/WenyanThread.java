@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.runtime;
 
+import indi.wenyan.WenyanNature;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
@@ -35,7 +36,14 @@ public class WenyanThread {
 
             WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
 
-            int needStep = code.code().getStep(code.arg(), this);
+            int needStep;
+            try {
+                needStep = code.code().getStep(code.arg(), this);
+            } catch (Exception e) {
+                dieWithException(e);
+                return;
+            }
+
             if (assignedSteps < needStep) {
                 return; //switch
             }
@@ -44,16 +52,9 @@ public class WenyanThread {
 
             try {
                 code.code().exec(code.arg(), this);
-            } catch (WenyanException e) {
-                state = State.DYING;
-                WenyanBytecode.Context context = runtime.bytecode.getContext(runtime.programCounter);
-
-                WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
-            } catch (RuntimeException e) {
-                // for debug only
-                state = State.DYING;
-                WenyanBytecode.Context context = runtime.bytecode.getContext(runtime.programCounter);
-                throw new RuntimeException(Component.translatable("error.wenyan_nature.runtime_error_").getString() + context.line() + ":" + context.column() + " " + e.getMessage());
+            } catch (Exception e) {
+                dieWithException(e);
+                return;
             }
 
 //        System.out.println(runtime.programCounter + ": " + code);
@@ -63,6 +64,19 @@ public class WenyanThread {
             if (!runtime.PCFlag)
                 runtime.programCounter++;
             runtime.PCFlag = false;
+        }
+    }
+
+    private void dieWithException(Exception e) {
+        state = State.DYING;
+        if (e instanceof WenyanException) {
+            WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
+            WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
+        } else {
+            // for debug only
+            WenyanNature.LOGGER.error("WenyanThread died with an unexpected exception", e);
+            WenyanNature.LOGGER.error(e.getMessage());
+            WenyanException.handleException(program.holder, "killed");
         }
     }
 

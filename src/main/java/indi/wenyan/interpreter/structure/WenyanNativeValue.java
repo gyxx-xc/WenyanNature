@@ -4,21 +4,9 @@ import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 // about to Deprecated and change to WenyanValue
 public class WenyanNativeValue implements WenyanValue {
-
-    public static final HashMap<WenyanType, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
-        put(WenyanType.STRING, 0);
-        put(WenyanType.LIST, 1);
-        put(WenyanType.FUNCTION, 1);
-        put(WenyanType.OBJECT, 1);
-        put(WenyanType.OBJECT_TYPE, 1);
-        put(WenyanType.DOUBLE, 2);
-        put(WenyanType.INT, 3);
-        put(WenyanType.BOOL, 4);
-    }};
 
     private final WenyanType type;
     private Object value;
@@ -289,16 +277,14 @@ public class WenyanNativeValue implements WenyanValue {
 
     private static String WenyanString(FunctionSign functionSign) {
         StringBuilder sb = new StringBuilder();
-        sb.append(functionSign.name).append("(");
-        for (int i = 0; i < functionSign.argTypes.length; i++) {
-            sb.append(functionSign.argTypes[i].toString());
-            if (i < functionSign.argTypes.length - 1) {
+        sb.append(functionSign.name()).append("(");
+        for (int i = 0; i < functionSign.argTypes().length; i++) {
+            sb.append(functionSign.argTypes()[i].toString());
+            if (i < functionSign.argTypes().length - 1) {
                 sb.append(", ");
             }
         }
         sb.append(")");
         return sb.toString();
     }
-
-    public record FunctionSign(String name, WenyanType[] argTypes, WenyanFunction function) {}
 }

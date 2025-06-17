@@ -36,7 +36,7 @@ public class FunctionCode extends WenyanCode {
                 runtime.processStack.push(self);
                 noReturn = true;
             } else { // function
-                // handle self first
+                // handleWarper self first
                 if (operation == Operation.CALL_ATTR) {
                     // try casting to object (might be list)
                     try {

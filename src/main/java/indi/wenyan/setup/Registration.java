@@ -50,6 +50,8 @@ public class Registration {
         CREATIVE_MODE_TABS.register(modEventBus);
         MENU_TYPE.register(modEventBus);
         DATA.register(modEventBus);
+        RECIPE_TYPE.register(modEventBus);
+        SERIALIZER.register(modEventBus);
 
         modEventBus.addListener(Registration::onRegisterPayloadHandler);
     }

@@ -56,24 +56,6 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     public static final VoxelShape WEST_AABB;
     public static final VoxelShape EAST_AABB;
 
-    @Override
-    protected @NotNull InteractionResult
-    useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!player.isShiftKeyDown()) {
-            if (!level.isClientSide()) {
-                BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
-                if (Objects.requireNonNull(runner).program == null || !runner.program.isRunning()) {
-                    runner.program = new WenyanProgram(String.join("\n", runner.pages),
-                            WenyanPackages.blockEnvironment(pos, state, player, runner), player);
-                    runner.program.run();
-                } else {
-                    WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
-                }
-            }
-        }
-        return InteractionResult.SUCCESS;
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {

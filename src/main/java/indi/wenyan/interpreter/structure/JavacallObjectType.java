@@ -28,7 +28,6 @@ public class JavacallObjectType extends WenyanDictObjectType {
         WenyanNativeValue[] newArgs = new WenyanNativeValue[args.length + 1];
         newArgs[0] = object;
         System.arraycopy(args, 0, newArgs, 1, args.length);
-        constructor.handle(newArgs);
         return object;
     }
 
