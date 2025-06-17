@@ -36,7 +36,14 @@ public class WenyanThread {
 
             WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
 
-            int needStep = code.code().getStep(code.arg(), this);
+            int needStep;
+            try {
+                needStep = code.code().getStep(code.arg(), this);
+            } catch (Exception e) {
+                dieWithException(e);
+                return;
+            }
+
             if (assignedSteps < needStep) {
                 return; //switch
             }
@@ -45,18 +52,8 @@ public class WenyanThread {
 
             try {
                 code.code().exec(code.arg(), this);
-            } catch (WenyanException e) {
-                state = State.DYING;
-                WenyanBytecode.Context context = runtime.bytecode.getContext(runtime.programCounter);
-
-                WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
-                return;
-            } catch (RuntimeException e) {
-                // for debug only
-                state = State.DYING;
-
-                WenyanNature.LOGGER.error(e.getMessage());
-                WenyanException.handleException(program.holder, "killed");
+            } catch (Exception e) {
+                dieWithException(e);
                 return;
             }
 
@@ -67,6 +64,22 @@ public class WenyanThread {
             if (!runtime.PCFlag)
                 runtime.programCounter++;
             runtime.PCFlag = false;
+        }
+    }
+
+    private void dieWithException(Exception e) {
+        if (e instanceof WenyanException) {
+            state = State.DYING;
+            WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
+
+            WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
+        } else {
+            WenyanNature.LOGGER.error("WenyanThread died with an unexpected exception", e);
+            // for debug only
+            state = State.DYING;
+
+            WenyanNature.LOGGER.error(e.getMessage());
+            WenyanException.handleException(program.holder, "killed");
         }
     }
 
