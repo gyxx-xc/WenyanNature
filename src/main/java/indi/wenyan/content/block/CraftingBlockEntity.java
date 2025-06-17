@@ -107,7 +107,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                     entity.runner.program = new WenyanProgram(String.join("\n", entity.runner.pages),
                             WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
                             entity.player, entity.checker);
-                    entity.checker.init();
+                    entity.checker.init(entity.runner.program);
                     entity.runner.program.run();
                 }
             }
@@ -142,9 +142,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         round = 0;
         this.player = player;
         runner.program = new WenyanProgram(String.join("\n", runner.pages),
-                WenyanPackageBuilder.create()
-                        .environment(WenyanPackages.CRAFTING_BASE_ENVIRONMENT)
-                        .environment(checker.inputEnvironment()).build(), player, checker);
+                WenyanPackages.CRAFTING_BASE_ENVIRONMENT, player, checker);
+        checker.init(runner.program);
         runner.program.run();
         isCrafting = true;
     }

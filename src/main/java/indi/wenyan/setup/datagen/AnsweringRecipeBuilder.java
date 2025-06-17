@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnsweringRecipeBuilder {
+public final class AnsweringRecipeBuilder {
     private final List<Ingredient> input = new ArrayList<>();
     private final ItemStack output;
     private String question;

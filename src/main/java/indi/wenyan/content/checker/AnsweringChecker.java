@@ -1,9 +1,10 @@
 package indi.wenyan.content.checker;
 
+import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
 
 public interface AnsweringChecker {
-    void init();
+    void init(WenyanProgram program);
 
     void accept(WenyanNativeValue value);
 
