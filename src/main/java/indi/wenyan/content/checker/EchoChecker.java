@@ -22,7 +22,7 @@ public class EchoChecker extends CraftingAnswerChecker {
     @Override
     public void accept(WenyanNativeValue value) {
         try {
-            if (value.equals(ans)){
+            if (WenyanNativeValue.equals(value, ans)){
                 setStatus(Result.ANSWER_CORRECT);
                 return;
             }

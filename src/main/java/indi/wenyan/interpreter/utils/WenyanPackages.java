@@ -44,12 +44,12 @@ public final class WenyanPackages {
             .function("且", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalAnd))
             .function("或", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalOr))
 
-            .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !a.equals(b)))
-            .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) <= 0))
-            .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) >= 0))
-            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation(WenyanNativeValue::equals))
-            .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) > 0))
-            .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) < 0))
+            .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !WenyanNativeValue.equals(a, b)))
+            .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) <= 0))
+            .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) >= 0))
+            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation((value, other) -> WenyanNativeValue.equals(value, other)))
+            .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) > 0))
+            .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanNativeValue.compareTo(a, b) < 0))
 
             .function("「」", args -> WenyanValue.NULL)
             .build();
