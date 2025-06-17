@@ -18,20 +18,20 @@ import java.util.concurrent.Semaphore;
 
 public class WenyanProgram {
 
-    public String code;
+    public final String code;
 
     public final WenyanBytecode baseBytecode = new WenyanBytecode();
     public final WenyanRuntime baseEnvironment;
 
-    public WenyanThread mainThread = new WenyanThread(this);
-    public Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
-    public Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
+    public final WenyanThread mainThread = new WenyanThread(this);
+    public final Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
+    public final Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
     private Thread programJavaThread;
 
     // STUB: used in error handler, might changed
-    public Player holder;
+    public final Player holder;
 
     public final JavacallContext.RunnerWarper<?> warper;
 

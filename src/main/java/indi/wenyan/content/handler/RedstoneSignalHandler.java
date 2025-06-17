@@ -11,7 +11,7 @@ public class RedstoneSignalHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(JavacallContext context) {
         int value = 0;
         if (context.runnerWarper().runner() instanceof BlockRunner runner)
             if (runner.getLevel() != null) {

@@ -55,6 +55,9 @@ public class EnglishLanguageProvider extends LanguageProvider {
         this.add("error.wenyan_nature.type_cannot_be_divided", "謬：類不可相除");
         this.add("error.wenyan_nature.type_cannot_be_mod", "謬：類不可相餘");
         this.add("error.wenyan_nature.type_cannot_be_compared", "謬：類不可相比");
+        this.add("error.wenyan_nature.for_iter", "謬：不可迭代之物");
+        this.add("error.wenyan_nature.for_num", "謬：不可數之物");
+        this.add("error.wenyan_nature.too_many_variables", "謬：變數過多");
 
         this.add("type.wenyan_nature.int", "數");
         this.add("type.wenyan_nature.double", "分數");

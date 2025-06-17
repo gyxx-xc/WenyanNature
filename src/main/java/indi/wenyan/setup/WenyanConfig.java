@@ -46,8 +46,7 @@ public class WenyanConfig {
 
           });
 
-          Screen screen = builder.build();
-          return screen;
+          return builder.build();
       }
 
 }

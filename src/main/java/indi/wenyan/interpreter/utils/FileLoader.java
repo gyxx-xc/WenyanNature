@@ -99,7 +99,7 @@ public final class FileLoader {
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             LOGGER.info("[WenyanNature] 第{}行: {}", i + 1, line);
-            if (line.length() > maxCharPerLine || line.length() > maxCharsPerPage) {
+            if (line.length() > maxCharPerLine) {
                 source.sendSystemMessage(Component.literal("§c：第" + i + 1 + "行超出95字符限制, 无法导入。请检查文件内容。"));
                 return ItemStack.EMPTY;
             }
@@ -107,7 +107,7 @@ public final class FileLoader {
             //Exceed maxCharsPerPage or maxLinePerPage
             if (pageBuilder.length() + line.length() + 1 > maxCharsPerPage || lineCounter > maxLinePerPage) {
                 // Remove change line character at the end of the page
-                if (pageBuilder.length() > 0 && pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
+                if (!pageBuilder.isEmpty() && pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
                     pageBuilder.setLength(pageBuilder.length() - 1);
                 }
                 pages.add(Filterable.passThrough(pageBuilder.toString()));
@@ -119,7 +119,7 @@ public final class FileLoader {
         }
 
         //Last Page
-            if (pageBuilder.length() > 0) {
+            if (!pageBuilder.isEmpty()) {
                 if (pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
                     pageBuilder.setLength(pageBuilder.length() - 1);
                 }

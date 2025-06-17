@@ -12,7 +12,7 @@ public class SelfPositionBlockHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(JavacallContext context) {
         if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             return new WenyanNativeValue(WenyanType.DOUBLE, switch (direction) {
                 case DOWN -> runner.getBlockPos().getCenter().y - context.holder().position().y;

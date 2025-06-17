@@ -20,7 +20,7 @@ public class OutputHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(JavacallContext context) {
         StringBuilder result = new StringBuilder();
         for (WenyanNativeValue arg : context.args()) {
             result.append(result.isEmpty() ? "" : " ").append(arg.toString());
