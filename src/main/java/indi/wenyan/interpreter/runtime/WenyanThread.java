@@ -68,16 +68,13 @@ public class WenyanThread {
     }
 
     private void dieWithException(Exception e) {
+        state = State.DYING;
         if (e instanceof WenyanException) {
-            state = State.DYING;
             WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
-
             WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
         } else {
-            WenyanNature.LOGGER.error("WenyanThread died with an unexpected exception", e);
             // for debug only
-            state = State.DYING;
-
+            WenyanNature.LOGGER.error("WenyanThread died with an unexpected exception", e);
             WenyanNature.LOGGER.error(e.getMessage());
             WenyanException.handleException(program.holder, "killed");
         }
