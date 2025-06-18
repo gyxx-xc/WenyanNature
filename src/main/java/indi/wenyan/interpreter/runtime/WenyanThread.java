@@ -57,10 +57,6 @@ public class WenyanThread {
                 return;
             }
 
-            WenyanNature.LOGGER.debug("{}: {}", runtime.programCounter, code);
-            WenyanNature.LOGGER.debug(String.valueOf(runtime.processStack));
-            WenyanNature.LOGGER.debug(runtime.resultStack.toString());
-
             if (!runtime.PCFlag)
                 runtime.programCounter++;
             runtime.PCFlag = false;
