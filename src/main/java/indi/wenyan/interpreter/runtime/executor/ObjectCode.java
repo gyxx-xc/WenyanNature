@@ -3,7 +3,6 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
-import net.minecraft.network.chat.Component;
 
 public class ObjectCode extends WenyanCode {
     private final Operation operation;
@@ -59,7 +58,7 @@ public class ObjectCode extends WenyanCode {
                 case CREATE_TYPE -> {
                     WenyanNativeValue type = new WenyanNativeValue(WenyanType.OBJECT_TYPE,
                             new WenyanDictObjectType((WenyanObjectType) runtime.processStack.pop()
-                                    .casting(WenyanType.OBJECT_TYPE).getValue(), id), true);
+                                    .casting(WenyanType.OBJECT_TYPE).getValue()), true);
                     runtime.processStack.push(type);
                 }
             }

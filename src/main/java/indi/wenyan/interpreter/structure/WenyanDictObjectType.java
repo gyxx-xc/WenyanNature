@@ -1,24 +1,16 @@
 package indi.wenyan.interpreter.structure;
 
-import net.minecraft.network.chat.Component;
-
 import java.util.HashMap;
 
 public class WenyanDictObjectType implements WenyanObjectType {
     private final WenyanObjectType parent;
-    private final String name;
     private final HashMap<String, WenyanNativeValue> staticVariable = new HashMap<>();
     private final HashMap<String, WenyanNativeValue> functions = new HashMap<>();
 
-    public WenyanDictObjectType(WenyanObjectType parent, String name) {
+    public WenyanDictObjectType(WenyanObjectType parent) {
         this.parent = parent;
-        this.name = name;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 
     @Override
     public WenyanObjectType getParent() {

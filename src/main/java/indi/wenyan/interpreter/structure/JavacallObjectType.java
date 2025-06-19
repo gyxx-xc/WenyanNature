@@ -12,7 +12,7 @@ public class JavacallObjectType extends WenyanDictObjectType {
     private final JavacallHandler constructor;
 
     public JavacallObjectType(WenyanObjectType parent, String name, JavacallHandler constructor) {
-        super(parent, name);
+        super(parent);
         if (!constructor.isLocal())
             throw new RuntimeException("cannot use JavacallObjectType with non-local constructor");
         this.constructor = constructor;
