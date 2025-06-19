@@ -2,7 +2,9 @@ package indi.wenyan.interpreter.structure;
 
 import net.minecraft.network.chat.Component;
 
-public interface WenyanObjectType {
+import javax.annotation.Nullable;
+
+public interface WenyanObjectType extends WenyanValue {
     default WenyanNativeValue getAttribute(String name) {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunction(name);
@@ -12,17 +14,12 @@ public interface WenyanObjectType {
             return attr;
     }
 
-    String getName();
-
+    @Nullable
     WenyanObjectType getParent();
 
     WenyanNativeValue getFunction(String id);
 
-    void addFunction(String id, WenyanNativeValue function);
-
     WenyanNativeValue getStaticVariable(String id);
-
-    void addStaticVariable(String id, WenyanNativeValue value);
 
     default WenyanType type() {
         return WenyanType.OBJECT_TYPE;

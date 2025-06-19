@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.checker.AnsweringChecker;
+import indi.wenyan.content.checker.LabyrinthChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
@@ -10,7 +11,9 @@ import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -142,11 +145,7 @@ public class WenyanProgram {
 云云""",
                 WenyanPackages.WENYAN_BASIC_PACKAGES
         , null);
-        System.out.println(program.baseBytecode);
-        program.run();
-        while (program.isRunning()) {
-            program.step();
-            program.handle();
-        }
+        LabyrinthChecker checker = new LabyrinthChecker(new LegacyRandomSource(223));
+        checker.init(program);
     }
 }

@@ -89,11 +89,6 @@ public class WenyanPackageBuilder {
         return this;
     }
 
-    public WenyanPackageBuilder object(WenyanObjectType objectType) {
-        environment.setVariable(objectType.getName(), new WenyanNativeValue(WenyanType.OBJECT_TYPE, objectType, true));
-        return this;
-    }
-
     public static JavacallHandlers.WenyanFunction reduceWith(ReduceFunction function) {
         return args -> {
             if (args.size() <= 1)

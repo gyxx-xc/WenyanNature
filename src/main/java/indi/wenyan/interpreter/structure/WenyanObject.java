@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface WenyanObject extends WenyanValue {
@@ -29,8 +30,7 @@ public interface WenyanObject extends WenyanValue {
      *
      * @return the parent WenyanObjectType
      */
-    @Nullable
-    WenyanObjectType getParent();
+    WenyanObjectType getObjectType();
 
     default WenyanType type() {
         return WenyanType.OBJECT;

@@ -114,7 +114,6 @@ public final class WenyanPackages {
                 .function("「移」", new MoveHandler(), MoveHandler.ARGS_TYPE)
                 .function("「爆」", new ExplosionHandler())
                 .function("「雷」", new ThunderHandler())
-                .object(WenyanObjectTypes.VECTOR3)
                 .function("「己方位」", new SelfPositionHandler())
                 .build();
 

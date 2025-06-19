@@ -67,7 +67,7 @@ public class WenyanArrayObject implements WenyanObject {
     }
 
     @Override
-    public WenyanObjectType getParent() {
+    public WenyanObjectType getObjectType() {
         return null;
     }
 

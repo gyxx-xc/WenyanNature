@@ -25,7 +25,7 @@ public class WenyanDictObject implements WenyanObject {
     }
 
     @Override
-    public WenyanObjectType getParent() {
-        return type.getParent();
+    public WenyanObjectType getObjectType() {
+        return type;
     }
 }

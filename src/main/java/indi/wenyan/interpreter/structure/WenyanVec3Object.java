@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 // used as return new WenyanNativeValue(WenyanType.OBJECT, new WenyanVec3Object(vec3), true);
 public class WenyanVec3Object implements WenyanObject {
     private final Vec3 vec3;
+    private final WenyanObjectType objectType = new Vec3ObjectType();
 
     public WenyanVec3Object(Vec3 vec3) {
         this.vec3 = vec3;
@@ -27,7 +28,25 @@ public class WenyanVec3Object implements WenyanObject {
     }
 
     @Override
-    public @Nullable WenyanObjectType getParent() {
-        return null;
+    public @Nullable WenyanObjectType getObjectType() {
+        return objectType;
+    }
+
+    // store all static information
+    static class Vec3ObjectType implements WenyanObjectType {
+        @Override
+        public @Nullable WenyanObjectType getParent() {
+            return null; // Vec3 does not have a parent type
+        }
+
+        @Override
+        public WenyanNativeValue getFunction(String id) {
+            throw new WenyanException("Vec3 does not support functions: " + id);
+        }
+
+        @Override
+        public WenyanNativeValue getStaticVariable(String id) {
+            throw new WenyanException("Vec3 does not support static variables: " + id);
+        }
     }
 }

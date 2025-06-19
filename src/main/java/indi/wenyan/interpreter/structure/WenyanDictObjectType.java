@@ -36,7 +36,6 @@ public class WenyanDictObjectType implements WenyanObjectType {
         }
     }
 
-    @Override
     public void addFunction(String id, WenyanNativeValue function) {
         functions.put(id, function);
     }
@@ -46,7 +45,6 @@ public class WenyanDictObjectType implements WenyanObjectType {
         return staticVariable.get(id);
     }
 
-    @Override
     public void addStaticVariable(String id, WenyanNativeValue value) {
         staticVariable.put(id, value);
     }

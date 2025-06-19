@@ -39,13 +39,13 @@ public class ObjectCode extends WenyanCode {
                 }
                 case STORE_STATIC_ATTR -> {
                     WenyanNativeValue value = WenyanNativeValue.varOf(runtime.processStack.pop());
-                    WenyanObjectType type = (WenyanObjectType) runtime.processStack.peek()
+                    WenyanDictObjectType type = (WenyanDictObjectType) runtime.processStack.peek()
                             .casting(WenyanType.OBJECT_TYPE).getValue();
                     type.addStaticVariable(id, value);
                 }
                 case STORE_FUNCTION_ATTR -> {
                     WenyanNativeValue value = runtime.processStack.pop();
-                    WenyanObjectType type = (WenyanObjectType) runtime.processStack.peek()
+                    WenyanDictObjectType type = (WenyanDictObjectType) runtime.processStack.peek()
                             .casting(WenyanType.OBJECT_TYPE).getValue();
                     type.addFunction(id, value);
                 }
