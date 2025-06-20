@@ -9,6 +9,7 @@ import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.WenyanHandRunner;
+import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.setup.network.OutputInformationHandler;
 import indi.wenyan.setup.network.OutputInformationPacket;
@@ -39,6 +40,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 import static indi.wenyan.WenyanNature.MODID;
+import static indi.wenyan.setup.datagen.ModItemModelProvider.*;
 
 public class Registration {
 
@@ -70,6 +72,15 @@ public class Registration {
     public static final DeferredItem<Item> HAND_RUNNER_1;
     public static final DeferredItem<Item> HAND_RUNNER_2;
     public static final DeferredItem<Item> HAND_RUNNER_3;
+
+    public static final DeferredItem<Item> BAMBOO_PAPER;
+    public static final DeferredItem<Item> CLOUD_PAPER;
+    public static final DeferredItem<Item> DRAGON_PAPER;
+    public static final DeferredItem<Item> FROST_PAPER;
+    public static final DeferredItem<Item> PHOENIX_PAPER;
+    public static final DeferredItem<Item> STAR_PAPER;
+
+
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
     public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER;
@@ -135,6 +146,23 @@ public class Registration {
                         .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
                         .sized(0.45f, 1f)
                         .build("hand_runner"));
+        //Ink
+
+        //Paper
+        BAMBOO_PAPER = ITEMS.registerItem(BAMBOO_PAPER_ID,
+                (Item.Properties properties) -> new bamboo_paper(properties));
+        CLOUD_PAPER = ITEMS.registerItem(CLOUD_PAPER_ID,
+                (Item.Properties properties) -> new cloud_paper(properties));
+        DRAGON_PAPER = ITEMS.registerItem(DRAGON_PAPER_ID,
+                (Item.Properties properties) -> new dragon_paper(properties));
+        FROST_PAPER = ITEMS.registerItem(FROST_PAPER_ID,
+                (Item.Properties properties) -> new frost_paper(properties));
+        PHOENIX_PAPER = ITEMS.registerItem(PHOENIX_PAPER_ID,
+                (Item.Properties properties) -> new phoenix_paper(properties));
+        STAR_PAPER = ITEMS.registerItem(STAR_PAPER_ID,
+                (Item.Properties properties) -> new star_paper(properties));
+
+
 
         // TODO: add crafting block variable
         CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
@@ -187,6 +215,13 @@ public class Registration {
                     output.accept(HAND_RUNNER_1.get());
                     output.accept(HAND_RUNNER_2.get());
                     output.accept(HAND_RUNNER_3.get());
+                    output.accept(BAMBOO_PAPER.get());
+                    output.accept(CLOUD_PAPER.get());
+                    output.accept(DRAGON_PAPER.get());
+                    output.accept(FROST_PAPER.get());
+                    output.accept(PHOENIX_PAPER.get());
+                    output.accept(STAR_PAPER.get());
+
                 }).build());
     }
 }

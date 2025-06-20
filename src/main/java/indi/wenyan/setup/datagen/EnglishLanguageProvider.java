@@ -12,6 +12,12 @@ public class EnglishLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         this.add(Registration.HAND_RUNNER.get(),"符咒");
+        this.add(Registration.BAMBOO_PAPER.get(),"松竹纸");
+        this.add(Registration.CLOUD_PAPER.get(),"云篆纸");
+        this.add(Registration.STAR_PAPER.get(),"星辉纸");
+        this.add(Registration.FROST_PAPER.get(),"霜华纸");
+        this.add(Registration.PHOENIX_PAPER.get(),"凤羽纸");
+        this.add(Registration.DRAGON_PAPER.get(),"龙鳞纸");
 
         this.add("error.wenyan_nature.variables_not_match","謬：參數非同於冊");
         this.add("error.wenyan_nature.cannot_assign_to_constant", "謬：常數者無變也");
