@@ -69,7 +69,11 @@ public class WenyanProgram {
         this.code = code;
         this.warper = warper;
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
-        visitor.visit(WenyanVisitor.program(code));
+        try {
+            visitor.visit(WenyanVisitor.program(code));
+        } catch (WenyanException e) {
+            WenyanException.handleException(holder, e.getMessage());
+        }
         this.baseEnvironment = baseEnvironment;
         this.holder = holder;
     }

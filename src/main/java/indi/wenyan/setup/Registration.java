@@ -69,6 +69,7 @@ public class Registration {
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZER;
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE;
 
+
     public static final DeferredItem<Item> HAND_RUNNER;
     public static final DeferredItem<Item> HAND_RUNNER_1;
     public static final DeferredItem<Item> HAND_RUNNER_2;
@@ -87,10 +88,6 @@ public class Registration {
     public static final DeferredItem<Item> LUNAR_INK;
     public static final DeferredItem<Item> CINNABAR_INK;
     public static final DeferredItem<Item> STARLIGHT_INK;
-
-
-
-
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
     public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER;
@@ -156,7 +153,6 @@ public class Registration {
                         .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
                         .sized(0.45f, 1f)
                         .build("hand_runner"));
-        //Ink
 
         //Paper
         BAMBOO_PAPER = ITEMS.registerItem(BAMBOO_PAPER_ID,
@@ -186,8 +182,6 @@ public class Registration {
         STARLIGHT_INK = ITEMS.registerItem(STARLIGHT_INK_ID,
                 (Item.Properties properties) -> new starlight_ink(properties));
 
-
-        // TODO: add crafting block variable
         CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
         ITEMS.registerItem("crafting_block", (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
         CRAFTING_ENTITY = BLOCK_ENTITY.register("crafting_block",
@@ -238,6 +232,7 @@ public class Registration {
                     output.accept(HAND_RUNNER_1.get());
                     output.accept(HAND_RUNNER_2.get());
                     output.accept(HAND_RUNNER_3.get());
+
                     output.accept(BAMBOO_PAPER.get());
                     output.accept(CLOUD_PAPER.get());
                     output.accept(DRAGON_PAPER.get());
@@ -251,8 +246,6 @@ public class Registration {
                     output.accept(LUNAR_INK.get());
                     output.accept(CINNABAR_INK.get());
                     output.accept(STARLIGHT_INK.get());
-
-
                 }).build());
     }
 }
