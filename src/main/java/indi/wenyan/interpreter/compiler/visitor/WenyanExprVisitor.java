@@ -115,6 +115,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
+        visit(ctx.function_define_body());
+        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
+        return true;
+    }
+
+    @Override
+    public Boolean visitFunction_define_body(WenyanRParser.Function_define_bodyContext ctx) {
         ArrayList<WenyanType> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i ++) {
             try {
@@ -140,7 +147,6 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.FUNCTION,
                 new WenyanNativeFunction(argsType, functionBytecode), true));
-        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
         return true;
     }
 
@@ -274,45 +280,12 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitObject_method_define(WenyanRParser.Object_method_defineContext ctx) {
-        String id;
-        if (ctx.CREATE_OBJECT().size() == 2) {
-            id = ctx.CREATE_OBJECT(0).getText();
-        } else if (ctx.CREATE_OBJECT().isEmpty()) {
-            if (ctx.STRING_LITERAL(0).getText().equals(ctx.STRING_LITERAL(1).getText())) {
-                id = ctx.STRING_LITERAL(0).getText();
-            } else {
-                throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
-            }
-        } else {
+        if (!ctx.CREATE_OBJECT().isEmpty() && ctx.CREATE_OBJECT().size() != 2 ||
+                !ctx.STRING_LITERAL(0).getText().equals(ctx.STRING_LITERAL(1).getText())) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
 
-        ArrayList<WenyanType> argsType = new ArrayList<>();
-        for (int i = 0; i < ctx.args.size(); i++) {
-            try {
-                int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
-                for (int j = 0; j < n; j++)
-                    argsType.add(WenyanDataParser.parseType(ctx.type(i).getText()));
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx);
-            }
-        }
-
-        WenyanBytecode functionBytecode = new WenyanBytecode();
-        WenyanFunction sign = new WenyanNativeFunction(
-                argsType, functionBytecode);
-
-        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
-        for (Token i : ctx.id)
-            environment.getIdentifierIndex(i.getText()); // return should be indexOf(i)
-
-        new WenyanMainVisitor(environment).visit(ctx.statements());
-
-            // add a return null at end
-        environment.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.NULL, null, true));
-        environment.add(WenyanCodes.RET);
-
-        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.FUNCTION, sign, true));
+        visit(ctx.function_define_body());
         return true;
     }
 

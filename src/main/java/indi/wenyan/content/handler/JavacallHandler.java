@@ -36,11 +36,6 @@ public interface JavacallHandler extends WenyanFunction {
         return 1;
     }
 
-    default void handleWarper(JavacallContext context) throws WenyanException.WenyanThrowException {
-        WenyanNativeValue value = handle(context);
-        context.thread().currentRuntime().processStack.push(value);
-    }
-
     @Override
     default void call(WenyanNativeValue self, WenyanThread thread,
                       List<WenyanNativeValue> argsList)
@@ -55,7 +50,8 @@ public interface JavacallHandler extends WenyanFunction {
         }
     }
 
-    static List<Object> getArgs(List<WenyanNativeValue> args, WenyanType[] args_type) throws WenyanException.WenyanTypeException {
+    static List<Object> getArgs(List<WenyanNativeValue> args, WenyanType[] args_type)
+            throws WenyanException.WenyanTypeException {
         List<Object> newArgs = new ArrayList<>();
         if (args.size() != args_type.length)
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
