@@ -10,6 +10,7 @@ import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.WenyanHandRunner;
 import indi.wenyan.content.item.paper.*;
+import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.setup.network.OutputInformationHandler;
 import indi.wenyan.setup.network.OutputInformationPacket;
@@ -79,6 +80,15 @@ public class Registration {
     public static final DeferredItem<Item> FROST_PAPER;
     public static final DeferredItem<Item> PHOENIX_PAPER;
     public static final DeferredItem<Item> STAR_PAPER;
+
+    public static final DeferredItem<Item> ARCANE_INK;
+    public static final DeferredItem<Item> BAMBOO_INK;
+    public static final DeferredItem<Item> CELESTIAL_INK;
+    public static final DeferredItem<Item> LUNAR_INK;
+    public static final DeferredItem<Item> CINNABAR_INK;
+    public static final DeferredItem<Item> STARLIGHT_INK;
+
+
 
 
 
@@ -162,6 +172,19 @@ public class Registration {
         STAR_PAPER = ITEMS.registerItem(STAR_PAPER_ID,
                 (Item.Properties properties) -> new star_paper(properties));
 
+        //Ink
+        ARCANE_INK = ITEMS.registerItem(ARCANE_INK_ID,
+                (Item.Properties properties) -> new arcane_ink(properties));
+        BAMBOO_INK = ITEMS.registerItem(BAMBOO_INK_ID,
+                (Item.Properties properties) -> new bamboo_ink(properties));
+        CELESTIAL_INK = ITEMS.registerItem(CELESTIAL_INK_ID,
+                (Item.Properties properties) -> new celestial_ink(properties));
+        LUNAR_INK = ITEMS.registerItem(LUNAR_INK_ID,
+                (Item.Properties properties) -> new lunar_ink(properties));
+        CINNABAR_INK = ITEMS.registerItem(CINNABAR_INK_ID,
+                (Item.Properties properties) -> new cinnabar_ink(properties));
+        STARLIGHT_INK = ITEMS.registerItem(STARLIGHT_INK_ID,
+                (Item.Properties properties) -> new starlight_ink(properties));
 
 
         // TODO: add crafting block variable
@@ -221,6 +244,14 @@ public class Registration {
                     output.accept(FROST_PAPER.get());
                     output.accept(PHOENIX_PAPER.get());
                     output.accept(STAR_PAPER.get());
+
+                    output.accept(ARCANE_INK.get());
+                    output.accept(BAMBOO_INK.get());
+                    output.accept(CELESTIAL_INK.get());
+                    output.accept(LUNAR_INK.get());
+                    output.accept(CINNABAR_INK.get());
+                    output.accept(STARLIGHT_INK.get());
+
 
                 }).build());
     }

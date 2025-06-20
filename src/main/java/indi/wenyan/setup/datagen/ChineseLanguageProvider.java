@@ -18,6 +18,13 @@ public class ChineseLanguageProvider extends LanguageProvider {
         this.add(Registration.FROST_PAPER.get(),"霜华纸");
         this.add(Registration.PHOENIX_PAPER.get(),"凤羽纸");
         this.add(Registration.DRAGON_PAPER.get(),"龙鳞纸");
+        this.add(Registration.ARCANE_INK.get(),"玄武墨");
+        this.add(Registration.BAMBOO_INK.get(),"松清墨");
+        this.add(Registration.CELESTIAL_INK.get(),"冥土墨");
+        this.add(Registration.CINNABAR_INK.get(),"朱砂墨");
+        this.add(Registration.LUNAR_INK.get(),"月华墨");
+        this.add(Registration.STARLIGHT_INK.get(),"星光墨");
+
 
         this.add("error.wenyan_nature.variables_not_match","謬：參數非同於冊");
         this.add("error.wenyan_nature.cannot_assign_to_constant", "謬：常數者無變也");
