@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.compiler.WenyanNativeFunction;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
@@ -108,7 +109,7 @@ public class WenyanNativeValue implements WenyanValue {
         }
         if (type == WenyanType.FUNCTION) {
             if (this.type == WenyanType.OBJECT_TYPE) {
-                return ((WenyanObjectType) this.value).getFunction(WenyanDataParser.CONSTRUCTOR_ID);
+                return ((WenyanObjectType) this.value).getAttribute(WenyanDataParser.CONSTRUCTOR_ID);
             }
         }
         if (type == WenyanType.OBJECT) {
@@ -238,7 +239,7 @@ public class WenyanNativeValue implements WenyanValue {
             case BOOL -> WenyanString((boolean) value);
             case STRING -> (String) value;
             case LIST -> value.toString();
-            case FUNCTION -> WenyanString((FunctionSign) value);
+            case FUNCTION -> WenyanString((WenyanFunction) value);
             case OBJECT -> Component.translatable("type.wenyan_nature.object").getString();
             case OBJECT_TYPE -> Component.translatable("type.wenyan_nature.object_type").getString();
         };
@@ -275,16 +276,19 @@ public class WenyanNativeValue implements WenyanValue {
         return result.toString();
     }
 
-    private static String WenyanString(FunctionSign functionSign) {
+    private static String WenyanString(WenyanFunction functionSign) {
         StringBuilder sb = new StringBuilder();
-        sb.append(functionSign.name()).append("(");
-        for (int i = 0; i < functionSign.argTypes().length; i++) {
-            sb.append(functionSign.argTypes()[i].toString());
-            if (i < functionSign.argTypes().length - 1) {
-                sb.append(", ");
+        sb.append(Component.translatable("type.wenyan_nature.function").getString());
+        if (functionSign instanceof WenyanNativeFunction function) {
+            sb.append("(");
+            for (int i = 0; i < function.argTypes().size(); i++) {
+                sb.append(function.argTypes().get(i).toString());
+                if (i < function.argTypes().size() - 1) {
+                    sb.append(", ");
+                }
             }
+            sb.append(")");
         }
-        sb.append(")");
         return sb.toString();
     }
 }

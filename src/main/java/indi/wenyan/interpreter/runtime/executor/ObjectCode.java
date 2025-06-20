@@ -20,11 +20,8 @@ public class ObjectCode extends WenyanCode {
             switch (operation) {
                 case ATTR, ATTR_REMAIN -> {
                     WenyanNativeValue attr;
-                    WenyanNativeValue value;
-                    if (operation == Operation.ATTR)
-                        value = runtime.processStack.pop();
-                    else
-                        value = runtime.processStack.peek();
+                    WenyanNativeValue value = operation == Operation.ATTR ?
+                            runtime.processStack.pop() : runtime.processStack.peek();
                     if (value.type() == WenyanType.OBJECT_TYPE) {
                         WenyanObjectType object = (WenyanObjectType) value
                                 .casting(WenyanType.OBJECT_TYPE).getValue();
@@ -57,7 +54,7 @@ public class ObjectCode extends WenyanCode {
                 }
                 case CREATE_TYPE -> {
                     WenyanNativeValue type = new WenyanNativeValue(WenyanType.OBJECT_TYPE,
-                            new WenyanDictObjectType((WenyanObjectType) runtime.processStack.pop()
+                            new WenyanDictObjectType((WenyanDictObjectType) runtime.processStack.pop()
                                     .casting(WenyanType.OBJECT_TYPE).getValue()), true);
                     runtime.processStack.push(type);
                 }

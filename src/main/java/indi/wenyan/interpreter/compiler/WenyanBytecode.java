@@ -1,17 +1,13 @@
 package indi.wenyan.interpreter.compiler;
 
-import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
-import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.WenyanDataParser;
-import net.minecraft.network.chat.Component;
+import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WenyanBytecode implements WenyanFunction {
+public class WenyanBytecode {
     private final List<Code> bytecode = new ArrayList<>();
     private final List<WenyanNativeValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
@@ -100,28 +96,4 @@ public class WenyanBytecode implements WenyanFunction {
     }
 
     public record Context(int line, int column, int start, int end){}
-
-    @Override
-    public void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self,
-                     WenyanThread thread, int args, boolean isConstructor)
-            throws WenyanException.WenyanThrowException {
-        WenyanNativeValue[] argsList = new WenyanNativeValue[args];
-        if (sign.argTypes().length != args)
-            throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-        WenyanRuntime runtime = thread.currentRuntime();
-        for (int i = 0; i < args; i++)
-            argsList[i] = runtime.processStack.pop().casting(sign.argTypes()[i]);
-
-        WenyanRuntime newRuntime = new WenyanRuntime(this);
-        if (self != null) {
-            newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
-            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanType.OBJECT_TYPE,
-                    ((WenyanObject) self.getValue()).getObjectType().getParent(), true));
-        }
-        // STUB: assume the first n id is the args
-        for (int i = 0; i < args; i++)
-            newRuntime.setVariable(getIdentifier(i), WenyanNativeValue.varOf(argsList[i]));
-        newRuntime.noReturnFlag = isConstructor;
-        thread.add(newRuntime);
-    }
 }

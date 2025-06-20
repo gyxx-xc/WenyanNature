@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.compiler.visitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.interpreter.compiler.WenyanNativeFunction;
 import indi.wenyan.interpreter.runtime.WenyanStack;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.utils.WenyanCodes;
@@ -126,8 +127,6 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
 
         WenyanBytecode functionBytecode = new WenyanBytecode();
-        WenyanNativeValue.FunctionSign sign = new WenyanNativeValue.FunctionSign(
-                ctx.IDENTIFIER(0).getText(), argsType.toArray(new WenyanType[0]), functionBytecode);
 
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
         for (Token i : ctx.id)
@@ -139,7 +138,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
         environment.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.NULL, null, true));
         environment.add(WenyanCodes.RET);
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.FUNCTION, sign, true));
+        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.FUNCTION,
+                new WenyanNativeFunction(argsType, functionBytecode), true));
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
         return true;
     }
@@ -299,8 +299,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
 
         WenyanBytecode functionBytecode = new WenyanBytecode();
-        WenyanNativeValue.FunctionSign sign = new WenyanNativeValue.FunctionSign(
-                id, argsType.toArray(new WenyanType[0]), functionBytecode);
+        WenyanFunction sign = new WenyanNativeFunction(
+                argsType, functionBytecode);
 
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
         for (Token i : ctx.id)

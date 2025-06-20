@@ -1,25 +1,14 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.interpreter.utils.WenyanDataParser;
+import indi.wenyan.content.handler.JavacallHandler;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 // used as return new WenyanNativeValue(WenyanType.OBJECT, new WenyanVec3Object(vec3), true);
 public class WenyanVec3Object implements WenyanObject {
     private final Vec3 vec3;
-    private final WenyanObjectType objectType = new Vec3ObjectType();
-    // TODO
-//    public static final WenyanNativeValue CONSTRUCTOR = new WenyanNativeValue(WenyanType.FUNCTION,
-//            new WenyanNativeValue.FunctionSign(WenyanDataParser.CONSTRUCTOR_ID,
-//                    new WenyanType[]{WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE},
-//                    args -> {
-//                        if (args.size() != 3)
-//                            throw new WenyanException("Vec3 constructor requires 3 arguments: x, y, z");
-//                        return new WenyanNativeValue(WenyanType.OBJECT, new WenyanVec3Object(new Vec3(
-//                                args.get(0).casting(WenyanType.DOUBLE).getValue(),
-//                                args.get(1).casting(WenyanType.DOUBLE).getValue(),
-//                                args.get(2).casting(WenyanType.DOUBLE).getValue())), true);
-//                    }), true);
+    public static final WenyanObjectType TYPE = new Vec3ObjectType();
 
     public WenyanVec3Object(Vec3 vec3) {
         this.vec3 = vec3;
@@ -40,29 +29,18 @@ public class WenyanVec3Object implements WenyanObject {
         throw new WenyanException("Cannot set variable on Vec3 object: " + name);
     }
 
-    @Override
-    public @Nullable WenyanObjectType getObjectType() {
-        return objectType;
-    }
-
     // store all static information
-    static class Vec3ObjectType implements WenyanObjectType {
+    public static class Vec3ObjectType implements WenyanObjectType {
+
         @Override
-        public @Nullable WenyanObjectType getParent() {
-            return null;
+        public WenyanNativeValue getAttribute(String name) {
+            throw new WenyanException("Vec3ObjectType does not have attributes: " + name);
         }
 
         @Override
-        public WenyanNativeValue getFunction(String id) {
-//            switch (id) {
-//                case WenyanDataParser.ITER_ID ->
-//            }
-            return null;
-        }
-
-        @Override
-        public WenyanNativeValue getStaticVariable(String id) {
-            throw new WenyanException("Vec3 does not support static variables: " + id);
+        public WenyanObject createObject(List<WenyanNativeValue> argsList) throws WenyanException.WenyanThrowException {
+            var args = JavacallHandler.getArgs(argsList, new WenyanType[]{WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE});
+            return new WenyanVec3Object(new Vec3((double) args.get(0), (double) args.get(1), (double) args.get(2)));
         }
     }
 }

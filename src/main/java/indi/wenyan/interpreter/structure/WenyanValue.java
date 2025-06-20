@@ -16,6 +16,4 @@ public interface WenyanValue {
     }};
 
     WenyanType type();
-
-    record FunctionSign(String name, WenyanType[] argTypes, WenyanFunction function) {}
 }

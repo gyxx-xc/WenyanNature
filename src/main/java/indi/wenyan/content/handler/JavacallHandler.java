@@ -1,11 +1,8 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.JavacallContext;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanFunction;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.*;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,29 +38,34 @@ public interface JavacallHandler extends WenyanFunction {
 
     default void handleWarper(JavacallContext context) throws WenyanException.WenyanThrowException {
         WenyanNativeValue value = handle(context);
-//        if (!context.isConstructor())
         context.thread().currentRuntime().processStack.push(value);
     }
 
     @Override
-    default void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self,
-                      WenyanThread thread, int args, boolean isConstructor)
+    default void call(WenyanNativeValue self, WenyanThread thread,
+                      List<WenyanNativeValue> argsList)
             throws WenyanException.WenyanThrowException{
-        List<WenyanNativeValue> argsList = new ArrayList<>(args);
-        if (self != null)
-            argsList.add(self);
-        WenyanRuntime runtime = thread.currentRuntime();
-        for (int i = 0; i < args; i++)
-            argsList.add(runtime.processStack.pop());
-
         JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
-                isConstructor, thread, this, thread.program.holder);
+                thread, this, thread.program.holder);
         if (isLocal(context)) {
-            System.out.println(sign.name());
-            handleWarper(context);
+            context.thread().currentRuntime().processStack.push(handle(context));
         } else {
             thread.program.requestThreads.add(context);
             thread.block();
         }
+    }
+
+    static List<Object> getArgs(List<WenyanNativeValue> args, WenyanType[] args_type) throws WenyanException.WenyanTypeException {
+        List<Object> newArgs = new ArrayList<>();
+        if (args.size() != args_type.length)
+            throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+        for (int i = 0; i < args.size(); i++)
+            newArgs.add(args.get(i).casting(args_type[i]).getValue());
+        return newArgs;
+    }
+
+    @FunctionalInterface
+    interface WenyanFunction {
+        WenyanNativeValue apply(List<WenyanNativeValue> args) throws WenyanException.WenyanThrowException;
     }
 }

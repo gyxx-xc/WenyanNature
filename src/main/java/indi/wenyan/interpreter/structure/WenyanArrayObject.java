@@ -42,33 +42,24 @@ public class WenyanArrayObject implements WenyanObject {
     public WenyanNativeValue getAttribute(String name) {
         return switch (name) {
             case WenyanDataParser.ARRAY_GET_ID -> new WenyanNativeValue(WenyanType.FUNCTION,
-                    new WenyanNativeValue.FunctionSign(WenyanDataParser.ARRAY_GET_ID,
-                            new WenyanType[]{WenyanType.LIST, WenyanType.INT},
                             new LocalCallHandler(args -> {
                                 if (args.size() != 2)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                                 args.getFirst().casting(WenyanType.LIST);
                                 args.get(1).casting(WenyanType.INT);
                                 return ((WenyanArrayObject) args.get(0).getValue()).get(args.get(1));
-                            })), true);
+                            }), true);
             case WenyanDataParser.ITER_ID -> new WenyanNativeValue(WenyanType.FUNCTION,
-                    new WenyanNativeValue.FunctionSign(WenyanDataParser.ITER_ID,
-                            new WenyanType[]{WenyanType.LIST},
                             new LocalCallHandler(args -> {
                                 if (args.size() != 1)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                                 args.getFirst().casting(WenyanType.LIST);
                                 return new WenyanNativeValue(WenyanType.OBJECT,
                                         ((WenyanArrayObject) args.getFirst().getValue()).values.iterator(), true);
-                            })), true);
+                            }), true);
             case WenyanDataParser.LONG_ID -> new WenyanNativeValue(WenyanType.INT, values.size(), true);
             default -> throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
         };
-    }
-
-    @Override
-    public WenyanObjectType getObjectType() {
-        return null;
     }
 
     @Override

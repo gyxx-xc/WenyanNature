@@ -5,6 +5,9 @@ import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FunctionCode extends WenyanCode {
     private final Operation operation;
 
@@ -15,27 +18,29 @@ public class FunctionCode extends WenyanCode {
 
     // func / create_obj
     // -> ori_func / javacall
+
+    // javacall
+    //   A.B() a.B() B() -> exec
+    //   A.b() b() -> exec
+    //   a.b() -> set self, exec
+    // native
+    //   A.B() a.B() B() -> make self, call, capture return
+    //   A.b() b() -> call
+    //   a.b() -> set self, call
+
     @Override
     public void exec(int args, WenyanThread thread) {
         try {
             WenyanRuntime runtime = thread.currentRuntime();
             WenyanNativeValue func = runtime.processStack.pop();
-            WenyanNativeValue.FunctionSign sign = (WenyanNativeValue.FunctionSign)
-                    func.casting(WenyanType.FUNCTION).getValue();
             WenyanNativeValue self = null;
-            boolean isConstructor;
+            WenyanFunction callable;
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
 
             // object_type
             if (func.type() == WenyanType.OBJECT_TYPE) {
-                // create empty, run constructor, return self
-                // TODO
-                self = new WenyanNativeValue(WenyanType.OBJECT,
-                        new WenyanDictObject((WenyanObjectType)
-                                func.casting(WenyanType.OBJECT_TYPE).getValue()), true);
-                runtime.processStack.push(self);
-                isConstructor = true;
+                callable = (WenyanObjectType) func.casting(WenyanType.OBJECT_TYPE).getValue();
             } else { // function
                 // handleWarper self first
                 if (operation == Operation.CALL_ATTR) {
@@ -47,13 +52,18 @@ public class FunctionCode extends WenyanCode {
                         self = null;
                     }
                 }
-                isConstructor = false;
+                callable = (WenyanFunction)
+                        func.casting(WenyanType.FUNCTION).getValue();
             }
+
+            List<WenyanNativeValue> argsList = new ArrayList<>(args);
+            for (int i = 0; i < args; i++)
+                argsList.add(runtime.processStack.pop());
 
             // must make the callF at end, because it may block thread
             // which is a fake block, it will still run the rest command before blocked
             // it will only block the next WenyanCode being executed
-            sign.function().call(sign, self, thread, args, isConstructor);
+            callable.call(self, thread, argsList);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage());
         }
@@ -61,15 +71,14 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public int getStep(int args, WenyanThread thread) {
-        WenyanNativeValue.FunctionSign sign;
+        WenyanFunction sign;
         try {
-            sign = (WenyanNativeValue.FunctionSign)
-                    thread.currentRuntime().processStack.peek()
+            sign = (WenyanFunction) thread.currentRuntime().processStack.peek()
                             .casting(WenyanType.FUNCTION).getValue();
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }
-        if (sign.function() instanceof JavacallHandler javacall) {
+        if (sign instanceof JavacallHandler javacall) {
             return javacall.getStep(args, thread);
         } else {
             return args;

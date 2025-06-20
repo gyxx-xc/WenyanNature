@@ -2,7 +2,6 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 
@@ -18,7 +17,7 @@ public class TouchHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
+        List<Object> args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
         int dx = Math.max(-10, Math.min(10, (int) args.get(0)));
         int dy = Math.max(-10, Math.min(10, (int) args.get(1)));
         int dz = Math.max(-10, Math.min(10, (int) args.get(2)));

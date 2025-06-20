@@ -11,7 +11,6 @@ import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
@@ -79,8 +78,8 @@ public class WenyanProgram {
     }
 
     public void run() {
-        mainThread.add(baseEnvironment);
-        mainThread.add(new WenyanRuntime(baseBytecode));
+        mainThread.call(baseEnvironment);
+        mainThread.call(new WenyanRuntime(baseBytecode));
         readyQueue.add(mainThread);
         programJavaThread = new Thread(() -> scheduler(this));
         programJavaThread.start();
@@ -90,9 +89,9 @@ public class WenyanProgram {
         while (!requestThreads.isEmpty()) {
             JavacallContext request = requestThreads.poll();
             try {
-                request.handler().handleWarper(request);
-                request.thread().state = WenyanThread.State.READY;
-                request.thread().program.readyQueue.add(request.thread());
+                request.thread().currentRuntime().processStack
+                        .push(request.handler().handle(request));
+                request.thread().unblock();
             } catch (WenyanException.WenyanThrowException | WenyanException e) {
                 request.thread().state = WenyanThread.State.DYING;
                 WenyanException.handleException(holder, e.getMessage());
@@ -129,10 +128,6 @@ public class WenyanProgram {
                 WenyanThread thread = program.readyQueue.poll();
                 thread.assignedSteps = SWITCH_STEP;
                 thread.programLoop(program.accumulatedSteps);
-
-                if (thread.state == WenyanThread.State.READY) {
-                    program.readyQueue.add(thread);
-                }
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
