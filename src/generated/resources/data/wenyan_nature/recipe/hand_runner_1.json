@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_nature:answering_recipe",
+  "input": [
+    {
+      "item": "minecraft:paper"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "wenyan_nature:hand_runner"
+  },
+  "question": "plus"
+}
