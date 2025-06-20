@@ -47,7 +47,7 @@ public class BlockMoveHandler implements JavacallHandler {
     }
 
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }

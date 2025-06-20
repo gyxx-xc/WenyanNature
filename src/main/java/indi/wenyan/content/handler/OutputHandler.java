@@ -5,7 +5,6 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
-import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.WenyanValue;
 import indi.wenyan.setup.network.OutputInformationPacket;
@@ -40,7 +39,15 @@ public class OutputHandler implements JavacallHandler {
     }
 
     @Override
-    public boolean isLocal() {
-        return false;
+    public boolean isLocal(JavacallContext context) {
+        if (context.runnerWarper().runner() instanceof BlockRunner) {
+            return false;
+        } else if (context.runnerWarper().runner() instanceof HandRunnerEntity) {
+            return false;
+        } else if (context.runnerWarper().runner() instanceof CraftingAnswerChecker){
+            return true;
+        } else {
+            return true;
+        }
     }
 }

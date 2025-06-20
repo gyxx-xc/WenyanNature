@@ -145,17 +145,4 @@ public final class WenyanPackages {
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);
     }};
-
-    public static class WenyanObjectTypes {
-        public static final JavacallObjectType VECTOR3 = new JavacallObjectType(null, "「方位」",
-                ConstructorBuilder.builder()
-                        .var("「「上下」」")
-                        .var("「「東西」」")
-                        .var("「「南北」」")
-                        .makeConstructor())
-                .addStatic("「「零」」", Arrays.asList(new WenyanNativeValue(WenyanType.INT, 0, true),
-                        new WenyanNativeValue(WenyanType.INT, 0, true),
-                        new WenyanNativeValue(WenyanType.INT, 0, true))
-                        .toArray(WenyanNativeValue[]::new));
-    }
 }

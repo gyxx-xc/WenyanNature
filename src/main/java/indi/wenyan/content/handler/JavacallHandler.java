@@ -22,7 +22,7 @@ public interface JavacallHandler extends WenyanFunction {
      *
      * @return true if local, false otherwise
      */
-    boolean isLocal();
+    boolean isLocal(JavacallContext context);
 
     /**
      * The step of this handler.
@@ -58,7 +58,8 @@ public interface JavacallHandler extends WenyanFunction {
 
         JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
                 isConstructor, thread, this, thread.program.holder);
-        if (isLocal()) {
+        if (isLocal(context)) {
+            System.out.println(sign.name());
             handleWarper(context);
         } else {
             thread.program.requestThreads.add(context);

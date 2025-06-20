@@ -27,7 +27,7 @@ public class MoveHandler implements JavacallHandler {
         return WenyanValue.NULL;
     }
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }

@@ -64,7 +64,7 @@ public class BlockPlaceHandler implements JavacallHandler {
         block.getBlock().setPlacedBy(world, pos, block, player, stack);
     }
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }

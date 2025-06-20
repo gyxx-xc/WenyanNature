@@ -15,17 +15,15 @@ public class SelfPositionHandler implements JavacallHandler {
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         if (context.runnerWarper().runner() instanceof HandRunnerEntity runner) {
             Vec3 vec = runner.position().subtract(context.holder().position());
-            return WenyanPackages.WenyanObjectTypes.VECTOR3.newObject(
-                    Arrays.asList(new WenyanNativeValue(WenyanType.DOUBLE, vec.y, true)
-                                    , new WenyanNativeValue(WenyanType.DOUBLE, vec.x, true)
-                                    , new WenyanNativeValue(WenyanType.DOUBLE, vec.z, true))
-                            .toArray(WenyanNativeValue[]::new));
+            return new WenyanNativeValue(
+                    WenyanType.OBJECT,
+                    new WenyanVec3Object(vec), true);
         } else {
             return WenyanValue.NULL;
         }
     }
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }
