@@ -102,7 +102,9 @@ public class WenyanBytecode implements WenyanFunction {
     public record Context(int line, int column, int start, int end){}
 
     @Override
-    public void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self, WenyanThread thread, int args, boolean noReturn) throws WenyanException.WenyanThrowException {
+    public void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self,
+                     WenyanThread thread, int args, boolean isConstructor)
+            throws WenyanException.WenyanThrowException {
         WenyanNativeValue[] argsList = new WenyanNativeValue[args];
         if (sign.argTypes().length != args)
             throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
@@ -119,7 +121,7 @@ public class WenyanBytecode implements WenyanFunction {
         // STUB: assume the first n id is the args
         for (int i = 0; i < args; i++)
             newRuntime.setVariable(getIdentifier(i), WenyanNativeValue.varOf(argsList[i]));
-        newRuntime.noReturnFlag = noReturn;
+        newRuntime.noReturnFlag = isConstructor;
         thread.add(newRuntime);
     }
 }

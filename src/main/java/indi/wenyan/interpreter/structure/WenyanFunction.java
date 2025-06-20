@@ -8,6 +8,6 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
  */
 public interface WenyanFunction {
     void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self,
-              WenyanThread thread, int args, boolean noReturn)
+              WenyanThread thread, int args, boolean isConstructor)
             throws WenyanException.WenyanThrowException;
 }

@@ -41,13 +41,13 @@ public interface JavacallHandler extends WenyanFunction {
 
     default void handleWarper(JavacallContext context) throws WenyanException.WenyanThrowException {
         WenyanNativeValue value = handle(context);
-        if (!context.noReturn())
-            context.thread().currentRuntime().processStack.push(value);
+//        if (!context.isConstructor())
+        context.thread().currentRuntime().processStack.push(value);
     }
 
     @Override
     default void call(WenyanNativeValue.FunctionSign sign, WenyanNativeValue self,
-                      WenyanThread thread, int args, boolean noReturn)
+                      WenyanThread thread, int args, boolean isConstructor)
             throws WenyanException.WenyanThrowException{
         List<WenyanNativeValue> argsList = new ArrayList<>(args);
         if (self != null)
@@ -57,7 +57,7 @@ public interface JavacallHandler extends WenyanFunction {
             argsList.add(runtime.processStack.pop());
 
         JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
-                noReturn, thread, this, thread.program.holder);
+                isConstructor, thread, this, thread.program.holder);
         if (isLocal()) {
             handleWarper(context);
         } else {

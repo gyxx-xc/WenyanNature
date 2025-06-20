@@ -44,7 +44,7 @@ public class WenyanHandRunner extends BlockItem {
 
     @Override
     public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
-        if (!player.isShiftKeyDown()){
+        if (!player.isShiftKeyDown()) {
             WritableBookContent writableBookContent = item.get(DataComponents.WRITABLE_BOOK_CONTENT);
             if (writableBookContent != null) {
                 Stream<String> pages = writableBookContent.getPages(false);
@@ -53,7 +53,7 @@ public class WenyanHandRunner extends BlockItem {
                 player.level().addFreshEntity(handRunnerEntity);
 
                 item.shrink(1);
-                return false;
+                return false; // not gen an item entity
             } // else : go outside
         }
         return super.onDroppedByPlayer(item, player);

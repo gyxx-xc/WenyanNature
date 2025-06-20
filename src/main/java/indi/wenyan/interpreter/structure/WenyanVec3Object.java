@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -7,6 +8,18 @@ import org.jetbrains.annotations.Nullable;
 public class WenyanVec3Object implements WenyanObject {
     private final Vec3 vec3;
     private final WenyanObjectType objectType = new Vec3ObjectType();
+    // TODO
+//    public static final WenyanNativeValue CONSTRUCTOR = new WenyanNativeValue(WenyanType.FUNCTION,
+//            new WenyanNativeValue.FunctionSign(WenyanDataParser.CONSTRUCTOR_ID,
+//                    new WenyanType[]{WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE},
+//                    args -> {
+//                        if (args.size() != 3)
+//                            throw new WenyanException("Vec3 constructor requires 3 arguments: x, y, z");
+//                        return new WenyanNativeValue(WenyanType.OBJECT, new WenyanVec3Object(new Vec3(
+//                                args.get(0).casting(WenyanType.DOUBLE).getValue(),
+//                                args.get(1).casting(WenyanType.DOUBLE).getValue(),
+//                                args.get(2).casting(WenyanType.DOUBLE).getValue())), true);
+//                    }), true);
 
     public WenyanVec3Object(Vec3 vec3) {
         this.vec3 = vec3;
@@ -36,12 +49,15 @@ public class WenyanVec3Object implements WenyanObject {
     static class Vec3ObjectType implements WenyanObjectType {
         @Override
         public @Nullable WenyanObjectType getParent() {
-            return null; // Vec3 does not have a parent type
+            return null;
         }
 
         @Override
         public WenyanNativeValue getFunction(String id) {
-            throw new WenyanException("Vec3 does not support functions: " + id);
+//            switch (id) {
+//                case WenyanDataParser.ITER_ID ->
+//            }
+            return null;
         }
 
         @Override

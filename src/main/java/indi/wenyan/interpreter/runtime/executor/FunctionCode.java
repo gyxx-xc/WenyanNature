@@ -23,18 +23,19 @@ public class FunctionCode extends WenyanCode {
             WenyanNativeValue.FunctionSign sign = (WenyanNativeValue.FunctionSign)
                     func.casting(WenyanType.FUNCTION).getValue();
             WenyanNativeValue self = null;
-            boolean noReturn;
+            boolean isConstructor;
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
 
             // object_type
             if (func.type() == WenyanType.OBJECT_TYPE) {
                 // create empty, run constructor, return self
+                // TODO
                 self = new WenyanNativeValue(WenyanType.OBJECT,
                         new WenyanDictObject((WenyanObjectType)
                                 func.casting(WenyanType.OBJECT_TYPE).getValue()), true);
                 runtime.processStack.push(self);
-                noReturn = true;
+                isConstructor = true;
             } else { // function
                 // handleWarper self first
                 if (operation == Operation.CALL_ATTR) {
@@ -46,13 +47,13 @@ public class FunctionCode extends WenyanCode {
                         self = null;
                     }
                 }
-                noReturn = false;
+                isConstructor = false;
             }
 
             // must make the callF at end, because it may block thread
             // which is a fake block, it will still run the rest command before blocked
             // it will only block the next WenyanCode being executed
-            sign.function().call(sign, self, thread, args, noReturn);
+            sign.function().call(sign, self, thread, args, isConstructor);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage());
         }

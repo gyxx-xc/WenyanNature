@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.List;
 
 public record JavacallContext(RunnerWarper<?> runnerWarper, WenyanNativeValue self, List<WenyanNativeValue> args,
-                              boolean noReturn, WenyanThread thread, JavacallHandler handler, Player holder) {
+                              boolean isConstructor, WenyanThread thread, JavacallHandler handler, Player holder) {
 
     public interface RunnerWarper<T> {
         T runner();
