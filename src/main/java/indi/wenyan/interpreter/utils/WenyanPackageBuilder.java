@@ -37,7 +37,7 @@ public class WenyanPackageBuilder {
 
     public WenyanPackageBuilder function(String name, Function<Object[], Object> function,
                                          WenyanType returnType, WenyanType[] argTypes) {
-        return function(name, args -> {
+        return function(name, (self, args) -> {
             Object[] newArgs = new Object[args.size()];
             for (int i = 0; i < argTypes.length; i++)
                 newArgs[i] = args.get(i).casting(argTypes[i]).getValue();
@@ -46,7 +46,7 @@ public class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, Function<Object[], Object> function, WenyanType valueType) {
-        return function(name, args -> {
+        return function(name, (self, args) -> {
             Object[] newArgs = new Object[args.size()];
             for (int i = 0; i < args.size(); i++)
                 newArgs[i] = args.get(i).casting(valueType).getValue();
@@ -54,18 +54,18 @@ public class WenyanPackageBuilder {
         }, new WenyanType[0]);
     }
 
-    public WenyanPackageBuilder function(String name, JavacallHandler.WenyanFunction function) {
+    public WenyanPackageBuilder function(String name, LocalCallHandler.LocalFunction function) {
         return function(name, function, new WenyanType[0]);
     }
 
-    public WenyanPackageBuilder function(String[] name, JavacallHandler.WenyanFunction function) {
+    public WenyanPackageBuilder function(String[] name, LocalCallHandler.LocalFunction function) {
         for (String n : name) {
             function(n, function);
         }
         return this;
     }
 
-    public WenyanPackageBuilder function(String name, JavacallHandler.WenyanFunction function, WenyanType[] argTypes) {
+    public WenyanPackageBuilder function(String name, LocalCallHandler.LocalFunction function, WenyanType[] argTypes) {
         return function(name, new LocalCallHandler(function), argTypes);
     }
 
@@ -90,8 +90,8 @@ public class WenyanPackageBuilder {
         return this;
     }
 
-    public static JavacallHandler.WenyanFunction reduceWith(ReduceFunction function) {
-        return args -> {
+    public static LocalCallHandler.LocalFunction reduceWith(ReduceFunction function) {
+        return (self, args) -> {
             if (args.size() <= 1)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
             WenyanNativeValue value = args.getFirst();
@@ -102,8 +102,8 @@ public class WenyanPackageBuilder {
         };
     }
 
-    public static JavacallHandler.WenyanFunction boolBinaryOperation(java.util.function.BiFunction<Boolean, Boolean, Boolean> function) {
-        return args -> {
+    public static LocalCallHandler.LocalFunction boolBinaryOperation(java.util.function.BiFunction<Boolean, Boolean, Boolean> function) {
+        return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
             return new WenyanNativeValue(WenyanType.BOOL,
@@ -113,8 +113,8 @@ public class WenyanPackageBuilder {
         };
     }
 
-    public static JavacallHandler.WenyanFunction compareOperation(CompareFunction function) {
-        return args -> {
+    public static LocalCallHandler.LocalFunction compareOperation(CompareFunction function) {
+        return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
             return new WenyanNativeValue(WenyanType.BOOL,

@@ -112,7 +112,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitFunction_define_statement(WenyanRParser.Function_define_statementContext ctx) {
-        if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
+        if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size() - 1).getText())) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
         visit(ctx.function_define_body());
@@ -123,11 +123,11 @@ public class WenyanExprVisitor extends WenyanVisitor {
     @Override
     public Boolean visitFunction_define_body(WenyanRParser.Function_define_bodyContext ctx) {
         ArrayList<WenyanType> argsType = new ArrayList<>();
-        for (int i = 0; i < ctx.args.size(); i ++) {
+        for (int i = 0; i < ctx.args.size(); i++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
                 for (int j = 0; j < n; j++)
-                    argsType.add(WenyanDataParser.parseType(ctx.type(i).getText()));
+                    argsType.add(WenyanDataParser.parseType(ctx.t.get(i).getText()));
             } catch (WenyanException.WenyanThrowException e) {
                 throw new WenyanException(e.getMessage(), ctx);
             }
@@ -167,7 +167,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                         throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
             }
         } else {
-            for (int i = ctx.data().size()-1; i >= 0; i--) {
+            for (int i = ctx.data().size() - 1; i >= 0; i--) {
                 visit(ctx.data(i));
             }
         }
@@ -244,7 +244,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitObject_statement(WenyanRParser.Object_statementContext ctx) {
-        if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size()-1).getText())) {
+        if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size() - 1).getText())) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
 
@@ -280,8 +280,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitObject_method_define(WenyanRParser.Object_method_defineContext ctx) {
-        if (!ctx.CREATE_OBJECT().isEmpty() && ctx.CREATE_OBJECT().size() != 2 ||
-                !ctx.STRING_LITERAL(0).getText().equals(ctx.STRING_LITERAL(1).getText())) {
+        if ((!ctx.CREATE_OBJECT().isEmpty() && ctx.CREATE_OBJECT().size() != 2) ||
+                (ctx.STRING_LITERAL().size() == 2 && !ctx.STRING_LITERAL(0).getText().equals(ctx.STRING_LITERAL(1).getText()))) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.function_name_does_not_match").getString(), ctx);
         }
 

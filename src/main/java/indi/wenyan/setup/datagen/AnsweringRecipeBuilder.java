@@ -35,6 +35,13 @@ public final class AnsweringRecipeBuilder {
         return this;
     }
 
+    public AnsweringRecipeBuilder addInput(Item item, int count) {
+        for (int i = 0; i < count; i++) {
+            addInput(item);
+        }
+        return this;
+    }
+
     public AnsweringRecipeBuilder addInput(Item item) {
         return addInput(Ingredient.of(item));
     }

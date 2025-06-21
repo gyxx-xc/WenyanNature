@@ -9,7 +9,6 @@ import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -118,6 +117,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         assert level != null;
         if (isCrafting) {
             WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
+            return;
         }
 
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();

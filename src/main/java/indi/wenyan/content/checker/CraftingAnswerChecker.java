@@ -1,13 +1,10 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
-import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanValue;
-import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import net.minecraft.util.RandomSource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CraftingAnswerChecker implements AnsweringChecker {
@@ -33,7 +30,7 @@ public abstract class CraftingAnswerChecker implements AnsweringChecker {
         this.random = random;
     }
 
-    public void accept(List<WenyanNativeValue> value) {
+    public void accept(List<WenyanNativeValue> value) throws WenyanException.WenyanCheckerError {
         for (var v : value)
             accept(v);
     }
@@ -47,5 +44,11 @@ public abstract class CraftingAnswerChecker implements AnsweringChecker {
         if (program == null)
             throw new IllegalStateException("Program is not initialized");
         program.baseEnvironment.setVariable(DEFAULT_INPUT_NAME[i], value);
+    }
+
+    protected void setAttribute(String name, WenyanNativeValue value) {
+        if (program == null)
+            throw new IllegalStateException("Program is not initialized");
+        program.baseEnvironment.setVariable(name, value);
     }
 }

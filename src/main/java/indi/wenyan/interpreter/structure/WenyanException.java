@@ -42,6 +42,12 @@ public class WenyanException extends RuntimeException {
         }
     }
 
+    public static class WenyanCheckerError extends WenyanThrowException {
+        public WenyanCheckerError(String message) {
+            super(message);
+        }
+    }
+
     public static abstract class WenyanThrowException extends Exception {
         public WenyanThrowException(String message) {
             super(message);

@@ -53,7 +53,12 @@ public class WenyanNativeValue implements WenyanValue {
     }
 
     public static WenyanNativeValue varOf(WenyanNativeValue value) {
-        return new WenyanNativeValue(value.type, value.value, false);
+        Object value1 = value.value;
+        // STUB: I don't think this will be remained
+        if (value.value instanceof WenyanArrayObject arrayObject) {
+            value1 = new WenyanArrayObject(new ArrayList<>(arrayObject.values));
+        }
+        return new WenyanNativeValue(value.type, value1, false);
     }
 
     // what we need to do these function?

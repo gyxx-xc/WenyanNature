@@ -19,7 +19,9 @@ public interface JavacallHandler extends WenyanFunction {
      *
      * @return true if local, false otherwise
      */
-    boolean isLocal(JavacallContext context);
+    default boolean isLocal(JavacallContext context) {
+        return false;
+    }
 
     /**
      * The step of this handler.
@@ -58,10 +60,5 @@ public interface JavacallHandler extends WenyanFunction {
         for (int i = 0; i < args.size(); i++)
             newArgs.add(args.get(i).casting(args_type[i]).getValue());
         return newArgs;
-    }
-
-    @FunctionalInterface
-    interface WenyanFunction {
-        WenyanNativeValue apply(List<WenyanNativeValue> args) throws WenyanException.WenyanThrowException;
     }
 }

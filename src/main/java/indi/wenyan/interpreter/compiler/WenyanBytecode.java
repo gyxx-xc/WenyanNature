@@ -52,8 +52,8 @@ public class WenyanBytecode {
         return labelTable.size() - 1;
     }
 
-    public void addContext(int line, int column, int start, int end) {
-        debugTable.add(new Context(line, column, start, end));
+    public void addContext(int line, int column, int start, int end, String content) {
+        debugTable.add(new Context(line, column, start, end, content));
     }
 
     public Context getContext(int index) {
@@ -95,5 +95,5 @@ public class WenyanBytecode {
         return sb.toString();
     }
 
-    public record Context(int line, int column, int start, int end){}
+    public record Context(int line, int column, int start, int end, String content){}
 }

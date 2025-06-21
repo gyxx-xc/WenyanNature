@@ -113,8 +113,9 @@ object_property_define      : OBJECT_STATIC_DECLARE STRING_LITERAL ZHE type (YUE
 
 import_statement            : '吾嘗觀' STRING_LITERAL '之書' ('方悟' IDENTIFIER+ '之義')? ;
 
-function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET (args+=INT_NUM type (YUE id+=IDENTIFIER)+)+)?
-                              FUNCTION_BODY_START statements DEFINE_CLOSURE ;
+function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
+                              (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
+                              (YUE id+=IDENTIFIER)+)+)? FUNCTION_BODY_START statements DEFINE_CLOSURE ;
 
 if_logic_op                 : op=(EQ|NEQ|LTE|GTE|GT|LT) ;
 

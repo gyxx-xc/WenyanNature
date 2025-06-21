@@ -82,7 +82,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         }
         visit(ctx.data());
         bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanDataParser.ARRAY_GET_ID);
-        bytecode.add(WenyanCodes.CALL, 2);
+        bytecode.add(WenyanCodes.CALL_ATTR, 1);
         return true;
     }
 

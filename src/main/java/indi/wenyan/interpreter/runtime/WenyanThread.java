@@ -69,7 +69,8 @@ public class WenyanThread {
     private void dieWithException(Exception e) {
         if (e instanceof WenyanException) {
             WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
-            WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " + e.getMessage());
+            WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " +
+                    context.content() + " " + e.getMessage());
         } else {
             // for debug only
             WenyanNature.LOGGER.error("WenyanThread died with an unexpected exception", e);
@@ -100,8 +101,6 @@ public class WenyanThread {
     public void yield() {
         if (state == State.READY) {
             program.readyQueue.add(this);
-        } else {
-            throw new RuntimeException("unreached");
         }
     }
 

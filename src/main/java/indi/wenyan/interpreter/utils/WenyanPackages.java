@@ -26,8 +26,8 @@ public final class WenyanPackages {
             .function("除", WenyanPackageBuilder.reduceWith(WenyanNativeValue::div))
             .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanNativeValue::add))
 
-            .function(new String[]{"變","变"}, args -> args.getFirst().not())
-            .function("充", args -> {
+            .function(new String[]{"變","变"}, (self, args) -> args.getFirst().not())
+            .function("充", (self, args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanNativeValue value = args.getFirst().casting(WenyanType.LIST);
@@ -50,7 +50,8 @@ public final class WenyanPackages {
             .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) > 0))
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> a.compareTo(b) < 0))
 
-            .function("「」", args -> WenyanValue.NULL)
+            .function(new String[] {"書","书"}, new OutputHandler())
+            .function("「」", (self, args) -> WenyanValue.NULL)
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
@@ -108,7 +109,6 @@ public final class WenyanPackages {
 
     public static final WenyanRuntime HAND_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
-            .function(new String[] {"書","书"}, new OutputHandler())
             .function("「射」", new BulletHandler(), BulletHandler.ARGS_TYPE)
             .function("「移」", new MoveHandler(), MoveHandler.ARGS_TYPE)
             .function("「爆」", new ExplosionHandler())
@@ -119,7 +119,6 @@ public final class WenyanPackages {
 
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
-            .function(new String[] {"書","书"}, new OutputHandler())
             .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
 //                .function("「放置」", new BlockPlaceHandler(holder,
 //                        (BlockItem) Items.ACACIA_LOG.asItem()
@@ -137,7 +136,6 @@ public final class WenyanPackages {
 
     public static final WenyanRuntime CRAFTING_BASE_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
-            .function("書", new OutputHandler())
             .build();
 
     public static final Map<String, WenyanRuntime> PACKAGES = new HashMap<>(){{

@@ -126,7 +126,7 @@ public class WenyanProgram {
                 }
 
                 WenyanThread thread = program.readyQueue.poll();
-                thread.assignedSteps = SWITCH_STEP;
+                thread.assignedSteps += SWITCH_STEP;
                 thread.programLoop(program.accumulatedSteps);
             }
         } catch (InterruptedException e) {
