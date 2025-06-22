@@ -68,52 +68,53 @@ public class WenyanNativeValue implements WenyanValue {
     // double -> int
     // ~list -> bool
     // obj -> function (constructor)
-    public WenyanNativeValue casting(WenyanType<?> type) throws WenyanException.WenyanTypeException {
+    @SuppressWarnings("unchecked")
+    public <T extends WenyanValue> T As(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         if (this.type == type)
-            return this;
+            return (T) this;
         if (this.type == WenyanType.NULL)
-            return this;
+            return (T) this;
         if (type == WenyanType.INT) {
             if (this.type == WenyanType.DOUBLE) {
-                return new WenyanNativeValue(WenyanType.INT, (int) (double) value, isConst);
+                return (T) new WenyanNativeValue(WenyanType.INT, (int) (double) value, isConst);
             }
             if (this.type == WenyanType.BOOL) {
-                return new WenyanNativeValue(WenyanType.INT, (boolean) value ? 1 : 0, isConst);
+                return (T) new WenyanNativeValue(WenyanType.INT, (boolean) value ? 1 : 0, isConst);
             }
         }
         if (type == WenyanType.DOUBLE) {
             if (this.type == WenyanType.INT) {
-                return new WenyanNativeValue(WenyanType.DOUBLE, (double) (int) value, isConst);
+                return (T) new WenyanNativeValue(WenyanType.DOUBLE, (double) (int) value, isConst);
             }
             if (this.type == WenyanType.BOOL) {
-                return new WenyanNativeValue(WenyanType.DOUBLE, (boolean) value ? 1.0 : 0.0, isConst);
+                return (T) new WenyanNativeValue(WenyanType.DOUBLE, (boolean) value ? 1.0 : 0.0, isConst);
             }
         }
         if (type == WenyanType.STRING) {
-            return new WenyanNativeValue(WenyanType.STRING, this.toString(), isConst);
+            return (T) new WenyanNativeValue(WenyanType.STRING, this.toString(), isConst);
         }
         if (type == WenyanType.BOOL) {
             if (this.type == WenyanType.INT) {
-                return new WenyanNativeValue(WenyanType.BOOL, (int) value != 0, isConst);
+                return (T) new WenyanNativeValue(WenyanType.BOOL, (int) value != 0, isConst);
             }
             if (this.type == WenyanType.DOUBLE) {
-                return new WenyanNativeValue(WenyanType.BOOL, (double) value != 0.0, isConst);
+                return (T) new WenyanNativeValue(WenyanType.BOOL, (double) value != 0.0, isConst);
             }
             if (this.type == WenyanType.STRING) {
-                return new WenyanNativeValue(WenyanType.BOOL, !((String) value).isEmpty(), isConst);
+                return (T) new WenyanNativeValue(WenyanType.BOOL, !((String) value).isEmpty(), isConst);
             }
             if (this.type == WenyanType.LIST) {
-                return new WenyanNativeValue(WenyanType.BOOL, !((ArrayList<?>) value).isEmpty(), isConst);
+                return (T) new WenyanNativeValue(WenyanType.BOOL, !((ArrayList<?>) value).isEmpty(), isConst);
             }
         }
         if (type == WenyanType.FUNCTION) {
             if (this.type == WenyanType.OBJECT_TYPE) {
-                return ((WenyanObjectType) this.value).getFunction(WenyanDataParser.CONSTRUCTOR_ID);
+                return (T) ((WenyanObjectType) this.value).getFunction(WenyanDataParser.CONSTRUCTOR_ID);
             }
         }
         if (type == WenyanType.OBJECT) {
             if (this.type == WenyanType.LIST) {
-                return this;
+                return (T) this;
             }
         }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
@@ -127,7 +128,7 @@ public class WenyanNativeValue implements WenyanValue {
 
     public WenyanNativeValue not() throws WenyanException.WenyanTypeException {
         // require type bool
-        WenyanNativeValue wenyanValue = this.casting(WenyanType.BOOL);
+        WenyanNativeValue wenyanValue = this.As(WenyanType.BOOL);
         return new WenyanNativeValue(WenyanType.BOOL, !(boolean) wenyanValue.value, true);
     }
 

@@ -19,6 +19,15 @@ public final class WenyanType<T extends WenyanValue> {
         this.name = name;
     }
 
+    // TODO
+    public static WenyanType<? extends WenyanComputable> computeWiderType(WenyanType<?> type1, WenyanType<?> type2) {
+        return null;
+    }
+
+    public static WenyanType<? extends WenyanComparable> compareWiderType(WenyanType<?> type1, WenyanType<?> type2) {
+        return null;
+    }
+
     public int ordinal() {
         return switch (name) {
             case "null" -> 0;

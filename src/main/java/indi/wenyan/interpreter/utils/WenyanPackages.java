@@ -31,7 +31,7 @@ public final class WenyanPackages {
             .function("充", args -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanNativeValue value = args.getFirst().casting(WenyanType.LIST);
+                WenyanNativeValue value = args.getFirst().As(WenyanType.LIST);
                 WenyanArrayObject list = (WenyanArrayObject) value.getValue();
                 for (int i = 1; i < args.size(); i++) {
                     list.add(WenyanNativeValue.varOf(args.get(i)));

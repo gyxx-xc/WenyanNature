@@ -108,7 +108,7 @@ public class WenyanBytecode implements WenyanFunction {
             throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
         WenyanRuntime runtime = thread.currentRuntime();
         for (int i = 0; i < args; i++)
-            argsList[i] = runtime.processStack.pop().casting(sign.argTypes()[i]);
+            argsList[i] = runtime.processStack.pop().As(sign.argTypes()[i]);
 
         WenyanRuntime newRuntime = new WenyanRuntime(this);
         if (self != null) {

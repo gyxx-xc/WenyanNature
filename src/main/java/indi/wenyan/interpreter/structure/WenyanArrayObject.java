@@ -27,7 +27,7 @@ public class WenyanArrayObject implements WenyanObject {
 
     public WenyanNativeValue get(WenyanNativeValue index) throws WenyanException.WenyanThrowException {
         try {
-            return values.get((int) index.casting(WenyanType.INT).getValue() - 1);
+            return values.get((int) index.As(WenyanType.INT).getValue() - 1);
         } catch (RuntimeException e) {
             throw new WenyanException.WenyanDataException(e.getMessage());
         }
@@ -47,8 +47,8 @@ public class WenyanArrayObject implements WenyanObject {
                             new LocalCallHandler(args -> {
                                 if (args.size() != 2)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                                args.getFirst().casting(WenyanType.LIST);
-                                args.get(1).casting(WenyanType.INT);
+                                args.getFirst().As(WenyanType.LIST);
+                                args.get(1).As(WenyanType.INT);
                                 return ((WenyanArrayObject) args.get(0).getValue()).get(args.get(1));
                             })), true);
             case WenyanDataParser.ITER_ID -> new WenyanNativeValue(WenyanType.FUNCTION,
@@ -57,7 +57,7 @@ public class WenyanArrayObject implements WenyanObject {
                             new LocalCallHandler(args -> {
                                 if (args.size() != 1)
                                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                                args.getFirst().casting(WenyanType.LIST);
+                                args.getFirst().As(WenyanType.LIST);
                                 return new WenyanNativeValue(WenyanType.OBJECT,
                                         ((WenyanArrayObject) args.getFirst().getValue()).values.iterator(), true);
                             })), true);

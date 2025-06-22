@@ -16,7 +16,7 @@ public final class JavacallHandlers {
         if (args.size() != args_type.length)
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
         for (int i = 0; i < args.size(); i++)
-            newArgs.add(args.get(i).casting(args_type[i]).getValue());
+            newArgs.add(args.get(i).As(args_type[i]).getValue());
         return newArgs;
     }
 

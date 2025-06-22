@@ -43,7 +43,7 @@ public class WenyanPackageBuilder {
         return function(name, args -> {
             Object[] newArgs = new Object[args.size()];
             for (int i = 0; i < argTypes.length; i++)
-                newArgs[i] = args.get(i).casting(argTypes[i]).getValue();
+                newArgs[i] = args.get(i).As(argTypes[i]).getValue();
             return new WenyanNativeValue(returnType, function.apply(newArgs), true);
         }, new WenyanType[0]);
     }
@@ -52,7 +52,7 @@ public class WenyanPackageBuilder {
         return function(name, args -> {
             Object[] newArgs = new Object[args.size()];
             for (int i = 0; i < args.size(); i++)
-                newArgs[i] = args.get(i).casting(valueType).getValue();
+                newArgs[i] = args.get(i).As(valueType).getValue();
             return new WenyanNativeValue(valueType, function.apply(newArgs), true);
         }, new WenyanType[0]);
     }
@@ -111,8 +111,8 @@ public class WenyanPackageBuilder {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
             return new WenyanNativeValue(WenyanType.BOOL,
-                    function.apply((boolean) args.get(0).casting(WenyanType.BOOL).getValue(),
-                            (boolean) args.get(1).casting(WenyanType.BOOL).getValue()),
+                    function.apply((boolean) args.get(0).As(WenyanType.BOOL).getValue(),
+                            (boolean) args.get(1).As(WenyanType.BOOL).getValue()),
                     true);
         };
     }
