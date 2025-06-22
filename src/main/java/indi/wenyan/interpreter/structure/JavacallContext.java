@@ -5,12 +5,12 @@ import indi.wenyan.content.checker.AnsweringChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-public record JavacallContext(RunnerWarper<?> runnerWarper, WenyanNativeValue self, List<WenyanNativeValue> args,
+public record JavacallContext(RunnerWarper<?> runnerWarper, WenyanValue self, List<WenyanValue> args,
                               WenyanThread thread, JavacallHandler handler, Player holder) {
 
     public interface RunnerWarper<T> {

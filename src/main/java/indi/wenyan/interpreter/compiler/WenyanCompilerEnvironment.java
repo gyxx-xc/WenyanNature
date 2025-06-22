@@ -1,8 +1,9 @@
 package indi.wenyan.interpreter.compiler;
 
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -20,14 +21,14 @@ public class WenyanCompilerEnvironment implements Serializable {
 
     private record ForEnvironment(int forEndLabel, int progEndLabel) {}
 
-    private record Constant(WenyanType t, Object o) {}
+    private record Constant(WenyanType<?> t, Object o) {}
     private record Context(int line, int column, String content) {}
 
     public WenyanCompilerEnvironment(WenyanBytecode bytecode) {
         this.bytecode = bytecode;
     }
 
-    public void add(WenyanCode code, WenyanNativeValue value) {
+    public void add(WenyanCode code, WenyanValue value) {
         int index = getConstIndex(value);
         bytecode.add(code, index);
     }
@@ -76,8 +77,8 @@ public class WenyanCompilerEnvironment implements Serializable {
         forStack.pop();
     }
 
-    private int getConstIndex(WenyanNativeValue value) {
-        Constant constant = new Constant(value.type(), value.getValue());
+    private int getConstIndex(WenyanValue value) {
+        Constant constant = new Constant(value.type(), value);
         Integer index = constTable.get(constant);
         if (index == null) {
             index = bytecode.addConst(value);

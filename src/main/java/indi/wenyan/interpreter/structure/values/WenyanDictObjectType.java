@@ -10,8 +10,8 @@ import java.util.List;
 
 public class WenyanDictObjectType implements WenyanObjectType {
     private final WenyanDictObjectType parent;
-    private final HashMap<String, WenyanNativeValue> staticVariable = new HashMap<>();
-    private final HashMap<String, WenyanNativeValue> functions = new HashMap<>();
+    private final HashMap<String, WenyanValue> staticVariable = new HashMap<>();
+    private final HashMap<String, WenyanValue> functions = new HashMap<>();
 
     public WenyanDictObjectType(WenyanDictObjectType parent) {
         this.parent = parent;
@@ -22,7 +22,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     }
 
     @Override
-    public WenyanNativeValue getAttribute(String name) {
+    public WenyanValue getAttribute(String name) {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunction(name);
         if (attr == null)
@@ -31,7 +31,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
             return attr;
     }
 
-    public WenyanNativeValue getFunction(String id) {
+    public WenyanValue getFunction(String id) {
         if (functions.containsKey(id)) {
             return functions.get(id);
         } else if (parent != null) {
@@ -41,20 +41,20 @@ public class WenyanDictObjectType implements WenyanObjectType {
         }
     }
 
-    public void addFunction(String id, WenyanNativeValue function) {
+    public void addFunction(String id, WenyanValue function) {
         functions.put(id, function);
     }
 
-    public WenyanNativeValue getStaticVariable(String id) {
+    public WenyanValue getStaticVariable(String id) {
         return staticVariable.get(id);
     }
 
-    public void addStaticVariable(String id, WenyanNativeValue value) {
+    public void addStaticVariable(String id, WenyanValue value) {
         staticVariable.put(id, value);
     }
 
     @Override
-    public WenyanObject createObject(List<WenyanNativeValue> argsList) {
+    public WenyanObject createObject(List<WenyanValue> argsList) {
         return null;
     }
 
@@ -62,7 +62,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     public void call(WenyanValue self, WenyanThread thread,
                      List<WenyanValue> argsList) throws WenyanException.WenyanThrowException {
         // create empty, run constructor, return self
-        self = new WenyanNativeValue(WenyanObject.TYPE,
+        self = new WenyanNativeValue1(WenyanObject.TYPE,
                 new WenyanDictObject(this), true);
         thread.currentRuntime().processStack.push(self);
 

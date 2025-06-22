@@ -21,6 +21,9 @@ public interface WenyanFunction extends WenyanValue {
     default WenyanType<?> type() { return TYPE; }
 
     default  <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
+        if (type() == type) {
+            return (T) this;
+        }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +
                 this.type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }

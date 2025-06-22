@@ -3,7 +3,7 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -33,7 +33,7 @@ public class BlockPlaceHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         var args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
         BlockPos blockPos = pos.offset(
                 Math.max(-10, Math.min(10, (int) args.get(0))),

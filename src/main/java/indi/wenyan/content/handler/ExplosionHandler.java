@@ -3,7 +3,7 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.values.WenyanDouble;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.world.level.Level;
 
@@ -16,7 +16,7 @@ public class ExplosionHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
         var args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
         if (context.runnerWarper().runner() instanceof HandRunnerEntity entity)
             entity.level().explode(entity, entity.getX(), entity.getY(), entity.getZ(),

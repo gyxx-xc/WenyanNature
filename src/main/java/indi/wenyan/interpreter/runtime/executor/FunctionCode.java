@@ -4,10 +4,7 @@ import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.structure.values.WenyanFunction;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.values.WenyanObject;
-import indi.wenyan.interpreter.structure.values.WenyanObjectType;
+import indi.wenyan.interpreter.structure.values.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +33,8 @@ public class FunctionCode extends WenyanCode {
     public void exec(int args, WenyanThread thread) {
         try {
             WenyanRuntime runtime = thread.currentRuntime();
-            WenyanNativeValue func = runtime.processStack.pop();
-            WenyanNativeValue self = null;
+            WenyanNativeValue1 func = runtime.processStack.pop();
+            WenyanNativeValue1 self = null;
             WenyanFunction callable;
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
@@ -60,7 +57,7 @@ public class FunctionCode extends WenyanCode {
                         func.casting(WenyanFunction.TYPE).getValue();
             }
 
-            List<WenyanNativeValue> argsList = new ArrayList<>(args);
+            List<WenyanValue> argsList = new ArrayList<>(args);
             for (int i = 0; i < args; i++)
                 argsList.add(runtime.processStack.pop());
 

@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class WenyanInteger implements WenyanComputable, WenyanComparable {
     public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int");
-    int value;
-    boolean isConstant;
+    public Integer value;
+    public boolean isConstant;
 
     public WenyanInteger(int value) {
         this.value = value;

@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 // about to Deprecated and change to WenyanValue
 @Deprecated
-public class WenyanNativeValue implements WenyanValue {
+public class WenyanNativeValue1 implements WenyanValue {
 
     private final WenyanType<?> type;
     private Object value;
     private final boolean isConst;
 
-    public WenyanNativeValue(WenyanType<?> type, Object value, boolean isConst) {
+    public WenyanNativeValue1(WenyanType<?> type, Object value, boolean isConst) {
         this.type = type;
         this.value = value;
         this.isConst = isConst;
@@ -35,13 +35,13 @@ public class WenyanNativeValue implements WenyanValue {
         return isConst;
     }
 
-    public static WenyanNativeValue varOf(WenyanNativeValue value) {
+    public static WenyanValue varOf(WenyanNativeValue1 value) {
         Object value1 = value.value;
         // STUB: I don't think this will be remained
         if (value.value instanceof WenyanArrayObject arrayObject) {
             value1 = new WenyanArrayObject(new ArrayList<>(arrayObject.values));
         }
-        return new WenyanNativeValue(value.type, value1, false);
+        return new WenyanNativeValue1(value.type, value1, false);
     }
 
     // what we need to do these function?

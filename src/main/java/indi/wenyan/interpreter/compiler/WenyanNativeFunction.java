@@ -24,12 +24,12 @@ public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode 
         WenyanRuntime newRuntime = new WenyanRuntime(bytecode);
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
-            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanObjectType.TYPE,
-                    ((WenyanDictObject) self.getValue()).getObjectType().getParent(), true));
+            newRuntime.setVariable(WenyanDataParser.PARENT_ID, //TODO
+                    ((WenyanDictObject) self).getObjectType().getParent());
         }
         // STUB: assume the first n id is the args
         for (int i = 0; i < argsList.size(); i++)
-            newRuntime.setVariable(bytecode.getIdentifier(i), WenyanNativeValue.varOf(argsList.get(i)));
+            newRuntime.setVariable(bytecode.getIdentifier(i), WenyanNativeValue1.varOf(argsList.get(i)));
         thread.call(newRuntime);
     }
 

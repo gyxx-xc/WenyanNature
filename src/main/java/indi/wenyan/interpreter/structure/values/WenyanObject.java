@@ -16,7 +16,7 @@ public interface WenyanObject extends WenyanValue {
      * @param name the name of the attribute
      * @return the value of the attribute
      */
-    WenyanNativeValue getAttribute(String name);
+    WenyanValue getAttribute(String name);
 
     /**
      * Set a variable in this object.
@@ -24,13 +24,17 @@ public interface WenyanObject extends WenyanValue {
      * @param name  the name of the variable
      * @param value the value to set
      */
-    void setVariable(String name, WenyanNativeValue value);
+    void setVariable(String name, WenyanValue value);
 
     default WenyanType<?> type() {
         return TYPE;
     }
 
+    @SuppressWarnings("unchecked")
     default  <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
+        if (type() == type) {
+            return (T) this;
+        }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +
                 this.type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }

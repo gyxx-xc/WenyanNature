@@ -11,12 +11,12 @@ import java.util.List;
 
 public class WenyanArrayObject implements WenyanObject {
     public static final WenyanType<WenyanArrayObject> TYPE = new WenyanType<>("list");
-    public final List<WenyanNativeValue> values;
+    public final List<WenyanValue> values;
 
     public WenyanArrayObject() {
         values = new ArrayList<>();
     }
-    public WenyanArrayObject(List<WenyanNativeValue> values) {
+    public WenyanArrayObject(List<WenyanValue> values) {
         this.values = values;
     }
 
@@ -25,11 +25,11 @@ public class WenyanArrayObject implements WenyanObject {
         return this;
     }
 
-    public void add(WenyanNativeValue wenyanValue) {
+    public void add(WenyanValue wenyanValue) {
         values.add(wenyanValue);
     }
 
-    public WenyanNativeValue get(WenyanNativeValue index) throws WenyanException.WenyanThrowException {
+    public WenyanValue get(WenyanNativeValue1 index) throws WenyanException.WenyanThrowException {
         try {
             return values.get((int) index.as(WenyanInteger.TYPE).getValue() - 1);
         } catch (RuntimeException e) {
@@ -38,29 +38,29 @@ public class WenyanArrayObject implements WenyanObject {
     }
 
     @Override
-    public void setVariable(String name, WenyanNativeValue value) {
+    public void setVariable(String name, WenyanValue value) {
         throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
     }
 
     @Override
-    public WenyanNativeValue getAttribute(String name) {
+    public WenyanValue getAttribute(String name) {
         return switch (name) {
-            case WenyanDataParser.ARRAY_GET_ID -> new WenyanNativeValue(WenyanFunction.TYPE,
+            case WenyanDataParser.ARRAY_GET_ID -> new WenyanNativeValue1(WenyanFunction.TYPE,
                     new LocalCallHandler((self, args) -> {
                         if (args.size() != 1)
                             throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                         self.casting(TYPE);
                         return ((WenyanArrayObject) self.getValue()).get(args.getFirst().casting(WenyanInteger.TYPE));
                     }), true);
-            case WenyanDataParser.ITER_ID -> new WenyanNativeValue(WenyanFunction.TYPE,
+            case WenyanDataParser.ITER_ID -> new WenyanNativeValue1(WenyanFunction.TYPE,
                     new LocalCallHandler((self, args) -> {
                         if (!args.isEmpty())
                             throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                         self.casting(TYPE);
-                        return new WenyanNativeValue(WenyanObject.TYPE,
+                        return new WenyanNativeValue1(WenyanObject.TYPE,
                                 ((WenyanArrayObject) self.getValue()).values.iterator(), true);
                     }), true);
-            case WenyanDataParser.LONG_ID -> new WenyanNativeValue(WenyanInteger.TYPE, values.size(), true);
+            case WenyanDataParser.LONG_ID -> new WenyanNativeValue1(WenyanInteger.TYPE, values.size(), true);
             default -> throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
         };
     }
@@ -78,6 +78,9 @@ public class WenyanArrayObject implements WenyanObject {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
+        if (type == TYPE) {
+            return (T) this;
+        }
         if (type == WenyanObject.TYPE) {
             return (T) this;
         }

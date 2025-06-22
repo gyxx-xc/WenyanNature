@@ -1,7 +1,8 @@
 package indi.wenyan.interpreter.compiler;
 
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class WenyanBytecode {
     private final List<Code> bytecode = new ArrayList<>();
-    private final List<WenyanNativeValue> constTable = new ArrayList<>();
+    private final List<WenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
     private final List<Context> debugTable = new ArrayList<>();
@@ -29,11 +30,11 @@ public class WenyanBytecode {
         return bytecode.get(index);
     }
 
-    public WenyanNativeValue getConst(int index) {
+    public WenyanNativeValue1 getConst(int index) {
         return constTable.get(index);
     }
 
-    public int addConst(WenyanNativeValue value) {
+    public int addConst(WenyanValue value) {
         constTable.add(value);
         return constTable.size() - 1;
     }

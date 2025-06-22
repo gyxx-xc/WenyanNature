@@ -3,7 +3,6 @@ package indi.wenyan.content.handler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.values.WenyanFunction;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.network.chat.Component;
 
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface JavacallHandler extends WenyanFunction {
-    WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
+    WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
     /**
      * Decided if this handler is running at program thread.
@@ -55,7 +54,7 @@ public interface JavacallHandler extends WenyanFunction {
         }
     }
 
-    static List<Object> getArgs(List<WenyanNativeValue> args, WenyanType[] args_type)
+    static List<Object> getArgs(List<WenyanValue> args, WenyanType[] args_type)
             throws WenyanException.WenyanTypeException {
         List<Object> newArgs = new ArrayList<>();
         if (args.size() != args_type.length)

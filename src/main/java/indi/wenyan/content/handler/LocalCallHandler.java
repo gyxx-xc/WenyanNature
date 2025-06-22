@@ -2,7 +2,7 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class LocalCallHandler implements JavacallHandler {
         this.function = function;
     }
 
-    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         return function.apply(context.self(), context.args());
     }
 
@@ -25,6 +25,6 @@ public class LocalCallHandler implements JavacallHandler {
     @FunctionalInterface
     public
     interface LocalFunction {
-        WenyanNativeValue apply(WenyanNativeValue self, List<WenyanNativeValue> args) throws WenyanException.WenyanThrowException;
+        WenyanValue apply(WenyanValue self, List<WenyanValue> args) throws WenyanException.WenyanThrowException;
     }
 }

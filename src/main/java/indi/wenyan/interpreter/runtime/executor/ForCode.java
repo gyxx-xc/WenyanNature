@@ -4,7 +4,8 @@ import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
 import net.minecraft.network.chat.Component;
 
 import java.util.Iterator;
@@ -21,10 +22,10 @@ public class ForCode extends WenyanCode {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case FOR_ITER -> {
-                WenyanNativeValue value = runtime.processStack.peek();
+                WenyanValue value = runtime.processStack.peek();
                 if (value.getValue() instanceof Iterator<?> iter) {
                     if (iter.hasNext()) {
-                        runtime.processStack.push((WenyanNativeValue) iter.next());
+                        runtime.processStack.push((WenyanValue) iter.next());
                     } else {
                         runtime.processStack.pop();
                         runtime.programCounter = runtime.bytecode.getLabel(args);
@@ -35,17 +36,17 @@ public class ForCode extends WenyanCode {
                 }
             }
             case FOR_NUM -> {
-                WenyanNativeValue value = runtime.processStack.pop();
-                if (value.type() == WenyanInteger.TYPE) {
-                    int num = (int) value.getValue();
+                WenyanValue value = runtime.processStack.pop();
+                try {
+                    int num = value.as(WenyanInteger.TYPE).value;
                     if (num > 0) {
-                        runtime.processStack.push(new WenyanNativeValue(WenyanInteger.TYPE, num - 1, true));
+                        runtime.processStack.push(new WenyanNativeValue1(WenyanInteger.TYPE, num - 1, true));
                     } else {
                         runtime.programCounter = runtime.bytecode.getLabel(args);
                         runtime.PCFlag = true;
                     }
-                } else {
-                    throw new WenyanException(Component.translatable("error.wenyan_nature.for_num").getString());
+                } catch (WenyanException.WenyanThrowException e){
+                    throw new WenyanException(e.getMessage());
                 }
             }
         }

@@ -18,26 +18,26 @@ public class WenyanVec3Object implements WenyanObject {
     }
 
     @Override
-    public WenyanNativeValue getAttribute(String name) {
+    public WenyanValue getAttribute(String name) {
         return switch (name) {
-            case "「「上下」」" -> new WenyanNativeValue(WenyanDouble.TYPE, vec3.y, true);
-            case "「「東西」」" -> new WenyanNativeValue(WenyanDouble.TYPE, vec3.x, true);
-            case "「「南北」」" -> new WenyanNativeValue(WenyanDouble.TYPE, vec3.z, true);
-            case "「「長」」" -> new WenyanNativeValue(WenyanDouble.TYPE, vec3.length(), true);
-            case "「「方長」」" -> new WenyanNativeValue(WenyanDouble.TYPE, vec3.lengthSqr(), true);
-            case "「「偏移」」" -> new WenyanNativeValue(WenyanFunction.TYPE, new LocalCallHandler(
+            case "「「上下」」" -> new WenyanNativeValue1(WenyanDouble.TYPE, vec3.y, true);
+            case "「「東西」」" -> new WenyanNativeValue1(WenyanDouble.TYPE, vec3.x, true);
+            case "「「南北」」" -> new WenyanNativeValue1(WenyanDouble.TYPE, vec3.z, true);
+            case "「「長」」" -> new WenyanNativeValue1(WenyanDouble.TYPE, vec3.length(), true);
+            case "「「方長」」" -> new WenyanNativeValue1(WenyanDouble.TYPE, vec3.lengthSqr(), true);
+            case "「「偏移」」" -> new WenyanNativeValue1(WenyanFunction.TYPE, new LocalCallHandler(
                     (self, args) -> {
                         if (args.size() == 1) {
                             var offsetValue = JavacallHandler.getArgs(args, new WenyanType[]{WenyanObject.TYPE}).getFirst();
                             if (offsetValue instanceof WenyanVec3Object offsetVec3) {
-                                return new WenyanNativeValue(WenyanObject.TYPE,
+                                return new WenyanNativeValue1(WenyanObject.TYPE,
                                         new WenyanVec3Object(vec3.add(offsetVec3.vec3)), true);
                             } else {
                                 throw new WenyanException.WenyanVarException("Offset must be a Vec3 object");
                             }
                         } else if (args.size() == 3) {
                             var offset = JavacallHandler.getArgs(args, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
-                            return new WenyanNativeValue(WenyanObject.TYPE,
+                            return new WenyanNativeValue1(WenyanObject.TYPE,
                                     new WenyanVec3Object(vec3.add((double) offset.get(0), (double) offset.get(1), (double) offset.get(2)))
                                     , true);
                         } else {
@@ -50,7 +50,7 @@ public class WenyanVec3Object implements WenyanObject {
     }
 
     @Override
-    public void setVariable(String name, WenyanNativeValue value) {
+    public void setVariable(String name, WenyanValue value) {
         throw new WenyanException("Cannot set variable on Vec3 object: " + name);
     }
 
@@ -58,18 +58,18 @@ public class WenyanVec3Object implements WenyanObject {
     public static class Vec3ObjectType implements WenyanObjectType {
         public static final Vec3ObjectType INSTANCE = new Vec3ObjectType();
 
-        public static final WenyanNativeValue ZERO;
-        public static final WenyanNativeValue UP;
-        public static final WenyanNativeValue DOWN;
-        public static final WenyanNativeValue EAST;
-        public static final WenyanNativeValue WEST;
-        public static final WenyanNativeValue SOUTH;
-        public static final WenyanNativeValue NORTH;
+        public static final WenyanValue ZERO;
+        public static final WenyanValue UP;
+        public static final WenyanValue DOWN;
+        public static final WenyanValue EAST;
+        public static final WenyanValue WEST;
+        public static final WenyanValue SOUTH;
+        public static final WenyanValue NORTH;
 
         private Vec3ObjectType() {}
 
         @Override
-        public WenyanNativeValue getAttribute(String name) {
+        public WenyanValue getAttribute(String name) {
             return switch (name) {
                 case "「「零」」" -> ZERO;
                 case "「「上」」" -> UP;
@@ -83,7 +83,7 @@ public class WenyanVec3Object implements WenyanObject {
         }
 
         @Override
-        public WenyanObject createObject(List<WenyanNativeValue> argsList) throws WenyanException.WenyanThrowException {
+        public WenyanObject createObject(List<WenyanValue> argsList) throws WenyanException.WenyanThrowException {
             if (argsList.size() == 1) {
                 if (argsList.getFirst().as(WenyanObject.TYPE).getValue() instanceof WenyanVec3Object vec3Object) {
                     return vec3Object;
@@ -97,13 +97,13 @@ public class WenyanVec3Object implements WenyanObject {
         }
 
         static {
-            ZERO = new WenyanNativeValue(WenyanObject.TYPE, new WenyanVec3Object(Vec3.ZERO), true);
-            UP = new WenyanNativeValue(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, 1, 0)), true);
-            DOWN = new WenyanNativeValue(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, -1, 0)), true);
-            EAST = new WenyanNativeValue(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(1, 0, 0)), true);
-            WEST = new WenyanNativeValue(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(-1, 0, 0)), true);
-            SOUTH = new WenyanNativeValue(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, 0, 1)), true);
-            NORTH = new WenyanNativeValue(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, 0, -1)), true);
+            ZERO = new WenyanNativeValue1(WenyanObject.TYPE, new WenyanVec3Object(Vec3.ZERO), true);
+            UP = new WenyanNativeValue1(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, 1, 0)), true);
+            DOWN = new WenyanNativeValue1(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, -1, 0)), true);
+            EAST = new WenyanNativeValue1(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(1, 0, 0)), true);
+            WEST = new WenyanNativeValue1(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(-1, 0, 0)), true);
+            SOUTH = new WenyanNativeValue1(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, 0, 1)), true);
+            NORTH = new WenyanNativeValue1(WenyanObject.TYPE, new WenyanVec3Object(new Vec3(0, 0, -1)), true);
         }
     }
 }

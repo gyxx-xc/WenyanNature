@@ -3,7 +3,6 @@ package indi.wenyan.content.checker;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.util.RandomSource;
 

@@ -22,16 +22,14 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
 
         private static class OffsetHandler implements JavacallHandler {
             @Override
-            public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+            public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                 if (context.self().casting(WenyanObject.TYPE).getValue() instanceof Position(int x, int y)) {
                     if (context.args().size() == 1 && context.args().getFirst()
                             .casting(WenyanObject.TYPE).getValue() instanceof Position(int dx, int dy)) {
-                        return new WenyanNativeValue(WenyanObject.TYPE,
-                                new Position(x + dx, y + dy), true);
+                        return new Position(x + dx, y + dy);
                     } else {
                         var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
-                        return new WenyanNativeValue(WenyanObject.TYPE,
-                                new Position(x + (int) arg.get(0), y + (int) arg.get(1)), true);
+                        return new Position(x + (int) arg.get(0), y + (int) arg.get(1));
                     }
                 } else {
                     throw new WenyanException.WenyanTypeException("Expected Position object");
@@ -45,38 +43,37 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         }
 
         @Override
-        public WenyanNativeValue getAttribute(String name) {
+        public WenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「「上下」」" -> new WenyanNativeValue(WenyanInteger.TYPE, x, true);
-                case "「「左右」」" -> new WenyanNativeValue(WenyanInteger.TYPE, y, true);
-                case "「「偏移」」" -> new WenyanNativeValue(WenyanFunction.TYPE, new OffsetHandler(), true);
+                case "「「上下」」" -> new WenyanInteger(x);
+                case "「「左右」」" -> new WenyanInteger(y);
+                case "「「偏移」」" -> new OffsetHandler();
                 default -> throw new UnsupportedOperationException("Unknown Direction attribute: " + name);
             };
         }
 
         @Override
-        public void setVariable(String name, WenyanNativeValue value) {
+        public void setVariable(String name, WenyanValue value) {
             throw new UnsupportedOperationException("Cannot set variable on Direction object: " + name);
         }
 
         enum PositionType implements WenyanObjectType {
             TYPE;
             @Override
-            public WenyanNativeValue getAttribute(String name) {
+            public WenyanValue getAttribute(String name) {
                 return switch (name) {
-                    case "「「上」」" -> new WenyanNativeValue(WenyanObject.TYPE, UP, true);
-                    case "「「下」」" -> new WenyanNativeValue(WenyanObject.TYPE, DOWN, true);
-                    case "「「左」」" -> new WenyanNativeValue(WenyanObject.TYPE, LEFT, true);
-                    case "「「右」」" -> new WenyanNativeValue(WenyanObject.TYPE, RIGHT, true);
-                    case "「「方向」」" -> new WenyanNativeValue(WenyanArrayObject.TYPE,
-                            new WenyanArrayObject(DIRECTIONS.stream().map(a->new WenyanNativeValue(WenyanObject.TYPE, a, true)).toList()), true);
+                    case "「「上」」" -> UP;
+                    case "「「下」」" -> DOWN;
+                    case "「「左」」" -> LEFT;
+                    case "「「右」」" -> RIGHT;
+                    case "「「方向」」" -> new WenyanArrayObject(new ArrayList<>(DIRECTIONS));
                     case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };
             }
 
             @Override
-            public WenyanObject createObject(List<WenyanNativeValue> argsList) throws WenyanException.WenyanTypeException {
+            public WenyanObject createObject(List<WenyanValue> argsList) throws WenyanException.WenyanTypeException {
                 var args = JavacallHandler.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
                 return new Position((int) args.get(0), (int) args.get(1));
             }
@@ -93,21 +90,20 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         private int EndY;
 
         @Override
-        public WenyanNativeValue getAttribute(String name) {
+        public WenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「「终」」" -> new WenyanNativeValue(WenyanObject.TYPE, new Position(EndX+1, EndY+1), true);
-                case "「「長」」" -> new WenyanNativeValue(WenyanInteger.TYPE, maxX, true);
-                case "「「寬」」" -> new WenyanNativeValue(WenyanInteger.TYPE, maxY, true);
-                case "「「尋路」」" -> new WenyanNativeValue(WenyanFunction.TYPE, new JavacallHandler() {
+                case "「「终」」" -> new Position(EndX+1, EndY+1);
+                case "「「長」」" -> new WenyanInteger(maxX);
+                case "「「寬」」" -> new WenyanInteger(maxY);
+                case "「「尋路」」" -> new JavacallHandler() {
                     @Override
-                    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                         if (context.args().size() == 1 && context.args().getFirst()
                                 .casting(WenyanObject.TYPE).getValue() instanceof Position(int x, int y)) {
-                            return new WenyanNativeValue(WenyanBoolean.TYPE, !isWall(x-1, y-1), true);
+                            return new WenyanBoolean(!isWall(x-1, y-1));
                         } else {
                             var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
-                            return new WenyanNativeValue(WenyanBoolean.TYPE,
-                                    !isWall((int) arg.get(0)-1, (int) arg.get(1)-1), true);
+                            return new WenyanBoolean(!isWall((int) arg.get(0)-1, (int) arg.get(1)-1));
                         }
                     }
 
@@ -115,13 +111,13 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                     public boolean isLocal(JavacallContext context) {
                         return true;
                     }
-                }, true);
+                };
                 default -> throw new UnsupportedOperationException("Unknown Map attribute: " + name);
             };
         }
 
         @Override
-        public void setVariable(String name, WenyanNativeValue value) {
+        public void setVariable(String name, WenyanValue value) {
 
         }
 
@@ -201,14 +197,13 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         curY = 0;
         input = new Map();
 
-        setAttribute("「方位」", new WenyanNativeValue(WenyanObjectType.TYPE,
-                Position.PositionType.TYPE, true));
+        setAttribute("「方位」", Position.PositionType.TYPE);
 
-        setAttribute("「迷宫」", new WenyanNativeValue(WenyanObject.TYPE, input, true));
+        setAttribute("「迷宫」", input);
     }
 
     @Override
-    public void accept(WenyanNativeValue value) throws WenyanException.WenyanCheckerError {
+    public void accept(WenyanValue value) throws WenyanException.WenyanCheckerError {
         try {
             if (value.casting(WenyanObject.TYPE).getValue() instanceof Position(int dx, int dy)) {
                 // TODO: check if Position is direction
