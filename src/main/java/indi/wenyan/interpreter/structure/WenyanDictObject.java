@@ -3,10 +3,10 @@ package indi.wenyan.interpreter.structure;
 import java.util.HashMap;
 
 public class WenyanDictObject implements WenyanObject {
-    private final WenyanObjectType type;
+    private final WenyanDictObjectType type;
     private final HashMap<String, WenyanNativeValue> variable = new HashMap<>();
 
-    public WenyanDictObject(WenyanObjectType type) {
+    public WenyanDictObject(WenyanDictObjectType type) {
         this.type = type;
     }
 
@@ -24,8 +24,7 @@ public class WenyanDictObject implements WenyanObject {
         variable.put(name, value);
     }
 
-    @Override
-    public WenyanObjectType getParent() {
-        return type.getParent();
+    public WenyanDictObjectType getObjectType() {
+        return type;
     }
 }

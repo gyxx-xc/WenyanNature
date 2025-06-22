@@ -20,7 +20,7 @@ public class OutputHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanCheckerError {
         StringBuilder result = new StringBuilder();
         for (WenyanNativeValue arg : context.args()) {
             result.append(result.isEmpty() ? "" : " ").append(arg.toString());
@@ -40,7 +40,15 @@ public class OutputHandler implements JavacallHandler {
     }
 
     @Override
-    public boolean isLocal() {
-        return false;
+    public boolean isLocal(JavacallContext context) {
+        if (context.runnerWarper().runner() instanceof BlockRunner) {
+            return false;
+        } else if (context.runnerWarper().runner() instanceof HandRunnerEntity) {
+            return false;
+        } else if (context.runnerWarper().runner() instanceof CraftingAnswerChecker){
+            return true;
+        } else {
+            return true;
+        }
     }
 }

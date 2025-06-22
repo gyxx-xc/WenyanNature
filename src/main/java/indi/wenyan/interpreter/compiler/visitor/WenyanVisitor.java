@@ -20,7 +20,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
     @Override
     public Boolean visit(ParseTree tree) {
         if (tree instanceof ParserRuleContext ctx) {
-            bytecode.enterContext(ctx.start.getLine(), ctx.start.getCharPositionInLine());
+            bytecode.enterContext(ctx.start.getLine(), ctx.start.getCharPositionInLine(), ctx.getText());
         }
         Boolean result = super.visit(tree);
         if (tree instanceof ParserRuleContext) {

@@ -38,7 +38,6 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
         poseStack.pushPose();
         poseStack.translate(0, 0.5, 0);
         poseStack.mulPose(Axis.YP.rotationDegrees(-dispatcher.camera.getYRot()));
-        poseStack.pushPose();
         poseStack.scale(0.8F, 0.8F, 0.8F);
         Minecraft.getInstance().getItemRenderer().renderStatic(
                 new ItemStack(Registration.HAND_RUNNER_1.get()),
@@ -48,11 +47,6 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
                 poseStack,
                 bufferSource,
                 Minecraft.getInstance().level, 0);
-        poseStack.popPose();
-
-        poseStack.scale(-0.025F, -0.025F, -0.25F);
-        poseStack.translate(0.0, 0.0, 0.2);
-        font.drawInBatch(entityIn.output, -15, 0, 255*256*256+255*256+255, true, poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, packedLightIn);
         poseStack.popPose();
     }
 }

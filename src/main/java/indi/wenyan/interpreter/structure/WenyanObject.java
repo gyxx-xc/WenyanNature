@@ -1,7 +1,5 @@
 package indi.wenyan.interpreter.structure;
 
-import javax.annotation.Nullable;
-
 public interface WenyanObject extends WenyanValue {
     /**
      * Get the attribute of this object.
@@ -21,16 +19,6 @@ public interface WenyanObject extends WenyanValue {
      * @param value the value to set
      */
     void setVariable(String name, WenyanNativeValue value);
-
-    /**
-     * Get the parent type of this object.
-     * <p>
-     * Just returns null if you are not sure
-     *
-     * @return the parent WenyanObjectType
-     */
-    @Nullable
-    WenyanObjectType getParent();
 
     default WenyanType type() {
         return WenyanType.OBJECT;

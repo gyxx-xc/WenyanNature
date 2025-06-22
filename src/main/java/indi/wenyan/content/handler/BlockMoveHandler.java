@@ -3,7 +3,6 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -18,7 +17,7 @@ public class BlockMoveHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
+        List<Object> args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
         args.set(0, Math.max(-10, Math.min(10, (int) args.get(0))));
         args.set(1, Math.max(-10, Math.min(10, (int) args.get(1))));
         args.set(2, Math.max(-10, Math.min(10, (int) args.get(2))));
@@ -47,7 +46,7 @@ public class BlockMoveHandler implements JavacallHandler {
     }
 
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }

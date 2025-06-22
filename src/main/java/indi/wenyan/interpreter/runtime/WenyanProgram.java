@@ -1,7 +1,8 @@
 package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.content.block.BlockRunner;
-import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.AnsweringChecker;
+import indi.wenyan.content.checker.LabyrinthChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
@@ -11,6 +12,7 @@ import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -18,20 +20,20 @@ import java.util.concurrent.Semaphore;
 
 public class WenyanProgram {
 
-    public String code;
+    public final String code;
 
     public final WenyanBytecode baseBytecode = new WenyanBytecode();
     public final WenyanRuntime baseEnvironment;
 
-    public WenyanThread mainThread = new WenyanThread(this);
-    public Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
-    public Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
+    public final WenyanThread mainThread = new WenyanThread(this);
+    public final Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
+    public final Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
     private Thread programJavaThread;
 
     // STUB: used in error handler, might changed
-    public Player holder;
+    public final Player holder;
 
     public final JavacallContext.RunnerWarper<?> warper;
 
@@ -56,7 +58,7 @@ public class WenyanProgram {
     }
 
     public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
-                         CraftingAnswerChecker checker) {
+                         AnsweringChecker checker) {
         this(code, baseEnvironment, holder,
                 new JavacallContext.CraftingAnswerWarper(checker));
     }
@@ -66,14 +68,18 @@ public class WenyanProgram {
         this.code = code;
         this.warper = warper;
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
-        visitor.visit(WenyanVisitor.program(code));
+        try {
+            visitor.visit(WenyanVisitor.program(code));
+        } catch (WenyanException e) {
+            WenyanException.handleException(holder, e.getMessage());
+        }
         this.baseEnvironment = baseEnvironment;
         this.holder = holder;
     }
 
     public void run() {
-        mainThread.add(baseEnvironment);
-        mainThread.add(new WenyanRuntime(baseBytecode));
+        mainThread.call(baseEnvironment);
+        mainThread.call(new WenyanRuntime(baseBytecode));
         readyQueue.add(mainThread);
         programJavaThread = new Thread(() -> scheduler(this));
         programJavaThread.start();
@@ -83,9 +89,9 @@ public class WenyanProgram {
         while (!requestThreads.isEmpty()) {
             JavacallContext request = requestThreads.poll();
             try {
-                request.handler().handleWarper(request);
-                request.thread().state = WenyanThread.State.READY;
-                request.thread().program.readyQueue.add(request.thread());
+                request.thread().currentRuntime().processStack
+                        .push(request.handler().handle(request));
+                request.thread().unblock();
             } catch (WenyanException.WenyanThrowException | WenyanException e) {
                 request.thread().state = WenyanThread.State.DYING;
                 WenyanException.handleException(holder, e.getMessage());
@@ -120,12 +126,8 @@ public class WenyanProgram {
                 }
 
                 WenyanThread thread = program.readyQueue.poll();
-                thread.assignedSteps = SWITCH_STEP;
+                thread.assignedSteps += SWITCH_STEP;
                 thread.programLoop(program.accumulatedSteps);
-
-                if (thread.state == WenyanThread.State.READY) {
-                    program.readyQueue.add(thread);
-                }
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -142,11 +144,7 @@ public class WenyanProgram {
 云云""",
                 WenyanPackages.WENYAN_BASIC_PACKAGES
         , null);
-        System.out.println(program.baseBytecode);
-        program.run();
-        while (program.isRunning()) {
-            program.step();
-            program.handle();
-        }
+        LabyrinthChecker checker = new LabyrinthChecker(new LegacyRandomSource(223));
+        checker.init(program);
     }
 }

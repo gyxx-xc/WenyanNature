@@ -2,7 +2,6 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.world.phys.Vec3;
 
 public class CommunicateHandler implements JavacallHandler {
@@ -14,7 +13,7 @@ public class CommunicateHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        var args = JavacallHandlers.getArgs(context.args(), ARG_TYPES);
+        var args = JavacallHandler.getArgs(context.args(), ARG_TYPES);
         if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             runner.communicate = new Vec3(
                     Math.max(-10, Math.min(10, (int) args.get(0))),
@@ -27,7 +26,7 @@ public class CommunicateHandler implements JavacallHandler {
         return WenyanValue.NULL;
     }
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }

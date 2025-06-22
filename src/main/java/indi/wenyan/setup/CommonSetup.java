@@ -12,7 +12,6 @@ import static com.mojang.text2speech.Narrator.LOGGER;
 
 public class CommonSetup {
     public static void setup(IEventBus modEventBus) {
-        modEventBus.addListener(CommonSetup::registerCapabilities);
         createConfigPath();
     }
     public static void createConfigPath(){
@@ -23,11 +22,5 @@ public class CommonSetup {
         } catch (IOException e) {
             LOGGER.error("[WenyanNature] 无法创建脚本目录: {}", scriptsDir, e);
         }
-    }
-    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
-//        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
-//                Registration.CRAFTING_ENTITY.get(), (o, direction) -> o.getRunnerItemHandler());
-//        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
-//                Registration.CRAFTING_ENTITY.get(), (o, direction) -> o.getItemHandler());
     }
 }

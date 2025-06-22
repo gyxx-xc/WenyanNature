@@ -1,39 +1,26 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import net.minecraft.util.RandomSource;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CraftingAnswerChecker {
-    protected final ArrayList<WenyanNativeValue> input = new ArrayList<>();
-    protected final ArrayList<String> inputName = new ArrayList<>();
+public abstract class CraftingAnswerChecker implements AnsweringChecker {
     protected final RandomSource random;
+    protected WenyanProgram program;
 
     private Result result = Result.WRONG_ANSWER;
 
-    public enum Result {
-        ANSWER_CORRECT,
-        WRONG_ANSWER,
-        RUNTIME_ERROR,
-        COMPILE_ERROR,
-        TIME_LIMIT_EXCEEDED,
-    }
-
     private static final String[] DEFAULT_INPUT_NAME =
             {"「甲」", "「乙」", "「丙」", "「丁」", "「戊」", "「己」", "「庚」", "「辛」", "「壬」", "「癸」"};
-
-    abstract protected void genInput();
-
-    abstract public void accept(WenyanNativeValue value);
 
     protected void setStatus(Result result) {
         this.result = result;
     }
 
+    @Override
     public Result getResult() {
         // TODO: if tle: return tle
         return result;
@@ -43,17 +30,25 @@ public abstract class CraftingAnswerChecker {
         this.random = random;
     }
 
-    public void accept(List<WenyanNativeValue> value) {
+    public void accept(List<WenyanNativeValue> value) throws WenyanException.WenyanCheckerError {
         for (var v : value)
             accept(v);
     }
 
-    public WenyanRuntime inputEnvironment() {
-        genInput();
-        WenyanPackageBuilder builder = WenyanPackageBuilder.create();
-        for (int i = 0; i < input.size(); i++)
-            builder.constant(inputName.isEmpty() ? DEFAULT_INPUT_NAME[i] : inputName.get(i), input.get(i));
-        return builder.build();
+    @Override
+    public void init(WenyanProgram program) {
+        this.program = program;
     }
 
+    protected void setVariable(int i, WenyanNativeValue value) {
+        if (program == null)
+            throw new IllegalStateException("Program is not initialized");
+        program.baseEnvironment.setVariable(DEFAULT_INPUT_NAME[i], value);
+    }
+
+    protected void setAttribute(String name, WenyanNativeValue value) {
+        if (program == null)
+            throw new IllegalStateException("Program is not initialized");
+        program.baseEnvironment.setVariable(name, value);
+    }
 }

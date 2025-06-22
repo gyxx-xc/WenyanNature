@@ -1,31 +1,35 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.runtime.WenyanThread;
+import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class WenyanDictObjectType implements WenyanObjectType {
-    private final WenyanObjectType parent;
-    private final String name;
+    private final WenyanDictObjectType parent;
     private final HashMap<String, WenyanNativeValue> staticVariable = new HashMap<>();
     private final HashMap<String, WenyanNativeValue> functions = new HashMap<>();
 
-    public WenyanDictObjectType(WenyanObjectType parent, String name) {
+    public WenyanDictObjectType(WenyanDictObjectType parent) {
         this.parent = parent;
-        this.name = name;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public WenyanObjectType getParent() {
+    public WenyanDictObjectType getParent() {
         return parent;
     }
 
     @Override
+    public WenyanNativeValue getAttribute(String name) {
+        var attr = getStaticVariable(name);
+        if (attr == null) attr = getFunction(name);
+        if (attr == null)
+            throw new WenyanException(Component.translatable("error.wenyan_nature.function_not_found_").getString() + name);
+        else
+            return attr;
+    }
+
     public WenyanNativeValue getFunction(String id) {
         if (functions.containsKey(id)) {
             return functions.get(id);
@@ -36,18 +40,35 @@ public class WenyanDictObjectType implements WenyanObjectType {
         }
     }
 
-    @Override
     public void addFunction(String id, WenyanNativeValue function) {
         functions.put(id, function);
     }
 
-    @Override
     public WenyanNativeValue getStaticVariable(String id) {
         return staticVariable.get(id);
     }
 
-    @Override
     public void addStaticVariable(String id, WenyanNativeValue value) {
         staticVariable.put(id, value);
+    }
+
+    @Override
+    public WenyanObject createObject(List<WenyanNativeValue> argsList) {
+        return null;
+    }
+
+    @Override
+    public void call(WenyanNativeValue self, WenyanThread thread,
+                     List<WenyanNativeValue> argsList) throws WenyanException.WenyanThrowException {
+        // create empty, run constructor, return self
+        self = new WenyanNativeValue(WenyanType.OBJECT,
+                new WenyanDictObject(this), true);
+        thread.currentRuntime().processStack.push(self);
+
+        WenyanFunction constructor = (WenyanFunction) getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
+                .casting(WenyanType.FUNCTION).getValue();
+
+        constructor.call(self, thread, argsList); // we got a runtime change here
+        thread.currentRuntime().noReturnFlag = true;
     }
 }

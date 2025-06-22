@@ -12,6 +12,19 @@ public class ChineseLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         this.add(Registration.HAND_RUNNER.get(),"符咒");
+        this.add(Registration.BAMBOO_PAPER.get(),"松竹纸");
+        this.add(Registration.CLOUD_PAPER.get(),"云篆纸");
+        this.add(Registration.STAR_PAPER.get(),"星辉纸");
+        this.add(Registration.FROST_PAPER.get(),"霜华纸");
+        this.add(Registration.PHOENIX_PAPER.get(),"凤羽纸");
+        this.add(Registration.DRAGON_PAPER.get(),"龙鳞纸");
+        this.add(Registration.ARCANE_INK.get(),"玄武墨");
+        this.add(Registration.BAMBOO_INK.get(),"松清墨");
+        this.add(Registration.CELESTIAL_INK.get(),"冥土墨");
+        this.add(Registration.CINNABAR_INK.get(),"朱砂墨");
+        this.add(Registration.LUNAR_INK.get(),"月华墨");
+        this.add(Registration.STARLIGHT_INK.get(),"星光墨");
+
 
         this.add("error.wenyan_nature.variables_not_match","謬：參數非同於冊");
         this.add("error.wenyan_nature.cannot_assign_to_constant", "謬：常數者無變也");
@@ -42,6 +55,10 @@ public class ChineseLanguageProvider extends LanguageProvider {
         this.add("error.wenyan_nature.type_cannot_be_mod", "謬：類不可相餘");
         this.add("error.wenyan_nature.type_cannot_be_compared", "謬：類不可相比");
 
+        this.add("error.wenyan_nature.for_iter", "謬：不可迭代之物");
+        this.add("error.wenyan_nature.for_num", "謬：不可數之物");
+        this.add("error.wenyan_nature.too_many_variables", "謬：變數過多");
+
         this.add("type.wenyan_nature.int", "數");
         this.add("type.wenyan_nature.double", "分數");
         this.add("type.wenyan_nature.bool", "爻");
@@ -55,6 +72,18 @@ public class ChineseLanguageProvider extends LanguageProvider {
         this.add("type.wenyan_nature.object_type", "類");
 
         this.add("title.wenyan_nature.create_tab", "吾有一術");
+
+        this.add("config.wenyan_nature.main.title", "吾有一术 参数板");
+        this.add("config.wenyan_nature.general.title", "通用");
+        this.add("config.wenyan_nature.general.test", "测试");
+
+        this.add("config.wenyan_nature.performance.title", "性能设置");
+        this.add("config.wenyan_nature.performance.thread_limit", "线程限制");
+        this.add("config.wenyan_nature.performance.thread_limit.description", "同时能够执行符咒的最大线程数。");
+
+        this.add("config.wenyan_nature.advanced.title", "进阶设置");
+        this.add("config.wenyan_nature.advanced.debug_mode", "调试模式");
+        this.add("config.wenyan_nature.advanced.debug_mode.description", "启用此选项以在控制台中输出调试信息。");
 
     }
 }

@@ -105,6 +105,9 @@ public final class WenyanDataParser {
         put("列", WenyanType.LIST);
 
         put("数", WenyanType.DOUBLE);
+
+        put("物", WenyanType.OBJECT);
+        put("術", WenyanType.FUNCTION);
     }};
 
     public static int parseInt(String text) throws WenyanException.WenyanNumberException {

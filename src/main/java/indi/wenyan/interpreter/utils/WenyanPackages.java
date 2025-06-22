@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,8 +26,8 @@ public final class WenyanPackages {
             .function("除", WenyanPackageBuilder.reduceWith(WenyanValue::div))
             .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanValue::add))
 
-            .function(new String[]{"變","变"}, args -> args.getFirst().not())
-            .function("充", args -> {
+            .function(new String[]{"變","变"}, (self, args) -> args.getFirst().not())
+            .function("充", (self, args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
                 WenyanNativeValue value = args.getFirst().As(WenyanType.LIST);
@@ -51,7 +50,8 @@ public final class WenyanPackages {
             .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) > 0))
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) < 0))
 
-            .function("「」", args -> WenyanValue.NULL)
+            .function(new String[] {"書","书"}, new OutputHandler())
+            .function("「」", (self, args) -> WenyanValue.NULL)
             .build();
 
     public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
@@ -108,37 +108,34 @@ public final class WenyanPackages {
             .build();
 
     public static final WenyanRuntime HAND_ENVIRONMENT = WenyanPackageBuilder.create()
-                .environment(WENYAN_BASIC_PACKAGES)
-                .function(new String[] {"書","书"}, new OutputHandler())
-                .function("「射」", new BulletHandler(), BulletHandler.ARGS_TYPE)
-                .function("「移」", new MoveHandler(), MoveHandler.ARGS_TYPE)
-                .function("「爆」", new ExplosionHandler())
-                .function("「雷」", new ThunderHandler())
-                .object(WenyanObjectTypes.VECTOR3)
-                .function("「己方位」", new SelfPositionHandler())
-                .build();
+            .environment(WENYAN_BASIC_PACKAGES)
+            .function("「射」", new BulletHandler(), BulletHandler.ARGS_TYPE)
+            .function("「移」", new MoveHandler(), MoveHandler.ARGS_TYPE)
+            .function("「爆」", new ExplosionHandler())
+            .function("「雷」", new ThunderHandler())
+            .object("「方位」", WenyanVec3Object.TYPE)
+            .function("「己方位」", new SelfPositionHandler())
+            .build();
 
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
-                .environment(WENYAN_BASIC_PACKAGES)
-                .function(new String[] {"書","书"}, new OutputHandler())
-                .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
+            .environment(WENYAN_BASIC_PACKAGES)
+            .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
 //                .function("「放置」", new BlockPlaceHandler(holder,
 //                        (BlockItem) Items.ACACIA_LOG.asItem()
 //                        ,pos, block))
-                .function("「移」", new BlockMoveHandler(), BlockMoveHandler.ARGS_TYPE)
-                .function("「放」", new CommunicateHandler(), CommunicateHandler.ARG_TYPES)
-                .function("「紅石量」", new RedstoneSignalHandler())
-                .function("「己於上」", new SelfPositionBlockHandler(Direction.UP))
-                .function("「己於下」", new SelfPositionBlockHandler(Direction.DOWN))
-                .function("「己於東」", new SelfPositionBlockHandler(Direction.EAST))
-                .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
-                .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
-                .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
-                .build();
+            .function("「移」", new BlockMoveHandler(), BlockMoveHandler.ARGS_TYPE)
+            .function("「放」", new CommunicateHandler(), CommunicateHandler.ARG_TYPES)
+            .function("「紅石量」", new RedstoneSignalHandler())
+            .function("「己於上」", new SelfPositionBlockHandler(Direction.UP))
+            .function("「己於下」", new SelfPositionBlockHandler(Direction.DOWN))
+            .function("「己於東」", new SelfPositionBlockHandler(Direction.EAST))
+            .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
+            .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
+            .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
+            .build();
 
     public static final WenyanRuntime CRAFTING_BASE_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
-            .function("書", new OutputHandler())
             .build();
 
     public static final Map<String, WenyanRuntime> PACKAGES = new HashMap<>(){{
@@ -146,17 +143,4 @@ public final class WenyanPackages {
         put("「「位經」」", BIT_PACKAGES);
         put("「「易經」」", RANDOM_PACKAGES);
     }};
-
-    public static class WenyanObjectTypes {
-        public static final JavacallObjectType VECTOR3 = new JavacallObjectType(null, "「方位」",
-                ConstructorBuilder.builder()
-                        .var("「「上下」」")
-                        .var("「「東西」」")
-                        .var("「「南北」」")
-                        .makeConstructor())
-                .addStatic("「「零」」", Arrays.asList(new WenyanNativeValue(WenyanType.INT, 0, true),
-                        new WenyanNativeValue(WenyanType.INT, 0, true),
-                        new WenyanNativeValue(WenyanType.INT, 0, true))
-                        .toArray(WenyanNativeValue[]::new));
-    }
 }

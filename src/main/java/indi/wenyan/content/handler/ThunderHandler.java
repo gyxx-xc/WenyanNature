@@ -23,7 +23,7 @@ public class ThunderHandler implements JavacallHandler {
         return WenyanValue.NULL;
     }
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }

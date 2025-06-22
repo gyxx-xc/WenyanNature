@@ -1,0 +1,16 @@
+{
+  "type": "wenyan_nature:answering_recipe",
+  "input": [
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "minecraft:coal"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "minecraft:diamond"
+  },
+  "question": "labyrinth"
+}

@@ -77,8 +77,7 @@ assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGH
                             | ASSIGN_LEFT data ZHE (ASSIGN_RIGHT)? ASSIGN_RIGHT_NULL       # assign_null_statement;
 
 function_define_statement   : LOCAL_DECLARE_OP INT_NUM FUNCTION_TYPE NAMING YUE IDENTIFIER
-                              (FUNCTION_ARGS_START FUNCTION_ARGS_GET (args+=INT_NUM type (YUE id+=IDENTIFIER)+)+)?
-                              FUNCTION_BODY_START statements DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END ;
+                              function_define_body IDENTIFIER FUNCTION_DEFINE_END ;
 
 function_call_statement     : call=(CALLING_FUNCTION|CREATE_OBJECT) (data|key_function)
                               (preposition (args+=data))?
@@ -109,11 +108,14 @@ object_statement            : LOCAL_DECLARE_OP INT_NUM OBJECT_TYPE (EXTENDS data
                               OBJECT_BODY_START (object_property_define | object_method_define)*
                               DEFINE_CLOSURE IDENTIFIER OBJECT_DEFINE_END ;
 object_method_define        : OBJECT_STATIC_DECLARE (STRING_LITERAL | CREATE_OBJECT) ZHE FUNCTION_TYPE
-                              (FUNCTION_ARGS_START FUNCTION_ARGS_GET (args+=INT_NUM type (YUE id+=IDENTIFIER)+)+ )?
-                              FUNCTION_BODY_START statements DEFINE_CLOSURE (STRING_LITERAL | CREATE_OBJECT) FUNCTION_DEFINE_END ;
+                              function_define_body (STRING_LITERAL | CREATE_OBJECT) FUNCTION_DEFINE_END ;
 object_property_define      : OBJECT_STATIC_DECLARE STRING_LITERAL ZHE type (YUE data)? ;
 
 import_statement            : '吾嘗觀' STRING_LITERAL '之書' ('方悟' IDENTIFIER+ '之義')? ;
+
+function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
+                              (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
+                              (YUE id+=IDENTIFIER)+)+)? FUNCTION_BODY_START statements DEFINE_CLOSURE ;
 
 if_logic_op                 : op=(EQ|NEQ|LTE|GTE|GT|LT) ;
 

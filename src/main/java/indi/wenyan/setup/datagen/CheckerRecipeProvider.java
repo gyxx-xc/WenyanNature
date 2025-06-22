@@ -20,8 +20,14 @@ public class CheckerRecipeProvider extends RecipeProvider {
         AnsweringRecipeBuilder
                 .create(Registration.HAND_RUNNER_1.get())
                 .addInput(Items.PAPER)
-                .question(CheckerFactory.ECHO_CHECKER)
+                .question(CheckerFactory.PLUS_CHECKER)
                 .unlock(has(Registration.HAND_RUNNER.get()))
                 .save(recipeOutput, "hand_runner_1");
+        AnsweringRecipeBuilder
+                .create(Items.DIAMOND)
+                .addInput(Items.COAL, 2)
+                .question(CheckerFactory.LABYRINTH_CHECKER)
+                .unlock(has(Items.DIAMOND))
+                .save(recipeOutput, "diamond_labyrinth_checker");
     }
 }

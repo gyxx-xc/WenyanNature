@@ -20,8 +20,8 @@ public class WenyanCompilerEnvironment implements Serializable {
 
     private record ForEnvironment(int forEndLabel, int progEndLabel) {}
 
-    private record Constant(WenyanType<?> t, Object o) {}
-    private record Context(int line, int column) {}
+    private record Constant(WenyanType t, Object o) {}
+    private record Context(int line, int column, String content) {}
 
     public WenyanCompilerEnvironment(WenyanBytecode bytecode) {
         this.bytecode = bytecode;
@@ -95,21 +95,21 @@ public class WenyanCompilerEnvironment implements Serializable {
         return index;
     }
 
-    public void enterContext(int line, int column) {
+    public void enterContext(int line, int column, String content) {
         if (!debugContextStack.isEmpty()) {
             Context curContext = debugContextStack.peek();
             if (bytecode.size() != lastContextStart)
-                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size());
+                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size(), curContext.content);
         }
         lastContextStart = bytecode.size();
-        debugContextStack.push(new Context(line, column));
+        debugContextStack.push(new Context(line, column, content));
     }
 
     public void exitContext() {
         if (!debugContextStack.isEmpty()) {
             Context curContext = debugContextStack.pop();
             if (bytecode.size() != lastContextStart)
-                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size());
+                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size(), curContext.content);
             lastContextStart = bytecode.size();
         }
     }

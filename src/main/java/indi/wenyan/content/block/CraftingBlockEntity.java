@@ -1,6 +1,7 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.WenyanNature;
+import indi.wenyan.content.checker.AnsweringChecker;
 import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
@@ -8,7 +9,6 @@ import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -91,22 +91,22 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
                         new AnsweringRecipeInput(pedestalItems), level);
                 if (recipeHolder.isEmpty() || !recipeHolder.get().equals(entity.recipeHolder)) {
-                    entity.result = CraftingAnswerChecker.Result.RUNTIME_ERROR;
+                    entity.result = AnsweringChecker.Result.RUNTIME_ERROR;
                 }
 
-                if (entity.result != CraftingAnswerChecker.Result.ANSWER_CORRECT) {
+                // handle the result
+                if (entity.result != AnsweringChecker.Result.ANSWER_CORRECT) {
                     entity.isCrafting = false;
                 } else if (entity.round >= entity.maxRound) {
                     entity.isCrafting = false;
                     forNearbyPedestal(level, pos, p -> p.removeItem(0, p.getMaxStackSize()));
                     entity.ejectItem();
                 } else {
-                    // TODO
+                    // continue
                     entity.runner.program = new WenyanProgram(String.join("\n", entity.runner.pages),
-                            WenyanPackageBuilder.create()
-                                    .environment(WenyanPackages.CRAFTING_BASE_ENVIRONMENT)
-                                    .environment(entity.checker.inputEnvironment()).build(),
+                            WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
                             entity.player, entity.checker);
+                    entity.checker.init(entity.runner.program);
                     entity.runner.program.run();
                 }
             }
@@ -117,6 +117,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         assert level != null;
         if (isCrafting) {
             WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
+            return;
         }
 
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
@@ -141,9 +142,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         round = 0;
         this.player = player;
         runner.program = new WenyanProgram(String.join("\n", runner.pages),
-                WenyanPackageBuilder.create()
-                        .environment(WenyanPackages.CRAFTING_BASE_ENVIRONMENT)
-                        .environment(checker.inputEnvironment()).build(), player, checker);
+                WenyanPackages.CRAFTING_BASE_ENVIRONMENT, player, checker);
+        checker.init(runner.program);
         runner.program.run();
         isCrafting = true;
     }

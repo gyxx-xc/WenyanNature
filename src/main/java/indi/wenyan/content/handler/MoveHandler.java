@@ -2,7 +2,6 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.JavacallHandlers;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public class MoveHandler implements JavacallHandler {
 
     @Override
     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> newArgs = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
+        List<Object> newArgs = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
         newArgs.set(0, Math.max(-20, Math.min(20, (double) newArgs.get(0))));
         newArgs.set(1, Math.max(-20, Math.min(20, (double) newArgs.get(1))));
         newArgs.set(2, Math.max(-20, Math.min(20, (double) newArgs.get(2))));
@@ -27,7 +26,7 @@ public class MoveHandler implements JavacallHandler {
         return WenyanValue.NULL;
     }
     @Override
-    public boolean isLocal() {
+    public boolean isLocal(JavacallContext context) {
         return false;
     }
 }
