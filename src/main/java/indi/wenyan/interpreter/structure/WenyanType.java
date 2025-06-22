@@ -2,6 +2,8 @@ package indi.wenyan.interpreter.structure;
 
 import net.minecraft.network.chat.Component;
 
+import java.util.HashMap;
+
 public final class WenyanType<T extends WenyanValue> {
     public static final WenyanType<WenyanNativeValue> NULL = new WenyanType<>("null");
     public static final WenyanType<WenyanNativeValue> INT = new WenyanType<>("int");
@@ -12,6 +14,16 @@ public final class WenyanType<T extends WenyanValue> {
     public static final WenyanType<WenyanNativeValue> OBJECT = new WenyanType<>("object");
     public static final WenyanType<WenyanNativeValue> OBJECT_TYPE = new WenyanType<>("object_type");
     public static final WenyanType<WenyanNativeValue> FUNCTION = new WenyanType<>("function");
+    public static final HashMap<WenyanType<?>, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
+        put(STRING, 0);
+        put(LIST, 1);
+        put(FUNCTION, 1);
+        put(OBJECT, 1);
+        put(OBJECT_TYPE, 1);
+        put(DOUBLE, 2);
+        put(INT, 3);
+        put(BOOL, 4);
+    }};
 
     private final String name;
 

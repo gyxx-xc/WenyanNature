@@ -19,7 +19,7 @@ public class WenyanNativeValue implements WenyanValue {
         this.isConst = isConst;
     }
 
-    public WenyanType type() {
+    public WenyanType<?> type() {
         return type;
     }
 
@@ -126,7 +126,7 @@ public class WenyanNativeValue implements WenyanValue {
     }
 
     public WenyanType widerType(WenyanType type) {
-        if (TYPE_CASTING_ORDER.get(this.type) < TYPE_CASTING_ORDER.get(type))
+        if (WenyanType.TYPE_CASTING_ORDER.get(this.type) < WenyanType.TYPE_CASTING_ORDER.get(type))
             return this.type;
         return type;
     }
