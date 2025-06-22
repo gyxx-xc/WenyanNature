@@ -1,6 +1,7 @@
-package indi.wenyan.interpreter.structure;
+package indi.wenyan.interpreter.structure.values;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
@@ -58,15 +59,15 @@ public class WenyanDictObjectType implements WenyanObjectType {
     }
 
     @Override
-    public void call(WenyanNativeValue self, WenyanThread thread,
-                     List<WenyanNativeValue> argsList) throws WenyanException.WenyanThrowException {
+    public void call(WenyanValue self, WenyanThread thread,
+                     List<WenyanValue> argsList) throws WenyanException.WenyanThrowException {
         // create empty, run constructor, return self
-        self = new WenyanNativeValue(WenyanType.OBJECT,
+        self = new WenyanNativeValue(WenyanObject.TYPE,
                 new WenyanDictObject(this), true);
         thread.currentRuntime().processStack.push(self);
 
         WenyanFunction constructor = (WenyanFunction) getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
-                .casting(WenyanType.FUNCTION).getValue();
+                .casting(WenyanFunction.TYPE).getValue();
 
         constructor.call(self, thread, argsList); // we got a runtime change here
         thread.currentRuntime().noReturnFlag = true;

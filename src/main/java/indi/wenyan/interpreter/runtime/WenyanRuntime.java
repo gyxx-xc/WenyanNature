@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 
 import java.util.HashMap;
 import java.util.Stack;

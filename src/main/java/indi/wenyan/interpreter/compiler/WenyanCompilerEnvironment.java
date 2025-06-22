@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.compiler;
 
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import indi.wenyan.interpreter.structure.WenyanType;
 
 import java.io.Serializable;

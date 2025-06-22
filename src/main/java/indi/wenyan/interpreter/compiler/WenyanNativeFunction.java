@@ -3,15 +3,17 @@ package indi.wenyan.interpreter.compiler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record WenyanNativeFunction(List<WenyanType> argTypes, WenyanBytecode bytecode) implements WenyanFunction {
+public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode bytecode) implements WenyanFunction {
     @Override
-    public void call(WenyanNativeValue self, WenyanThread thread,
-                     List<WenyanNativeValue> argsList)
+    public void call(WenyanValue self, WenyanThread thread,
+                     List<WenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
         if (argTypes().size() != argsList.size())
             throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
@@ -22,12 +24,27 @@ public record WenyanNativeFunction(List<WenyanType> argTypes, WenyanBytecode byt
         WenyanRuntime newRuntime = new WenyanRuntime(bytecode);
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
-            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanType.OBJECT_TYPE,
+            newRuntime.setVariable(WenyanDataParser.PARENT_ID, new WenyanNativeValue(WenyanObjectType.TYPE,
                     ((WenyanDictObject) self.getValue()).getObjectType().getParent(), true));
         }
         // STUB: assume the first n id is the args
         for (int i = 0; i < argsList.size(); i++)
             newRuntime.setVariable(bytecode.getIdentifier(i), WenyanNativeValue.varOf(argsList.get(i)));
         thread.call(newRuntime);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Component.translatable("type.wenyan_nature.function").getString());
+        sb.append("(");
+        for (int i = 0; i < argTypes().size(); i++) {
+            sb.append(argTypes().get(i).toString());
+            if (i < argTypes().size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
     }
 }

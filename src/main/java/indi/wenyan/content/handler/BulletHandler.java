@@ -3,11 +3,15 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.world.phys.Vec3;
 
 public class BulletHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
-            {WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.DOUBLE, WenyanType.INT};
+            {WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanInteger.TYPE};
 
     public BulletHandler() {
     }
@@ -27,7 +31,7 @@ public class BulletHandler implements JavacallHandler {
                     Math.max(1, Math.min(200, (int) newArgs.get(4))), context.holder());
             entity.level().addFreshEntity(bullet);
         }
-        return WenyanValue.NULL;
+        return WenyanNull.NULL;
     }
     @Override
     public boolean isLocal(JavacallContext context) {

@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.compiler.visitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.utils.*;
 import net.minecraft.network.chat.Component;
 
@@ -15,14 +16,14 @@ public class WenyanDataVisitor extends WenyanVisitor {
     public Boolean visitData_primary(WenyanRParser.Data_primaryContext ctx) {
         try {
             WenyanNativeValue value = switch (ctx.data_type.getType()) {
-                case WenyanRParser.BOOL_VALUE -> new WenyanNativeValue(WenyanType.BOOL,
+                case WenyanRParser.BOOL_VALUE -> new WenyanNativeValue(WenyanBoolean.TYPE,
                         WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()), true);
-                case WenyanRParser.INT_NUM -> new WenyanNativeValue(WenyanType.INT,
+                case WenyanRParser.INT_NUM -> new WenyanNativeValue(WenyanInteger.TYPE,
                         WenyanDataParser.parseInt(ctx.INT_NUM().getText()), true);
-                case WenyanRParser.FLOAT_NUM -> new WenyanNativeValue(WenyanType.DOUBLE,
+                case WenyanRParser.FLOAT_NUM -> new WenyanNativeValue(WenyanDouble.TYPE,
                         WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()),
                         true);
-                case WenyanRParser.STRING_LITERAL -> new WenyanNativeValue(WenyanType.STRING,
+                case WenyanRParser.STRING_LITERAL -> new WenyanNativeValue(WenyanString.TYPE,
                         WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()), true);
                 default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString(), ctx);
             };
@@ -68,7 +69,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         switch (ctx.p.getType()) {
             case WenyanRParser.INT_NUM -> {
                 try {
-                    bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.INT,
+                    bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanInteger.TYPE,
                             WenyanDataParser.parseInt(ctx.INT_NUM().getText()), true));
                 } catch (WenyanException.WenyanNumberException e) {
                     throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_number").getString(), ctx);

@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.runtime.executor;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 
 import java.util.ArrayList;
 import java.util.List;

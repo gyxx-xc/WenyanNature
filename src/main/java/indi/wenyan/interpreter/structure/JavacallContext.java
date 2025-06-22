@@ -5,6 +5,7 @@ import indi.wenyan.content.checker.AnsweringChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;

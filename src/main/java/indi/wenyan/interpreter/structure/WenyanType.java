@@ -1,35 +1,29 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.structure.values.*;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 
 public final class WenyanType<T extends WenyanValue> {
-    public static final WenyanType<WenyanNativeValue> NULL = new WenyanType<>("null");
-    public static final WenyanType<WenyanNativeValue> INT = new WenyanType<>("int");
-    public static final WenyanType<WenyanNativeValue> DOUBLE = new WenyanType<>("double");
-    public static final WenyanType<WenyanNativeValue> BOOL = new WenyanType<>("bool");
-    public static final WenyanType<WenyanNativeValue> STRING = new WenyanType<>("string");
-    public static final WenyanType<WenyanNativeValue> LIST = new WenyanType<>("list");
-    public static final WenyanType<WenyanNativeValue> OBJECT = new WenyanType<>("object");
-    public static final WenyanType<WenyanNativeValue> OBJECT_TYPE = new WenyanType<>("object_type");
-    public static final WenyanType<WenyanNativeValue> FUNCTION = new WenyanType<>("function");
+
     public static final HashMap<WenyanType<?>, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
-        put(STRING, 0);
-        put(LIST, 1);
-        put(FUNCTION, 1);
-        put(OBJECT, 1);
-        put(OBJECT_TYPE, 1);
-        put(DOUBLE, 2);
-        put(INT, 3);
-        put(BOOL, 4);
+        put(WenyanString.TYPE, 0);
+        put(WenyanArrayObject.TYPE, 1);
+        put(WenyanFunction.TYPE, 1);
+        put(WenyanObject.TYPE, 1);
+        put(WenyanObjectType.TYPE, 1);
+        put(WenyanDouble.TYPE, 2);
+        put(WenyanInteger.TYPE, 3);
+        put(WenyanBoolean.TYPE, 4);
     }};
 
     private final String name;
 
-    private WenyanType(String name) {
+    public WenyanType(String name) {
         this.name = name;
     }
+    public WenyanType() {this("");}
 
     // TODO
     public static WenyanType<? extends WenyanComputable> computeWiderType(WenyanType<?> type1, WenyanType<?> type2) {

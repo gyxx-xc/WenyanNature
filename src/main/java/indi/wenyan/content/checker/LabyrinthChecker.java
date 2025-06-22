@@ -3,6 +3,7 @@ package indi.wenyan.content.checker;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.util.RandomSource;
 
@@ -22,14 +23,14 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         private static class OffsetHandler implements JavacallHandler {
             @Override
             public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-                if (context.self().casting(WenyanType.OBJECT).getValue() instanceof Position(int x, int y)) {
+                if (context.self().casting(WenyanObject.TYPE).getValue() instanceof Position(int x, int y)) {
                     if (context.args().size() == 1 && context.args().getFirst()
-                            .casting(WenyanType.OBJECT).getValue() instanceof Position(int dx, int dy)) {
-                        return new WenyanNativeValue(WenyanType.OBJECT,
+                            .casting(WenyanObject.TYPE).getValue() instanceof Position(int dx, int dy)) {
+                        return new WenyanNativeValue(WenyanObject.TYPE,
                                 new Position(x + dx, y + dy), true);
                     } else {
-                        var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanType.INT, WenyanType.INT});
-                        return new WenyanNativeValue(WenyanType.OBJECT,
+                        var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
+                        return new WenyanNativeValue(WenyanObject.TYPE,
                                 new Position(x + (int) arg.get(0), y + (int) arg.get(1)), true);
                     }
                 } else {
@@ -46,9 +47,9 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         @Override
         public WenyanNativeValue getAttribute(String name) {
             return switch (name) {
-                case "「「上下」」" -> new WenyanNativeValue(WenyanType.INT, x, true);
-                case "「「左右」」" -> new WenyanNativeValue(WenyanType.INT, y, true);
-                case "「「偏移」」" -> new WenyanNativeValue(WenyanType.FUNCTION, new OffsetHandler(), true);
+                case "「「上下」」" -> new WenyanNativeValue(WenyanInteger.TYPE, x, true);
+                case "「「左右」」" -> new WenyanNativeValue(WenyanInteger.TYPE, y, true);
+                case "「「偏移」」" -> new WenyanNativeValue(WenyanFunction.TYPE, new OffsetHandler(), true);
                 default -> throw new UnsupportedOperationException("Unknown Direction attribute: " + name);
             };
         }
@@ -63,20 +64,20 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
             @Override
             public WenyanNativeValue getAttribute(String name) {
                 return switch (name) {
-                    case "「「上」」" -> new WenyanNativeValue(WenyanType.OBJECT, UP, true);
-                    case "「「下」」" -> new WenyanNativeValue(WenyanType.OBJECT, DOWN, true);
-                    case "「「左」」" -> new WenyanNativeValue(WenyanType.OBJECT, LEFT, true);
-                    case "「「右」」" -> new WenyanNativeValue(WenyanType.OBJECT, RIGHT, true);
-                    case "「「方向」」" -> new WenyanNativeValue(WenyanType.LIST,
-                            new WenyanArrayObject(DIRECTIONS.stream().map(a->new WenyanNativeValue(WenyanType.OBJECT, a, true)).toList()), true);
-                    case WenyanDataParser.CONSTRUCTOR_ID -> WenyanValue.NULL;
+                    case "「「上」」" -> new WenyanNativeValue(WenyanObject.TYPE, UP, true);
+                    case "「「下」」" -> new WenyanNativeValue(WenyanObject.TYPE, DOWN, true);
+                    case "「「左」」" -> new WenyanNativeValue(WenyanObject.TYPE, LEFT, true);
+                    case "「「右」」" -> new WenyanNativeValue(WenyanObject.TYPE, RIGHT, true);
+                    case "「「方向」」" -> new WenyanNativeValue(WenyanArrayObject.TYPE,
+                            new WenyanArrayObject(DIRECTIONS.stream().map(a->new WenyanNativeValue(WenyanObject.TYPE, a, true)).toList()), true);
+                    case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };
             }
 
             @Override
             public WenyanObject createObject(List<WenyanNativeValue> argsList) throws WenyanException.WenyanTypeException {
-                var args = JavacallHandler.getArgs(argsList, new WenyanType[]{WenyanType.INT, WenyanType.INT});
+                var args = JavacallHandler.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
                 return new Position((int) args.get(0), (int) args.get(1));
             }
         }
@@ -94,18 +95,18 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         @Override
         public WenyanNativeValue getAttribute(String name) {
             return switch (name) {
-                case "「「终」」" -> new WenyanNativeValue(WenyanType.OBJECT, new Position(EndX+1, EndY+1), true);
-                case "「「長」」" -> new WenyanNativeValue(WenyanType.INT, maxX, true);
-                case "「「寬」」" -> new WenyanNativeValue(WenyanType.INT, maxY, true);
-                case "「「尋路」」" -> new WenyanNativeValue(WenyanType.FUNCTION, new JavacallHandler() {
+                case "「「终」」" -> new WenyanNativeValue(WenyanObject.TYPE, new Position(EndX+1, EndY+1), true);
+                case "「「長」」" -> new WenyanNativeValue(WenyanInteger.TYPE, maxX, true);
+                case "「「寬」」" -> new WenyanNativeValue(WenyanInteger.TYPE, maxY, true);
+                case "「「尋路」」" -> new WenyanNativeValue(WenyanFunction.TYPE, new JavacallHandler() {
                     @Override
                     public WenyanNativeValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                         if (context.args().size() == 1 && context.args().getFirst()
-                                .casting(WenyanType.OBJECT).getValue() instanceof Position(int x, int y)) {
-                            return new WenyanNativeValue(WenyanType.BOOL, !isWall(x-1, y-1), true);
+                                .casting(WenyanObject.TYPE).getValue() instanceof Position(int x, int y)) {
+                            return new WenyanNativeValue(WenyanBoolean.TYPE, !isWall(x-1, y-1), true);
                         } else {
-                            var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanType.INT, WenyanType.INT});
-                            return new WenyanNativeValue(WenyanType.BOOL,
+                            var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
+                            return new WenyanNativeValue(WenyanBoolean.TYPE,
                                     !isWall((int) arg.get(0)-1, (int) arg.get(1)-1), true);
                         }
                     }
@@ -200,16 +201,16 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         curY = 0;
         input = new Map();
 
-        setAttribute("「方位」", new WenyanNativeValue(WenyanType.OBJECT_TYPE,
+        setAttribute("「方位」", new WenyanNativeValue(WenyanObjectType.TYPE,
                 Position.PositionType.TYPE, true));
 
-        setAttribute("「迷宫」", new WenyanNativeValue(WenyanType.OBJECT, input, true));
+        setAttribute("「迷宫」", new WenyanNativeValue(WenyanObject.TYPE, input, true));
     }
 
     @Override
     public void accept(WenyanNativeValue value) throws WenyanException.WenyanCheckerError {
         try {
-            if (value.casting(WenyanType.OBJECT).getValue() instanceof Position(int dx, int dy)) {
+            if (value.casting(WenyanObject.TYPE).getValue() instanceof Position(int dx, int dy)) {
                 // TODO: check if Position is direction
                 curX = curX + dx;
                 curY = curY + dy;

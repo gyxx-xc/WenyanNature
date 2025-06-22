@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.structure;
+package indi.wenyan.interpreter.structure.values;
 
 import java.util.HashMap;
 

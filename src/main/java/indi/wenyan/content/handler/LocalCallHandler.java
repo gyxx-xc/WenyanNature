@@ -2,7 +2,7 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 
 import java.util.List;
 

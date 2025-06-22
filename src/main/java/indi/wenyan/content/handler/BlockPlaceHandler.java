@@ -2,6 +2,9 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +23,7 @@ public class BlockPlaceHandler implements JavacallHandler {
     private final BlockState block;
 
     public static final WenyanType<?>[] ARGS_TYPE =
-            {WenyanType.INT, WenyanType.INT, WenyanType.INT};
+            {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     public BlockPlaceHandler(Player player, BlockItem block, BlockPos pos, BlockState self) {
         this.holder = player;
@@ -37,7 +40,7 @@ public class BlockPlaceHandler implements JavacallHandler {
                 Math.max(-10, Math.min(10, (int) args.get(1))),
                 Math.max(-10, Math.min(10, (int) args.get(2))));
         placeBlock(holder.level(), holder, block, blockPos, attach);
-        return WenyanValue.NULL;
+        return WenyanNull.NULL;
     }
 
     private static void placeBlock(Level world, Player player, BlockState block, BlockPos pos, BlockPos attach) {

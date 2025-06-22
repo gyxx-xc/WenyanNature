@@ -3,6 +3,8 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.Iterator;
@@ -34,10 +36,10 @@ public class ForCode extends WenyanCode {
             }
             case FOR_NUM -> {
                 WenyanNativeValue value = runtime.processStack.pop();
-                if (value.type() == WenyanType.INT) {
+                if (value.type() == WenyanInteger.TYPE) {
                     int num = (int) value.getValue();
                     if (num > 0) {
-                        runtime.processStack.push(new WenyanNativeValue(WenyanType.INT, num - 1, true));
+                        runtime.processStack.push(new WenyanNativeValue(WenyanInteger.TYPE, num - 1, true));
                     } else {
                         runtime.programCounter = runtime.bytecode.getLabel(args);
                         runtime.PCFlag = true;

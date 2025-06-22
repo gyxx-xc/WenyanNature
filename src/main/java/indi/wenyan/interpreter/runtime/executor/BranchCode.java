@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanBoolean;
 
 import java.util.Objects;
 
@@ -24,10 +25,10 @@ public class BranchCode extends WenyanCode {
             if (condition != Condition.NONE) {
                 if (operation == Operation.POP) {
                     val = (boolean) runtime.processStack.pop()
-                            .As(WenyanType.BOOL).getValue();
+                            .as(WenyanBoolean.TYPE).getValue();
                 } else {
                     val = (boolean) runtime.processStack.peek()
-                            .As(WenyanType.BOOL).getValue();
+                            .as(WenyanBoolean.TYPE).getValue();
                 }
             }
         } catch (WenyanException.WenyanTypeException e) {

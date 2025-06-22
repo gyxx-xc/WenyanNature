@@ -1,8 +1,8 @@
 package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -12,7 +12,7 @@ public class WenyanStack {
     public static final int MAX_SIZE = 64;
 
     public void push(WenyanNativeValue item) {
-        if (item.type() != WenyanType.NULL)
+        if (item.type() != WenyanNull.TYPE)
             stack.addLast(item);
         while (stack.size() > MAX_SIZE) {
             stack.removeFirst();

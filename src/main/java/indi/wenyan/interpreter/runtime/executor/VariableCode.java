@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.*;
 import net.minecraft.network.chat.Component;
 
 public class VariableCode extends WenyanCode {
@@ -32,7 +33,7 @@ public class VariableCode extends WenyanCode {
                 if (var.isConst())
                     throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString());
                 try {
-                    var.setValue(value.As(var.type()).getValue());
+                    var.setValue(value);
                 } catch (WenyanException.WenyanTypeException e) {
                     throw new WenyanException(e.getMessage());
                 }
@@ -41,14 +42,14 @@ public class VariableCode extends WenyanCode {
                 WenyanNativeValue var = runtime.processStack.pop();
                 try {
                     switch (args) {
-                        case 1 -> var.As(WenyanType.INT);
-                        case 2 -> var.As(WenyanType.DOUBLE);
-                        case 3 -> var.As(WenyanType.BOOL);
-                        case 4 -> var.As(WenyanType.STRING);
-                        case 5 -> var.As(WenyanType.LIST);
-                        case 6 -> var.As(WenyanType.OBJECT);
-                        case 7 -> var.As(WenyanType.OBJECT_TYPE);
-                        case 8 -> var.As(WenyanType.FUNCTION);
+                        case 1 -> var.as(WenyanInteger.TYPE);
+                        case 2 -> var.as(WenyanDouble.TYPE);
+                        case 3 -> var.as(WenyanBoolean.TYPE);
+                        case 4 -> var.as(WenyanString.TYPE);
+                        case 5 -> var.as(WenyanArrayObject.TYPE);
+                        case 6 -> var.as(WenyanObject.TYPE);
+                        case 7 -> var.as(WenyanObjectType.TYPE);
+                        case 8 -> var.as(WenyanFunction.TYPE);
                         default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
                     }
                     runtime.processStack.push(var);

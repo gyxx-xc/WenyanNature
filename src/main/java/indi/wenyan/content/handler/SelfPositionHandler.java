@@ -2,10 +2,11 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.utils.WenyanPackages;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.structure.values.WenyanObject;
+import indi.wenyan.interpreter.structure.values.WenyanVec3Object;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Arrays;
 
 public class SelfPositionHandler implements JavacallHandler {
     public SelfPositionHandler() {
@@ -16,10 +17,10 @@ public class SelfPositionHandler implements JavacallHandler {
         if (context.runnerWarper().runner() instanceof HandRunnerEntity runner) {
             Vec3 vec = runner.position().subtract(context.holder().position());
             return new WenyanNativeValue(
-                    WenyanType.OBJECT,
+                    WenyanObject.TYPE,
                     new WenyanVec3Object(vec), true);
         } else {
-            return WenyanValue.NULL;
+            return WenyanNull.NULL;
         }
     }
     @Override

@@ -2,11 +2,14 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.world.phys.Vec3;
 
 public class CommunicateHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARG_TYPES =
-            {WenyanType.INT, WenyanType.INT, WenyanType.INT};
+            {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     public CommunicateHandler() {
     }
@@ -23,7 +26,7 @@ public class CommunicateHandler implements JavacallHandler {
             assert runner.getLevel() != null;
             runner.getLevel().sendBlockUpdated(runner.getBlockPos(), runner.getBlockState(), runner.getBlockState(), 3);
         }
-        return WenyanValue.NULL;
+        return WenyanNull.NULL;
     }
     @Override
     public boolean isLocal(JavacallContext context) {

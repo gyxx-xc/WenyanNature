@@ -2,6 +2,9 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.core.Direction;
 
 public class SelfPositionBlockHandler implements JavacallHandler {
@@ -14,7 +17,7 @@ public class SelfPositionBlockHandler implements JavacallHandler {
     @Override
     public WenyanNativeValue handle(JavacallContext context) {
         if (context.runnerWarper().runner() instanceof BlockRunner runner) {
-            return new WenyanNativeValue(WenyanType.DOUBLE, switch (direction) {
+            return new WenyanNativeValue(WenyanDouble.TYPE, switch (direction) {
                 case DOWN -> runner.getBlockPos().getCenter().y - context.holder().position().y;
                 case UP -> context.holder().position().y - runner.getBlockPos().getCenter().y;
                 case WEST -> runner.getBlockPos().getCenter().x - context.holder().position().x;
@@ -24,7 +27,7 @@ public class SelfPositionBlockHandler implements JavacallHandler {
             }, true);
         } else {
             // TODO thr
-            return WenyanValue.NULL;
+            return WenyanNull.NULL;
         }
     }
     @Override

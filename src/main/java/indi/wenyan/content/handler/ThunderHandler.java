@@ -2,8 +2,8 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
@@ -20,7 +20,7 @@ public class ThunderHandler implements JavacallHandler {
             e.moveTo(entity.getX(), entity.getY(), entity.getZ());
             entity.level().addFreshEntity(e);
         }
-        return WenyanValue.NULL;
+        return WenyanNull.NULL;
     }
     @Override
     public boolean isLocal(JavacallContext context) {

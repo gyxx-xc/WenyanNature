@@ -3,6 +3,9 @@ package indi.wenyan.content.handler;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -10,7 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.List;
 
 public class BlockMoveHandler implements JavacallHandler {
-    public static final WenyanType<?>[] ARGS_TYPE = {WenyanType.INT, WenyanType.INT, WenyanType.INT};
+    public static final WenyanType<?>[] ARGS_TYPE = {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     public BlockMoveHandler() {
     }
@@ -27,7 +30,7 @@ public class BlockMoveHandler implements JavacallHandler {
             BlockPos newPos = runner.getBlockPos().offset((int) args.get(0), (int) args.get(1), (int) args.get(2));
             BlockPos attach = newPos.relative(RunnerBlock.getConnectedDirection(runner.getBlockState()).getOpposite());
             assert level != null;
-            if (!level.getBlockState(attach).isCollisionShapeFullBlock(level, attach)) return WenyanValue.NULL;
+            if (!level.getBlockState(attach).isCollisionShapeFullBlock(level, attach)) return WenyanNull.NULL;
             level.setBlockAndUpdate(newPos, runner.getBlockState());
             level.neighborChanged(newPos, runner.getBlockState().getBlock(), newPos);
             BlockRunner entity = (BlockRunner) level.getBlockEntity(newPos);
@@ -42,7 +45,7 @@ public class BlockMoveHandler implements JavacallHandler {
             throw new WenyanException.WenyanTypeException("BlockMoveHandler can only be used with BlockRunner.");
         }
 
-        return WenyanValue.NULL;
+        return WenyanNull.NULL;
     }
 
     @Override

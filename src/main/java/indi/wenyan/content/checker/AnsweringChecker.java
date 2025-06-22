@@ -2,7 +2,7 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 
 public interface AnsweringChecker {
     void init(WenyanProgram program);

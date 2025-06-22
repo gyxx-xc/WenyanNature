@@ -2,6 +2,9 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 
@@ -9,7 +12,7 @@ import java.util.List;
 
 public class TouchHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
-            {WenyanType.INT, WenyanType.INT, WenyanType.INT};
+            {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     public TouchHandler() {
         super();
@@ -30,7 +33,7 @@ public class TouchHandler implements JavacallHandler {
                     });
             context.holder().level().getProfiler().pop();
         }
-        return WenyanValue.NULL;
+        return WenyanNull.NULL;
     }
     @Override
     public boolean isLocal(JavacallContext context) {

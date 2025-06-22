@@ -2,9 +2,9 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -14,7 +14,7 @@ import net.minecraft.util.RandomSource;
  * output var0
  */
 public class EchoChecker extends CraftingAnswerChecker {
-    private WenyanNativeValue ans;
+    private WenyanValue ans;
 
     public EchoChecker(RandomSource random) {
         super(random);
@@ -23,12 +23,12 @@ public class EchoChecker extends CraftingAnswerChecker {
     @Override
     public void init(WenyanProgram program) {
         super.init(program);
-        ans = new WenyanNativeValue(WenyanType.INT, random.nextInt(), true);
+        ans = new WenyanInteger(random.nextInt());
         setVariable(0, ans);
     }
 
     @Override
-    public void accept(WenyanNativeValue value) {
+    public void accept(WenyanValue value) {
         try {
             if (WenyanValue.equals(value, ans)){
                 setStatus(Result.ANSWER_CORRECT);

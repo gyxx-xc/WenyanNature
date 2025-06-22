@@ -1,9 +1,9 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -24,9 +24,9 @@ public class PlusChecker extends CraftingAnswerChecker {
         super.init(program);
         int a = random.nextInt(100);
         int b = random.nextInt(100);
-        setVariable(0, new WenyanNativeValue(WenyanType.INT, a, true));
-        setVariable(1, new WenyanNativeValue(WenyanType.INT, b, true));
-        ans = new WenyanNativeValue(WenyanType.INT, a + b, true);
+        setVariable(0, new WenyanNativeValue(WenyanInteger.TYPE, a, true));
+        setVariable(1, new WenyanNativeValue(WenyanInteger.TYPE, b, true));
+        ans = new WenyanNativeValue(WenyanInteger.TYPE, a + b, true);
     }
 
     @Override

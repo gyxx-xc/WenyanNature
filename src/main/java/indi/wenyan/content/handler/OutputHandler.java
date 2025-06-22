@@ -6,8 +6,8 @@ import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import indi.wenyan.setup.network.OutputInformationPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -36,7 +36,7 @@ public class OutputHandler implements JavacallHandler {
         } else {
             WenyanNature.LOGGER.warn("Lost Output: {}", result);
         }
-        return WenyanValue.NULL;
+        return WenyanNull.NULL;
     }
 
     @Override

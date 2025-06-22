@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.runtime;
 import indi.wenyan.WenyanNature;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.Stack;

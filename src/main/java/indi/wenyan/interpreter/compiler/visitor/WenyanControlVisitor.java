@@ -2,8 +2,8 @@ package indi.wenyan.interpreter.compiler.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.WenyanNativeValue;
-import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 
@@ -149,7 +149,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitReturn_void_statement(WenyanRParser.Return_void_statementContext ctx) {
-        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanType.NULL, null, true));
+        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue(WenyanNull.TYPE, null, true));
         bytecode.add(WenyanCodes.RET);
         return true;
     }

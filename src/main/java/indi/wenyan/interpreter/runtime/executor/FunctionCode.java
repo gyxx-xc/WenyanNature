@@ -4,6 +4,10 @@ import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanFunction;
+import indi.wenyan.interpreter.structure.values.WenyanNativeValue;
+import indi.wenyan.interpreter.structure.values.WenyanObject;
+import indi.wenyan.interpreter.structure.values.WenyanObjectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +43,21 @@ public class FunctionCode extends WenyanCode {
                 self = runtime.processStack.pop();
 
             // object_type
-            if (func.type() == WenyanType.OBJECT_TYPE) {
-                callable = (WenyanObjectType) func.casting(WenyanType.OBJECT_TYPE).getValue();
+            if (func.type() == WenyanObjectType.TYPE) {
+                callable = (WenyanObjectType) func.casting(WenyanObjectType.TYPE).getValue();
             } else { // function
                 // handleWarper self first
                 if (operation == Operation.CALL_ATTR) {
                     // try casting to object (might be list)
                     try {
-                        self = self.casting(WenyanType.OBJECT);
+                        self = self.casting(WenyanObject.TYPE);
                     } catch (WenyanException.WenyanTypeException e) {
                         // ignore self then
                         self = null;
                     }
                 }
                 callable = (WenyanFunction)
-                        func.casting(WenyanType.FUNCTION).getValue();
+                        func.casting(WenyanFunction.TYPE).getValue();
             }
 
             List<WenyanNativeValue> argsList = new ArrayList<>(args);
@@ -74,7 +78,7 @@ public class FunctionCode extends WenyanCode {
         WenyanFunction sign;
         try {
             sign = (WenyanFunction) thread.currentRuntime().processStack.peek()
-                            .casting(WenyanType.FUNCTION).getValue();
+                            .casting(WenyanFunction.TYPE).getValue();
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }

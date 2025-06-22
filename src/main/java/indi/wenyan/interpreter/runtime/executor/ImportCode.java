@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.values.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 
 public class ImportCode extends WenyanCode {
@@ -23,7 +24,7 @@ public class ImportCode extends WenyanCode {
             case IMPORT_FROM -> {
                 try {
                     String name = (String) runtime.processStack.peek()
-                            .As(WenyanType.STRING).getValue();
+                            .as(WenyanString.TYPE).getValue();
                     runtime.setVariable(id,
                             WenyanPackages.PACKAGES.get(name).variables.get(id));
                 } catch (WenyanException.WenyanTypeException e) {
