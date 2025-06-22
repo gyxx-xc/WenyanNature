@@ -59,8 +59,10 @@ public interface WenyanValue {
         WenyanComparable right = other.As(cmpType);
         return left.compareTo(right);
     }
+
     WenyanType<?> type();
 
-    record FunctionSign(String name, WenyanType<?>[] argTypes, WenyanFunction function) {
-    }
+    <T extends WenyanValue> T As(WenyanType<T> type);
+
+    record FunctionSign(String name, WenyanType<?>[] argTypes, WenyanFunction function) { }
 }
