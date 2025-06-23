@@ -27,7 +27,7 @@ public class WenyanThread {
 
     // This method should be only called by the main thread to run the program loop.
     // since it needs scheduling after return
-    public void programLoop(Semaphore accumulatedSteps) throws InterruptedException {
+    public void programLoop(Semaphore accumulatedSteps) {
         while (true) {
             WenyanRuntime runtime = currentRuntime();
 

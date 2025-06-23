@@ -4,11 +4,10 @@ import indi.wenyan.interpreter.runtime.executor.WenyanCode;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class WenyanCompilerEnvironment implements Serializable {
+public class WenyanCompilerEnvironment {
     private final WenyanBytecode bytecode;
     private final HashMap<Constant, Integer> constTable = new HashMap<>();
     private final HashMap<String, Integer> identifierTable = new HashMap<>();

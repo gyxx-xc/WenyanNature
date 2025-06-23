@@ -22,8 +22,8 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
 
     public HandRunnerRender(EntityRendererProvider.Context context) {
         super(context);
-        this.dispatcher = context.getEntityRenderDispatcher();
-        this.font = context.getFont();
+        dispatcher = context.getEntityRenderDispatcher();
+        font = context.getFont();
     }
 
     @Override

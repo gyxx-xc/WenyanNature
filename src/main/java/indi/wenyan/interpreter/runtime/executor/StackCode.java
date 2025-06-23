@@ -9,7 +9,7 @@ public class StackCode extends WenyanCode {
 
     public StackCode(Operation o) {
         super(name(o));
-        this.operation = o;
+        operation = o;
     }
 
     @Override

@@ -3,10 +3,11 @@ package indi.wenyan.interpreter.structure.values;
 import indi.wenyan.interpreter.structure.WenyanType;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class WenyanDictObject implements WenyanObject {
     private final WenyanDictObjectType type;
-    private final HashMap<String, WenyanValue> variable = new HashMap<>();
+    private final Map<String, WenyanValue> variable = new HashMap<>();
     public static final WenyanType<WenyanDictObject> TYPE = new WenyanType<>("dict_object", WenyanDictObject.class);
 
     public WenyanDictObject(WenyanDictObjectType type) {

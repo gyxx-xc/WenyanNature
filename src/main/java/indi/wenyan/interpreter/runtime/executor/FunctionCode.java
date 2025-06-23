@@ -14,7 +14,7 @@ public class FunctionCode extends WenyanCode {
 
     public FunctionCode(Operation o) {
         super(name(o));
-        this.operation = o;
+        operation = o;
     }
 
     // func / create_obj

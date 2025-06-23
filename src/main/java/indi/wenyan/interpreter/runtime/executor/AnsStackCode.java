@@ -12,7 +12,7 @@ public class AnsStackCode extends WenyanCode {
 
     public AnsStackCode(Operation o) {
         super(name(o));
-        this.operation = o;
+        operation = o;
     }
 
     @Override

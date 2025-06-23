@@ -13,10 +13,6 @@ public class MoveHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE};
 
-    public MoveHandler() {
-        super();
-    }
-
     @Override
     public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         List<Object> newArgs = JavacallHandler.getArgs(context.args(), ARGS_TYPE);

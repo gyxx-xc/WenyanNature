@@ -15,7 +15,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        this.horizontalFaceBlock(Registration.RUNNER_BLOCK.get(),
+        horizontalFaceBlock(Registration.RUNNER_BLOCK.get(),
                 new ModelFile.UncheckedModelFile(
                         ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "block/runner_block")));
 

@@ -16,9 +16,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class OutputHandler implements JavacallHandler {
 
-    public OutputHandler() {
-    }
-
     @Override
     public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanCheckerError {
         StringBuilder result = new StringBuilder();

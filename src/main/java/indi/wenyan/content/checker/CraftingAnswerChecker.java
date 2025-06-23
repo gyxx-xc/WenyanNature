@@ -5,8 +5,6 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.util.RandomSource;
 
-import java.util.List;
-
 public abstract class CraftingAnswerChecker implements AnsweringChecker {
     protected final RandomSource random;
     protected WenyanProgram program;
@@ -30,7 +28,7 @@ public abstract class CraftingAnswerChecker implements AnsweringChecker {
         this.random = random;
     }
 
-    public void accept(List<WenyanValue> value) throws WenyanException.WenyanCheckerError {
+    public void accept(Iterable<WenyanValue> value) throws WenyanException.WenyanCheckerError {
         for (var v : value)
             accept(v);
     }

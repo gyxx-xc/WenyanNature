@@ -5,8 +5,6 @@ import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 public class RedstoneSignalHandler implements JavacallHandler {
-    public RedstoneSignalHandler() {
-    }
 
     @Override
     public WenyanValue handle(JavacallContext context) {

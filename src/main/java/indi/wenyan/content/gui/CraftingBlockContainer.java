@@ -33,15 +33,15 @@ public class CraftingBlockContainer extends AbstractContainerMenu {
     }
 
     public int getProgress(int length) {
-        int progress = this.data.get(0);
-        int maxProgress = this.data.get(1);
-        if (this.data.get(2) == 0) // not crafting
+        int progress = data.get(0);
+        int maxProgress = data.get(1);
+        if (data.get(2) == 0) // not crafting
             return length;
         return maxProgress == 0 ? 0 : progress * length / maxProgress;
     }
 
     public int getResult() {
-        return this.data.get(3);
+        return data.get(3);
     }
 
     @Override

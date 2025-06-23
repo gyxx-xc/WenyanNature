@@ -29,8 +29,8 @@ import java.util.List;
 import static indi.wenyan.WenyanNature.LOGGER;
 
 
-public final class FileLoader {
-    private FileLoader(){}
+public enum FileLoader {
+    ;
 
     public static DeferredItem<Item> runnerItem;
 
@@ -160,11 +160,11 @@ public final class FileLoader {
         }
         // Give to player or drop on ground
         boolean added = player.getInventory().add(book);
-        if (!added) {
+        if (added) {
+            source.sendSystemMessage(Component.literal("§a[WenyanNature] 已将符咒发送给你：" + filename));
+        } else {
             player.drop(book, false);
             source.sendSystemMessage(Component.literal("§e[WenyanNature] 背包已满，符咒已丢在地上：" + filename));
-        } else {
-            source.sendSystemMessage(Component.literal("§a[WenyanNature] 已将符咒发送给你：" + filename));
         }
 
         return Command.SINGLE_SUCCESS;

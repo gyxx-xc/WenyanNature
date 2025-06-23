@@ -32,7 +32,7 @@ public class BulletRender extends EntityRenderer<BulletEntity> {
     public void render(BulletEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
         poseStack.translate(0, 0.1, 0);
-        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        poseStack.mulPose(entityRenderDispatcher.cameraOrientation());
         poseStack.scale(0.3F, 0.3F, 0.3F);
         VertexConsumer vertexconsumer = buffer.getBuffer(RENDER_TYPE);
         PoseStack.Pose posestack$pose = poseStack.last();

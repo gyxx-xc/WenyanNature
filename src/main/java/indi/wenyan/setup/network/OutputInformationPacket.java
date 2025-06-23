@@ -25,8 +25,8 @@ public final class OutputInformationPacket implements CustomPacketPayload {
     }
 
     public OutputInformationPacket(FriendlyByteBuf buffer) {
-        this.pos = buffer.readBlockPos();
-        this.output = buffer.readUtf();
+        pos = buffer.readBlockPos();
+        output = buffer.readUtf();
     }
 
     private static void write(FriendlyByteBuf buffer, OutputInformationPacket packet) {
@@ -42,10 +42,10 @@ public final class OutputInformationPacket implements CustomPacketPayload {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == null || obj.getClass() != getClass()) return false;
         var that = (OutputInformationPacket) obj;
-        return Objects.equals(this.pos, that.pos) &&
-                Objects.equals(this.output, that.output);
+        return Objects.equals(pos, that.pos) &&
+                Objects.equals(output, that.output);
     }
 
     @Override

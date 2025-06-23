@@ -12,6 +12,6 @@ public class BlockRunnerScreen extends RunnerScreen {
     protected boolean bookKeyPressed(int keyCode, int scanCode, int modifiers) {return false;}
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        return this.getFocused() != null && this.getFocused().charTyped(codePoint, modifiers);
+        return getFocused() != null && getFocused().charTyped(codePoint, modifiers);
     }
 }

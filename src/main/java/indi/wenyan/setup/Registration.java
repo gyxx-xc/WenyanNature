@@ -1,7 +1,6 @@
 package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
-import indi.wenyan.WenyanNature;
 import indi.wenyan.content.block.*;
 import indi.wenyan.content.data.OutputData;
 import indi.wenyan.content.data.RunnerTierData;
@@ -9,8 +8,8 @@ import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.WenyanHandRunner;
-import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.item.ink.*;
+import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.setup.network.OutputInformationHandler;
 import indi.wenyan.setup.network.OutputInformationPacket;
@@ -43,7 +42,7 @@ import java.util.function.Supplier;
 import static indi.wenyan.WenyanNature.MODID;
 import static indi.wenyan.setup.datagen.ModItemModelProvider.*;
 
-public class Registration {
+public final class Registration {
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
@@ -108,8 +107,8 @@ public class Registration {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
 
-    private static void onRegisterPayloadHandler(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(WenyanNature.MODID)
+    private static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(MODID)
                 .versioned("1.0")
                 .optional();
         registrar.playToServer(
@@ -151,7 +150,7 @@ public class Registration {
         HAND_RUNNER_ENTITY = ENTITY.register("hand_runner",
                 () -> EntityType.Builder
                         .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
-                        .sized(0.45f, 1f)
+                        .sized(0.45f, 1.0f)
                         .build("hand_runner"));
 
         //Paper

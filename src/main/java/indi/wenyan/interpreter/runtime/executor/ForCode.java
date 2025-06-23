@@ -21,7 +21,7 @@ public class ForCode extends WenyanCode {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case FOR_ITER -> {
-                Iterator<?> iter = null;
+                Iterator<?> iter;
                 try {
                     iter = runtime.processStack.peek().as(WenyanIterator.TYPE).value();
                 } catch (WenyanException.WenyanTypeException e) {

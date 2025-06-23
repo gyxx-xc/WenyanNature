@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
-    private boolean isCrafting = false;
+    private boolean isCrafting;
     private BlockRunner runner;
     private CraftingAnswerChecker checker;
     private RecipeHolder<AnsweringRecipe> recipeHolder;
@@ -47,7 +47,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
 
     // for gui
     public CraftingAnswerChecker.Result result;
-    public int round = 0;
+    public int round;
     public final int maxRound = 16;
     protected final ContainerData data;
     private static final int RANGE = 3; // the offset to search for pedestals
@@ -58,10 +58,10 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
             @Override
             public int get(int i) {
                 return switch (i) {
-                    case 0 -> CraftingBlockEntity.this.round;
-                    case 1 -> CraftingBlockEntity.this.maxRound;
-                    case 2 -> CraftingBlockEntity.this.isCrafting ? 1 : 0;
-                    case 3 -> CraftingBlockEntity.this.result != null ? CraftingBlockEntity.this.result.ordinal() : -1;
+                    case 0 -> round;
+                    case 1 -> maxRound;
+                    case 2 -> isCrafting ? 1 : 0;
+                    case 3 -> result != null ? result.ordinal() : -1;
                     default -> 0;
                 };
             }

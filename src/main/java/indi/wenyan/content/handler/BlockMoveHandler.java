@@ -15,9 +15,6 @@ import java.util.List;
 public class BlockMoveHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE = {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
-    public BlockMoveHandler() {
-    }
-
     @Override
     public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         List<Object> args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);

@@ -10,7 +10,7 @@ import static indi.wenyan.WenyanNature.LOGGER;
 import static indi.wenyan.WenyanNature.MODID;
 
 @EventBusSubscriber(modid = MODID)
-public class ServerEvent {
+public final class ServerEvent {
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
         LOGGER.info("道曰：「「问天地好在」」");

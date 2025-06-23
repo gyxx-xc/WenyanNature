@@ -2,7 +2,7 @@ package indi.wenyan.content.checker;
 
 import net.minecraft.util.RandomSource;
 
-public class CheckerFactory {
+public enum CheckerFactory {;
     public static final String PLUS_CHECKER = "plus";
     public static final String ECHO_CHECKER = "echo";
     public static final String LABYRINTH_CHECKER = "labyrinth";

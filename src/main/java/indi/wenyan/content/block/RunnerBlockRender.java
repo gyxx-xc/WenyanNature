@@ -9,7 +9,6 @@ import indi.wenyan.WenyanNature;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -58,7 +57,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
             DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES, 1536,
             RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_LINES_SHADER)
-                    .setLineState(new RenderStateShard.LineStateShard(OptionalDouble.empty()))
+                    .setLineState(new LineStateShard(OptionalDouble.empty()))
                     .setLayeringState(VIEW_OFFSET_Z_LAYERING)
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setOutputState(ITEM_ENTITY_TARGET)
@@ -174,7 +173,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
         VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entityTranslucent(LIGHT));
-        Random random = new Random(beam.hashCode());
+        var random = new Random(beam.hashCode());
         Color color = Color.getHSBColor(random.nextFloat(), 0.8F, 0.9F);
         color = color.brighter().brighter();
         int l = (int) beam.x + (int) beam.y + (int) beam.z;

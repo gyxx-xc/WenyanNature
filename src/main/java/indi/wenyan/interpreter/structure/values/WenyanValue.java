@@ -27,7 +27,7 @@ public interface WenyanValue {
             return casting(type);
         }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +
-                this.type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
+                type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 
     static WenyanValue add(WenyanValue self, WenyanValue other) throws WenyanException.WenyanThrowException {
@@ -64,7 +64,7 @@ public interface WenyanValue {
         return left.mod(right);
     }
 
-    static boolean equals(WenyanValue self, WenyanValue other) throws WenyanException.WenyanTypeException {
+    static boolean equals(WenyanValue self, WenyanValue other) {
         return self.equals(other);
     }
 
@@ -75,7 +75,7 @@ public interface WenyanValue {
         return left.compareTo(right);
     }
 
-    static WenyanValue emptyOf(WenyanType<?> type) throws WenyanException.WenyanTypeException {
+    static WenyanValue emptyOf(WenyanType<?> type) {
         if (type == WenyanDouble.TYPE) return new WenyanDouble(0.0);
         if (type == WenyanBoolean.TYPE) return new WenyanBoolean(false);
         if (type == WenyanString.TYPE) return new WenyanString("");

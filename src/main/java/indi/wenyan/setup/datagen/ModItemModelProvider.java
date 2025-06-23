@@ -32,35 +32,35 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        this.basicItem(Registration.HAND_RUNNER.get());
-        this.basicItem(Registration.HAND_RUNNER_1.get());
-        this.basicItem(Registration.HAND_RUNNER_2.get());
-        this.basicItem(Registration.HAND_RUNNER_3.get());
+        basicItem(Registration.HAND_RUNNER.get());
+        basicItem(Registration.HAND_RUNNER_1.get());
+        basicItem(Registration.HAND_RUNNER_2.get());
+        basicItem(Registration.HAND_RUNNER_3.get());
         //Paper
-        this.singleTexture(BAMBOO_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(BAMBOO_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/paper/" + BAMBOO_PAPER_ID));
-        this.singleTexture(CLOUD_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(CLOUD_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/paper/" + CLOUD_PAPER_ID));
-        this.singleTexture(DRAGON_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(DRAGON_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/paper/" + DRAGON_PAPER_ID));
-        this.singleTexture(FROST_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(FROST_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/paper/" + FROST_PAPER_ID));
-        this.singleTexture(PHOENIX_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(PHOENIX_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/paper/" + PHOENIX_PAPER_ID));
-        this.singleTexture(STAR_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(STAR_PAPER_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/paper/" + STAR_PAPER_ID));
         //INK
-        this.singleTexture(ARCANE_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(ARCANE_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/ink/" + ARCANE_INK_ID));
-        this.singleTexture(BAMBOO_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(BAMBOO_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/ink/" + BAMBOO_INK_ID));
-        this.singleTexture(CELESTIAL_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(CELESTIAL_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/ink/" + CELESTIAL_INK_ID));
-        this.singleTexture(CINNABAR_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(CINNABAR_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/ink/" + CINNABAR_INK_ID));
-        this.singleTexture(LUNAR_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(LUNAR_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/ink/" + LUNAR_INK_ID));
-        this.singleTexture(STARLIGHT_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
+        singleTexture(STARLIGHT_INK_ID, ResourceLocation.withDefaultNamespace("item/generated"),
                 "layer0", ResourceLocation.fromNamespaceAndPath(MODID,"item/ink/" + STARLIGHT_INK_ID));
     }
 }

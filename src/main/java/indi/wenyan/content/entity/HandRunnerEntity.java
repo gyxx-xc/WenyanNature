@@ -27,12 +27,12 @@ public class HandRunnerEntity extends Projectile {
 
     public HandRunnerEntity(@NotNull Player holder, String code, int level) {
         super(Registration.HAND_RUNNER_ENTITY.get(), holder.level());
-        speed = (int) Math.pow(10, level);
+        speed = (int) StrictMath.pow(10, level);
         program = new WenyanProgram(code, WenyanPackages.HAND_ENVIRONMENT, holder, this);
 
         Vec3 lookDirection = Vec3.directionFromRotation(holder.getXRot(), holder.getYRot()).normalize().scale(0.5);
-        this.moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));
-        this.shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.1F, 10F);
+        moveTo(holder.getEyePosition().add(lookDirection.x, -0.5, lookDirection.z));
+        shoot(lookDirection.x, lookDirection.y+0.5, lookDirection.z, 0.1F, 10.0F);
         addDeltaMovement(holder.getDeltaMovement());
     }
 
@@ -41,14 +41,14 @@ public class HandRunnerEntity extends Projectile {
         if (!hasRun) {
             if (getDeltaMovement().length() < 0.01) {
                 setDeltaMovement(Vec3.ZERO);
-                if (!this.level().isClientSide())
+                if (!level().isClientSide())
                     program.run();
                 hasRun = true;
             } else {
                 setDeltaMovement(getDeltaMovement().scale(0.5));
             }
         }
-        if (!this.level().isClientSide() && hasRun) {
+        if (!level().isClientSide() && hasRun) {
             if (program == null || !program.isRunning()) {
                 discard();
                 return;

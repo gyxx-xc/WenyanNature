@@ -75,8 +75,8 @@ public class BlockRunner extends BlockEntity {
     }
 
     public void copy(BlockRunner other) {
-        this.pages = other.pages;
-        this.program = other.program;
+        pages = other.pages;
+        program = other.program;
     }
 
     public void addOutput(String text) {
@@ -129,7 +129,7 @@ public class BlockRunner extends BlockEntity {
             return;
         }
 
-        speed = (int)Math.pow(10, Math.min(speedTier, 3));
+        speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
         super.setChanged();
     }
 

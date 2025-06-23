@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 
-public class WenyanConfig {
+public final class WenyanConfig {
       public static Screen createConfigScreen(Screen parent) {
           //init
           ConfigBuilder builder = ConfigBuilder.create()

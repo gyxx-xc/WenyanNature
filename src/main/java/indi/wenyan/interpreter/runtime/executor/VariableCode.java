@@ -11,7 +11,7 @@ public class VariableCode extends WenyanCode {
 
     public VariableCode(Operation o) {
         super(name(o));
-        this.operation = o;
+        operation = o;
     }
 
     @Override

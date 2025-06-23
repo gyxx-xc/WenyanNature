@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 import static com.mojang.text2speech.Narrator.LOGGER;
 
-public class CommonSetup {
+public final class CommonSetup {
     public static void setup(IEventBus modEventBus) {
         createConfigPath();
     }

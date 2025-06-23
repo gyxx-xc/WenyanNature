@@ -31,7 +31,7 @@ public final class AnsweringRecipeBuilder {
     }
 
     public AnsweringRecipeBuilder addInput(Ingredient ingredient) {
-        this.input.add(ingredient);
+        input.add(ingredient);
         return this;
     }
 
@@ -50,7 +50,7 @@ public final class AnsweringRecipeBuilder {
         return addInput(Ingredient.of(itemStack));
     }
 
-    public AnsweringRecipeBuilder addInput(List<Item> items) {
+    public AnsweringRecipeBuilder addInput(Iterable<Item> items) {
         for (Item item : items) {
             addInput(item);
         }

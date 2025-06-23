@@ -11,9 +11,6 @@ public class CommunicateHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARG_TYPES =
             {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
-    public CommunicateHandler() {
-    }
-
     @Override
     public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         var args = JavacallHandler.getArgs(context.args(), ARG_TYPES);

@@ -11,10 +11,6 @@ public class ExplosionHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanDouble.TYPE};
 
-    public ExplosionHandler() {
-        super();
-    }
-
     @Override
     public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
         var args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);

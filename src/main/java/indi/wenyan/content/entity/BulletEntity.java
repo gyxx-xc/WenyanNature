@@ -29,15 +29,17 @@ public class BulletEntity extends AbstractArrow {
         this.holder = holder;
         tickCount = 0;
         this.aliveTime = aliveTime;
-        this.moveTo(pos);
-        this.shoot(direction.x, direction.y, direction.z, (float) speed, 0);
+        moveTo(pos);
+        shoot(direction.x, direction.y, direction.z, (float) speed, 0);
     }
 
     @Override
     public void tick() {
-        if (!this.level().isClientSide())
-            if (this.tickCount++ > aliveTime)
+        if (!level().isClientSide()) {
+            if (this.tickCount > aliveTime)
                 this.discard();
+            this.tickCount++;
+        }
         checkInsideBlocks();
         updateRotation();
         setPos(position().add(getDeltaMovement()));
@@ -48,7 +50,7 @@ public class BulletEntity extends AbstractArrow {
     protected void onHitEntity(EntityHitResult result) {
         Entity entity = result.getEntity();
         float f = 25.0F;
-        DamageSource damagesource = this.damageSources().mobProjectile(this, holder);
+        DamageSource damagesource = damageSources().mobProjectile(this, holder);
         if (entity.hurt(damagesource, (float) (f*getDeltaMovement().length()))) {
             if (entity.getType() == EntityType.ENDERMAN) return;
             if (entity instanceof LivingEntity livingEntity) {
@@ -65,7 +67,7 @@ public class BulletEntity extends AbstractArrow {
     @Override
     protected void onInsideBlock(BlockState state) {
         if (state.isCollisionShapeFullBlock(level(), blockPosition()))
-            this.discard();
+            discard();
     }
 
     @Override

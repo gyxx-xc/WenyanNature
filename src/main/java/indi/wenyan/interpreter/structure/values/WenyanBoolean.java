@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.structure.values;
 
-import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 
 public record WenyanBoolean(Boolean value) implements WenyanValue {
@@ -20,7 +19,7 @@ public record WenyanBoolean(Boolean value) implements WenyanValue {
         return null;
     }
 
-    public WenyanBoolean not() throws WenyanException.WenyanTypeException {
+    public WenyanBoolean not() {
         return new WenyanBoolean(!value);
     }
 

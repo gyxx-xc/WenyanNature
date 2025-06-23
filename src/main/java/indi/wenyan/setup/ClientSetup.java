@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import static indi.wenyan.WenyanNature.MODID;
 
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ClientSetup {
+public final class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,

@@ -3,8 +3,7 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.interpreter.runtime.executor.*;
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
 
-public final class WenyanCodes {
-    private WenyanCodes(){}
+public enum WenyanCodes {;
 
     public static final WenyanCode BRANCH_POP_FALSE = new BranchCode(BranchCode.Condition.FALSE, BranchCode.Operation.POP);
     public static final WenyanCode BRANCH_FALSE = new BranchCode(BranchCode.Condition.FALSE, BranchCode.Operation.NONE);

@@ -6,11 +6,9 @@ import indi.wenyan.interpreter.structure.values.*;
 import net.minecraft.world.phys.Vec3;
 
 public class SelfPositionHandler implements JavacallHandler {
-    public SelfPositionHandler() {
-    }
 
     @Override
-    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public WenyanValue handle(JavacallContext context) {
         if (context.runnerWarper().runner() instanceof HandRunnerEntity runner) {
             Vec3 vec = runner.position().subtract(context.holder().position());
             return new WenyanVec3Object(vec);

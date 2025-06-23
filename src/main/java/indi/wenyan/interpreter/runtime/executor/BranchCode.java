@@ -13,8 +13,8 @@ public class BranchCode extends WenyanCode {
 
     public BranchCode(Condition c, Operation o) {
         super(name(c, o));
-        this.condition = c;
-        this.operation = o;
+        condition = c;
+        operation = o;
     }
 
     @Override

@@ -7,10 +7,9 @@ import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
-public final class WenyanDataParser {
-    private WenyanDataParser(){}
-
+public enum WenyanDataParser {;
     //Todo: translate to CHS
     public static final String PARENT_ID = "父";
     public static final String SELF_ID = "己";
@@ -61,12 +60,12 @@ public final class WenyanDataParser {
 
     }};
 
-    public static final HashSet<String> SIGN = new HashSet<>() {{
+    public static final Set<String> SIGN = new HashSet<>() {{
         add("負");
         add("负");
     }};
 
-    public static final HashSet<String> FLOAT_DIVISION = new HashSet<>() {{
+    public static final Set<String> FLOAT_DIVISION = new HashSet<>() {{
         add("又");
     }};
 
@@ -124,7 +123,7 @@ public final class WenyanDataParser {
         return n;
     }
 
-    public static double parseFloat(String text) throws WenyanException.WenyanNumberException, NumberFormatException {
+    public static double parseFloat(String text) throws WenyanException.WenyanNumberException {
         for (String div : FLOAT_DIVISION) {
             if (text.contains(div)) {
                 String[] parts = text.split(div);
@@ -237,10 +236,10 @@ public final class WenyanDataParser {
             }
 
             Num shift(int exp) {
-                if (num.equals("0"))
+                if ("0".equals(num))
                     return this;
                 else
-                    return new Num(this.num, this.exp + exp);
+                    return new Num(num, this.exp + exp);
             }
         }
 }

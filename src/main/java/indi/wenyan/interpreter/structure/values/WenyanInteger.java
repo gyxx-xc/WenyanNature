@@ -30,7 +30,7 @@ public record WenyanInteger(Integer value) implements WenyanComputable, WenyanCo
         return new WenyanInteger(value / other.as(TYPE).value);
     }
 
-    public WenyanInteger mod(WenyanInteger other) throws WenyanException.WenyanTypeException {
+    public WenyanInteger mod(WenyanInteger other) {
         return new WenyanInteger(value % other.value);
     }
 

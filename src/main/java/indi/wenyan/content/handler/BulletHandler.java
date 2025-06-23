@@ -13,9 +13,6 @@ public class BulletHandler implements JavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanInteger.TYPE};
 
-    public BulletHandler() {
-    }
-
     @Override
     public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
         var newArgs = JavacallHandler.getArgs(context.args(), ARGS_TYPE);

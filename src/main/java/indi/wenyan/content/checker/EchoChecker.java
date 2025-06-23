@@ -28,13 +28,9 @@ public class EchoChecker extends CraftingAnswerChecker {
 
     @Override
     public void accept(WenyanValue value) {
-        try {
-            if (WenyanValue.equals(value, ans)){
-                setStatus(Result.ANSWER_CORRECT);
-                return;
-            }
-        } catch (WenyanException.WenyanTypeException e) {
-            setStatus(Result.RUNTIME_ERROR);
+        if (WenyanValue.equals(value, ans)){
+            setStatus(Result.ANSWER_CORRECT);
+            return;
         }
         setStatus(Result.WRONG_ANSWER);
     }

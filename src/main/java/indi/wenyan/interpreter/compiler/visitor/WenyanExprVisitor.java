@@ -38,7 +38,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.variables_not_match").getString(), ctx);
         }
-        WenyanType type;
+        WenyanType<?> type;
         try {
             type = WenyanDataParser.parseType(ctx.type().getText());
         } catch (WenyanException.WenyanThrowException e) {
@@ -48,17 +48,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanException(Component.translatable("error.wenyan_nature.too_many_variables").getString(), ctx);
         }
         for (int i = 0; i < n; i++) {
-            try {
-                if (!ctx.d.isEmpty()) {
-                    visit(ctx.d.get(i));
-                    bytecode.add(WenyanCodes.CAST, type.ordinal()); // STUB type
-                } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(type));
-                }
-                bytecode.add(WenyanCodes.PUSH_ANS);
-            } catch (WenyanException.WenyanThrowException e) {
-                throw new WenyanException(e.getMessage(), ctx);
+            if (ctx.d.isEmpty()) {
+                bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(type));
+            } else {
+                visit(ctx.d.get(i));
+                bytecode.add(WenyanCodes.CAST, type.ordinal()); // STUB type
             }
+            bytecode.add(WenyanCodes.PUSH_ANS);
         }
         return true;
     }
@@ -252,18 +248,14 @@ public class WenyanExprVisitor extends WenyanVisitor {
         else bytecode.add(WenyanCodes.PUSH, WenyanNull.NULL);
         bytecode.add(WenyanCodes.CREATE_TYPE, ctx.IDENTIFIER(0).getText());
 
-        try {
-            for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
-                if (var.data() != null) {
-                    visit(var.data());
-                    bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
-                } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
-                }
-                bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
+        for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
+            if (var.data() != null) {
+                visit(var.data());
+                bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
+            } else {
+                bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
             }
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
+            bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
         }
 
         for (WenyanRParser.Object_method_defineContext func : ctx.object_method_define()) {

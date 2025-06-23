@@ -9,9 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 
 public class ThunderHandler implements JavacallHandler {
-    public ThunderHandler() {
-        super();
-    }
 
     @Override
     public WenyanValue handle(JavacallContext context) {

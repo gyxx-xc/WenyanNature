@@ -8,7 +8,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 @EventBusSubscriber(modid = WenyanNature.MODID,bus = EventBusSubscriber.Bus.MOD)
-public class ModDataGeneratorHandler {
+public final class ModDataGeneratorHandler {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event){
         ExistingFileHelper efh = event.getExistingFileHelper();

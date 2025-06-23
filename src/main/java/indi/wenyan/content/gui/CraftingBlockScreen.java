@@ -17,9 +17,9 @@ public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockCo
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        int relX = (this.width - this.imageWidth) / 2;
-        int relY = (this.height - this.imageHeight) / 2;
-        graphics.blit(GUI, relX, relY, 0, 0, imageWidth, this.imageHeight);
+        int relX = (width - imageWidth) / 2;
+        int relY = (height - imageHeight) / 2;
+        graphics.blit(GUI, relX, relY, 0, 0, imageWidth, imageHeight);
         graphics.blit(GUI, relX+59, relY+108, 1, 202+menu.getResult()*11, menu.getProgress(58), 9);
     }
 

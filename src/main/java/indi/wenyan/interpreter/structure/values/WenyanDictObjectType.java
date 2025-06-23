@@ -64,13 +64,13 @@ public class WenyanDictObjectType implements WenyanObjectType {
     public void call(WenyanValue self, WenyanThread thread,
                      List<WenyanValue> argsList) throws WenyanException.WenyanThrowException {
         // create empty, run constructor, return self
-        self = new WenyanDictObject(this);
-        thread.currentRuntime().processStack.push(self);
+        WenyanValue selfObj = new WenyanDictObject(this);
+        thread.currentRuntime().processStack.push(selfObj);
 
         WenyanFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
                 .as(WenyanFunction.TYPE);
 
-        constructor.call(self, thread, argsList); // we got a runtime change here
+        constructor.call(selfObj, thread, argsList); // we got a runtime change here
         thread.currentRuntime().noReturnFlag = true;
     }
 
