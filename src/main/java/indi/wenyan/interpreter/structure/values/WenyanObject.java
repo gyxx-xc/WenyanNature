@@ -1,11 +1,9 @@
 package indi.wenyan.interpreter.structure.values;
 
-import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
-import net.minecraft.network.chat.Component;
 
 public interface WenyanObject extends WenyanValue {
-    WenyanType<WenyanObject> TYPE = new WenyanType<>("object");
+    WenyanType<WenyanObject> TYPE = new WenyanType<>("object", WenyanObject.class);
 
     /**
      * Get the attribute of this object.
@@ -25,22 +23,4 @@ public interface WenyanObject extends WenyanValue {
      * @param value the value to set
      */
     void setVariable(String name, WenyanValue value);
-
-    default WenyanType<?> type() {
-        return TYPE;
-    }
-
-    @SuppressWarnings("unchecked")
-    default  <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
-        if (type() == type) {
-            return (T) this;
-        }
-        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +
-                this.type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
-    }
-
-    default void setValue(WenyanValue value) throws WenyanException.WenyanTypeException {
-        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_set_value_of_").getString() +
-                this.type());
-    }
 }

@@ -5,8 +5,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 
-public final class WenyanType<T extends WenyanValue> {
-
+public class WenyanType<T extends WenyanValue> {
     public static final HashMap<WenyanType<?>, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
         put(WenyanString.TYPE, 0);
         put(WenyanArrayObject.TYPE, 1);
@@ -19,11 +18,12 @@ public final class WenyanType<T extends WenyanValue> {
     }};
 
     private final String name;
+    public final Class<T> tClass;
 
-    public WenyanType(String name) {
+    public WenyanType(String name, Class<T> tClass) {
         this.name = name;
+        this.tClass = tClass;
     }
-    public WenyanType() {this("");}
 
     // TODO
     public static WenyanType<? extends WenyanComputable> computeWiderType(WenyanType<?> type1, WenyanType<?> type2) {

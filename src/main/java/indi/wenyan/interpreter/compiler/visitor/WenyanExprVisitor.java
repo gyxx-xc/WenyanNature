@@ -53,7 +53,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                     visit(ctx.d.get(i));
                     bytecode.add(WenyanCodes.CAST, type.ordinal()); // STUB type
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(type, true));
+                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(type));
                 }
                 bytecode.add(WenyanCodes.PUSH_ANS);
             } catch (WenyanException.WenyanThrowException e) {
@@ -258,7 +258,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                     visit(var.data());
                     bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText()), true));
+                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
                 }
                 bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
             }

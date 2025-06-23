@@ -1,8 +1,34 @@
 package indi.wenyan.interpreter.structure.values;
 
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanComparable;
+import indi.wenyan.interpreter.structure.WenyanComputable;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
+import net.minecraft.network.chat.Component;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public interface WenyanValue {
+
+    WenyanType<?> type();
+
+    @Nullable
+    default <T extends WenyanValue> T casting(WenyanType<T> type) {
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
+        if (type.tClass.isInstance(this)) {
+            return (T) this;
+        }
+        if (casting(type) != null) {
+            return casting(type);
+        }
+        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +
+                this.type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
+    }
 
     static WenyanValue add(WenyanValue self, WenyanValue other) throws WenyanException.WenyanThrowException {
         WenyanType<? extends WenyanComputable> addType = WenyanType.computeWiderType(self.type(), other.type());
@@ -50,16 +76,10 @@ public interface WenyanValue {
     }
 
     static WenyanValue emptyOf(WenyanType<?> type) throws WenyanException.WenyanTypeException {
-        if (type == WenyanInteger.TYPE) return new WenyanInteger(0);
         if (type == WenyanDouble.TYPE) return new WenyanDouble(0.0);
         if (type == WenyanBoolean.TYPE) return new WenyanBoolean(false);
         if (type == WenyanString.TYPE) return new WenyanString("");
+        if (type == WenyanArrayObject.TYPE) return new WenyanArrayObject(new ArrayList<>());
         throw new WenyanException("unreached");
     }
-
-    WenyanType<?> type();
-
-    <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException;
-
-    void setValue(WenyanValue value) throws WenyanException.WenyanTypeException;
 }

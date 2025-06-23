@@ -158,7 +158,7 @@ public final class WenyanDataParser {
         return text.substring(2, text.length() - 2);
     }
 
-    public static WenyanType parseType(String text) throws WenyanException.WenyanDataException {
+    public static WenyanType<?> parseType(String text) throws WenyanException.WenyanDataException {
         if (TYPE_MAP.containsKey(text))
             return TYPE_MAP.get(text);
         else

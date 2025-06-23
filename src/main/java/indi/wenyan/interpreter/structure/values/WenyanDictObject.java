@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class WenyanDictObject implements WenyanObject {
     private final WenyanDictObjectType type;
     private final HashMap<String, WenyanValue> variable = new HashMap<>();
-    public static final WenyanType<WenyanDictObject> TYPE = new WenyanType<>("dict_object");
+    public static final WenyanType<WenyanDictObject> TYPE = new WenyanType<>("dict_object", WenyanDictObject.class);
 
     public WenyanDictObject(WenyanDictObjectType type) {
         this.type = type;
@@ -29,5 +29,10 @@ public class WenyanDictObject implements WenyanObject {
 
     public WenyanDictObjectType getObjectType() {
         return type;
+    }
+
+    @Override
+    public WenyanType<?> type() {
+        return TYPE;
     }
 }

@@ -35,8 +35,4 @@ public class TouchHandler implements JavacallHandler {
         }
         return WenyanNull.NULL;
     }
-    @Override
-    public boolean isLocal(JavacallContext context) {
-        return false;
-    }
 }

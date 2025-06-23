@@ -23,8 +23,4 @@ public class ExplosionHandler implements JavacallHandler {
                     (float) Math.max(1, Math.min(20, (double) args.getFirst())), Level.ExplosionInteraction.MOB);
         return WenyanNull.NULL;
     }
-    @Override
-    public boolean isLocal(JavacallContext context) {
-        return false;
-    }
 }

@@ -17,8 +17,4 @@ public class RedstoneSignalHandler implements JavacallHandler {
             }
         return new WenyanInteger(value);
     }
-    @Override
-    public boolean isLocal(JavacallContext context) {
-        return false;
-    }
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface JavacallHandler extends WenyanFunction {
+    WenyanType<JavacallHandler> TYPE = new WenyanType<>("javacall_handler", JavacallHandler.class);
     WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
     /**
@@ -54,13 +55,17 @@ public interface JavacallHandler extends WenyanFunction {
         }
     }
 
-    static List<Object> getArgs(List<WenyanValue> args, WenyanType[] args_type)
+    static List<Object> getArgs(List<WenyanValue> args, WenyanType<?>[] args_type)
             throws WenyanException.WenyanTypeException {
         List<Object> newArgs = new ArrayList<>();
         if (args.size() != args_type.length)
             throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
         for (int i = 0; i < args.size(); i++)
-            newArgs.add(args.get(i).casting(args_type[i]).getValue());
+            newArgs.add(args.get(i).as(args_type[i]));
         return newArgs;
+    }
+
+    default WenyanType<?> type() {
+        return TYPE;
     }
 }

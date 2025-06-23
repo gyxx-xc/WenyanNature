@@ -3,8 +3,6 @@ package indi.wenyan.interpreter.structure.values;
 import indi.wenyan.interpreter.structure.*;
 import net.minecraft.network.chat.Component;
 
-import java.util.ArrayList;
-
 // about to Deprecated and change to WenyanValue
 @Deprecated
 public class WenyanNativeValue1 implements WenyanValue {
@@ -35,15 +33,6 @@ public class WenyanNativeValue1 implements WenyanValue {
         return isConst;
     }
 
-    public static WenyanValue varOf(WenyanNativeValue1 value) {
-        Object value1 = value.value;
-        // STUB: I don't think this will be remained
-        if (value.value instanceof WenyanArrayObject arrayObject) {
-            value1 = new WenyanArrayObject(new ArrayList<>(arrayObject.values));
-        }
-        return new WenyanNativeValue1(value.type, value1, false);
-    }
-
     // what we need to do these function?
     // 1. wide link
     // 2. required type
@@ -59,10 +48,5 @@ public class WenyanNativeValue1 implements WenyanValue {
     // obj -> function (constructor)
     public <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
-    }
-
-    @Override
-    public void setValue(WenyanValue value) throws WenyanException.WenyanTypeException {
-
     }
 }

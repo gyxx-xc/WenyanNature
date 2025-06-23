@@ -23,8 +23,8 @@ public class ImportCode extends WenyanCode {
                     .get(id));
             case IMPORT_FROM -> {
                 try {
-                    String name = (String) runtime.processStack.peek()
-                            .as(WenyanString.TYPE).getValue();
+                    String name = runtime.processStack.peek()
+                            .as(WenyanString.TYPE).value();
                     runtime.setVariable(id,
                             WenyanPackages.PACKAGES.get(name).variables.get(id));
                 } catch (WenyanException.WenyanTypeException e) {

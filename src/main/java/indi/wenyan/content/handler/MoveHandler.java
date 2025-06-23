@@ -28,8 +28,4 @@ public class MoveHandler implements JavacallHandler {
                     (double) newArgs.get(1)/10, (double) newArgs.get(2)/10));
         return WenyanNull.NULL;
     }
-    @Override
-    public boolean isLocal(JavacallContext context) {
-        return false;
-    }
 }

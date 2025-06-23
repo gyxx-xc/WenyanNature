@@ -13,7 +13,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     private final WenyanDictObjectType parent;
     private final HashMap<String, WenyanValue> staticVariable = new HashMap<>();
     private final HashMap<String, WenyanValue> functions = new HashMap<>();
-    public static final WenyanType<WenyanDictObjectType> TYPE = new WenyanType<>("dict_object_type");
+    public static final WenyanType<WenyanDictObjectType> TYPE = new WenyanType<>("dict_object_type", WenyanDictObjectType.class);
 
     public WenyanDictObjectType(WenyanDictObjectType parent) {
         this.parent = parent;
@@ -72,5 +72,10 @@ public class WenyanDictObjectType implements WenyanObjectType {
 
         constructor.call(self, thread, argsList); // we got a runtime change here
         thread.currentRuntime().noReturnFlag = true;
+    }
+
+    @Override
+    public WenyanType<?> type() {
+        return TYPE;
     }
 }

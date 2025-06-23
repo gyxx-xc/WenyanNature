@@ -1,6 +1,7 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.content.handler.JavacallHandler;
+import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.values.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class LabyrinthChecker extends CraftingAnswerChecker {
     private record Position(int x, int y) implements WenyanObject {
+        public static final WenyanType<Position> TYPE = new WenyanType<>("position", Position.class);
         public static final Position UP = new Position(-1, 0);
         public static final Position DOWN = new Position(1, 0);
         public static final Position LEFT = new Position(0, -1);
@@ -20,26 +22,9 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
 
         public static final List<Position> DIRECTIONS = List.of(UP, DOWN, LEFT, RIGHT);
 
-        private static class OffsetHandler implements JavacallHandler {
-            @Override
-            public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-                if (context.self().casting(WenyanObject.TYPE).getValue() instanceof Position(int x, int y)) {
-                    if (context.args().size() == 1 && context.args().getFirst()
-                            .casting(WenyanObject.TYPE).getValue() instanceof Position(int dx, int dy)) {
-                        return new Position(x + dx, y + dy);
-                    } else {
-                        var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
-                        return new Position(x + (int) arg.get(0), y + (int) arg.get(1));
-                    }
-                } else {
-                    throw new WenyanException.WenyanTypeException("Expected Position object");
-                }
-            }
-
-            @Override
-            public boolean isLocal(JavacallContext context) {
-                return true;
-            }
+        @Override
+        public WenyanType<?> type() {
+            return TYPE;
         }
 
         @Override
@@ -47,7 +32,14 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
             return switch (name) {
                 case "「「上下」」" -> new WenyanInteger(x);
                 case "「「左右」」" -> new WenyanInteger(y);
-                case "「「偏移」」" -> new OffsetHandler();
+                case "「「偏移」」" -> new LocalCallHandler(((self, args) -> {
+                    if (args.size() == 1 && args.getFirst().as(TYPE) instanceof Position(int dx, int dy)) {
+                        return new Position(self.as(TYPE).x + dx, self.as(TYPE).y + dy);
+                    } else {
+                        return new Position(self.as(TYPE).x + args.get(0).as(WenyanInteger.TYPE).value(),
+                                self.as(TYPE).y + args.get(1).as(WenyanInteger.TYPE).value());
+                    }
+                }));
                 default -> throw new UnsupportedOperationException("Unknown Direction attribute: " + name);
             };
         }
@@ -58,7 +50,9 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         }
 
         enum PositionType implements WenyanObjectType {
-            TYPE;
+            POSITION_TYPE;
+            public static final WenyanType<PositionType> TYPE = new WenyanType<>("position_type", PositionType.class);
+
             @Override
             public WenyanValue getAttribute(String name) {
                 return switch (name) {
@@ -77,10 +71,21 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                 var args = JavacallHandler.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
                 return new Position((int) args.get(0), (int) args.get(1));
             }
+
+            @Override
+            public WenyanType<?> type() {
+                return TYPE;
+            }
         }
     }
 
     class Map implements WenyanObject {
+        public static final WenyanType<Map> TYPE = new WenyanType<>("map", Map.class);
+        @Override
+        public WenyanType<?> type() {
+            return TYPE;
+        }
+
         private final int maxX = 10;
         private final int maxY = 10;
         private final Boolean[][] labyrinth = new Boolean[maxX][maxY];
@@ -92,26 +97,17 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         @Override
         public WenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「「终」」" -> new Position(EndX+1, EndY+1);
+                case "「「终」」" -> new Position(EndX + 1, EndY + 1);
                 case "「「長」」" -> new WenyanInteger(maxX);
                 case "「「寬」」" -> new WenyanInteger(maxY);
-                case "「「尋路」」" -> new JavacallHandler() {
-                    @Override
-                    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-                        if (context.args().size() == 1 && context.args().getFirst()
-                                .casting(WenyanObject.TYPE).getValue() instanceof Position(int x, int y)) {
-                            return new WenyanBoolean(!isWall(x-1, y-1));
-                        } else {
-                            var arg = JavacallHandler.getArgs(context.args(), new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
-                            return new WenyanBoolean(!isWall((int) arg.get(0)-1, (int) arg.get(1)-1));
-                        }
+                case "「「尋路」」" -> new LocalCallHandler(((self, args) -> {
+                    if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
+                        return new WenyanBoolean(!isWall(x - 1, y - 1));
+                    } else {
+                        var arg = JavacallHandler.getArgs(args, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
+                        return new WenyanBoolean(!isWall((int) arg.get(0) - 1, (int) arg.get(1) - 1));
                     }
-
-                    @Override
-                    public boolean isLocal(JavacallContext context) {
-                        return true;
-                    }
-                };
+                }));
                 default -> throw new UnsupportedOperationException("Unknown Map attribute: " + name);
             };
         }
@@ -197,7 +193,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         curY = 0;
         input = new Map();
 
-        setAttribute("「方位」", Position.PositionType.TYPE);
+        setAttribute("「方位」", Position.PositionType.POSITION_TYPE);
 
         setAttribute("「迷宫」", input);
     }
@@ -205,7 +201,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     @Override
     public void accept(WenyanValue value) throws WenyanException.WenyanCheckerError {
         try {
-            if (value.casting(WenyanObject.TYPE).getValue() instanceof Position(int dx, int dy)) {
+            if (value.as(Position.TYPE) instanceof Position(int dx, int dy)) {
                 // TODO: check if Position is direction
                 curX = curX + dx;
                 curY = curY + dy;

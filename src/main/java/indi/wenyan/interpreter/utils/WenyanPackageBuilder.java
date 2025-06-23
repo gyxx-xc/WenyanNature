@@ -38,7 +38,7 @@ public class WenyanPackageBuilder {
         return function(name, (self, args) -> {
             List<Double> newArgs = new ArrayList<>();
             for (WenyanValue arg : args) {
-                newArgs.add(arg.as(WenyanDouble.TYPE).value);
+                newArgs.add(arg.as(WenyanDouble.TYPE).value());
             }
             return new WenyanDouble(function.apply(newArgs));
         }, new WenyanType[0]);
@@ -49,7 +49,7 @@ public class WenyanPackageBuilder {
         return function(name, (self, args) -> {
             List<Integer> newArgs = new ArrayList<>();
             for (WenyanValue arg : args) {
-                newArgs.add(arg.as(WenyanInteger.TYPE).value);
+                newArgs.add(arg.as(WenyanInteger.TYPE).value());
             }
             return new WenyanInteger(function.apply(newArgs));
         }, new WenyanType[0]);
@@ -107,8 +107,8 @@ public class WenyanPackageBuilder {
         return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-            return new WenyanBoolean(function.apply(args.get(0).as(WenyanBoolean.TYPE).value,
-                    args.get(1).as(WenyanBoolean.TYPE).value));
+            return new WenyanBoolean(function.apply(args.get(0).as(WenyanBoolean.TYPE).value(),
+                    args.get(1).as(WenyanBoolean.TYPE).value()));
         };
     }
 

@@ -28,8 +28,4 @@ public class CommunicateHandler implements JavacallHandler {
         }
         return WenyanNull.NULL;
     }
-    @Override
-    public boolean isLocal(JavacallContext context) {
-        return false;
-    }
 }

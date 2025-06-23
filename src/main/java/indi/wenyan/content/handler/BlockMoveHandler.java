@@ -47,9 +47,4 @@ public class BlockMoveHandler implements JavacallHandler {
 
         return WenyanNull.NULL;
     }
-
-    @Override
-    public boolean isLocal(JavacallContext context) {
-        return false;
-    }
 }

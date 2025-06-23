@@ -8,18 +8,13 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class WenyanVec3Object implements WenyanObject {
-    private final Vec3 vec3;
+public record WenyanVec3Object(Vec3 vec3) implements WenyanObject {
     public static final WenyanObjectType OBJECT_TYPE = new Vec3ObjectType();
-    public static final WenyanType<WenyanVec3Object> TYPE = new WenyanType<>("vec3");
+    public static final WenyanType<WenyanVec3Object> TYPE = new WenyanType<>("vec3", WenyanVec3Object.class);
 
     @Override
     public WenyanType<?> type() {
         return TYPE;
-    }
-
-    public WenyanVec3Object(Vec3 vec3) {
-        this.vec3 = vec3;
     }
 
     @Override
@@ -33,12 +28,7 @@ public class WenyanVec3Object implements WenyanObject {
             case "「「偏移」」" -> new LocalCallHandler(
                     (self, args) -> {
                         if (args.size() == 1) {
-                            var offsetValue = JavacallHandler.getArgs(args, new WenyanType[]{WenyanObject.TYPE}).getFirst();
-                            if (offsetValue instanceof WenyanVec3Object offsetVec3) {
-                                return new WenyanVec3Object(vec3.add(offsetVec3.vec3));
-                            } else {
-                                throw new WenyanException.WenyanVarException("Offset must be a Vec3 object");
-                            }
+                            return new WenyanVec3Object(vec3.add(args.getFirst().as(TYPE).vec3));
                         } else if (args.size() == 3) {
                             var offset = JavacallHandler.getArgs(args, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
                             return new WenyanVec3Object(vec3.add((double) offset.get(0), (double) offset.get(1), (double) offset.get(2)));
@@ -58,6 +48,7 @@ public class WenyanVec3Object implements WenyanObject {
 
     // store all static information
     public static class Vec3ObjectType implements WenyanObjectType {
+        public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>("vec3_object_type", Vec3ObjectType.class);
         public static final Vec3ObjectType INSTANCE = new Vec3ObjectType();
 
         public static final WenyanValue ZERO;
@@ -68,7 +59,8 @@ public class WenyanVec3Object implements WenyanObject {
         public static final WenyanValue SOUTH;
         public static final WenyanValue NORTH;
 
-        private Vec3ObjectType() {}
+        private Vec3ObjectType() {
+        }
 
         @Override
         public WenyanValue getAttribute(String name) {
@@ -107,6 +99,11 @@ public class WenyanVec3Object implements WenyanObject {
             WEST = new WenyanVec3Object(new Vec3(-1, 0, 0));
             SOUTH = new WenyanVec3Object(new Vec3(0, 0, 1));
             NORTH = new WenyanVec3Object(new Vec3(0, 0, -1));
+        }
+
+        @Override
+        public WenyanType<?> type() {
+            return TYPE;
         }
     }
 }

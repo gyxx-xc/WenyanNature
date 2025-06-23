@@ -33,7 +33,7 @@ public class ObjectCode extends WenyanCode {
                     runtime.processStack.push(attr);
                 }
                 case STORE_STATIC_ATTR -> {
-                    WenyanValue value = WenyanNativeValue1.varOf(runtime.processStack.pop());
+                    WenyanValue value = WenyanLeftValue.varOf(runtime.processStack.pop());
                     WenyanDictObjectType type = runtime.processStack.peek().as(WenyanDictObjectType.TYPE);
                     type.addStaticVariable(id, value);
                 }
@@ -45,7 +45,7 @@ public class ObjectCode extends WenyanCode {
                 case STORE_ATTR -> {
                     // currently only used at define (mzy SELF ZHI STRING)
                     WenyanObject self = runtime.processStack.pop().as(WenyanObject.TYPE);
-                    WenyanValue value = WenyanNativeValue1.varOf(runtime.processStack.pop());
+                    WenyanValue value = WenyanLeftValue.varOf(runtime.processStack.pop());
                     self.setVariable(id, value);
                 }
                 case CREATE_TYPE -> {

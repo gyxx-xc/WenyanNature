@@ -27,15 +27,14 @@ public class VariableCode extends WenyanCode {
                 runtime.processStack.push(value);
             }
             case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args),
-                    WenyanNativeValue1.varOf(runtime.processStack.pop()));
+                    WenyanLeftValue.varOf(runtime.processStack.pop()));
             case SET_VALUE -> {
                 WenyanValue value = runtime.processStack.pop();
                 WenyanValue var =  runtime.processStack.pop();
-]                try {
-                    var.setValue(value);
-                } catch (WenyanException.WenyanTypeException e) {
-                    throw new WenyanException(e.getMessage());
-                }
+                if (var instanceof WenyanLeftValue lv)
+                    lv.setValue(value);
+                else
+                    throw new WenyanException(Component.translatable("error.wenyan_nature.set_value_to_non_left_value").getString());
             }
             case CAST -> {
                 WenyanValue var = runtime.processStack.pop();

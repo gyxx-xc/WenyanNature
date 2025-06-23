@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode bytecode) implements WenyanFunction {
+    public static final WenyanType<WenyanNativeFunction> TYPE = new WenyanType<>("native_function", WenyanNativeFunction.class);
+
     @Override
     public void call(WenyanValue self, WenyanThread thread,
                      List<WenyanValue> argsList)
@@ -18,7 +20,7 @@ public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode 
         if (argTypes().size() != argsList.size())
             throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
         for (int i = 0; i < argsList.size(); i++) {
-            argsList.get(i).casting(argTypes().get(i));
+            argsList.get(i).as(argTypes().get(i));
         }
 
         WenyanRuntime newRuntime = new WenyanRuntime(bytecode);
@@ -29,7 +31,7 @@ public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode 
         }
         // STUB: assume the first n id is the args
         for (int i = 0; i < argsList.size(); i++)
-            newRuntime.setVariable(bytecode.getIdentifier(i), WenyanNativeValue1.varOf(argsList.get(i)));
+            newRuntime.setVariable(bytecode.getIdentifier(i), WenyanLeftValue.varOf(argsList.get(i)));
         thread.call(newRuntime);
     }
 
@@ -46,5 +48,10 @@ public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode 
         }
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    public WenyanType<?> type() {
+        return TYPE;
     }
 }

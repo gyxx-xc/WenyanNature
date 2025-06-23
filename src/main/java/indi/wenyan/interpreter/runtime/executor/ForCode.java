@@ -2,10 +2,10 @@ package indi.wenyan.interpreter.runtime.executor;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.WenyanIterator;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
-import net.minecraft.network.chat.Component;
 
 import java.util.Iterator;
 
@@ -21,23 +21,24 @@ public class ForCode extends WenyanCode {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case FOR_ITER -> {
-                WenyanValue value = runtime.processStack.peek();
-                if (value.getValue() instanceof Iterator<?> iter) {
-                    if (iter.hasNext()) {
-                        runtime.processStack.push((WenyanValue) iter.next());
-                    } else {
-                        runtime.processStack.pop();
-                        runtime.programCounter = runtime.bytecode.getLabel(args);
-                        runtime.PCFlag = true;
-                    }
+                Iterator<?> iter = null;
+                try {
+                    iter = runtime.processStack.peek().as(WenyanIterator.TYPE).value();
+                } catch (WenyanException.WenyanTypeException e) {
+                    throw new WenyanException(e.getMessage());
+                }
+                if (iter.hasNext()) {
+                    runtime.processStack.push((WenyanValue) iter.next());
                 } else {
-                    throw new WenyanException(Component.translatable("error.wenyan_nature.for_iter").getString());
+                    runtime.processStack.pop();
+                    runtime.programCounter = runtime.bytecode.getLabel(args);
+                    runtime.PCFlag = true;
                 }
             }
             case FOR_NUM -> {
                 WenyanValue value = runtime.processStack.pop();
                 try {
-                    int num = value.as(WenyanInteger.TYPE).value;
+                    int num = value.as(WenyanInteger.TYPE).value();
                     if (num > 0) {
                         runtime.processStack.push(new WenyanInteger(num - 1));
                     } else {

@@ -1,17 +1,14 @@
 package indi.wenyan.interpreter.structure.values;
 
-import indi.wenyan.interpreter.structure.*;
-import net.minecraft.network.chat.Component;
+import indi.wenyan.interpreter.structure.WenyanComparable;
+import indi.wenyan.interpreter.structure.WenyanComputable;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class WenyanInteger implements WenyanComputable, WenyanComparable {
-    public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int");
-    public Integer value;
-    public boolean isConstant;
-
-    public WenyanInteger(int value) {
-        this.value = value;
-    }
+public record WenyanInteger(Integer value) implements WenyanComputable, WenyanComparable {
+    public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);
 
     @Override
     public WenyanValue add(WenyanValue other) throws WenyanException.WenyanTypeException {
@@ -44,17 +41,14 @@ public class WenyanInteger implements WenyanComputable, WenyanComparable {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
-        if (this.type() == type)
-            return (T) this;
+    public @Nullable <T extends WenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanDouble.TYPE) {
-            return (T) new WenyanDouble(value);
+            return (T) new WenyanDouble(value.doubleValue());
         }
         if (type == WenyanString.TYPE) {
             return (T) new WenyanString(toString());
         }
-        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +
-                this.type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
+        return null;
     }
 
     @Override
@@ -63,19 +57,15 @@ public class WenyanInteger implements WenyanComputable, WenyanComparable {
     }
 
     @Override
-    public void setValue(WenyanValue value) throws WenyanException.WenyanTypeException {
-        this.value = value.as(TYPE).value;
-    }
-
-    @Override
     public String toString() {
         String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
         StringBuilder result = new StringBuilder();
-        if (value < 0) {
+        int v = value;
+        if (v < 0) {
             result.append("負");
-            value = -value;
+            v = -v;
         }
-        for (char digit : Integer.toString(value).toCharArray())
+        for (char digit : Integer.toString(v).toCharArray())
             result.append(numerals[Character.getNumericValue(digit)]);
         return result.toString();
     }
