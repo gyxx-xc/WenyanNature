@@ -248,14 +248,18 @@ public class WenyanExprVisitor extends WenyanVisitor {
         else bytecode.add(WenyanCodes.PUSH, WenyanNull.NULL);
         bytecode.add(WenyanCodes.CREATE_TYPE, ctx.IDENTIFIER(0).getText());
 
-        for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
-            if (var.data() != null) {
-                visit(var.data());
-                bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
-            } else {
-                bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
+        try {
+            for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
+                if (var.data() != null) {
+                    visit(var.data());
+                    bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
+                } else {
+                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
+                }
+                bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
             }
-            bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
+        } catch (WenyanException.WenyanDataException e) {
+            throw new WenyanException(e.getMessage());
         }
 
         for (WenyanRParser.Object_method_defineContext func : ctx.object_method_define()) {

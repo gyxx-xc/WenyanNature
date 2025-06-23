@@ -122,6 +122,7 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
             default:
                 throw new MatchException(null, null);
         }
+        throw new MatchException(null, null);
     }
 
     @Override
