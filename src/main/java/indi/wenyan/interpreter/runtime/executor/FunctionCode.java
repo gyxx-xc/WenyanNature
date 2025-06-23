@@ -33,28 +33,27 @@ public class FunctionCode extends WenyanCode {
     public void exec(int args, WenyanThread thread) {
         try {
             WenyanRuntime runtime = thread.currentRuntime();
-            WenyanNativeValue1 func = runtime.processStack.pop();
-            WenyanNativeValue1 self = null;
+            WenyanValue func = runtime.processStack.pop();
+            WenyanValue self = null;
             WenyanFunction callable;
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
 
             // object_type
             if (func.type() == WenyanObjectType.TYPE) {
-                callable = (WenyanObjectType) func.casting(WenyanObjectType.TYPE).getValue();
+                callable = func.as(WenyanObjectType.TYPE);
             } else { // function
                 // handleWarper self first
                 if (operation == Operation.CALL_ATTR) {
                     // try casting to object (might be list)
                     try {
-                        self = self.casting(WenyanObject.TYPE);
+                        self = self.as(WenyanObject.TYPE);
                     } catch (WenyanException.WenyanTypeException e) {
                         // ignore self then
                         self = null;
                     }
                 }
-                callable = (WenyanFunction)
-                        func.casting(WenyanFunction.TYPE).getValue();
+                callable = func.as(WenyanFunction.TYPE);
             }
 
             List<WenyanValue> argsList = new ArrayList<>(args);
@@ -74,8 +73,8 @@ public class FunctionCode extends WenyanCode {
     public int getStep(int args, WenyanThread thread) {
         WenyanFunction sign;
         try {
-            sign = (WenyanFunction) thread.currentRuntime().processStack.peek()
-                            .casting(WenyanFunction.TYPE).getValue();
+            sign = thread.currentRuntime().processStack.peek()
+                    .as(WenyanFunction.TYPE);
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }

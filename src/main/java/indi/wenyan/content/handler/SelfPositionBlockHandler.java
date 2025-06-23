@@ -1,11 +1,10 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.WenyanDouble;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.core.Direction;
 
 public class SelfPositionBlockHandler implements JavacallHandler {

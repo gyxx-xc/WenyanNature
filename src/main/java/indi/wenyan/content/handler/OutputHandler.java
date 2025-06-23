@@ -6,7 +6,6 @@ import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 import indi.wenyan.setup.network.OutputInformationPacket;

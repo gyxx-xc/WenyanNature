@@ -2,7 +2,6 @@ package indi.wenyan.interpreter.compiler.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
 import indi.wenyan.interpreter.structure.values.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -34,8 +33,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
         if (ctx.IDENTIFIER().isEmpty()) {
             bytecode.add(WenyanCodes.IMPORT, ctx.STRING_LITERAL().getText());
         } else {
-            bytecode.add(WenyanCodes.PUSH,
-                    new WenyanNativeValue1(WenyanString.TYPE, ctx.STRING_LITERAL().getText(), true));
+            bytecode.add(WenyanCodes.PUSH, new WenyanString(ctx.STRING_LITERAL().getText()));
             for (TerminalNode id : ctx.IDENTIFIER())
                 bytecode.add(WenyanCodes.IMPORT_FROM, id.getText());
             bytecode.add(WenyanCodes.POP);

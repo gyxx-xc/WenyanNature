@@ -5,7 +5,6 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.values.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
 import net.minecraft.network.chat.Component;
 
 import java.util.Iterator;
@@ -40,7 +39,7 @@ public class ForCode extends WenyanCode {
                 try {
                     int num = value.as(WenyanInteger.TYPE).value;
                     if (num > 0) {
-                        runtime.processStack.push(new WenyanNativeValue1(WenyanInteger.TYPE, num - 1, true));
+                        runtime.processStack.push(new WenyanInteger(num - 1));
                     } else {
                         runtime.programCounter = runtime.bytecode.getLabel(args);
                         runtime.PCFlag = true;

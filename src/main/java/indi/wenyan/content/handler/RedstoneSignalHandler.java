@@ -4,8 +4,6 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
-import indi.wenyan.interpreter.structure.values.WenyanNativeValue1;
-
 public class RedstoneSignalHandler implements JavacallHandler {
     public RedstoneSignalHandler() {
     }

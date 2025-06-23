@@ -26,20 +26,19 @@ public class VariableCode extends WenyanCode {
                 }
                 runtime.processStack.push(value);
             }
-            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args), WenyanNativeValue1.varOf(runtime.processStack.pop()));
+            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args),
+                    WenyanNativeValue1.varOf(runtime.processStack.pop()));
             case SET_VALUE -> {
-                WenyanNativeValue1 value = runtime.processStack.pop();
-                WenyanNativeValue1 var =  runtime.processStack.pop();
-                if (var.isConst())
-                    throw new WenyanException(Component.translatable("error.wenyan_nature.cannot_assign_to_constant").getString());
-                try {
+                WenyanValue value = runtime.processStack.pop();
+                WenyanValue var =  runtime.processStack.pop();
+]                try {
                     var.setValue(value);
                 } catch (WenyanException.WenyanTypeException e) {
                     throw new WenyanException(e.getMessage());
                 }
             }
             case CAST -> {
-                WenyanNativeValue1 var = runtime.processStack.pop();
+                WenyanValue var = runtime.processStack.pop();
                 try {
                     switch (args) {
                         case 1 -> var.as(WenyanInteger.TYPE);

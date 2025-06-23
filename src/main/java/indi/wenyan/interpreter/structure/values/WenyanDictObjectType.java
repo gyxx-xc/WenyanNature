@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.structure.values;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
@@ -12,6 +13,7 @@ public class WenyanDictObjectType implements WenyanObjectType {
     private final WenyanDictObjectType parent;
     private final HashMap<String, WenyanValue> staticVariable = new HashMap<>();
     private final HashMap<String, WenyanValue> functions = new HashMap<>();
+    public static final WenyanType<WenyanDictObjectType> TYPE = new WenyanType<>("dict_object_type");
 
     public WenyanDictObjectType(WenyanDictObjectType parent) {
         this.parent = parent;
@@ -62,12 +64,11 @@ public class WenyanDictObjectType implements WenyanObjectType {
     public void call(WenyanValue self, WenyanThread thread,
                      List<WenyanValue> argsList) throws WenyanException.WenyanThrowException {
         // create empty, run constructor, return self
-        self = new WenyanNativeValue1(WenyanObject.TYPE,
-                new WenyanDictObject(this), true);
+        self = new WenyanDictObject(this);
         thread.currentRuntime().processStack.push(self);
 
-        WenyanFunction constructor = (WenyanFunction) getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
-                .casting(WenyanFunction.TYPE).getValue();
+        WenyanFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
+                .as(WenyanFunction.TYPE);
 
         constructor.call(self, thread, argsList); // we got a runtime change here
         thread.currentRuntime().noReturnFlag = true;

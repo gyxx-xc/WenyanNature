@@ -123,7 +123,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitFunction_define_body(WenyanRParser.Function_define_bodyContext ctx) {
-        ArrayList<WenyanType> argsType = new ArrayList<>();
+        ArrayList<WenyanType<?>> argsType = new ArrayList<>();
         for (int i = 0; i < ctx.args.size(); i++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
@@ -143,11 +143,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
         new WenyanMainVisitor(environment).visit(ctx.statements());
 
         // add a return null at end
-        environment.add(WenyanCodes.PUSH, new WenyanNativeValue1(WenyanNull.TYPE, null, true));
+        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
         environment.add(WenyanCodes.RET);
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanNativeValue1(WenyanFunction.TYPE,
-                new WenyanNativeFunction(argsType, functionBytecode), true));
+        bytecode.add(WenyanCodes.PUSH, new WenyanNativeFunction(argsType, functionBytecode));
         return true;
     }
 

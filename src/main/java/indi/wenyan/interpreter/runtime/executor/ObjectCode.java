@@ -21,42 +21,36 @@ public class ObjectCode extends WenyanCode {
             switch (operation) {
                 case ATTR, ATTR_REMAIN -> {
                     WenyanValue attr;
-                    WenyanNativeValue1 value = operation == Operation.ATTR ?
+                    WenyanValue value = operation == Operation.ATTR ?
                             runtime.processStack.pop() : runtime.processStack.peek();
                     if (value.type() == WenyanObjectType.TYPE) {
-                        WenyanObjectType object = (WenyanObjectType) value
-                                .casting(WenyanObjectType.TYPE).getValue();
+                        WenyanObjectType object = value.as(WenyanObjectType.TYPE);
                         attr = object.getAttribute(id);
                     } else {
-                        WenyanObject object = (WenyanObject) value
-                                .casting(WenyanObject.TYPE).getValue();
+                        WenyanObject object = value.as(WenyanObject.TYPE);
                         attr = object.getAttribute(id);
                     }
                     runtime.processStack.push(attr);
                 }
                 case STORE_STATIC_ATTR -> {
                     WenyanValue value = WenyanNativeValue1.varOf(runtime.processStack.pop());
-                    WenyanDictObjectType type = (WenyanDictObjectType) runtime.processStack.peek()
-                            .casting(WenyanObjectType.TYPE).getValue();
+                    WenyanDictObjectType type = runtime.processStack.peek().as(WenyanDictObjectType.TYPE);
                     type.addStaticVariable(id, value);
                 }
                 case STORE_FUNCTION_ATTR -> {
                     WenyanValue value = runtime.processStack.pop();
-                    WenyanDictObjectType type = (WenyanDictObjectType) runtime.processStack.peek()
-                            .casting(WenyanObjectType.TYPE).getValue();
+                    WenyanDictObjectType type = runtime.processStack.peek().as(WenyanDictObjectType.TYPE);
                     type.addFunction(id, value);
                 }
                 case STORE_ATTR -> {
                     // currently only used at define (mzy SELF ZHI STRING)
-                    WenyanObject self = (WenyanObject) runtime.processStack.pop()
-                            .casting(WenyanObject.TYPE).getValue();
+                    WenyanObject self = runtime.processStack.pop().as(WenyanObject.TYPE);
                     WenyanValue value = WenyanNativeValue1.varOf(runtime.processStack.pop());
                     self.setVariable(id, value);
                 }
                 case CREATE_TYPE -> {
-                    WenyanValue type = new WenyanNativeValue1(WenyanObjectType.TYPE,
-                            new WenyanDictObjectType((WenyanDictObjectType) runtime.processStack.pop()
-                                    .casting(WenyanObjectType.TYPE).getValue()), true);
+                    WenyanValue type = new WenyanDictObjectType(runtime.processStack.pop()
+                            .as(WenyanDictObjectType.TYPE));
                     runtime.processStack.push(type);
                 }
             }

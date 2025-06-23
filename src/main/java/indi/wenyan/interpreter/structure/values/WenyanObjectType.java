@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public interface WenyanObjectType extends WenyanValue, WenyanFunction {
+public interface WenyanObjectType extends WenyanFunction {
     WenyanType<WenyanObjectType> TYPE = new WenyanType<>("object_type");
 
     WenyanValue getAttribute(String name);
@@ -18,8 +18,7 @@ public interface WenyanObjectType extends WenyanValue, WenyanFunction {
     @Override
     default void call(WenyanValue self, WenyanThread thread, List<WenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
-        thread.currentRuntime().processStack.push(new WenyanNativeValue1(WenyanObject.TYPE,
-                createObject(argsList), true));
+        thread.currentRuntime().processStack.push(createObject(argsList));
     }
 
     default WenyanType<?> type() {
@@ -28,6 +27,9 @@ public interface WenyanObjectType extends WenyanValue, WenyanFunction {
 
     default  <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         if (type() == type) {
+            return (T) this;
+        }
+        if (type == WenyanFunction.TYPE) {
             return (T) this;
         }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +

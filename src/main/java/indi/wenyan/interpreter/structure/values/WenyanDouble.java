@@ -8,8 +8,8 @@ import net.minecraft.network.chat.Component;
 
 public class WenyanDouble implements WenyanComputable, WenyanComparable {
     public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>("double");
-    Double value;
-    boolean isConstant;
+    public Double value;
+    public boolean isConstant;
 
     public WenyanDouble(double value) {
         this.value = value;
