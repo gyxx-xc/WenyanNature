@@ -1,7 +1,9 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.WenyanFunction;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 import net.minecraft.network.chat.Component;

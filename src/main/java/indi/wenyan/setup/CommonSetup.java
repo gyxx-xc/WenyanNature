@@ -2,7 +2,6 @@ package indi.wenyan.setup;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 import java.io.IOException;
 import java.nio.file.Files;

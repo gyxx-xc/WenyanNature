@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.structure.values;
 
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
 import net.minecraft.network.chat.Component;
 
 // about to Deprecated and change to WenyanValue

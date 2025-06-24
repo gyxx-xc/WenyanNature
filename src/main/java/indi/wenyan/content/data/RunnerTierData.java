@@ -1,15 +1,12 @@
 package indi.wenyan.content.data;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
-import net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public record RunnerTierData(int tier) implements TooltipProvider {

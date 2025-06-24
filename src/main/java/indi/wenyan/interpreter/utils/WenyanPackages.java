@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;

@@ -2,9 +2,10 @@ package indi.wenyan.interpreter.compiler.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.*;
-import indi.wenyan.interpreter.utils.*;
+import indi.wenyan.interpreter.utils.WenyanCodes;
+import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
 public class WenyanDataVisitor extends WenyanVisitor {

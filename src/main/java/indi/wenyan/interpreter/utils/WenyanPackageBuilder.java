@@ -3,7 +3,8 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.structure.*;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.*;
 import net.minecraft.network.chat.Component;
 

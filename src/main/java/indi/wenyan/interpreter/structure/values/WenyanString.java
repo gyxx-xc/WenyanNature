@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.structure.values;
 
-import indi.wenyan.interpreter.structure.WenyanComparable;
 import indi.wenyan.interpreter.structure.WenyanComputable;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;

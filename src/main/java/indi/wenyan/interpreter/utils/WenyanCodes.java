@@ -1,7 +1,6 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.runtime.executor.*;
-import indi.wenyan.interpreter.runtime.executor.WenyanCode;
 
 public enum WenyanCodes {;
 

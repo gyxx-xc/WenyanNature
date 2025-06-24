@@ -3,8 +3,11 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.content.handler.JavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.structure.values.*;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.WenyanFunction;
+import indi.wenyan.interpreter.structure.values.WenyanObject;
+import indi.wenyan.interpreter.structure.values.WenyanObjectType;
+import indi.wenyan.interpreter.structure.values.WenyanValue;
 
 import java.util.ArrayList;
 import java.util.List;
