@@ -4,16 +4,16 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.WenyanFunction;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanFunction;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface JavacallHandler extends WenyanFunction {
-    WenyanType<JavacallHandler> TYPE = new WenyanType<>("javacall_handler", JavacallHandler.class);
-    WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
+public interface IJavacallHandler extends IWenyanFunction {
+    WenyanType<IJavacallHandler> TYPE = new WenyanType<>("javacall_handler", IJavacallHandler.class);
+    IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
     /**
      * Decided if this handler is running at program thread.
@@ -44,8 +44,8 @@ public interface JavacallHandler extends WenyanFunction {
     }
 
     @Override
-    default void call(WenyanValue self, WenyanThread thread,
-                      List<WenyanValue> argsList)
+    default void call(IWenyanValue self, WenyanThread thread,
+                      List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException{
         JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
                 thread, this, thread.program.holder);
@@ -57,7 +57,7 @@ public interface JavacallHandler extends WenyanFunction {
         }
     }
 
-    static List<Object> getArgs(List<WenyanValue> args, WenyanType<?>[] args_type)
+    static List<Object> getArgs(List<IWenyanValue> args, WenyanType<?>[] args_type)
             throws WenyanException.WenyanTypeException {
         List<Object> newArgs = new ArrayList<>();
         if (args.size() != args_type.length)

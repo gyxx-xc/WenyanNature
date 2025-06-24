@@ -52,6 +52,7 @@ control_statement           : if_statement
                             | continue_
                             ;
 
+// Here has a typo of primitive but I don't want to fix it
 data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT_NUM)   # data_primary
                             | DATA_ID_LAST                                              # id_last
                             | ZHI                                                       # id_last_remain

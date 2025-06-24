@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.compiler.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.values.WenyanString;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import org.antlr.v4.runtime.tree.TerminalNode;
 

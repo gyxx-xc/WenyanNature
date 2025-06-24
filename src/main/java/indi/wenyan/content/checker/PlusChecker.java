@@ -1,8 +1,8 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
-import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -12,7 +12,7 @@ import net.minecraft.util.RandomSource;
  * output var0 + var1
  */
 public class PlusChecker extends CraftingAnswerChecker {
-    private WenyanValue ans;
+    private IWenyanValue ans;
 
     public PlusChecker(RandomSource random) {
         super(random);
@@ -29,9 +29,9 @@ public class PlusChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void accept(WenyanValue value) {
+    public void accept(IWenyanValue value) {
         try {
-            if (WenyanValue.equals(value, ans)) {
+            if (IWenyanValue.equals(value, ans)) {
                 setStatus(Result.ANSWER_CORRECT);
             } else {
                 setStatus(Result.WRONG_ANSWER);

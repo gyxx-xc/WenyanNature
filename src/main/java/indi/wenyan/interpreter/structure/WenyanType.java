@@ -1,12 +1,12 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.interpreter.structure.values.WenyanDouble;
-import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanString;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.network.chat.Component;
 
-public class WenyanType<T extends WenyanValue> {
+public class WenyanType<T extends IWenyanValue> {
 
     private final String name;
     public final Class<T> tClass;
@@ -17,7 +17,7 @@ public class WenyanType<T extends WenyanValue> {
     }
 
     // TODO
-    public static WenyanType<? extends WenyanComputable> computeWiderType(WenyanType<?> type1, WenyanType<?> type2) {
+    public static WenyanType<? extends IWenyanComputable> computeWiderType(WenyanType<?> type1, WenyanType<?> type2) {
         if (type1 == WenyanString.TYPE || type2 == WenyanString.TYPE) {
             return WenyanString.TYPE;
         }
@@ -27,7 +27,7 @@ public class WenyanType<T extends WenyanValue> {
         return WenyanInteger.TYPE;
     }
 
-    public static WenyanType<? extends WenyanComparable> compareWiderType(WenyanType<?> type1, WenyanType<?> type2) {
+    public static WenyanType<? extends IWenyanComparable> compareWiderType(WenyanType<?> type1, WenyanType<?> type2) {
         if (type1 == WenyanDouble.TYPE || type2 == WenyanDouble.TYPE) {
             return WenyanDouble.TYPE;
         }

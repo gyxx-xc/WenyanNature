@@ -4,6 +4,11 @@ import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.*;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
+import indi.wenyan.interpreter.structure.values.warper.WenyanVec3Object;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -21,32 +26,32 @@ public final class WenyanPackages {
     public static final String MOD_ID = "模";
 
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
-            .function("加", WenyanPackageBuilder.reduceWith(WenyanValue::add))
-            .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(WenyanValue::sub))
-            .function("乘", WenyanPackageBuilder.reduceWith(WenyanValue::mul))
-            .function("除", WenyanPackageBuilder.reduceWith(WenyanValue::div))
-            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(WenyanValue::add))
+            .function("加", WenyanPackageBuilder.reduceWith(IWenyanValue::add))
+            .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(IWenyanValue::sub))
+            .function("乘", WenyanPackageBuilder.reduceWith(IWenyanValue::mul))
+            .function("除", WenyanPackageBuilder.reduceWith(IWenyanValue::div))
+            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(IWenyanValue::add))
 
             .function(new String[]{"變","变"}, (self, args) -> args.getFirst().as(WenyanBoolean.TYPE).not())
             .function("充", (self, args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-                WenyanArrayObject value = args.getFirst().as(WenyanArrayObject.TYPE);
+                WenyanArrayList value = args.getFirst().as(WenyanArrayList.TYPE);
                 args.subList(1, args.size()).forEach(value::add);
                 return value;
             })
 
             // 模, 且, 或
-            .function("模", WenyanPackageBuilder.reduceWith(WenyanValue::mod))
+            .function("模", WenyanPackageBuilder.reduceWith(IWenyanValue::mod))
             .function("且", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalAnd))
             .function("或", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalOr))
 
-            .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !WenyanValue.equals(a, b)))
-            .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) <= 0))
-            .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) >= 0))
-            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation((value, other) -> WenyanValue.equals(value, other)))
-            .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) > 0))
-            .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> WenyanValue.compareTo(a, b) < 0))
+            .function(new String [] {"不等於","不等于"}, WenyanPackageBuilder.compareOperation((a, b) -> !IWenyanValue.equals(a, b)))
+            .function(new String [] {"不大於","不大于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) <= 0))
+            .function(new String [] {"不小於","不小于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) >= 0))
+            .function(new String [] {"等於","等于"}, WenyanPackageBuilder.compareOperation((value, other) -> IWenyanValue.equals(value, other)))
+            .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) > 0))
+            .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
             .function(new String[] {"書","书"}, new OutputHandler())
             .function("「」", (self, args) -> WenyanNull.NULL)

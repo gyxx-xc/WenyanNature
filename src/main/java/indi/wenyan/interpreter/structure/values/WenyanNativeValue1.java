@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 
 // about to Deprecated and change to WenyanValue
 @Deprecated
-public class WenyanNativeValue1 implements WenyanValue {
+public class WenyanNativeValue1 implements IWenyanValue {
 
     private final WenyanType<?> type;
     private Object value;
@@ -43,7 +43,7 @@ public class WenyanNativeValue1 implements WenyanValue {
     // double -> int
     // ~list -> bool
     // obj -> function (constructor)
-    public <T extends WenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
+    public <T extends IWenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() + this.type + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 }

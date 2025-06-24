@@ -6,16 +6,16 @@ import indi.wenyan.interpreter.structure.WenyanType;
 
 import java.util.List;
 
-public interface WenyanObjectType extends WenyanFunction {
-    WenyanType<WenyanObjectType> TYPE = new WenyanType<>("object_type", WenyanObjectType.class);
+public interface IWenyanObjectType extends IWenyanFunction {
+    WenyanType<IWenyanObjectType> TYPE = new WenyanType<>("object_type", IWenyanObjectType.class);
 
-    WenyanValue getAttribute(String name);
+    IWenyanValue getAttribute(String name);
 
-    WenyanObject createObject(List<WenyanValue> argsList)
+    IWenyanObject createObject(List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException;
 
     @Override
-    default void call(WenyanValue self, WenyanThread thread, List<WenyanValue> argsList)
+    default void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
         thread.currentRuntime().processStack.push(createObject(argsList));
     }

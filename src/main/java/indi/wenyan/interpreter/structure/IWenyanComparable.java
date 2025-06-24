@@ -1,8 +1,8 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
-public interface WenyanComparable extends WenyanValue {
+public interface IWenyanComparable extends IWenyanValue {
     /**
      * Compare this value with another value.
      *
@@ -10,5 +10,5 @@ public interface WenyanComparable extends WenyanValue {
      * @return a negative integer, zero, or a positive integer as this value is less than, equal to, or greater than the specified value
      * @throws WenyanException.WenyanTypeException if the types are incompatible for comparison
      */
-    int compareTo(WenyanValue other) throws WenyanException.WenyanThrowException;
+    int compareTo(IWenyanValue other) throws WenyanException.WenyanThrowException;
 }

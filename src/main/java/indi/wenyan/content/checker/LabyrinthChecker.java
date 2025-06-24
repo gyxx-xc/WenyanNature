@@ -1,11 +1,15 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.handler.JavacallHandler;
+import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.*;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.util.RandomSource;
 
@@ -14,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LabyrinthChecker extends CraftingAnswerChecker {
-    private record Position(int x, int y) implements WenyanObject {
+    private record Position(int x, int y) implements IWenyanObject {
         public static final WenyanType<Position> TYPE = new WenyanType<>("position", Position.class);
         public static final Position UP = new Position(-1, 0);
         public static final Position DOWN = new Position(1, 0);
@@ -29,7 +33,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         }
 
         @Override
-        public WenyanValue getAttribute(String name) {
+        public IWenyanValue getAttribute(String name) {
             return switch (name) {
                 case "「「上下」」" -> new WenyanInteger(x);
                 case "「「左右」」" -> new WenyanInteger(y);
@@ -46,30 +50,30 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         }
 
         @Override
-        public void setVariable(String name, WenyanValue value) {
+        public void setVariable(String name, IWenyanValue value) {
             throw new UnsupportedOperationException("Cannot set variable on Direction object: " + name);
         }
 
-        enum PositionType implements WenyanObjectType {
+        enum PositionType implements IWenyanObjectType {
             POSITION_TYPE;
             public static final WenyanType<PositionType> TYPE = new WenyanType<>("position_type", PositionType.class);
 
             @Override
-            public WenyanValue getAttribute(String name) {
+            public IWenyanValue getAttribute(String name) {
                 return switch (name) {
                     case "「「上」」" -> UP;
                     case "「「下」」" -> DOWN;
                     case "「「左」」" -> LEFT;
                     case "「「右」」" -> RIGHT;
-                    case "「「方向」」" -> new WenyanArrayObject(new ArrayList<>(DIRECTIONS));
+                    case "「「方向」」" -> new WenyanArrayList(new ArrayList<>(DIRECTIONS));
                     case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };
             }
 
             @Override
-            public WenyanObject createObject(List<WenyanValue> argsList) throws WenyanException.WenyanTypeException {
-                var args = JavacallHandler.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
+            public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanTypeException {
+                var args = IJavacallHandler.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
                 return new Position((int) args.get(0), (int) args.get(1));
             }
 
@@ -80,7 +84,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         }
     }
 
-    class Map implements WenyanObject {
+    class Map implements IWenyanObject {
         public static final WenyanType<Map> TYPE = new WenyanType<>("map", Map.class);
         @Override
         public WenyanType<?> type() {
@@ -96,7 +100,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         private int EndY;
 
         @Override
-        public WenyanValue getAttribute(String name) {
+        public IWenyanValue getAttribute(String name) {
             return switch (name) {
                 case "「「终」」" -> new Position(EndX + 1, EndY + 1);
                 case "「「長」」" -> new WenyanInteger(maxX);
@@ -105,7 +109,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return new WenyanBoolean(!isWall(x - 1, y - 1));
                     } else {
-                        var arg = JavacallHandler.getArgs(args, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
+                        var arg = IJavacallHandler.getArgs(args, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
                         return new WenyanBoolean(!isWall((int) arg.get(0) - 1, (int) arg.get(1) - 1));
                     }
                 }));
@@ -114,7 +118,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         }
 
         @Override
-        public void setVariable(String name, WenyanValue value) {
+        public void setVariable(String name, IWenyanValue value) {
 
         }
 
@@ -200,7 +204,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void accept(WenyanValue value) throws WenyanException.WenyanCheckerError {
+    public void accept(IWenyanValue value) throws WenyanException.WenyanCheckerError {
         try {
             if (value.as(Position.TYPE) instanceof Position(int dx, int dy)) {
                 // TODO: check if Position is direction

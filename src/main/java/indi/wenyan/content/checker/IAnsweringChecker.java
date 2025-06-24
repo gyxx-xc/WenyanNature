@@ -2,12 +2,12 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
-public interface AnsweringChecker {
+public interface IAnsweringChecker {
     void init(WenyanProgram program);
 
-    void accept(WenyanValue value) throws WenyanException.WenyanCheckerError;
+    void accept(IWenyanValue value) throws WenyanException.WenyanCheckerError;
 
     CraftingAnswerChecker.Result getResult();
 

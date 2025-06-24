@@ -1,11 +1,14 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.content.handler.JavacallHandler;
+import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.*;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ public class WenyanPackageBuilder {
         return environment;
     }
 
-    public WenyanPackageBuilder constant(String name, WenyanValue value) {
+    public WenyanPackageBuilder constant(String name, IWenyanValue value) {
         environment.setVariable(name, value);
         return this;
     }
@@ -38,7 +41,7 @@ public class WenyanPackageBuilder {
     doubleFunction(String name, Function<List<Double>, Double> function) {
         return function(name, (self, args) -> {
             List<Double> newArgs = new ArrayList<>();
-            for (WenyanValue arg : args) {
+            for (IWenyanValue arg : args) {
                 newArgs.add(arg.as(WenyanDouble.TYPE).value());
             }
             return new WenyanDouble(function.apply(newArgs));
@@ -49,7 +52,7 @@ public class WenyanPackageBuilder {
     intFunction(String name, Function<List<Integer>, Integer> function) {
         return function(name, (self, args) -> {
             List<Integer> newArgs = new ArrayList<>();
-            for (WenyanValue arg : args) {
+            for (IWenyanValue arg : args) {
                 newArgs.add(arg.as(WenyanInteger.TYPE).value());
             }
             return new WenyanInteger(function.apply(newArgs));
@@ -71,23 +74,23 @@ public class WenyanPackageBuilder {
         return function(name, new LocalCallHandler(function), argTypes);
     }
 
-    public WenyanPackageBuilder function(String name, JavacallHandler javacall) {
+    public WenyanPackageBuilder function(String name, IJavacallHandler javacall) {
         return function(name, javacall, new WenyanType[0]);
     }
 
-    public WenyanPackageBuilder function(String[] name, JavacallHandler javacall) {
+    public WenyanPackageBuilder function(String[] name, IJavacallHandler javacall) {
         for (String n : name) {
             function(n, javacall);
         }
         return this;
     }
 
-    public WenyanPackageBuilder function(String name, JavacallHandler javacall, WenyanType<?>[] argTypes) {
+    public WenyanPackageBuilder function(String name, IJavacallHandler javacall, WenyanType<?>[] argTypes) {
         environment.setVariable(name, javacall);
         return this;
     }
 
-    public WenyanPackageBuilder object(String name, WenyanObjectType objectType) {
+    public WenyanPackageBuilder object(String name, IWenyanObjectType objectType) {
         environment.setVariable(name, objectType);
         return this;
     }
@@ -96,7 +99,7 @@ public class WenyanPackageBuilder {
         return (self, args) -> {
             if (args.size() <= 1)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-            WenyanValue value = args.getFirst();
+            IWenyanValue value = args.getFirst();
             for (int i = 1; i < args.size(); i++) {
                 value = function.apply(value, args.get(i));
             }
@@ -123,11 +126,11 @@ public class WenyanPackageBuilder {
 
     @FunctionalInterface
     public interface ReduceFunction {
-        WenyanValue apply(WenyanValue a, WenyanValue b) throws WenyanException.WenyanThrowException;
+        IWenyanValue apply(IWenyanValue a, IWenyanValue b) throws WenyanException.WenyanThrowException;
     }
 
     @FunctionalInterface
     public interface CompareFunction {
-        boolean apply(WenyanValue a, WenyanValue b) throws WenyanException.WenyanThrowException;
+        boolean apply(IWenyanValue a, IWenyanValue b) throws WenyanException.WenyanThrowException;
     }
 }

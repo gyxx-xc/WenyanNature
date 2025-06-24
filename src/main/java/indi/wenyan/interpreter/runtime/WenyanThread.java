@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.runtime;
 import indi.wenyan.WenyanNature;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.network.chat.Component;
 
 import java.util.Stack;
@@ -118,8 +118,8 @@ public class WenyanThread {
         runtimes.pop();
     }
 
-    public WenyanValue getGlobalVariable(String id) {
-        WenyanValue value = null;
+    public IWenyanValue getGlobalVariable(String id) {
+        IWenyanValue value = null;
         for (int i = runtimes.size()-1; i >= 0; i --) {
             if (runtimes.get(i).variables.containsKey(id)) {
                 value = runtimes.get(i).variables.get(id);

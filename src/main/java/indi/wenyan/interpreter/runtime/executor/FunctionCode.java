@@ -1,13 +1,13 @@
 package indi.wenyan.interpreter.runtime.executor;
 
-import indi.wenyan.content.handler.JavacallHandler;
+import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanFunction;
-import indi.wenyan.interpreter.structure.values.WenyanObject;
-import indi.wenyan.interpreter.structure.values.WenyanObjectType;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanFunction;
+import indi.wenyan.interpreter.structure.values.IWenyanObject;
+import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,30 +36,30 @@ public class FunctionCode extends WenyanCode {
     public void exec(int args, WenyanThread thread) {
         try {
             WenyanRuntime runtime = thread.currentRuntime();
-            WenyanValue func = runtime.processStack.pop();
-            WenyanValue self = null;
-            WenyanFunction callable;
+            IWenyanValue func = runtime.processStack.pop();
+            IWenyanValue self = null;
+            IWenyanFunction callable;
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
 
             // object_type
-            if (func.type() == WenyanObjectType.TYPE) {
-                callable = func.as(WenyanObjectType.TYPE);
+            if (func.type() == IWenyanObjectType.TYPE) {
+                callable = func.as(IWenyanObjectType.TYPE);
             } else { // function
                 // handleWarper self first
                 if (operation == Operation.CALL_ATTR) {
                     // try casting to object (might be list)
                     try {
-                        self = self.as(WenyanObject.TYPE);
+                        self = self.as(IWenyanObject.TYPE);
                     } catch (WenyanException.WenyanTypeException e) {
                         // ignore self then
                         self = null;
                     }
                 }
-                callable = func.as(WenyanFunction.TYPE);
+                callable = func.as(IWenyanFunction.TYPE);
             }
 
-            List<WenyanValue> argsList = new ArrayList<>(args);
+            List<IWenyanValue> argsList = new ArrayList<>(args);
             for (int i = 0; i < args; i++)
                 argsList.add(runtime.processStack.pop());
 
@@ -74,14 +74,14 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public int getStep(int args, WenyanThread thread) {
-        WenyanFunction sign;
+        IWenyanFunction sign;
         try {
             sign = thread.currentRuntime().processStack.peek()
-                    .as(WenyanFunction.TYPE);
+                    .as(IWenyanFunction.TYPE);
         } catch (WenyanException.WenyanTypeException e) {
             throw new WenyanException(e.getMessage());
         }
-        if (sign instanceof JavacallHandler javacall) {
+        if (sign instanceof IJavacallHandler javacall) {
             return javacall.getStep(args, thread);
         } else {
             return args;

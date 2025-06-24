@@ -6,10 +6,10 @@ import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.runtime.WenyanStack;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.WenyanNativeFunction;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.WenyanObjectType;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.wynative.WenyanNativeFunction;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
@@ -52,7 +52,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
         for (int i = 0; i < n; i++) {
             if (ctx.d.isEmpty()) {
-                bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(type));
+                bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
             } else {
                 visit(ctx.d.get(i));
                 bytecode.add(WenyanCodes.CAST, type.ordinal()); // STUB type
@@ -198,7 +198,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 visit(ctx.data(0));
 
             if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
-                bytecode.add(WenyanCodes.CAST, WenyanObjectType.TYPE.ordinal());
+                bytecode.add(WenyanCodes.CAST, IWenyanObjectType.TYPE.ordinal());
             bytecode.add(WenyanCodes.CALL, ctx.args.size());
         }
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -234,7 +234,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 visit(ctx.data());
 
             if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
-                bytecode.add(WenyanCodes.CAST, WenyanObjectType.TYPE.ordinal());
+                bytecode.add(WenyanCodes.CAST, IWenyanObjectType.TYPE.ordinal());
             bytecode.add(WenyanCodes.CALL, count);
         }
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -257,7 +257,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                     visit(var.data());
                     bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, WenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
+                    bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
                 }
                 bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
             }

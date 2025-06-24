@@ -3,9 +3,9 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanIterator;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.warper.WenyanIterator;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 import java.util.Iterator;
 
@@ -28,7 +28,7 @@ public class ForCode extends WenyanCode {
                     throw new WenyanException(e.getMessage());
                 }
                 if (iter.hasNext()) {
-                    runtime.processStack.push((WenyanValue) iter.next());
+                    runtime.processStack.push((IWenyanValue) iter.next());
                 } else {
                     runtime.processStack.pop();
                     runtime.programCounter = runtime.bytecode.getLabel(args);
@@ -36,7 +36,7 @@ public class ForCode extends WenyanCode {
                 }
             }
             case FOR_NUM -> {
-                WenyanValue value = runtime.processStack.pop();
+                IWenyanValue value = runtime.processStack.pop();
                 try {
                     int num = value.as(WenyanInteger.TYPE).value();
                     if (num > 0) {

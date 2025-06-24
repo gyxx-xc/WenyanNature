@@ -4,18 +4,18 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.world.phys.Vec3;
 
-public class CommunicateHandler implements JavacallHandler {
+public class CommunicateHandler implements IJavacallHandler {
     public static final WenyanType<?>[] ARG_TYPES =
             {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     @Override
-    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        var args = JavacallHandler.getArgs(context.args(), ARG_TYPES);
+    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        var args = IJavacallHandler.getArgs(context.args(), ARG_TYPES);
         if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             runner.communicate = new Vec3(
                     Math.max(-10, Math.min(10, (int) args.get(0))),

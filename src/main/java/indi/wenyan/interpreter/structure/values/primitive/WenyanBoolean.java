@@ -1,8 +1,9 @@
-package indi.wenyan.interpreter.structure.values;
+package indi.wenyan.interpreter.structure.values.primitive;
 
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
-public record WenyanBoolean(Boolean value) implements WenyanValue {
+public record WenyanBoolean(Boolean value) implements IWenyanValue {
     public static final WenyanType<WenyanBoolean> TYPE = new WenyanType<>("bool", WenyanBoolean.class);
 
     @Override
@@ -12,7 +13,7 @@ public record WenyanBoolean(Boolean value) implements WenyanValue {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends WenyanValue> T casting(WenyanType<T> type) {
+    public <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE) {
             return (T) new WenyanString(toString());
         }

@@ -3,6 +3,10 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.*;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
@@ -102,12 +106,12 @@ public enum WenyanDataParser {;
         put("爻", WenyanBoolean.TYPE);
         put("數", WenyanDouble.TYPE);
         put("言", WenyanString.TYPE);
-        put("列", WenyanArrayObject.TYPE);
+        put("列", WenyanArrayList.TYPE);
 
         put("数", WenyanDouble.TYPE);
 
-        put("物", WenyanObject.TYPE);
-        put("術", WenyanFunction.TYPE);
+        put("物", IWenyanObject.TYPE);
+        put("術", IWenyanFunction.TYPE);
     }};
 
     public static int parseInt(String text) throws WenyanException.WenyanNumberException {

@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanBoolean;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 
 import java.util.Objects;
 

@@ -1,7 +1,7 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.WenyanNature;
-import indi.wenyan.content.checker.AnsweringChecker;
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
@@ -91,11 +91,11 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
                         new AnsweringRecipeInput(pedestalItems), level);
                 if (recipeHolder.isEmpty() || !recipeHolder.get().equals(entity.recipeHolder)) {
-                    entity.result = AnsweringChecker.Result.RUNTIME_ERROR;
+                    entity.result = IAnsweringChecker.Result.RUNTIME_ERROR;
                 }
 
                 // handle the result
-                if (entity.result != AnsweringChecker.Result.ANSWER_CORRECT) {
+                if (entity.result != IAnsweringChecker.Result.ANSWER_CORRECT) {
                     entity.isCrafting = false;
                 } else if (entity.round >= entity.maxRound) {
                     entity.isCrafting = false;

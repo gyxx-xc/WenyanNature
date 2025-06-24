@@ -5,21 +5,21 @@ import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 
-public class BlockMoveHandler implements JavacallHandler {
+public class BlockMoveHandler implements IJavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE = {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     @Override
-    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
+    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        List<Object> args = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
         args.set(0, Math.max(-10, Math.min(10, (int) args.get(0))));
         args.set(1, Math.max(-10, Math.min(10, (int) args.get(1))));
         args.set(2, Math.max(-10, Math.min(10, (int) args.get(2))));

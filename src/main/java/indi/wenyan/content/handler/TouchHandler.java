@@ -4,21 +4,21 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 
 import java.util.List;
 
-public class TouchHandler implements JavacallHandler {
+public class TouchHandler implements IJavacallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     @Override
-    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
+    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        List<Object> args = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
         int dx = Math.max(-10, Math.min(10, (int) args.get(0)));
         int dy = Math.max(-10, Math.min(10, (int) args.get(1)));
         int dz = Math.max(-10, Math.min(10, (int) args.get(2)));

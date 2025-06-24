@@ -1,32 +1,33 @@
-package indi.wenyan.interpreter.structure.values;
+package indi.wenyan.interpreter.structure.values.primitive;
 
-import indi.wenyan.interpreter.structure.WenyanComparable;
-import indi.wenyan.interpreter.structure.WenyanComputable;
+import indi.wenyan.interpreter.structure.IWenyanComparable;
+import indi.wenyan.interpreter.structure.IWenyanComputable;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record WenyanInteger(Integer value) implements WenyanComputable, WenyanComparable {
+public record WenyanInteger(Integer value) implements IWenyanComputable, IWenyanComparable {
     public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);
 
     @Override
-    public WenyanValue add(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue add(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanInteger(value + other.as(TYPE).value);
     }
 
     @Override
-    public WenyanValue subtract(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue subtract(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanInteger(value - other.as(TYPE).value);
     }
 
     @Override
-    public WenyanValue multiply(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue multiply(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanInteger(value * other.as(TYPE).value);
     }
 
     @Override
-    public WenyanValue divide(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue divide(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanDouble((double)value / other.as(TYPE).value);
     }
 
@@ -41,7 +42,7 @@ public record WenyanInteger(Integer value) implements WenyanComputable, WenyanCo
 
     @Override
     @SuppressWarnings("unchecked")
-    public @Nullable <T extends WenyanValue> T casting(WenyanType<T> type) {
+    public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanDouble.TYPE) {
             return (T) new WenyanDouble(value.doubleValue());
         }
@@ -52,7 +53,7 @@ public record WenyanInteger(Integer value) implements WenyanComputable, WenyanCo
     }
 
     @Override
-    public int compareTo(@NotNull WenyanValue value) throws WenyanException.WenyanTypeException {
+    public int compareTo(@NotNull IWenyanValue value) throws WenyanException.WenyanTypeException {
         return value.as(TYPE).value - this.value;
     }
 

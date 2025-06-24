@@ -6,21 +6,21 @@ import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.WenyanString;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.setup.network.OutputInformationPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class OutputHandler implements JavacallHandler {
+public class OutputHandler implements IJavacallHandler {
 
     @Override
-    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         StringBuilder result = new StringBuilder();
-        for (WenyanValue arg : context.args()) {
+        for (IWenyanValue arg : context.args()) {
             result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));
         }
 

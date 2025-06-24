@@ -1,22 +1,25 @@
-package indi.wenyan.interpreter.structure.values;
+package indi.wenyan.interpreter.structure.values.wynative;
 
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.IWenyanFunction;
+import indi.wenyan.interpreter.structure.values.WenyanLeftValue;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode bytecode) implements WenyanFunction {
+public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode bytecode) implements IWenyanFunction {
     public static final WenyanType<WenyanNativeFunction> TYPE = new WenyanType<>("native_function", WenyanNativeFunction.class);
 
     @Override
-    public void call(WenyanValue self, WenyanThread thread,
-                     List<WenyanValue> argsList)
+    public void call(IWenyanValue self, WenyanThread thread,
+                     List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
         if (argTypes().size() != argsList.size())
             throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
@@ -28,7 +31,7 @@ public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode 
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
             newRuntime.setVariable(WenyanDataParser.PARENT_ID, //TODO
-                    ((WenyanDictObject) self).getObjectType().getParent());
+                    ((WenyanNativeObject) self).getObjectType().getParent());
         }
         // STUB: assume the first n id is the args
         for (int i = 0; i < argsList.size(); i++)

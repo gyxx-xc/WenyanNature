@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.compiler;
 
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 import java.util.HashMap;
 import java.util.Stack;
@@ -26,7 +26,7 @@ public class WenyanCompilerEnvironment {
         this.bytecode = bytecode;
     }
 
-    public void add(WenyanCode code, WenyanValue value) {
+    public void add(WenyanCode code, IWenyanValue value) {
         int index = getConstIndex(value);
         bytecode.add(code, index);
     }
@@ -75,7 +75,7 @@ public class WenyanCompilerEnvironment {
         forStack.pop();
     }
 
-    private int getConstIndex(WenyanValue value) {
+    private int getConstIndex(IWenyanValue value) {
         Constant constant = new Constant(value.type(), value);
         Integer index = constTable.get(constant);
         if (index == null) {

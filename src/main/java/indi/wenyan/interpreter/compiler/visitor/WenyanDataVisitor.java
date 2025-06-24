@@ -4,6 +4,10 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.*;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
@@ -16,7 +20,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
     @Override
     public Boolean visitData_primary(WenyanRParser.Data_primaryContext ctx) {
         try {
-            WenyanValue value = switch (ctx.data_type.getType()) {
+            IWenyanValue value = switch (ctx.data_type.getType()) {
                 case WenyanRParser.BOOL_VALUE -> new WenyanBoolean(WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()));
                 case WenyanRParser.INT_NUM -> new WenyanInteger(WenyanDataParser.parseInt(ctx.INT_NUM().getText()));
                 case WenyanRParser.FLOAT_NUM -> new WenyanDouble(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));

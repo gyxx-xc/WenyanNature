@@ -4,9 +4,9 @@ import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.WenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
-public class BlockPlaceHandler implements JavacallHandler {
+public class BlockPlaceHandler implements IJavacallHandler {
     private final BlockPos pos;
     private final BlockPos attach;
     private final Player holder;
@@ -35,8 +35,8 @@ public class BlockPlaceHandler implements JavacallHandler {
     }
 
     @Override
-    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        var args = JavacallHandler.getArgs(context.args(), ARGS_TYPE);
+    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+        var args = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
         BlockPos blockPos = pos.offset(
                 Math.max(-10, Math.min(10, (int) args.get(0))),
                 Math.max(-10, Math.min(10, (int) args.get(1))),

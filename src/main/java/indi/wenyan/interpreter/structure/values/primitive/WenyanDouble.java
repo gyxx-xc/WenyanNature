@@ -1,11 +1,12 @@
-package indi.wenyan.interpreter.structure.values;
+package indi.wenyan.interpreter.structure.values.primitive;
 
-import indi.wenyan.interpreter.structure.WenyanComparable;
-import indi.wenyan.interpreter.structure.WenyanComputable;
+import indi.wenyan.interpreter.structure.IWenyanComparable;
+import indi.wenyan.interpreter.structure.IWenyanComputable;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
-public record WenyanDouble(Double value) implements WenyanComputable, WenyanComparable {
+public record WenyanDouble(Double value) implements IWenyanComputable, IWenyanComparable {
     public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>("double", WenyanDouble.class);
 
     @Override
@@ -15,7 +16,7 @@ public record WenyanDouble(Double value) implements WenyanComputable, WenyanComp
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends WenyanValue> T casting(WenyanType<T> type) {
+    public <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanInteger.TYPE) {
             return (T) new WenyanInteger(value.intValue());
         }
@@ -26,27 +27,27 @@ public record WenyanDouble(Double value) implements WenyanComputable, WenyanComp
     }
 
     @Override
-    public WenyanDouble add(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public WenyanDouble add(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanDouble(value + other.as(TYPE).value);
     }
 
     @Override
-    public WenyanDouble subtract(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public WenyanDouble subtract(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanDouble(value - other.as(TYPE).value);
     }
 
     @Override
-    public WenyanDouble multiply(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public WenyanDouble multiply(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanDouble(value * other.as(TYPE).value);
     }
 
     @Override
-    public WenyanDouble divide(WenyanValue other) throws WenyanException.WenyanTypeException {
+    public WenyanDouble divide(IWenyanValue other) throws WenyanException.WenyanTypeException {
         return new WenyanDouble(value / other.as(TYPE).value);
     }
 
     @Override
-    public int compareTo(WenyanValue value) throws WenyanException.WenyanTypeException {
+    public int compareTo(IWenyanValue value) throws WenyanException.WenyanTypeException {
         return this.value.compareTo(value.as(TYPE).value);
     }
 
