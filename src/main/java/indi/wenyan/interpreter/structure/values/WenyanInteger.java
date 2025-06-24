@@ -27,7 +27,7 @@ public record WenyanInteger(Integer value) implements WenyanComputable, WenyanCo
 
     @Override
     public WenyanValue divide(WenyanValue other) throws WenyanException.WenyanTypeException {
-        return new WenyanInteger(value / other.as(TYPE).value);
+        return new WenyanDouble((double)value / other.as(TYPE).value);
     }
 
     public WenyanInteger mod(WenyanInteger other) {

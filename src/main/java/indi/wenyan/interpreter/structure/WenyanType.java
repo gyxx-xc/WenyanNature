@@ -3,19 +3,7 @@ package indi.wenyan.interpreter.structure;
 import indi.wenyan.interpreter.structure.values.*;
 import net.minecraft.network.chat.Component;
 
-import java.util.HashMap;
-
 public class WenyanType<T extends WenyanValue> {
-    public static final HashMap<WenyanType<?>, Integer> TYPE_CASTING_ORDER = new HashMap<>() {{
-        put(WenyanString.TYPE, 0);
-        put(WenyanArrayObject.TYPE, 1);
-        put(WenyanFunction.TYPE, 1);
-        put(WenyanObject.TYPE, 1);
-        put(WenyanObjectType.TYPE, 1);
-        put(WenyanDouble.TYPE, 2);
-        put(WenyanInteger.TYPE, 3);
-        put(WenyanBoolean.TYPE, 4);
-    }};
 
     private final String name;
     public final Class<T> tClass;
@@ -27,11 +15,20 @@ public class WenyanType<T extends WenyanValue> {
 
     // TODO
     public static WenyanType<? extends WenyanComputable> computeWiderType(WenyanType<?> type1, WenyanType<?> type2) {
-        return null;
+        if (type1 == WenyanString.TYPE || type2 == WenyanString.TYPE) {
+            return WenyanString.TYPE;
+        }
+        if (type1 == WenyanDouble.TYPE || type2 == WenyanDouble.TYPE) {
+            return WenyanDouble.TYPE;
+        }
+        return WenyanInteger.TYPE;
     }
 
     public static WenyanType<? extends WenyanComparable> compareWiderType(WenyanType<?> type1, WenyanType<?> type2) {
-        return null;
+        if (type1 == WenyanDouble.TYPE || type2 == WenyanDouble.TYPE) {
+            return WenyanDouble.TYPE;
+        }
+        return WenyanInteger.TYPE;
     }
 
     public int ordinal() {

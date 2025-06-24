@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.structure.values;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -16,4 +17,13 @@ public interface WenyanFunction extends WenyanValue {
     void call(WenyanValue self, WenyanThread thread,
               List<WenyanValue> argsList)
             throws WenyanException.WenyanThrowException;
+
+    @Override
+    @Nullable
+    default <T extends WenyanValue> T casting(WenyanType<T> type) {
+        if (type == WenyanString.TYPE) {
+            return (T) new WenyanString(this.toString());
+        }
+        return null;
+    }
 }

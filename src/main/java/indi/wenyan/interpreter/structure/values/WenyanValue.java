@@ -30,6 +30,15 @@ public interface WenyanValue {
                 type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
     }
 
+    default boolean is(WenyanType<?> type) {
+        try {
+            as(type);
+            return true;
+        } catch (WenyanException.WenyanTypeException e) {
+            return false;
+        }
+    }
+
     static WenyanValue add(WenyanValue self, WenyanValue other) throws WenyanException.WenyanThrowException {
         WenyanType<? extends WenyanComputable> addType = WenyanType.computeWiderType(self.type(), other.type());
         WenyanComputable left = self.as(addType);
@@ -64,7 +73,10 @@ public interface WenyanValue {
         return left.mod(right);
     }
 
-    static boolean equals(WenyanValue self, WenyanValue other) {
+    static boolean equals(WenyanValue self, WenyanValue other) throws WenyanException.WenyanThrowException {
+        if (self.type() == WenyanDouble.TYPE || other.type() == WenyanDouble.TYPE) {
+            return self.as(WenyanDouble.TYPE).equals(other.as(WenyanDouble.TYPE));
+        }
         return self.equals(other);
     }
 

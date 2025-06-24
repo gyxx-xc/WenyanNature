@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.compiler.visitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.compiler.WenyanNativeFunction;
+import indi.wenyan.interpreter.structure.values.WenyanNativeFunction;
 import indi.wenyan.interpreter.runtime.WenyanStack;
 import indi.wenyan.interpreter.structure.*;
 import indi.wenyan.interpreter.structure.values.*;

@@ -137,14 +137,47 @@ public class WenyanProgram {
     public static void main(String[] args) {
         WenyanProgram program = new WenyanProgram(
                 """
-吾有一列名之曰「a 」
-充「a 」以一以一以一以一以一以一
-凡「a 」中之「b 」
-書「b 」
-云云""",
+                        吾有一物。名之曰「a」。其物如是。
+                                                  	物之造者術是術曰。
+                                                  		夫一名之曰己之「「a 」」
+                                                  	是謂造之術也。
+                                                  是謂「a」之物也。
+                        
+                                                  吾有一物繼「a」。名之曰「b」。其物如是。
+                                                  	物之造者術是術曰。
+                                                  		施父之造
+                                                  		夫二名之曰己之「「a 」」
+                                                  		夫一名之曰己之「「b 」」
+                                                  	是謂造之術也。
+                                                  是謂「b」之物也。
+                        
+                                                  造「a」名之曰「a 」
+                                                  施「a」名之曰「a1 」
+                                                  造「b」名之曰「b 」
+                                                  施「b」名之曰「b1 」
+                        
+                                                  書「a 」之「「a 」」
+                                                  書「a1 」之「「a 」」
+                                                  書「b 」之「「a 」」
+                                                  書「b1 」之「「a 」」
+                                                  書「b 」之「「b 」」
+                                                  書「b1 」之「「b 」」
+                        
+                                                  昔之「b 」之「「a 」」者今三是矣
+                        
+                                                  書「a 」之「「a 」」
+                                                  書「b 」之「「a 」」
+                        """,
                 WenyanPackages.WENYAN_BASIC_PACKAGES
         , null);
-        LabyrinthChecker checker = new LabyrinthChecker(new LegacyRandomSource(223));
-        checker.init(program);
+        program.run();
+        while (true) {
+            program.step();
+            program.handle();
+            if (!program.isRunning()) {
+                System.out.println("Program finished.");
+                break;
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ public class ObjectCode extends WenyanCode {
                     WenyanValue attr;
                     WenyanValue value = operation == Operation.ATTR ?
                             runtime.processStack.pop() : runtime.processStack.peek();
-                    if (value.type() == WenyanObjectType.TYPE) {
+                    if (value.is(WenyanObjectType.TYPE)) {
                         WenyanObjectType object = value.as(WenyanObjectType.TYPE);
                         attr = object.getAttribute(id);
                     } else {
@@ -49,7 +49,12 @@ public class ObjectCode extends WenyanCode {
                     self.setVariable(id, value);
                 }
                 case CREATE_TYPE -> {
-                    WenyanValue type = new WenyanDictObjectType(runtime.processStack.pop()
+                    var parent = runtime.processStack.pop();
+                    WenyanValue type;
+                    if (parent.is(WenyanNull.TYPE))
+                        type = new WenyanDictObjectType(null);
+                    else
+                        type = new WenyanDictObjectType(parent
                             .as(WenyanDictObjectType.TYPE));
                     runtime.processStack.push(type);
                 }

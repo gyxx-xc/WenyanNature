@@ -1,8 +1,11 @@
 package indi.wenyan.interpreter.structure.values;
 
+import indi.wenyan.interpreter.structure.WenyanComparable;
+import indi.wenyan.interpreter.structure.WenyanComputable;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 
-public record WenyanString(String value) implements WenyanValue {
+public record WenyanString(String value) implements WenyanComputable {
     public static final WenyanType<WenyanString> TYPE = new WenyanType<>("string", WenyanString.class);
 
     @Override
@@ -13,5 +16,25 @@ public record WenyanString(String value) implements WenyanValue {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public WenyanValue add(WenyanValue other) throws WenyanException.WenyanThrowException {
+        return new WenyanString(value+ other.as(TYPE).value);
+    }
+
+    @Override
+    public WenyanValue subtract(WenyanValue other) throws WenyanException.WenyanThrowException {
+        throw new WenyanException("");
+    }
+
+    @Override
+    public WenyanValue multiply(WenyanValue other) throws WenyanException.WenyanThrowException {
+        throw new WenyanException("");
+    }
+
+    @Override
+    public WenyanValue divide(WenyanValue other) throws WenyanException.WenyanThrowException {
+        throw new WenyanException("");
     }
 }

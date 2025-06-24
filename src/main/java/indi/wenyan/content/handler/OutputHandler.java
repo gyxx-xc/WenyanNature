@@ -7,6 +7,7 @@ import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.structure.values.WenyanString;
 import indi.wenyan.interpreter.structure.values.WenyanValue;
 import indi.wenyan.setup.network.OutputInformationPacket;
 import net.minecraft.network.chat.Component;
@@ -17,10 +18,10 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class OutputHandler implements JavacallHandler {
 
     @Override
-    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanCheckerError {
+    public WenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
         StringBuilder result = new StringBuilder();
         for (WenyanValue arg : context.args()) {
-            result.append(result.isEmpty() ? "" : " ").append(arg.toString());
+            result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));
         }
 
         if (context.runnerWarper().runner() instanceof BlockRunner runner && runner.getLevel() instanceof ServerLevel sl) {

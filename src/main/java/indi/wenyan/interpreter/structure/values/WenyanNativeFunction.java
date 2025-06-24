@@ -1,9 +1,9 @@
-package indi.wenyan.interpreter.compiler;
+package indi.wenyan.interpreter.structure.values;
 
+import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.*;
-import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
