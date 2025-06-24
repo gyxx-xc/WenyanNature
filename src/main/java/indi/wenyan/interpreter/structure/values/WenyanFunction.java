@@ -20,6 +20,7 @@ public interface WenyanFunction extends WenyanValue {
 
     @Override
     @Nullable
+    @SuppressWarnings("unchecked")
     default <T extends WenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE) {
             return (T) new WenyanString(this.toString());

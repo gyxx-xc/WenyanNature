@@ -24,17 +24,17 @@ public record WenyanString(String value) implements WenyanComputable {
     }
 
     @Override
-    public WenyanValue subtract(WenyanValue other) throws WenyanException.WenyanThrowException {
+    public WenyanValue subtract(WenyanValue other) {
         throw new WenyanException("");
     }
 
     @Override
-    public WenyanValue multiply(WenyanValue other) throws WenyanException.WenyanThrowException {
+    public WenyanValue multiply(WenyanValue other) {
         throw new WenyanException("");
     }
 
     @Override
-    public WenyanValue divide(WenyanValue other) throws WenyanException.WenyanThrowException {
+    public WenyanValue divide(WenyanValue other) {
         throw new WenyanException("");
     }
 }
