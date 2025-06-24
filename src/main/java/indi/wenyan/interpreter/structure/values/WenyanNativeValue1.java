@@ -30,10 +30,6 @@ public class WenyanNativeValue1 implements WenyanValue {
         this.value = value;
     }
 
-    public boolean isConst() {
-        return isConst;
-    }
-
     // what we need to do these function?
     // 1. wide link
     // 2. required type
