@@ -29,9 +29,18 @@ public enum WenyanPackages {;
             .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(IWenyanValue::sub))
             .function("乘", WenyanPackageBuilder.reduceWith(IWenyanValue::mul))
             .function("除", WenyanPackageBuilder.reduceWith(IWenyanValue::div))
-            .function(new String[]{"銜","衔"}, WenyanPackageBuilder.reduceWith(IWenyanValue::add))
 
             .function(new String[]{"變","变"}, (self, args) -> args.getFirst().as(WenyanBoolean.TYPE).not())
+
+            .function(new String[]{"銜","衔"}, (self, args) -> {
+                if (args.size() <= 1)
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                WenyanArrayList value = args.getFirst().as(WenyanArrayList.TYPE);
+                for (IWenyanValue v : args.subList(1, args.size())) {
+                    value.concat(v.as(WenyanArrayList.TYPE));
+                }
+                return value;
+            })
             .function("充", (self, args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
