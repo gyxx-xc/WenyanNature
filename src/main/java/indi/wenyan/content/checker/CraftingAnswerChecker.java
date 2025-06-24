@@ -24,7 +24,7 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
         return result;
     }
 
-    public CraftingAnswerChecker(RandomSource random) {
+    protected CraftingAnswerChecker(RandomSource random) {
         this.random = random;
     }
 

@@ -54,14 +54,14 @@ public abstract class RunnerScreen extends Screen {
     private PageButton forwardButton;
     private PageButton backButton;
 
-    public RunnerScreen(List<String> pages) {
+    protected RunnerScreen(List<String> pages) {
         super(GameNarrator.NO_TITLE);
         this.displayCache = RunnerScreen.DisplayCache.EMPTY;
         if (pages != null) this.pages.addAll(pages);
         if (this.pages.isEmpty()) this.pages.add("");
     }
 
-    public RunnerScreen(WritableBookContent writableBookContent) {
+    protected RunnerScreen(WritableBookContent writableBookContent) {
         super(GameNarrator.NO_TITLE);
         this.displayCache = RunnerScreen.DisplayCache.EMPTY;
         if (writableBookContent != null) writableBookContent.pages().forEach(

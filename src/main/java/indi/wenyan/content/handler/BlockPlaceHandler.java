@@ -41,14 +41,14 @@ public class BlockPlaceHandler implements IJavacallHandler {
                 Math.max(-10, Math.min(10, (int) args.get(0))),
                 Math.max(-10, Math.min(10, (int) args.get(1))),
                 Math.max(-10, Math.min(10, (int) args.get(2))));
-        placeBlock(holder.level(), holder, block, blockPos, attach);
+        placeBlock(holder.level(), holder, blockPos, attach);
         return WenyanNull.NULL;
     }
 
-    private static void placeBlock(Level world, Player player, BlockState block, BlockPos pos, BlockPos attach) {
+    private static void placeBlock(Level world, Player player, BlockPos pos, BlockPos attach) {
 
         // TODO: change this to a real block
-        block = world.getBlockState(attach);
+        BlockState block = world.getBlockState(attach);
 
         if(!world.setBlockAndUpdate(pos, block)) {
             throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());

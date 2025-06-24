@@ -18,12 +18,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
     private final EntityRenderDispatcher dispatcher;
-    private final Font font;
 
     public HandRunnerRender(EntityRendererProvider.Context context) {
         super(context);
         dispatcher = context.getEntityRenderDispatcher();
-        font = context.getFont();
     }
 
     @Override

@@ -155,31 +155,31 @@ public final class Registration {
 
         //Paper
         BAMBOO_PAPER = ITEMS.registerItem(BAMBOO_PAPER_ID,
-                (Item.Properties properties) -> new bamboo_paper(properties));
+                bamboo_paper::new);
         CLOUD_PAPER = ITEMS.registerItem(CLOUD_PAPER_ID,
-                (Item.Properties properties) -> new cloud_paper(properties));
+                cloud_paper::new);
         DRAGON_PAPER = ITEMS.registerItem(DRAGON_PAPER_ID,
-                (Item.Properties properties) -> new dragon_paper(properties));
+                dragon_paper::new);
         FROST_PAPER = ITEMS.registerItem(FROST_PAPER_ID,
-                (Item.Properties properties) -> new frost_paper(properties));
+                frost_paper::new);
         PHOENIX_PAPER = ITEMS.registerItem(PHOENIX_PAPER_ID,
-                (Item.Properties properties) -> new phoenix_paper(properties));
+                phoenix_paper::new);
         STAR_PAPER = ITEMS.registerItem(STAR_PAPER_ID,
-                (Item.Properties properties) -> new star_paper(properties));
+                star_paper::new);
 
         //Ink
         ARCANE_INK = ITEMS.registerItem(ARCANE_INK_ID,
-                (Item.Properties properties) -> new arcane_ink(properties));
+                arcane_ink::new);
         BAMBOO_INK = ITEMS.registerItem(BAMBOO_INK_ID,
-                (Item.Properties properties) -> new bamboo_ink(properties));
+                bamboo_ink::new);
         CELESTIAL_INK = ITEMS.registerItem(CELESTIAL_INK_ID,
-                (Item.Properties properties) -> new celestial_ink(properties));
+                celestial_ink::new);
         LUNAR_INK = ITEMS.registerItem(LUNAR_INK_ID,
-                (Item.Properties properties) -> new lunar_ink(properties));
+                lunar_ink::new);
         CINNABAR_INK = ITEMS.registerItem(CINNABAR_INK_ID,
-                (Item.Properties properties) -> new cinnabar_ink(properties));
+                cinnabar_ink::new);
         STARLIGHT_INK = ITEMS.registerItem(STARLIGHT_INK_ID,
-                (Item.Properties properties) -> new starlight_ink(properties));
+                starlight_ink::new);
 
         CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
         ITEMS.registerItem("crafting_block", (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));

@@ -46,7 +46,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     private Player player; // the player who is crafting
 
     // for gui
-    public CraftingAnswerChecker.Result result;
+    public IAnsweringChecker.Result result;
     public int round;
     public final int maxRound = 16;
     protected final ContainerData data;

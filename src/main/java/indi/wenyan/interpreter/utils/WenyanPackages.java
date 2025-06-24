@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public final class WenyanPackages {
-    private WenyanPackages(){}
+public enum WenyanPackages {;
 
     // these string for candy visitor
     public static final String AND_ID = "且";

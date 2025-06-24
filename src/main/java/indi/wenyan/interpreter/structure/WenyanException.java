@@ -49,7 +49,7 @@ public class WenyanException extends RuntimeException {
     }
 
     public static abstract class WenyanThrowException extends Exception {
-        public WenyanThrowException(String message) {
+        protected WenyanThrowException(String message) {
             super(message);
         }
     }

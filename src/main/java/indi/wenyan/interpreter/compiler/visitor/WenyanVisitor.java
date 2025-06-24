@@ -13,7 +13,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
     protected final WenyanCompilerEnvironment bytecode;
 
-    public WenyanVisitor(WenyanCompilerEnvironment bytecode) {
+    protected WenyanVisitor(WenyanCompilerEnvironment bytecode) {
         this.bytecode = bytecode;
     }
 

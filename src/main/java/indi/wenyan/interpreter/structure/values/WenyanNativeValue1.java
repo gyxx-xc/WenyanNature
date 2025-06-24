@@ -4,18 +4,17 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import net.minecraft.network.chat.Component;
 
-// about to Deprecated and change to WenyanValue
+// Deprecated and change to WenyanValue
 @Deprecated
+@SuppressWarnings("unused")
 public class WenyanNativeValue1 implements IWenyanValue {
 
     private final WenyanType<?> type;
     private Object value;
-    private final boolean isConst;
 
     public WenyanNativeValue1(WenyanType<?> type, Object value, boolean isConst) {
         this.type = type;
         this.value = value;
-        this.isConst = isConst;
     }
 
     public WenyanType<?> type() {

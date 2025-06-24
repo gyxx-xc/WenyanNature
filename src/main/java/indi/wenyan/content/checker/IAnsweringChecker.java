@@ -9,7 +9,7 @@ public interface IAnsweringChecker {
 
     void accept(IWenyanValue value) throws WenyanException.WenyanCheckerError;
 
-    CraftingAnswerChecker.Result getResult();
+    IAnsweringChecker.Result getResult();
 
     enum Result {
         ANSWER_CORRECT,
