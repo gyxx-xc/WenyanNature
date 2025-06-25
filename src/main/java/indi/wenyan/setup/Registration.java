@@ -90,13 +90,14 @@ public final class Registration {
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
     public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER;
-    public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
+    public static final DeferredBlock<AdditionalPaper> ADDITIONAL_PAPER_BLOCK;
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK;
     public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_ENTITY;
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
 
+    public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
     public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER;
@@ -153,32 +154,32 @@ public final class Registration {
                         .sized(0.45f, 1.0f)
                         .build("hand_runner"));
 
-        //Paper
-        BAMBOO_PAPER = ITEMS.registerItem(BAMBOO_PAPER_ID,
+        // Paper
+        BAMBOO_PAPER = ITEMS.registerItem(bamboo_paper.item_ID,
                 bamboo_paper::new);
-        CLOUD_PAPER = ITEMS.registerItem(CLOUD_PAPER_ID,
+        CLOUD_PAPER = ITEMS.registerItem(cloud_paper.item_ID,
                 cloud_paper::new);
-        DRAGON_PAPER = ITEMS.registerItem(DRAGON_PAPER_ID,
+        DRAGON_PAPER = ITEMS.registerItem(dragon_paper.item_ID,
                 dragon_paper::new);
-        FROST_PAPER = ITEMS.registerItem(FROST_PAPER_ID,
+        FROST_PAPER = ITEMS.registerItem(frost_paper.item_ID,
                 frost_paper::new);
-        PHOENIX_PAPER = ITEMS.registerItem(PHOENIX_PAPER_ID,
+        PHOENIX_PAPER = ITEMS.registerItem(phoenix_paper.item_ID,
                 phoenix_paper::new);
-        STAR_PAPER = ITEMS.registerItem(STAR_PAPER_ID,
+        STAR_PAPER = ITEMS.registerItem(star_paper.item_ID,
                 star_paper::new);
 
-        //Ink
-        ARCANE_INK = ITEMS.registerItem(ARCANE_INK_ID,
+        // Ink
+        ARCANE_INK = ITEMS.registerItem(arcane_ink.item_ID,
                 arcane_ink::new);
-        BAMBOO_INK = ITEMS.registerItem(BAMBOO_INK_ID,
+        BAMBOO_INK = ITEMS.registerItem(bamboo_ink.item_ID,
                 bamboo_ink::new);
-        CELESTIAL_INK = ITEMS.registerItem(CELESTIAL_INK_ID,
+        CELESTIAL_INK = ITEMS.registerItem(celestial_ink.item_ID,
                 celestial_ink::new);
-        LUNAR_INK = ITEMS.registerItem(LUNAR_INK_ID,
+        LUNAR_INK = ITEMS.registerItem(lunar_ink.item_ID,
                 lunar_ink::new);
-        CINNABAR_INK = ITEMS.registerItem(CINNABAR_INK_ID,
+        CINNABAR_INK = ITEMS.registerItem(cinnabar_ink.item_ID,
                 cinnabar_ink::new);
-        STARLIGHT_INK = ITEMS.registerItem(STARLIGHT_INK_ID,
+        STARLIGHT_INK = ITEMS.registerItem(starlight_ink.item_ID,
                 starlight_ink::new);
 
         CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
@@ -201,6 +202,10 @@ public final class Registration {
                 () -> BlockEntityType.Builder
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
                         .build(DSL.remainderType()));
+
+        ADDITIONAL_PAPER_BLOCK = BLOCKS.register("additional_paper_block", AdditionalPaper::new);
+        ITEMS.registerItem("additional_paper_block",
+                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
 
         TIER_DATA = DATA.register("runner_tier_data",
                 () -> DataComponentType.<RunnerTierData>builder()
