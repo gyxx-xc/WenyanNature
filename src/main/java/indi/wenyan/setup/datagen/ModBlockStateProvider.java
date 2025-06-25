@@ -18,6 +18,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         horizontalFaceBlock(Registration.RUNNER_BLOCK.get(),
                 new ModelFile.UncheckedModelFile(
                         ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "block/runner_block")));
-
+        horizontalFaceBlock(Registration.ADDITIONAL_PAPER_BLOCK.get(),
+                new ModelFile.UncheckedModelFile(
+                        ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "block/runner_block")));
     }
 }

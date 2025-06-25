@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "wenyan_nature:item/paper/dragon_paper"
+    "layer0": "wenyan_nature:item/dragon_paper"
   }
 }

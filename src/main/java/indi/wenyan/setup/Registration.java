@@ -40,7 +40,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 import static indi.wenyan.WenyanNature.MODID;
-import static indi.wenyan.setup.datagen.ModItemModelProvider.*;
 
 public final class Registration {
 
@@ -91,10 +90,13 @@ public final class Registration {
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
     public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER;
     public static final DeferredBlock<AdditionalPaper> ADDITIONAL_PAPER_BLOCK;
+    public static final DeferredItem<BlockItem> ADDITIONAL_PAPER_BLOCK_ITEM;
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK;
+    public static final DeferredItem<BlockItem> CRAFTING_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_ENTITY;
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
+    public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
@@ -183,7 +185,7 @@ public final class Registration {
                 starlight_ink::new);
 
         CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
-        ITEMS.registerItem("crafting_block", (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
+        CRAFTING_BLOCK_ITEM = ITEMS.registerItem("crafting_block", (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
         CRAFTING_ENTITY = BLOCK_ENTITY.register("crafting_block",
                 () -> BlockEntityType.Builder
                         .of(CraftingBlockEntity::new, CRAFTING_BLOCK.get())
@@ -197,14 +199,14 @@ public final class Registration {
                         .sized(0.25f, 0.25f)
                         .build("bullet_entity"));
         PEDESTAL_BLOCK = BLOCKS.register("pedestal_block", PedestalBlock::new);
-        ITEMS.registerItem("pedestal_block", (properties) -> new BlockItem(PEDESTAL_BLOCK.get(), properties));
+        PEDESTAL_BLOCK_ITEM = ITEMS.registerItem("pedestal_block", (properties) -> new BlockItem(PEDESTAL_BLOCK.get(), properties));
         PEDESTAL_ENTITY = BLOCK_ENTITY.register("pedestal_block",
                 () -> BlockEntityType.Builder
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
                         .build(DSL.remainderType()));
 
         ADDITIONAL_PAPER_BLOCK = BLOCKS.register("additional_paper_block", AdditionalPaper::new);
-        ITEMS.registerItem("additional_paper_block",
+        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem("additional_paper_block",
                 (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
 
         TIER_DATA = DATA.register("runner_tier_data",

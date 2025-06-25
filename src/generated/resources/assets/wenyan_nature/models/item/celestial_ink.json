@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "wenyan_nature:item/ink/celestial_ink"
+    "layer0": "wenyan_nature:item/celestial_ink"
   }
 }

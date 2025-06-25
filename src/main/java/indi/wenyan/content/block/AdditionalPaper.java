@@ -1,40 +1,20 @@
 package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
-import indi.wenyan.content.gui.BlockRunnerScreen;
-import indi.wenyan.setup.Registration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-public class
-RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
+public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock {
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
     public static final Properties PROPERTIES;
     public static final VoxelShape FLOOR_NORTH_AABB;
@@ -50,35 +30,12 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     public static final VoxelShape WEST_AABB;
     public static final VoxelShape EAST_AABB;
 
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (player.isShiftKeyDown()) {
-            if (level.isClientSide())
-                Minecraft.getInstance().setScreen(new BlockRunnerScreen((BlockRunner) level.getBlockEntity(pos)));
-        } else {
-            if (!level.isClientSide()) {
-                BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
-                var maybeCrafting = level.getBlockEntity(
-                        pos.relative(getConnectedDirection(state).getOpposite()));
-
-                assert runner != null;
-                if (maybeCrafting instanceof CraftingBlockEntity cb) {
-                    cb.run(runner, player);
-                } else {
-                    runner.run(player);
-                }
-            }
-        }
-        return ItemInteractionResult.SUCCESS;
-    }
-
     @Override
     protected @NotNull MapCodec<RunnerBlock> codec() {
         return CODEC;
     }
 
-    public RunnerBlock() {
+    public AdditionalPaper() {
         super(PROPERTIES);
     }
 
@@ -128,32 +85,6 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, FACE);
     }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        blockState.getProperties();
-        return new BlockRunner(blockPos, blockState);
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T>
-    getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return (type, pos, state1, entity) -> {
-            if (blockEntityType == Registration.BLOCK_RUNNER.get())
-                BlockRunner.tick(level, pos, state1, (BlockRunner) entity);
-        };
-    }
-
-    public static @NotNull Direction getConnectedDirection(BlockState state) {
-        return switch (state.getValue(FACE)) {
-            case CEILING -> Direction.DOWN;
-            case FLOOR -> Direction.UP;
-            default -> state.getValue(FACING);
-        };
-    }
-
 
     static {
         PROPERTIES = BlockBehaviour.Properties.of()

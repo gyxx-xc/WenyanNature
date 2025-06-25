@@ -22,7 +22,6 @@ import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,9 +36,6 @@ public class BlockRunner extends BlockEntity {
 
     public Vec3 communicate;
     public boolean isCommunicating;
-
-    public AABB findArea;
-    public int findTime;
 
     public List<String> pages;
     public int speed;
@@ -58,9 +54,6 @@ public class BlockRunner extends BlockEntity {
 
         if (entity.isCommunicating) {
             entity.isCommunicating = false;
-        }
-        if (entity.findTime > 0) {
-            entity.findTime--;
         }
     }
 
