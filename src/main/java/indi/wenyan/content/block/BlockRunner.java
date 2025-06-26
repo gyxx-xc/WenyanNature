@@ -25,20 +25,26 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class BlockRunner extends BlockEntity {
+    private static final Logger log = LoggerFactory.getLogger(BlockRunner.class);
     public WenyanProgram program;
-
-    public Vec3 communicate;
-    public boolean isCommunicating;
 
     public List<String> pages;
     public int speed;
+
+    public List<BlockPos> additionalPages = new ArrayList<>();
+
+    public Vec3 communicate;
+    public boolean isCommunicating;
     private final List<String> output = new LinkedList<>();
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
@@ -62,7 +68,17 @@ public class BlockRunner extends BlockEntity {
             WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
             return;
         }
-        program = new WenyanProgram(String.join("\n", pages),
+        StringBuilder programBuilder = new StringBuilder().append(String.join("\n", pages));
+        for (var additionalPage : additionalPages) {
+            assert level != null;
+            var e = level.getBlockEntity(additionalPage);
+            if (e instanceof AdditionalPaperEntity additionalPaperEntity) {
+                programBuilder.append("\n").append(String.join("\n", additionalPaperEntity.pages));
+            } else {
+                WenyanException.handleException(player, Component.translatable("error.wenyan_nature.additional_page_not_found", additionalPage).getString());
+            }
+        }
+        program = new WenyanProgram(programBuilder.toString(),
                 WenyanPackages.BLOCK_ENVIRONMENT, player, this);
         program.run();
     }
@@ -90,6 +106,17 @@ public class BlockRunner extends BlockEntity {
             pagesTag.addAll(pages.stream().map(StringTag::valueOf).toList());
             tag.put("pages", pagesTag);
         }
+        if (additionalPages != null && !additionalPages.isEmpty()) {
+            ListTag additionalPagesTag = new ListTag();
+            for (BlockPos pos : additionalPages) {
+                var posTag = new CompoundTag();
+                posTag.putInt("x", pos.getX());
+                posTag.putInt("y", pos.getY());
+                posTag.putInt("z", pos.getZ());
+                additionalPagesTag.add(posTag);
+            }
+            tag.put("additional_pages", additionalPagesTag);
+        }
         tag.putDouble("communicate_x", communicate != null ? communicate.x : 0.0);
         tag.putDouble("communicate_y", communicate != null ? communicate.y : 0.0);
         tag.putDouble("communicate_z", communicate != null ? communicate.z : 0.0);
@@ -104,6 +131,18 @@ public class BlockRunner extends BlockEntity {
             isCommunicating = true;
         } else {
             isCommunicating = false;
+        }
+        if (tag.contains("additional_pages")) {
+            additionalPages = new ArrayList<>();
+            ListTag additionalPagesTag = tag.getList("additional_pages", Tag.TAG_COMPOUND);
+            for (Tag posTag : additionalPagesTag) {
+                if (posTag instanceof CompoundTag compoundTag) {
+                    int x = compoundTag.getInt("x");
+                    int y = compoundTag.getInt("y");
+                    int z = compoundTag.getInt("z");
+                    additionalPages.add(new BlockPos(x, y, z));
+                }
+            }
         }
         speed = tag.getInt("speed");
     }

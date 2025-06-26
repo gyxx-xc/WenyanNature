@@ -56,6 +56,10 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
                 Minecraft.getInstance().setScreen(new BlockRunnerScreen((BlockRunner) level.getBlockEntity(pos)));
+            else {
+                var runner = (BlockRunner) level.getBlockEntity(pos);
+                runner.additionalPages.add(pos.offset(1, 0, 0));
+            }
         } else {
             if (!level.isClientSide()) {
                 BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);

@@ -5,16 +5,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock {
+public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
     public static final Properties PROPERTIES;
     public static final VoxelShape FLOOR_NORTH_AABB;
@@ -37,6 +40,11 @@ public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock {
 
     public AdditionalPaper() {
         super(PROPERTIES);
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new AdditionalPaperEntity(blockPos, blockState);
     }
 
     @Override
