@@ -209,7 +209,11 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     public void accept(IWenyanValue value) throws WenyanException.WenyanCheckerError {
         try {
             if (value.as(Position.TYPE) instanceof Position(int dx, int dy)) {
-                // TODO: check if Position is direction
+                if (Math.abs(dx) + Math.abs(dy) != 1) {
+                    setStatus(Result.WRONG_ANSWER);
+                    throw new WenyanException.WenyanCheckerError("wrong");
+                }
+
                 curX = curX + dx;
                 curY = curY + dy;
 

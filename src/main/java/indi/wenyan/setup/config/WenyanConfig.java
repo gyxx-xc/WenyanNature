@@ -3,11 +3,6 @@ package indi.wenyan.setup.config;
 import indi.wenyan.WenyanProgramming;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
 
 @Config(name = WenyanProgramming.MODID)
 public final class WenyanConfig implements ConfigData {

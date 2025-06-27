@@ -2,10 +2,11 @@ package indi.wenyan.content.item;
 
 import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.HandRunnerEntity;
-import indi.wenyan.content.gui.HandRunnerScreen;
+import indi.wenyan.content.gui.TextFieldScreen;
 import indi.wenyan.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -37,7 +38,8 @@ public class WenyanHandRunner extends BlockItem {
     use(Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide())
-            Minecraft.getInstance().setScreen(new HandRunnerScreen(player, itemstack, hand));
+//            Minecraft.getInstance().setScreen(new HandRunnerScreen(player, itemstack, hand));
+            Minecraft.getInstance().setScreen(new TextFieldScreen(Component.empty()));
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
