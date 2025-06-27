@@ -49,7 +49,7 @@ public class BranchCode extends WenyanCode {
     private static String name(Condition c, Operation o) {
         StringBuilder sb = new StringBuilder();
         sb.append("BRANCH");
-        if (Objects.requireNonNull(o) == Operation.POP) {
+        if (o == Operation.POP) {
             sb.append("_POP");
         }
         switch (c) {

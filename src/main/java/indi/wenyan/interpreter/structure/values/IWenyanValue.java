@@ -31,8 +31,8 @@ public interface IWenyanValue {
         if (casting(type) != null) {
             return casting(type);
         }
-        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.cannot_cast_").getString() +
-                type() + Component.translatable("error.wenyan_nature._to_").getString() + type);
+        throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_programming.cannot_cast_").getString() +
+                type() + Component.translatable("error.wenyan_programming._to_").getString() + type);
     }
 
     default boolean is(WenyanType<?> type) {

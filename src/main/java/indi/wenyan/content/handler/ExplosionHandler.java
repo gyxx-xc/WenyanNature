@@ -15,7 +15,7 @@ public class ExplosionHandler implements IJavacallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-        var args = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
+        var args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
         if (context.runnerWarper().runner() instanceof HandRunnerEntity entity)
             entity.level().explode(entity, entity.getX(), entity.getY(), entity.getZ(),
                     (float) Math.max(1, Math.min(20, (double) args.getFirst())), Level.ExplosionInteraction.MOB);

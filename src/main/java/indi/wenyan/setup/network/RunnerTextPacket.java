@@ -1,6 +1,6 @@
 package indi.wenyan.setup.network;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,7 +13,7 @@ import java.util.List;
 public record RunnerTextPacket(int slot, List<String> pages) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<RunnerTextPacket> TYPE =
-            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "runner_text"));
+            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "runner_text"));
 
     public static final StreamCodec<ByteBuf, RunnerTextPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,

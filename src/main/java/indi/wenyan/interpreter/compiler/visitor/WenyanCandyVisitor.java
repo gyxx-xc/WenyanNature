@@ -44,7 +44,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             case WenyanRParser.AND -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.AND_ID);
             case WenyanRParser.OR -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.OR_ID);
             default ->
-                    throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_operator").getString(), ctx);
+                    throw new WenyanException(Component.translatable("error.wenyan_programming.unknown_operator").getString(), ctx);
         }
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -63,7 +63,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
                 exprVisitor.visit(ctx.data(1));
                 break;
             default:
-                throw new WenyanException(Component.translatable("error.wenyan_nature.unknown_preposition").getString(), ctx);
+                throw new WenyanException(Component.translatable("error.wenyan_programming.unknown_preposition").getString(), ctx);
         }
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);

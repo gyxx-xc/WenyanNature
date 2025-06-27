@@ -1,6 +1,6 @@
 package indi.wenyan.content.gui;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
 
-    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "textures/gui/crafting_gui.png");
+    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/gui/crafting_gui.png");
 
     public CraftingBlockScreen(CraftingBlockContainer container, Inventory inventory, Component title) {
         super(container, inventory, title);

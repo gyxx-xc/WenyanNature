@@ -1,6 +1,6 @@
 package indi.wenyan.setup.network;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public final class OutputInformationPacket implements CustomPacketPayload {
     public static final Type<OutputInformationPacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "output_text"));
+            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "output_text"));
 
     public static final StreamCodec<FriendlyByteBuf, OutputInformationPacket> STREAM_CODEC =
             StreamCodec.of(OutputInformationPacket::write, OutputInformationPacket::new);

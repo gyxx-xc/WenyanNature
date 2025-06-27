@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
-import indi.wenyan.content.handler.IJavacallHandler;
+import indi.wenyan.content.handler.JavacallHandlers;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
@@ -34,7 +34,7 @@ public record WenyanVec3Object(Vec3 vec3) implements IWenyanObject {
                         if (args.size() == 1) {
                             return new WenyanVec3Object(vec3.add(args.getFirst().as(TYPE).vec3));
                         } else if (args.size() == 3) {
-                            var offset = IJavacallHandler.getArgs(args, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
+                            var offset = JavacallHandlers.getArgs(args, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
                             return new WenyanVec3Object(vec3.add((double) offset.get(0), (double) offset.get(1), (double) offset.get(2)));
                         } else {
                             throw new WenyanException.WenyanVarException("args?");
@@ -85,7 +85,7 @@ public record WenyanVec3Object(Vec3 vec3) implements IWenyanObject {
             if (argsList.size() == 1) {
                 return argsList.getFirst().as(WenyanVec3Object.TYPE);
             } else {
-                var args = IJavacallHandler.getArgs(argsList, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
+                var args = JavacallHandlers.getArgs(argsList, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
                 return new WenyanVec3Object(new Vec3((double) args.get(0), (double) args.get(1), (double) args.get(2)));
             }
         }

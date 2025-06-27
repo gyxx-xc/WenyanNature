@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static indi.wenyan.WenyanNature.LOGGER;
+import static indi.wenyan.WenyanProgramming.LOGGER;
 
 
 public enum FileLoader {

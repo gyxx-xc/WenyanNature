@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.runtime;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -73,8 +73,8 @@ public class WenyanThread {
                     context.content() + " " + e.getMessage());
         } else {
             // for debug only
-            WenyanNature.LOGGER.error("WenyanThread died with an unexpected exception", e);
-            WenyanNature.LOGGER.error(e.getMessage());
+            WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", e);
+            WenyanProgramming.LOGGER.error(e.getMessage());
             WenyanException.handleException(program.holder, "killed");
         }
         die();
@@ -127,7 +127,7 @@ public class WenyanThread {
             }
         }
         if (value == null)
-            throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString()+id);
+            throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString()+id);
         return value;
     }
 }

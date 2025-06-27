@@ -39,10 +39,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-import static indi.wenyan.WenyanNature.MODID;
+import static indi.wenyan.WenyanProgramming.MODID;
 
 public final class Registration {
-
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
@@ -157,32 +156,32 @@ public final class Registration {
                         .build("hand_runner"));
 
         // Paper
-        BAMBOO_PAPER = ITEMS.registerItem(bamboo_paper.item_ID,
-                bamboo_paper::new);
-        CLOUD_PAPER = ITEMS.registerItem(cloud_paper.item_ID,
-                cloud_paper::new);
-        DRAGON_PAPER = ITEMS.registerItem(dragon_paper.item_ID,
-                dragon_paper::new);
-        FROST_PAPER = ITEMS.registerItem(frost_paper.item_ID,
-                frost_paper::new);
-        PHOENIX_PAPER = ITEMS.registerItem(phoenix_paper.item_ID,
-                phoenix_paper::new);
-        STAR_PAPER = ITEMS.registerItem(star_paper.item_ID,
-                star_paper::new);
+        BAMBOO_PAPER = ITEMS.registerItem(BambooPaper.ID,
+                BambooPaper::new);
+        CLOUD_PAPER = ITEMS.registerItem(CloudPaper.ID,
+                CloudPaper::new);
+        DRAGON_PAPER = ITEMS.registerItem(DragonPaper.ID,
+                DragonPaper::new);
+        FROST_PAPER = ITEMS.registerItem(FrostPaper.ID,
+                FrostPaper::new);
+        PHOENIX_PAPER = ITEMS.registerItem(PhoenixPaper.ID,
+                PhoenixPaper::new);
+        STAR_PAPER = ITEMS.registerItem(StarPaper.ID,
+                StarPaper::new);
 
         // Ink
-        ARCANE_INK = ITEMS.registerItem(arcane_ink.item_ID,
-                arcane_ink::new);
-        BAMBOO_INK = ITEMS.registerItem(bamboo_ink.item_ID,
-                bamboo_ink::new);
-        CELESTIAL_INK = ITEMS.registerItem(celestial_ink.item_ID,
-                celestial_ink::new);
-        LUNAR_INK = ITEMS.registerItem(lunar_ink.item_ID,
-                lunar_ink::new);
-        CINNABAR_INK = ITEMS.registerItem(cinnabar_ink.item_ID,
-                cinnabar_ink::new);
-        STARLIGHT_INK = ITEMS.registerItem(starlight_ink.item_ID,
-                starlight_ink::new);
+        ARCANE_INK = ITEMS.registerItem(ArcaneInk.ID,
+                ArcaneInk::new);
+        BAMBOO_INK = ITEMS.registerItem(BambooInk.ID,
+                BambooInk::new);
+        CELESTIAL_INK = ITEMS.registerItem(CelestialInk.ID,
+                CelestialInk::new);
+        LUNAR_INK = ITEMS.registerItem(LunarInk.ID,
+                LunarInk::new);
+        CINNABAR_INK = ITEMS.registerItem(CinnabarInk.ID,
+                CinnabarInk::new);
+        STARLIGHT_INK = ITEMS.registerItem(StarlightInk.ID,
+                StarlightInk::new);
 
         CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
         CRAFTING_BLOCK_ITEM = ITEMS.registerItem("crafting_block", (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
@@ -229,8 +228,8 @@ public final class Registration {
                     }
                 });
 
-        CREATIVE_MODE_TABS.register("wenyan_nature", () -> CreativeModeTab.builder()
-                .title(Component.translatable("title.wenyan_nature.create_tab"))
+        CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
+                .title(Component.translatable("title.wenyan_programming.create_tab"))
                 .withTabsBefore(CreativeModeTabs.COMBAT)
                 .icon(() -> HAND_RUNNER_1.get().getDefaultInstance())
                 .displayItems((parameters, output) -> {

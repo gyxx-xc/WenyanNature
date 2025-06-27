@@ -17,6 +17,6 @@ public final class WenyanNull implements IWenyanValue {
 
     @Override
     public String toString() {
-        return Component.translatable("type.wenyan_nature.null").getString();
+        return Component.translatable("type.wenyan_programming.null").getString();
     }
 }

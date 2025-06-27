@@ -1,6 +1,6 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
@@ -32,7 +32,7 @@ public class OutputHandler implements IJavacallHandler {
         } else if (context.runnerWarper().runner() instanceof CraftingAnswerChecker checker){
             checker.accept(context.args());
         } else {
-            WenyanNature.LOGGER.warn("Lost Output: {}", result);
+            WenyanProgramming.LOGGER.warn("Lost Output: {}", result);
         }
         return WenyanNull.NULL;
     }

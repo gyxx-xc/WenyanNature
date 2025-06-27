@@ -17,7 +17,7 @@ public class BulletHandler implements IJavacallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-        var newArgs = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
+        var newArgs = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
 
         Vec3 dir = new Vec3(
                 Math.max(-10, Math.min(10, (double) newArgs.get(0))),

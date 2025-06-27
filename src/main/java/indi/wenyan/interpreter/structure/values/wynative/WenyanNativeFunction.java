@@ -22,7 +22,7 @@ public record WenyanNativeFunction(List<Arg> args, WenyanBytecode bytecode) impl
                      List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
         if (args().size() != argsList.size())
-            throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+            throw new WenyanException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
 
         WenyanRuntime newRuntime = new WenyanRuntime(bytecode);
         if (self != null) {
@@ -38,7 +38,7 @@ public record WenyanNativeFunction(List<Arg> args, WenyanBytecode bytecode) impl
     @Override
     public @NotNull String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(Component.translatable("type.wenyan_nature.function").getString());
+        sb.append(Component.translatable("type.wenyan_programming.function").getString());
         sb.append("(");
         for (int i = 0; i < args().size(); i++) {
             sb.append(args().get(i).toString());

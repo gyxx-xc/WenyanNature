@@ -6,9 +6,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import net.minecraft.network.chat.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IJavacallHandler extends IWenyanFunction {
@@ -55,16 +53,6 @@ public interface IJavacallHandler extends IWenyanFunction {
             thread.program.requestThreads.add(context);
             thread.block();
         }
-    }
-
-    static List<Object> getArgs(List<IWenyanValue> args, WenyanType<?>[] args_type)
-            throws WenyanException.WenyanTypeException {
-        List<Object> newArgs = new ArrayList<>();
-        if (args.size() != args_type.length)
-            throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-        for (int i = 0; i < args.size(); i++)
-            newArgs.add(args.get(i).as(args_type[i]));
-        return newArgs;
     }
 
     default WenyanType<?> type() {

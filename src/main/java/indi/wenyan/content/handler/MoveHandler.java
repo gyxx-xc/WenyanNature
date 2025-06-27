@@ -17,7 +17,7 @@ public class MoveHandler implements IJavacallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> newArgs = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
+        List<Object> newArgs = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
         newArgs.set(0, Math.max(-20, Math.min(20, (double) newArgs.get(0))));
         newArgs.set(1, Math.max(-20, Math.min(20, (double) newArgs.get(1))));
         newArgs.set(2, Math.max(-20, Math.min(20, (double) newArgs.get(2))));

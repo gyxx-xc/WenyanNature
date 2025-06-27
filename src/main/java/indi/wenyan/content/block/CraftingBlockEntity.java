@@ -1,6 +1,6 @@
 package indi.wenyan.content.block;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
@@ -116,7 +116,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     public void run(BlockRunner runner, Player player) {
         assert level != null;
         if (isCrafting) {
-            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
+            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.already_run").getString());
             return;
         }
 
@@ -125,7 +125,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
                 new AnsweringRecipeInput(pedestalItems), level);
         if (recipeHolder.isEmpty()) {
-            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.function_not_found_").getString());
+            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.function_not_found_").getString());
             return;
         }
 
@@ -133,8 +133,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         var question = recipeHolder.get().value().question();
         checker = CheckerFactory.produce(question, level.getRandom());
         if (checker == null) {
-            WenyanNature.LOGGER.error("Failed to create checker for question: {}", question);
-            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.function_not_found_").getString());
+            WenyanProgramming.LOGGER.error("Failed to create checker for question: {}", question);
+            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.function_not_found_").getString());
             return;
         }
 

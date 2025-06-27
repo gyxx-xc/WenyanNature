@@ -122,7 +122,7 @@ public enum WenyanDataParser {;
         try{
             n = Integer.parseInt(num.num + "0".repeat(num.exp));
         } catch (NumberFormatException e) {
-            throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_number").getString());
+            throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_programming.invalid_number").getString());
         }
         return n;
     }
@@ -132,7 +132,7 @@ public enum WenyanDataParser {;
             if (text.contains(div)) {
                 String[] parts = text.split(div);
                 if (parts.length != 2)
-                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_float_number").getString());
+                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_programming.invalid_float_number").getString());
                 // parts 1
                 double result = parseInt(parts[0]);
                 // parts 2 (Int FLOAT_EXP)+
@@ -147,14 +147,14 @@ public enum WenyanDataParser {;
                 return result;
             }
         }
-        throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_float_number").getString());
+        throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_programming.invalid_float_number").getString());
     }
 
     public static boolean parseBool(String text) throws WenyanException.WenyanDataException {
         if (BOOL_MAP.containsKey(text))
             return BOOL_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid_bool_value").getString());
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_programming.invalid_bool_value").getString());
     }
 
     public static String parseString(String text) {
@@ -165,7 +165,7 @@ public enum WenyanDataParser {;
         if (TYPE_MAP.containsKey(text))
             return TYPE_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_programming.invalid_data_type").getString());
     }
 
     private static Num parseIntHelper(String num) throws WenyanException.WenyanNumberException {
@@ -214,7 +214,7 @@ public enum WenyanDataParser {;
             boolean zero = true;
             for (int i = 0; i < num.length(); i++) {
                 if (!DIGIT.containsKey(num.substring(i, i+1)))
-                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.unexpected_character").getString());
+                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_programming.unexpected_character").getString());
                 if (zero && DIGIT.get(num.substring(i, i+1)) != 0)
                     zero = false;
                 if (!zero)
@@ -225,7 +225,7 @@ public enum WenyanDataParser {;
             else
                 return new Num(res.toString(), 0);
         } else {
-            throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.unexpected_character").getString());
+            throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_programming.unexpected_character").getString());
         }
     }
 
@@ -233,7 +233,7 @@ public enum WenyanDataParser {;
 
         Num add(Num other) throws WenyanException.WenyanNumberException {
                 if (exp - other.exp < other.num.length())
-                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_nature.invalid_number").getString());
+                    throw new WenyanException.WenyanNumberException(Component.translatable("error.wenyan_programming.invalid_number").getString());
                 return new Num(
                         num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
                         other.exp);

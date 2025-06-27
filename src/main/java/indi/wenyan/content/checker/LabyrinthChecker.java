@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.handler.IJavacallHandler;
+import indi.wenyan.content.handler.JavacallHandlers;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -73,7 +73,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
 
             @Override
             public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanTypeException {
-                var args = IJavacallHandler.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
+                var args = JavacallHandlers.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
                 return new Position((int) args.get(0), (int) args.get(1));
             }
 
@@ -109,7 +109,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return new WenyanBoolean(!isWall(x - 1, y - 1));
                     } else {
-                        var arg = IJavacallHandler.getArgs(args, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
+                        var arg = JavacallHandlers.getArgs(args, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
                         return new WenyanBoolean(!isWall((int) arg.get(0) - 1, (int) arg.get(1) - 1));
                     }
                 }));

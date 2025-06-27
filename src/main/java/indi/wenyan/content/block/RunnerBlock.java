@@ -58,6 +58,7 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
                 Minecraft.getInstance().setScreen(new BlockRunnerScreen((BlockRunner) level.getBlockEntity(pos)));
             else {
                 var runner = (BlockRunner) level.getBlockEntity(pos);
+                assert runner != null;
                 runner.additionalPages.add(pos.offset(1, 0, 0));
             }
         } else {

@@ -33,7 +33,7 @@ public record WenyanArrayList(List<IWenyanValue> values) implements IWenyanObjec
 
     @Override
     public void setVariable(String name, IWenyanValue value) {
-        throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
+        throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
     }
 
     @Override
@@ -41,16 +41,16 @@ public record WenyanArrayList(List<IWenyanValue> values) implements IWenyanObjec
         return switch (name) {
             case WenyanDataParser.ARRAY_GET_ID -> new LocalCallHandler((self, args) -> {
                 if (args.size() != 1)
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return self.as(TYPE).get(args.getFirst().as(WenyanInteger.TYPE).value());
             });
             case WenyanDataParser.ITER_ID -> new LocalCallHandler((self, args) -> {
                 if (!args.isEmpty())
-                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return new WenyanIterator(self.as(TYPE).values.iterator());
             });
             case WenyanDataParser.LONG_ID -> new WenyanInteger(values.size());
-            default -> throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + name);
+            default -> throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
         };
     }
 

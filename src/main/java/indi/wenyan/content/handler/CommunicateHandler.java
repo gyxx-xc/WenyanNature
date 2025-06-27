@@ -15,7 +15,7 @@ public class CommunicateHandler implements IJavacallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        var args = IJavacallHandler.getArgs(context.args(), ARG_TYPES);
+        var args = JavacallHandlers.getArgs(context.args(), ARG_TYPES);
         if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             runner.communicate = new Vec3(
                     Math.max(-10, Math.min(10, (int) args.get(0))),

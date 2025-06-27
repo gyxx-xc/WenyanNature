@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -26,8 +26,8 @@ import java.util.Random;
 import static net.minecraft.client.renderer.RenderStateShard.*;
 
 public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
-    final ResourceLocation LIGHT = ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "textures/entity/bullet.png");
-    final ResourceLocation AABB_WALL = ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "textures/block/wall.png");
+    final ResourceLocation LIGHT = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/entity/bullet.png");
+    final ResourceLocation AABB_WALL = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
 
     private final BlockEntityRenderDispatcher dispatcher;
     private final Font font;
@@ -49,8 +49,8 @@ public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
         }
 
         renderOutput(poseStack, be, partialTicks, bufferSource, combinedLight);
-        renderAABB(poseStack, bufferSource, combinedLight,
-                new AABB(-0.5, -0.25, -0.5, 2, 5, 0.5));
+//        renderAABB(poseStack, bufferSource, combinedLight,
+//                new AABB(-0.5, -0.25, -0.5, 2, 5, 0.5));
     }
 
     public static final RenderType FRONT_LINES = RenderType.create("lines",

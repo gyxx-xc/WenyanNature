@@ -18,7 +18,7 @@ public class TouchHandler implements IJavacallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> args = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
+        List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
         int dx = Math.max(-10, Math.min(10, (int) args.get(0)));
         int dy = Math.max(-10, Math.min(10, (int) args.get(1)));
         int dz = Math.max(-10, Math.min(10, (int) args.get(2)));

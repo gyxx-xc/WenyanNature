@@ -1,6 +1,6 @@
 package indi.wenyan.setup.datagen;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -17,9 +17,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         horizontalFaceBlock(Registration.RUNNER_BLOCK.get(),
                 new ModelFile.UncheckedModelFile(
-                        ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "block/runner_block")));
+                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/runner_block")));
         horizontalFaceBlock(Registration.ADDITIONAL_PAPER_BLOCK.get(),
                 new ModelFile.UncheckedModelFile(
-                        ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "block/runner_block")));
+                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/runner_block")));
     }
 }

@@ -32,7 +32,7 @@ public class WenyanNativeObjectType implements IWenyanObjectType {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunction(name);
         if (attr == null)
-            throw new WenyanException(Component.translatable("error.wenyan_nature.function_not_found_").getString() + name);
+            throw new WenyanException(Component.translatable("error.wenyan_programming.function_not_found_").getString() + name);
         else
             return attr;
     }

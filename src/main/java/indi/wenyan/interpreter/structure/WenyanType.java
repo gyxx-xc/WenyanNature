@@ -50,6 +50,6 @@ public class WenyanType<T extends IWenyanValue> {
 
     @Override
     public String toString() {
-        return Component.translatable("type.wenyan_nature." + name.toLowerCase()).getString();
+        return Component.translatable("type.wenyan_programming." + name.toLowerCase()).getString();
     }
 }

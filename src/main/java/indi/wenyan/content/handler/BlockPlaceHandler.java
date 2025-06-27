@@ -36,7 +36,7 @@ public class BlockPlaceHandler implements IJavacallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        var args = IJavacallHandler.getArgs(context.args(), ARGS_TYPE);
+        var args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
         BlockPos blockPos = pos.offset(
                 Math.max(-10, Math.min(10, (int) args.get(0))),
                 Math.max(-10, Math.min(10, (int) args.get(1))),
@@ -51,7 +51,7 @@ public class BlockPlaceHandler implements IJavacallHandler {
         BlockState block = world.getBlockState(attach);
 
         if(!world.setBlockAndUpdate(pos, block)) {
-            throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
+            throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString());
         }
 
         // Remove block if placeEvent is canceled

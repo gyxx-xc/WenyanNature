@@ -22,7 +22,7 @@ public class WenyanStack {
     public IWenyanValue peek() {
         int len = stack.size();
         if (len == 0) {
-            throw new WenyanException("error.wenyan_nature.stack_empty");
+            throw new WenyanException("error.wenyan_programming.stack_empty");
         }
         return stack.getLast();
     }
@@ -30,7 +30,7 @@ public class WenyanStack {
     public IWenyanValue pop() {
         int len = stack.size();
         if (len == 0) {
-            throw new WenyanException("error.wenyan_nature.stack_empty");
+            throw new WenyanException("error.wenyan_programming.stack_empty");
         }
         return stack.removeLast();
     }
@@ -45,7 +45,7 @@ public class WenyanStack {
 
     public IWenyanValue get(int index) {
         if (index < 0 || index >= stack.size()) {
-            throw new WenyanException("error.wenyan_nature.stack_index_out_of_bounds");
+            throw new WenyanException("error.wenyan_programming.stack_index_out_of_bounds");
         }
         return ((LinkedList<IWenyanValue>) stack).get(stack.size() - index - 1);
     }

@@ -1,6 +1,6 @@
 package indi.wenyan.setup.datagen;
 
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -69,7 +69,7 @@ public final class AnsweringRecipeBuilder {
     }
 
     public void save(RecipeOutput recipeOutput, String recipeName) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, recipeName);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, recipeName);
         recipeOutput.accept(
                 id,
                 new AnsweringRecipe(input, question, output),

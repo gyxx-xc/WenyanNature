@@ -2,7 +2,7 @@ package indi.wenyan.content.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import indi.wenyan.WenyanNature;
+import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -16,7 +16,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class BulletRender extends EntityRenderer<BulletEntity> {
     private static final ResourceLocation TEXTURE_LOCATION =
-            ResourceLocation.fromNamespaceAndPath(WenyanNature.MODID, "textures/entity/bullet.png");
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/entity/bullet.png");
     private static final RenderType RENDER_TYPE =
             RenderType.entityTranslucent(TEXTURE_LOCATION);
 

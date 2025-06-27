@@ -27,7 +27,7 @@ public class VariableCode extends WenyanCode {
                 String id = runtime.bytecode.getIdentifier(args);
                 IWenyanValue value = thread.getGlobalVariable(id);
                 if (value == null) {
-                    throw new WenyanException(Component.translatable("error.wenyan_nature.variable_not_found_").getString() + id);
+                    throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + id);
                 }
                 runtime.processStack.push(value);
             }
@@ -39,7 +39,7 @@ public class VariableCode extends WenyanCode {
                 if (var instanceof WenyanLeftValue lv)
                     lv.setValue(value);
                 else
-                    throw new WenyanException(Component.translatable("error.wenyan_nature.set_value_to_non_left_value").getString());
+                    throw new WenyanException(Component.translatable("error.wenyan_programming.set_value_to_non_left_value").getString());
             }
             case CAST -> {
                 IWenyanValue var = runtime.processStack.pop();
@@ -53,7 +53,7 @@ public class VariableCode extends WenyanCode {
                         case 6 -> var.as(IWenyanObject.TYPE);
                         case 7 -> var.as(IWenyanObjectType.TYPE);
                         case 8 -> var.as(IWenyanFunction.TYPE);
-                        default -> throw new WenyanException(Component.translatable("error.wenyan_nature.invalid_data_type").getString());
+                        default -> throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString());
                     }
                     runtime.processStack.push(var);
                 } catch (WenyanException.WenyanTypeException e) {

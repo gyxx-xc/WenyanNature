@@ -65,7 +65,7 @@ public class BlockRunner extends BlockEntity {
 
     public void run(Player player) {
         if (program != null && program.isRunning()) {
-            WenyanException.handleException(player, Component.translatable("error.wenyan_nature.already_run").getString());
+            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.already_run").getString());
             return;
         }
         StringBuilder programBuilder = new StringBuilder().append(String.join("\n", pages));
@@ -75,7 +75,7 @@ public class BlockRunner extends BlockEntity {
             if (e instanceof AdditionalPaperEntity additionalPaperEntity) {
                 programBuilder.append("\n").append(String.join("\n", additionalPaperEntity.pages));
             } else {
-                WenyanException.handleException(player, Component.translatable("error.wenyan_nature.additional_page_not_found", additionalPage).getString());
+                WenyanException.handleException(player, Component.translatable("error.wenyan_programming.additional_page_not_found", additionalPage).getString());
             }
         }
         program = new WenyanProgram(programBuilder.toString(),
