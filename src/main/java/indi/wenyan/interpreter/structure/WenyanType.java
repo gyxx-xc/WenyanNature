@@ -16,7 +16,6 @@ public class WenyanType<T extends IWenyanValue> {
         this.tClass = tClass;
     }
 
-    // TODO
     public static WenyanType<? extends IWenyanComputable> computeWiderType(WenyanType<?> type1, WenyanType<?> type2) {
         if (type1 == WenyanString.TYPE || type2 == WenyanString.TYPE) {
             return WenyanString.TYPE;

@@ -14,28 +14,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode bytecode) implements IWenyanFunction {
+public record WenyanNativeFunction(List<Arg> args, WenyanBytecode bytecode) implements IWenyanFunction {
     public static final WenyanType<WenyanNativeFunction> TYPE = new WenyanType<>("native_function", WenyanNativeFunction.class);
 
     @Override
     public void call(IWenyanValue self, WenyanThread thread,
                      List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
-        if (argTypes().size() != argsList.size())
+        if (args().size() != argsList.size())
             throw new WenyanException(Component.translatable("error.wenyan_nature.number_of_arguments_does_not_match").getString());
-        for (int i = 0; i < argsList.size(); i++) {
-            argsList.get(i).as(argTypes().get(i));
-        }
 
         WenyanRuntime newRuntime = new WenyanRuntime(bytecode);
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
-            newRuntime.setVariable(WenyanDataParser.PARENT_ID, //TODO
-                    ((WenyanNativeObject) self).getObjectType().getParent());
+            newRuntime.setVariable(WenyanDataParser.PARENT_ID,
+                    self.as(WenyanNativeObject.TYPE).getObjectType().getParent());
         }
-        // STUB: assume the first n id is the args
         for (int i = 0; i < argsList.size(); i++)
-            newRuntime.setVariable(bytecode.getIdentifier(i), WenyanLeftValue.varOf(argsList.get(i)));
+            newRuntime.setVariable(args.get(i).id(), WenyanLeftValue.varOf(argsList.get(i).as(args().get(i).type())));
         thread.call(newRuntime);
     }
 
@@ -44,9 +40,9 @@ public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode 
         StringBuilder sb = new StringBuilder();
         sb.append(Component.translatable("type.wenyan_nature.function").getString());
         sb.append("(");
-        for (int i = 0; i < argTypes().size(); i++) {
-            sb.append(argTypes().get(i).toString());
-            if (i < argTypes().size() - 1) {
+        for (int i = 0; i < args().size(); i++) {
+            sb.append(args().get(i).toString());
+            if (i < args().size() - 1) {
                 sb.append(", ");
             }
         }
@@ -58,4 +54,11 @@ public record WenyanNativeFunction(List<WenyanType<?>> argTypes, WenyanBytecode 
     public WenyanType<?> type() {
         return TYPE;
     }
+
+    public record Arg(WenyanType<?> type, String id){
+        @Override
+        public String toString() {
+            return id + ":" + type.toString();
+        }
+    };
 }

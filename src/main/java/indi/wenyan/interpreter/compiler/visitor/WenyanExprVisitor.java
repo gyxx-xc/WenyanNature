@@ -14,6 +14,8 @@ import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 import org.antlr.v4.runtime.Token;
+import org.checkerframework.checker.units.qual.A;
+import org.codehaus.plexus.util.cli.Arg;
 
 import java.util.ArrayList;
 
@@ -122,26 +124,26 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitFunction_define_body(WenyanRParser.Function_define_bodyContext ctx) {
-        ArrayList<WenyanType<?>> argsType = new ArrayList<>();
+        ArrayList<WenyanNativeFunction.Arg> argsType = new ArrayList<>();
+        int count = 0;
         for (int i = 0; i < ctx.args.size(); i++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
-                for (int j = 0; j < n; j++)
-                    argsType.add(WenyanDataParser.parseType(ctx.t.get(i).getText()));
+                WenyanType<?> type = WenyanDataParser.parseType(ctx.t.get(i).getText());
+                for (int j = 0; j < n; j++) {
+                    argsType.add(new WenyanNativeFunction.Arg(type, ctx.id.get(count).getText()));
+                    count++;
+                }
             } catch (WenyanException.WenyanThrowException e) {
                 throw new WenyanException(e.getMessage(), ctx);
             }
         }
 
         WenyanBytecode functionBytecode = new WenyanBytecode();
-
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
-        for (Token i : ctx.id)
-            environment.getIdentifierIndex(i.getText()); // return should be indexOf(i)
-
         new WenyanMainVisitor(environment).visit(ctx.statements());
 
-        // add a return null at end
+        // STUB: add a return null at end in case no return
         environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
         environment.add(WenyanCodes.RET);
 

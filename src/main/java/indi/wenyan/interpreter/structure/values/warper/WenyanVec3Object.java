@@ -83,12 +83,7 @@ public record WenyanVec3Object(Vec3 vec3) implements IWenyanObject {
         @Override
         public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
             if (argsList.size() == 1) {
-                // TODO
-                if (argsList.getFirst().as(WenyanVec3Object.TYPE) instanceof WenyanVec3Object vec3Object) {
-                    return vec3Object;
-                } else {
-                    throw new WenyanException.WenyanVarException("Expected a Vec3 object as argument");
-                }
+                return argsList.getFirst().as(WenyanVec3Object.TYPE);
             } else {
                 var args = IJavacallHandler.getArgs(argsList, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
                 return new WenyanVec3Object(new Vec3((double) args.get(0), (double) args.get(1), (double) args.get(2)));
