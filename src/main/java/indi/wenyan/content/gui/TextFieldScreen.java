@@ -1,7 +1,6 @@
 package indi.wenyan.content.gui;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.network.chat.Component;
@@ -14,10 +13,10 @@ public class TextFieldScreen extends Screen {
         super(title);
     }
 
-    protected MultiLineEditBox createCommentBox(int width, int height, Consumer<String> valueListener) {
-        MultiLineEditBox multilineeditbox = new TextField(this.font, (this.width - 192) / 2, 2, width, height, Component.literal(""), Component.empty());
-        multilineeditbox.setValueListener(valueListener);
-        return multilineeditbox;
+    protected TextField createCommentBox(int width, int height, Consumer<String> valueListener) {
+        TextField textField = new TextField(this.font, (this.width - 192) / 2, 2, width, height, Component.literal(""), Component.empty());
+        textField.setValueListener(valueListener);
+        return textField;
     }
 
     @Override
