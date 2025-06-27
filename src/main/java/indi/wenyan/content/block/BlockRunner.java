@@ -35,7 +35,6 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class BlockRunner extends BlockEntity {
-    private static final Logger log = LoggerFactory.getLogger(BlockRunner.class);
     public WenyanProgram program;
 
     public List<String> pages;

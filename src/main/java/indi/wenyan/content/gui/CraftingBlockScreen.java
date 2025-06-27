@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
 
@@ -24,6 +25,6 @@ public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockCo
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
     }
 }

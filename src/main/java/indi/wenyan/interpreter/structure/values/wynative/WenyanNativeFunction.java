@@ -57,8 +57,8 @@ public record WenyanNativeFunction(List<Arg> args, WenyanBytecode bytecode) impl
 
     public record Arg(WenyanType<?> type, String id){
         @Override
-        public String toString() {
+        public @NotNull String toString() {
             return id + ":" + type.toString();
         }
-    };
+    }
 }
