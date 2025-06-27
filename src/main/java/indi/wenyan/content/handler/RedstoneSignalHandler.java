@@ -2,8 +2,8 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.JavacallContext;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 public class RedstoneSignalHandler implements IJavacallHandler {
 
     @Override

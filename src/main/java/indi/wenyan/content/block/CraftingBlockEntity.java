@@ -1,9 +1,9 @@
 package indi.wenyan.content.block;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;

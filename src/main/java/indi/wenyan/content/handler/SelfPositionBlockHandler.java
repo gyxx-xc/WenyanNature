@@ -2,9 +2,9 @@ package indi.wenyan.content.handler;
 
 import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.core.Direction;
 
 public class SelfPositionBlockHandler implements IJavacallHandler {

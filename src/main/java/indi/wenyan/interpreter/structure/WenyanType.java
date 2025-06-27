@@ -1,9 +1,9 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.network.chat.Component;
 
 public class WenyanType<T extends IWenyanValue> {

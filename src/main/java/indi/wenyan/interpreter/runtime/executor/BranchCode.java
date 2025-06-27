@@ -5,8 +5,6 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 
-import java.util.Objects;
-
 public class BranchCode extends WenyanCode {
     private final Operation operation;
     private final Condition condition;

@@ -4,9 +4,9 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 

@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    {
+      "item": "minecraft:paper"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "wenyan_programming:hand_runner"
+  },
+  "question": "plus"
+}
