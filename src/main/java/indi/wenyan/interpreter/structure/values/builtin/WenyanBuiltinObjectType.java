@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.structure.values.wynative;
+package indi.wenyan.interpreter.structure.values.builtin;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -13,17 +13,17 @@ import net.minecraft.network.chat.Component;
 import java.util.HashMap;
 import java.util.List;
 
-public class WenyanNativeObjectType implements IWenyanObjectType {
-    private final WenyanNativeObjectType parent;
+public class WenyanBuiltinObjectType implements IWenyanObjectType {
+    private final WenyanBuiltinObjectType parent;
     private final HashMap<String, IWenyanValue> staticVariable = new HashMap<>();
     private final HashMap<String, IWenyanValue> functions = new HashMap<>();
-    public static final WenyanType<WenyanNativeObjectType> TYPE = new WenyanType<>("dict_object_type", WenyanNativeObjectType.class);
+    public static final WenyanType<WenyanBuiltinObjectType> TYPE = new WenyanType<>("dict_object_type", WenyanBuiltinObjectType.class);
 
-    public WenyanNativeObjectType(WenyanNativeObjectType parent) {
+    public WenyanBuiltinObjectType(WenyanBuiltinObjectType parent) {
         this.parent = parent;
     }
 
-    public WenyanNativeObjectType getParent() {
+    public WenyanBuiltinObjectType getParent() {
         return parent;
     }
 
@@ -68,7 +68,7 @@ public class WenyanNativeObjectType implements IWenyanObjectType {
     public void call(IWenyanValue self, WenyanThread thread,
                      List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
         // create empty, run constructor, return self
-        IWenyanValue selfObj = new WenyanNativeObject(this);
+        IWenyanValue selfObj = new WenyanBuiltinObject(this);
         thread.currentRuntime().processStack.push(selfObj);
 
         IWenyanFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)

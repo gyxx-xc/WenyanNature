@@ -9,7 +9,7 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
-import indi.wenyan.interpreter.structure.values.wynative.WenyanNativeFunction;
+import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
@@ -121,14 +121,14 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitFunction_define_body(WenyanRParser.Function_define_bodyContext ctx) {
-        ArrayList<WenyanNativeFunction.Arg> argsType = new ArrayList<>();
+        ArrayList<WenyanBuiltinFunction.Arg> argsType = new ArrayList<>();
         int count = 0;
         for (int i = 0; i < ctx.args.size(); i++) {
             try {
                 int n = WenyanDataParser.parseInt(ctx.args.get(i).getText());
                 WenyanType<?> type = WenyanDataParser.parseType(ctx.t.get(i).getText());
                 for (int j = 0; j < n; j++) {
-                    argsType.add(new WenyanNativeFunction.Arg(type, ctx.id.get(count).getText()));
+                    argsType.add(new WenyanBuiltinFunction.Arg(type, ctx.id.get(count).getText()));
                     count++;
                 }
             } catch (WenyanException.WenyanThrowException e) {
@@ -144,7 +144,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
         environment.add(WenyanCodes.RET);
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanNativeFunction(argsType, functionBytecode));
+        bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(argsType, functionBytecode));
         return true;
     }
 

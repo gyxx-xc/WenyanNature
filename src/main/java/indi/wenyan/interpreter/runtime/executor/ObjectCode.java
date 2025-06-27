@@ -8,7 +8,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanLeftValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
-import indi.wenyan.interpreter.structure.values.wynative.WenyanNativeObjectType;
+import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObjectType;
 
 public class ObjectCode extends WenyanCode {
     private final Operation operation;
@@ -39,12 +39,12 @@ public class ObjectCode extends WenyanCode {
                 }
                 case STORE_STATIC_ATTR -> {
                     IWenyanValue value = WenyanLeftValue.varOf(runtime.processStack.pop());
-                    WenyanNativeObjectType type = runtime.processStack.peek().as(WenyanNativeObjectType.TYPE);
+                    WenyanBuiltinObjectType type = runtime.processStack.peek().as(WenyanBuiltinObjectType.TYPE);
                     type.addStaticVariable(id, value);
                 }
                 case STORE_FUNCTION_ATTR -> {
                     IWenyanValue value = runtime.processStack.pop();
-                    WenyanNativeObjectType type = runtime.processStack.peek().as(WenyanNativeObjectType.TYPE);
+                    WenyanBuiltinObjectType type = runtime.processStack.peek().as(WenyanBuiltinObjectType.TYPE);
                     type.addFunction(id, value);
                 }
                 case STORE_ATTR -> {
@@ -57,10 +57,10 @@ public class ObjectCode extends WenyanCode {
                     var parent = runtime.processStack.pop();
                     IWenyanValue type;
                     if (parent.is(WenyanNull.TYPE))
-                        type = new WenyanNativeObjectType(null);
+                        type = new WenyanBuiltinObjectType(null);
                     else
-                        type = new WenyanNativeObjectType(parent
-                            .as(WenyanNativeObjectType.TYPE));
+                        type = new WenyanBuiltinObjectType(parent
+                            .as(WenyanBuiltinObjectType.TYPE));
                     runtime.processStack.push(type);
                 }
             }

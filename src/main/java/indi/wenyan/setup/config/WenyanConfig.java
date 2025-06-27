@@ -1,6 +1,7 @@
 package indi.wenyan.setup.config;
 
 import indi.wenyan.WenyanProgramming;
+import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -9,8 +10,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 @Config(name = WenyanProgramming.MODID)
-public final class WenyanConfig {
-      public static Screen createConfigScreen(Screen parent) {
+public final class WenyanConfig implements ConfigData {
+    // RTFM Use https://shedaniel.gitbook.io/cloth-config/auto-config/introduction-to-auto-config-1u
+
+/*    public static Screen createConfigScreen(Screen parent) {
           //init
           ConfigBuilder builder = ConfigBuilder.create()
                   .setParentScreen(parent)
@@ -49,6 +52,6 @@ public final class WenyanConfig {
           });
 
           return builder.build();
-      }
+      }*/
 
 }

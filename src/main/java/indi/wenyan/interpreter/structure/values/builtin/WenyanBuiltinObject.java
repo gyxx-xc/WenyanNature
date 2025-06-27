@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.structure.values.wynative;
+package indi.wenyan.interpreter.structure.values.builtin;
 
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
@@ -7,12 +7,12 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WenyanNativeObject implements IWenyanObject {
-    private final WenyanNativeObjectType type;
+public class WenyanBuiltinObject implements IWenyanObject {
+    private final WenyanBuiltinObjectType type;
     private final Map<String, IWenyanValue> variable = new HashMap<>();
-    public static final WenyanType<WenyanNativeObject> TYPE = new WenyanType<>("dict_object", WenyanNativeObject.class);
+    public static final WenyanType<WenyanBuiltinObject> TYPE = new WenyanType<>("dict_object", WenyanBuiltinObject.class);
 
-    public WenyanNativeObject(WenyanNativeObjectType type) {
+    public WenyanBuiltinObject(WenyanBuiltinObjectType type) {
         this.type = type;
     }
 
@@ -30,7 +30,7 @@ public class WenyanNativeObject implements IWenyanObject {
         variable.put(name, value);
     }
 
-    public WenyanNativeObjectType getObjectType() {
+    public WenyanBuiltinObjectType getObjectType() {
         return type;
     }
 

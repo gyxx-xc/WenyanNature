@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * since a function can be a bytecode or a native function,
+ * since a function can be a bytecode or a builtin function,
  * we define an empty interface to represent a function in Wenyan
  */
 public interface IWenyanFunction extends IWenyanValue {

@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.structure.values.wynative;
+package indi.wenyan.interpreter.structure.values.builtin;
 
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record WenyanNativeFunction(List<Arg> args, WenyanBytecode bytecode) implements IWenyanFunction {
-    public static final WenyanType<WenyanNativeFunction> TYPE = new WenyanType<>("native_function", WenyanNativeFunction.class);
+public record WenyanBuiltinFunction(List<Arg> args, WenyanBytecode bytecode) implements IWenyanFunction {
+    public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
 
     @Override
     public void call(IWenyanValue self, WenyanThread thread,
@@ -28,7 +28,7 @@ public record WenyanNativeFunction(List<Arg> args, WenyanBytecode bytecode) impl
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
             newRuntime.setVariable(WenyanDataParser.PARENT_ID,
-                    self.as(WenyanNativeObject.TYPE).getObjectType().getParent());
+                    self.as(WenyanBuiltinObject.TYPE).getObjectType().getParent());
         }
         for (int i = 0; i < argsList.size(); i++)
             newRuntime.setVariable(args.get(i).id(), WenyanLeftValue.varOf(argsList.get(i).as(args().get(i).type())));
