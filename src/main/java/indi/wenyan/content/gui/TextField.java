@@ -16,28 +16,21 @@ import net.neoforged.api.distmarker.OnlyIn;
 import java.util.List;
 import java.util.function.Consumer;
 
+// from net.minecraft.client.gui.components.MultilineTextField;
 @OnlyIn(Dist.CLIENT)
 public class TextField {
     public static final int NO_CHARACTER_LIMIT = Integer.MAX_VALUE;
     private static final int LINE_SEEK_PIXEL_BIAS = 2;
     private final Font font;
     private final List<StringView> displayLines = Lists.newArrayList();
-    @Getter
-    private String value;
-    @Getter
-    private int cursor;
+    @Getter private String value;
+    @Getter private int cursor;
     private int selectCursor;
-    @Setter
-    private boolean selecting;
-    @Getter
-    private int characterLimit = NO_CHARACTER_LIMIT;
+    @Setter private boolean selecting;
+    @Getter private int characterLimit = NO_CHARACTER_LIMIT;
     private final int width;
-    @Setter
-    private Consumer<String> valueListener = (p_239235_) -> {
-    };
-    @Setter
-    private Runnable cursorListener = () -> {
-    };
+    @Setter private Consumer<String> valueListener = (p_239235_) -> {};
+    @Setter private Runnable cursorListener = () -> {};
 
     public TextField(Font font, int width) {
         this.font = font;
@@ -58,7 +51,8 @@ public class TextField {
     }
 
     public void setValue(String fullText) {
-        this.value = this.truncateFullText(fullText);
+        this.value = this.hasCharacterLimit() ?
+                StringUtil.truncateStringIfNecessary(fullText, this.characterLimit, false) : fullText;
         this.cursor = this.value.length();
         this.selectCursor = this.cursor;
         this.onValueChange();
@@ -66,10 +60,13 @@ public class TextField {
 
     public void insertText(String text) {
         if (!text.isEmpty() || this.hasSelection()) {
-            String s = this.truncateInsertionText(StringUtil.filterText(text, true));
-            StringView multilinetextfield$stringview = this.getSelected();
-            this.value = (new StringBuilder(this.value)).replace(multilinetextfield$stringview.beginIndex, multilinetextfield$stringview.endIndex, s).toString();
-            this.cursor = multilinetextfield$stringview.beginIndex + s.length();
+            String filteredText = StringUtil.filterText(text, true);
+            String string = this.hasCharacterLimit() ?
+                    StringUtil.truncateStringIfNecessary(filteredText, this.characterLimit - this.value.length(), false)
+                    : filteredText;
+            StringView stringView = this.getSelected();
+            this.value = (new StringBuilder(this.value)).replace(stringView.beginIndex, stringView.endIndex, string).toString();
+            this.cursor = stringView.beginIndex + string.length();
             this.selectCursor = this.cursor;
             this.onValueChange();
         }
@@ -275,15 +272,14 @@ public class TextField {
         if (this.value.isEmpty()) {
             return StringView.EMPTY;
         } else {
-            int i;
-            for (i = Mth.clamp(this.cursor, 0, this.value.length() - 1); i > 0 && Character.isWhitespace(this.value.charAt(i - 1)); --i) {
+            int wordStart = Mth.clamp(this.cursor, 0, this.value.length() - 1);
+            while (wordStart > 0 && Character.isWhitespace(this.value.charAt(wordStart - 1))) {
+                wordStart --;
             }
-
-            while (i > 0 && !Character.isWhitespace(this.value.charAt(i - 1))) {
-                --i;
+            while (wordStart > 0 && !Character.isWhitespace(this.value.charAt(wordStart - 1))) {
+                wordStart --;
             }
-
-            return new StringView(i, this.getWordEndPosition(i));
+            return new StringView(wordStart, this.getWordEndPosition(wordStart));
         }
     }
 
@@ -291,33 +287,26 @@ public class TextField {
         if (this.value.isEmpty()) {
             return StringView.EMPTY;
         } else {
-            int i;
-            for (i = Mth.clamp(this.cursor, 0, this.value.length() - 1); i < this.value.length() && !Character.isWhitespace(this.value.charAt(i)); ++i) {
+            int wordStart = getWordEndPosition(
+                    Mth.clamp(this.cursor, 0, this.value.length() - 1));
+            while (wordStart < this.value.length() &&
+                    Character.isWhitespace(this.value.charAt(wordStart))) {
+                wordStart++;
             }
-
-            while (i < this.value.length() && Character.isWhitespace(this.value.charAt(i))) {
-                ++i;
-            }
-
-            return new StringView(i, this.getWordEndPosition(i));
+            return new StringView(wordStart, this.getWordEndPosition(wordStart));
         }
     }
 
     private int getWordEndPosition(int cursor) {
-        int i;
-        for (i = cursor; i < this.value.length() && !Character.isWhitespace(this.value.charAt(i)); ++i) {
+        while (cursor < this.value.length() &&
+                !Character.isWhitespace(this.value.charAt(cursor))) {
+            cursor++;
         }
-
-        return i;
+        return cursor;
     }
 
     private void onValueChange() {
-        this.reflowDisplayLines();
-        this.valueListener.accept(this.value);
-        this.cursorListener.run();
-    }
-
-    private void reflowDisplayLines() {
+        // reflowDisplayLines
         this.displayLines.clear();
         if (this.value.isEmpty()) {
             this.displayLines.add(StringView.EMPTY);
@@ -328,19 +317,8 @@ public class TextField {
             }
         }
 
-    }
-
-    private String truncateFullText(String fullText) {
-        return this.hasCharacterLimit() ? StringUtil.truncateStringIfNecessary(fullText, this.characterLimit, false) : fullText;
-    }
-
-    private String truncateInsertionText(String text) {
-        if (this.hasCharacterLimit()) {
-            int i = this.characterLimit - this.value.length();
-            return StringUtil.truncateStringIfNecessary(text, i, false);
-        } else {
-            return text;
-        }
+        this.valueListener.accept(this.value);
+        this.cursorListener.run();
     }
 
     @OnlyIn(Dist.CLIENT)
