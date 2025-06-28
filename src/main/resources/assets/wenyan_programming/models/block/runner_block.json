@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "wenyan_nature:block/runner_block",
-		"particle": "wenyan_nature:block/runner_block_particle"
+		"0": "wenyan_programming:block/runner_block",
+		"particle": "wenyan_programming:block/runner_block_particle"
 	},
 	"elements": [
 		{
