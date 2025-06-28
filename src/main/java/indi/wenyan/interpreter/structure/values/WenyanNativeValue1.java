@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.structure.values;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.network.chat.Component;
 
 // Deprecated and change to WenyanValue
@@ -11,6 +12,7 @@ import net.minecraft.network.chat.Component;
 public class WenyanNativeValue1 implements IWenyanValue {
 
     private final WenyanType<?> type;
+    @Setter
     @Getter
     private Object value;
 
@@ -21,10 +23,6 @@ public class WenyanNativeValue1 implements IWenyanValue {
 
     public WenyanType<?> type() {
         return type;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
     }
 
     // what we need to do these function?

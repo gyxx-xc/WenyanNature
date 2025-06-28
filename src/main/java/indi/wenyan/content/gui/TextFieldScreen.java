@@ -13,15 +13,15 @@ public class TextFieldScreen extends Screen {
         super(title);
     }
 
-    protected TextField createCommentBox(int width, int height, Consumer<String> valueListener) {
-        TextField textField = new TextField(this.font, (this.width - 192) / 2, 2, width, height, Component.literal(""), Component.empty());
+    protected TextFieldWidget createCommentBox(int width, int height, Consumer<String> valueListener) {
+        TextFieldWidget textField = new TextFieldWidget(this.font, (this.width - 192) / 2, 2, width, height, Component.literal(""), Component.empty());
         textField.setValueListener(valueListener);
         return textField;
     }
 
     @Override
     protected void init() {
-        addRenderableWidget(new TextField(this.font, (this.width - 192) / 2+35, 15, 115, 159, Component.literal(""), Component.empty()));
+        addRenderableWidget(new TextFieldWidget(this.font, (this.width - 192) / 2+35, 15, 115, 159, Component.literal(""), Component.empty()));
     }
 
     @Override
