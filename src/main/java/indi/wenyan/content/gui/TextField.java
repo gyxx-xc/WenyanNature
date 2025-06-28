@@ -3,10 +3,8 @@ package indi.wenyan.content.gui;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
-import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.MultilineTextField;
 import net.minecraft.client.gui.components.Whence;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Style;
@@ -14,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -23,44 +22,36 @@ import java.util.function.Consumer;
 public class TextField {
     public static final int NO_CHARACTER_LIMIT = Integer.MAX_VALUE;
     private static final int LINE_SEEK_PIXEL_BIAS = 2;
+
     private final Font font;
 
+    @Getter
     private final List<StringView> displayLines = Lists.newArrayList();
-    @Getter private String value;
+    @Getter private String value = "";
 
-    @Getter private int cursor;
-    private int selectCursor;
+    @Getter private int cursor = 0;
+    private int selectCursor = 0;
     @Setter private boolean selecting;
 
-    @Getter private int characterLimit = NO_CHARACTER_LIMIT;
+    @Setter @Getter private int characterLimit = NO_CHARACTER_LIMIT;
     private final int width;
 
-    @Setter private Consumer<String> valueListener = (s) -> {};
-    @Setter private Runnable cursorListener = () -> {};
+    @Setter private Consumer<String> valueListener = (s) -> {
+    };
+    @Setter private Runnable cursorListener = () -> {
+    };
 
     public TextField(Font font, int width) {
         this.font = font;
         this.width = width;
-        setValue("");
+        onValueChange();
     }
 
-    public void setCharacterLimit(int characterLimit) {
-        if (characterLimit < 0) {
-            throw new IllegalArgumentException("Character limit cannot be negative");
-        } else {
-            this.characterLimit = characterLimit;
-        }
-    }
-
-    public boolean hasCharacterLimit() {
-        return characterLimit != NO_CHARACTER_LIMIT;
-    }
 
     public void setValue(String fullText) {
         value = hasCharacterLimit() ?
                 StringUtil.truncateStringIfNecessary(fullText, characterLimit, false) : fullText;
-        cursor = value.length();
-        selectCursor = cursor;
+        selectCursor = cursor = value.length();
         onValueChange();
     }
 
@@ -78,18 +69,8 @@ public class TextField {
         }
     }
 
-    public void deleteText(int length) {
-        if (!hasSelection())
-            selectCursor = Mth.clamp(cursor + length, 0, value.length());
-        insertText("");
-    }
-
     public StringView getSelected() {
         return new StringView(Math.min(selectCursor, cursor), Math.max(selectCursor, cursor));
-    }
-
-    public int getLineCount() {
-        return displayLines.size();
     }
 
     public int getLineAtCursor() {
@@ -107,31 +88,6 @@ public class TextField {
         return displayLines.get(Mth.clamp(lineNumber, 0, displayLines.size() - 1));
     }
 
-    public void seekCursor(Whence whence, int position) {
-        switch (whence) {
-            case ABSOLUTE -> cursor = position;
-            case RELATIVE -> cursor += position;
-            case END -> cursor = value.length() + position;
-        }
-
-        cursor = Mth.clamp(cursor, 0, value.length());
-        cursorListener.run();
-        if (!selecting) {
-            selectCursor = cursor;
-        }
-
-    }
-
-    public void seekCursorLine(int offset) {
-        if (offset != 0) {
-            int i = font.width(value.substring(getCursorLineView().beginIndex, cursor)) + LINE_SEEK_PIXEL_BIAS;
-            StringView cursorLineView = getCursorLineView(offset);
-            int j = font.plainSubstrByWidth(value.substring(cursorLineView.beginIndex, cursorLineView.endIndex), i).length();
-            seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex + j);
-        }
-
-    }
-
     public void seekCursorToPoint(double x, double y) {
         int i = Mth.floor(x);
         int j = Mth.floor(y / TextFieldScreen.LINE_HEIGHT);
@@ -140,122 +96,17 @@ public class TextField {
         seekCursor(Whence.ABSOLUTE, stringView.beginIndex + k);
     }
 
-    public boolean keyPressed(int keyCode) {
-        selecting = Screen.hasShiftDown();
-        if (Screen.isSelectAll(keyCode)) {
-            cursor = value.length();
-            selectCursor = 0;
-            return true;
-        } else if (Screen.isCopy(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(getSelectedText());
-            return true;
-        } else if (Screen.isPaste(keyCode)) {
-            insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
-            return true;
-        } else if (Screen.isCut(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(getSelectedText());
-            insertText("");
-            return true;
-        } else {
-            return switch (keyCode) {
-                case 257, 335 -> {
-                    insertText("\n");
-                    yield true;
-                }
-                case 259 -> {
-                    if (Screen.hasControlDown()) {
-                        StringView previousWord = getPreviousWord();
-                        deleteText(previousWord.beginIndex - cursor);
-                    } else {
-                        deleteText(-1);
-                    }
-
-                    yield true;
-                }
-                case 261 -> {
-                    if (Screen.hasControlDown()) {
-                        StringView nextWord = getNextWord();
-                        deleteText(nextWord.beginIndex - cursor);
-                    } else {
-                        deleteText(1);
-                    }
-
-                    yield true;
-                }
-                case 262 -> {
-                    if (Screen.hasControlDown()) {
-                        StringView nextWord = getNextWord();
-                        seekCursor(Whence.ABSOLUTE, nextWord.beginIndex);
-                    } else {
-                        seekCursor(Whence.RELATIVE, 1);
-                    }
-
-                    yield true;
-                }
-                case 263 -> {
-                    if (Screen.hasControlDown()) {
-                        StringView previousWord = getPreviousWord();
-                        seekCursor(Whence.ABSOLUTE, previousWord.beginIndex);
-                    } else {
-                        seekCursor(Whence.RELATIVE, -1);
-                    }
-
-                    yield true;
-                }
-                case 264 -> {
-                    if (!Screen.hasControlDown()) {
-                        seekCursorLine(1);
-                    }
-
-                    yield true;
-                }
-                case 265 -> {
-                    if (!Screen.hasControlDown()) {
-                        seekCursorLine(-1);
-                    }
-
-                    yield true;
-                }
-                case 266 -> {
-                    seekCursor(Whence.ABSOLUTE, 0);
-                    yield true;
-                }
-                case 267 -> {
-                    seekCursor(Whence.END, 0);
-                    yield true;
-                }
-                case 268 -> {
-                    if (Screen.hasControlDown()) {
-                        seekCursor(Whence.ABSOLUTE, 0);
-                    } else {
-                        seekCursor(Whence.ABSOLUTE, getCursorLineView().beginIndex);
-                    }
-
-                    yield true;
-                }
-                case 269 -> {
-                    if (Screen.hasControlDown()) {
-                        seekCursor(Whence.END, 0);
-                    } else {
-                        seekCursor(Whence.ABSOLUTE, getCursorLineView().endIndex);
-                    }
-
-                    yield true;
-                }
-                default -> false;
-            };
-        }
-    }
-
-    public Iterable<StringView> iterateLines() {
-        return displayLines;
-    }
 
     public boolean hasSelection() {
         return selectCursor != cursor;
     }
 
-    public String getSelectedText() {
+    public boolean hasCharacterLimit() {
+        return characterLimit != NO_CHARACTER_LIMIT;
+    }
+
+
+    private String getSelectedText() {
         StringView stringView = getSelected();
         return value.substring(stringView.beginIndex, stringView.endIndex);
     }
@@ -274,22 +125,63 @@ public class TextField {
         }
     }
 
-    public StringView getPreviousWord() {
+    private void onValueChange() {
+        // reflowDisplayLines
+        displayLines.clear();
+        if (value.isEmpty()) {
+            displayLines.add(StringView.EMPTY);
+        } else {
+            font.getSplitter().splitLines(value, width, Style.EMPTY, false,
+                    (style, start, end) -> displayLines.add(new StringView(start, end)));
+            if (value.charAt(value.length() - 1) == '\n') {
+                displayLines.add(new StringView(value.length(), value.length()));
+            }
+        }
+
+        valueListener.accept(value);
+        cursorListener.run();
+    }
+
+    private void seekCursor(Whence whence, int position) {
+        switch (whence) {
+            case ABSOLUTE -> cursor = position;
+            case RELATIVE -> cursor += position;
+            case END -> cursor = value.length() + position;
+        }
+
+        cursor = Mth.clamp(cursor, 0, value.length());
+        cursorListener.run();
+        if (!selecting) {
+            selectCursor = cursor;
+        }
+
+    }
+
+    private void seekCursorLine(int offset) {
+        if (offset != 0) {
+            int i = font.width(value.substring(getCursorLineView().beginIndex, cursor)) + LINE_SEEK_PIXEL_BIAS;
+            StringView cursorLineView = getCursorLineView(offset);
+            int j = font.plainSubstrByWidth(value.substring(cursorLineView.beginIndex, cursorLineView.endIndex), i).length();
+            seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex + j);
+        }
+    }
+
+    private StringView getPreviousWord() {
         if (value.isEmpty()) {
             return StringView.EMPTY;
         } else {
             int wordStart = Mth.clamp(cursor, 0, value.length() - 1);
             while (wordStart > 0 && Character.isWhitespace(value.charAt(wordStart - 1))) {
-                wordStart --;
+                wordStart--;
             }
             while (wordStart > 0 && !Character.isWhitespace(value.charAt(wordStart - 1))) {
-                wordStart --;
+                wordStart--;
             }
             return new StringView(wordStart, getWordEndPosition(wordStart));
         }
     }
 
-    public StringView getNextWord() {
+    private StringView getNextWord() {
         if (value.isEmpty()) {
             return StringView.EMPTY;
         } else {
@@ -312,21 +204,58 @@ public class TextField {
         return endCursor;
     }
 
-    private void onValueChange() {
-        // reflowDisplayLines
-        displayLines.clear();
-        if (value.isEmpty()) {
-            displayLines.add(StringView.EMPTY);
+    private void deleteText(int length) {
+        if (!hasSelection())
+            selectCursor = Mth.clamp(cursor + length, 0, value.length());
+        insertText("");
+    }
+
+    public boolean keyPressed(int keyCode) {
+        selecting = Screen.hasShiftDown();
+        if (Screen.isSelectAll(keyCode)) {
+            cursor = value.length();
+            selectCursor = 0;
+        } else if (Screen.isCopy(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(getSelectedText());
+        } else if (Screen.isPaste(keyCode)) {
+            insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
+        } else if (Screen.isCut(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(getSelectedText());
+            insertText("");
+        } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
+            insertText("\n");
+        } else if (keyCode == GLFW.GLFW_KEY_PAGE_UP) {
+            seekCursor(Whence.ABSOLUTE, 0);
+        } else if (keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
+            seekCursor(Whence.END, 0);
+        } else if (Screen.hasControlDown()) {
+            switch (keyCode) {
+                case GLFW.GLFW_KEY_BACKSPACE -> deleteText(getPreviousWord().beginIndex - cursor);
+                case GLFW.GLFW_KEY_DELETE -> deleteText(getNextWord().beginIndex - cursor);
+                case GLFW.GLFW_KEY_RIGHT -> seekCursor(Whence.ABSOLUTE, getNextWord().beginIndex);
+                case GLFW.GLFW_KEY_LEFT -> seekCursor(Whence.ABSOLUTE, getPreviousWord().beginIndex);
+                case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, 0);
+                case GLFW.GLFW_KEY_END -> seekCursor(Whence.END, 0);
+                default -> {
+                    return false;
+                }
+            }
         } else {
-            font.getSplitter().splitLines(value, width, Style.EMPTY, false,
-                    (style, start, end) -> displayLines.add(new StringView(start, end)));
-            if (value.charAt(value.length() - 1) == '\n') {
-                displayLines.add(new StringView(value.length(), value.length()));
+            switch (keyCode) {
+                case GLFW.GLFW_KEY_BACKSPACE -> deleteText(-1);
+                case GLFW.GLFW_KEY_DELETE -> deleteText(1);
+                case GLFW.GLFW_KEY_RIGHT -> seekCursor(Whence.RELATIVE, 1);
+                case GLFW.GLFW_KEY_LEFT -> seekCursor(Whence.RELATIVE, -1);
+                case GLFW.GLFW_KEY_DOWN -> seekCursorLine(1);
+                case GLFW.GLFW_KEY_UP -> seekCursorLine(-1);
+                case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, getCursorLineView().beginIndex);
+                case GLFW.GLFW_KEY_END -> seekCursor(Whence.ABSOLUTE, getCursorLineView().endIndex);
+                default -> {
+                    return false;
+                }
             }
         }
-
-        valueListener.accept(value);
-        cursorListener.run();
+        return true;
     }
 
     @OnlyIn(Dist.CLIENT)
