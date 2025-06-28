@@ -5,7 +5,7 @@ import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.TextFieldScreen;
 import indi.wenyan.setup.Registration;
-import indi.wenyan.setup.network.RunnerTextServerPayloadHandler;
+import indi.wenyan.setup.network.RunnerCodePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
@@ -44,7 +44,7 @@ public class WenyanHandRunner extends BlockItem {
                     itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), new ProgramCodeData("")).code(),
                     content -> {
                         int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
-                        PacketDistributor.sendToServer(new RunnerTextServerPayloadHandler.RunnerTextPacket(slot, content));
+                        PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
                     }));
         }
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());

@@ -1,6 +1,5 @@
 package indi.wenyan.content.gui;
 
-import indi.wenyan.content.data.ProgramCodeData;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;

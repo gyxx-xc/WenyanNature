@@ -1,9 +1,9 @@
 package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
-import indi.wenyan.content.gui.BlockRunnerScreen;
 import indi.wenyan.content.gui.TextFieldScreen;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,6 +28,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +61,7 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
             if (level.isClientSide())
                 Minecraft.getInstance().setScreen(new TextFieldScreen(runner.pages, content -> {
                     runner.pages = content;
-                    runner.setChanged();
+                    PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
                 }));
         } else {
             if (!level.isClientSide()) {

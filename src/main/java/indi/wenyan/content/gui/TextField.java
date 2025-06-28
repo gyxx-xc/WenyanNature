@@ -101,11 +101,6 @@ public class TextField {
     }
 
 
-    private String getSelectedText() {
-        StringView stringView = getSelected();
-        return value.substring(stringView.beginIndex, stringView.endIndex);
-    }
-
     private StringView getPreviousWord() {
         if (value.isEmpty()) {
             return StringView.EMPTY;
@@ -144,10 +139,6 @@ public class TextField {
         return endCursor;
     }
 
-    private StringView getCursorLineView() {
-        return getCursorLineView(0);
-    }
-
     private StringView getCursorLineView(int offset) {
         int i = getLineAtCursor();
         if (i < 0) {
@@ -175,7 +166,7 @@ public class TextField {
 
     private void seekCursorLine(int offset) {
         if (offset != 0) {
-            int i = font.width(value.substring(getCursorLineView().beginIndex, cursor)) + LINE_SEEK_PIXEL_BIAS;
+            int i = font.width(value.substring(getCursorLineView(0).beginIndex, cursor)) + LINE_SEEK_PIXEL_BIAS;
             StringView cursorLineView = getCursorLineView(offset);
             int j = font.plainSubstrByWidth(value.substring(cursorLineView.beginIndex, cursorLineView.endIndex), i).length();
             seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex + j);
@@ -194,11 +185,11 @@ public class TextField {
             cursor = value.length();
             selectCursor = 0;
         } else if (Screen.isCopy(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(getSelectedText());
+            Minecraft.getInstance().keyboardHandler.setClipboard(value.substring(getSelected().beginIndex, getSelected().endIndex));
         } else if (Screen.isPaste(keyCode)) {
             insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
         } else if (Screen.isCut(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(getSelectedText());
+            Minecraft.getInstance().keyboardHandler.setClipboard(value.substring(getSelected().beginIndex, getSelected().endIndex));
             insertText("");
         } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
             insertText("\n");
@@ -226,8 +217,8 @@ public class TextField {
                 case GLFW.GLFW_KEY_LEFT -> seekCursor(Whence.RELATIVE, -1);
                 case GLFW.GLFW_KEY_DOWN -> seekCursorLine(1);
                 case GLFW.GLFW_KEY_UP -> seekCursorLine(-1);
-                case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, getCursorLineView().beginIndex);
-                case GLFW.GLFW_KEY_END -> seekCursor(Whence.ABSOLUTE, getCursorLineView().endIndex);
+                case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, getCursorLineView(0).beginIndex);
+                case GLFW.GLFW_KEY_END -> seekCursor(Whence.ABSOLUTE, getCursorLineView(0).endIndex);
                 default -> {
                     return false;
                 }
