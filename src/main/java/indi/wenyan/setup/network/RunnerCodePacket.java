@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record RunnerCodePacket(int slot, String code) implements CustomPacketPayload {
     public static final Type<RunnerCodePacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "runner_text"));
+            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "runner_code"));
 
     public static final StreamCodec<ByteBuf, RunnerCodePacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,

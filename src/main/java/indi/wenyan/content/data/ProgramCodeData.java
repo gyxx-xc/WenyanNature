@@ -1,7 +1,7 @@
 package indi.wenyan.content.data;
 
 import com.mojang.serialization.Codec;
-import lombok.*;
+import lombok.NonNull;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record BlockRunnerCodePacket(BlockPos pos, String code) implements CustomPacketPayload {
     public static final Type<BlockRunnerCodePacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "output_text"));
+            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block_runner_code"));
 
     public static final StreamCodec<FriendlyByteBuf, BlockRunnerCodePacket> STREAM_CODEC =
             StreamCodec.of(
@@ -27,7 +27,7 @@ public record BlockRunnerCodePacket(BlockPos pos, String code) implements Custom
                     });
 
     public static final IPayloadHandler<BlockRunnerCodePacket> HANDLER = (packet, context) -> {
-        if (context.flow().isClientbound()) {
+        if (context.flow().isServerbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
             if (entity instanceof BlockRunner runner) {
                 runner.pages = packet.code();
