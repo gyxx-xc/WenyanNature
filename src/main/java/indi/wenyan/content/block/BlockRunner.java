@@ -147,12 +147,12 @@ public class BlockRunner extends BlockEntity {
         WritableBookContent content = components().get(DataComponents.WRITABLE_BOOK_CONTENT);
         if (content != null)
             pages = content.getPages(false).toList();
-        Object o = components().get(Registration.TIER_DATA.get());
+        RunnerTierData tierData = components().get(Registration.TIER_DATA.get());
         int speedTier;
-        if (o instanceof RunnerTierData(int tier)) {
-            speedTier = tier;
+        if (tierData != null) {
+            speedTier = tierData.tier();
         } else {
-//            WenyanException.handleException(null, "BlockRunner does not have a valid tier data component.");
+            // TODO: thr
             return;
         }
 

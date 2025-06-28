@@ -3,6 +3,7 @@ package indi.wenyan.setup;
 import com.mojang.datafixers.DSL;
 import indi.wenyan.content.block.*;
 import indi.wenyan.content.data.OutputData;
+import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
@@ -105,6 +106,7 @@ public final class Registration {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<RunnerTierData>> TIER_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<OutputData>> OUTPUT_DATA;
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ProgramCodeData>> PROGRAM_CODE_DATA;
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
@@ -216,6 +218,11 @@ public final class Registration {
                 () -> DataComponentType.<OutputData>builder()
                         .persistent(OutputData.CODEC)
                         .networkSynchronized(OutputData.STREAM_CODEC)
+                        .build());
+        PROGRAM_CODE_DATA = DATA.register("program_code_data",
+                () -> DataComponentType.<ProgramCodeData>builder()
+                        .persistent(ProgramCodeData.CODEC)
+                        .networkSynchronized(ProgramCodeData.STREAM_CODEC)
                         .build());
 
         ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register("answering_recipe",

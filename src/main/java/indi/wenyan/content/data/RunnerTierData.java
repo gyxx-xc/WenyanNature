@@ -6,9 +6,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@ParametersAreNonnullByDefault
 public record RunnerTierData(int tier) implements TooltipProvider {
     public static final Codec<RunnerTierData> CODEC = Codec.INT.xmap(
             RunnerTierData::new, RunnerTierData::tier

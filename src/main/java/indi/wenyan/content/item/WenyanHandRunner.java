@@ -4,9 +4,9 @@ import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.TextFieldScreen;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.network.RunnerTextPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,6 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -37,9 +38,14 @@ public class WenyanHandRunner extends BlockItem {
     public @NotNull InteractionResultHolder<ItemStack>
     use(Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (level.isClientSide())
-//            Minecraft.getInstance().setScreen(new HandRunnerScreen(player, itemstack, hand));
-            Minecraft.getInstance().setScreen(new TextFieldScreen(Component.empty()));
+        if (level.isClientSide()) {
+            Minecraft.getInstance().setScreen(new TextFieldScreen(
+                    itemstack.get(Registration.PROGRAM_CODE_DATA.get()),
+                    code -> {
+                        int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
+                        PacketDistributor.sendToServer(new RunnerTextPacket(slot, code));
+                    }));
+        }
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
