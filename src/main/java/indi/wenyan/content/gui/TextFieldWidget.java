@@ -23,7 +23,6 @@ public class TextFieldWidget extends AbstractScrollWidget {
     private static final String CURSOR_APPEND_CHARACTER = "_";
     private static final int TEXT_COLOR = 0xffe0e0e0;
     private static final int PLACEHOLDER_TEXT_COLOR = 0xcce0e0e0;
-    private static final int LINE_HEIGHT = 9;
     private final Font font;
     private final Component placeholder;
     private final TextField textField;
@@ -60,13 +59,13 @@ public class TextFieldWidget extends AbstractScrollWidget {
 
     private void scrollToCursor() {
         double scrollAmount = scrollAmount();
-        TextField.StringView stringView = textField.getLineView((int) (scrollAmount / LINE_HEIGHT));
+        TextField.StringView stringView = textField.getLineView((int) (scrollAmount / TextFieldScreen.LINE_HEIGHT));
         if (textField.getCursor() <= stringView.beginIndex()) {
-            scrollAmount = textField.getLineAtCursor() * LINE_HEIGHT;
+            scrollAmount = textField.getLineAtCursor() * TextFieldScreen.LINE_HEIGHT;
         } else {
-            TextField.StringView multilinetextfield$stringView1 = textField.getLineView((int) ((scrollAmount + height) / LINE_HEIGHT) - 1);
+            TextField.StringView multilinetextfield$stringView1 = textField.getLineView((int) ((scrollAmount + height) / TextFieldScreen.LINE_HEIGHT) - 1);
             if (textField.getCursor() > multilinetextfield$stringView1.endIndex()) {
-                scrollAmount = textField.getLineAtCursor() * LINE_HEIGHT - height + LINE_HEIGHT + totalInnerPadding();
+                scrollAmount = textField.getLineAtCursor() * TextFieldScreen.LINE_HEIGHT - height + TextFieldScreen.LINE_HEIGHT + totalInnerPadding();
             }
         }
 
@@ -131,7 +130,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
             int currentY = getY() + innerPadding();
 
             for (var stringView : textField.iterateLines()) {
-                boolean withinContent = withinContentAreaTopBottom(currentY, currentY + LINE_HEIGHT);
+                boolean withinContent = withinContentAreaTopBottom(currentY, currentY + TextFieldScreen.LINE_HEIGHT);
                 if (isCursorRender && cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
                     if (withinContent) {
                         cursorX = guiGraphics.drawString(font,
@@ -141,7 +140,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
                         guiGraphics.drawString(font, content.substring(cursor, stringView.endIndex()),
                                 cursorX, currentY, TEXT_COLOR);
                         // cursor
-                        guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + LINE_HEIGHT, CURSOR_INSERT_COLOR);
+                        guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + TextFieldScreen.LINE_HEIGHT, CURSOR_INSERT_COLOR);
                     }
                 } else {
                     if (withinContent) {
@@ -152,10 +151,10 @@ public class TextFieldWidget extends AbstractScrollWidget {
                     }
                     cursorY = currentY;
                 }
-                currentY += LINE_HEIGHT;
+                currentY += TextFieldScreen.LINE_HEIGHT;
             }
 
-            if (isCursorRender && !cursorInContent && withinContentAreaTopBottom(cursorY, cursorY + LINE_HEIGHT)) {
+            if (isCursorRender && !cursorInContent && withinContentAreaTopBottom(cursorY, cursorY + TextFieldScreen.LINE_HEIGHT)) {
                 guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
             }
 
@@ -170,7 +169,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
                             break;
                         }
 
-                        if (withinContentAreaTopBottom(currentY, currentY + LINE_HEIGHT)) {
+                        if (withinContentAreaTopBottom(currentY, currentY + TextFieldScreen.LINE_HEIGHT)) {
                             int i1 = font.width(content.substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
                             int j1;
                             if (selected.endIndex() > stringView.endIndex()) {
@@ -179,11 +178,11 @@ public class TextFieldWidget extends AbstractScrollWidget {
                                 j1 = font.width(content.substring(stringView.beginIndex(), selected.endIndex()));
                             }
                             guiGraphics.fill(RenderType.guiTextHighlight(),
-                                    k1 + i1, currentY, k1 + j1, currentY + LINE_HEIGHT,
+                                    k1 + i1, currentY, k1 + j1, currentY + TextFieldScreen.LINE_HEIGHT,
                                     0xff0000ff);
                         }
                     }
-                    currentY += LINE_HEIGHT;
+                    currentY += TextFieldScreen.LINE_HEIGHT;
                 }
             }
         }
@@ -200,11 +199,11 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     public int getInnerHeight() {
-        return LINE_HEIGHT * textField.getLineCount();
+        return TextFieldScreen.LINE_HEIGHT * textField.getLineCount();
     }
 
     protected boolean scrollbarVisible() {
-        return textField.getLineCount() > (height - totalInnerPadding()) / (double) LINE_HEIGHT;
+        return textField.getLineCount() > (height - totalInnerPadding()) / (double) TextFieldScreen.LINE_HEIGHT;
     }
 
     protected double scrollRate() {

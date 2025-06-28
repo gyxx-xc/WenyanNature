@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 public class TextFieldScreen extends Screen {
+    public static final int LINE_HEIGHT = 9;
+
     public TextFieldScreen(Component title) {
         super(title);
     }
