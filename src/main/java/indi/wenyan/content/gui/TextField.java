@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
@@ -82,10 +81,6 @@ public class TextField {
         }
 
         return -1;
-    }
-
-    public StringView getLineView(int lineNumber) {
-        return displayLines.get(Mth.clamp(lineNumber, 0, displayLines.size() - 1));
     }
 
     public void seekCursorToPoint(double x, double y) {

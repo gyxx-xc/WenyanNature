@@ -6,26 +6,20 @@ import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-
 public class TextFieldScreen extends Screen {
-    public static final int LINE_HEIGHT = 9;
+    private TextFieldWidget textFieldWidget;
+    String temp = "";
 
     public TextFieldScreen(Component title) {
         super(title);
     }
 
-    protected TextFieldWidget createCommentBox(int width, int height, Consumer<String> valueListener) {
-        TextFieldWidget textField = new TextFieldWidget(font,
-                (width - 192) / 2, 2, width, height,
-                Component.literal(""), Component.empty());
-        textField.setValueListener(valueListener);
-        return textField;
-    }
-
     @Override
     protected void init() {
-        addRenderableWidget(new TextFieldWidget(font, (width - 192) / 2+35, 15, 115, 159, Component.literal(""), Component.empty()));
+        textFieldWidget = new TextFieldWidget(font, (width - 192) / 2+35, 15, 115, 159);
+        textFieldWidget.setValue(temp);
+        textFieldWidget.setValueListener(s -> temp = s);
+        addRenderableWidget(textFieldWidget);
     }
 
     @Override
