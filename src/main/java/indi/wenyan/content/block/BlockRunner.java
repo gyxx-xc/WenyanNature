@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -42,6 +43,7 @@ public class BlockRunner extends BlockEntity {
 
     public Vec3 communicate;
     public boolean isCommunicating;
+    @Getter
     private final List<String> output = new LinkedList<>();
 
     public BlockRunner(BlockPos pos, BlockState blockState) {
@@ -90,10 +92,6 @@ public class BlockRunner extends BlockEntity {
         if (output.size() > 10) {
             output.removeFirst();
         }
-    }
-
-    public List<String> getOutput() {
-        return output;
     }
 
     @SuppressWarnings("unused")

@@ -2,7 +2,9 @@ package indi.wenyan.interpreter.structure.values;
 
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
+import lombok.Setter;
 
+@Setter
 public class WenyanLeftValue implements IWenyanValue {
     public IWenyanValue value;
 
@@ -29,7 +31,4 @@ public class WenyanLeftValue implements IWenyanValue {
         return value.as(type);
     }
 
-    public void setValue(IWenyanValue value) {
-        this.value = value;
-    }
 }

@@ -1,6 +1,8 @@
 package indi.wenyan.content.gui;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -26,21 +28,26 @@ import java.util.function.Consumer;
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
 public class TextField extends AbstractScrollWidget {
-    private static final int CURSOR_INSERT_COLOR = -3092272;
+    private static final int CURSOR_INSERT_COLOR = 0xffd0d0d0;
     private static final String CURSOR_APPEND_CHARACTER = "_";
-    private static final int TEXT_COLOR = -2039584;
-    private static final int PLACEHOLDER_TEXT_COLOR = -857677600;
+    private static final int TEXT_COLOR = 0xffe0e0e0;
+    private static final int PLACEHOLDER_TEXT_COLOR = 0xcce0e0e0;
     private final Font font;
     private final Component placeholder;
     private final MultilineTextField textField;
     private long focusedTime = Util.getMillis();
 
+    @Override
+    protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
+
+    }
+
     public TextField(Font font, int x, int y, int width, int height, Component placeholder, Component message) {
         super(x, y, width, height, message);
         this.font = font;
         this.placeholder = placeholder;
-        this.textField = new MultilineTextField(font, width - this.totalInnerPadding());
-        this.textField.setCursorListener(this::scrollToCursor);
+        textField = new MultilineTextField(font, width - totalInnerPadding());
+        textField.setCursorListener(this::scrollToCursor);
     }
 
     public void setCharacterLimit(int characterLimit) {
@@ -56,7 +63,7 @@ public class TextField extends AbstractScrollWidget {
     }
 
     public String getValue() {
-        return this.textField.value();
+        return this.textField.getValue();
     }
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
@@ -100,76 +107,80 @@ public class TextField extends AbstractScrollWidget {
     }
 
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        String s = this.textField.value();
-        if (s.isEmpty() && !this.isFocused()) {
+        String content = this.textField.getValue();
+        if (content.isEmpty() && !this.isFocused()) {
             guiGraphics.drawWordWrap(this.font, this.placeholder, this.getX() + this.innerPadding(), this.getY() + this.innerPadding(), this.width - this.totalInnerPadding(), PLACEHOLDER_TEXT_COLOR);
         } else {
-            int i = this.textField.cursor();
-            boolean flag = this.isFocused() && (Util.getMillis() - this.focusedTime) / 300L % 2L == 0L;
-            boolean flag1 = i < s.length();
-            int j = 0;
-            int k = 0;
-            int l = this.getY() + this.innerPadding();
+            int cursor = this.textField.getCursor();
+            boolean isCursorRender = this.isFocused() && (Util.getMillis() - this.focusedTime) / 300L % 2L == 0L;
+            boolean cursorInContent = cursor < content.length();
+            int cursorX = 0;
+            int cursorY = 0;
+            int currentY = this.getY() + this.innerPadding();
 
-            for(MultilineTextField.StringView multilinetextfield$stringview : this.textField.iterateLines()) {
-                boolean flag2 = this.withinContentAreaTopBottom(l, l + 9);
-                if (flag && flag1 && i >= multilinetextfield$stringview.beginIndex() && i <= multilinetextfield$stringview.endIndex()) {
-                    if (flag2) {
-                        j = guiGraphics.drawString(this.font, s.substring(multilinetextfield$stringview.beginIndex(), i), this.getX() + this.innerPadding(), l, TEXT_COLOR) - 1;
-                        guiGraphics.fill(j, l - 1, j + 1, l + 1 + 9, CURSOR_INSERT_COLOR);
-                        guiGraphics.drawString(this.font, s.substring(i, multilinetextfield$stringview.endIndex()), j, l, TEXT_COLOR);
+            for(var stringView : this.textField.iterateLines()) {
+                boolean withinContent = this.withinContentAreaTopBottom(currentY, currentY + 9);
+                if (isCursorRender && cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
+                    if (withinContent) {
+                        cursorX = guiGraphics.drawString(this.font,
+                                content.substring(stringView.beginIndex(), cursor),
+                                this.getX() + this.innerPadding(), currentY, TEXT_COLOR) - 1;
+                        // content
+                        guiGraphics.drawString(this.font, content.substring(cursor, stringView.endIndex()),
+                                cursorX, currentY, TEXT_COLOR);
+                        // cursor
+                        guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + 9, CURSOR_INSERT_COLOR);
                     }
                 } else {
-                    if (flag2) {
-                        j = guiGraphics.drawString(this.font, s.substring(multilinetextfield$stringview.beginIndex(), multilinetextfield$stringview.endIndex()), this.getX() + this.innerPadding(), l, TEXT_COLOR) - 1;
+                    if (withinContent) {
+                        cursorX = guiGraphics.drawString(this.font,
+                                content.substring(stringView.beginIndex(), stringView.endIndex()),
+                                this.getX() + this.innerPadding(), currentY,
+                                TEXT_COLOR) - 1;
                     }
-
-                    k = l;
+                    cursorY = currentY;
                 }
-
-                l += 9;
+                currentY += 9;
             }
 
-            if (flag && !flag1 && this.withinContentAreaTopBottom(k, k + 9)) {
-                guiGraphics.drawString(this.font, CURSOR_APPEND_CHARACTER, j, k, CURSOR_INSERT_COLOR);
+            if (isCursorRender && !cursorInContent && this.withinContentAreaTopBottom(cursorY, cursorY + 9)) {
+                guiGraphics.drawString(this.font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
             }
 
             if (this.textField.hasSelection()) {
-                MultilineTextField.StringView multilinetextfield$stringview2 = this.textField.getSelected();
+                var selected = this.textField.getSelected();
                 int k1 = this.getX() + this.innerPadding();
-                l = this.getY() + this.innerPadding();
+                currentY = this.getY() + this.innerPadding();
 
-                for(MultilineTextField.StringView multilinetextfield$stringview1 : this.textField.iterateLines()) {
-                    if (multilinetextfield$stringview2.beginIndex() <= multilinetextfield$stringview1.endIndex()) {
-                        if (multilinetextfield$stringview1.beginIndex() > multilinetextfield$stringview2.endIndex()) {
+                for(var stringView : this.textField.iterateLines()) {
+                    if (selected.beginIndex() <= stringView.endIndex()) {
+                        if (stringView.beginIndex() > selected.endIndex()) {
                             break;
                         }
 
-                        if (this.withinContentAreaTopBottom(l, l + 9)) {
-                            int i1 = this.font.width(s.substring(multilinetextfield$stringview1.beginIndex(), Math.max(multilinetextfield$stringview2.beginIndex(), multilinetextfield$stringview1.beginIndex())));
+                        if (this.withinContentAreaTopBottom(currentY, currentY + 9)) {
+                            int i1 = this.font.width(content.substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
                             int j1;
-                            if (multilinetextfield$stringview2.endIndex() > multilinetextfield$stringview1.endIndex()) {
+                            if (selected.endIndex() > stringView.endIndex()) {
                                 j1 = this.width - this.innerPadding();
                             } else {
-                                j1 = this.font.width(s.substring(multilinetextfield$stringview1.beginIndex(), multilinetextfield$stringview2.endIndex()));
+                                j1 = this.font.width(content.substring(stringView.beginIndex(), selected.endIndex()));
                             }
 
-                            this.renderHighlight(guiGraphics, k1 + i1, l, k1 + j1, l + 9);
+                            this.renderHighlight(guiGraphics, k1 + i1, currentY, k1 + j1, currentY + 9);
                         }
-
                     }
-                    l += 9;
+                    currentY += 9;
                 }
             }
         }
-
     }
 
     protected void renderDecorations(@NotNull GuiGraphics guiGraphics) {
         super.renderDecorations(guiGraphics);
         if (this.textField.hasCharacterLimit()) {
-            int i = this.textField.characterLimit();
-            Component component = Component.translatable("gui.multiLineEditBox.character_limit", this.textField.value().length(), i);
+            int i = this.textField.getCharacterLimit();
+            Component component = Component.translatable("gui.multiLineEditBox.character_limit", this.textField.getValue().length(), i);
             guiGraphics.drawString(this.font, component, this.getX() + this.width - this.font.width(component), this.getY() + this.height + 4, 10526880);
         }
 
@@ -194,11 +205,11 @@ public class TextField extends AbstractScrollWidget {
     private void scrollToCursor() {
         double d0 = this.scrollAmount();
         MultilineTextField.StringView multilinetextfield$stringview = this.textField.getLineView((int)(d0 / (double)9.0F));
-        if (this.textField.cursor() <= multilinetextfield$stringview.beginIndex()) {
+        if (this.textField.getCursor() <= multilinetextfield$stringview.beginIndex()) {
             d0 = this.textField.getLineAtCursor() * 9;
         } else {
             MultilineTextField.StringView multilinetextfield$stringview1 = this.textField.getLineView((int)((d0 + (double)this.height) / (double)9.0F) - 1);
-            if (this.textField.cursor() > multilinetextfield$stringview1.endIndex()) {
+            if (this.textField.getCursor() > multilinetextfield$stringview1.endIndex()) {
                 d0 = this.textField.getLineAtCursor() * 9 - this.height + 9 + this.totalInnerPadding();
             }
         }
@@ -230,25 +241,19 @@ public class TextField extends AbstractScrollWidget {
         private static final int LINE_SEEK_PIXEL_BIAS = 2;
         private final Font font;
         private final List<StringView> displayLines = Lists.newArrayList();
-        private String value;
-        private int cursor;
+        @Getter private String value;
+        @Getter private int cursor;
         private int selectCursor;
-        private boolean selecting;
-        private int characterLimit = NO_CHARACTER_LIMIT;
+        @Setter private boolean selecting;
+        @Getter private int characterLimit = NO_CHARACTER_LIMIT;
         private final int width;
-        private Consumer<String> valueListener = (p_239235_) -> {
-        };
-        private Runnable cursorListener = () -> {
-        };
+        @Setter private Consumer<String> valueListener = (p_239235_) -> {};
+        @Setter private Runnable cursorListener = () -> {};
 
         public MultilineTextField(Font font, int width) {
             this.font = font;
             this.width = width;
             this.setValue("");
-        }
-
-        public int characterLimit() {
-            return this.characterLimit;
         }
 
         public void setCharacterLimit(int characterLimit) {
@@ -263,23 +268,11 @@ public class TextField extends AbstractScrollWidget {
             return this.characterLimit != NO_CHARACTER_LIMIT;
         }
 
-        public void setValueListener(Consumer<String> valueListener) {
-            this.valueListener = valueListener;
-        }
-
-        public void setCursorListener(Runnable cursorListener) {
-            this.cursorListener = cursorListener;
-        }
-
         public void setValue(String fullText) {
             this.value = this.truncateFullText(fullText);
             this.cursor = this.value.length();
             this.selectCursor = this.cursor;
             this.onValueChange();
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public void insertText(String text) {
@@ -291,23 +284,12 @@ public class TextField extends AbstractScrollWidget {
                 this.selectCursor = this.cursor;
                 this.onValueChange();
             }
-
         }
 
         public void deleteText(int length) {
-            if (!this.hasSelection()) {
+            if (!this.hasSelection())
                 this.selectCursor = Mth.clamp(this.cursor + length, 0, this.value.length());
-            }
-
             this.insertText("");
-        }
-
-        public int cursor() {
-            return this.cursor;
-        }
-
-        public void setSelecting(boolean selecting) {
-            this.selecting = selecting;
         }
 
         public StringView getSelected() {

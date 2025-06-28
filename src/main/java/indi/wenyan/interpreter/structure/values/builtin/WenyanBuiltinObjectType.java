@@ -8,12 +8,14 @@ import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
+import lombok.Getter;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class WenyanBuiltinObjectType implements IWenyanObjectType {
+    @Getter
     private final WenyanBuiltinObjectType parent;
     private final HashMap<String, IWenyanValue> staticVariable = new HashMap<>();
     private final HashMap<String, IWenyanValue> functions = new HashMap<>();
@@ -21,10 +23,6 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
 
     public WenyanBuiltinObjectType(WenyanBuiltinObjectType parent) {
         this.parent = parent;
-    }
-
-    public WenyanBuiltinObjectType getParent() {
-        return parent;
     }
 
     @Override
