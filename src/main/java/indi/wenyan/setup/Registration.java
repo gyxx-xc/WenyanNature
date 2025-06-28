@@ -13,9 +13,7 @@ import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.setup.network.OutputInformationHandler;
-import indi.wenyan.setup.network.OutputInformationPacket;
-import indi.wenyan.setup.network.ProgramTextServerPayloadHandler;
-import indi.wenyan.setup.network.RunnerTextPacket;
+import indi.wenyan.setup.network.RunnerTextServerPayloadHandler;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -116,12 +114,12 @@ public final class Registration {
                 .versioned("1.0")
                 .optional();
         registrar.playToServer(
-                RunnerTextPacket.TYPE,
-                RunnerTextPacket.STREAM_CODEC,
-                new ProgramTextServerPayloadHandler());
+                RunnerTextServerPayloadHandler.TYPE,
+                RunnerTextServerPayloadHandler.STREAM_CODEC,
+                new RunnerTextServerPayloadHandler());
         registrar.commonToClient(
-                OutputInformationPacket.TYPE,
-                OutputInformationPacket.STREAM_CODEC,
+                OutputInformationHandler.TYPE,
+                OutputInformationHandler.STREAM_CODEC,
                 new OutputInformationHandler()
         );
     }

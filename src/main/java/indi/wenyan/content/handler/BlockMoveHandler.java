@@ -34,7 +34,7 @@ public class BlockMoveHandler implements IJavacallHandler {
             level.neighborChanged(newPos, runner.getBlockState().getBlock(), newPos);
             BlockRunner entity = (BlockRunner) level.getBlockEntity(newPos);
             assert entity != null;
-            entity.copy((BlockRunner) level.getBlockEntity(runner.getBlockPos()));
+//            entity.copy((BlockRunner) level.getBlockEntity(runner.getBlockPos()));
 
             level.setBlockAndUpdate(runner.getBlockPos(), Blocks.AIR.defaultBlockState());
             level.neighborChanged(runner.getBlockPos(), runner.getBlockState().getBlock(), runner.getBlockPos());

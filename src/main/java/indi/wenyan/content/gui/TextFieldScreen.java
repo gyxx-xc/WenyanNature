@@ -14,9 +14,9 @@ public class TextFieldScreen extends Screen {
     private String data;
     private final Consumer<String> saving;
 
-    public TextFieldScreen(@Nullable ProgramCodeData s, Consumer<String> save) {
+    public TextFieldScreen(@Nullable String s, Consumer<String> save) {
         super(Component.empty());
-        this.data = s == null ? "" : s.code();
+        this.data = s == null ? "" : s;
         this.saving = save;
     }
 

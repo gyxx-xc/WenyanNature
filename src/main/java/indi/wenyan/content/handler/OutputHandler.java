@@ -9,7 +9,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.setup.network.OutputInformationPacket;
+import indi.wenyan.setup.network.OutputInformationHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -26,7 +26,7 @@ public class OutputHandler implements IJavacallHandler {
 
         if (context.runnerWarper().runner() instanceof BlockRunner runner && runner.getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(runner.getBlockPos()),
-                    new OutputInformationPacket(runner.getBlockPos(), result.toString()));
+                    new OutputInformationHandler.OutputInformationPacket(runner.getBlockPos(), result.toString()));
         } else if (context.runnerWarper().runner() instanceof HandRunnerEntity) {
             context.holder().displayClientMessage(Component.literal(result.toString()), true);
         } else if (context.runnerWarper().runner() instanceof CraftingAnswerChecker checker){

@@ -2,6 +2,7 @@ package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.gui.BlockRunnerScreen;
+import indi.wenyan.content.gui.TextFieldScreen;
 import indi.wenyan.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -53,21 +54,19 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     @OnlyIn(Dist.CLIENT)
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        var runner = (BlockRunner) level.getBlockEntity(pos);
+        assert runner != null;
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
-                Minecraft.getInstance().setScreen(new BlockRunnerScreen((BlockRunner) level.getBlockEntity(pos)));
-            else {
-                var runner = (BlockRunner) level.getBlockEntity(pos);
-                assert runner != null;
-                runner.additionalPages.add(pos.offset(1, 0, 0));
-            }
+                Minecraft.getInstance().setScreen(new TextFieldScreen(runner.pages, content -> {
+                    runner.pages = content;
+                    runner.setChanged();
+                }));
         } else {
             if (!level.isClientSide()) {
-                BlockRunner runner = (BlockRunner) level.getBlockEntity(pos);
                 var maybeCrafting = level.getBlockEntity(
                         pos.relative(getConnectedDirection(state).getOpposite()));
 
-                assert runner != null;
                 if (maybeCrafting instanceof CraftingBlockEntity cb) {
                     cb.run(runner, player);
                 } else {

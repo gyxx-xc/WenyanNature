@@ -2,9 +2,12 @@ package indi.wenyan.content.gui;
 
 import indi.wenyan.content.block.BlockRunner;
 
+import java.util.List;
+
 public class BlockRunnerScreen extends RunnerScreen {
     public BlockRunnerScreen(BlockRunner blockRunner) {
-        super(blockRunner.pages);
+//        super(blockRunner.pages);
+        super(List.of(""));
     }
     @Override
     protected void saveChanges() {}

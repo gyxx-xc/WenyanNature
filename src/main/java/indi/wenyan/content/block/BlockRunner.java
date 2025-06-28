@@ -1,5 +1,6 @@
 package indi.wenyan.content.block;
 
+import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -8,10 +9,8 @@ import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,7 +34,7 @@ import java.util.List;
 public class BlockRunner extends BlockEntity {
     public WenyanProgram program;
 
-    public List<String> pages;
+    public String pages;
     public int speed;
 
     public List<BlockPos> additionalPages = new ArrayList<>();
@@ -67,7 +65,7 @@ public class BlockRunner extends BlockEntity {
             WenyanException.handleException(player, Component.translatable("error.wenyan_programming.already_run").getString());
             return;
         }
-        StringBuilder programBuilder = new StringBuilder().append(String.join("\n", pages));
+        StringBuilder programBuilder = new StringBuilder().append(pages);
         for (var additionalPage : additionalPages) {
             assert level != null;
             var e = level.getBlockEntity(additionalPage);
@@ -82,11 +80,6 @@ public class BlockRunner extends BlockEntity {
         program.run();
     }
 
-    public void copy(BlockRunner other) {
-        pages = other.pages;
-        program = other.program;
-    }
-
     public void addOutput(String text) {
         output.addLast(text);
         if (output.size() > 10) {
@@ -96,11 +89,8 @@ public class BlockRunner extends BlockEntity {
 
     @SuppressWarnings("unused")
     private void saveData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (pages != null) {
-            ListTag pagesTag = new ListTag();
-            pagesTag.addAll(pages.stream().map(StringTag::valueOf).toList());
-            tag.put("pages", pagesTag);
-        }
+        if (pages != null)
+            tag.putString("pages", pages);
         if (additionalPages != null && !additionalPages.isEmpty()) {
             ListTag additionalPagesTag = new ListTag();
             for (BlockPos pos : additionalPages) {
@@ -120,7 +110,11 @@ public class BlockRunner extends BlockEntity {
 
     @SuppressWarnings("unused")
     private void loadData(CompoundTag tag, HolderLookup.Provider registries) {
-        pages = tag.getList("pages", Tag.TAG_STRING).stream().map(Tag::getAsString).toList();
+
+        if (tag.contains("pages")) {
+            pages = tag.getString("pages");
+        }
+
         if (tag.contains("communicate_x")) {
             communicate = new Vec3(tag.getDouble("communicate_x"), tag.getDouble("communicate_y"), tag.getDouble("communicate_z"));
             isCommunicating = true;
@@ -143,21 +137,10 @@ public class BlockRunner extends BlockEntity {
     }
 
     @Override
-    public void setChanged() {
-        WritableBookContent content = components().get(DataComponents.WRITABLE_BOOK_CONTENT);
-        if (content != null)
-            pages = content.getPages(false).toList();
-        RunnerTierData tierData = components().get(Registration.TIER_DATA.get());
-        int speedTier;
-        if (tierData != null) {
-            speedTier = tierData.tier();
-        } else {
-            // TODO: thr
-            return;
-        }
-
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        pages = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), new ProgramCodeData("")).code();
+        int speedTier = componentInput.getOrDefault(Registration.TIER_DATA.get(), new RunnerTierData(0)).tier();
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
-        super.setChanged();
     }
 
     @Override
