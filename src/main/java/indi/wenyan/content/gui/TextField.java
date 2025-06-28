@@ -90,7 +90,7 @@ public class TextField {
 
     public void seekCursorToPoint(double x, double y) {
         int i = Mth.floor(x);
-        int j = Mth.floor(y / TextFieldScreen.LINE_HEIGHT);
+        int j = Mth.floor(y / font.lineHeight);
         StringView stringView = displayLines.get(Mth.clamp(j, 0, displayLines.size() - 1));
         int k = font.plainSubstrByWidth(value.substring(stringView.beginIndex, stringView.endIndex), i).length();
         seekCursor(Whence.ABSOLUTE, stringView.beginIndex + k);
@@ -109,61 +109,6 @@ public class TextField {
     private String getSelectedText() {
         StringView stringView = getSelected();
         return value.substring(stringView.beginIndex, stringView.endIndex);
-    }
-
-    private StringView getCursorLineView() {
-        return getCursorLineView(0);
-    }
-
-    private StringView getCursorLineView(int offset) {
-        int i = getLineAtCursor();
-        if (i < 0) {
-            int var10002 = cursor;
-            throw new IllegalStateException("Cursor is not within text (cursor = " + var10002 + ", length = " + value.length() + ")");
-        } else {
-            return displayLines.get(Mth.clamp(i + offset, 0, displayLines.size() - 1));
-        }
-    }
-
-    private void onValueChange() {
-        // reflowDisplayLines
-        displayLines.clear();
-        if (value.isEmpty()) {
-            displayLines.add(StringView.EMPTY);
-        } else {
-            font.getSplitter().splitLines(value, width, Style.EMPTY, false,
-                    (style, start, end) -> displayLines.add(new StringView(start, end)));
-            if (value.charAt(value.length() - 1) == '\n') {
-                displayLines.add(new StringView(value.length(), value.length()));
-            }
-        }
-
-        valueListener.accept(value);
-        cursorListener.run();
-    }
-
-    private void seekCursor(Whence whence, int position) {
-        switch (whence) {
-            case ABSOLUTE -> cursor = position;
-            case RELATIVE -> cursor += position;
-            case END -> cursor = value.length() + position;
-        }
-
-        cursor = Mth.clamp(cursor, 0, value.length());
-        cursorListener.run();
-        if (!selecting) {
-            selectCursor = cursor;
-        }
-
-    }
-
-    private void seekCursorLine(int offset) {
-        if (offset != 0) {
-            int i = font.width(value.substring(getCursorLineView().beginIndex, cursor)) + LINE_SEEK_PIXEL_BIAS;
-            StringView cursorLineView = getCursorLineView(offset);
-            int j = font.plainSubstrByWidth(value.substring(cursorLineView.beginIndex, cursorLineView.endIndex), i).length();
-            seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex + j);
-        }
     }
 
     private StringView getPreviousWord() {
@@ -202,6 +147,44 @@ public class TextField {
             endCursor++;
         }
         return endCursor;
+    }
+
+    private StringView getCursorLineView() {
+        return getCursorLineView(0);
+    }
+
+    private StringView getCursorLineView(int offset) {
+        int i = getLineAtCursor();
+        if (i < 0) {
+            int var10002 = cursor;
+            throw new IllegalStateException("Cursor is not within text (cursor = " + var10002 + ", length = " + value.length() + ")");
+        } else {
+            return displayLines.get(Mth.clamp(i + offset, 0, displayLines.size() - 1));
+        }
+    }
+
+    private void seekCursor(Whence whence, int position) {
+        switch (whence) {
+            case ABSOLUTE -> cursor = position;
+            case RELATIVE -> cursor += position;
+            case END -> cursor = value.length() + position;
+        }
+
+        cursor = Mth.clamp(cursor, 0, value.length());
+        cursorListener.run();
+        if (!selecting) {
+            selectCursor = cursor;
+        }
+
+    }
+
+    private void seekCursorLine(int offset) {
+        if (offset != 0) {
+            int i = font.width(value.substring(getCursorLineView().beginIndex, cursor)) + LINE_SEEK_PIXEL_BIAS;
+            StringView cursorLineView = getCursorLineView(offset);
+            int j = font.plainSubstrByWidth(value.substring(cursorLineView.beginIndex, cursorLineView.endIndex), i).length();
+            seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex + j);
+        }
     }
 
     private void deleteText(int length) {
@@ -256,6 +239,46 @@ public class TextField {
             }
         }
         return true;
+    }
+
+
+    private void onValueChange() {
+        // reflowDisplayLines
+        displayLines.clear();
+        if (value.isEmpty()) {
+            displayLines.add(StringView.EMPTY);
+        } else {
+            // split
+            int lineStart = 0;
+            int lineWidth = 0;
+            for (int i = 0; i < value.length(); i++) {
+                char c = value.charAt(i);
+                if (c == '\n') {
+                    displayLines.add(new StringView(lineStart, i));
+                    lineStart = i + 1;
+                    lineWidth = 0;
+                    continue;
+                }
+                int charWidth = font.width(String.valueOf(c));
+                if (lineWidth + charWidth > width) {
+                    displayLines.add(new StringView(lineStart, i));
+                    lineStart = i;
+                    lineWidth = charWidth;
+                } else {
+                    lineWidth += charWidth;
+                }
+            }
+            if (lineStart < value.length()) {
+                displayLines.add(new StringView(lineStart, value.length()));
+            }
+
+            if (value.charAt(value.length() - 1) == '\n') {
+                displayLines.add(new StringView(value.length(), value.length()));
+            }
+        }
+
+        valueListener.accept(value);
+        cursorListener.run();
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -16,19 +16,21 @@ public class TextFieldScreen extends Screen {
     }
 
     protected TextFieldWidget createCommentBox(int width, int height, Consumer<String> valueListener) {
-        TextFieldWidget textField = new TextFieldWidget(this.font, (this.width - 192) / 2, 2, width, height, Component.literal(""), Component.empty());
+        TextFieldWidget textField = new TextFieldWidget(font,
+                (width - 192) / 2, 2, width, height,
+                Component.literal(""), Component.empty());
         textField.setValueListener(valueListener);
         return textField;
     }
 
     @Override
     protected void init() {
-        addRenderableWidget(new TextFieldWidget(this.font, (this.width - 192) / 2+35, 15, 115, 159, Component.literal(""), Component.empty()));
+        addRenderableWidget(new TextFieldWidget(font, (width - 192) / 2+35, 15, 115, 159, Component.literal(""), Component.empty()));
     }
 
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderTransparentBackground(guiGraphics);
-        guiGraphics.blit(BookViewScreen.BOOK_LOCATION, (this.width - 192) / 2, 2, 0, 0, 192, 192);
+        renderTransparentBackground(guiGraphics);
+        guiGraphics.blit(BookViewScreen.BOOK_LOCATION, (width - 192) / 2, 2, 0, 0, 192, 192);
     }
 }

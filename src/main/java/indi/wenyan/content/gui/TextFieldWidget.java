@@ -1,5 +1,6 @@
 package indi.wenyan.content.gui;
 
+import lombok.experimental.Delegate;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,13 +27,16 @@ public class TextFieldWidget extends AbstractScrollWidget {
 
     private final Font font;
     private final Component placeholder;
-    private long focusedTime = Util.getMillis();
+    private long focusedTime = Util.getMillis(); // for blink
 
+    @Delegate(types = FromTextField.class)
     private final TextField textField;
-
-    @Override
-    protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-
+    @SuppressWarnings("unused") // ide don't know this lombok delegate
+    private interface FromTextField {
+        void setCharacterLimit(int characterLimit);
+        void setValueListener(Consumer<String> valueListener);
+        void setValue(String fullText);
+        String getValue();
     }
 
     public TextFieldWidget(Font font, int x, int y, int width, int height, Component placeholder, Component message) {
@@ -41,22 +45,6 @@ public class TextFieldWidget extends AbstractScrollWidget {
         this.placeholder = placeholder;
         textField = new TextField(font, width - totalInnerPadding());
         textField.setCursorListener(this::scrollToCursor);
-    }
-
-    public void setCharacterLimit(int characterLimit) {
-        textField.setCharacterLimit(characterLimit);
-    }
-
-    public void setValueListener(Consumer<String> valueListener) {
-        textField.setValueListener(valueListener);
-    }
-
-    public void setValue(String fullText) {
-        textField.setValue(fullText);
-    }
-
-    public String getValue() {
-        return textField.getValue();
     }
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
@@ -123,7 +111,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
             int currentY = getY() + innerPadding();
 
             for (var stringView : textField.getDisplayLines()) {
-                boolean withinContent = withinContentAreaTopBottom(currentY, currentY + TextFieldScreen.LINE_HEIGHT);
+                boolean withinContent = withinContentAreaTopBottom(currentY, currentY + font.lineHeight);
                 if (isCursorRender && cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
                     if (withinContent) {
                         cursorX = guiGraphics.drawString(font,
@@ -133,7 +121,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
                         guiGraphics.drawString(font, content.substring(cursor, stringView.endIndex()),
                                 cursorX, currentY, TEXT_COLOR);
                         // cursor
-                        guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + TextFieldScreen.LINE_HEIGHT, CURSOR_INSERT_COLOR);
+                        guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + font.lineHeight, CURSOR_INSERT_COLOR);
                     }
                 } else {
                     if (withinContent) {
@@ -144,10 +132,10 @@ public class TextFieldWidget extends AbstractScrollWidget {
                     }
                     cursorY = currentY;
                 }
-                currentY += TextFieldScreen.LINE_HEIGHT;
+                currentY += font.lineHeight;
             }
 
-            if (isCursorRender && !cursorInContent && withinContentAreaTopBottom(cursorY, cursorY + TextFieldScreen.LINE_HEIGHT)) {
+            if (isCursorRender && !cursorInContent && withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
                 guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
             }
 
@@ -162,7 +150,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
                             break;
                         }
 
-                        if (withinContentAreaTopBottom(currentY, currentY + TextFieldScreen.LINE_HEIGHT)) {
+                        if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
                             int i1 = font.width(content.substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
                             int j1;
                             if (selected.endIndex() > stringView.endIndex()) {
@@ -171,11 +159,11 @@ public class TextFieldWidget extends AbstractScrollWidget {
                                 j1 = font.width(content.substring(stringView.beginIndex(), selected.endIndex()));
                             }
                             guiGraphics.fill(RenderType.guiTextHighlight(),
-                                    k1 + i1, currentY, k1 + j1, currentY + TextFieldScreen.LINE_HEIGHT,
+                                    k1 + i1, currentY, k1 + j1, currentY + font.lineHeight,
                                     0xff0000ff);
                         }
                     }
-                    currentY += TextFieldScreen.LINE_HEIGHT;
+                    currentY += font.lineHeight;
                 }
             }
         }
@@ -191,29 +179,33 @@ public class TextFieldWidget extends AbstractScrollWidget {
 
     }
 
+    protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
+
+    }
+
     // scrolling
     public int getInnerHeight() {
-        return TextFieldScreen.LINE_HEIGHT * textField.getDisplayLines().size();
+        return font.lineHeight * textField.getDisplayLines().size();
     }
 
     protected boolean scrollbarVisible() {
-        return textField.getDisplayLines().size() > (height - totalInnerPadding()) / (double) TextFieldScreen.LINE_HEIGHT;
+        return textField.getDisplayLines().size() > (height - totalInnerPadding()) / (double) font.lineHeight;
     }
 
     protected double scrollRate() {
-        return 6.5F;
+        return 3*font.lineHeight;
     }
 
     // helper
     private void scrollToCursor() {
         double scrollAmount = scrollAmount();
-        TextField.StringView stringView = textField.getLineView((int) (scrollAmount / TextFieldScreen.LINE_HEIGHT));
+        TextField.StringView stringView = textField.getLineView((int) (scrollAmount / font.lineHeight));
         if (textField.getCursor() <= stringView.beginIndex()) {
-            scrollAmount = textField.getLineAtCursor() * TextFieldScreen.LINE_HEIGHT;
+            scrollAmount = textField.getLineAtCursor() * font.lineHeight;
         } else {
-            TextField.StringView multilinetextfield$stringView1 = textField.getLineView((int) ((scrollAmount + height) / TextFieldScreen.LINE_HEIGHT) - 1);
+            TextField.StringView multilinetextfield$stringView1 = textField.getLineView((int) ((scrollAmount + height) / font.lineHeight) - 1);
             if (textField.getCursor() > multilinetextfield$stringView1.endIndex()) {
-                scrollAmount = textField.getLineAtCursor() * TextFieldScreen.LINE_HEIGHT - height + TextFieldScreen.LINE_HEIGHT + totalInnerPadding();
+                scrollAmount = textField.getLineAtCursor() * font.lineHeight - height + font.lineHeight + totalInnerPadding();
             }
         }
 
