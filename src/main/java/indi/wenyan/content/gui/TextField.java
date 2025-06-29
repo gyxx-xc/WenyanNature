@@ -1,8 +1,10 @@
 package indi.wenyan.content.gui;
 
 import com.google.common.collect.Lists;
+import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Singular;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
@@ -11,6 +13,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -26,6 +30,8 @@ public class TextField {
 
     @Getter
     private final List<StringView> displayLines = Lists.newArrayList();
+    @Getter
+    private final List<StyledView> styleMarks = Lists.newArrayList();
     @Getter private String value = "";
 
     @Getter private int cursor = 0;
@@ -263,6 +269,22 @@ public class TextField {
             }
         }
 
+        if (!value.isEmpty()) {
+            var lexer = new WenyanRLexer(CharStreams.fromString(value));
+            lexer.removeErrorListeners();
+            var token = new CommonTokenStream(lexer);
+            token.fill();
+            styleMarks.clear();
+            int lastIndex = 0;
+            for (var t : token.getTokens()) {
+                if (t.getStartIndex() > lastIndex) {
+                    styleMarks.add(new StyledView(t.getStartIndex(), -1));
+                }
+                styleMarks.add(new StyledView(t.getStopIndex(), t.getType()));
+                lastIndex = t.getStopIndex() + 1;
+            }
+        }
+
         valueListener.accept(value);
         cursorListener.run();
     }
@@ -271,4 +293,7 @@ public class TextField {
     public record StringView(int beginIndex, int endIndex) {
         static final StringView EMPTY = new StringView(0, 0);
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public record StyledView(int endIndex, int style) {}
 }

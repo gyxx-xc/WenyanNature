@@ -121,30 +121,27 @@ public class TextFieldWidget extends AbstractScrollWidget {
             int currentY = getY() + innerPadding();
 
             for (var stringView : textField.getDisplayLines()) {
-                boolean withinContent = withinContentAreaTopBottom(currentY, currentY + font.lineHeight);
-                if (isCursorRender && cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
-                    if (withinContent) {
+                if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                    if (isCursorRender && cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
                         // content
                         cursorX = guiGraphics.drawString(font,
                                 content.substring(stringView.beginIndex(), cursor),
                                 getX() + innerPadding(), currentY, TEXT_COLOR, false) - 1;
                         guiGraphics.drawString(font, content.substring(cursor, stringView.endIndex()),
-                                cursorX+1, currentY, TEXT_COLOR, false);
+                                cursorX + 1, currentY, TEXT_COLOR, false);
                         // cursor
                         guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + font.lineHeight, CURSOR_INSERT_COLOR);
-                    }
-                } else {
-                    if (withinContent) {
+                    } else {
                         cursorX = guiGraphics.drawString(font,
                                 content.substring(stringView.beginIndex(), stringView.endIndex()),
                                 getX() + innerPadding(), currentY,
                                 TEXT_COLOR, false) - 1;
                     }
-                    cursorY = currentY;
                 }
                 currentY += font.lineHeight;
             }
 
+            cursorY = currentY - font.lineHeight;
             if (isCursorRender && !cursorInContent && withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
                 guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
             }

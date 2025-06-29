@@ -242,5 +242,6 @@ INT_NUM_KEYWORDS            : '〇'|'零'|'一'|'二'|'三'|'四'|'五'|'六'|'�
 
 BOOL_VALUE                  : '陰'|'陽'|'阴'|'阳';
 
-COMMENT                     : ('注曰'|'疏曰'|'批曰') WS? STRING_LITERAL -> skip ;
-WS                          : ([ \t\r\n]|'。'|'、'|'，'|'　')+ -> skip ;
+COMMENT                     : ('注曰'|'疏曰'|'批曰') WS? STRING_LITERAL -> channel(HIDDEN) ;
+WS                          : ([ \t]|'。'|'、'|'，'|'　')+ -> channel(HIDDEN) ;
+NEWLINE                     : ('\r'? '\n' | '\r') -> channel(HIDDEN) ;
