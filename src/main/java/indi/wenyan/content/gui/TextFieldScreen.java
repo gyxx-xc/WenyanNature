@@ -1,9 +1,10 @@
 package indi.wenyan.content.gui;
 
+import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -12,6 +13,8 @@ import java.util.function.Consumer;
 public class TextFieldScreen extends Screen {
     private String data;
     private final Consumer<String> saving;
+    private final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+            "textures/gui/edit.png");
 
     public TextFieldScreen(@Nullable String s, Consumer<String> save) {
         super(Component.empty());
@@ -21,7 +24,7 @@ public class TextFieldScreen extends Screen {
 
     @Override
     protected void init() {
-        TextFieldWidget textFieldWidget = new TextFieldWidget(font, (width - 192) / 2 + 35, 15, 115, 159);
+        TextFieldWidget textFieldWidget = new TextFieldWidget(font, (width - 256) / 2 + 15, 15, 226, 159);
         textFieldWidget.setValue(data);
         textFieldWidget.setValueListener(s -> data = s);
         addRenderableWidget(textFieldWidget);
@@ -30,7 +33,7 @@ public class TextFieldScreen extends Screen {
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderTransparentBackground(guiGraphics);
-        guiGraphics.blit(BookViewScreen.BOOK_LOCATION, (width - 192) / 2, 2, 0, 0, 192, 192);
+        guiGraphics.blit(BACKGROUND, (width - 256) / 2, 2, 0, 0, 256, 192);
     }
 
     @Override

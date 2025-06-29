@@ -3,7 +3,6 @@ package indi.wenyan.content.gui;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import lombok.experimental.Delegate;
 import lombok.val;
-import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -67,29 +66,34 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     private Style styleFromTokenType(int tokenType) {
-        val CONTROL_STYLE = Style.EMPTY.withColor(ChatFormatting.RED); // control
-        val STRING_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN); // string
-        val DATA_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD); // number
-        val COMMENT_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY); // comment
-        val IDENTIFIER_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA); // identifier
-        val OPERATOR_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE); // operator
-        val KEYWORD_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE); // keyword
-        val TYPE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GREEN); // type
-/*        /*
-        ASSIGN_RIGHT_NULL=20, ASSIGN_RIGHT_END=21,
-		ASSIGN_RIGHT=22, FUNCTION_ARGS_START=30, FUNCTION_ARGS_GET=31, FUNCTION_BODY_START=32, FUNCTION_DEFINE_END=33,
-		FUNCTION_GET_ARGS=34, OBJECT_BODY_START=35, OBJECT_DEFINE_END=36, OBJECT_STATIC_DECLARE=37,
-		LOCAL_DECLARE_OP=38, GLOBAL_DECLARE_OP=39, DEFINE_CLOSURE=40,
-		NAMING=42, ASSIGN_LEFT=43, DECLARE_HAVE=44, PREPOSITION_LEFT=45, PREPOSITION_RIGHT=46,
-		CALLING_FUNCTION=47, CREATE_OBJECT=48, EXTENDS=49, FU=51, YUE=52, WS=78, NEWLINE=79;
+val CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);      // bright orange (control keywords)
+val STRING_STYLE = Style.EMPTY.withColor(0x008000);       // green (strings)
+val DATA_STYLE = Style.EMPTY.withColor(0x1C00CF);         // blue (numbers, bools)
+val COMMENT_STYLE = Style.EMPTY.withColor(0xAAAAAA);      // light gray (comments)
+val IDENTIFIER_STYLE = Style.EMPTY.withColor(0x005CC5);   // bright blue (identifiers)
+val OPERATOR_STYLE = Style.EMPTY.withColor(0xD73A49);     // red (operators)
+val TYPE_STYLE = Style.EMPTY.withColor(0x795E26);         // brown (types)
+val DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);      // black (default)
+/*
+        things in default
+
+		FUNCTION_ARGS_START=30, FUNCTION_ARGS_GET=31, FUNCTION_BODY_START=32, FUNCTION_DEFINE_END=33, FUNCTION_GET_ARGS=34,
+		OBJECT_BODY_START=35, OBJECT_DEFINE_END=36, OBJECT_STATIC_DECLARE=37, EXTENDS=49,
+		DEFINE_CLOSURE=40,
+
+        ASSIGN_LEFT=43, ASSIGN_RIGHT_NULL=20, ASSIGN_RIGHT_END=21, ASSIGN_RIGHT=22,
+		LOCAL_DECLARE_OP=38, GLOBAL_DECLARE_OP=39,
+		NAMING=42, DECLARE_HAVE=44, YUE=52,
+		PREPOSITION_LEFT=45, PREPOSITION_RIGHT=46,
+		CALLING_FUNCTION=47, CREATE_OBJECT=48,
+		WS=78, NEWLINE=79;
         */
         return switch (tokenType) {
             // control
             case WenyanRLexer.RETURN_NULL, WenyanRLexer.RETURN, WenyanRLexer.RETURN_LAST,
                  WenyanRLexer.BREAK_, WenyanRLexer.CONTINUE_, WenyanRLexer.IF_, WenyanRLexer.ELSE_,
                  WenyanRLexer.FOR_WHILE_SART, WenyanRLexer.FOR_ARR_BELONG, WenyanRLexer.FOR_ENUM_START,
-                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END, WenyanRLexer.FLUSH,
-                 WenyanRLexer.ZHE
+                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END, WenyanRLexer.ZHE
                     -> CONTROL_STYLE;
             // string
             case WenyanRLexer.STRING_LITERAL -> STRING_STYLE;
@@ -110,7 +114,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
             case WenyanRLexer.BOOL_TYPE, WenyanRLexer.STRING_TYPE, WenyanRLexer.LIST_TYPE, WenyanRLexer.OBJECT_TYPE,
                  WenyanRLexer.FUNCTION_TYPE, WenyanRLexer.NUM_TYPE
                     -> TYPE_STYLE;
-            default -> Style.EMPTY.withColor(0xff0e0e0e); // unknown
+            default -> DEFAULT_STYLE;
         };
     }
 
@@ -192,8 +196,8 @@ public class TextFieldWidget extends AbstractScrollWidget {
                         String line = content.substring(lastEnd, Math.clamp(end, stringView.beginIndex(), stringView.endIndex()));
                         var style = styleFromTokenType(textField.getStyleMarks().get(styleCounter).style());
                         cursorX = guiGraphics.drawString(font, Component.literal(line).withStyle(style),
-                                cursorX + 1, currentY,
-                                0xFFFFFFFF, false) - 1;
+                                cursorX, currentY,
+                                0xFFFFFFFF, false);
                         lastEnd = end;
                         if (end < stringView.endIndex()) {
                             styleCounter++;

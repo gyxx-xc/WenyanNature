@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
 
-    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/gui/crafting_gui.png");
+    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+            "textures/gui/crafting_gui.png");
 
     public CraftingBlockScreen(CraftingBlockContainer container, Inventory inventory, Component title) {
         super(container, inventory, title);
