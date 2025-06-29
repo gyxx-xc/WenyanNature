@@ -1,6 +1,9 @@
 package indi.wenyan.content.gui;
 
+import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import lombok.experimental.Delegate;
+import lombok.val;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,6 +13,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -22,18 +26,21 @@ import java.util.function.Consumer;
 public class TextFieldWidget extends AbstractScrollWidget {
     private static final int CURSOR_INSERT_COLOR = 0xffd0d0d0;
     private static final String CURSOR_APPEND_CHARACTER = "_";
-    private static final int TEXT_COLOR = 0xff0e0e0e;
 
     private final Font font;
     private long focusedTime = Util.getMillis(); // for blink
 
     @Delegate(types = FromTextField.class)
     private final TextField textField;
+
     @SuppressWarnings("unused") // ide don't know this lombok delegate
     private interface FromTextField {
         void setCharacterLimit(int characterLimit);
+
         void setValueListener(Consumer<String> valueListener);
+
         void setValue(String fullText);
+
         String getValue();
     }
 
@@ -57,6 +64,54 @@ public class TextFieldWidget extends AbstractScrollWidget {
 
             setScrollAmount(scrollAmount);
         });
+    }
+
+    private Style styleFromTokenType(int tokenType) {
+        val CONTROL_STYLE = Style.EMPTY.withColor(ChatFormatting.RED); // control
+        val STRING_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN); // string
+        val DATA_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD); // number
+        val COMMENT_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY); // comment
+        val IDENTIFIER_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA); // identifier
+        val OPERATOR_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE); // operator
+        val KEYWORD_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE); // keyword
+        val TYPE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GREEN); // type
+/*        /*
+        ASSIGN_RIGHT_NULL=20, ASSIGN_RIGHT_END=21,
+		ASSIGN_RIGHT=22, FUNCTION_ARGS_START=30, FUNCTION_ARGS_GET=31, FUNCTION_BODY_START=32, FUNCTION_DEFINE_END=33,
+		FUNCTION_GET_ARGS=34, OBJECT_BODY_START=35, OBJECT_DEFINE_END=36, OBJECT_STATIC_DECLARE=37,
+		LOCAL_DECLARE_OP=38, GLOBAL_DECLARE_OP=39, DEFINE_CLOSURE=40,
+		NAMING=42, ASSIGN_LEFT=43, DECLARE_HAVE=44, PREPOSITION_LEFT=45, PREPOSITION_RIGHT=46,
+		CALLING_FUNCTION=47, CREATE_OBJECT=48, EXTENDS=49, FU=51, YUE=52, WS=78, NEWLINE=79;
+        */
+        return switch (tokenType) {
+            // control
+            case WenyanRLexer.RETURN_NULL, WenyanRLexer.RETURN, WenyanRLexer.RETURN_LAST,
+                 WenyanRLexer.BREAK_, WenyanRLexer.CONTINUE_, WenyanRLexer.IF_, WenyanRLexer.ELSE_,
+                 WenyanRLexer.FOR_WHILE_SART, WenyanRLexer.FOR_ARR_BELONG, WenyanRLexer.FOR_ENUM_START,
+                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END, WenyanRLexer.FLUSH,
+                 WenyanRLexer.ZHE
+                    -> CONTROL_STYLE;
+            // string
+            case WenyanRLexer.STRING_LITERAL -> STRING_STYLE;
+            // data
+            case WenyanRLexer.FLOAT_NUM, WenyanRLexer.INT_NUM, WenyanRLexer.BOOL_VALUE -> DATA_STYLE;
+            // comment
+            case WenyanRLexer.COMMENT -> COMMENT_STYLE;
+            // identifier
+            case WenyanRLexer.IDENTIFIER, WenyanRLexer.LONG, WenyanRLexer.SELF, WenyanRLexer.PARENT, WenyanRLexer.DATA_ID_LAST, WenyanRLexer.ZHI -> IDENTIFIER_STYLE;
+            // operator
+            case WenyanRLexer.ADD, WenyanRLexer.SUB, WenyanRLexer.MUL,
+                 WenyanRLexer.DIV, WenyanRLexer.UNARY_OP, WenyanRLexer.ARRAY_COMBINE_OP,
+                 WenyanRLexer.ARRAY_ADD_OP, WenyanRLexer.WRITE_KEY_FUNCTION, WenyanRLexer.POST_MOD_MATH_OP,
+                 WenyanRLexer.AND, WenyanRLexer.OR, WenyanRLexer.NEQ, WenyanRLexer.LTE,
+                 WenyanRLexer.GTE, WenyanRLexer.EQ, WenyanRLexer.GT, WenyanRLexer.LT
+                    -> OPERATOR_STYLE;
+            // type
+            case WenyanRLexer.BOOL_TYPE, WenyanRLexer.STRING_TYPE, WenyanRLexer.LIST_TYPE, WenyanRLexer.OBJECT_TYPE,
+                 WenyanRLexer.FUNCTION_TYPE, WenyanRLexer.NUM_TYPE
+                    -> TYPE_STYLE;
+            default -> Style.EMPTY.withColor(0xff0e0e0e); // unknown
+        };
     }
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
@@ -117,31 +172,38 @@ public class TextFieldWidget extends AbstractScrollWidget {
             boolean isCursorRender = isFocused() && (Util.getMillis() - focusedTime) / 300L % 2L == 0L;
             boolean cursorInContent = cursor < content.length();
             int cursorX = 0;
-            int cursorY = 0;
             int currentY = getY() + innerPadding();
+            int styleCounter = 0;
 
             for (var stringView : textField.getDisplayLines()) {
-                if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                if (stringView.beginIndex() != stringView.endIndex() && withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
                     if (isCursorRender && cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
-                        // content
-                        cursorX = guiGraphics.drawString(font,
-                                content.substring(stringView.beginIndex(), cursor),
-                                getX() + innerPadding(), currentY, TEXT_COLOR, false) - 1;
-                        guiGraphics.drawString(font, content.substring(cursor, stringView.endIndex()),
-                                cursorX + 1, currentY, TEXT_COLOR, false);
                         // cursor
+                        cursorX = getX() + innerPadding() + font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
                         guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + font.lineHeight, CURSOR_INSERT_COLOR);
-                    } else {
-                        cursorX = guiGraphics.drawString(font,
-                                content.substring(stringView.beginIndex(), stringView.endIndex()),
-                                getX() + innerPadding(), currentY,
-                                TEXT_COLOR, false) - 1;
                     }
+                    int lastEnd = stringView.beginIndex();
+                    cursorX = getX() + innerPadding();
+                    do {
+                        int end;
+                        do {
+                            end = textField.getStyleMarks().get(styleCounter).endIndex();
+                        } while (end <= stringView.beginIndex() && ++styleCounter < textField.getStyleMarks().size());
+                        String line = content.substring(lastEnd, Math.clamp(end, stringView.beginIndex(), stringView.endIndex()));
+                        var style = styleFromTokenType(textField.getStyleMarks().get(styleCounter).style());
+                        cursorX = guiGraphics.drawString(font, Component.literal(line).withStyle(style),
+                                cursorX + 1, currentY,
+                                0xFFFFFFFF, false) - 1;
+                        lastEnd = end;
+                        if (end < stringView.endIndex()) {
+                            styleCounter++;
+                        }
+                    } while (lastEnd < stringView.endIndex());
                 }
                 currentY += font.lineHeight;
             }
 
-            cursorY = currentY - font.lineHeight;
+            int cursorY = currentY - font.lineHeight;
             if (isCursorRender && !cursorInContent && withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
                 guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
             }
@@ -199,6 +261,6 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     protected double scrollRate() {
-        return 3*font.lineHeight;
+        return 3 * font.lineHeight;
     }
 }

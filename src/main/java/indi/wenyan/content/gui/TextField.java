@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Singular;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
@@ -269,7 +268,10 @@ public class TextField {
             }
         }
 
-        if (!value.isEmpty()) {
+        if (value.isEmpty()) {
+            styleMarks.clear();
+            styleMarks.add(new StyledView(0, -1));
+        } else {
             var lexer = new WenyanRLexer(CharStreams.fromString(value));
             lexer.removeErrorListeners();
             var token = new CommonTokenStream(lexer);
@@ -278,11 +280,13 @@ public class TextField {
             int lastIndex = 0;
             for (var t : token.getTokens()) {
                 if (t.getStartIndex() > lastIndex) {
-                    styleMarks.add(new StyledView(t.getStartIndex(), -1));
+                    styleMarks.add(new StyledView(t.getStartIndex()+1, -1));
                 }
-                styleMarks.add(new StyledView(t.getStopIndex(), t.getType()));
+                if (t.getType() == WenyanRLexer.EOF) { break; }
+                styleMarks.add(new StyledView(t.getStopIndex()+1, t.getType()));
                 lastIndex = t.getStopIndex() + 1;
             }
+            styleMarks.add(new StyledView(value.length(), -1));
         }
 
         valueListener.accept(value);
