@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class TextFieldScreen extends Screen {
@@ -16,15 +15,18 @@ public class TextFieldScreen extends Screen {
     private final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/edit.png");
 
-    public TextFieldScreen(@Nullable String s, Consumer<String> save) {
+    public static final int WIDTH = 256;
+    public static final int TEXT_FIELD_WIDTH = 226;
+
+    public TextFieldScreen(String data, Consumer<String> save) {
         super(Component.empty());
-        this.data = s == null ? "" : s;
+        this.data = data;
         this.saving = save;
     }
 
     @Override
     protected void init() {
-        TextFieldWidget textFieldWidget = new TextFieldWidget(font, (width - 256) / 2 + 15, 15, 226, 159);
+        TextFieldWidget textFieldWidget = new TextFieldWidget(font, (width - TEXT_FIELD_WIDTH) / 2, 15, TEXT_FIELD_WIDTH, 159);
         textFieldWidget.setValue(data);
         textFieldWidget.setValueListener(s -> data = s);
         addRenderableWidget(textFieldWidget);
@@ -33,7 +35,7 @@ public class TextFieldScreen extends Screen {
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderTransparentBackground(guiGraphics);
-        guiGraphics.blit(BACKGROUND, (width - 256) / 2, 2, 0, 0, 256, 192);
+        guiGraphics.blit(BACKGROUND, (width - WIDTH) / 2, 2, 0, 0, WIDTH, 192);
     }
 
     @Override

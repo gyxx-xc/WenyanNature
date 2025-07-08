@@ -66,14 +66,14 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     private Style styleFromTokenType(int tokenType) {
-val CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);      // bright orange (control keywords)
-val STRING_STYLE = Style.EMPTY.withColor(0x008000);       // green (strings)
-val DATA_STYLE = Style.EMPTY.withColor(0x1C00CF);         // blue (numbers, bools)
-val COMMENT_STYLE = Style.EMPTY.withColor(0xAAAAAA);      // light gray (comments)
-val IDENTIFIER_STYLE = Style.EMPTY.withColor(0x005CC5);   // bright blue (identifiers)
-val OPERATOR_STYLE = Style.EMPTY.withColor(0xD73A49);     // red (operators)
-val TYPE_STYLE = Style.EMPTY.withColor(0x795E26);         // brown (types)
-val DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);      // black (default)
+        val CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);
+        val STRING_STYLE = Style.EMPTY.withColor(0x008000);
+        val DATA_STYLE = Style.EMPTY.withColor(0x1C00CF);
+        val COMMENT_STYLE = Style.EMPTY.withColor(0xAAAAAA);
+        val IDENTIFIER_STYLE = Style.EMPTY.withColor(0x005CC5);
+        val OPERATOR_STYLE = Style.EMPTY.withColor(0xD73A49);
+        val TYPE_STYLE = Style.EMPTY.withColor(0x795E26);
+        val DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);
 /*
         things in default
 
@@ -93,8 +93,8 @@ val DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);      // black (default)
             case WenyanRLexer.RETURN_NULL, WenyanRLexer.RETURN, WenyanRLexer.RETURN_LAST,
                  WenyanRLexer.BREAK_, WenyanRLexer.CONTINUE_, WenyanRLexer.IF_, WenyanRLexer.ELSE_,
                  WenyanRLexer.FOR_WHILE_SART, WenyanRLexer.FOR_ARR_BELONG, WenyanRLexer.FOR_ENUM_START,
-                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END, WenyanRLexer.ZHE
-                    -> CONTROL_STYLE;
+                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END, WenyanRLexer.ZHE ->
+                    CONTROL_STYLE;
             // string
             case WenyanRLexer.STRING_LITERAL -> STRING_STYLE;
             // data
@@ -102,18 +102,17 @@ val DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);      // black (default)
             // comment
             case WenyanRLexer.COMMENT -> COMMENT_STYLE;
             // identifier
-            case WenyanRLexer.IDENTIFIER, WenyanRLexer.LONG, WenyanRLexer.SELF, WenyanRLexer.PARENT, WenyanRLexer.DATA_ID_LAST, WenyanRLexer.ZHI -> IDENTIFIER_STYLE;
+            case WenyanRLexer.IDENTIFIER, WenyanRLexer.LONG, WenyanRLexer.SELF, WenyanRLexer.PARENT,
+                 WenyanRLexer.DATA_ID_LAST, WenyanRLexer.ZHI -> IDENTIFIER_STYLE;
             // operator
             case WenyanRLexer.ADD, WenyanRLexer.SUB, WenyanRLexer.MUL,
                  WenyanRLexer.DIV, WenyanRLexer.UNARY_OP, WenyanRLexer.ARRAY_COMBINE_OP,
                  WenyanRLexer.ARRAY_ADD_OP, WenyanRLexer.WRITE_KEY_FUNCTION, WenyanRLexer.POST_MOD_MATH_OP,
                  WenyanRLexer.AND, WenyanRLexer.OR, WenyanRLexer.NEQ, WenyanRLexer.LTE,
-                 WenyanRLexer.GTE, WenyanRLexer.EQ, WenyanRLexer.GT, WenyanRLexer.LT
-                    -> OPERATOR_STYLE;
+                 WenyanRLexer.GTE, WenyanRLexer.EQ, WenyanRLexer.GT, WenyanRLexer.LT -> OPERATOR_STYLE;
             // type
             case WenyanRLexer.BOOL_TYPE, WenyanRLexer.STRING_TYPE, WenyanRLexer.LIST_TYPE, WenyanRLexer.OBJECT_TYPE,
-                 WenyanRLexer.FUNCTION_TYPE, WenyanRLexer.NUM_TYPE
-                    -> TYPE_STYLE;
+                 WenyanRLexer.FUNCTION_TYPE, WenyanRLexer.NUM_TYPE -> TYPE_STYLE;
             default -> DEFAULT_STYLE;
         };
     }
