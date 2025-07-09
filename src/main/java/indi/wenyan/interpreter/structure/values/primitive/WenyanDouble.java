@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import org.jetbrains.annotations.NotNull;
 
 public record WenyanDouble(Double value) implements IWenyanComputable, IWenyanComparable {
     public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>("double", WenyanDouble.class);
@@ -52,7 +53,7 @@ public record WenyanDouble(Double value) implements IWenyanComputable, IWenyanCo
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
         String dot = "又";
         StringBuilder result = new StringBuilder();

@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import org.jetbrains.annotations.NotNull;
 
 public record WenyanString(String value) implements IWenyanComputable {
     public static final WenyanType<WenyanString> TYPE = new WenyanType<>("string", WenyanString.class);
@@ -14,7 +15,7 @@ public record WenyanString(String value) implements IWenyanComputable {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return value;
     }
 

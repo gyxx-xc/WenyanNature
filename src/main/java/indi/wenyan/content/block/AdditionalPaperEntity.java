@@ -3,7 +3,6 @@ package indi.wenyan.content.block;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;

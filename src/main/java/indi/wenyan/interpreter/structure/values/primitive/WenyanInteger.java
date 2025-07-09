@@ -58,7 +58,7 @@ public record WenyanInteger(Integer value) implements IWenyanComputable, IWenyan
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
         StringBuilder result = new StringBuilder();
         int v = value;
