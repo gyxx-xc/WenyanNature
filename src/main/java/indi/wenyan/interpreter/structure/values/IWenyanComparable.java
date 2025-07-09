@@ -1,6 +1,6 @@
-package indi.wenyan.interpreter.structure;
+package indi.wenyan.interpreter.structure.values;
 
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.WenyanException;
 
 public interface IWenyanComparable extends IWenyanValue {
     /**

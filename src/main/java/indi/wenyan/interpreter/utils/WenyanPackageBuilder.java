@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public class WenyanPackageBuilder {
+public final class WenyanPackageBuilder {
     private final WenyanRuntime environment = new WenyanRuntime(null);
 
     public static WenyanPackageBuilder create() {
