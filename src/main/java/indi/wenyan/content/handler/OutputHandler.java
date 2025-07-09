@@ -1,7 +1,6 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
@@ -9,13 +8,14 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.setup.network.BlockOutputPacket;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-import net.neoforged.neoforge.network.PacketDistributor;
 
-public class OutputHandler implements IJavacallHandler {
+public class OutputHandler implements IOutputHandler {
+
+    @Override
+    public void output(String message) throws WenyanException.WenyanThrowException {
+        // TODO
+    }
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
@@ -24,10 +24,7 @@ public class OutputHandler implements IJavacallHandler {
             result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));
         }
 
-        if (context.runnerWarper().runner() instanceof BlockRunner runner && runner.getLevel() instanceof ServerLevel sl) {
-            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(runner.getBlockPos()),
-                    new BlockOutputPacket(runner.getBlockPos(), result.toString()));
-        } else if (context.runnerWarper().runner() instanceof HandRunnerEntity) {
+        if (context.runnerWarper().runner() instanceof HandRunnerEntity) {
             context.holder().displayClientMessage(Component.literal(result.toString()), true);
         } else if (context.runnerWarper().runner() instanceof CraftingAnswerChecker checker){
             checker.accept(context.args());
@@ -39,9 +36,7 @@ public class OutputHandler implements IJavacallHandler {
 
     @Override
     public boolean isLocal(JavacallContext context) {
-        if (context.runnerWarper().runner() instanceof BlockRunner) {
-            return false;
-        } else if (context.runnerWarper().runner() instanceof HandRunnerEntity) {
+        if (context.runnerWarper().runner() instanceof HandRunnerEntity) {
             return false;
         } else if (context.runnerWarper().runner() instanceof CraftingAnswerChecker){
             return true;

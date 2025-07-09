@@ -6,9 +6,6 @@ import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
@@ -117,16 +114,10 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
-                .function(new String[] {"書","书"}, (context)->{
-                    StringBuilder result = new StringBuilder();
-                    for (IWenyanValue arg : context.args()) {
-                        result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));
-                    }
-
+                .function(new String[]{"書", "书"}, (IOutputHandler) message -> {
                     if (getLevel() instanceof ServerLevel sl)
-                        PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(this.getBlockPos()),
-                                new BlockOutputPacket(this.getBlockPos(), result.toString()));
-                    return WenyanNull.NULL;
+                        PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                                new BlockOutputPacket(getBlockPos(), message));
                 })
                 .build();
     }
