@@ -6,6 +6,7 @@ import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public record JavacallContext(RunnerWarper<?> runnerWarper, IWenyanValue self, L
     public record HandRunnerWarper(HandRunnerEntity runner) implements RunnerWarper<HandRunnerEntity> { }
     public record NullRunnerWarper(Void runner) implements RunnerWarper<Void> { }
     public record CraftingAnswerWarper(IAnsweringChecker runner) implements RunnerWarper<IAnsweringChecker> { }
+    public record ExecutorWarper(IWenyanExecutor runner) implements RunnerWarper<IWenyanExecutor> { }
 }

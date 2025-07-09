@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.world.entity.player.Player;
 
@@ -59,6 +60,11 @@ public class WenyanProgram {
                          IAnsweringChecker checker) {
         this(code, baseEnvironment, holder,
                 new JavacallContext.CraftingAnswerWarper(checker));
+    }
+
+    public WenyanProgram(String code, Player holder, IWenyanExecutor executor) {
+        this(code, executor.getBaseEnvironment(), holder,
+                new JavacallContext.ExecutorWarper(executor));
     }
 
     private WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,

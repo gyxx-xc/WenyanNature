@@ -2,12 +2,21 @@ package indi.wenyan.content.block;
 
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
+import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.utils.IWenyanExecutor;
+import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.network.BlockOutputPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -17,11 +26,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +42,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static indi.wenyan.interpreter.utils.WenyanPackages.WENYAN_BASIC_PACKAGES;
+
 @ParametersAreNonnullByDefault
-public class BlockRunner extends BlockEntity {
+public class BlockRunner extends BlockEntity implements IWenyanExecutor {
     public WenyanProgram program;
 
     public String pages;
@@ -76,7 +90,7 @@ public class BlockRunner extends BlockEntity {
             }
         }
         program = new WenyanProgram(programBuilder.toString(),
-                WenyanPackages.BLOCK_ENVIRONMENT, player, this);
+                player, this);
         program.run();
     }
 
@@ -85,6 +99,37 @@ public class BlockRunner extends BlockEntity {
         if (output.size() > 10) {
             output.removeFirst();
         }
+    }
+
+    @Override
+    public WenyanRuntime getBaseEnvironment() {
+        return WenyanPackageBuilder.create()
+                .environment(WENYAN_BASIC_PACKAGES)
+                .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
+//                .function("「放置」", new BlockPlaceHandler(holder,
+//                        (BlockItem) Items.ACACIA_LOG.asItem()
+//                        ,pos, block))
+                .function("「移」", new BlockMoveHandler(), BlockMoveHandler.ARGS_TYPE)
+                .function("「放」", new CommunicateHandler(), CommunicateHandler.ARG_TYPES)
+                .function("「紅石量」", new RedstoneSignalHandler())
+                .function("「己於上」", new SelfPositionBlockHandler(Direction.UP))
+                .function("「己於下」", new SelfPositionBlockHandler(Direction.DOWN))
+                .function("「己於東」", new SelfPositionBlockHandler(Direction.EAST))
+                .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
+                .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
+                .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
+                .function(new String[] {"書","书"}, (context)->{
+                    StringBuilder result = new StringBuilder();
+                    for (IWenyanValue arg : context.args()) {
+                        result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));
+                    }
+
+                    if (getLevel() instanceof ServerLevel sl)
+                        PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(this.getBlockPos()),
+                                new BlockOutputPacket(this.getBlockPos(), result.toString()));
+                    return WenyanNull.NULL;
+                })
+                .build();
     }
 
     @SuppressWarnings("unused")
