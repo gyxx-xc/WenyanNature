@@ -1,6 +1,5 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -8,9 +7,6 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.IWenyanExecutor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +16,7 @@ public interface IJavacallHandler extends IWenyanFunction {
     IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
     /**
+     * Deprecated: change to get Executor, a empty option value means local
      * Decided if this handler is running at program thread.
      * <p>
      * the handler will be executed in the main thread of MC if it is not local,
@@ -28,6 +25,7 @@ public interface IJavacallHandler extends IWenyanFunction {
      *
      * @return true if local, false otherwise
      */
+    @Deprecated
     default boolean isLocal(JavacallContext context) {
         return false;
     }
@@ -59,7 +57,7 @@ public interface IJavacallHandler extends IWenyanFunction {
                 thread, this, thread.program.holder);
 
         if (getExecutor().isPresent()){
-            getExecutor().get().exec(context);
+            getExecutor().get().getExecQueue().receive(context);
             thread.block();
             return;
         }

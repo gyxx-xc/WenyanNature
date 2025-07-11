@@ -7,6 +7,8 @@ import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
@@ -35,7 +37,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import static indi.wenyan.interpreter.utils.WenyanPackages.WENYAN_BASIC_PACKAGES;
 
@@ -99,6 +104,11 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
     }
 
     @Override
+    public String packageName() {
+        return "";
+    }
+
+    @Override
     public WenyanRuntime getPackage() {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
@@ -115,6 +125,25 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
+                .function("「find」", new IJavacallHandler() {
+                    @Override
+                    public IWenyanValue handle(JavacallContext context) {
+                        int RANGE = 3;
+                        for (BlockPos b : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE),
+                                getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
+                            assert level != null;
+                            if (level.getBlockEntity(b) instanceof IWenyanExecutor executor) {
+                                context.thread().currentRuntime().importEnvironment(executor.getPackage());
+                            }
+                        }
+                        return WenyanNull.NULL;
+                    }
+
+                    @Override
+                    public Optional<IWenyanExecutor> getExecutor() {
+                        return Optional.of(BlockRunner.this);
+                    }
+                })
                 .function(new String[]{"書", "书"}, new IOutputHandlerHelper() {
                     @Override
                     public void output(String message) {
@@ -133,8 +162,8 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
     }
 
     @Override
-    public void exec(JavacallContext request) {
-        requests.receive(request);
+    public ExecQueue getExecQueue() {
+        return requests;
     }
 
     @SuppressWarnings("unused")

@@ -189,6 +189,5 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 consumer.accept(pedestal);
             }
         }
-
     }
 }

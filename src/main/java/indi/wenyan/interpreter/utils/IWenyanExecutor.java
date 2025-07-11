@@ -10,7 +10,9 @@ import java.util.Queue;
 public interface IWenyanExecutor {
     WenyanRuntime getPackage();
 
-    void exec(JavacallContext request);
+    String packageName();
+
+    ExecQueue getExecQueue();
 
     class ExecQueue {
         private final Queue<JavacallContext> queue = new LinkedList<>();
@@ -21,7 +23,7 @@ public interface IWenyanExecutor {
 
         public void handle() {
             while (!queue.isEmpty()) {
-                JavacallContext request = queue.poll();
+                JavacallContext request = queue.remove();
                 try {
                     request.thread().currentRuntime().processStack
                             .push(request.handler().handle(request));
