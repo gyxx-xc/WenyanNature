@@ -87,7 +87,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
         }
         program = new WenyanProgram(programBuilder.toString(),
                 player, this);
-        program.run();
+        program.createThread();
     }
 
     public void addOutput(String text) {
@@ -98,7 +98,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
     }
 
     @Override
-    public WenyanRuntime getBaseEnvironment() {
+    public WenyanRuntime getPackage() {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
@@ -114,7 +114,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
-                .function(new String[]{"書", "书"}, (IOutputHandler) message -> {
+                .function(new String[]{"書", "书"}, (IOutputHandlerHelper) message -> {
                     if (getLevel() instanceof ServerLevel sl)
                         PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
                                 new BlockOutputPacket(getBlockPos(), message));

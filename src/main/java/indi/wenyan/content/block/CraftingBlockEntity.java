@@ -107,7 +107,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                             WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
                             entity.player, entity.checker);
                     entity.checker.init(entity.runner.program);
-                    entity.runner.program.run();
+                    entity.runner.program.createThread();
                 }
             }
         }
@@ -144,7 +144,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         runner.program = new WenyanProgram(runner.pages,
                 WenyanPackages.CRAFTING_BASE_ENVIRONMENT, player, checker);
         checker.init(runner.program);
-        runner.program.run();
+        runner.program.createThread();
         isCrafting = true;
     }
 

@@ -10,7 +10,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import net.minecraft.network.chat.Component;
 
-public class OutputHandler implements IOutputHandler {
+public class OutputHandler implements IOutputHandlerHelper {
 
     @Override
     public void output(String message) throws WenyanException.WenyanThrowException {

@@ -14,8 +14,8 @@ import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WenyanProgram {
 
@@ -24,7 +24,7 @@ public class WenyanProgram {
     public final WenyanBytecode baseBytecode = new WenyanBytecode();
     public final WenyanRuntime baseEnvironment;
 
-    public final WenyanThread mainThread = new WenyanThread(this);
+    public AtomicInteger runningCounter = new AtomicInteger(0);
     public final Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
     public final Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
@@ -63,7 +63,7 @@ public class WenyanProgram {
     }
 
     public WenyanProgram(String code, Player holder, IWenyanExecutor executor) {
-        this(code, executor.getBaseEnvironment(), holder,
+        this(code, executor.getPackage(), holder,
                 new JavacallContext.ExecutorWarper(executor));
     }
 
@@ -79,14 +79,16 @@ public class WenyanProgram {
         }
         this.baseEnvironment = baseEnvironment;
         this.holder = holder;
+        programJavaThread = new Thread(this::scheduler);
+        programJavaThread.start();
     }
 
-    public void run() {
-        mainThread.call(baseEnvironment);
-        mainThread.call(new WenyanRuntime(baseBytecode));
-        readyQueue.add(mainThread);
-        programJavaThread = new Thread(() -> scheduler(this));
-        programJavaThread.start();
+    public void createThread() {
+        WenyanThread thread = new WenyanThread(this);
+        thread.call(baseEnvironment);
+        thread.call(new WenyanRuntime(baseBytecode));
+        readyQueue.add(thread);
+        runningCounter.getAndIncrement();
     }
 
     public void handle() {
@@ -97,7 +99,7 @@ public class WenyanProgram {
                         .push(request.handler().handle(request));
                 request.thread().unblock();
             } catch (WenyanException.WenyanThrowException | WenyanException e) {
-                request.thread().state = WenyanThread.State.DYING;
+                request.thread().die();
                 WenyanException.handleException(holder, e.getMessage());
             }
         }
@@ -116,27 +118,46 @@ public class WenyanProgram {
     }
 
     public boolean isRunning() {
-        return mainThread.state != WenyanThread.State.DYING;
+        return runningCounter.get() > 0;
     }
 
     // this on other thread
-    public static void scheduler(WenyanProgram program) {
+//    public static void scheduler(WenyanProgram program) {
+//        try {
+//            while (program.isRunning()) {
+//                program.accumulatedSteps.acquire(SWITCH_COST);
+//                if (program.readyQueue.isEmpty()) {
+//                    program.accumulatedSteps.drainPermits();
+//                    continue;
+//                }
+//
+//                WenyanThread thread = program.readyQueue.poll();
+//                thread.assignedSteps += SWITCH_STEP;
+//                thread.programLoop(program.accumulatedSteps);
+//            }
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
+//    }
+
+    public void scheduler() {
         try {
-            while (program.mainThread.state != WenyanThread.State.DYING) {
-                program.accumulatedSteps.acquire(SWITCH_COST);
-                if (program.readyQueue.isEmpty()) {
-                    program.accumulatedSteps.drainPermits();
+            while (true) {
+                accumulatedSteps.acquire(SWITCH_COST);
+                if (readyQueue.isEmpty()) {
+                    accumulatedSteps.drainPermits();
                     continue;
                 }
 
-                WenyanThread thread = program.readyQueue.poll();
+                WenyanThread thread = readyQueue.poll();
                 thread.assignedSteps += SWITCH_STEP;
-                thread.programLoop(program.accumulatedSteps);
+                thread.programLoop(accumulatedSteps);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
+
 
     public static void main(String[] args) {
         WenyanProgram program = new WenyanProgram(
@@ -174,7 +195,7 @@ public class WenyanProgram {
                         """,
                 WenyanPackages.WENYAN_BASIC_PACKAGES
         , null);
-        program.run();
+        program.createThread();
         while (true) {
             program.step();
             program.handle();

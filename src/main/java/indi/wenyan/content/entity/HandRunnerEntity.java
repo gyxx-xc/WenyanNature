@@ -42,7 +42,7 @@ public class HandRunnerEntity extends Projectile {
             if (getDeltaMovement().length() < 0.01) {
                 setDeltaMovement(Vec3.ZERO);
                 if (!level().isClientSide())
-                    program.run();
+                    program.createThread();
                 hasRun = true;
             } else {
                 setDeltaMovement(getDeltaMovement().scale(0.5));

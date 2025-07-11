@@ -6,7 +6,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 
-public interface IOutputHandler extends IJavacallHandler {
+public interface IOutputHandlerHelper extends IJavacallHandler {
 
     void output(String message) throws WenyanException.WenyanThrowException;
 
