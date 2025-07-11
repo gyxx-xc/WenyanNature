@@ -5,6 +5,7 @@ import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
@@ -34,9 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static indi.wenyan.interpreter.utils.WenyanPackages.WENYAN_BASIC_PACKAGES;
 
@@ -54,6 +53,8 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
     @Getter
     private final List<String> output = new LinkedList<>();
 
+    public final ExecQueue requests = new ExecQueue();
+
     public BlockRunner(BlockPos pos, BlockState blockState) {
         super(Registration.BLOCK_RUNNER.get(), pos, blockState);
     }
@@ -62,7 +63,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
     public static void tick(Level level, BlockPos pos, BlockState state, BlockRunner entity) {
         if (!level.isClientSide && entity.program != null && entity.program.isRunning()) {
             entity.program.step(entity.speed);
-            entity.program.handle();
+            entity.requests.handle();
         }
 
         if (entity.isCommunicating) {
@@ -114,12 +115,26 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
-                .function(new String[]{"書", "书"}, (IOutputHandlerHelper) message -> {
-                    if (getLevel() instanceof ServerLevel sl)
-                        PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
-                                new BlockOutputPacket(getBlockPos(), message));
+                .function(new String[]{"書", "书"}, new IOutputHandlerHelper() {
+                    @Override
+                    public void output(String message) {
+                        if (getLevel() instanceof ServerLevel sl)
+                            PacketDistributor.sendToPlayersTrackingChunk(sl,
+                                    new ChunkPos(getBlockPos()),
+                                    new BlockOutputPacket(getBlockPos(), message));
+                    }
+
+                    @Override
+                    public Optional<IWenyanExecutor> getExecutor() {
+                        return Optional.of(BlockRunner.this);
+                    }
                 })
                 .build();
+    }
+
+    @Override
+    public void exec(JavacallContext request) {
+        requests.receive(request);
     }
 
     @SuppressWarnings("unused")

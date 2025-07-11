@@ -29,7 +29,7 @@ public class WenyanProgram {
     public final Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
-    private Thread programJavaThread;
+    private final Thread programJavaThread;
 
     // STUB: used in error handler, might changed
     public final Player holder;
@@ -103,6 +103,10 @@ public class WenyanProgram {
                 WenyanException.handleException(holder, e.getMessage());
             }
         }
+    }
+
+    public void handleException(WenyanException e) {
+        WenyanException.handleException(holder, e.getMessage());
     }
 
     public void step() {

@@ -1,13 +1,19 @@
 package indi.wenyan.content.handler;
 
+import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.utils.IWenyanExecutor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IJavacallHandler extends IWenyanFunction {
     WenyanType<IJavacallHandler> TYPE = new WenyanType<>("javacall_handler", IJavacallHandler.class);
@@ -41,12 +47,22 @@ public interface IJavacallHandler extends IWenyanFunction {
         return 1;
     }
 
+    default Optional<IWenyanExecutor> getExecutor() {
+        return Optional.empty();
+    }
+
     @Override
     default void call(IWenyanValue self, WenyanThread thread,
                       List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException{
         JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
                 thread, this, thread.program.holder);
+
+        if (getExecutor().isPresent()){
+            getExecutor().get().exec(context);
+            thread.block();
+            return;
+        }
         if (isLocal(context)) {
             context.thread().currentRuntime().processStack.push(handle(context));
         } else {
