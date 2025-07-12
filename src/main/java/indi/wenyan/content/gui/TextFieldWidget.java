@@ -179,11 +179,16 @@ public class TextFieldWidget extends AbstractScrollWidget {
             int styleCounter = 0;
 
             for (var stringView : textField.getDisplayLines()) {
-                if (stringView.beginIndex() != stringView.endIndex() && withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                    if (isCursorRender && cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
+                if (stringView.beginIndex() != stringView.endIndex() &&
+                        withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                    if (isCursorRender && cursorInContent &&
+                            cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
                         // cursor
-                        cursorX = getX() + innerPadding() + font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
-                        guiGraphics.fill(cursorX, currentY - 1, cursorX + 1, currentY + 1 + font.lineHeight, CURSOR_INSERT_COLOR);
+                        cursorX = getX() + innerPadding() +
+                                font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
+                        guiGraphics.fill(cursorX, currentY - 1,
+                                cursorX + 1, currentY + 1 + font.lineHeight,
+                                CURSOR_INSERT_COLOR);
                     }
                     int lastEnd = stringView.beginIndex();
                     cursorX = getX() + innerPadding();
@@ -192,7 +197,8 @@ public class TextFieldWidget extends AbstractScrollWidget {
                         do {
                             end = textField.getStyleMarks().get(styleCounter).endIndex();
                         } while (end <= stringView.beginIndex() && ++styleCounter < textField.getStyleMarks().size());
-                        String line = content.substring(lastEnd, Math.clamp(end, stringView.beginIndex(), stringView.endIndex()));
+                        String line = content.substring(lastEnd,
+                                Math.clamp(end, stringView.beginIndex(), stringView.endIndex()));
                         var style = styleFromTokenType(textField.getStyleMarks().get(styleCounter).style());
                         cursorX = guiGraphics.drawString(font, Component.literal(line).withStyle(style),
                                 cursorX, currentY,
@@ -207,8 +213,9 @@ public class TextFieldWidget extends AbstractScrollWidget {
             }
 
             int cursorY = currentY - font.lineHeight;
-            if (isCursorRender && !cursorInContent && withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
-                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
+            if (isCursorRender && !cursorInContent &&
+                    withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
+                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, getX() + innerPadding(), cursorY, CURSOR_INSERT_COLOR);
             }
 
             if (textField.hasSelection()) {

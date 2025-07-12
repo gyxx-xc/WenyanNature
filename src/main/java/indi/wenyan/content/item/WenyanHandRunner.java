@@ -53,11 +53,10 @@ public class WenyanHandRunner extends BlockItem {
     @Override
     public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
         if (!player.isShiftKeyDown()) {
-            WritableBookContent writableBookContent = item.get(DataComponents.WRITABLE_BOOK_CONTENT);
-            if (writableBookContent != null) {
-                Stream<String> pages = writableBookContent.getPages(false);
-                String program = pages.collect(Collectors.joining("\n"));
-                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player, program, runningLevel);
+            var codeData = item.get(Registration.PROGRAM_CODE_DATA.get());
+            if (codeData != null) {
+                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player,
+                        codeData.code(), runningLevel);
                 player.level().addFreshEntity(handRunnerEntity);
 
                 item.shrink(1);
