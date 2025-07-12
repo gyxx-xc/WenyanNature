@@ -8,10 +8,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import net.minecraft.network.chat.Component;
-
-import java.util.Optional;
 
 public class OutputHandler implements IOutputHandlerHelper {
 

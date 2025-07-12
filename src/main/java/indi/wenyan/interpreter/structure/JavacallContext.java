@@ -4,7 +4,6 @@ import indi.wenyan.content.block.BlockRunner;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.IExecCallHandler;
-import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.IWenyanExecutor;

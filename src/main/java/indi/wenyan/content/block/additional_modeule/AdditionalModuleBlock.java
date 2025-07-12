@@ -1,7 +1,6 @@
 package indi.wenyan.content.block.additional_modeule;
 
 import indi.wenyan.content.handler.IExecCallHandler;
-import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;

@@ -1,6 +1,5 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.handler.JavacallHandlers;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;

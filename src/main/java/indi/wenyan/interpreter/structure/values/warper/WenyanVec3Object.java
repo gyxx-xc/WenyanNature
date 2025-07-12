@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
-import indi.wenyan.content.handler.JavacallHandlers;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
