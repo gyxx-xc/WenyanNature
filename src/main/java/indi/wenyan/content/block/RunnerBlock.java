@@ -137,7 +137,6 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        blockState.getProperties();
         return new BlockRunner(blockPos, blockState);
     }
 

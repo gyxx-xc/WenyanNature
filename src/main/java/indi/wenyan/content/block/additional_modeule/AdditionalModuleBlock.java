@@ -1,5 +1,6 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.additional_modeule;
 
+import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
@@ -36,20 +37,20 @@ public class AdditionalModuleBlock extends Block implements EntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new AdditionalModuleEntity(blockPos, blockState);
+        return Registration.ADDITIONAL_MODULE_BLOCK.get().newBlockEntity(blockPos, blockState);
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T>
+    getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == Registration.ADDITIONAL_MODULE_ENTITY.get())
-                ((AdditionalModuleEntity) entity).requests.handle();
+                ((AdditionalModuleEntity) entity).execQueue.handle();
         };
-
     }
 
     public static class AdditionalModuleEntity extends BlockEntity implements IWenyanExecutor {
-        public final ExecQueue requests = new ExecQueue();
+        public final ExecQueue execQueue = new ExecQueue();
 
         public AdditionalModuleEntity(BlockPos pos, BlockState blockState) {
             super(Registration.ADDITIONAL_MODULE_ENTITY.get(), pos, blockState);
@@ -57,7 +58,7 @@ public class AdditionalModuleBlock extends Block implements EntityBlock {
         @Override
         public WenyanRuntime getPackage() {
             return WenyanPackageBuilder.create()
-                    .function("「a」", new IJavacallHandler() {
+                    .function("「a」", new IExecCallHandler() {
                         @Override
                         public IWenyanValue handle(JavacallContext context) {
                             assert level != null;
@@ -82,7 +83,7 @@ public class AdditionalModuleBlock extends Block implements EntityBlock {
 
         @Override
         public ExecQueue getExecQueue() {
-            return requests;
+            return execQueue;
         }
     }
 }

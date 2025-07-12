@@ -7,7 +7,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3Object;
 import net.minecraft.world.phys.Vec3;
 
-public class SelfPositionHandler implements IJavacallHandler {
+public class SelfPositionHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) {

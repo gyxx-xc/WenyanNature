@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class MoveHandler implements IJavacallHandler {
+public class MoveHandler implements IExecCallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE};
 

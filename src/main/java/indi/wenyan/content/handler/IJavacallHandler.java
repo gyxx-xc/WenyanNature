@@ -1,34 +1,11 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.JavacallContext;
-import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.IWenyanExecutor;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface IJavacallHandler extends IWenyanFunction {
     WenyanType<IJavacallHandler> TYPE = new WenyanType<>("javacall_handler", IJavacallHandler.class);
-    IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
-
-    /**
-     * Deprecated: change to get Executor, a empty option value means local
-     * Decided if this handler is running at program thread.
-     * <p>
-     * the handler will be executed in the main thread of MC if it is not local,
-     * This is important since the MC is not thread-safe,
-     * and can cause strange bug and unmatched exception, making it really hard to debug.
-     *
-     * @return true if local, false otherwise
-     */
-    @Deprecated
-    default boolean isLocal(JavacallContext context) {
-        return false;
-    }
 
     /**
      * The step of this handler.
@@ -43,30 +20,6 @@ public interface IJavacallHandler extends IWenyanFunction {
     @SuppressWarnings("unused")
     default int getStep(int args, WenyanThread thread) {
         return 1;
-    }
-
-    default Optional<IWenyanExecutor> getExecutor() {
-        return Optional.empty();
-    }
-
-    @Override
-    default void call(IWenyanValue self, WenyanThread thread,
-                      List<IWenyanValue> argsList)
-            throws WenyanException.WenyanThrowException{
-        JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
-                thread, this, thread.program.holder);
-
-        if (getExecutor().isPresent()){
-            getExecutor().get().getExecQueue().receive(context);
-            thread.block();
-            return;
-        }
-        if (isLocal(context)) {
-            context.thread().currentRuntime().processStack.push(handle(context));
-        } else {
-            thread.program.requestThreads.add(context);
-            thread.block();
-        }
     }
 
     default WenyanType<?> type() {

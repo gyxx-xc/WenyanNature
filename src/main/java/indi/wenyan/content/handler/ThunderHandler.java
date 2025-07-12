@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 
-public class ThunderHandler implements IJavacallHandler {
+public class ThunderHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) {

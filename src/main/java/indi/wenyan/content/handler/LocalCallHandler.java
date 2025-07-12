@@ -1,7 +1,9 @@
 package indi.wenyan.content.handler;
 
+import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 import java.util.List;
@@ -13,13 +15,13 @@ public class LocalCallHandler implements IJavacallHandler {
         this.function = function;
     }
 
-    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        return function.apply(context.self(), context.args());
+    public IWenyanValue handle(IWenyanValue self, List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
+        return function.apply(self, argsList);
     }
 
     @Override
-    public boolean isLocal(JavacallContext context) {
-        return true;
+    public void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
+        thread.currentRuntime().processStack.push(handle(self, argsList));
     }
 
     @FunctionalInterface

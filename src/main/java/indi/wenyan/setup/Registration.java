@@ -2,6 +2,7 @@ package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
 import indi.wenyan.content.block.*;
+import indi.wenyan.content.block.additional_modeule.AdditionalModuleBlock;
 import indi.wenyan.content.data.OutputData;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;

@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.content.handler.LocalCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
@@ -75,11 +76,11 @@ public final class WenyanPackageBuilder {
         return function(name, new LocalCallHandler(function), argTypes);
     }
 
-    public WenyanPackageBuilder function(String name, IJavacallHandler javacall) {
+    public WenyanPackageBuilder function(String name, IExecCallHandler javacall) {
         return function(name, javacall, new WenyanType[0]);
     }
 
-    public WenyanPackageBuilder function(String[] name, IJavacallHandler javacall) {
+    public WenyanPackageBuilder function(String[] name, IExecCallHandler javacall) {
         for (String n : name) {
             function(n, javacall);
         }

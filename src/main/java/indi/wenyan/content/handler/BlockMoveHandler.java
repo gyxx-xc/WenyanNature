@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 
-public class BlockMoveHandler implements IJavacallHandler {
+public class BlockMoveHandler implements IExecCallHandler {
     public static final WenyanType<?>[] ARGS_TYPE = {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
     @Override

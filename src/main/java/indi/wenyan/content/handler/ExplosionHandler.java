@@ -9,7 +9,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import net.minecraft.world.level.Level;
 
-public class ExplosionHandler implements IJavacallHandler {
+public class ExplosionHandler implements IExecCallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanDouble.TYPE};
 

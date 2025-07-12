@@ -9,7 +9,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import net.minecraft.world.phys.Vec3;
 
-public class CommunicateHandler implements IJavacallHandler {
+public class CommunicateHandler implements IExecCallHandler {
     public static final WenyanType<?>[] ARG_TYPES =
             {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 

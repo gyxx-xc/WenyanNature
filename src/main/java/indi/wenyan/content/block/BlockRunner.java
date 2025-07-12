@@ -125,7 +125,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
-                .function("「find」", new IJavacallHandler() {
+                .function("「find」", new IExecCallHandler() {
                     @Override
                     public IWenyanValue handle(JavacallContext context) {
                         int RANGE = 3;

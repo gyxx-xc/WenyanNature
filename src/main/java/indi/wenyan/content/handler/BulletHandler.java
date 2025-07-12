@@ -11,7 +11,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import net.minecraft.world.phys.Vec3;
 
-public class BulletHandler implements IJavacallHandler {
+public class BulletHandler implements IExecCallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanInteger.TYPE};
 
