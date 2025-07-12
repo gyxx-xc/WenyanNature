@@ -36,11 +36,10 @@ public class BlockPlaceHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        var args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
         BlockPos blockPos = pos.offset(
-                Math.max(-10, Math.min(10, (int) args.get(0))),
-                Math.max(-10, Math.min(10, (int) args.get(1))),
-                Math.max(-10, Math.min(10, (int) args.get(2))));
+                Math.max(-10, Math.min(10, context.args().get(0).as(WenyanInteger.TYPE).value())),
+                Math.max(-10, Math.min(10, context.args().get(1).as(WenyanInteger.TYPE).value())),
+                Math.max(-10, Math.min(10, context.args().get(2).as(WenyanInteger.TYPE).value())));
         placeBlock(holder.level(), holder, blockPos, attach);
         return WenyanNull.NULL;
     }

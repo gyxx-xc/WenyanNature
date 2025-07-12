@@ -17,17 +17,17 @@ public class BulletHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-        var newArgs = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
-
         Vec3 dir = new Vec3(
-                Math.max(-10, Math.min(10, (double) newArgs.get(0))),
-                Math.max(-10, Math.min(10, (double) newArgs.get(1))),
-                Math.max(-10, Math.min(10, (double) newArgs.get(2))));
+                Math.max(-10, Math.min(10, context.args().get(0).as(WenyanDouble.TYPE).value())),
+                Math.max(-10, Math.min(10, context.args().get(1).as(WenyanDouble.TYPE).value())),
+                Math.max(-10, Math.min(10, context.args().get(2).as(WenyanDouble.TYPE).value())));
 
         if (context.runnerWarper().runner() instanceof HandRunnerEntity entity) {
-            BulletEntity bullet = new BulletEntity(entity.level(), entity.getPosition(0), dir,
-                    Math.max(1, Math.min(20, (double) newArgs.get(3))) / 10,
-                    Math.max(1, Math.min(200, (int) newArgs.get(4))), context.holder());
+            BulletEntity bullet = new BulletEntity(entity.level(), entity.getPosition(0),
+                    dir, Math.max(1,
+                    Math.min(20, context.args().get(3).as(WenyanDouble.TYPE).value())) / 10,
+                    Math.max(1, Math.min(200, context.args().get(4).as(WenyanInteger.TYPE).value())),
+                    context.holder());
             entity.level().addFreshEntity(bullet);
         }
         return WenyanNull.NULL;

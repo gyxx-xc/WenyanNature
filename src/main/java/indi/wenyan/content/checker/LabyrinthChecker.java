@@ -75,8 +75,8 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
 
             @Override
             public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanTypeException {
-                var args = JavacallHandlers.getArgs(argsList, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
-                return new Position((int) args.get(0), (int) args.get(1));
+                return new Position(argsList.get(0).as(WenyanInteger.TYPE).value(),
+                        argsList.get(1).as(WenyanInteger.TYPE).value());
             }
 
             @Override
@@ -111,8 +111,8 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return new WenyanBoolean(!isWall(x - 1, y - 1));
                     } else {
-                        var arg = JavacallHandlers.getArgs(args, new WenyanType[]{WenyanInteger.TYPE, WenyanInteger.TYPE});
-                        return new WenyanBoolean(!isWall((int) arg.get(0) - 1, (int) arg.get(1) - 1));
+                        return new WenyanBoolean(!isWall(args.get(0).as(WenyanInteger.TYPE).value() - 1,
+                                args.get(1).as(WenyanInteger.TYPE).value() - 1));
                     }
                 }));
                 default -> throw new UnsupportedOperationException("Unknown Map attribute: " + name);

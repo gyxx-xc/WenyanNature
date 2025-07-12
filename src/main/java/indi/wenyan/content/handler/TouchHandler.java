@@ -18,10 +18,9 @@ public class TouchHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
-        int dx = Math.max(-10, Math.min(10, (int) args.get(0)));
-        int dy = Math.max(-10, Math.min(10, (int) args.get(1)));
-        int dz = Math.max(-10, Math.min(10, (int) args.get(2)));
+        int dx = Math.max(-10, Math.min(10, context.args().get(0).as(WenyanInteger.TYPE).value()));
+        int dy = Math.max(-10, Math.min(10, context.args().get(1).as(WenyanInteger.TYPE).value()));
+        int dz = Math.max(-10, Math.min(10, context.args().get(2).as(WenyanInteger.TYPE).value()));
         if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             BlockPos blockPos = runner.getBlockPos().offset(dx, dy, dz);
             context.holder().level().getProfiler().push("explosion_blocks");

@@ -8,6 +8,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
@@ -17,13 +18,13 @@ public class MoveHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> newArgs = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
-        newArgs.set(0, Math.max(-20, Math.min(20, (double) newArgs.get(0))));
-        newArgs.set(1, Math.max(-20, Math.min(20, (double) newArgs.get(1))));
-        newArgs.set(2, Math.max(-20, Math.min(20, (double) newArgs.get(2))));
+        List<Double> newArgs = Lists.newArrayList();
+        newArgs.add(Math.max(-20, Math.min(20, context.args().get(0).as(WenyanDouble.TYPE).value())));
+        newArgs.add(Math.max(-20, Math.min(20, context.args().get(1).as(WenyanDouble.TYPE).value())));
+        newArgs.add(Math.max(-20, Math.min(20, context.args().get(2).as(WenyanDouble.TYPE).value())));
         if (context.runnerWarper().runner() instanceof HandRunnerEntity entity)
-            entity.setDeltaMovement(new Vec3((double) newArgs.get(0)/10,
-                    (double) newArgs.get(1)/10, (double) newArgs.get(2)/10));
+            entity.setDeltaMovement(new Vec3(newArgs.get(0) /10,
+                    newArgs.get(1) /10, newArgs.get(2) /10));
         return WenyanNull.NULL;
     }
 }

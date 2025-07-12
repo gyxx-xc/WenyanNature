@@ -11,6 +11,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
@@ -19,14 +20,14 @@ public class BlockMoveHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        List<Object> args = JavacallHandlers.getArgs(context.args(), ARGS_TYPE);
-        args.set(0, Math.max(-10, Math.min(10, (int) args.get(0))));
-        args.set(1, Math.max(-10, Math.min(10, (int) args.get(1))));
-        args.set(2, Math.max(-10, Math.min(10, (int) args.get(2))));
+        List<Integer> args = Lists.newArrayList();
+        args.add(Math.max(-10, Math.min(10, context.args().get(0).as(WenyanInteger.TYPE).value())));
+        args.add(Math.max(-10, Math.min(10, context.args().get(1).as(WenyanInteger.TYPE).value())));
+        args.add(Math.max(-10, Math.min(10, context.args().get(2).as(WenyanInteger.TYPE).value())));
 
         if (context.runnerWarper().runner() instanceof BlockRunner runner) {
             Level level = runner.getLevel();
-            BlockPos newPos = runner.getBlockPos().offset((int) args.get(0), (int) args.get(1), (int) args.get(2));
+            BlockPos newPos = runner.getBlockPos().offset(args.get(0), args.get(1), args.get(2));
             BlockPos attach = newPos.relative(RunnerBlock.getConnectedDirection(runner.getBlockState()).getOpposite());
             assert level != null;
             if (!level.getBlockState(attach).isCollisionShapeFullBlock(level, attach)) return WenyanNull.NULL;

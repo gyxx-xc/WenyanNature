@@ -36,9 +36,4 @@ public class OutputHandler implements IOutputHandlerHelper {
         }
         return WenyanNull.NULL;
     }
-
-    @Override
-    public Optional<IWenyanExecutor> getExecutor() {
-        return Optional.empty();
-    }
 }

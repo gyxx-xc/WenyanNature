@@ -34,8 +34,10 @@ public record WenyanVec3Object(Vec3 vec3) implements IWenyanObject {
                         if (args.size() == 1) {
                             return new WenyanVec3Object(vec3.add(args.getFirst().as(TYPE).vec3));
                         } else if (args.size() == 3) {
-                            var offset = JavacallHandlers.getArgs(args, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
-                            return new WenyanVec3Object(vec3.add((double) offset.get(0), (double) offset.get(1), (double) offset.get(2)));
+                            return new WenyanVec3Object(vec3.add(
+                                    args.get(0).as(WenyanDouble.TYPE).value(),
+                                    args.get(1).as(WenyanDouble.TYPE).value(),
+                                    args.get(2).as(WenyanDouble.TYPE).value()));
                         } else {
                             throw new WenyanException.WenyanVarException("args?");
                         }
@@ -85,8 +87,10 @@ public record WenyanVec3Object(Vec3 vec3) implements IWenyanObject {
             if (argsList.size() == 1) {
                 return argsList.getFirst().as(WenyanVec3Object.TYPE);
             } else {
-                var args = JavacallHandlers.getArgs(argsList, new WenyanType[]{WenyanDouble.TYPE, WenyanDouble.TYPE, WenyanDouble.TYPE});
-                return new WenyanVec3Object(new Vec3((double) args.get(0), (double) args.get(1), (double) args.get(2)));
+                return new WenyanVec3Object(new Vec3(
+                        argsList.get(0).as(WenyanDouble.TYPE).value(),
+                        argsList.get(1).as(WenyanDouble.TYPE).value(),
+                        argsList.get(2).as(WenyanDouble.TYPE).value()));
             }
         }
 
