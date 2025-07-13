@@ -44,6 +44,7 @@ import java.util.function.Supplier;
 import static indi.wenyan.WenyanProgramming.MODID;
 
 public final class Registration {
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
@@ -89,7 +90,7 @@ public final class Registration {
     public static final DeferredItem<Item> STARLIGHT_INK;
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
-    public static final Supplier<BlockEntityType<BlockRunner>> BLOCK_RUNNER;
+    public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY;
     public static final DeferredBlock<AdditionalPaper> ADDITIONAL_PAPER_BLOCK;
     public static final DeferredItem<BlockItem> ADDITIONAL_PAPER_BLOCK_ITEM;
 
@@ -144,25 +145,25 @@ public final class Registration {
         SERIALIZER = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
         RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
 
-        HAND_RUNNER = ITEMS.registerItem("hand_runner_0",
+        HAND_RUNNER = ITEMS.registerItem(HandRunnerEntity.ID_0,
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 0));
-        HAND_RUNNER_1 = ITEMS.registerItem("hand_runner",
+        HAND_RUNNER_1 = ITEMS.registerItem(HandRunnerEntity.ID_1,
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 1));
-        HAND_RUNNER_2 = ITEMS.registerItem("hand_runner_2",
+        HAND_RUNNER_2 = ITEMS.registerItem(HandRunnerEntity.ID_2,
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 2));
-        HAND_RUNNER_3 = ITEMS.registerItem("hand_runner_3",
+        HAND_RUNNER_3 = ITEMS.registerItem(HandRunnerEntity.ID_3,
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 3));
 
-        RUNNER_BLOCK = BLOCKS.register("runner_block", RunnerBlock::new);
-        BLOCK_RUNNER = BLOCK_ENTITY.register("block_runner",
+        RUNNER_BLOCK = BLOCKS.register(RunnerBlock.ID, RunnerBlock::new);
+        RUNNER_BLOCK_ENTITY = BLOCK_ENTITY.register(RunnerBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(BlockRunner::new, RUNNER_BLOCK.get())
+                        .of(RunnerBlockEntity::new, RUNNER_BLOCK.get())
                         .build(DSL.remainderType()));
-        HAND_RUNNER_ENTITY = ENTITY.register("hand_runner",
+        HAND_RUNNER_ENTITY = ENTITY.register(HandRunnerEntity.ID_1,
                 () -> EntityType.Builder
                         .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
                         .sized(0.45f, 1.0f)
-                        .build("hand_runner"));
+                        .build(HandRunnerEntity.ID_1));
 
         // Paper
         BAMBOO_PAPER = ITEMS.registerItem(BambooPaper.ID, BambooPaper::new);
@@ -180,64 +181,64 @@ public final class Registration {
         CINNABAR_INK = ITEMS.registerItem(CinnabarInk.ID, CinnabarInk::new);
         STARLIGHT_INK = ITEMS.registerItem(StarlightInk.ID, StarlightInk::new);
 
-        BULLET_ENTITY = ENTITY.register("bullet_entity",
+        BULLET_ENTITY = ENTITY.register(BulletEntity.ID,
                 () -> EntityType.Builder
                         .of((EntityType.EntityFactory<BulletEntity>) BulletEntity::new, MobCategory.MISC)
                         .sized(0.25f, 0.25f)
-                        .build("bullet_entity"));
+                        .build(BulletEntity.ID));
 
-        CRAFTING_BLOCK = BLOCKS.register("crafting_block", CraftingBlock::new);
-        CRAFTING_BLOCK_ITEM = ITEMS.registerItem("crafting_block",
+        CRAFTING_BLOCK = BLOCKS.register(CraftingBlock.ID, CraftingBlock::new);
+        CRAFTING_BLOCK_ITEM = ITEMS.registerItem(CraftingBlock.ID,
                 (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
-        CRAFTING_ENTITY = BLOCK_ENTITY.register("crafting_block",
+        CRAFTING_ENTITY = BLOCK_ENTITY.register(CraftingBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(CraftingBlockEntity::new, CRAFTING_BLOCK.get())
                         .build(DSL.remainderType()));
-        CRAFTING_CONTAINER = MENU_TYPE.register("crafting_block",
+        CRAFTING_CONTAINER = MENU_TYPE.register(CraftingBlock.ID,
                 () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
 
-        PEDESTAL_BLOCK = BLOCKS.register("pedestal_block", PedestalBlock::new);
-        PEDESTAL_BLOCK_ITEM = ITEMS.registerItem("pedestal_block",
+        PEDESTAL_BLOCK = BLOCKS.register(PedestalBlock.ID, PedestalBlock::new);
+        PEDESTAL_BLOCK_ITEM = ITEMS.registerItem(PedestalBlock.ID,
                 (properties) -> new BlockItem(PEDESTAL_BLOCK.get(), properties));
-        PEDESTAL_ENTITY = BLOCK_ENTITY.register("pedestal_block",
+        PEDESTAL_ENTITY = BLOCK_ENTITY.register(PedestalBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        ADDITIONAL_MODULE_BLOCK = BLOCKS.register("additional_module_block", AAdditionalModuleBlock::new);
-        ADDITIONAL_MODULE_BLOCK_ITEM = ITEMS.registerItem("additional_module_block",
+        ADDITIONAL_MODULE_BLOCK = BLOCKS.register(AAdditionalModuleBlock.ID, AAdditionalModuleBlock::new);
+        ADDITIONAL_MODULE_BLOCK_ITEM = ITEMS.registerItem(AAdditionalModuleBlock.ID,
                 (properties) -> new BlockItem(ADDITIONAL_MODULE_BLOCK.get(), properties));
-        ADDITIONAL_MODULE_ENTITY = BLOCK_ENTITY.register("additional_module_block",
+        ADDITIONAL_MODULE_ENTITY = BLOCK_ENTITY.register(AAdditionalModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(AAdditionalModuleEntity::new, ADDITIONAL_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        ADDITIONAL_PAPER_BLOCK = BLOCKS.register("additional_paper_block", AdditionalPaper::new);
-        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem("additional_paper_block",
+        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
+        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
                 (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
 
-        TIER_DATA = DATA.register("runner_tier_data",
+        TIER_DATA = DATA.register(RunnerTierData.ID,
                 () -> DataComponentType.<RunnerTierData>builder()
                         .persistent(RunnerTierData.CODEC)
                         .build());
-        OUTPUT_DATA = DATA.register("output_data",
+        OUTPUT_DATA = DATA.register(OutputData.ID,
                 () -> DataComponentType.<OutputData>builder()
                         .persistent(OutputData.CODEC)
                         .networkSynchronized(OutputData.STREAM_CODEC)
                         .build());
-        PROGRAM_CODE_DATA = DATA.register("program_code_data",
+        PROGRAM_CODE_DATA = DATA.register(ProgramCodeData.ID,
                 () -> DataComponentType.<ProgramCodeData>builder()
                         .persistent(ProgramCodeData.CODEC)
                         .networkSynchronized(ProgramCodeData.STREAM_CODEC)
                         .build());
 
-        ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register("answering_recipe",
+        ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register(AnsweringRecipe.ID,
                 AnsweringRecipe.Serializer::new);
-        ANSWERING_RECIPE_TYPE = RECIPE_TYPE.register("answering_recipe",
+        ANSWERING_RECIPE_TYPE = RECIPE_TYPE.register(AnsweringRecipe.ID,
                 () -> new RecipeType<>() {
                     @Override
                     public String toString() {
-                        return "answering_recipe";
+                        return AnsweringRecipe.ID;
                     }
                 });
 

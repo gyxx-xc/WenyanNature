@@ -1,6 +1,6 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.block.RunnerBlockEntity;
 import indi.wenyan.content.block.RunnerBlock;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -25,7 +25,7 @@ public class BlockMoveHandler implements IExecCallHandler {
         args.add(Math.max(-10, Math.min(10, context.args().get(1).as(WenyanInteger.TYPE).value())));
         args.add(Math.max(-10, Math.min(10, context.args().get(2).as(WenyanInteger.TYPE).value())));
 
-        if (context.runnerWarper().runner() instanceof BlockRunner runner) {
+        if (context.runnerWarper().runner() instanceof RunnerBlockEntity runner) {
             Level level = runner.getLevel();
             BlockPos newPos = runner.getBlockPos().offset(args.get(0), args.get(1), args.get(2));
             BlockPos attach = newPos.relative(RunnerBlock.getConnectedDirection(runner.getBlockState()).getOpposite());
@@ -33,7 +33,7 @@ public class BlockMoveHandler implements IExecCallHandler {
             if (!level.getBlockState(attach).isCollisionShapeFullBlock(level, attach)) return WenyanNull.NULL;
             level.setBlockAndUpdate(newPos, runner.getBlockState());
             level.neighborChanged(newPos, runner.getBlockState().getBlock(), newPos);
-            BlockRunner entity = (BlockRunner) level.getBlockEntity(newPos);
+            RunnerBlockEntity entity = (RunnerBlockEntity) level.getBlockEntity(newPos);
             assert entity != null;
 //            entity.copy((BlockRunner) level.getBlockEntity(runner.getBlockPos()));
 

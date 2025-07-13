@@ -40,7 +40,7 @@ import java.util.function.Consumer;
 @MethodsReturnNonnullByDefault
 public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     private boolean isCrafting;
-    private BlockRunner runner;
+    private RunnerBlockEntity runner;
     private CraftingAnswerChecker checker;
     private RecipeHolder<AnsweringRecipe> recipeHolder;
     private Player player; // the player who is crafting
@@ -113,7 +113,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
 
-    public void run(BlockRunner runner, Player player) {
+    public void run(RunnerBlockEntity runner, Player player) {
         assert level != null;
         if (isCrafting) {
             WenyanException.handleException(player, Component.translatable("error.wenyan_programming.already_run").getString());

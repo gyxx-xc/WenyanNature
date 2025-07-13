@@ -13,4 +13,5 @@ public record OutputData(String output) {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, OutputData> STREAM_CODEC =
             StreamCodec.composite(ByteBufCodecs.STRING_UTF8, OutputData::output, OutputData::new);
+    public static final String ID = "output_data";
 }

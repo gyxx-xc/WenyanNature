@@ -32,6 +32,7 @@ public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock impl
     public static final VoxelShape SOUTH_AABB;
     public static final VoxelShape WEST_AABB;
     public static final VoxelShape EAST_AABB;
+    public static final String ID = "additional_paper_block";
 
     @Override
     protected @NotNull MapCodec<RunnerBlock> codec() {

@@ -46,7 +46,7 @@ import java.util.Optional;
 import static indi.wenyan.interpreter.utils.WenyanPackages.WENYAN_BASIC_PACKAGES;
 
 @ParametersAreNonnullByDefault
-public class BlockRunner extends BlockEntity implements IWenyanExecutor {
+public class RunnerBlockEntity extends BlockEntity implements IWenyanExecutor {
     public WenyanProgram program;
 
     public String pages;
@@ -61,12 +61,12 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
 
     public final ExecQueue requests = new ExecQueue();
 
-    public BlockRunner(BlockPos pos, BlockState blockState) {
-        super(Registration.BLOCK_RUNNER.get(), pos, blockState);
+    public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     @SuppressWarnings("unused")
-    public static void tick(Level level, BlockPos pos, BlockState state, BlockRunner entity) {
+    public static void tick(Level level, BlockPos pos, BlockState state, RunnerBlockEntity entity) {
         if (!level.isClientSide && entity.program != null && entity.program.isRunning()) {
             entity.program.step(entity.speed);
             entity.requests.handle();
@@ -142,7 +142,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
 
                     @Override
                     public Optional<IWenyanExecutor> getExecutor() {
-                        return Optional.of(BlockRunner.this);
+                        return Optional.of(RunnerBlockEntity.this);
                     }
                 })
                 .function(new String[]{"書", "书"}, new IOutputHandlerHelper() {
@@ -156,7 +156,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
 
                     @Override
                     public Optional<IWenyanExecutor> getExecutor() {
-                        return Optional.of(BlockRunner.this);
+                        return Optional.of(RunnerBlockEntity.this);
                     }
                 })
                 .build();

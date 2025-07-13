@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class PedestalBlock extends Block implements EntityBlock {
 
     public static final Properties PROPERTIES = Properties.of();
+    public static final String ID = "pedestal_block";
 
     public PedestalBlock() {
         super(PROPERTIES);

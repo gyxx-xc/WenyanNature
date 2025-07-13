@@ -16,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class BulletEntity extends AbstractArrow {
+    public static final String ID = "bullet_entity";
     private int aliveTime;
     private int tickCount;
     public Player holder;

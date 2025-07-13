@@ -25,7 +25,7 @@ import java.util.Random;
 
 import static net.minecraft.client.renderer.RenderStateShard.*;
 
-public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
+public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity> {
     final ResourceLocation LIGHT = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/entity/bullet.png");
     final ResourceLocation AABB_WALL = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
 
@@ -40,7 +40,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
     }
 
     @Override
-    public void render(@NotNull BlockRunner be, float partialTicks,
+    public void render(@NotNull RunnerBlockEntity be, float partialTicks,
                        @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource,
                        int combinedLight, int combinedOverlay) {
         Vec3 beam = be.communicate;
@@ -66,7 +66,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
                     .setDepthTestState(NO_DEPTH_TEST)
                     .createCompositeState(false));
 
-    public void renderOutput(PoseStack poseStack, BlockRunner be, float partialTicks,
+    public void renderOutput(PoseStack poseStack, RunnerBlockEntity be, float partialTicks,
                              MultiBufferSource bufferSource, int combinedLight) {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
@@ -210,12 +210,12 @@ public class RunnerBlockRender implements BlockEntityRenderer<BlockRunner> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(BlockRunner blockEntity) {
+    public boolean shouldRenderOffScreen(RunnerBlockEntity blockEntity) {
         return true;
     }
 
     @Override
-    public AABB getRenderBoundingBox(BlockRunner blockEntity) {
+    public AABB getRenderBoundingBox(RunnerBlockEntity blockEntity) {
         return blockEntity.isCommunicating ? AABB.INFINITE : BlockEntityRenderer.super.getRenderBoundingBox(blockEntity);
     }
 }

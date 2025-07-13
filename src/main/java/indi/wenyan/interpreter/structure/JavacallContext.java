@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.block.RunnerBlockEntity;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.IExecCallHandler;
@@ -18,7 +18,8 @@ public record JavacallContext(RunnerWarper<?> runnerWarper, IWenyanValue self, L
         T runner();
     }
 
-    public record BlockRunnerWarper(BlockRunner runner) implements RunnerWarper<BlockRunner> { }
+    public record BlockRunnerWarper(
+            RunnerBlockEntity runner) implements RunnerWarper<RunnerBlockEntity> { }
     public record HandRunnerWarper(HandRunnerEntity runner) implements RunnerWarper<HandRunnerEntity> { }
     public record NullRunnerWarper(Void runner) implements RunnerWarper<Void> { }
     public record CraftingAnswerWarper(IAnsweringChecker runner) implements RunnerWarper<IAnsweringChecker> { }

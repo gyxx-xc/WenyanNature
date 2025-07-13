@@ -17,6 +17,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class HandRunnerEntity extends Projectile {
+    public static final String ID_1 = "hand_runner";
+    // String constants for registry names and entity IDs
+    public static final String ID_0 = "hand_runner_0";
+    public static final String ID_2 = "hand_runner_2";
+    public static final String ID_3 = "hand_runner_3";
     public WenyanProgram program;
     public boolean hasRun = false;
     public int speed;

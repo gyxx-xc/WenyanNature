@@ -1,6 +1,6 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.block.RunnerBlockEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
@@ -15,7 +15,7 @@ public class CommunicateHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-        if (context.runnerWarper().runner() instanceof BlockRunner runner) {
+        if (context.runnerWarper().runner() instanceof RunnerBlockEntity runner) {
             runner.communicate = new Vec3(
                     Math.max(-10, Math.min(10, context.args().get(0).as(WenyanInteger.TYPE).value())),
                     Math.max(-10, Math.min(10, context.args().get(1).as(WenyanInteger.TYPE).value())),

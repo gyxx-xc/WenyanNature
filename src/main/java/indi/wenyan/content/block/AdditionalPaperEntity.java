@@ -20,7 +20,7 @@ public class AdditionalPaperEntity extends BlockEntity {
     public List<String> pages;
 
     public AdditionalPaperEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.BLOCK_RUNNER.get(), pos, blockState);
+        super(Registration.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
         pages = new ArrayList<>();
         pages.add("書一");
     }

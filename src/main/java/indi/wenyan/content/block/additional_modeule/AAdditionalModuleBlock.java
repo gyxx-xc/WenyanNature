@@ -18,6 +18,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class AAdditionalModuleBlock extends Block implements EntityBlock {
     public static final Properties PROPERTIES = Properties.of();
+    public static final String ID = "additional_module_block";
 
     public AAdditionalModuleBlock() {
         super(PROPERTIES);

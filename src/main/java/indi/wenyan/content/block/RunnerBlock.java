@@ -51,11 +51,12 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     public static final VoxelShape SOUTH_AABB;
     public static final VoxelShape WEST_AABB;
     public static final VoxelShape EAST_AABB;
+    public static final String ID = "runner_block";
 
     @OnlyIn(Dist.CLIENT)
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        var runner = (BlockRunner) level.getBlockEntity(pos);
+        var runner = (RunnerBlockEntity) level.getBlockEntity(pos);
         assert runner != null;
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
@@ -137,7 +138,7 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new BlockRunner(blockPos, blockState);
+        return new RunnerBlockEntity(blockPos, blockState);
     }
 
     @Nullable
@@ -145,8 +146,8 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     public <T extends BlockEntity> BlockEntityTicker<T>
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
-            if (blockEntityType == Registration.BLOCK_RUNNER.get())
-                BlockRunner.tick(level1, pos, state1, (BlockRunner) entity);
+            if (blockEntityType == Registration.RUNNER_BLOCK_ENTITY.get())
+                RunnerBlockEntity.tick(level1, pos, state1, (RunnerBlockEntity) entity);
         };
     }
 

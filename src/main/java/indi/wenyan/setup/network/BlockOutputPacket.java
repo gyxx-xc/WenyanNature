@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.block.RunnerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,7 +29,7 @@ public record BlockOutputPacket(BlockPos pos, String output) implements CustomPa
     public static final IPayloadHandler<BlockOutputPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
-            if (entity instanceof BlockRunner runner) {
+            if (entity instanceof RunnerBlockEntity runner) {
                 runner.addOutput(packet.output());
             }
         }

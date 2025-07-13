@@ -14,4 +14,5 @@ public record ProgramCodeData(@NonNull String code) {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ProgramCodeData> STREAM_CODEC =
             StreamCodec.composite(ByteBufCodecs.STRING_UTF8, ProgramCodeData::code, ProgramCodeData::new);
+    public static final String ID = "program_code_data";
 }

@@ -1,6 +1,6 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.block.RunnerBlockEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
@@ -16,7 +16,7 @@ public class SelfPositionBlockHandler implements IExecCallHandler {
 
     @Override
     public IWenyanValue handle(JavacallContext context) {
-        if (context.runnerWarper().runner() instanceof BlockRunner runner) {
+        if (context.runnerWarper().runner() instanceof RunnerBlockEntity runner) {
             return new WenyanDouble(switch (direction) {
                 case DOWN -> runner.getBlockPos().getCenter().y - context.holder().position().y;
                 case UP -> context.holder().position().y - runner.getBlockPos().getCenter().y;

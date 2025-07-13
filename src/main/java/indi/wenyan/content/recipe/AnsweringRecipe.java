@@ -25,6 +25,8 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack output) implements Recipe<AnsweringRecipeInput> {
 
+    public static final String ID = "answering_recipe";
+
     @Override
     public boolean matches(AnsweringRecipeInput answeringRecipeInput, Level level) {
         if (level.isClientSide() || input.size() != answeringRecipeInput.size()){

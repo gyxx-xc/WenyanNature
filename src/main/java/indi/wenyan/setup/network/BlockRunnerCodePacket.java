@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.BlockRunner;
+import indi.wenyan.content.block.RunnerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,7 +29,7 @@ public record BlockRunnerCodePacket(BlockPos pos, String code) implements Custom
     public static final IPayloadHandler<BlockRunnerCodePacket> HANDLER = (packet, context) -> {
         if (context.flow().isServerbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
-            if (entity instanceof BlockRunner runner) {
+            if (entity instanceof RunnerBlockEntity runner) {
                 runner.pages = packet.code();
             }
         }

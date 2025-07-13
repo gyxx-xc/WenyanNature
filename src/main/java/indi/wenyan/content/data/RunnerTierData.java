@@ -15,6 +15,7 @@ public record RunnerTierData(int tier) implements TooltipProvider {
     public static final Codec<RunnerTierData> CODEC = Codec.INT.xmap(
             RunnerTierData::new, RunnerTierData::tier
     );
+    public static final String ID = "runner_tier_data";
 
     @Override
     public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
