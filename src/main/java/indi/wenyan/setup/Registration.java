@@ -2,7 +2,7 @@ package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
 import indi.wenyan.content.block.*;
-import indi.wenyan.content.block.additional_modeule.AdditionalModuleBlock;
+import indi.wenyan.content.block.additional_modeule.AdditionalModuleEntity;
 import indi.wenyan.content.data.OutputData;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
@@ -98,9 +98,9 @@ public final class Registration {
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
-    public static final DeferredBlock<AdditionalModuleBlock> ADDITIONAL_MODULE_BLOCK;
+    public static final DeferredBlock<AdditionalModuleEntity.AdditionalModuleBlock> ADDITIONAL_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> ADDITIONAL_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<AdditionalModuleBlock.AdditionalModuleEntity>> ADDITIONAL_MODULE_ENTITY;
+    public static final Supplier<BlockEntityType<AdditionalModuleEntity>> ADDITIONAL_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -214,12 +214,12 @@ public final class Registration {
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        ADDITIONAL_MODULE_BLOCK = BLOCKS.register("additional_module_block", AdditionalModuleBlock::new);
+        ADDITIONAL_MODULE_BLOCK = BLOCKS.register("additional_module_block", AdditionalModuleEntity.AdditionalModuleBlock::new);
         ADDITIONAL_MODULE_BLOCK_ITEM = ITEMS.registerItem("additional_module_block",
                 (properties) -> new BlockItem(ADDITIONAL_MODULE_BLOCK.get(), properties));
         ADDITIONAL_MODULE_ENTITY = BLOCK_ENTITY.register("additional_module_block",
                 () -> BlockEntityType.Builder
-                        .of(AdditionalModuleBlock.AdditionalModuleEntity::new, ADDITIONAL_MODULE_BLOCK.get())
+                        .of(AdditionalModuleEntity::new, ADDITIONAL_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
         ADDITIONAL_PAPER_BLOCK = BLOCKS.register("additional_paper_block", AdditionalPaper::new);
