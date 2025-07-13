@@ -106,10 +106,6 @@ public class WenyanProgram {
         }
     }
 
-    public void handleException(WenyanException e) {
-        WenyanException.handleException(holder, e.getMessage());
-    }
-
     public void step() {
         step(1);
     }

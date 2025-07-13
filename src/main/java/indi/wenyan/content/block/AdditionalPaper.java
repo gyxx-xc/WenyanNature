@@ -1,6 +1,7 @@
 package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -17,6 +18,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
     public static final Properties PROPERTIES;
