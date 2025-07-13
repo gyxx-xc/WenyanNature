@@ -64,7 +64,7 @@ public class WenyanProgram {
     }
 
     public WenyanProgram(String code, Player holder, IWenyanExecutor executor) {
-        this(code, executor.getPackage(), holder,
+        this(code, executor.getExecPackage(), holder,
                 new JavacallContext.ExecutorWarper(executor));
     }
 

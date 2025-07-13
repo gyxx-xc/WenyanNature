@@ -104,12 +104,12 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
     }
 
     @Override
-    public String packageName() {
+    public String getPackageName() {
         return "";
     }
 
     @Override
-    public WenyanRuntime getPackage() {
+    public WenyanRuntime getExecPackage() {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
                 .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
@@ -133,7 +133,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
                                 getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
                             assert level != null;
                             if (level.getBlockEntity(b) instanceof IWenyanExecutor executor) {
-                                context.thread().currentRuntime().importEnvironment(executor.getPackage());
+                                context.thread().currentRuntime().importEnvironment(executor.getExecPackage());
                             }
                         }
                         return WenyanNull.NULL;

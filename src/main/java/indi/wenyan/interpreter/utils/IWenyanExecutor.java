@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public interface IWenyanExecutor {
-    WenyanRuntime getPackage();
+    WenyanRuntime getExecPackage();
 
-    String packageName();
+    String getPackageName();
 
     ExecQueue getExecQueue();
 
