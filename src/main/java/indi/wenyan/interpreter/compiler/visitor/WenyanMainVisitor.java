@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanCodes;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class WenyanMainVisitor extends WenyanVisitor {
@@ -30,14 +31,12 @@ public class WenyanMainVisitor extends WenyanVisitor {
     // STUB: might change
     @Override
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
-        if (ctx.IDENTIFIER().isEmpty()) {
-            bytecode.add(WenyanCodes.IMPORT, ctx.STRING_LITERAL().getText());
-        } else {
-            bytecode.add(WenyanCodes.PUSH, new WenyanString(ctx.STRING_LITERAL().getText()));
-            for (TerminalNode id : ctx.IDENTIFIER())
-                bytecode.add(WenyanCodes.IMPORT_FROM, id.getText());
-            bytecode.add(WenyanCodes.POP);
-        }
+        // stack: id1, id2, ..., package, import
+        for (TerminalNode id : ctx.IDENTIFIER())
+            bytecode.add(WenyanCodes.PUSH, new WenyanString(id.getText()));
+        bytecode.add(WenyanCodes.PUSH, new WenyanString(ctx.STRING_LITERAL().getText()));
+        bytecode.add(WenyanCodes.LOAD, WenyanPackages.IMPORT_ID);
+        bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size() + 1);
         return true;
     }
 }

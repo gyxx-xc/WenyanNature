@@ -11,6 +11,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockOutputPacket;
 import lombok.Getter;
@@ -125,7 +126,7 @@ public class BlockRunner extends BlockEntity implements IWenyanExecutor {
                 .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
                 .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
                 .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
-                .function("「find」", new IExecCallHandler() {
+                .function(WenyanPackages.IMPORT_ID, new IExecCallHandler() {
                     @Override
                     public IWenyanValue handle(JavacallContext context) {
                         int RANGE = 3;

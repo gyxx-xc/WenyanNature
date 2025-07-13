@@ -23,6 +23,7 @@ public enum WenyanPackages {;
     public static final String AND_ID = "且";
     public static final String OR_ID = "或";
     public static final String MOD_ID = "模";
+    public static final String IMPORT_ID = "import";
 
     public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", WenyanPackageBuilder.reduceWith(IWenyanValue::add))
