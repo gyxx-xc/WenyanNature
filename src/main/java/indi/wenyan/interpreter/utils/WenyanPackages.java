@@ -135,9 +135,6 @@ public enum WenyanPackages {;
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
             .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
-//                .function("「放置」", new BlockPlaceHandler(holder,
-//                        (BlockItem) Items.ACACIA_LOG.asItem()
-//                        ,pos, block))
             .function("「移」", new BlockMoveHandler(), BlockMoveHandler.ARGS_TYPE)
             .function("「放」", new CommunicateHandler(), CommunicateHandler.ARG_TYPES)
             .function("「紅石量」", new RedstoneSignalHandler())

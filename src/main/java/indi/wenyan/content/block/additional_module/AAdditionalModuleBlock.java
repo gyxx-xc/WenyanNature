@@ -1,4 +1,4 @@
-package indi.wenyan.content.block.additional_modeule;
+package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;

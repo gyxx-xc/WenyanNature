@@ -1,4 +1,4 @@
-package indi.wenyan.content.block.additional_modeule;
+package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
