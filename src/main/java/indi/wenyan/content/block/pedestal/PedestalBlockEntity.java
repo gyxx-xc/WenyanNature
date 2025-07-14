@@ -1,4 +1,4 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.pedestal;
 
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;

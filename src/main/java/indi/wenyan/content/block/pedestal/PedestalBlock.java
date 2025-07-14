@@ -1,4 +1,4 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.pedestal;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

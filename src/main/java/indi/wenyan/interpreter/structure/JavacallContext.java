@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.content.block.RunnerBlockEntity;
+import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.IExecCallHandler;

@@ -1,4 +1,4 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.pedestal;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

@@ -1,6 +1,7 @@
 package indi.wenyan.content.block;
 
 import com.mojang.serialization.MapCodec;
+import indi.wenyan.content.block.runner.RunnerBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

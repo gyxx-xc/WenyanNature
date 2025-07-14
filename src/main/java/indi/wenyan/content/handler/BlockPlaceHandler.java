@@ -1,6 +1,6 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.content.block.RunnerBlock;
+import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;

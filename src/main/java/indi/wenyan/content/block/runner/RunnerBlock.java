@@ -1,6 +1,7 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.runner;
 
 import com.mojang.serialization.MapCodec;
+import indi.wenyan.content.block.CraftingBlockEntity;
 import indi.wenyan.content.gui.TextFieldScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;

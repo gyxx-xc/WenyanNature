@@ -1,5 +1,7 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.runner;
 
+import indi.wenyan.content.block.AdditionalPaperEntity;
+import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.handler.*;
@@ -16,26 +18,18 @@ import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockOutputPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -46,7 +40,7 @@ import java.util.Optional;
 import static indi.wenyan.interpreter.utils.WenyanPackages.WENYAN_BASIC_PACKAGES;
 
 @ParametersAreNonnullByDefault
-public class RunnerBlockEntity extends BlockEntity implements IWenyanExecutor {
+public class RunnerBlockEntity extends DataBlockEntity implements IWenyanExecutor {
     public WenyanProgram program;
 
     public String pages;
@@ -104,6 +98,7 @@ public class RunnerBlockEntity extends BlockEntity implements IWenyanExecutor {
         }
     }
 
+
     @Override
     public String getPackageName() {
         return "";
@@ -113,52 +108,9 @@ public class RunnerBlockEntity extends BlockEntity implements IWenyanExecutor {
     public WenyanRuntime getExecPackage() {
         return WenyanPackageBuilder.create()
                 .environment(WENYAN_BASIC_PACKAGES)
-                .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
-//                .function("「放置」", new BlockPlaceHandler(holder,
-//                        (BlockItem) Items.ACACIA_LOG.asItem()
-//                        ,pos, block))
-                .function("「移」", new BlockMoveHandler(), BlockMoveHandler.ARGS_TYPE)
                 .function("「放」", new CommunicateHandler(), CommunicateHandler.ARG_TYPES)
-                .function("「紅石量」", new RedstoneSignalHandler())
-                .function("「己於上」", new SelfPositionBlockHandler(Direction.UP))
-                .function("「己於下」", new SelfPositionBlockHandler(Direction.DOWN))
-                .function("「己於東」", new SelfPositionBlockHandler(Direction.EAST))
-                .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
-                .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
-                .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
-                .function(WenyanPackages.IMPORT_ID, new IExecCallHandler() {
-                    @Override
-                    public IWenyanValue handle(JavacallContext context) {
-                        int RANGE = 3;
-                        for (BlockPos b : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE),
-                                getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
-                            assert level != null;
-                            if (level.getBlockEntity(b) instanceof IWenyanExecutor executor) {
-                                context.thread().currentRuntime().importEnvironment(executor.getExecPackage());
-                            }
-                        }
-                        return WenyanNull.NULL;
-                    }
-
-                    @Override
-                    public Optional<IWenyanExecutor> getExecutor() {
-                        return Optional.of(RunnerBlockEntity.this);
-                    }
-                })
-                .function(new String[]{"書", "书"}, new IOutputHandlerHelper() {
-                    @Override
-                    public void output(String message) {
-                        if (getLevel() instanceof ServerLevel sl)
-                            PacketDistributor.sendToPlayersTrackingChunk(sl,
-                                    new ChunkPos(getBlockPos()),
-                                    new BlockOutputPacket(getBlockPos(), message));
-                    }
-
-                    @Override
-                    public Optional<IWenyanExecutor> getExecutor() {
-                        return Optional.of(RunnerBlockEntity.this);
-                    }
-                })
+                .function(WenyanPackages.IMPORT_ID, new ImportCallHandler())
+                .function(new String[]{"書", "书"}, new MyIOutputHandlerHelper())
                 .build();
     }
 
@@ -167,8 +119,10 @@ public class RunnerBlockEntity extends BlockEntity implements IWenyanExecutor {
         return requests;
     }
 
+
     @SuppressWarnings("unused")
-    private void saveData(CompoundTag tag, HolderLookup.Provider registries) {
+    @Override
+    protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null)
             tag.putString("pages", pages);
         if (additionalPages != null && !additionalPages.isEmpty()) {
@@ -189,7 +143,8 @@ public class RunnerBlockEntity extends BlockEntity implements IWenyanExecutor {
     }
 
     @SuppressWarnings("unused")
-    private void loadData(CompoundTag tag, HolderLookup.Provider registries) {
+    @Override
+    protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
 
         if (tag.contains("pages")) {
             pages = tag.getString("pages");
@@ -223,34 +178,36 @@ public class RunnerBlockEntity extends BlockEntity implements IWenyanExecutor {
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        saveData(tag, registries);
+
+    private class ImportCallHandler extends ThisCallHandler implements IExecCallHandler {
+        @Override
+        public IWenyanValue handle(JavacallContext context) {
+            int RANGE = 3;
+            for (BlockPos b : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE),
+                    getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
+                assert level != null;
+                if (level.getBlockEntity(b) instanceof IWenyanExecutor executor) {
+                    context.thread().currentRuntime().importEnvironment(executor.getExecPackage());
+                }
+            }
+            return WenyanNull.NULL;
+        }
     }
 
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        loadData(tag, registries);
+    private class MyIOutputHandlerHelper extends ThisCallHandler implements IOutputHandlerHelper {
+        @Override
+        public void output(String message) {
+            if (getLevel() instanceof ServerLevel sl)
+                PacketDistributor.sendToPlayersTrackingChunk(sl,
+                        new ChunkPos(getBlockPos()),
+                        new BlockOutputPacket(getBlockPos(), message));
+        }
     }
 
-    @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = super.getUpdateTag(registries);
-        saveData(tag, registries);
-        return tag;
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        super.onDataPacket(net, pkt, lookupProvider);
-        loadData(pkt.getTag(), lookupProvider);
+    private abstract class ThisCallHandler implements IExecCallHandler {
+        @Override
+        public Optional<IWenyanExecutor> getExecutor() {
+            return Optional.of(RunnerBlockEntity.this);
+        }
     }
 }
