@@ -148,7 +148,7 @@ RunnerBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBloc
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == Registration.RUNNER_BLOCK_ENTITY.get())
-                RunnerBlockEntity.tick(level1, pos, state1, (RunnerBlockEntity) entity);
+                ((RunnerBlockEntity) entity).tick(level1, pos, state1);
         };
     }
 

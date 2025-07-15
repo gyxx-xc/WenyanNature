@@ -2,6 +2,7 @@ package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.AdditionalPaperEntity;
 import indi.wenyan.content.block.DataBlockEntity;
+import indi.wenyan.content.block.runner.handler.CommunicateHandler;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.handler.*;
@@ -60,14 +61,14 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanExecuto
     }
 
     @SuppressWarnings("unused")
-    public static void tick(Level level, BlockPos pos, BlockState state, RunnerBlockEntity entity) {
-        if (!level.isClientSide && entity.program != null && entity.program.isRunning()) {
-            entity.program.step(entity.speed);
-            entity.requests.handle();
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (!level.isClientSide && program != null && program.isRunning()) {
+            program.step(speed);
+            requests.handle();
         }
 
-        if (entity.isCommunicating) {
-            entity.isCommunicating = false;
+        if (isCommunicating) {
+            isCommunicating = false;
         }
     }
 

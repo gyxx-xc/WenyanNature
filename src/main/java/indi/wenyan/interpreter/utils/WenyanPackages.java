@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.content.block.runner.handler.CommunicateHandler;
 import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
