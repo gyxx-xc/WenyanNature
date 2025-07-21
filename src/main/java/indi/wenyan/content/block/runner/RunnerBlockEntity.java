@@ -192,7 +192,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanExecuto
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
     }
 
-
     private class ImportCallHandler extends ThisCallHandler implements IExecCallHandler {
         @Override
         public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {

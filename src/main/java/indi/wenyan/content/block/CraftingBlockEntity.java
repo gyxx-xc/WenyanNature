@@ -81,35 +81,35 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @SuppressWarnings("unused")
-    public static void tick(Level level, BlockPos pos, BlockState state, CraftingBlockEntity entity) {
+    public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide()) {
-            if (entity.isCrafting && !entity.runner.program.isRunning()) {
-                entity.round ++;
-                entity.result = entity.checker.getResult();
+            if (isCrafting && !runner.program.isRunning()) {
+                round ++;
+                result = checker.getResult();
 
                 // Check if the crafting is still valid
                 ArrayList<ItemStack> pedestalItems = new ArrayList<>();
                 forNearbyPedestal(level, pos, p -> pedestalItems.add(p.getItem(0)));
                 var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
                         new AnsweringRecipeInput(pedestalItems), level);
-                if (recipeHolder.isEmpty() || !recipeHolder.get().equals(entity.recipeHolder)) {
-                    entity.result = IAnsweringChecker.Result.RUNTIME_ERROR;
+                if (recipeHolder.isEmpty() || !recipeHolder.get().equals(recipeHolder)) {
+                    result = IAnsweringChecker.Result.RUNTIME_ERROR;
                 }
 
                 // handle the result
-                if (entity.result != IAnsweringChecker.Result.ANSWER_CORRECT) {
-                    entity.isCrafting = false;
-                } else if (entity.round >= entity.maxRound) {
-                    entity.isCrafting = false;
+                if (result != IAnsweringChecker.Result.ANSWER_CORRECT) {
+                    isCrafting = false;
+                } else if (round >= maxRound) {
+                    isCrafting = false;
                     forNearbyPedestal(level, pos, p -> p.removeItem(0, p.getMaxStackSize()));
-                    entity.ejectItem();
+                    ejectItem();
                 } else {
                     // continue
-                    entity.runner.program = new WenyanProgram(entity.runner.pages,
+                    runner.program = new WenyanProgram(runner.pages,
                             WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
-                            entity.player, entity.checker);
-                    entity.checker.init(entity.runner.program);
-                    entity.runner.program.createThread();
+                            player, checker);
+                    checker.init(runner.program);
+                    runner.program.createThread();
                 }
             }
         }

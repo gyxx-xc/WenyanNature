@@ -52,7 +52,7 @@ public class CraftingBlock extends Block implements EntityBlock {
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return level.isClientSide() ? null : (type, pos, state1, entity) -> {
             if (blockEntityType == Registration.CRAFTING_ENTITY.get())
-                CraftingBlockEntity.tick(level, pos, state1, (CraftingBlockEntity) entity);
+                ((CraftingBlockEntity) entity).tick(level, pos, state1);
         };
     }
 }
