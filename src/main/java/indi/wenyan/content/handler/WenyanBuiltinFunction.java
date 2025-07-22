@@ -6,10 +6,10 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 import java.util.List;
 
-public class LocalCallHandler implements IJavacallHandler {
-    private final LocalFunction function;
+public class WenyanBuiltinFunction implements IJavacallHandler {
+    private final BuiltinFunction function;
 
-    public LocalCallHandler(LocalFunction function) {
+    public WenyanBuiltinFunction(BuiltinFunction function) {
         this.function = function;
     }
 
@@ -23,8 +23,8 @@ public class LocalCallHandler implements IJavacallHandler {
     }
 
     @FunctionalInterface
-    public
-    interface LocalFunction {
-        IWenyanValue apply(IWenyanValue self, List<IWenyanValue> args) throws WenyanException.WenyanThrowException;
+    public interface BuiltinFunction {
+        IWenyanValue apply(IWenyanValue self, List<IWenyanValue> args)
+                throws WenyanException.WenyanThrowException;
     }
 }

@@ -16,6 +16,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
@@ -45,6 +46,11 @@ public class AAdditionalModuleEntity extends BlockEntity implements IWenyanExecu
                 }
             })
             .build();
+
+    @Override
+    public Vec3 getPosition() {
+        return getBlockPos().getCenter();
+    }
 
     public AAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
         super(Registration.ADDITIONAL_MODULE_ENTITY.get(), pos, blockState);

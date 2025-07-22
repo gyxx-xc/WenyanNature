@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
-import indi.wenyan.content.handler.LocalCallHandler;
+import indi.wenyan.content.handler.WenyanBuiltinFunction;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
@@ -39,12 +39,12 @@ public record WenyanArrayList(List<IWenyanValue> values) implements IWenyanObjec
     @Override
     public IWenyanValue getAttribute(String name) {
         return switch (name) {
-            case WenyanDataParser.ARRAY_GET_ID -> new LocalCallHandler((self, args) -> {
+            case WenyanDataParser.ARRAY_GET_ID -> new WenyanBuiltinFunction((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return self.as(TYPE).get(args.getFirst().as(WenyanInteger.TYPE).value());
             });
-            case WenyanDataParser.ITER_ID -> new LocalCallHandler((self, args) -> {
+            case WenyanDataParser.ITER_ID -> new WenyanBuiltinFunction((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return new WenyanIterator(self.as(TYPE).values.iterator());

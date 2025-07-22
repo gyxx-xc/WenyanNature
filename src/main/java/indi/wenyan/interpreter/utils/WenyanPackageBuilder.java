@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.content.handler.IJavacallHandler;
-import indi.wenyan.content.handler.LocalCallHandler;
+import indi.wenyan.content.handler.WenyanBuiltinFunction;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
@@ -61,19 +61,19 @@ public final class WenyanPackageBuilder {
         }, new WenyanType[0]);
     }
 
-    public WenyanPackageBuilder function(String name, LocalCallHandler.LocalFunction function) {
+    public WenyanPackageBuilder function(String name, WenyanBuiltinFunction.BuiltinFunction function) {
         return function(name, function, new WenyanType[0]);
     }
 
-    public WenyanPackageBuilder function(String[] name, LocalCallHandler.LocalFunction function) {
+    public WenyanPackageBuilder function(String[] name, WenyanBuiltinFunction.BuiltinFunction function) {
         for (String n : name) {
             function(n, function);
         }
         return this;
     }
 
-    public WenyanPackageBuilder function(String name, LocalCallHandler.LocalFunction function, WenyanType<?>[] argTypes) {
-        return function(name, new LocalCallHandler(function), argTypes);
+    public WenyanPackageBuilder function(String name, WenyanBuiltinFunction.BuiltinFunction function, WenyanType<?>[] argTypes) {
+        return function(name, new WenyanBuiltinFunction(function), argTypes);
     }
 
     public WenyanPackageBuilder function(String name, IExecCallHandler javacall) {
@@ -97,7 +97,7 @@ public final class WenyanPackageBuilder {
         return this;
     }
 
-    public static LocalCallHandler.LocalFunction reduceWith(ReduceFunction function) {
+    public static WenyanBuiltinFunction.BuiltinFunction reduceWith(ReduceFunction function) {
         return (self, args) -> {
             if (args.size() <= 1)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
@@ -109,7 +109,7 @@ public final class WenyanPackageBuilder {
         };
     }
 
-    public static LocalCallHandler.LocalFunction boolBinaryOperation(java.util.function.BiFunction<Boolean, Boolean, Boolean> function) {
+    public static WenyanBuiltinFunction.BuiltinFunction boolBinaryOperation(java.util.function.BiFunction<Boolean, Boolean, Boolean> function) {
         return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
@@ -118,7 +118,7 @@ public final class WenyanPackageBuilder {
         };
     }
 
-    public static LocalCallHandler.LocalFunction compareOperation(CompareFunction function) {
+    public static WenyanBuiltinFunction.BuiltinFunction compareOperation(CompareFunction function) {
         return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());

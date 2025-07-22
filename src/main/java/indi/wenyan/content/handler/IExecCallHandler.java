@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.IWenyanExecutor;
+import indi.wenyan.interpreter.utils.IWenyanPlatform;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +23,14 @@ public interface IExecCallHandler extends IJavacallHandler {
         JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
                 thread, this, thread.program.holder);
 
-        if (getExecutor().isPresent())
-            getExecutor().get().getExecQueue().receive(context);
-        else
+        getExecutor().ifPresentOrElse((executor) -> {
+            if (thread.program.warper.runner() instanceof IWenyanPlatform platform){
+                platform.accept(context);
+            }
+        }, () -> {
             // deprecated, use getExecutor()
             thread.program.requestThreads.add(context);
+        });
         thread.block();
     }
 }

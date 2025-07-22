@@ -6,13 +6,12 @@ import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.IWenyanExecutor;
+import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
-import java.util.Objects;
 
 @Accessors(fluent = true)
 @Value
@@ -43,6 +42,6 @@ public class JavacallContext {
             IAnsweringChecker runner) implements RunnerWarper<IAnsweringChecker> {
     }
 
-    public record ExecutorWarper(IWenyanExecutor runner) implements RunnerWarper<IWenyanExecutor> {
+    public record PlatformWarper(IWenyanPlatform runner) implements RunnerWarper<IWenyanPlatform> {
     }
 }

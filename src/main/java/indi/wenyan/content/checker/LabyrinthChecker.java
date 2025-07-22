@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.handler.LocalCallHandler;
+import indi.wenyan.content.handler.WenyanBuiltinFunction;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
@@ -38,7 +38,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
             return switch (name) {
                 case "「「上下」」" -> new WenyanInteger(x);
                 case "「「左右」」" -> new WenyanInteger(y);
-                case "「「偏移」」" -> new LocalCallHandler(((self, args) -> {
+                case "「「偏移」」" -> new WenyanBuiltinFunction(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(TYPE) instanceof Position(int dx, int dy)) {
                         return new Position(self.as(TYPE).x + dx, self.as(TYPE).y + dy);
                     } else {
@@ -106,7 +106,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                 case "「「终」」" -> new Position(EndX + 1, EndY + 1);
                 case "「「長」」" -> new WenyanInteger(maxX);
                 case "「「寬」」" -> new WenyanInteger(maxY);
-                case "「「尋路」」" -> new LocalCallHandler(((self, args) -> {
+                case "「「尋路」」" -> new WenyanBuiltinFunction(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return new WenyanBoolean(!isWall(x - 1, y - 1));
                     } else {
