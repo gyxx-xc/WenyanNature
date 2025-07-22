@@ -66,6 +66,7 @@ public class WenyanProgram {
     public WenyanProgram(String code, Player holder, IWenyanPlatform executor) {
         this(code, WenyanPackages.WENYAN_BASIC_PACKAGES, holder,
                 new JavacallContext.PlatformWarper(executor));
+        this.baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, executor.getImportFunction());
     }
 
     private WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,

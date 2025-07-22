@@ -50,6 +50,52 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Getter
     private final List<String> output = new LinkedList<>();
 
+    @Getter
+    IWenyanFunction importFunction = (IJavacallHandler) (self, thread, argsList) -> {
+        String packageName = argsList.getFirst().as(WenyanString.TYPE).value();
+        int RANGE = 3;
+        IWenyanExecutor wenyanExecutor = null;
+        assert level != null;
+        for (BlockPos b : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE),
+                getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
+            if (level.getBlockEntity(b) instanceof IWenyanExecutor executor) {
+                if (executor.getPackageName().equals(packageName)) {
+                    wenyanExecutor = executor;
+                    break;
+                }
+            }
+        }
+
+        if (wenyanExecutor == null) {
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
+        }
+
+        var execPackage = wenyanExecutor.getExecPackage();
+        if (argsList.size() == 1) {
+            thread.currentRuntime().importEnvironment(execPackage);
+        } else {
+            for (IWenyanValue arg : argsList.subList(1, argsList.size())) {
+                String id = arg.as(WenyanString.TYPE).value();
+                if (execPackage.variables.containsKey(id)) {
+                    thread.currentRuntime().setVariable(id,
+                            execPackage.variables.get(id));
+                } else {
+                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.variable_not_found", id).getString());
+                }
+            }
+        }
+
+        if (getLevel() instanceof ServerLevel sl) {
+            PacketDistributor.sendToPlayersTrackingChunk(sl,
+                    new ChunkPos(getBlockPos()),
+                    new CommunicationLocationPacket(getBlockPos(), wenyanExecutor.getPosition())
+            );
+        }
+
+        // return null
+        thread.currentRuntime().processStack.push(WenyanNull.NULL);
+    };
+
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
     }
@@ -111,55 +157,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                         new CommunicationLocationPacket(getBlockPos(), executor.getPosition()));
             executor.getExecQueue().receive(context);
         });
-    }
-
-    @Override
-    public IWenyanFunction getImportFunction() {
-        return (IJavacallHandler) (self, thread, argsList) -> {
-            String packageName = argsList.getFirst().as(WenyanString.TYPE).value();
-            int RANGE = 3;
-            BlockPos pos = null;
-            assert level != null;
-            for (BlockPos b : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE),
-                    getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
-                if (level.getBlockEntity(b) instanceof IWenyanExecutor executor) {
-                    if (executor.getPackageName().equals(packageName)) {
-                        pos = b;
-                        break;
-                    }
-                }
-            }
-
-            if (pos == null) {
-                throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
-            }
-            if (level.getBlockEntity(pos) instanceof IWenyanExecutor executor) {
-                var execPackage = executor.getExecPackage();
-                if (argsList.size() == 1) {
-                    thread.currentRuntime().importEnvironment(execPackage);
-                } else {
-                    for (IWenyanValue arg : argsList.subList(1, argsList.size())) {
-                        String id = arg.as(WenyanString.TYPE).value();
-                        if (execPackage.variables.containsKey(id)) {
-                            thread.currentRuntime().setVariable(id,
-                                    execPackage.variables.get(id));
-                        } else {
-                            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.variable_not_found", id).getString());
-                        }
-                    }
-                }
-            }
-
-            if (getLevel() instanceof ServerLevel sl) {
-                PacketDistributor.sendToPlayersTrackingChunk(sl,
-                        new ChunkPos(getBlockPos()),
-                        new CommunicationLocationPacket(getBlockPos(), pos.getCenter())
-                );
-            }
-
-            // return null
-            thread.currentRuntime().processStack.push(WenyanNull.NULL);
-        };
     }
 
     @SuppressWarnings("unused")
