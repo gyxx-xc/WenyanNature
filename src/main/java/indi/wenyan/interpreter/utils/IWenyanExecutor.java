@@ -5,8 +5,8 @@ import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface IWenyanExecutor {
     WenyanRuntime getExecPackage();
@@ -18,8 +18,8 @@ public interface IWenyanExecutor {
     Vec3 getPosition();
 
     class ExecQueue {
-        // might change to a thread-safe queue in the future
-        private final Queue<JavacallContext> queue = new LinkedList<>();
+        // change to a thread-safe queue
+        private final Queue<JavacallContext> queue = new ConcurrentLinkedQueue<>();
 
         public void receive(JavacallContext request) {
             queue.add(request);
@@ -35,6 +35,7 @@ public interface IWenyanExecutor {
                 } catch (WenyanException.WenyanThrowException | WenyanException e) {
                     request.thread().die();
                     // TODO: show exception
+                    System.out.println(e);
                 }
             }
         }

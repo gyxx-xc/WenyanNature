@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
 public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vec3 to) implements CustomPacketPayload {
-    public static final Type<BlockOutputPacket> TYPE =
+    public static final Type<CommunicationLocationPacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "communication_location"));
 
     public static final StreamCodec<FriendlyByteBuf, CommunicationLocationPacket> STREAM_CODEC =

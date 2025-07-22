@@ -20,6 +20,7 @@ import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.setup.network.BlockOutputPacket;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
+import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -136,6 +137,10 @@ public final class Registration {
                 BlockOutputPacket.TYPE,
                 BlockOutputPacket.STREAM_CODEC,
                 BlockOutputPacket.HANDLER);
+        registrar.commonToClient(
+                CommunicationLocationPacket.TYPE,
+                CommunicationLocationPacket.STREAM_CODEC,
+                CommunicationLocationPacket.HANDLER);
     }
 
     static {
