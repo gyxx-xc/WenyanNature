@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.content.block.runner.handler.CommunicateHandler;
 import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -11,7 +10,6 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3Object;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
@@ -135,14 +133,6 @@ public enum WenyanPackages {;
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
             .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
-            .function("「移」", new BlockMoveHandler(), BlockMoveHandler.ARGS_TYPE)
-            .function("「放」", new CommunicateHandler(), CommunicateHandler.ARG_TYPES)
-            .function("「己於上」", new SelfPositionBlockHandler(Direction.UP))
-            .function("「己於下」", new SelfPositionBlockHandler(Direction.DOWN))
-            .function("「己於東」", new SelfPositionBlockHandler(Direction.EAST))
-            .function("「己於南」", new SelfPositionBlockHandler(Direction.SOUTH))
-            .function("「己於西」", new SelfPositionBlockHandler(Direction.WEST))
-            .function("「己於北」", new SelfPositionBlockHandler(Direction.NORTH))
             .build();
 
     public static final WenyanRuntime CRAFTING_BASE_ENVIRONMENT = WenyanPackageBuilder.create()

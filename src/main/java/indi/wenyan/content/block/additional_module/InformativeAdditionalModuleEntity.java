@@ -30,5 +30,4 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
     public InformativeAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
         super(Registration.INFORMATIVE_MODULE_ENTITY.get(), pos, blockState);
     }
-
 }
