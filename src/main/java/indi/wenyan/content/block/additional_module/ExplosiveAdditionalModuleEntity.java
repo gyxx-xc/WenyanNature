@@ -1,11 +1,9 @@
 package indi.wenyan.content.block.additional_module;
 
-import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
-import indi.wenyan.interpreter.utils.IWenyanExecutor;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
@@ -14,23 +12,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class AAdditionalModuleEntity extends BlockEntity implements IWenyanExecutor {
+public class ExplosiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
-    private final ExecQueue execQueue = new ExecQueue();
-    @Getter
-    private final String packageName = "「「a」」";
+    private final String packageName = "「「em」」";
     @Getter
     private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
-            .function("「a」", new IExecCallHandler() {
+            .function("「l」", new IThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {
                     assert level != null;
@@ -39,20 +32,10 @@ public class AAdditionalModuleEntity extends BlockEntity implements IWenyanExecu
                     level.addFreshEntity(e);
                     return WenyanNull.NULL;
                 }
-
-                @Override
-                public Optional<IWenyanExecutor> getExecutor() {
-                    return Optional.of(AAdditionalModuleEntity.this);
-                }
             })
             .build();
 
-    @Override
-    public Vec3 getPosition() {
-        return getBlockPos().getCenter();
-    }
-
-    public AAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.ADDITIONAL_MODULE_ENTITY.get(), pos, blockState);
+    public ExplosiveAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.EXPLOSIVE_MODULE_ENTITY.get(), pos, blockState);
     }
 }

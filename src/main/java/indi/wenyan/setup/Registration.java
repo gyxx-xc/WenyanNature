@@ -2,8 +2,8 @@ package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
 import indi.wenyan.content.block.*;
-import indi.wenyan.content.block.additional_module.AAdditionalModuleBlock;
-import indi.wenyan.content.block.additional_module.AAdditionalModuleEntity;
+import indi.wenyan.content.block.additional_module.ExplosiveAdditionalModuleBlock;
+import indi.wenyan.content.block.additional_module.ExplosiveAdditionalModuleEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
@@ -105,9 +105,9 @@ public final class Registration {
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
-    public static final DeferredBlock<AAdditionalModuleBlock> ADDITIONAL_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> ADDITIONAL_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<AAdditionalModuleEntity>> ADDITIONAL_MODULE_ENTITY;
+    public static final DeferredBlock<ExplosiveAdditionalModuleBlock> EXPLOSIVE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> EXPLOSIVE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<ExplosiveAdditionalModuleEntity>> EXPLOSIVE_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -214,12 +214,12 @@ public final class Registration {
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        ADDITIONAL_MODULE_BLOCK = BLOCKS.register(AAdditionalModuleBlock.ID, AAdditionalModuleBlock::new);
-        ADDITIONAL_MODULE_BLOCK_ITEM = ITEMS.registerItem(AAdditionalModuleBlock.ID,
-                (properties) -> new BlockItem(ADDITIONAL_MODULE_BLOCK.get(), properties));
-        ADDITIONAL_MODULE_ENTITY = BLOCK_ENTITY.register(AAdditionalModuleBlock.ID,
+        EXPLOSIVE_MODULE_BLOCK = BLOCKS.register(ExplosiveAdditionalModuleBlock.ID, ExplosiveAdditionalModuleBlock::new);
+        EXPLOSIVE_MODULE_BLOCK_ITEM = ITEMS.registerItem(ExplosiveAdditionalModuleBlock.ID,
+                (properties) -> new BlockItem(EXPLOSIVE_MODULE_BLOCK.get(), properties));
+        EXPLOSIVE_MODULE_ENTITY = BLOCK_ENTITY.register(ExplosiveAdditionalModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(AAdditionalModuleEntity::new, ADDITIONAL_MODULE_BLOCK.get())
+                        .of(ExplosiveAdditionalModuleEntity::new, EXPLOSIVE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
         ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);

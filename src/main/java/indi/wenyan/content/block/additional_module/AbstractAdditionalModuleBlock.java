@@ -1,6 +1,5 @@
 package indi.wenyan.content.block.additional_module;
 
-import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -16,25 +15,26 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class AAdditionalModuleBlock extends Block implements EntityBlock {
+public abstract class AbstractAdditionalModuleBlock extends Block implements EntityBlock {
     public static final Properties PROPERTIES = Properties.of();
-    public static final String ID = "additional_module_block";
 
-    public AAdditionalModuleBlock() {
-        super(PROPERTIES);
+    public AbstractAdditionalModuleBlock(Properties properties) {
+        super(properties);
     }
+
+    abstract BlockEntityType<?> getType();
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return Registration.ADDITIONAL_MODULE_ENTITY.get().create(blockPos, blockState);
+        return getType().create(blockPos, blockState);
     }
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T>
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
-            if (blockEntityType == Registration.ADDITIONAL_MODULE_ENTITY.get())
-                ((AAdditionalModuleEntity) entity).getExecQueue().handle();
+            if (blockEntityType == getType())
+                ((AbstractAdditionalModuleEntity) entity).getExecQueue().handle();
         };
     }
 }

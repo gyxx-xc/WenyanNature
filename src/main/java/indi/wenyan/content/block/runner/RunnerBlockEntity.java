@@ -12,7 +12,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.interpreter.utils.IWenyanExecutor;
+import indi.wenyan.interpreter.utils.IWenyanDevice;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
@@ -49,7 +49,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public boolean isCommunicating;
     @Getter
     private final List<String> output = new LinkedList<>();
-    private final IWenyanExecutor.ExecQueue execQueue = new IWenyanExecutor.ExecQueue();
+    private final IWenyanDevice.ExecQueue execQueue = new IWenyanDevice.ExecQueue();
 
     @Getter
     IWenyanFunction importFunction = (IJavacallHandler) (self, thread, argsList) -> {
@@ -58,11 +58,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 (context1) -> {
                     String packageName = context1.args().getFirst().as(WenyanString.TYPE).value();
                     int RANGE = 3;
-                    IWenyanExecutor wenyanExecutor = null;
+                    IWenyanDevice wenyanExecutor = null;
                     assert level != null;
                     for (BlockPos b : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE),
                             getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
-                        if (level.getBlockEntity(b) instanceof IWenyanExecutor executor) {
+                        if (level.getBlockEntity(b) instanceof IWenyanDevice executor) {
                             if (executor.getPackageName().equals(packageName)) {
                                 wenyanExecutor = executor;
                                 break;

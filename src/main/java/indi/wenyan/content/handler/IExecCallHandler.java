@@ -4,7 +4,7 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.IWenyanExecutor;
+import indi.wenyan.interpreter.utils.IWenyanDevice;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface IExecCallHandler extends IJavacallHandler {
     IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
-    default Optional<IWenyanExecutor> getExecutor() {
+    default Optional<IWenyanDevice> getExecutor() {
         return Optional.empty();
     }
 

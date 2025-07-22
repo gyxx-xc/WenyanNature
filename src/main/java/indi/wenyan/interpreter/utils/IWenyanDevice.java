@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public interface IWenyanExecutor {
+public interface IWenyanDevice {
     WenyanRuntime getExecPackage();
 
     String getPackageName();
