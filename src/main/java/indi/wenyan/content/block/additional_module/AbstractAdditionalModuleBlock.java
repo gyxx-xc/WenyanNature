@@ -18,8 +18,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public abstract class AbstractAdditionalModuleBlock extends Block implements EntityBlock {
     public static final Properties PROPERTIES = Properties.of();
 
-    public AbstractAdditionalModuleBlock(Properties properties) {
-        super(properties);
+    public AbstractAdditionalModuleBlock() {
+        super(PROPERTIES);
     }
 
     abstract BlockEntityType<?> getType();

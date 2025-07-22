@@ -15,9 +15,4 @@ public class ExplosiveAdditionalModuleBlock extends AbstractAdditionalModuleBloc
     BlockEntityType<?> getType() {
         return Registration.EXPLOSIVE_MODULE_ENTITY.get();
     }
-
-    public ExplosiveAdditionalModuleBlock() {
-        super(PROPERTIES);
-    }
-
 }

@@ -128,7 +128,6 @@ public enum WenyanPackages {;
             .function("「射」", new BulletHandler(), BulletHandler.ARGS_TYPE)
             .function("「移」", new MoveHandler(), MoveHandler.ARGS_TYPE)
             .function("「爆」", new ExplosionHandler())
-            .function("「雷」", new ThunderHandler())
             .object("「方位」", WenyanVec3Object.OBJECT_TYPE)
             .function("「己方位」", new SelfPositionHandler())
             .build();
@@ -138,7 +137,6 @@ public enum WenyanPackages {;
             .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
             .function("「移」", new BlockMoveHandler(), BlockMoveHandler.ARGS_TYPE)
             .function("「放」", new CommunicateHandler(), CommunicateHandler.ARG_TYPES)
-            .function("「紅石量」", new RedstoneSignalHandler())
             .function("「己於上」", new SelfPositionBlockHandler(Direction.UP))
             .function("「己於下」", new SelfPositionBlockHandler(Direction.DOWN))
             .function("「己於東」", new SelfPositionBlockHandler(Direction.EAST))
