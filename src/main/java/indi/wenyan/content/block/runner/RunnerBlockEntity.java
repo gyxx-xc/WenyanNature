@@ -149,11 +149,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public void setCommunicate(Vec3 to) {
-        if (level == null || level.isClientSide()) {
+        if (level == null || !level.isClientSide()) {
             return;
         }
-        this.communicate = new Vec3(to.x() - getBlockPos().getX(),
+        communicate = new Vec3(to.x() - getBlockPos().getX(),
                 to.y() - getBlockPos().getY(), to.z() - getBlockPos().getZ());
+        isCommunicating = true;
     }
 
     @Override

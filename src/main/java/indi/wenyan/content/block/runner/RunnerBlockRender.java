@@ -47,9 +47,8 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
     public void render(@NotNull RunnerBlockEntity be, float partialTicks,
                        @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource,
                        int combinedLight, int combinedOverlay) {
-        Vec3 beam = be.communicate;
-        if (beam != null) {
-            renderBeam(poseStack, bufferSource, combinedLight, beam);
+        if (be.isCommunicating) {
+            renderBeam(poseStack, bufferSource, combinedLight, be.communicate);
         }
 
         renderOutput(poseStack, be, partialTicks, bufferSource, combinedLight);
@@ -180,7 +179,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
         var random = new Random(beam.hashCode());
         Color color = Color.getHSBColor(random.nextFloat(), 0.8F, 0.9F);
         color = color.brighter().brighter();
-        int l = (int) beam.x + (int) beam.y + (int) beam.z;
+        int l = Math.abs((int) beam.x) + Math.abs((int) beam.y) + Math.abs((int) beam.z);
         for (int i = 0; i < l; i++) {
             poseStack.pushPose();
             Vec3 pos = beam.scale((double) i / l)
