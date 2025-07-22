@@ -208,6 +208,8 @@ public class TextFieldWidget extends AbstractScrollWidget {
                             styleCounter++;
                         }
                     } while (lastEnd < stringView.endIndex());
+                } else {
+                    cursorX = getX() + innerPadding(); // for last line cursor
                 }
                 currentY += font.lineHeight;
             }
@@ -215,7 +217,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
             int cursorY = currentY - font.lineHeight;
             if (isCursorRender && !cursorInContent &&
                     withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
-                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, getX() + innerPadding(), cursorY, CURSOR_INSERT_COLOR);
+                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
             }
 
             if (textField.hasSelection()) {
