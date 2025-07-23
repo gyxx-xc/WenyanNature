@@ -26,8 +26,7 @@ public interface IExecCallHandler extends IJavacallHandler {
                 platform.accept(context);
             }
         }, () -> {
-            // deprecated, use getExecutor()
-            thread.program.requestThreads.add(context);
+            throw new WenyanException("killed by no executor");
         });
         thread.block();
     }
