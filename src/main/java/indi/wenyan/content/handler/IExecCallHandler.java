@@ -20,9 +20,7 @@ public interface IExecCallHandler extends IJavacallHandler {
         JavacallContext context = new JavacallContext(self, argsList,
                 thread, this, thread.program.holder);
 
-        getExecutor().ifPresentOrElse((executor) -> {
-            thread.program.platform.accept(context);
-        }, () -> {
+        getExecutor().ifPresentOrElse((executor) -> thread.program.platform.accept(context), () -> {
             throw new WenyanException("killed by no executor");
         });
         thread.block();

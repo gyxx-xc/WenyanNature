@@ -8,6 +8,12 @@ import indi.wenyan.content.block.additional_module.InformativeAdditionalModuleBl
 import indi.wenyan.content.block.additional_module.InformativeAdditionalModuleEntity;
 import indi.wenyan.content.block.additional_module.InteractiveAdditionalModuleBlock;
 import indi.wenyan.content.block.additional_module.InteractiveAdditionalModuleEntity;
+import indi.wenyan.content.block.additional_module.MathAdditionalModuleBlock;
+import indi.wenyan.content.block.additional_module.MathAdditionalModuleEntity;
+import indi.wenyan.content.block.additional_module.BitAdditionalModuleBlock;
+import indi.wenyan.content.block.additional_module.BitAdditionalModuleEntity;
+import indi.wenyan.content.block.additional_module.RandomAdditionalModuleBlock;
+import indi.wenyan.content.block.additional_module.RandomAdditionalModuleEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
@@ -118,6 +124,15 @@ public final class Registration {
     public static final DeferredBlock<InteractiveAdditionalModuleBlock> INTERACTIVE_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> INTERACTIVE_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<InteractiveAdditionalModuleEntity>> INTERACTIVE_MODULE_ENTITY;
+    public static final DeferredBlock<MathAdditionalModuleBlock> MATH_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> MATH_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<MathAdditionalModuleEntity>> MATH_MODULE_ENTITY;
+    public static final DeferredBlock<BitAdditionalModuleBlock> BIT_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> BIT_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<BitAdditionalModuleEntity>> BIT_MODULE_ENTITY;
+    public static final DeferredBlock<RandomAdditionalModuleBlock> RANDOM_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> RANDOM_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<RandomAdditionalModuleEntity>> RANDOM_MODULE_ENTITY;
 
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
@@ -249,6 +264,28 @@ public final class Registration {
                 () -> BlockEntityType.Builder
                         .of(InteractiveAdditionalModuleEntity::new, INTERACTIVE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
+        MATH_MODULE_BLOCK = BLOCKS.register(MathAdditionalModuleBlock.ID, MathAdditionalModuleBlock::new);
+        MATH_MODULE_BLOCK_ITEM = ITEMS.registerItem(MathAdditionalModuleBlock.ID,
+                (properties) -> new BlockItem(MATH_MODULE_BLOCK.get(), properties));
+        MATH_MODULE_ENTITY = BLOCK_ENTITY.register(MathAdditionalModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(MathAdditionalModuleEntity::new, MATH_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+        BIT_MODULE_BLOCK = BLOCKS.register(BitAdditionalModuleBlock.ID, BitAdditionalModuleBlock::new);
+        BIT_MODULE_BLOCK_ITEM = ITEMS.registerItem(BitAdditionalModuleBlock.ID,
+                (properties) -> new BlockItem(BIT_MODULE_BLOCK.get(), properties));
+        BIT_MODULE_ENTITY = BLOCK_ENTITY.register(BitAdditionalModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(BitAdditionalModuleEntity::new, BIT_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
+        RANDOM_MODULE_BLOCK = BLOCKS.register(RandomAdditionalModuleBlock.ID, RandomAdditionalModuleBlock::new);
+        RANDOM_MODULE_BLOCK_ITEM = ITEMS.registerItem(RandomAdditionalModuleBlock.ID,
+                (properties) -> new BlockItem(RANDOM_MODULE_BLOCK.get(), properties));
+        RANDOM_MODULE_ENTITY = BLOCK_ENTITY.register(RandomAdditionalModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(RandomAdditionalModuleEntity::new, RANDOM_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
 
 
         ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
@@ -310,6 +347,9 @@ public final class Registration {
                     output.accept(EXPLOSIVE_MODULE_BLOCK_ITEM.get());
                     output.accept(INFORMATIVE_MODULE_BLOCK_ITEM.get());
                     output.accept(INTERACTIVE_MODULE_BLOCK_ITEM.get());
+                    output.accept(MATH_MODULE_BLOCK_ITEM.get());
+                    output.accept(BIT_MODULE_BLOCK_ITEM.get());
+                    output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
                 }).build());
     }
 }

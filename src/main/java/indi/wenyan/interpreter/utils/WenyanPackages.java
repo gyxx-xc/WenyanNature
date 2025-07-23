@@ -4,18 +4,11 @@ import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 public enum WenyanPackages {;
-
     // these string for candy visitor
     public static final String AND_ID = "且";
     public static final String OR_ID = "或";
@@ -61,66 +54,4 @@ public enum WenyanPackages {;
 
             .function("「」", (self, args) -> WenyanNull.NULL)
             .build();
-
-    public static final WenyanRuntime MATH_PACKAGES = WenyanPackageBuilder.create()
-            .constant("「圓周率」", new WenyanDouble(Math.PI))
-            .constant("「倍圓周率」", new WenyanDouble(Math.TAU))
-            .constant("「半圓周率」", new WenyanDouble(Math.PI / 2))
-            .constant("「四分圓周率」", new WenyanDouble(Math.PI / 4))
-            .constant("「自然常數」", new WenyanDouble( Math.E))
-            .constant("「歐拉常數」", new WenyanDouble(0.5772156649))
-            .constant("「黃金分割數」", new WenyanDouble(1.6180339887))
-            .constant("「二之平方根」", new WenyanDouble(1.4142135623730951))
-            .constant("「二之對數」", new WenyanDouble(Math.log(2)))
-            .constant("「十之對數」", new WenyanDouble(Math.log(10)))
-            .doubleFunction("「正弦」", args -> StrictMath.sin(args.getFirst()))
-            .doubleFunction("「餘弦」", args -> StrictMath.cos(args.getFirst()))
-            .doubleFunction("「反正弦」", args -> StrictMath.asin(args.getFirst()))
-            .doubleFunction("「反餘弦」", args -> StrictMath.acos(args.getFirst()))
-            .doubleFunction("「正切」", args -> StrictMath.tan(args.getFirst()))
-            .doubleFunction("「反正切」", args -> StrictMath.atan(args.getFirst()))
-            .doubleFunction("「勾股求角」", args -> StrictMath.atan2(args.getFirst(), args.get(1)))
-            .doubleFunction("「勾股求弦」", args -> StrictMath.hypot(args.getFirst(), args.get(1)))
-            .doubleFunction("「對數」", args -> StrictMath.log(args.getFirst()))
-            .doubleFunction("「指數」", args -> StrictMath.exp(args.getFirst()))
-            .doubleFunction("「冪」", args -> StrictMath.pow(args.getFirst(), args.get(1)))
-            .doubleFunction("「平方根」", args -> Math.sqrt(args.getFirst()))
-            .doubleFunction("「絕對」", args -> Math.abs(args.getFirst()))
-            .doubleFunction("「取頂」", args -> Math.ceil(args.getFirst()))
-            .doubleFunction("「取底」", args -> Math.floor(args.getFirst()))
-            .doubleFunction("「取整」", args -> (double) Math.round(args.getFirst()))
-            .doubleFunction("「正負」", args -> Math.signum(args.getFirst()))
-            .build();
-
-    public static final WenyanRuntime BIT_PACKAGES = WenyanPackageBuilder.create()
-            .intFunction("「左移」", args -> args.getFirst()<<args.get(1))
-            .intFunction("「右移」", args -> args.getFirst()>>args.get(1))
-            .intFunction("「補零右移」", args -> args.getFirst()>>>args.get(1))
-            .intFunction("「位與」", args -> args.getFirst()&args.get(1))
-            .intFunction("「位或」", args -> args.getFirst()|args.get(1))
-            .intFunction("「異或」", args -> args.getFirst()^args.get(1))
-            .intFunction("「與非」", args -> ~(args.getFirst()&args.get(1)))
-            .intFunction("「位變」", args -> ~args.getFirst())
-            .build();
-
-    public static final WenyanRuntime RANDOM_PACKAGES = WenyanPackageBuilder.create()
-            .intFunction("「占數」", (args) -> {
-                var random = Objects.requireNonNull(Minecraft.getInstance().level).getRandom();
-                return switch (args.size()) {
-                    case 0 -> random.nextInt();
-                    case 1 -> random.nextInt(args.getFirst());
-                    case 2 -> random.nextInt(args.get(0), args.get(1));
-                    default -> throw new WenyanException(""); // TODO
-                };
-            })
-            .doubleFunction("「占分」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble())
-            .doubleFunction("「占偏」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle(args.getFirst(), args.get(1)))
-            .function("「占爻」", (self, args) -> new WenyanBoolean(Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean()))
-            .build();
-
-    public static final Map<String, WenyanRuntime> PACKAGES = new HashMap<>(){{
-        put("「「算經」」", MATH_PACKAGES);
-        put("「「位經」」", BIT_PACKAGES);
-        put("「「易經」」", RANDOM_PACKAGES);
-    }};
 }
