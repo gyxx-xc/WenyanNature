@@ -8,7 +8,6 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
-import indi.wenyan.interpreter.structure.values.warper.WenyanVec3Object;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
@@ -121,15 +120,13 @@ public enum WenyanPackages {;
             .function("「占爻」", (self, args) -> new WenyanBoolean(Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean()))
             .build();
 
+    @Deprecated
     public static final WenyanRuntime HAND_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
-            .function("「射」", new BulletHandler(), BulletHandler.ARGS_TYPE)
-            .function("「移」", new MoveHandler(), MoveHandler.ARGS_TYPE)
-            .function("「爆」", new ExplosionHandler())
-            .object("「方位」", WenyanVec3Object.OBJECT_TYPE)
             .function("「己方位」", new SelfPositionHandler())
             .build();
 
+    @Deprecated
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
             .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)

@@ -34,7 +34,7 @@ public abstract class AbstractAdditionalModuleBlock extends Block implements Ent
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == getType())
-                ((AbstractAdditionalModuleEntity) entity).getExecQueue().handle();
+                ((AbstractAdditionalModuleEntity) entity).handle();
         };
     }
 }

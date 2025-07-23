@@ -159,11 +159,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     public void accept(JavacallContext context) {
+        // run by program thread
         context.handler().getExecutor().ifPresent((executor) -> {
             if (level instanceof ServerLevel sl)
                 PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
                         new CommunicationLocationPacket(getBlockPos(), executor.getPosition()));
-            executor.getExecQueue().receive(context);
+            executor.receive(context);
         });
     }
 

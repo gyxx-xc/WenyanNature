@@ -15,10 +15,17 @@ public interface IWenyanDevice {
 
     ExecQueue getExecQueue();
 
+    default void receive(JavacallContext request) {
+        getExecQueue().receive(request);
+    }
+
+    default void handle() {
+        getExecQueue().handle();
+    }
+
     Vec3 getPosition();
 
     class ExecQueue {
-        // change to a thread-safe queue
         private final Queue<JavacallContext> queue = new ConcurrentLinkedQueue<>();
 
         public void receive(JavacallContext request) {

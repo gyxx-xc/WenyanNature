@@ -92,7 +92,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 forNearbyPedestal(level, pos, p -> pedestalItems.add(p.getItem(0)));
                 var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
                         new AnsweringRecipeInput(pedestalItems), level);
-                if (recipeHolder.isEmpty() || !recipeHolder.get().equals(recipeHolder)) {
+                if (recipeHolder.isEmpty() || !recipeHolder.get().equals(this.recipeHolder)) {
                     result = IAnsweringChecker.Result.RUNTIME_ERROR;
                 }
 

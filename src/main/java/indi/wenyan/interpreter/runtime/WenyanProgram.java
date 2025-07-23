@@ -1,8 +1,6 @@
 package indi.wenyan.interpreter.runtime;
 
-import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
@@ -43,18 +41,6 @@ public class WenyanProgram {
     public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder) {
         this(code, baseEnvironment, holder,
                 new JavacallContext.NullRunnerWarper(null));
-    }
-
-    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
-                         HandRunnerEntity runner) {
-        this(code, baseEnvironment, holder,
-                new JavacallContext.HandRunnerWarper(runner));
-    }
-
-    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
-                         RunnerBlockEntity runner) {
-        this(code, baseEnvironment, holder,
-                new JavacallContext.BlockRunnerWarper(runner));
     }
 
     public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,

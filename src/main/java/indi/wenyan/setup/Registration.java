@@ -6,6 +6,8 @@ import indi.wenyan.content.block.additional_module.ExplosiveAdditionalModuleBloc
 import indi.wenyan.content.block.additional_module.ExplosiveAdditionalModuleEntity;
 import indi.wenyan.content.block.additional_module.InformativeAdditionalModuleBlock;
 import indi.wenyan.content.block.additional_module.InformativeAdditionalModuleEntity;
+import indi.wenyan.content.block.additional_module.InteractiveAdditionalModuleBlock;
+import indi.wenyan.content.block.additional_module.InteractiveAdditionalModuleEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
@@ -113,6 +115,10 @@ public final class Registration {
     public static final DeferredBlock<InformativeAdditionalModuleBlock> INFORMATIVE_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> INFORMATIVE_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<InformativeAdditionalModuleEntity>> INFORMATIVE_MODULE_ENTITY;
+    public static final DeferredBlock<InteractiveAdditionalModuleBlock> INTERACTIVE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> INTERACTIVE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<InteractiveAdditionalModuleEntity>> INTERACTIVE_MODULE_ENTITY;
+
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -236,6 +242,14 @@ public final class Registration {
                         .of(InformativeAdditionalModuleEntity::new, INFORMATIVE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        INTERACTIVE_MODULE_BLOCK = BLOCKS.register(InteractiveAdditionalModuleBlock.ID, InteractiveAdditionalModuleBlock::new);
+        INTERACTIVE_MODULE_BLOCK_ITEM = ITEMS.registerItem(InteractiveAdditionalModuleBlock.ID,
+                (properties) -> new BlockItem(INTERACTIVE_MODULE_BLOCK.get(), properties));
+        INTERACTIVE_MODULE_ENTITY = BLOCK_ENTITY.register(InteractiveAdditionalModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(InteractiveAdditionalModuleEntity::new, INTERACTIVE_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 
         ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
         ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
@@ -289,6 +303,13 @@ public final class Registration {
                     output.accept(LUNAR_INK.get());
                     output.accept(CINNABAR_INK.get());
                     output.accept(STARLIGHT_INK.get());
+
+                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());
+                    output.accept(CRAFTING_BLOCK_ITEM.get());
+                    output.accept(PEDESTAL_BLOCK_ITEM.get());
+                    output.accept(EXPLOSIVE_MODULE_BLOCK_ITEM.get());
+                    output.accept(INFORMATIVE_MODULE_BLOCK_ITEM.get());
+                    output.accept(INTERACTIVE_MODULE_BLOCK_ITEM.get());
                 }).build());
     }
 }
