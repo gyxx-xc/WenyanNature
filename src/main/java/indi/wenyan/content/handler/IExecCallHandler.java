@@ -13,9 +13,7 @@ import java.util.Optional;
 public interface IExecCallHandler extends IJavacallHandler {
     IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
-    default Optional<IWenyanDevice> getExecutor() {
-        return Optional.empty();
-    }
+    Optional<IWenyanDevice> getExecutor();
 
     default void call(IWenyanValue self, WenyanThread thread,
                       List<IWenyanValue> argsList)

@@ -27,7 +27,7 @@ public class AdditionalPaperEntity extends BlockEntity {
 
     public WenyanRuntime provide_package(){
         return WenyanPackageBuilder.create()
-                .function("a", this::a)
+//                .function("a", this::a)
                 .build();
     }
 

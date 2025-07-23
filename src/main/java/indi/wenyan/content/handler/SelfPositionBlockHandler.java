@@ -7,7 +7,8 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import net.minecraft.core.Direction;
 
-public class SelfPositionBlockHandler implements IExecCallHandler {
+@Deprecated
+public abstract class SelfPositionBlockHandler implements IExecCallHandler {
     private final Direction direction;
 
     public SelfPositionBlockHandler(Direction direction) {

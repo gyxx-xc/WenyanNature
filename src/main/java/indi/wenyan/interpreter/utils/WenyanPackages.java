@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.content.handler.*;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -60,7 +59,6 @@ public enum WenyanPackages {;
             .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) > 0))
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
-            .function(new String[] {"書","书"}, new OutputHandler())
             .function("「」", (self, args) -> WenyanNull.NULL)
             .build();
 
@@ -123,13 +121,13 @@ public enum WenyanPackages {;
     @Deprecated
     public static final WenyanRuntime HAND_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
-            .function("「己方位」", new SelfPositionHandler())
+//            .function("「己方位」", new SelfPositionHandler())
             .build();
 
     @Deprecated
     public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
             .environment(WENYAN_BASIC_PACKAGES)
-            .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
+//            .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
             .build();
 
     public static final WenyanRuntime CRAFTING_BASE_ENVIRONMENT = WenyanPackageBuilder.create()

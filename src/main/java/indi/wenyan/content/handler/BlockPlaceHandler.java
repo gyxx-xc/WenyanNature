@@ -18,7 +18,8 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
-public class BlockPlaceHandler implements IExecCallHandler {
+@Deprecated
+public abstract class BlockPlaceHandler implements IExecCallHandler {
     private final BlockPos pos;
     private final BlockPos attach;
     private final Player holder;

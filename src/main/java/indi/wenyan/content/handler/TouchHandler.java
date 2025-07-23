@@ -10,7 +10,8 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 
-public class TouchHandler implements IExecCallHandler {
+@Deprecated
+public abstract class TouchHandler implements IExecCallHandler {
     public static final WenyanType<?>[] ARGS_TYPE =
             {WenyanInteger.TYPE, WenyanInteger.TYPE, WenyanInteger.TYPE};
 
