@@ -5,7 +5,6 @@ import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.IWenyanDevice;
-import indi.wenyan.interpreter.utils.IWenyanPlatform;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,13 +17,11 @@ public interface IExecCallHandler extends IJavacallHandler {
     default void call(IWenyanValue self, WenyanThread thread,
                       List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
-        JavacallContext context = new JavacallContext(thread.program.warper, self, argsList,
+        JavacallContext context = new JavacallContext(self, argsList,
                 thread, this, thread.program.holder);
 
         getExecutor().ifPresentOrElse((executor) -> {
-            if (thread.program.warper.runner() instanceof IWenyanPlatform platform){
-                platform.accept(context);
-            }
+            thread.program.platform.accept(context);
         }, () -> {
             throw new WenyanException("killed by no executor");
         });

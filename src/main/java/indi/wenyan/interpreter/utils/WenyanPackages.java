@@ -118,22 +118,6 @@ public enum WenyanPackages {;
             .function("「占爻」", (self, args) -> new WenyanBoolean(Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean()))
             .build();
 
-    @Deprecated
-    public static final WenyanRuntime HAND_ENVIRONMENT = WenyanPackageBuilder.create()
-            .environment(WENYAN_BASIC_PACKAGES)
-//            .function("「己方位」", new SelfPositionHandler())
-            .build();
-
-    @Deprecated
-    public static final WenyanRuntime BLOCK_ENVIRONMENT = WenyanPackageBuilder.create()
-            .environment(WENYAN_BASIC_PACKAGES)
-//            .function("「觸」", new TouchHandler(), TouchHandler.ARGS_TYPE)
-            .build();
-
-    public static final WenyanRuntime CRAFTING_BASE_ENVIRONMENT = WenyanPackageBuilder.create()
-            .environment(WENYAN_BASIC_PACKAGES)
-            .build();
-
     public static final Map<String, WenyanRuntime> PACKAGES = new HashMap<>(){{
         put("「「算經」」", MATH_PACKAGES);
         put("「「位經」」", BIT_PACKAGES);

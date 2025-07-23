@@ -1,11 +1,9 @@
 package indi.wenyan.interpreter.runtime;
 
-import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
-import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -17,7 +15,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WenyanProgram {
-
     public final String code;
 
     public final WenyanBytecode baseBytecode = new WenyanBytecode();
@@ -25,7 +22,6 @@ public class WenyanProgram {
 
     public AtomicInteger runningCounter = new AtomicInteger(0);
     public final Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
-    public final Queue<JavacallContext> requestThreads = new ConcurrentLinkedQueue<>();
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
     private final Thread programJavaThread;
@@ -33,32 +29,14 @@ public class WenyanProgram {
     // STUB: used in error handler, might changed
     public final Player holder;
 
-    public final JavacallContext.RunnerWarper<?> warper;
+    public final IWenyanPlatform platform;
 
     private static final int SWITCH_COST = 5;
     private static final int SWITCH_STEP = 10;
 
-    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder) {
-        this(code, baseEnvironment, holder,
-                new JavacallContext.NullRunnerWarper(null));
-    }
-
-    public WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
-                         IAnsweringChecker checker) {
-        this(code, baseEnvironment, holder,
-                new JavacallContext.CraftingAnswerWarper(checker));
-    }
-
-    public WenyanProgram(String code, Player holder, IWenyanPlatform executor) {
-        this(code, WenyanPackages.WENYAN_BASIC_PACKAGES, holder,
-                new JavacallContext.PlatformWarper(executor));
-        this.baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, executor.getImportFunction());
-    }
-
-    private WenyanProgram(String code, WenyanRuntime baseEnvironment, Player holder,
-                         JavacallContext.RunnerWarper<?> warper) {
+    public WenyanProgram(String code, Player holder, IWenyanPlatform platform) {
         this.code = code;
-        this.warper = warper;
+        this.platform = platform;
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
         try {
             visitor.visit(WenyanVisitor.program(code));
@@ -66,6 +44,7 @@ public class WenyanProgram {
             WenyanException.handleException(holder, e.getMessage());
         }
         this.baseEnvironment = new WenyanRuntime(null);
+        this.baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, platform.getImportFunction());
         this.baseEnvironment.importEnvironment(baseEnvironment);
         this.holder = holder;
         programJavaThread = new Thread(this::scheduler);
@@ -78,20 +57,6 @@ public class WenyanProgram {
         thread.call(new WenyanRuntime(baseBytecode));
         readyQueue.add(thread);
         runningCounter.getAndIncrement();
-    }
-
-    public void handle() {
-        while (!requestThreads.isEmpty()) {
-            JavacallContext request = requestThreads.poll();
-            try {
-                request.thread().currentRuntime().processStack
-                        .push(request.handler().handle(request));
-                request.thread().unblock();
-            } catch (WenyanException.WenyanThrowException | WenyanException e) {
-                request.thread().die();
-                WenyanException.handleException(holder, e.getMessage());
-            }
-        }
     }
 
     public void step() {
@@ -144,54 +109,6 @@ public class WenyanProgram {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        }
-    }
-
-
-    public static void main(String[] args) {
-        WenyanProgram program = new WenyanProgram(
-                """
-                        吾有一物。名之曰「a」。其物如是。
-                                                  	物之造者術是術曰。
-                                                  		夫一名之曰己之「「a 」」
-                                                  	是謂造之術也。
-                                                  是謂「a」之物也。
-                        
-                                                  吾有一物繼「a」。名之曰「b」。其物如是。
-                                                  	物之造者術是術曰。
-                                                  		施父之造
-                                                  		夫二名之曰己之「「a 」」
-                                                  		夫一名之曰己之「「b 」」
-                                                  	是謂造之術也。
-                                                  是謂「b」之物也。
-                        
-                                                  造「a」名之曰「a 」
-                                                  施「a」名之曰「a1 」
-                                                  造「b」名之曰「b 」
-                                                  施「b」名之曰「b1 」
-                        
-                                                  書「a 」之「「a 」」
-                                                  書「a1 」之「「a 」」
-                                                  書「b 」之「「a 」」
-                                                  書「b1 」之「「a 」」
-                                                  書「b 」之「「b 」」
-                                                  書「b1 」之「「b 」」
-                        
-                                                  昔之「b 」之「「a 」」者今三是矣
-                        
-                                                  書「a 」之「「a 」」
-                                                  書「b 」之「「a 」」
-                        """,
-                WenyanPackages.WENYAN_BASIC_PACKAGES
-        , null);
-        program.createThread();
-        while (true) {
-            program.step();
-            program.handle();
-            if (!program.isRunning()) {
-                System.out.println("Program finished.");
-                break;
-            }
         }
     }
 }

@@ -9,9 +9,7 @@ import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
-import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -45,7 +43,6 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     private RunnerBlockEntity runner;
     private CraftingAnswerChecker checker;
     private RecipeHolder<AnsweringRecipe> recipeHolder;
-    private Player player; // the player who is crafting
 
     // for gui
     public IAnsweringChecker.Result result;
@@ -105,9 +102,9 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                     ejectItem();
                 } else {
                     // continue
-                    runner.program = new WenyanProgram(runner.pages,
-                            WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
-                            player, checker);
+//                    runner.program = new WenyanProgram(runner.pages,
+//                            WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
+//                            player, checker);
                     checker.init(runner.program);
                     runner.program.createThread();
                 }
@@ -142,9 +139,8 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
 
         this.runner = runner;
         round = 0;
-        this.player = player;
-        runner.program = new WenyanProgram(runner.pages,
-                WenyanPackages.CRAFTING_BASE_ENVIRONMENT, player, checker);
+//        runner.program = new WenyanProgram(runner.pages,
+//                WenyanPackages.CRAFTING_BASE_ENVIRONMENT, player, checker);
         checker.init(runner.program);
         runner.program.createThread();
         isCrafting = true;

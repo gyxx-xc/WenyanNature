@@ -72,14 +72,12 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                                 Math.max(-10, Math.min(10, context.args().get(1).as(WenyanDouble.TYPE).value())),
                                 Math.max(-10, Math.min(10, context.args().get(2).as(WenyanDouble.TYPE).value())));
 
-                        if (context.runnerWarper().runner() instanceof HandRunnerEntity entity) {
-                            BulletEntity bullet = new BulletEntity(entity.level(), entity.getPosition(0),
-                                    dir, Math.max(1,
-                                    Math.min(20, context.args().get(3).as(WenyanDouble.TYPE).value())) / 10,
-                                    Math.max(1, Math.min(200, context.args().get(4).as(WenyanInteger.TYPE).value())),
-                                    context.holder());
-                            entity.level().addFreshEntity(bullet);
-                        }
+                        BulletEntity bullet = new BulletEntity(level(), getPosition(0),
+                                dir, Math.max(1,
+                                Math.min(20, context.args().get(3).as(WenyanDouble.TYPE).value())) / 10,
+                                Math.max(1, Math.min(200, context.args().get(4).as(WenyanInteger.TYPE).value())),
+                                context.holder());
+                        level().addFreshEntity(bullet);
                         return WenyanNull.NULL;
                     }
                 })
@@ -90,9 +88,8 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                         newArgs.add(Math.max(-20, Math.min(20, context.args().get(0).as(WenyanDouble.TYPE).value())));
                         newArgs.add(Math.max(-20, Math.min(20, context.args().get(1).as(WenyanDouble.TYPE).value())));
                         newArgs.add(Math.max(-20, Math.min(20, context.args().get(2).as(WenyanDouble.TYPE).value())));
-                        if (context.runnerWarper().runner() instanceof HandRunnerEntity entity)
-                            entity.setDeltaMovement(new Vec3(newArgs.get(0) /10,
-                                    newArgs.get(1) /10, newArgs.get(2) /10));
+                        setDeltaMovement(new Vec3(newArgs.get(0) / 10,
+                                newArgs.get(1) / 10, newArgs.get(2) / 10));
                         return WenyanNull.NULL;
 
                     }
@@ -100,11 +97,10 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 .function("「爆」", new ThisCallHandler() {
                     @Override
                     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-                        if (context.runnerWarper().runner() instanceof HandRunnerEntity entity)
-                            entity.level().explode(entity, entity.getX(), entity.getY(), entity.getZ(),
-                                    (float) Math.max(1, Math.min(20,
-                                            context.args().getFirst().as(WenyanDouble.TYPE).value())),
-                                    Level.ExplosionInteraction.MOB);
+                        level().explode(HandRunnerEntity.this, getX(), getY(), getZ(),
+                                (float) Math.max(1, Math.min(20,
+                                        context.args().getFirst().as(WenyanDouble.TYPE).value())),
+                                Level.ExplosionInteraction.MOB);
                         return WenyanNull.NULL;
                     }
                 })
@@ -155,7 +151,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 discard();
                 return;
             }
-            program.handle();
+            execQueue.handle();
             program.step(speed);
         }
         checkInsideBlocks();

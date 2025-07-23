@@ -56,7 +56,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Getter
     IWenyanFunction importFunction = (IJavacallHandler) (self, thread, argsList) -> {
         JavacallContext context = new JavacallContext(
-                new JavacallContext.BlockRunnerWarper(this), self, argsList, thread,
+                self, argsList, thread,
                 new IExecCallHandler() {
                     @Override
                     public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
