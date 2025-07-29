@@ -14,18 +14,9 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
     @Getter
     private final String packageName = "「im」";
 
+    // interactive, inventory
     @Getter
     private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
-            .function("「h」", new IThisCallHandler() {
-                @Override
-                public IWenyanValue handle(JavacallContext context) {
-                    int value = 0;
-                    if (getLevel() != null) {
-                        value = getLevel().getBestNeighborSignal(getBlockPos());
-                    }
-                    return new WenyanInteger(value);
-                }
-            })
             .build();
 
     public InteractiveAdditionalModuleEntity(BlockPos pos, BlockState blockState) {

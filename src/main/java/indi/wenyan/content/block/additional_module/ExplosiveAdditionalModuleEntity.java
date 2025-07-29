@@ -21,9 +21,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class ExplosiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
     private final String packageName = "「em」";
+
+    // lighting fire heat harm
     @Getter
     private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
-            .function("「l」", new IThisCallHandler() {
+            .function("「l」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {
                     assert level != null;

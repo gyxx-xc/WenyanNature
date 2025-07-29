@@ -76,24 +76,6 @@ public class WenyanProgram {
     }
 
     // this on other thread
-//    public static void scheduler(WenyanProgram program) {
-//        try {
-//            while (program.isRunning()) {
-//                program.accumulatedSteps.acquire(SWITCH_COST);
-//                if (program.readyQueue.isEmpty()) {
-//                    program.accumulatedSteps.drainPermits();
-//                    continue;
-//                }
-//
-//                WenyanThread thread = program.readyQueue.poll();
-//                thread.assignedSteps += SWITCH_STEP;
-//                thread.programLoop(program.accumulatedSteps);
-//            }
-//        } catch (InterruptedException e) {
-//            Thread.currentThread().interrupt();
-//        }
-//    }
-
     public void scheduler() {
         try {
             while (true) {

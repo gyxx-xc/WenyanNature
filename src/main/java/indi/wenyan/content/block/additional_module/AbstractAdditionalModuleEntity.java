@@ -33,7 +33,7 @@ public abstract class AbstractAdditionalModuleEntity extends BlockEntity impleme
 
     public abstract WenyanRuntime getExecPackage();
 
-    abstract class IThisCallHandler implements IExecCallHandler {
+    abstract class ThisCallHandler implements IExecCallHandler {
         @Override
         public Optional<IWenyanDevice> getExecutor() {
             if (isRemoved())

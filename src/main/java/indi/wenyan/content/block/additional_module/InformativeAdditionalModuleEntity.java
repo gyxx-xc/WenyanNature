@@ -13,9 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
     @Getter
     private final String packageName = "「im」";
+
+    // redstone get/set, show text, entity detection
     @Getter
     private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
-            .function("「h」", new IThisCallHandler() {
+            .function("「h」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {
                     int value = 0;
