@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class ExplosiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
-    private final String packageName = "「「em」」";
+    private final String packageName = "「em」";
     @Getter
     private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
             .function("「l」", new IThisCallHandler() {

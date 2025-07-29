@@ -59,15 +59,15 @@ data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT
                             | IDENTIFIER                                                # id
                             | SELF                                                      # self
                             | PARENT                                                    # parent
-                            | data ZHI p=(IDENTIFIER|INT_NUM|DATA_ID_LAST)              # array_index
-                            | data ZHI p=(STRING_LITERAL|LONG|CREATE_OBJECT)            # data_child
+                            | data ZHI p=(INT_NUM|DATA_ID_LAST)              # array_index
+                            | data ZHI p=(IDENTIFIER|LONG|CREATE_OBJECT)            # data_child
                             ;
 
 reference_statement         : FU data ;
 declare_statement           : declare_op INT_NUM type (YUE d+=data)* ;
 init_declare_statement      : DECLARE_HAVE type data ;
 define_statement            : NAMING (YUE definable_value)+ ;
-definable_value             : IDENTIFIER | (SELF ZHI STRING_LITERAL) ;
+definable_value             : IDENTIFIER | (SELF ZHI IDENTIFIER) ;
 
 declare_write_candy_statement : declare_statement WRITE_KEY_FUNCTION ZHI
                               ;
@@ -108,11 +108,11 @@ return_statement            : RETURN data                     # return_data_stat
 object_statement            : LOCAL_DECLARE_OP INT_NUM OBJECT_TYPE (EXTENDS data)? NAMING YUE IDENTIFIER
                               OBJECT_BODY_START (object_property_define | object_method_define)*
                               DEFINE_CLOSURE IDENTIFIER OBJECT_DEFINE_END ;
-object_method_define        : OBJECT_STATIC_DECLARE (STRING_LITERAL | CREATE_OBJECT) ZHE FUNCTION_TYPE
-                              function_define_body (STRING_LITERAL | CREATE_OBJECT) FUNCTION_DEFINE_END ;
-object_property_define      : OBJECT_STATIC_DECLARE STRING_LITERAL ZHE type (YUE data)? ;
+object_method_define        : OBJECT_STATIC_DECLARE (IDENTIFIER | CREATE_OBJECT) ZHE FUNCTION_TYPE
+                              function_define_body (IDENTIFIER | CREATE_OBJECT) FUNCTION_DEFINE_END ;
+object_property_define      : OBJECT_STATIC_DECLARE IDENTIFIER ZHE type (YUE data)? ;
 
-import_statement            : '吾嘗觀' STRING_LITERAL '之書' ('方悟' IDENTIFIER+ '之義')? ;
+import_statement            : '吾嘗觀' IDENTIFIER '之書' ('方悟' IDENTIFIER+ '之義')? ;
 
 function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
                               (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)

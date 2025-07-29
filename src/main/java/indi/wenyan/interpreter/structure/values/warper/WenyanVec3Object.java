@@ -23,12 +23,12 @@ public record WenyanVec3Object(Vec3 vec3) implements IWenyanObject {
     @Override
     public IWenyanValue getAttribute(String name) {
         return switch (name) {
-            case "「「上下」」" -> new WenyanDouble(vec3.y);
-            case "「「東西」」" -> new WenyanDouble(vec3.x);
-            case "「「南北」」" -> new WenyanDouble(vec3.z);
-            case "「「長」」" -> new WenyanDouble(vec3.length());
-            case "「「方長」」" -> new WenyanDouble(vec3.lengthSqr());
-            case "「「偏移」」" -> new WenyanBuiltinFunction(
+            case "「上下」" -> new WenyanDouble(vec3.y);
+            case "「東西」" -> new WenyanDouble(vec3.x);
+            case "「南北」" -> new WenyanDouble(vec3.z);
+            case "「長」" -> new WenyanDouble(vec3.length());
+            case "「方長」" -> new WenyanDouble(vec3.lengthSqr());
+            case "「偏移」" -> new WenyanBuiltinFunction(
                     (self, args) -> {
                         if (args.size() == 1) {
                             return new WenyanVec3Object(vec3.add(args.getFirst().as(TYPE).vec3));
@@ -70,13 +70,13 @@ public record WenyanVec3Object(Vec3 vec3) implements IWenyanObject {
         @Override
         public IWenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「「零」」" -> ZERO;
-                case "「「上」」" -> UP;
-                case "「「下」」" -> DOWN;
-                case "「「東」」" -> EAST;
-                case "「「西」」" -> WEST;
-                case "「「南」」" -> SOUTH;
-                case "「「北」」" -> NORTH;
+                case "「零」" -> ZERO;
+                case "「上」" -> UP;
+                case "「下」" -> DOWN;
+                case "「東」" -> EAST;
+                case "「西」" -> WEST;
+                case "「南」" -> SOUTH;
+                case "「北」" -> NORTH;
                 default -> throw new WenyanException("Unknown Vec3 static attribute: " + name);
             };
         }

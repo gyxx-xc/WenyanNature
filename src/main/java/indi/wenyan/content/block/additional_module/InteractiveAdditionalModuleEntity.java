@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
-    private final String packageName = "「「im」」";
+    private final String packageName = "「im」";
 
     @Getter
     private final WenyanRuntime execPackage = WenyanPackageBuilder.create()

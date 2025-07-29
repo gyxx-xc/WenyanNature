@@ -23,11 +23,12 @@ The syntax is designed to be fully compatible with the original syntax, meaning 
 
 ## Object
 - Object definitions now define a type, and objects can be instantiated using `造「物」` or `施「物」` to call their constructor. The original method of defining objects is retained as static variables of the class.
-- Functions can be declared as `物之「「甲」」者術....`
-- To declare non-static variables, define attributes in the constructor, e.g., `名之曰己之「「甲」」`, similar to Python. ~~Great, it’s Python.~~
+- Functions can be declared as `物之「甲」者術....`
+- To declare non-static variables, define attributes in the constructor, e.g., `名之曰己之「甲」`, similar to Python. ~~Great, it’s Python.~~
 - Objects can now be extended using `繼「物」` after `吾有一物`. This only extends functions.
 - Two new variables are introduced: `己`, which refers to the instance of the class, and `父`, which refers to the superclass type.
 - Functions can be static by omitting `己`.
+- Use one backtick for attribute
 
 ## Unimplemented
 - Macros

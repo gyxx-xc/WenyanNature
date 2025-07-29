@@ -36,9 +36,9 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         @Override
         public IWenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「「上下」」" -> new WenyanInteger(x);
-                case "「「左右」」" -> new WenyanInteger(y);
-                case "「「偏移」」" -> new WenyanBuiltinFunction(((self, args) -> {
+                case "「上下」" -> new WenyanInteger(x);
+                case "「左右」" -> new WenyanInteger(y);
+                case "「偏移」" -> new WenyanBuiltinFunction(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(TYPE) instanceof Position(int dx, int dy)) {
                         return new Position(self.as(TYPE).x + dx, self.as(TYPE).y + dy);
                     } else {
@@ -62,11 +62,11 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
             @Override
             public IWenyanValue getAttribute(String name) {
                 return switch (name) {
-                    case "「「上」」" -> UP;
-                    case "「「下」」" -> DOWN;
-                    case "「「左」」" -> LEFT;
-                    case "「「右」」" -> RIGHT;
-                    case "「「方向」」" -> new WenyanArrayList(new ArrayList<>(DIRECTIONS));
+                    case "「上」" -> UP;
+                    case "「下」" -> DOWN;
+                    case "「左」" -> LEFT;
+                    case "「右」" -> RIGHT;
+                    case "「方向」" -> new WenyanArrayList(new ArrayList<>(DIRECTIONS));
                     case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };
@@ -103,10 +103,10 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         @Override
         public IWenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「「终」」" -> new Position(EndX + 1, EndY + 1);
-                case "「「長」」" -> new WenyanInteger(maxX);
-                case "「「寬」」" -> new WenyanInteger(maxY);
-                case "「「尋路」」" -> new WenyanBuiltinFunction(((self, args) -> {
+                case "「终」" -> new Position(EndX + 1, EndY + 1);
+                case "「長」" -> new WenyanInteger(maxX);
+                case "「寬」" -> new WenyanInteger(maxY);
+                case "「尋路」" -> new WenyanBuiltinFunction(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return new WenyanBoolean(!isWall(x - 1, y - 1));
                     } else {
