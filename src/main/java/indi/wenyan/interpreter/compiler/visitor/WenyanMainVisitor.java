@@ -32,9 +32,9 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
         // stack: id1, id2, ..., package, import
-        for (TerminalNode id : ctx.IDENTIFIER())
+        for (TerminalNode id : ctx.IDENTIFIER().subList(1, ctx.IDENTIFIER().size()))
             bytecode.add(WenyanCodes.PUSH, new WenyanString(id.getText()));
-        bytecode.add(WenyanCodes.PUSH, new WenyanString(ctx.STRING_LITERAL().getText()));
+        bytecode.add(WenyanCodes.PUSH, new WenyanString(ctx.IDENTIFIER(0).getText()));
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size() + 1);
         return true;

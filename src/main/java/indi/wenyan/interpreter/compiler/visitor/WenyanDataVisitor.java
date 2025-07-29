@@ -75,8 +75,6 @@ public class WenyanDataVisitor extends WenyanVisitor {
                     throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_number").getString(), ctx);
                 }
             }
-            case WenyanRParser.IDENTIFIER ->
-                    bytecode.add(WenyanCodes.LOAD, ctx.IDENTIFIER().getText());
             case WenyanRParser.DATA_ID_LAST ->
                     bytecode.add(WenyanCodes.POP_ANS);
             default -> throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString(), ctx);
@@ -94,7 +92,8 @@ public class WenyanDataVisitor extends WenyanVisitor {
         visit(ctx.data());
         switch (ctx.p.getType()) {
             case WenyanRParser.LONG -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.LONG().getText());
-            case WenyanRParser.STRING_LITERAL -> bytecode.add(flag ? WenyanCodes.LOAD_ATTR_REMAIN : WenyanCodes.LOAD_ATTR, ctx.STRING_LITERAL().getText());
+            case WenyanRParser.IDENTIFIER -> bytecode.add(flag ? WenyanCodes.LOAD_ATTR_REMAIN :
+                WenyanCodes.LOAD_ATTR, ctx.IDENTIFIER().getText());
             default -> throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString(), ctx);
         }
         return true;

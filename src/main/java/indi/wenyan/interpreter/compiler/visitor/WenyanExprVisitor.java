@@ -86,7 +86,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     public Boolean visitDefinable_value(WenyanRParser.Definable_valueContext ctx) {
         if (ctx.ZHI() != null) {
             bytecode.add(WenyanCodes.LOAD, ctx.SELF().getText());
-            bytecode.add(WenyanCodes.STORE_ATTR, ctx.STRING_LITERAL().getText());
+            bytecode.add(WenyanCodes.STORE_ATTR, ctx.IDENTIFIER().getText());
         } else {
             bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER().getText());
         }
@@ -185,8 +185,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         if (ctx.data(0) instanceof WenyanRParser.Data_childContext context) {
             visit(context.data());
-            if (context.STRING_LITERAL() != null)
-                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.STRING_LITERAL().getText());
+            if (context.IDENTIFIER() != null)
+                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.IDENTIFIER().getText());
             else
                 bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.CREATE_OBJECT().getText());
             bytecode.add(WenyanCodes.CALL_ATTR, ctx.args.size());
@@ -221,8 +221,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         if (ctx.data() instanceof WenyanRParser.Data_childContext context) {
             visit(context.data());
-            if (context.STRING_LITERAL() != null)
-                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.STRING_LITERAL().getText());
+            if (context.IDENTIFIER() != null)
+                bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.IDENTIFIER().getText());
             else
                 bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, context.CREATE_OBJECT().getText());
             bytecode.add(WenyanCodes.CALL_ATTR, count);
@@ -258,7 +258,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 } else {
                     bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
                 }
-                bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.STRING_LITERAL().getText());
+                bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.IDENTIFIER().getText());
             }
         } catch (WenyanException.WenyanDataException e) {
             throw new WenyanException(e.getMessage());
@@ -266,10 +266,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         for (WenyanRParser.Object_method_defineContext func : ctx.object_method_define()) {
             visit(func);
-            if (func.STRING_LITERAL().isEmpty())
+            if (func.IDENTIFIER().isEmpty())
                 bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.CREATE_OBJECT(0).getText());
             else
-                bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.STRING_LITERAL(0).getText());
+                bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.IDENTIFIER(0).getText());
         }
 
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
@@ -279,7 +279,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     @Override
     public Boolean visitObject_method_define(WenyanRParser.Object_method_defineContext ctx) {
         if ((!ctx.CREATE_OBJECT().isEmpty() && ctx.CREATE_OBJECT().size() != 2) ||
-                (ctx.STRING_LITERAL().size() == 2 && !ctx.STRING_LITERAL(0).getText().equals(ctx.STRING_LITERAL(1).getText()))) {
+                (ctx.IDENTIFIER().size() == 2 && !ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(1).getText()))) {
             throw new WenyanException(Component.translatable("error.wenyan_programming.function_name_does_not_match").getString(), ctx);
         }
 
