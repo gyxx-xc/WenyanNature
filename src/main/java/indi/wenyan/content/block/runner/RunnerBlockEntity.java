@@ -7,6 +7,7 @@ import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
@@ -15,6 +16,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.IWenyanDevice;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import lombok.Getter;
@@ -53,8 +55,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private final List<String> output = new LinkedList<>();
     private final IWenyanDevice.ExecQueue execQueue = new IWenyanDevice.ExecQueue();
 
-    @Getter
-    IWenyanFunction importFunction = (IJavacallHandler) (self, thread, argsList) -> {
+    private final IWenyanFunction importFunction = (IJavacallHandler) (self, thread, argsList) -> {
         JavacallContext context = new JavacallContext(
                 self, argsList, thread,
                 new IExecCallHandler() {
@@ -84,12 +85,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                         } else {
                             for (IWenyanValue arg : context.args().subList(1, context.args().size())) {
                                 String id = arg.as(WenyanString.TYPE).value();
-                                if (execPackage.variables.containsKey(id)) {
-                                    context.thread().currentRuntime().setVariable(id,
-                                            execPackage.variables.get(id));
-                                } else {
-                                    throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.variable_not_found", id).getString());
-                                }
+                                // not found error will throw inside getAttribute
+                                context.thread().currentRuntime().setVariable(id,
+                                        execPackage.getAttribute(id));
                             }
                         }
 
@@ -111,6 +109,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         execQueue.receive(context);
         thread.block();
     };
+
+    @Override
+    public void initEnvironment(WenyanRuntime baseEnvironment) {
+        baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
+    }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.RUNNER_BLOCK_ENTITY.get(), pos, blockState);

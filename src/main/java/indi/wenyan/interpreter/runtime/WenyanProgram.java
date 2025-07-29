@@ -44,8 +44,8 @@ public class WenyanProgram {
             WenyanException.handleException(holder, e.getMessage());
         }
         this.baseEnvironment = new WenyanRuntime(null);
-        this.baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, platform.getImportFunction());
-        this.baseEnvironment.importEnvironment(baseEnvironment);
+        baseEnvironment.importEnvironment(WenyanPackages.WENYAN_BASIC_PACKAGES);
+        platform.initEnvironment(baseEnvironment);
         this.holder = holder;
         programJavaThread = new Thread(this::scheduler);
         programJavaThread.start();

@@ -1,6 +1,7 @@
 package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
@@ -13,7 +14,7 @@ public class MathAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
     private final String packageName = "「算經」";
 
     @Getter
-    private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
+    private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .constant("「圓周率」", new WenyanDouble(Math.PI))
             .constant("「倍圓周率」", new WenyanDouble(Math.TAU))
             .constant("「半圓周率」", new WenyanDouble(Math.PI / 2))

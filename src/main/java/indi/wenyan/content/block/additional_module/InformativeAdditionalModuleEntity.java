@@ -3,6 +3,7 @@ package indi.wenyan.content.block.additional_module;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
@@ -16,7 +17,7 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
 
     // redstone get/set, show text, entity detection
     @Getter
-    private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
+    private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function("「h」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {

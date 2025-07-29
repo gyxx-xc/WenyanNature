@@ -25,11 +25,11 @@ public class AdditionalPaperEntity extends BlockEntity {
         pages.add("書一");
     }
 
-    public WenyanRuntime provide_package(){
-        return WenyanPackageBuilder.create()
+//    public WenyanRuntime provide_package(){
+//        return WenyanPackageBuilder.create()
 //                .function("a", this::a)
-                .build();
-    }
+//                .build();
+//    }
 
     private IWenyanValue a(JavacallContext context) {
         return new WenyanString(pages.getFirst());

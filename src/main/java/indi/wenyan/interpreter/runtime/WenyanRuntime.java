@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 
 import java.util.HashMap;
 import java.util.Stack;
@@ -25,7 +26,7 @@ public class WenyanRuntime {
         variables.put(id, value);
     }
 
-    public void importEnvironment(WenyanRuntime environment) {
-        variables.putAll(environment.variables);
+    public void importEnvironment(WenyanPackage environment) {
+        variables.putAll(environment.getVariables());
     }
 }

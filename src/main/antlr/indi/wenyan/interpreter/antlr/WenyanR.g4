@@ -59,8 +59,8 @@ data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT
                             | IDENTIFIER                                                # id
                             | SELF                                                      # self
                             | PARENT                                                    # parent
-                            | data ZHI p=(INT_NUM|DATA_ID_LAST)              # array_index
-                            | data ZHI p=(IDENTIFIER|LONG|CREATE_OBJECT)            # data_child
+                            | data ZHI p=(INT_NUM|DATA_ID_LAST)                         # array_index
+                            | data ZHI p=(IDENTIFIER|LONG|CREATE_OBJECT)                # data_child
                             ;
 
 reference_statement         : FU data ;

@@ -3,13 +3,14 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface IWenyanDevice {
-    WenyanRuntime getExecPackage();
+    WenyanPackage getExecPackage();
 
     String getPackageName();
 

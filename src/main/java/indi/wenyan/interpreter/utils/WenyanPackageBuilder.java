@@ -8,34 +8,37 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class WenyanPackageBuilder {
-    private final WenyanRuntime environment = new WenyanRuntime(null);
+    Map<String, IWenyanValue> variables = new HashMap<>();
 
     public static WenyanPackageBuilder create() {
         return new WenyanPackageBuilder();
     }
 
-    public WenyanPackageBuilder environment(WenyanRuntime environment) {
-        this.environment.importEnvironment(environment);
+    public WenyanPackageBuilder environment(WenyanPackage environment) {
+        variables.putAll(environment.getVariables());
         return this;
     }
 
-    public WenyanRuntime build() {
-        return environment;
+    public WenyanPackage build() {
+        return new WenyanPackage(Map.copyOf(variables));
     }
 
     public WenyanPackageBuilder constant(String name, IWenyanValue value) {
-        environment.setVariable(name, value);
+        variables.put(name, value);
         return this;
     }
 
@@ -88,12 +91,12 @@ public final class WenyanPackageBuilder {
     }
 
     public WenyanPackageBuilder function(String name, IJavacallHandler javacall, WenyanType<?>[] argTypes) {
-        environment.setVariable(name, javacall);
+        variables.put(name, javacall);
         return this;
     }
 
     public WenyanPackageBuilder object(String name, IWenyanObjectType objectType) {
-        environment.setVariable(name, objectType);
+        variables.put(name, objectType);
         return this;
     }
 

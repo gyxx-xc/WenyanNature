@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
@@ -60,9 +61,8 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
         addDeltaMovement(holder.getDeltaMovement());
     }
 
-
     @Override
-    public WenyanRuntime getExecPackage() {
+    public WenyanPackage getExecPackage() {
         return WenyanPackageBuilder.create()
                 .function("a", new ThisCallHandler() {
                     @Override
@@ -119,9 +119,8 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
     }
 
     @Override
-    public IWenyanFunction getImportFunction() {
-        return (IJavacallHandler) (self, thread, argsList) ->
-                thread.currentRuntime().importEnvironment(getExecPackage());
+    public void initEnvironment(WenyanRuntime baseEnvironment) {
+        baseEnvironment.importEnvironment(getExecPackage());
     }
 
     @Override

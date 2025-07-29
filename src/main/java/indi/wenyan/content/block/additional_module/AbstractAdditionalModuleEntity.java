@@ -2,6 +2,7 @@ package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.IWenyanDevice;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -31,7 +32,7 @@ public abstract class AbstractAdditionalModuleEntity extends BlockEntity impleme
 
     public abstract String getPackageName();
 
-    public abstract WenyanRuntime getExecPackage();
+    public abstract WenyanPackage getExecPackage();
 
     abstract class ThisCallHandler implements IExecCallHandler {
         @Override

@@ -2,6 +2,7 @@ package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
@@ -17,7 +18,7 @@ public class RandomAdditionalModuleEntity extends AbstractAdditionalModuleEntity
     private final String packageName = "「易經」";
 
     @Getter
-    private final WenyanRuntime execPackage = WenyanPackageBuilder.create()
+    private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .intFunction("「占數」", (args) -> {
                 var random = Objects.requireNonNull(Minecraft.getInstance().level).getRandom();
                 return switch (args.size()) {

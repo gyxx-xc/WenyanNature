@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
@@ -15,7 +16,7 @@ public enum WenyanPackages {;
     public static final String MOD_ID = "模";
     public static final String IMPORT_ID = "import";
 
-    public static final WenyanRuntime WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
+    public static final WenyanPackage WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", WenyanPackageBuilder.reduceWith(IWenyanValue::add))
             .function(new String[]{"減","减"}, WenyanPackageBuilder.reduceWith(IWenyanValue::sub))
             .function("乘", WenyanPackageBuilder.reduceWith(IWenyanValue::mul))

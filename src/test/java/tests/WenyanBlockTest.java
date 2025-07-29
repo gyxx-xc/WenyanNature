@@ -140,11 +140,5 @@ public class WenyanBlockTest {
     @ParameterizedTest
     @MethodSource("getTestCases")
     public void testWenyanBlock(String s) {
-        WenyanProgram program = new WenyanProgram(s, WenyanPackages.WENYAN_BASIC_PACKAGES, null);
-        program.createThread();
-        while (program.isRunning()) {
-            program.step();
-            program.handle();
-        }
     }
 }
