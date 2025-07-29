@@ -3,7 +3,6 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.content.handler.IJavacallHandler;
 import indi.wenyan.content.handler.WenyanBuiltinFunction;
-import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;

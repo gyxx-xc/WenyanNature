@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@Deprecated
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {

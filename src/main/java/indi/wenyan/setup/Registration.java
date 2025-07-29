@@ -1,19 +1,9 @@
 package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
-import indi.wenyan.content.block.*;
-import indi.wenyan.content.block.additional_module.ExplosiveAdditionalModuleBlock;
-import indi.wenyan.content.block.additional_module.ExplosiveAdditionalModuleEntity;
-import indi.wenyan.content.block.additional_module.InformativeAdditionalModuleBlock;
-import indi.wenyan.content.block.additional_module.InformativeAdditionalModuleEntity;
-import indi.wenyan.content.block.additional_module.InteractiveAdditionalModuleBlock;
-import indi.wenyan.content.block.additional_module.InteractiveAdditionalModuleEntity;
-import indi.wenyan.content.block.additional_module.MathAdditionalModuleBlock;
-import indi.wenyan.content.block.additional_module.MathAdditionalModuleEntity;
-import indi.wenyan.content.block.additional_module.BitAdditionalModuleBlock;
-import indi.wenyan.content.block.additional_module.BitAdditionalModuleEntity;
-import indi.wenyan.content.block.additional_module.RandomAdditionalModuleBlock;
-import indi.wenyan.content.block.additional_module.RandomAdditionalModuleEntity;
+import indi.wenyan.content.block.CraftingBlock;
+import indi.wenyan.content.block.CraftingBlockEntity;
+import indi.wenyan.content.block.additional_module.*;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
@@ -106,8 +96,8 @@ public final class Registration {
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
     public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY;
-    public static final DeferredBlock<AdditionalPaper> ADDITIONAL_PAPER_BLOCK;
-    public static final DeferredItem<BlockItem> ADDITIONAL_PAPER_BLOCK_ITEM;
+//    public static final DeferredBlock<AdditionalPaper> ADDITIONAL_PAPER_BLOCK;
+//    public static final DeferredItem<BlockItem> ADDITIONAL_PAPER_BLOCK_ITEM;
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK;
     public static final DeferredItem<BlockItem> CRAFTING_BLOCK_ITEM;
@@ -288,9 +278,9 @@ public final class Registration {
                         .build(DSL.remainderType()));
 
 
-        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
-        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
-                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
+//        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
+//        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
+//                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
 
         TIER_DATA = DATA.register(RunnerTierData.ID,
                 () -> DataComponentType.<RunnerTierData>builder()
@@ -341,7 +331,7 @@ public final class Registration {
                     output.accept(CINNABAR_INK.get());
                     output.accept(STARLIGHT_INK.get());
 
-                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());
+//                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());
                     output.accept(CRAFTING_BLOCK_ITEM.get());
                     output.accept(PEDESTAL_BLOCK_ITEM.get());
                     output.accept(EXPLOSIVE_MODULE_BLOCK_ITEM.get());

@@ -1,6 +1,5 @@
 package indi.wenyan.content.block.runner;
 
-import indi.wenyan.content.block.AdditionalPaperEntity;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
@@ -136,18 +135,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             WenyanException.handleException(player, Component.translatable("error.wenyan_programming.already_run").getString());
             return;
         }
-        StringBuilder programBuilder = new StringBuilder().append(pages);
-        for (var additionalPage : additionalPages) {
-            assert level != null;
-            var e = level.getBlockEntity(additionalPage);
-            if (e instanceof AdditionalPaperEntity additionalPaperEntity) {
-                programBuilder.append("\n").append(String.join("\n", additionalPaperEntity.pages));
-            } else {
-                WenyanException.handleException(player, Component.translatable("error.wenyan_programming.additional_page_not_found", additionalPage).getString());
-            }
-        }
-        program = new WenyanProgram(programBuilder.toString(),
-                player, this);
+        program = new WenyanProgram(pages, player, this);
         program.createThread();
     }
 

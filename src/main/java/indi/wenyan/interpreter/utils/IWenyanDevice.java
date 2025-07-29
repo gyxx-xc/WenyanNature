@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;

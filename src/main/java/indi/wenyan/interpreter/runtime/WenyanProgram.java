@@ -59,10 +59,6 @@ public class WenyanProgram {
         runningCounter.getAndIncrement();
     }
 
-    public void step() {
-        step(1);
-    }
-
     public void step(int steps) {
         accumulatedSteps.release(steps);
     }
@@ -78,6 +74,8 @@ public class WenyanProgram {
     // this on other thread
     public void scheduler() {
         try {
+            // not stop until interrupted (object unloaded)
+            //noinspection InfiniteLoopStatement
             while (true) {
                 accumulatedSteps.acquire(SWITCH_COST);
                 if (readyQueue.isEmpty()) {
