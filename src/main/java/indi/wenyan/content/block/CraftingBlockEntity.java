@@ -99,6 +99,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
                 } else if (round >= maxRound) {
                     isCrafting = false;
                     forNearbyPedestal(level, pos, p -> p.removeItem(0, p.getMaxStackSize()));
+                    // TODO: not eject, may copy ComposterBlock
                     ejectItem();
                 } else {
                     // continue
