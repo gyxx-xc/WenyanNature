@@ -1,0 +1,21 @@
+package indi.wenyan.setup.event;
+
+import indi.wenyan.setup.Registration;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
+import static indi.wenyan.WenyanProgramming.MODID;
+
+@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+public enum ModSetup {;
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                Registration.PEDESTAL_ENTITY.get(),
+                (be, side) -> be.getItemHandler());
+    }
+
+}

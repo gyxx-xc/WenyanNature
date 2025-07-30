@@ -1,6 +1,7 @@
 package indi.wenyan.content.block.pedestal;
 
 import indi.wenyan.setup.Registration;
+import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -23,7 +24,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class PedestalBlockEntity extends BlockEntity implements Container {
-    private final ItemStackHandler item = createItemHandler();
+    @Getter
+    private final ItemStackHandler itemHandler = createItemHandler();
 
     public PedestalBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.PEDESTAL_ENTITY.get(), pos, blockState);
@@ -54,34 +56,34 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
 
     @Override
     public boolean isEmpty() {
-        return item.getStackInSlot(0).isEmpty();
+        return itemHandler.getStackInSlot(0).isEmpty();
     }
 
     @Override
     public ItemStack getItem(int pSlot) {
-        return item.getStackInSlot(pSlot);
+        return itemHandler.getStackInSlot(pSlot);
     }
 
     @Override
     public ItemStack removeItem(int pSlot, int pAmount) {
         updateBlock();
-        return item.extractItem(pSlot, pAmount, false);
+        return itemHandler.extractItem(pSlot, pAmount, false);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int pSlot) {
-        return item.extractItem(pSlot, item.getSlotLimit(pSlot), false);
+        return itemHandler.extractItem(pSlot, itemHandler.getSlotLimit(pSlot), false);
     }
 
     @Override
     public void setItem(int pSlot, ItemStack pStack) {
-        item.setStackInSlot(pSlot, pStack);
+        itemHandler.setStackInSlot(pSlot, pStack);
         updateBlock();
     }
 
     @Override
     public boolean canPlaceItem(int pIndex, ItemStack pStack) {
-        return item.getStackInSlot(0).isEmpty();
+        return itemHandler.getStackInSlot(0).isEmpty();
     }
 
     @Override
@@ -96,7 +98,7 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
 
     @Override
     public void clearContent() {
-        item.setStackInSlot(0, ItemStack.EMPTY);
+        itemHandler.setStackInSlot(0, ItemStack.EMPTY);
         updateBlock();
     }
 
@@ -109,24 +111,24 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
     }
 
     public ItemStack getStack() {
-        return item.getStackInSlot(0);
+        return itemHandler.getStackInSlot(0);
     }
 
     public void setStack(ItemStack stack) {
-        item.setStackInSlot(0, stack);
+        itemHandler.setStackInSlot(0, stack);
         updateBlock();
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put("inventory", item.serializeNBT(registries));
+        tag.put("inventory", itemHandler.serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        item.deserializeNBT(registries, tag.getCompound("inventory"));
+        itemHandler.deserializeNBT(registries, tag.getCompound("inventory"));
     }
 
     @Override

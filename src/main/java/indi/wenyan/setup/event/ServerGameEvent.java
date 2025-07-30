@@ -10,7 +10,7 @@ import static indi.wenyan.WenyanProgramming.LOGGER;
 import static indi.wenyan.WenyanProgramming.MODID;
 
 @EventBusSubscriber(modid = MODID)
-public enum ServerSetup {;
+public enum ServerGameEvent {;
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
         LOGGER.info("道曰：「「问天地好在」」");

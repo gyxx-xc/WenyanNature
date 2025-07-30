@@ -49,7 +49,7 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
                     assert level != null;
                     // TODO
                     var capability = level.getCapability(Capabilities.ItemHandler.BLOCK,
-                            getBlockPos(), Direction.UP);
+                            getBlockPos().relative(Direction.UP), Direction.DOWN);
                     ItemHandlerHelper.insertItem(capability, new ItemStack(Items.DIAMOND), false);
                     return WenyanNull.NULL;
                 }
