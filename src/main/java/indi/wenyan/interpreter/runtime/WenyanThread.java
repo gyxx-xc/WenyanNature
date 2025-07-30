@@ -59,14 +59,13 @@ public class WenyanThread {
                 dieWithException(e);
                 return;
             }
+            if (!runtime.PCFlag)
+                runtime.programCounter++;
+            runtime.PCFlag = false;
 
             if (state != State.READY) {
                 return; // yield
             }
-
-            if (!runtime.PCFlag)
-                runtime.programCounter++;
-            runtime.PCFlag = false;
         }
     }
 

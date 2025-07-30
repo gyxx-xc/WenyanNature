@@ -47,8 +47,8 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     signal = context.args().getFirst().as(WenyanInteger.TYPE).value();
-                    // TODO: test needed
-                    setChanged();
+                    assert getLevel() != null;
+                    InformativeAdditionalModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
                     return WenyanNull.NULL;
                 }
             })
