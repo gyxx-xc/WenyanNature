@@ -18,7 +18,6 @@ import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +34,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +48,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public Vec3 communicate;
     public boolean isCommunicating;
-    @Getter
-    private final List<String> output = new LinkedList<>();
     private final IWenyanDevice.ExecQueue execQueue = new IWenyanDevice.ExecQueue();
 
     private final IWenyanFunction importFunction = (IJavacallHandler) (self, thread, argsList) -> {
@@ -137,16 +133,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
         program = new WenyanProgram(pages, player, this);
         program.createThread();
-    }
-
-    public void addOutput(String text) {
-        if (level == null || !level.isClientSide()) {
-            return;
-        }
-        output.addLast(text);
-        if (output.size() > 10) {
-            output.removeFirst();
-        }
     }
 
     public void setCommunicate(Vec3 to) {

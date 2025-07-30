@@ -4,10 +4,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Axis;
 import indi.wenyan.WenyanProgramming;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -34,12 +32,8 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
     final ResourceLocation AABB_WALL = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
 
     private final BlockEntityRenderDispatcher dispatcher;
-    private final Font font;
-
-    private int lastOutput;
 
     public RunnerBlockRender(BlockEntityRendererProvider.Context context) {
-        font = context.getFont();
         dispatcher = context.getBlockEntityRenderDispatcher();
     }
 
@@ -51,7 +45,6 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
             renderBeam(poseStack, bufferSource, combinedLight, be.communicate);
         }
 
-        renderOutput(poseStack, be, partialTicks, bufferSource, combinedLight);
 //        renderAABB(poseStack, bufferSource, combinedLight,
 //                new AABB(-0.5, -0.25, -0.5, 2, 5, 0.5));
     }
@@ -68,43 +61,6 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
                     .setCullState(NO_CULL)
                     .setDepthTestState(NO_DEPTH_TEST)
                     .createCompositeState(false));
-
-    public void renderOutput(PoseStack poseStack, RunnerBlockEntity be, float partialTicks,
-                             MultiBufferSource bufferSource, int combinedLight) {
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.5, 0.5);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-dispatcher.camera.getYRot()));
-        poseStack.scale(-0.015F, -0.015F, -0.15F);
-
-        // older part
-        poseStack.pushPose();
-        var out = be.getOutput().reversed();
-        boolean animating = out.hashCode() != lastOutput;
-        String insert = null;
-        if (animating) {
-            if (!out.isEmpty()) insert = out.getFirst();
-            poseStack.translate(0.0, -10 * partialTicks, 0.0);
-            poseStack.scale(1 - 0.1F * partialTicks, 1 - 0.1F * partialTicks, 1 - 0.1F * partialTicks);
-        }
-        for (int i = animating ? 1 : 0; i < out.size(); i++) {
-            String s = out.get(i);
-            font.drawInBatch(s, -font.width(s) >> 1, 0, 0xFFFFFF, true,
-                    poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLight);
-            poseStack.translate(0.0, -10, 0.0);
-            poseStack.scale(0.9F, 0.9F, 0.9F);
-        }
-        poseStack.popPose();
-
-        if (insert != null && partialTicks > 0.5F) {
-            poseStack.scale(1 * partialTicks, 1 * partialTicks, 1 * partialTicks);
-            font.drawInBatch(insert, -font.width(insert) >> 1, 0, 0xFFFFFF, true,
-                    poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLight);
-        }
-
-        if (!out.isEmpty())
-            lastOutput = out.hashCode();
-        poseStack.popPose();
-    }
 
     public void renderAABB(PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, AABB aabb) {
         poseStack.pushPose();
