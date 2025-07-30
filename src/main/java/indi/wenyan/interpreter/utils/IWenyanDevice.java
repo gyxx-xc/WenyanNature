@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.utils;
 
+import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
@@ -38,7 +39,7 @@ public interface IWenyanDevice {
                 try {
                     request.thread().currentRuntime().processStack
                             .push(request.handler().handle(request));
-                    request.thread().unblock();
+                    WenyanProgram.unblock(request.thread());
                 } catch (WenyanException.WenyanThrowException | WenyanException e) {
                     request.thread().die();
                     // TODO: show exception

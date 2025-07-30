@@ -60,6 +60,10 @@ public class WenyanThread {
                 return;
             }
 
+            if (state != State.READY) {
+                return; // yield
+            }
+
             if (!runtime.PCFlag)
                 runtime.programCounter++;
             runtime.PCFlag = false;
@@ -84,15 +88,6 @@ public class WenyanThread {
         if (state == State.READY) {
             state = State.BLOCKED;
             assignedSteps = 0;
-        } else {
-            throw new RuntimeException("unreached");
-        }
-    }
-
-    public void unblock() {
-        if (state == State.BLOCKED) {
-            state = State.READY;
-            program.readyQueue.add(this);
         } else {
             throw new RuntimeException("unreached");
         }

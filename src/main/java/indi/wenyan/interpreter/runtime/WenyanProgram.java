@@ -67,6 +67,15 @@ public class WenyanProgram {
         programJavaThread.interrupt();
     }
 
+    public static void unblock(WenyanThread wenyanThread) {
+        if (wenyanThread.state == WenyanThread.State.BLOCKED) {
+            wenyanThread.state = WenyanThread.State.READY;
+            wenyanThread.program.readyQueue.add(wenyanThread);
+        } else {
+            throw new RuntimeException("unreached");
+        }
+    }
+
     public boolean isRunning() {
         return runningCounter.get() > 0;
     }

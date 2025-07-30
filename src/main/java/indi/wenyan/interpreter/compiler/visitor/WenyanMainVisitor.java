@@ -36,7 +36,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
             bytecode.add(WenyanCodes.PUSH, new WenyanString(id.getText()));
         bytecode.add(WenyanCodes.PUSH, new WenyanString(ctx.IDENTIFIER(0).getText()));
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.IMPORT_ID);
-        bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size() + 1);
+        bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size());
         return true;
     }
 }
