@@ -22,7 +22,7 @@ import java.util.List;
 
 public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
     @Getter
-    private final String packageName = "「im」";
+    private final String packageName = "「信」";
 
     @Getter
     private final List<String> output = new LinkedList<>();
@@ -33,7 +33,7 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
     // redstone get/set, show text, entity detection
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「h」", new ThisCallHandler() {
+            .function("「量」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {
                     int value = 0;
@@ -43,7 +43,7 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
                     return new WenyanInteger(value);
                 }
             })
-            .function("「sh」", new ThisCallHandler() {
+            .function("「輸能」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     signal = context.args().getFirst().as(WenyanInteger.TYPE).value();
@@ -52,7 +52,7 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
                     return WenyanNull.NULL;
                 }
             })
-            .function("「s」", new ThisCallHandler() {
+            .function("書", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     StringBuilder result = new StringBuilder();

@@ -20,12 +20,12 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
-    private final String packageName = "「im」";
+    private final String packageName = "「相」";
 
     // interactive, inventory
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「i」", new ThisCallHandler() {
+            .function("「觸」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     int dx = Math.max(-10, Math.min(10, context.args().get(0).as(WenyanInteger.TYPE).value()));
@@ -43,7 +43,7 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
                     return WenyanNull.NULL;
                 }
             })
-            .function("「e」", new ThisCallHandler() {
+            .function("「儲」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     assert level != null;
