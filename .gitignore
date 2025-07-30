@@ -27,3 +27,4 @@ repo
 /src/generated/resources/.cache/
 
 project
+/.github/git-commit-instructions.md
