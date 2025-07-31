@@ -29,13 +29,19 @@ public class InformativeAdditionalModuleBlock extends AbstractAdditionalModuleBl
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         var entity = level.getBlockEntity(pos);
-        if (entity instanceof InformativeAdditionalModuleEntity module) {
+        if (entity instanceof InformativeAdditionalModuleEntity module)
             return module.getSignal();
-        }
         return 0;
+    }
+
+    @Override
+    protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return getConnectedDirection(state) == direction ?
+                getSignal(state, level, pos, direction) : 0;
     }
 
     static void updateNeighbors(BlockState state, Level world, BlockPos pos) {
         world.updateNeighborsAt(pos, state.getBlock());
+        world.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), state.getBlock());
     }
 }

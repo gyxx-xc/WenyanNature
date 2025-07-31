@@ -10,7 +10,6 @@ import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
@@ -47,10 +46,28 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     assert level != null;
-                    // TODO
+                    var attached =
+                            InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState());
                     var capability = level.getCapability(Capabilities.ItemHandler.BLOCK,
-                            getBlockPos().relative(Direction.UP), Direction.DOWN);
+                            getBlockPos().relative(attached), attached.getOpposite());
+                    // TODO: item
                     ItemHandlerHelper.insertItem(capability, new ItemStack(Items.DIAMOND), false);
+                    return WenyanNull.NULL;
+                }
+            })
+            .function("「取」", new ThisCallHandler() {
+                @Override
+                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                    assert level != null;
+                    var attached =
+                            InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState());
+                    var capability = level.getCapability(Capabilities.ItemHandler.BLOCK,
+                            getBlockPos().relative(attached), attached.getOpposite());
+                    if (capability == null) {
+                        throw new WenyanException.WenyanTypeException("無法取得物品處理器");
+                    }
+                    var item = capability.extractItem(0, 0, false);
+                    // TODO: item
                     return WenyanNull.NULL;
                 }
             })
