@@ -5,9 +5,11 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import org.jetbrains.annotations.NotNull;
 
-public record WenyanDouble(Double value) implements IWenyanComputable, IWenyanComparable {
+public record WenyanDouble(Double value)
+        implements IWenyanWarperValue<Double>, IWenyanComputable, IWenyanComparable {
     public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>("double", WenyanDouble.class);
 
     @Override

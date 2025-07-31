@@ -2,9 +2,9 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
 import net.minecraft.network.chat.Component;
 

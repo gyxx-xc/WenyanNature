@@ -4,9 +4,11 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import org.jetbrains.annotations.NotNull;
 
-public record WenyanString(String value) implements IWenyanComputable {
+public record WenyanString(String value)
+        implements IWenyanWarperValue<String>, IWenyanComputable {
     public static final WenyanType<WenyanString> TYPE = new WenyanType<>("string", WenyanString.class);
 
     @Override

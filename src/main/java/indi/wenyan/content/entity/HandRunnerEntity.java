@@ -7,11 +7,11 @@ import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
-import indi.wenyan.interpreter.structure.values.warper.WenyanVec3Object;
+import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.IWenyanDevice;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
@@ -102,7 +102,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                         return WenyanNull.NULL;
                     }
                 })
-                .object("「方位」", WenyanVec3Object.OBJECT_TYPE)
+                .object("「方位」", WenyanVec3.OBJECT_TYPE)
                 .build();
     }
 

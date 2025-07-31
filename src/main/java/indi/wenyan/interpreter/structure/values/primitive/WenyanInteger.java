@@ -5,10 +5,12 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record WenyanInteger(Integer value) implements IWenyanComputable, IWenyanComparable {
+public record WenyanInteger(Integer value)
+        implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable {
     public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);
 
     @Override

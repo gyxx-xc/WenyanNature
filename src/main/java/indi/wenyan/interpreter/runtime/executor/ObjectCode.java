@@ -3,12 +3,8 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.IWenyanObject;
-import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.WenyanLeftValue;
+import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObjectType;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 
 public class ObjectCode extends WenyanCode {
     private final Operation operation;

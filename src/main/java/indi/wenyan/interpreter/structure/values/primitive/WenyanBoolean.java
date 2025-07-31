@@ -2,8 +2,10 @@ package indi.wenyan.interpreter.structure.values.primitive;
 
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import org.jetbrains.annotations.NotNull;
 
-public record WenyanBoolean(Boolean value) implements IWenyanValue {
+public record WenyanBoolean(Boolean value) implements IWenyanWarperValue<Boolean> {
     public static final WenyanType<WenyanBoolean> TYPE = new WenyanType<>("bool", WenyanBoolean.class);
 
     @Override
@@ -25,7 +27,7 @@ public record WenyanBoolean(Boolean value) implements IWenyanValue {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return value ? "陽" : "陰";
     }
 }

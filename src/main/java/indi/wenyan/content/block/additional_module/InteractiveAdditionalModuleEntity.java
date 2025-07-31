@@ -3,9 +3,9 @@ package indi.wenyan.content.block.additional_module;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
@@ -44,7 +44,7 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
             })
             .function("「儲」", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handle(JavacallContext context) {
                     assert level != null;
                     var attached =
                             InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState());

@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanNull;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 
 import java.util.Deque;
 import java.util.LinkedList;

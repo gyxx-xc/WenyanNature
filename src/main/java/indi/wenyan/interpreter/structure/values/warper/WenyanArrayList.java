@@ -5,27 +5,30 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record WenyanArrayList(List<IWenyanValue> values) implements IWenyanObject {
+public record WenyanArrayList(List<IWenyanValue> value)
+        implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {
     public static final WenyanType<WenyanArrayList> TYPE = new WenyanType<>("list", WenyanArrayList.class);
 
     public WenyanArrayList concat(WenyanArrayList other) {
-        values.addAll(other.values);
+        value.addAll(other.value);
         return this;
     }
 
     public void add(IWenyanValue wenyanValue) {
-        values.add(wenyanValue);
+        value.add(wenyanValue);
     }
 
     public IWenyanValue get(int index) throws WenyanException.WenyanThrowException {
         try {
-            return values.get(index - 1);
+            return value.get(index - 1);
         } catch (IndexOutOfBoundsException e) {
             throw new WenyanException.WenyanDataException(e.getMessage());
         }
@@ -47,9 +50,9 @@ public record WenyanArrayList(List<IWenyanValue> values) implements IWenyanObjec
             case WenyanDataParser.ITER_ID -> new WenyanBuiltinFunction((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
-                return new WenyanIterator(self.as(TYPE).values.iterator());
+                return new WenyanIterator(self.as(TYPE).value.iterator());
             });
-            case WenyanDataParser.LONG_ID -> new WenyanInteger(values.size());
+            case WenyanDataParser.LONG_ID -> new WenyanInteger(value.size());
             default -> throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
         };
     }
@@ -60,7 +63,7 @@ public record WenyanArrayList(List<IWenyanValue> values) implements IWenyanObjec
     }
 
     @Override
-    public String toString() {
-        return values.toString();
+    public @NotNull String toString() {
+        return value.toString();
     }
 }
