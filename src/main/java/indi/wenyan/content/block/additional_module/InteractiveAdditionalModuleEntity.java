@@ -6,6 +6,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.structure.values.warper.WenyanItemstack;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
@@ -27,9 +28,12 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
             .function("「觸」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    int dx = Math.max(-10, Math.min(10, context.args().get(0).as(WenyanInteger.TYPE).value()));
-                    int dy = Math.max(-10, Math.min(10, context.args().get(1).as(WenyanInteger.TYPE).value()));
-                    int dz = Math.max(-10, Math.min(10, context.args().get(2).as(WenyanInteger.TYPE).value()));
+                    int dx = Math.clamp(context.args().get(0).as(WenyanInteger.TYPE).value(),
+                            -10, 10);
+                    int dy = Math.clamp(context.args().get(1).as(WenyanInteger.TYPE).value(),
+                            -10, 10);
+                    int dz = Math.clamp(context.args().get(2).as(WenyanInteger.TYPE).value(),
+                            -10, 10);
                     BlockPos blockPos = getBlockPos().offset(dx, dy, dz);
                     assert level != null;
                     level.getProfiler().push("explosion_blocks");
@@ -69,6 +73,23 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
                     var item = capability.extractItem(0, 0, false);
                     // TODO: item
                     return WenyanNull.NULL;
+                }
+            })
+            .function("「讀」", new ThisCallHandler() {
+                @Override
+                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                    assert level != null;
+                    var attached =
+                            InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState());
+                    var capability = level.getCapability(Capabilities.ItemHandler.BLOCK,
+                            getBlockPos().relative(attached), attached.getOpposite());
+                    if (capability == null) {
+                        throw new WenyanException.WenyanTypeException("無法取得物品處理器");
+                    }
+                    int slot = Math.clamp(context.args().getFirst().as(WenyanInteger.TYPE).value(),
+                            0, capability.getSlots() - 1);
+                    var item = capability.getStackInSlot(slot);
+                    return new WenyanItemstack(item);
                 }
             })
             .build();
