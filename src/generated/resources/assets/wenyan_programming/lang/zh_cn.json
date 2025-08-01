@@ -1,5 +1,6 @@
 {
   "block.wenyan_programming.runner_block": "符咒",
+  "code.wenyan_programming.bracket": "「%s」",
   "config.wenyan_programming.advanced.debug_mode": "调试模式",
   "config.wenyan_programming.advanced.debug_mode.description": "启用此选项以在控制台中输出调试信息。",
   "config.wenyan_programming.advanced.title": "进阶设置",
@@ -44,6 +45,7 @@
   "item.wenyan_programming.cinnabar_ink": "朱砂墨",
   "item.wenyan_programming.cloud_paper": "云篆纸",
   "item.wenyan_programming.dragon_paper": "龙鳞纸",
+  "item.wenyan_programming.float_note": "浮签",
   "item.wenyan_programming.frost_paper": "霜华纸",
   "item.wenyan_programming.lunar_ink": "月华墨",
   "item.wenyan_programming.phoenix_paper": "凤羽纸",

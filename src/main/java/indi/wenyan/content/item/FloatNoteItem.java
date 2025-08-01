@@ -23,8 +23,8 @@ public class FloatNoteItem extends Item {
     }
 
     public @NotNull InteractionResult interactLivingEntity(
-            ItemStack stack, @NotNull Player player, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
-        Component component = stack.get(DataComponents.CUSTOM_NAME);
+            @NotNull ItemStack stack, @NotNull Player player, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
+        Component component = getNamingComponent(stack);
         if (component != null && !(target instanceof Player)) {
             if (!player.level().isClientSide && target.isAlive()) {
                 target.setCustomName(component);
@@ -45,12 +45,22 @@ public class FloatNoteItem extends Item {
         BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
 
         if (blockEntity instanceof AbstractAdditionalModuleEntity entity) {
-            Component component = context.getItemInHand().get(DataComponents.CUSTOM_NAME);
+            Component component = getNamingComponent(context.getItemInHand());
             if (component != null) {
-                entity.setPackageName(component.toString());
+                entity.setPackageName(component.getString());
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
         return InteractionResult.PASS;
+    }
+
+    private Component getNamingComponent(ItemStack stack) {
+        Component component = stack.get(DataComponents.CUSTOM_NAME);
+        if (component != null) {
+            return Component.translatable("code.wenyan_programming.bracket", component);
+        } else {
+            // TODO: open a GUI
+            return null;
+        }
     }
 }

@@ -12,6 +12,7 @@ public class ChineseLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add(Registration.HAND_RUNNER.get(),"符咒");
+        add(Registration.FLOAT_NOTE.get(), "浮签");
         add(Registration.BAMBOO_PAPER.get(),"松竹纸");
         add(Registration.CLOUD_PAPER.get(),"云篆纸");
         add(Registration.STAR_PAPER.get(),"星辉纸");
@@ -85,5 +86,6 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add("config.wenyan_programming.advanced.debug_mode", "调试模式");
         add("config.wenyan_programming.advanced.debug_mode.description", "启用此选项以在控制台中输出调试信息。");
 
+        add("code.wenyan_programming.bracket", "「%s」");
     }
 }
