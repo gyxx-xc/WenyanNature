@@ -23,8 +23,8 @@ The mod is still in development.
 
 - [ ]  **Virtualized Realm**: A sandboxed runtime to isolate code execution.
 - [x]  **Bytecode Compiling**: Real-time bytecode compilation, preserving progress even when chunks unload.
-- [ ]  **Craft Through Code**: Unlock items by designing code and solving mystical puzzles.
-- [ ]  **Polished Fu GUI**: Enhanced code editing with auto-completion, syntax highlighting, and more.
+- [x]  **Craft Through Code**: Unlock items by designing code and solving mystical puzzles.
+- [x]  **Polished Fu GUI**: Enhanced code editing with auto-completion, syntax highlighting, and more.
 - [ ]  **Expanded Minecraft Sorcery**: Deeper integration with the game’s mechanics.
 
 ## Docs
