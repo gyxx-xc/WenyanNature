@@ -40,6 +40,7 @@ public abstract class AbstractImportHandler implements IWenyanFunction {
                 }
             } catch (WenyanException.WenyanThrowException e) {
                 request.thread.dieWithException(e);
+                continue;
             }
             WenyanProgram.unblock(request.thread);
         }

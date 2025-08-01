@@ -59,5 +59,6 @@
   "type.wenyan_programming.list": "列",
   "type.wenyan_programming.null": "空無",
   "type.wenyan_programming.object": "物",
+  "type.wenyan_programming.object_type": "類",
   "type.wenyan_programming.string": "言"
 }

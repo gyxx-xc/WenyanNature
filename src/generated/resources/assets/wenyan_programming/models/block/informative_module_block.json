@@ -1,6 +1,6 @@
 {
   "parent": "wenyan_programming:block/template_runner_block",
   "textures": {
-    "texture": "wenyan_programming:block/additional_runner_block"
+    "texture": "wenyan_programming:block/informative_module_block"
   }
 }

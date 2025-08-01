@@ -6,16 +6,15 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.warper.WenyanItemstack;
+import indi.wenyan.interpreter.structure.values.warper.WenyanCapabilitySlot;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
@@ -46,27 +45,24 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
                     return WenyanNull.NULL;
                 }
             })
-            .function("「儲」", new ThisCallHandler() {
+            .function("「移」", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) {
-                    assert level != null;
-                    var attached =
-                            InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState());
-                    var capability = level.getCapability(Capabilities.ItemHandler.BLOCK,
-                            getBlockPos().relative(attached), attached.getOpposite());
-                    // TODO: item
-                    ItemHandlerHelper.insertItem(capability, new ItemStack(Items.DIAMOND), false);
+                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                    var capability = getItemHandlerCapability();
+                    var from = context.args().getFirst().as(WenyanCapabilitySlot.TYPE);
+                    var result = ItemHandlerHelper.insertItemStacked(capability,
+                            from.capabilities().getStackInSlot(from.slot()), true);
+                    int originAmount = from.capabilities().getStackInSlot(from.slot()).getCount();
+                    var extracted = from.capabilities().extractItem(from.slot(),
+                            originAmount - result.getCount(), false);
+                    ItemHandlerHelper.insertItemStacked(capability, extracted, false);
                     return WenyanNull.NULL;
                 }
             })
             .function("「取」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    assert level != null;
-                    var attached =
-                            InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState());
-                    var capability = level.getCapability(Capabilities.ItemHandler.BLOCK,
-                            getBlockPos().relative(attached), attached.getOpposite());
+                    var capability = getItemHandlerCapability();
                     if (capability == null) {
                         throw new WenyanException.WenyanTypeException("無法取得物品處理器");
                     }
@@ -78,23 +74,25 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
             .function("「讀」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    assert level != null;
-                    var attached =
-                            InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState());
-                    var capability = level.getCapability(Capabilities.ItemHandler.BLOCK,
-                            getBlockPos().relative(attached), attached.getOpposite());
+                    var capability = getItemHandlerCapability();
                     if (capability == null) {
                         throw new WenyanException.WenyanTypeException("無法取得物品處理器");
                     }
                     int slot = Math.clamp(context.args().getFirst().as(WenyanInteger.TYPE).value(),
                             0, capability.getSlots() - 1);
-                    var item = capability.getStackInSlot(slot);
-                    return new WenyanItemstack(item);
+                    return new WenyanCapabilitySlot(capability, slot);
                 }
             })
             .build();
 
     public InteractiveAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
         super(Registration.INTERACTIVE_MODULE_ENTITY.get(), pos, blockState);
+    }
+
+    private IItemHandler getItemHandlerCapability() {
+        var attached = InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState()).getOpposite();
+        assert level != null;
+        return level.getCapability(Capabilities.ItemHandler.BLOCK,
+                getBlockPos().relative(attached), attached.getOpposite());
     }
 }

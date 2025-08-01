@@ -8,7 +8,6 @@ import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.IWenyanDevice;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
@@ -44,10 +43,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public Vec3 communicate;
     public boolean isCommunicating;
-    private final IWenyanDevice.ExecQueue execQueue = new IWenyanDevice.ExecQueue();
 
     public static final int DEVICE_SEARCH_RANGE = 3;
-    private final IWenyanFunction importFunction = new AbstractImportHandler() {
+    private final AbstractImportHandler importFunction = new AbstractImportHandler() {
         @Override
         public WenyanPackage getPackage(String packageName) throws WenyanException.WenyanThrowException {
             IWenyanDevice wenyanExecutor = null;
@@ -88,7 +86,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide && program != null && program.isRunning()) {
             program.step(speed);
-            execQueue.handle();
+            importFunction.handle();
         }
 
         if (isCommunicating) {

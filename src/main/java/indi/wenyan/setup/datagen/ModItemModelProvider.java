@@ -33,6 +33,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(Registration.CINNABAR_INK.get());
         basicItem(Registration.STARLIGHT_INK.get());
 
+        basicItem(Registration.FLOAT_NOTE.get());
+
 //        withExistingParent(Registration.ADDITIONAL_PAPER_BLOCK.getId().getPath(),
 //                modLoc("block/runner_block"));
     }

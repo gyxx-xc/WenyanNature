@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 public class ModBlockStateProvider extends BlockStateProvider {
     public ModBlockStateProvider(PackOutput output, String modid, ExistingFileHelper exFileHelper) {
@@ -21,11 +22,19 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlock(Registration.CRAFTING_BLOCK.get(),
                 new ModelFile.UncheckedModelFile(
                         ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/money_case")));
-        horizontalFaceBlock(Registration.INFORMATIVE_MODULE_BLOCK.get(),
+        registerModuleBlock(Registration.INFORMATIVE_MODULE_BLOCK);
+        registerModuleBlock(Registration.INTERACTIVE_MODULE_BLOCK);
+        registerModuleBlock(Registration.BIT_MODULE_BLOCK);
+    }
+
+    private void registerModuleBlock(DeferredBlock<?> deferredBlock) {
+        String id = deferredBlock.getKey().location().getPath();
+        var block = deferredBlock.get();
+        horizontalFaceBlock(block,
                 new ModelFile.UncheckedModelFile(
-                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/additional_runner_block")));
-        models().singleTexture("additional_runner_block",
+                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id)));
+        models().singleTexture(id,
                 ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block"),
-                ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/additional_runner_block"));
+                ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id));
     }
 }
