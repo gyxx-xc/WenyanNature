@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
@@ -111,7 +112,7 @@ public final class WenyanPackageBuilder {
         };
     }
 
-    public static WenyanBuiltinFunction.BuiltinFunction boolBinaryOperation(java.util.function.BiFunction<Boolean, Boolean, Boolean> function) {
+    public static WenyanBuiltinFunction.BuiltinFunction boolBinaryOperation(BiFunction<Boolean, Boolean, Boolean> function) {
         return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());

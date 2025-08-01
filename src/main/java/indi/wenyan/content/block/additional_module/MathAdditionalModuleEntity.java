@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class MathAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
     @Getter
-    private final String packageName = "「算經」";
+    private final String basePackageName = "「算經」";
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()

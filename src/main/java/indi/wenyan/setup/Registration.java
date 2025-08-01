@@ -15,6 +15,7 @@ import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
+import indi.wenyan.content.item.FloatNoteItem;
 import indi.wenyan.content.item.WenyanHandRunner;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
@@ -84,6 +85,8 @@ public final class Registration {
     public static final DeferredItem<Item> HAND_RUNNER_1;
     public static final DeferredItem<Item> HAND_RUNNER_2;
     public static final DeferredItem<Item> HAND_RUNNER_3;
+
+    public static final DeferredItem<Item> FLOAT_NOTE;
 
     public static final DeferredItem<Item> BAMBOO_PAPER;
     public static final DeferredItem<Item> CLOUD_PAPER;
@@ -196,6 +199,8 @@ public final class Registration {
                         .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
                         .sized(0.45f, 1.0f)
                         .build(HandRunnerEntity.ID_1));
+
+        FLOAT_NOTE = ITEMS.registerItem(FloatNoteItem.ID, FloatNoteItem::new);
 
         // Paper
         BAMBOO_PAPER = ITEMS.registerItem(BambooPaper.ID, BambooPaper::new);
@@ -341,6 +346,7 @@ public final class Registration {
                     output.accept(CINNABAR_INK.get());
                     output.accept(STARLIGHT_INK.get());
 
+                    output.accept(FLOAT_NOTE.get());
 //                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());
                     output.accept(CRAFTING_BLOCK_ITEM.get());
                     output.accept(PEDESTAL_BLOCK_ITEM.get());

@@ -20,7 +20,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
-    private final String packageName = "「相」";
+    private final String basePackageName = "「相」";
 
     // interactive, inventory
     @Getter

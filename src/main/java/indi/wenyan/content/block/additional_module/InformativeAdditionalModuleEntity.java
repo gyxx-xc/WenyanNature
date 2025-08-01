@@ -22,7 +22,7 @@ import java.util.List;
 
 public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
     @Getter
-    private final String packageName = "「信」";
+    private final String basePackageName = "「信」";
 
     @Getter
     private final List<String> output = new LinkedList<>();

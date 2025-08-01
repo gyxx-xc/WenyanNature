@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class RandomAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
-    private final String packageName = "「易經」";
+    private final String basePackageName = "「易經」";
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()

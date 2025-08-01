@@ -4,6 +4,7 @@ import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.IWenyanDevice;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
@@ -19,6 +21,9 @@ import java.util.Optional;
 public abstract class AbstractAdditionalModuleEntity extends BlockEntity implements IWenyanDevice {
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
+
+    @Setter
+    private String packageName;
 
     public AbstractAdditionalModuleEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -29,7 +34,12 @@ public abstract class AbstractAdditionalModuleEntity extends BlockEntity impleme
         return getBlockPos().getCenter();
     }
 
-    public abstract String getPackageName();
+    @Override
+    public String getPackageName() {
+        return Objects.requireNonNullElseGet(packageName, this::getBasePackageName);
+    }
+
+    public abstract String getBasePackageName();
 
     public abstract WenyanPackage getExecPackage();
 

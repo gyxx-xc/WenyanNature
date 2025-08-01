@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BitAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
     @Getter
-    private final String packageName = "「位經」";
+    private final String basePackageName = "「位經」";
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
