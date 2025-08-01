@@ -18,7 +18,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class InventoryModuleEntity extends AbstractModuleEntity {
     @Getter
-    public static final String BasePackageName = "「仓」";
+    public final String BasePackageName = "「仓」";
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()

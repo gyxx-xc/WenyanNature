@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
@@ -25,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractModuleBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
-    public static final Properties PROPERTIES = Properties.of();
+    public static final Properties PROPERTIES = Properties.of().noCollission();
 
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
     public static final VoxelShape FLOOR_NORTH_AABB;
@@ -51,6 +52,13 @@ public abstract class AbstractModuleBlock extends FaceAttachedHorizontalDirectio
     }
 
     abstract BlockEntityType<?> getType();
+
+    @Override
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        Direction direction = getConnectedDirection(state).getOpposite();
+        return !level.getBlockState(pos.relative(direction))
+                .getCollisionShape(level, pos.relative(direction)).isEmpty();
+    }
 
     @Override
     public @NotNull VoxelShape
