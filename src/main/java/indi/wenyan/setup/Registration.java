@@ -1,6 +1,7 @@
 package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.CraftingBlock;
 import indi.wenyan.content.block.CraftingBlockEntity;
 import indi.wenyan.content.block.additional_module.*;
@@ -23,6 +24,9 @@ import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -60,6 +64,7 @@ public final class Registration {
         DATA.register(modEventBus);
         RECIPE_TYPE.register(modEventBus);
         SERIALIZER.register(modEventBus);
+        PARTICLE_TYPES.register(modEventBus);
 
         modEventBus.addListener(Registration::onRegisterPayloadHandler);
     }
@@ -73,7 +78,7 @@ public final class Registration {
     public static final DeferredRegister<DataComponentType<?>> DATA;
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZER;
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE;
-
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES;
 
     public static final DeferredItem<Item> HAND_RUNNER;
     public static final DeferredItem<Item> HAND_RUNNER_1;
@@ -124,11 +129,12 @@ public final class Registration {
     public static final DeferredItem<BlockItem> RANDOM_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<RandomAdditionalModuleEntity>> RANDOM_MODULE_ENTITY;
 
-
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
     public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER;
+
+    public static final Supplier<SimpleParticleType> COMMUNICATION_PARTICLES;
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<RunnerTierData>> TIER_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<OutputData>> OUTPUT_DATA;
@@ -169,6 +175,7 @@ public final class Registration {
         DATA = DeferredRegister.createDataComponents(MODID);
         SERIALIZER = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
         RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
+        PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
 
         HAND_RUNNER = ITEMS.registerItem(HandRunnerEntity.ID_0,
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 0));
@@ -306,6 +313,9 @@ public final class Registration {
                         return AnsweringRecipe.ID;
                     }
                 });
+
+        COMMUNICATION_PARTICLES = PARTICLE_TYPES.register("communication_particles",
+                () -> new SimpleParticleType(true));
 
         CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
                 .title(Component.translatable("title.wenyan_programming.create_tab"))

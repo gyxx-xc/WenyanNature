@@ -32,7 +32,10 @@ public final class ModDataGeneratorHandler {
         generator.addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<CheckerRecipeProvider>) pOutput ->
-                        new CheckerRecipeProvider(pOutput,event.getLookupProvider())
-        );
+                        new CheckerRecipeProvider(pOutput,event.getLookupProvider()));
+        generator.addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModParticleDescriptionProvider>) pOutput ->
+                        new ModParticleDescriptionProvider(pOutput, efh));
     }
 }

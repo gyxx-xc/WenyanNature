@@ -152,7 +152,6 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
             poseStack.popPose();
         }
         poseStack.popPose();
-
     }
 
     private static void vertex(
