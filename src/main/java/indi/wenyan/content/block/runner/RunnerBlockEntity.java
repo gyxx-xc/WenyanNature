@@ -3,16 +3,13 @@ package indi.wenyan.content.block.runner;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
-import indi.wenyan.content.handler.IExecCallHandler;
-import indi.wenyan.content.handler.IJavacallHandler;
+import indi.wenyan.content.handler.AbstractImportHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.IWenyanDevice;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -35,7 +32,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
@@ -50,59 +46,33 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public boolean isCommunicating;
     private final IWenyanDevice.ExecQueue execQueue = new IWenyanDevice.ExecQueue();
 
-    private final IWenyanFunction importFunction = (IJavacallHandler) (self, thread, argsList) -> {
-        JavacallContext context = new JavacallContext(
-                self, argsList, thread,
-                new IExecCallHandler() {
-                    @Override
-                    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
-                        String packageName = context.args().getFirst().as(WenyanString.TYPE).value();
-                        int RANGE = 3;
-                        IWenyanDevice wenyanExecutor = null;
-                        assert level != null;
-                        for (BlockPos b : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE),
-                                getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
-                            if (level.getBlockEntity(b) instanceof IWenyanDevice executor) {
-                                if (executor.getPackageName().equals(packageName)) {
-                                    wenyanExecutor = executor;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (wenyanExecutor == null) {
-                            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
-                        }
-
-                        var execPackage = wenyanExecutor.getExecPackage();
-                        if (context.args().size() == 1) {
-                            context.thread().currentRuntime().importEnvironment(execPackage);
-                        } else {
-                            for (IWenyanValue arg : context.args().subList(1, context.args().size())) {
-                                String id = arg.as(WenyanString.TYPE).value();
-                                // not found error will throw inside getAttribute
-                                context.thread().currentRuntime().setVariable(id,
-                                        execPackage.getAttribute(id));
-                            }
-                        }
-
-                        if (getLevel() instanceof ServerLevel sl) {
-                            PacketDistributor.sendToPlayersTrackingChunk(sl,
-                                    new ChunkPos(getBlockPos()),
-                                    new CommunicationLocationPacket(getBlockPos(), wenyanExecutor.getPosition())
-                            );
-                        }
-                        return WenyanNull.NULL;
-                    }
-
-                    @Override
-                    public Optional<IWenyanDevice> getExecutor() {
-                        return Optional.empty();
+    public static final int DEVICE_SEARCH_RANGE = 3;
+    private final IWenyanFunction importFunction = new AbstractImportHandler() {
+        @Override
+        public WenyanPackage getPackage(String packageName) throws WenyanException.WenyanThrowException {
+            IWenyanDevice wenyanExecutor = null;
+            assert level != null;
+            for (BlockPos b : BlockPos.betweenClosed(
+                    getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
+                    getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+                if (level.getBlockEntity(b) instanceof IWenyanDevice executor) {
+                    if (executor.getPackageName().equals(packageName)) {
+                        wenyanExecutor = executor;
+                        break;
                     }
                 }
-                , thread.program.holder);
-        execQueue.receive(context);
-        thread.block();
+            }
+            if (wenyanExecutor == null) {
+                throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
+            }
+            if (getLevel() instanceof ServerLevel sl) {
+                PacketDistributor.sendToPlayersTrackingChunk(sl,
+                        new ChunkPos(getBlockPos()),
+                        new CommunicationLocationPacket(getBlockPos(), wenyanExecutor.getPosition())
+                );
+            }
+            return wenyanExecutor.getExecPackage();
+        }
     };
 
     @Override

@@ -26,8 +26,6 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(Registration.LUNAR_INK.get(),"月华墨");
         add(Registration.STARLIGHT_INK.get(),"星光墨");
 
-
-
         add("error.wenyan_programming.variables_not_match","謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
         add("error.wenyan_programming.unknown_operator","謬：不識此算子");

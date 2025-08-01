@@ -41,9 +41,7 @@ public interface IWenyanDevice {
                             .push(request.handler().handle(request));
                     WenyanProgram.unblock(request.thread());
                 } catch (WenyanException.WenyanThrowException | WenyanException e) {
-                    request.thread().die();
-                    // TODO: show exception
-                    System.out.println(e);
+                    request.thread().dieWithException(e);
                 }
             }
         }

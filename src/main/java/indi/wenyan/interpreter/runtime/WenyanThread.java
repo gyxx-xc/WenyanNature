@@ -69,7 +69,7 @@ public class WenyanThread {
         }
     }
 
-    private void dieWithException(Exception e) {
+    public void dieWithException(Exception e) {
         if (e instanceof WenyanException) {
             WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
             WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " +
