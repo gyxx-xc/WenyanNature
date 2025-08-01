@@ -20,23 +20,22 @@ import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractAdditionalModuleEntity extends DataBlockEntity implements IWenyanDevice {
+public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanDevice {
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
 
     @Nullable
     private String packageName;
 
-    public void setPackageName(@Nullable String packageName) {
-        this.packageName = packageName;
-        setChanged();
-    }
-
-    protected AbstractAdditionalModuleEntity(
-            BlockEntityType<? extends AbstractAdditionalModuleEntity> type,
+    protected AbstractModuleEntity(
+            BlockEntityType<? extends AbstractModuleEntity> type,
             BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
+
+    public abstract String getBasePackageName();
+
+    public abstract WenyanPackage getExecPackage();
 
     @Override
     public Vec3 getPosition() {
@@ -48,9 +47,10 @@ public abstract class AbstractAdditionalModuleEntity extends DataBlockEntity imp
         return Objects.requireNonNullElseGet(packageName, this::getBasePackageName);
     }
 
-    public abstract String getBasePackageName();
-
-    public abstract WenyanPackage getExecPackage();
+    public void setPackageName(@Nullable String packageName) {
+        this.packageName = packageName;
+        setChanged();
+    }
 
     @Override
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
@@ -69,7 +69,7 @@ public abstract class AbstractAdditionalModuleEntity extends DataBlockEntity imp
         public Optional<IWenyanDevice> getExecutor() {
             if (isRemoved())
                 return Optional.empty();
-            return Optional.of(AbstractAdditionalModuleEntity.this);
+            return Optional.of(AbstractModuleEntity.this);
         }
     }
 }

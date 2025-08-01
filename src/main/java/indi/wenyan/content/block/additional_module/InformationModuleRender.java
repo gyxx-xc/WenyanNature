@@ -9,19 +9,19 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import org.jetbrains.annotations.NotNull;
 
-public class InformativeAdditionalModuleRender implements BlockEntityRenderer<InformativeAdditionalModuleEntity> {
+public class InformationModuleRender implements BlockEntityRenderer<InformationModuleEntity> {
     private final BlockEntityRenderDispatcher dispatcher;
     private final Font font;
 
     private int lastOutput;
 
-    public InformativeAdditionalModuleRender(BlockEntityRendererProvider.Context context) {
+    public InformationModuleRender(BlockEntityRendererProvider.Context context) {
         font = context.getFont();
         dispatcher = context.getBlockEntityRenderDispatcher();
     }
 
     @Override
-    public void render(@NotNull InformativeAdditionalModuleEntity be, float partialTicks,
+    public void render(@NotNull InformationModuleEntity be, float partialTicks,
                        @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource,
                        int combinedLight, int combinedOverlay) {
         poseStack.pushPose();

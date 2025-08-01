@@ -17,7 +17,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
+public class InteractModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = "「相」";
 
@@ -85,12 +85,12 @@ public class InteractiveAdditionalModuleEntity extends AbstractAdditionalModuleE
             })
             .build();
 
-    public InteractiveAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.INTERACTIVE_MODULE_ENTITY.get(), pos, blockState);
+    public InteractModuleEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.INTERACT_MODULE_ENTITY.get(), pos, blockState);
     }
 
     private IItemHandler getItemHandlerCapability() {
-        var attached = InteractiveAdditionalModuleBlock.getConnectedDirection(getBlockState()).getOpposite();
+        var attached = InteractModuleBlock.getConnectedDirection(getBlockState()).getOpposite();
         assert level != null;
         return level.getCapability(Capabilities.ItemHandler.BLOCK,
                 getBlockPos().relative(attached), attached.getOpposite());

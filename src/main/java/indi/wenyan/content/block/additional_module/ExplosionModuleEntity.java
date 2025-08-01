@@ -18,7 +18,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class ExplosiveAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
+public class ExplosionModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = "「em」";
 
@@ -37,7 +37,7 @@ public class ExplosiveAdditionalModuleEntity extends AbstractAdditionalModuleEnt
             })
             .build();
 
-    public ExplosiveAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.EXPLOSIVE_MODULE_ENTITY.get(), pos, blockState);
+    public ExplosionModuleEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.EXPLOSION_MODULE_ENTITY.get(), pos, blockState);
     }
 }

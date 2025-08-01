@@ -20,7 +20,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.LinkedList;
 import java.util.List;
 
-public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
+public class InformationModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = "「信」";
 
@@ -48,7 +48,7 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     signal = context.args().getFirst().as(WenyanInteger.TYPE).value();
                     assert getLevel() != null;
-                    InformativeAdditionalModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
+                    InformationModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
                     return WenyanNull.NULL;
                 }
             })
@@ -79,7 +79,7 @@ public class InformativeAdditionalModuleEntity extends AbstractAdditionalModuleE
         }
     }
 
-    public InformativeAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.INFORMATIVE_MODULE_ENTITY.get(), pos, blockState);
+    public InformationModuleEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.INFORMATION_MODULE_ENTITY.get(), pos, blockState);
     }
 }

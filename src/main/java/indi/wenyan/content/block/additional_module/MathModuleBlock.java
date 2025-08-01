@@ -4,12 +4,11 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
-public class RandomAdditionalModuleBlock extends AbstractAdditionalModuleBlock {
-
-    public static final String ID = "random_module_block";
+public class MathModuleBlock extends AbstractModuleBlock {
+    public static final String ID = "math_module_block";
 
     @Override
     protected @NotNull BlockEntityType<?> getType() {
-        return Registration.RANDOM_MODULE_ENTITY.get();
+        return Registration.MATH_MODULE_ENTITY.get();
     }
 }

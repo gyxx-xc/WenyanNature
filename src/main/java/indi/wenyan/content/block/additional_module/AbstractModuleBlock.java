@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractAdditionalModuleBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
+public abstract class AbstractModuleBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock {
     public static final Properties PROPERTIES = Properties.of();
 
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
@@ -41,7 +41,7 @@ public abstract class AbstractAdditionalModuleBlock extends FaceAttachedHorizont
     public static final VoxelShape WEST_AABB;
     public static final VoxelShape EAST_AABB;
 
-    public AbstractAdditionalModuleBlock() {
+    public AbstractModuleBlock() {
         super(PROPERTIES);
     }
 
@@ -132,7 +132,7 @@ public abstract class AbstractAdditionalModuleBlock extends FaceAttachedHorizont
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == getType())
-                ((AbstractAdditionalModuleEntity) entity).handle();
+                ((AbstractModuleEntity) entity).handle();
         };
     }
 }

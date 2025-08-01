@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Objects;
 
-public class RandomAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
+public class RandomModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = "「易經」";
 
@@ -32,7 +32,7 @@ public class RandomAdditionalModuleEntity extends AbstractAdditionalModuleEntity
             .function("「占爻」", (self, args) -> new WenyanBoolean(Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean()))
             .build();
 
-    public RandomAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
+    public RandomModuleEntity(BlockPos pos, BlockState blockState) {
         super(Registration.RANDOM_MODULE_ENTITY.get(), pos, blockState);
     }
 }

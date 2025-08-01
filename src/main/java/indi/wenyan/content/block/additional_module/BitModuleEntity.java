@@ -7,7 +7,7 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BitAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
+public class BitModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = "「位經」";
 
@@ -23,7 +23,7 @@ public class BitAdditionalModuleEntity extends AbstractAdditionalModuleEntity {
             .intFunction("「位變」", args -> ~args.getFirst())
             .build();
 
-    public BitAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
+    public BitModuleEntity(BlockPos pos, BlockState blockState) {
         super(Registration.BIT_MODULE_ENTITY.get(), pos, blockState);
     }
 }

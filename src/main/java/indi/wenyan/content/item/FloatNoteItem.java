@@ -1,6 +1,6 @@
 package indi.wenyan.content.item;
 
-import indi.wenyan.content.block.additional_module.AbstractAdditionalModuleEntity;
+import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -44,7 +44,7 @@ public class FloatNoteItem extends Item {
         Level level = context.getLevel();
         BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
 
-        if (blockEntity instanceof AbstractAdditionalModuleEntity entity) {
+        if (blockEntity instanceof AbstractModuleEntity entity) {
             Component component = getNamingComponent(context.getItemInHand());
             if (component != null) {
                 entity.setPackageName(component.getString());

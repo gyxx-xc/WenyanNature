@@ -8,7 +8,7 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class MathAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
+public class MathModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = "「算經」";
 
@@ -43,7 +43,7 @@ public class MathAdditionalModuleEntity extends AbstractAdditionalModuleEntity{
             .doubleFunction("「正負」", args -> Math.signum(args.getFirst()))
             .build();
 
-    public MathAdditionalModuleEntity(BlockPos pos, BlockState blockState) {
+    public MathModuleEntity(BlockPos pos, BlockState blockState) {
         super(Registration.MATH_MODULE_ENTITY.get(), pos, blockState);
     }
 }

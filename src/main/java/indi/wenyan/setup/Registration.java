@@ -113,24 +113,24 @@ public final class Registration {
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
-    public static final DeferredBlock<ExplosiveAdditionalModuleBlock> EXPLOSIVE_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> EXPLOSIVE_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<ExplosiveAdditionalModuleEntity>> EXPLOSIVE_MODULE_ENTITY;
-    public static final DeferredBlock<InformativeAdditionalModuleBlock> INFORMATIVE_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> INFORMATIVE_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<InformativeAdditionalModuleEntity>> INFORMATIVE_MODULE_ENTITY;
-    public static final DeferredBlock<InteractiveAdditionalModuleBlock> INTERACTIVE_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> INTERACTIVE_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<InteractiveAdditionalModuleEntity>> INTERACTIVE_MODULE_ENTITY;
-    public static final DeferredBlock<MathAdditionalModuleBlock> MATH_MODULE_BLOCK;
+    public static final DeferredBlock<ExplosionModuleBlock> EXPLOSION_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> EXPLOSION_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<ExplosionModuleEntity>> EXPLOSION_MODULE_ENTITY;
+    public static final DeferredBlock<InformationModuleBlock> INFORMATION_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> INFORMATION_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<InformationModuleEntity>> INFORMATION_MODULE_ENTITY;
+    public static final DeferredBlock<InteractModuleBlock> INTERACT_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> INTERACT_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<InteractModuleEntity>> INTERACT_MODULE_ENTITY;
+    public static final DeferredBlock<MathModuleBlock> MATH_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> MATH_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<MathAdditionalModuleEntity>> MATH_MODULE_ENTITY;
-    public static final DeferredBlock<BitAdditionalModuleBlock> BIT_MODULE_BLOCK;
+    public static final Supplier<BlockEntityType<MathModuleEntity>> MATH_MODULE_ENTITY;
+    public static final DeferredBlock<BitModuleBlock> BIT_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> BIT_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<BitAdditionalModuleEntity>> BIT_MODULE_ENTITY;
-    public static final DeferredBlock<RandomAdditionalModuleBlock> RANDOM_MODULE_BLOCK;
+    public static final Supplier<BlockEntityType<BitModuleEntity>> BIT_MODULE_ENTITY;
+    public static final DeferredBlock<RandomModuleBlock> RANDOM_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> RANDOM_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<RandomAdditionalModuleEntity>> RANDOM_MODULE_ENTITY;
+    public static final Supplier<BlockEntityType<RandomModuleEntity>> RANDOM_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -242,51 +242,51 @@ public final class Registration {
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        EXPLOSIVE_MODULE_BLOCK = BLOCKS.register(ExplosiveAdditionalModuleBlock.ID, ExplosiveAdditionalModuleBlock::new);
-        EXPLOSIVE_MODULE_BLOCK_ITEM = ITEMS.registerItem(ExplosiveAdditionalModuleBlock.ID,
-                (properties) -> new BlockItem(EXPLOSIVE_MODULE_BLOCK.get(), properties));
-        EXPLOSIVE_MODULE_ENTITY = BLOCK_ENTITY.register(ExplosiveAdditionalModuleBlock.ID,
+        EXPLOSION_MODULE_BLOCK = BLOCKS.register(ExplosionModuleBlock.ID, ExplosionModuleBlock::new);
+        EXPLOSION_MODULE_BLOCK_ITEM = ITEMS.registerItem(ExplosionModuleBlock.ID,
+                (properties) -> new BlockItem(EXPLOSION_MODULE_BLOCK.get(), properties));
+        EXPLOSION_MODULE_ENTITY = BLOCK_ENTITY.register(ExplosionModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(ExplosiveAdditionalModuleEntity::new, EXPLOSIVE_MODULE_BLOCK.get())
+                        .of(ExplosionModuleEntity::new, EXPLOSION_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        INFORMATIVE_MODULE_BLOCK = BLOCKS.register(InformativeAdditionalModuleBlock.ID,
-                InformativeAdditionalModuleBlock::new);
-        INFORMATIVE_MODULE_BLOCK_ITEM = ITEMS.registerItem(InformativeAdditionalModuleBlock.ID,
-                (properties) -> new BlockItem(INFORMATIVE_MODULE_BLOCK.get(), properties));
-        INFORMATIVE_MODULE_ENTITY = BLOCK_ENTITY.register(InformativeAdditionalModuleBlock.ID,
+        INFORMATION_MODULE_BLOCK = BLOCKS.register(InformationModuleBlock.ID,
+                InformationModuleBlock::new);
+        INFORMATION_MODULE_BLOCK_ITEM = ITEMS.registerItem(InformationModuleBlock.ID,
+                (properties) -> new BlockItem(INFORMATION_MODULE_BLOCK.get(), properties));
+        INFORMATION_MODULE_ENTITY = BLOCK_ENTITY.register(InformationModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(InformativeAdditionalModuleEntity::new, INFORMATIVE_MODULE_BLOCK.get())
+                        .of(InformationModuleEntity::new, INFORMATION_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        INTERACTIVE_MODULE_BLOCK = BLOCKS.register(InteractiveAdditionalModuleBlock.ID, InteractiveAdditionalModuleBlock::new);
-        INTERACTIVE_MODULE_BLOCK_ITEM = ITEMS.registerItem(InteractiveAdditionalModuleBlock.ID,
-                (properties) -> new BlockItem(INTERACTIVE_MODULE_BLOCK.get(), properties));
-        INTERACTIVE_MODULE_ENTITY = BLOCK_ENTITY.register(InteractiveAdditionalModuleBlock.ID,
+        INTERACT_MODULE_BLOCK = BLOCKS.register(InteractModuleBlock.ID, InteractModuleBlock::new);
+        INTERACT_MODULE_BLOCK_ITEM = ITEMS.registerItem(InteractModuleBlock.ID,
+                (properties) -> new BlockItem(INTERACT_MODULE_BLOCK.get(), properties));
+        INTERACT_MODULE_ENTITY = BLOCK_ENTITY.register(InteractModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(InteractiveAdditionalModuleEntity::new, INTERACTIVE_MODULE_BLOCK.get())
+                        .of(InteractModuleEntity::new, INTERACT_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
-        MATH_MODULE_BLOCK = BLOCKS.register(MathAdditionalModuleBlock.ID, MathAdditionalModuleBlock::new);
-        MATH_MODULE_BLOCK_ITEM = ITEMS.registerItem(MathAdditionalModuleBlock.ID,
+        MATH_MODULE_BLOCK = BLOCKS.register(MathModuleBlock.ID, MathModuleBlock::new);
+        MATH_MODULE_BLOCK_ITEM = ITEMS.registerItem(MathModuleBlock.ID,
                 (properties) -> new BlockItem(MATH_MODULE_BLOCK.get(), properties));
-        MATH_MODULE_ENTITY = BLOCK_ENTITY.register(MathAdditionalModuleBlock.ID,
+        MATH_MODULE_ENTITY = BLOCK_ENTITY.register(MathModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(MathAdditionalModuleEntity::new, MATH_MODULE_BLOCK.get())
+                        .of(MathModuleEntity::new, MATH_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
-        BIT_MODULE_BLOCK = BLOCKS.register(BitAdditionalModuleBlock.ID, BitAdditionalModuleBlock::new);
-        BIT_MODULE_BLOCK_ITEM = ITEMS.registerItem(BitAdditionalModuleBlock.ID,
+        BIT_MODULE_BLOCK = BLOCKS.register(BitModuleBlock.ID, BitModuleBlock::new);
+        BIT_MODULE_BLOCK_ITEM = ITEMS.registerItem(BitModuleBlock.ID,
                 (properties) -> new BlockItem(BIT_MODULE_BLOCK.get(), properties));
-        BIT_MODULE_ENTITY = BLOCK_ENTITY.register(BitAdditionalModuleBlock.ID,
+        BIT_MODULE_ENTITY = BLOCK_ENTITY.register(BitModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(BitAdditionalModuleEntity::new, BIT_MODULE_BLOCK.get())
+                        .of(BitModuleEntity::new, BIT_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        RANDOM_MODULE_BLOCK = BLOCKS.register(RandomAdditionalModuleBlock.ID, RandomAdditionalModuleBlock::new);
-        RANDOM_MODULE_BLOCK_ITEM = ITEMS.registerItem(RandomAdditionalModuleBlock.ID,
+        RANDOM_MODULE_BLOCK = BLOCKS.register(RandomModuleBlock.ID, RandomModuleBlock::new);
+        RANDOM_MODULE_BLOCK_ITEM = ITEMS.registerItem(RandomModuleBlock.ID,
                 (properties) -> new BlockItem(RANDOM_MODULE_BLOCK.get(), properties));
-        RANDOM_MODULE_ENTITY = BLOCK_ENTITY.register(RandomAdditionalModuleBlock.ID,
+        RANDOM_MODULE_ENTITY = BLOCK_ENTITY.register(RandomModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(RandomAdditionalModuleEntity::new, RANDOM_MODULE_BLOCK.get())
+                        .of(RandomModuleEntity::new, RANDOM_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
 
@@ -350,9 +350,9 @@ public final class Registration {
 //                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());
                     output.accept(CRAFTING_BLOCK_ITEM.get());
                     output.accept(PEDESTAL_BLOCK_ITEM.get());
-                    output.accept(EXPLOSIVE_MODULE_BLOCK_ITEM.get());
-                    output.accept(INFORMATIVE_MODULE_BLOCK_ITEM.get());
-                    output.accept(INTERACTIVE_MODULE_BLOCK_ITEM.get());
+                    output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
+                    output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
+                    output.accept(INTERACT_MODULE_BLOCK_ITEM.get());
                     output.accept(MATH_MODULE_BLOCK_ITEM.get());
                     output.accept(BIT_MODULE_BLOCK_ITEM.get());
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());

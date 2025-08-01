@@ -13,12 +13,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class InformativeAdditionalModuleBlock extends AbstractAdditionalModuleBlock {
-    public static final String ID = "informative_module_block";
+public class InformationModuleBlock extends AbstractModuleBlock {
+    public static final String ID = "information_module_block";
 
     @Override
     BlockEntityType<?> getType() {
-        return Registration.INFORMATIVE_MODULE_ENTITY.get();
+        return Registration.INFORMATION_MODULE_ENTITY.get();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class InformativeAdditionalModuleBlock extends AbstractAdditionalModuleBl
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         var entity = level.getBlockEntity(pos);
-        if (entity instanceof InformativeAdditionalModuleEntity module)
+        if (entity instanceof InformationModuleEntity module)
             return module.getSignal();
         return 0;
     }

@@ -8,11 +8,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class ExplosiveAdditionalModuleBlock extends AbstractAdditionalModuleBlock {
-    public static final String ID = "explosive_module_block";
+public class ExplosionModuleBlock extends AbstractModuleBlock {
+    public static final String ID = "explosion_module_block";
 
     @Override
     BlockEntityType<?> getType() {
-        return Registration.EXPLOSIVE_MODULE_ENTITY.get();
+        return Registration.EXPLOSION_MODULE_ENTITY.get();
     }
 }
