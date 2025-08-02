@@ -11,6 +11,7 @@ import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -25,12 +26,12 @@ public class InventoryModuleEntity extends AbstractModuleEntity {
             .function("「移」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    var capability = getItemHandlerCapability();
+                    IItemHandler capability = getItemHandlerCapability();
                     var from = context.args().getFirst().as(WenyanCapabilitySlot.TYPE);
-                    var result = ItemHandlerHelper.insertItemStacked(capability,
+                    ItemStack result = ItemHandlerHelper.insertItemStacked(capability,
                             from.capabilities().getStackInSlot(from.slot()), true);
                     int originAmount = from.capabilities().getStackInSlot(from.slot()).getCount();
-                    var extracted = from.capabilities().extractItem(from.slot(),
+                    ItemStack extracted = from.capabilities().extractItem(from.slot(),
                             originAmount - result.getCount(), false);
                     ItemHandlerHelper.insertItemStacked(capability, extracted, false);
                     return WenyanNull.NULL;
@@ -45,7 +46,7 @@ public class InventoryModuleEntity extends AbstractModuleEntity {
                     }
                     int slot = Math.clamp(context.args().getFirst().as(WenyanInteger.TYPE).value(),
                             0, capability.getSlots() - 1);
-                    return new WenyanCapabilitySlot(capability, slot);
+                    return new WenyanCapabilitySlot(getPosition(), capability, slot);
                 }
             })
             .build();

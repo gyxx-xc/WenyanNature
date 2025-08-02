@@ -4,10 +4,11 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-public record WenyanCapabilitySlot(IItemHandler capabilities, int slot) implements IWenyanObject {
+public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slot) implements IWenyanObject {
     public static final WenyanType<WenyanCapabilitySlot> TYPE = new WenyanType<>("item_slot",
             WenyanCapabilitySlot.class);
 
