@@ -26,6 +26,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         registerModuleBlock(Registration.INTERACT_MODULE_BLOCK);
         registerModuleBlock(Registration.BIT_MODULE_BLOCK);
         registerModuleBlock(Registration.INVENTORY_MODULE_BLOCK);
+        registerModuleBlock(Registration.BLOCK_MODULE_BLOCK);
     }
 
     private void registerModuleBlock(DeferredBlock<?> deferredBlock) {

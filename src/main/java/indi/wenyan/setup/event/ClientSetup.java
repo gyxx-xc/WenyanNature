@@ -1,5 +1,6 @@
 package indi.wenyan.setup.event;
 
+import indi.wenyan.content.block.additional_module.BlockModuleRender;
 import indi.wenyan.content.block.additional_module.InformationModuleRender;
 import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
@@ -24,6 +25,7 @@ public enum ClientSetup {;
         event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
         event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
         event.registerBlockEntityRenderer(Registration.RUNNER_BLOCK_ENTITY.get(), RunnerBlockRender::new);
+        event.registerBlockEntityRenderer(Registration.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
         event.registerBlockEntityRenderer(Registration.INFORMATION_MODULE_ENTITY.get(), InformationModuleRender::new);
         event.registerBlockEntityRenderer(Registration.PEDESTAL_ENTITY.get(), PedestalBlockRender::new);
     }

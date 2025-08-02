@@ -128,6 +128,9 @@ public final class Registration {
     public static final DeferredBlock<BitModuleBlock> BIT_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> BIT_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<BitModuleEntity>> BIT_MODULE_ENTITY;
+    public static final DeferredBlock<BlockModuleBlock> BLOCK_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> BLOCK_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<BlockModuleEntity>> BLOCK_MODULE_ENTITY;
     public static final DeferredBlock<RandomModuleBlock> RANDOM_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> RANDOM_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<RandomModuleEntity>> RANDOM_MODULE_ENTITY;
@@ -284,6 +287,14 @@ public final class Registration {
                         .of(BitModuleEntity::new, BIT_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        BLOCK_MODULE_BLOCK = BLOCKS.register(BlockModuleBlock.ID, BlockModuleBlock::new);
+        BLOCK_MODULE_BLOCK_ITEM = ITEMS.registerItem(BlockModuleBlock.ID,
+                (properties) -> new BlockItem(BLOCK_MODULE_BLOCK.get(), properties));
+        BLOCK_MODULE_ENTITY = BLOCK_ENTITY.register(BlockModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(BlockModuleEntity::new, BLOCK_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
         RANDOM_MODULE_BLOCK = BLOCKS.register(RandomModuleBlock.ID, RandomModuleBlock::new);
         RANDOM_MODULE_BLOCK_ITEM = ITEMS.registerItem(RandomModuleBlock.ID,
                 (properties) -> new BlockItem(RANDOM_MODULE_BLOCK.get(), properties));
@@ -366,6 +377,7 @@ public final class Registration {
                     output.accept(INTERACT_MODULE_BLOCK_ITEM.get());
                     output.accept(MATH_MODULE_BLOCK_ITEM.get());
                     output.accept(BIT_MODULE_BLOCK_ITEM.get());
+                    output.accept(BLOCK_MODULE_BLOCK_ITEM.get());
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
                     output.accept(INVENTORY_MODULE_BLOCK_ITEM.get());
                 }).build());
