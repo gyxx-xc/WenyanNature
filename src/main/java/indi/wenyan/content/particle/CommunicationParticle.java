@@ -19,7 +19,7 @@ public class CommunicationParticle extends TextureSheetParticle {
     protected CommunicationParticle(ClientLevel level, double x, double y, double z,
                                     double ex, double ey, double ez, SpriteSet spriteSet) {
         super(level, x, y, z);
-        lifetime = 80;
+        lifetime = 5;
         from = new Vec3(x, y, z);
         to = new Vec3(ex, ey, ez);
         rCol = 1.0f;
