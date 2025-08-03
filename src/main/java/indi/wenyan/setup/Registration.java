@@ -137,6 +137,9 @@ public final class Registration {
     public static final DeferredBlock<InventoryModuleBlock> INVENTORY_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> INVENTORY_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<InventoryModuleEntity>> INVENTORY_MODULE_ENTITY;
+    public static final DeferredBlock<Vec3ModuleBlock> VEC3_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> VEC3_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<Vec3ModuleEntity>> VEC3_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -311,6 +314,14 @@ public final class Registration {
                         .of(InventoryModuleEntity::new, INVENTORY_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        VEC3_MODULE_BLOCK = BLOCKS.register(Vec3ModuleBlock.ID, Vec3ModuleBlock::new);
+        VEC3_MODULE_BLOCK_ITEM = ITEMS.registerItem(Vec3ModuleBlock.ID,
+                (properties) -> new BlockItem(VEC3_MODULE_BLOCK.get(), properties));
+        VEC3_MODULE_ENTITY = BLOCK_ENTITY.register(Vec3ModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(Vec3ModuleEntity::new, VEC3_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
@@ -380,6 +391,7 @@ public final class Registration {
                     output.accept(BLOCK_MODULE_BLOCK_ITEM.get());
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
                     output.accept(INVENTORY_MODULE_BLOCK_ITEM.get());
+                    output.accept(VEC3_MODULE_BLOCK_ITEM.get());
                 }).build());
     }
 }

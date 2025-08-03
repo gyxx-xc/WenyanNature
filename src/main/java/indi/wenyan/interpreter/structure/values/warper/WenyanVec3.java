@@ -55,7 +55,6 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     // store all static information
     public static class Vec3ObjectType implements IWenyanObjectType {
         public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>("vec3_object_type", Vec3ObjectType.class);
-        public static final Vec3ObjectType INSTANCE = new Vec3ObjectType();
 
         public static final IWenyanValue ZERO;
         public static final IWenyanValue UP;
