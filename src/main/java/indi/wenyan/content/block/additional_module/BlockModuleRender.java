@@ -27,9 +27,10 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity>
     }
 
     @Override
-    public void render(@NotNull BlockModuleEntity blockModuleEntity, float v, @NotNull PoseStack poseStack,
+    public void render(@NotNull BlockModuleEntity entity, float v, @NotNull PoseStack poseStack,
                        @NotNull MultiBufferSource multiBufferSource, int i, int i1) {
-        renderAABB(poseStack, multiBufferSource, i, new AABB(0, 0, 0, 1, 1, 1));
+        if (entity.getContinueCount() > 0)
+            renderAABB(poseStack, multiBufferSource, i, new AABB(entity.getStart(), entity.getEnd()));
     }
 
     public static final RenderType FRONT_LINES = RenderType.create("lines",

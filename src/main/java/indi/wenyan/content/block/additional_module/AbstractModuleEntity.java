@@ -72,4 +72,8 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
             return Optional.of(AbstractModuleEntity.this);
         }
     }
+
+    public void tick() {
+        handle();
+    }
 }

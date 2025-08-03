@@ -20,10 +20,7 @@ import indi.wenyan.content.item.WenyanHandRunner;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
-import indi.wenyan.setup.network.BlockOutputPacket;
-import indi.wenyan.setup.network.BlockRunnerCodePacket;
-import indi.wenyan.setup.network.CommunicationLocationPacket;
-import indi.wenyan.setup.network.RunnerCodePacket;
+import indi.wenyan.setup.network.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -159,22 +156,21 @@ public final class Registration {
         PayloadRegistrar registrar = event.registrar(MODID)
                 .versioned("1.0")
                 .optional();
-        registrar.playToServer(
-                RunnerCodePacket.TYPE,
+        registrar.playToServer(RunnerCodePacket.TYPE,
                 RunnerCodePacket.STREAM_CODEC,
                 RunnerCodePacket.HANDLER);
-        registrar.playToServer(
-                BlockRunnerCodePacket.TYPE,
+        registrar.playToServer(BlockRunnerCodePacket.TYPE,
                 BlockRunnerCodePacket.STREAM_CODEC,
                 BlockRunnerCodePacket.HANDLER);
-        registrar.commonToClient(
-                BlockOutputPacket.TYPE,
+        registrar.commonToClient(BlockOutputPacket.TYPE,
                 BlockOutputPacket.STREAM_CODEC,
                 BlockOutputPacket.HANDLER);
-        registrar.commonToClient(
-                CommunicationLocationPacket.TYPE,
+        registrar.commonToClient(CommunicationLocationPacket.TYPE,
                 CommunicationLocationPacket.STREAM_CODEC,
                 CommunicationLocationPacket.HANDLER);
+        registrar.commonToClient(BlockPosRangePacket.TYPE,
+                BlockPosRangePacket.STREAM_CODEC,
+                BlockPosRangePacket.HANDLER);
     }
 
     static {

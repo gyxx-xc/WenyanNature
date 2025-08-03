@@ -28,7 +28,7 @@ public abstract class AbstractModuleBlock extends AbstractFuluBlock implements E
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == getType())
-                ((AbstractModuleEntity) entity).handle();
+                ((AbstractModuleEntity) entity).tick();
         };
     }
 }
