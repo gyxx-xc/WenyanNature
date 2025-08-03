@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
-public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end) implements CustomPacketPayload {
+public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end, boolean found) implements CustomPacketPayload {
     public static final Type<BlockPosRangePacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "output_pos_text"));
 
@@ -21,12 +21,14 @@ public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end) im
                         buffer.writeBlockPos(packet.pos);
                         buffer.writeBlockPos(packet.start);
                         buffer.writeBlockPos(packet.end);
+                        buffer.writeBoolean(packet.found);
                     },
                     buffer -> {
                         BlockPos pos = buffer.readBlockPos();
                         BlockPos start = buffer.readBlockPos();
                         BlockPos end = buffer.readBlockPos();
-                        return new BlockPosRangePacket(pos, start, end);
+                        boolean found = buffer.readBoolean();
+                        return new BlockPosRangePacket(pos, start, end, found);
                     });
 
     public static final IPayloadHandler<BlockPosRangePacket> HANDLER = (packet, context) -> {
@@ -37,7 +39,7 @@ public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end) im
                 Vec3 start = new Vec3(Math.floor(startVec.x), Math.floor(startVec.y), Math.floor(startVec.z));
                 Vec3 endVec = packet.end.getCenter();
                 Vec3 end = new Vec3(Math.ceil(endVec.x), Math.ceil(endVec.y), Math.ceil(endVec.z));
-                module.addRenderRange(start, end);
+                module.addRenderRange(start, end, packet.found);
             }
         }
     };

@@ -23,11 +23,11 @@ public class BlockModuleEntity extends AbstractModuleEntity {
     private final String basePackageName = "「塊」";
 
     @Getter
-    private Vec3 start;
-    @Getter
-    private Vec3 end;
-    @Getter
     private int continueCount = 0;
+
+    @Getter
+    private RenderRange renderRange;
+    public record RenderRange(Vec3 start, Vec3 end, boolean found) {}
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
@@ -38,20 +38,22 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                     BlockPos start = new BlockPos((int) s.x, (int) s.y, (int) s.z);
                     Vec3 e = context.args().get(1).as(WenyanVec3.TYPE).value();
                     BlockPos end = new BlockPos((int) e.x, (int) e.y, (int) e.z);
+                    boolean found = false;
                     // search from start to end
                     assert level != null;
                     for (var pos : BlockPos.betweenClosed(start.offset(getBlockPos()),
                             end.offset(getBlockPos()))) {
                         if (level.getBlockState(pos).is(Blocks.DIAMOND_ORE)) {
-                            return new WenyanBoolean(true);
+                            found = true;
+                            break;
                         }
                     }
 
                     if (level instanceof ServerLevel serverLevel)
                         PacketDistributor.sendToPlayersTrackingChunk(serverLevel,
                                 new ChunkPos(getBlockPos()),
-                                new BlockPosRangePacket(getBlockPos(), start, end));
-                    return new WenyanBoolean(false);
+                                new BlockPosRangePacket(getBlockPos(), start, end, found));
+                    return new WenyanBoolean(found);
                 }
             })
             .build();
@@ -60,9 +62,8 @@ public class BlockModuleEntity extends AbstractModuleEntity {
         super(Registration.BLOCK_MODULE_ENTITY.get(), pos, blockState);
     }
 
-    public void addRenderRange(Vec3 start, Vec3 end) {
-        this.start = start;
-        this.end = end;
+    public void addRenderRange(Vec3 start, Vec3 end, boolean found) {
+        renderRange = new RenderRange(start, end, found);
         continueCount = 20;
     }
 

@@ -30,7 +30,8 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity>
     public void render(@NotNull BlockModuleEntity entity, float v, @NotNull PoseStack poseStack,
                        @NotNull MultiBufferSource multiBufferSource, int i, int i1) {
         if (entity.getContinueCount() > 0)
-            renderAABB(poseStack, multiBufferSource, i, new AABB(entity.getStart(), entity.getEnd()));
+            renderAABB(poseStack, multiBufferSource, i, entity.getRenderRange().found(),
+                    new AABB(entity.getRenderRange().start(), entity.getRenderRange().end()));
     }
 
     public static final RenderType FRONT_LINES = RenderType.create("lines",
@@ -46,65 +47,72 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity>
                     .setDepthTestState(NO_DEPTH_TEST)
                     .createCompositeState(false));
 
-    public void renderAABB(PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, AABB aabb) {
+    public void renderAABB(PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight,
+                           boolean found, AABB aabb) {
         poseStack.pushPose();
         VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.entityTranslucent(AABB_WALL));
         int alpha = 80;
+        Color color;
+        if (found) {
+            color = new Color(0xCCFFCC);
+        } else {
+            color = new Color(0xFFCCCC);
+        }
 // down
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
-                alpha, 0, 0, combinedLight);
+                color, alpha, 0, 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
-                alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxZ - aabb.minZ), combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxZ - aabb.minZ), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
-                alpha, 0, (float) (aabb.maxZ - aabb.minZ), combinedLight);
+                color, alpha, 0, (float) (aabb.maxZ - aabb.minZ), combinedLight);
 // up
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
-                alpha, 0, 0, combinedLight);
+                color, alpha, 0, 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
-                alpha, 0, (float) (aabb.maxZ - aabb.minZ), combinedLight);
+                color, alpha, 0, (float) (aabb.maxZ - aabb.minZ), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxZ - aabb.minZ), combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxZ - aabb.minZ), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
-                alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
 
 // north
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
-                alpha, 0, 0, combinedLight);
+                color, alpha, 0, 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
-                alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
-                alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxY - aabb.minY), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
-                alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
 // south
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
-                alpha, 0, 0, combinedLight);
+                color, alpha, 0, 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxY - aabb.minY), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
-                alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
 // west
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
-                alpha, 0, 0, combinedLight);
+                color, alpha, 0, 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxZ - aabb.minZ), 0, combinedLight);
+                color, alpha, (float) (aabb.maxZ - aabb.minZ), 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxZ - aabb.minZ), (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, (float) (aabb.maxZ - aabb.minZ), (float) (aabb.maxY - aabb.minY), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
-                alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
 // east
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
-                alpha, 0, 0, combinedLight);
+                color, alpha, 0, 0, combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
-                alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxZ - aabb.minZ), (float) (aabb.maxY - aabb.minY), combinedLight);
+                color, alpha, (float) (aabb.maxZ - aabb.minZ), (float) (aabb.maxY - aabb.minY), combinedLight);
         vertex(vertexconsumer, poseStack.last(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
-                alpha, (float) (aabb.maxZ - aabb.minZ), 0, combinedLight);
+                color, alpha, (float) (aabb.maxZ - aabb.minZ), 0, combinedLight);
 
         vertexconsumer = bufferSource.getBuffer(FRONT_LINES);
         LevelRenderer.renderLineBox(poseStack, vertexconsumer,
@@ -113,12 +121,12 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity>
     }
 
     private static void vertex(
-            VertexConsumer consumer,
-            PoseStack.Pose pose,
+            VertexConsumer consumer, PoseStack.Pose pose,
             float x, float y, float z,
-            int alpha, float u, float v, int packedLight) {
+            Color color, int alpha,
+            float u, float v, int packedLight) {
         consumer.addVertex(pose, x, y, z)
-                .setColor(Color.WHITE.getRed(), Color.WHITE.getGreen(), Color.WHITE.getBlue(), alpha)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), alpha)
                 .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight)
                 .setNormal(pose, 0.0F, 1.0F, 0.0F);
