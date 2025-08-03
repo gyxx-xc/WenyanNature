@@ -59,6 +59,15 @@ public class WenyanDataVisitor extends WenyanVisitor {
     }
 
     @Override
+    public Boolean visitLogic_data(WenyanRParser.Logic_dataContext ctx) {
+        visit(ctx.data(1));
+        visit(ctx.data(0));
+        bytecode.add(WenyanCodes.LOAD, ctx.if_logic_op().op.getText());
+        bytecode.add(WenyanCodes.CALL, 2);
+        return true;
+    }
+
+    @Override
     public Boolean visitParent(WenyanRParser.ParentContext ctx) {
         bytecode.add(WenyanCodes.LOAD, ctx.PARENT().getText());
         return true;

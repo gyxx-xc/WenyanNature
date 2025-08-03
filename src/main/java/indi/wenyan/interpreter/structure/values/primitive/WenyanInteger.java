@@ -56,7 +56,7 @@ public record WenyanInteger(Integer value)
 
     @Override
     public int compareTo(@NotNull IWenyanValue value) throws WenyanException.WenyanTypeException {
-        return value.as(TYPE).value - this.value;
+        return this.value.compareTo(value.as(TYPE).value);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitIf_statement(WenyanRParser.If_statementContext ctx) {
-        visit(ctx.if_expression());
+        exprVisitor.visit(ctx.data());
         int ifEnds = bytecode.getNewLabel();
         bytecode.add(WenyanCodes.BRANCH_POP_FALSE, ifEnds);
         bodyVisitor.visit(ctx.if_); // if body
@@ -43,21 +43,6 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
             bytecode.setLabel(elseEnds);
         }
-        return true;
-    }
-
-    @Override
-    public Boolean visitIf_data(WenyanRParser.If_dataContext ctx) {
-        exprVisitor.visit(ctx.data());
-        return true;
-    }
-
-    @Override
-    public Boolean visitIf_logic(WenyanRParser.If_logicContext ctx) {
-        exprVisitor.visit(ctx.data(1));
-        exprVisitor.visit(ctx.data(0));
-        bytecode.add(WenyanCodes.LOAD, ctx.if_logic_op().op.getText());
-        bytecode.add(WenyanCodes.CALL, 2);
         return true;
     }
 

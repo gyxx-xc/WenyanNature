@@ -38,7 +38,7 @@ public abstract class AbstractImportHandler implements IWenyanFunction {
                                 execPackage.getAttribute(id));
                     }
                 }
-            } catch (WenyanException.WenyanThrowException e) {
+            } catch (WenyanException | WenyanException.WenyanThrowException e) {
                 request.thread.dieWithException(e);
                 continue;
             }

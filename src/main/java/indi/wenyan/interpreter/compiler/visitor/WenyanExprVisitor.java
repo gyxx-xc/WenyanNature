@@ -310,6 +310,11 @@ public class WenyanExprVisitor extends WenyanVisitor {
     }
 
     @Override
+    public Boolean visitLogic_data(WenyanRParser.Logic_dataContext ctx) {
+        return dataVisitor.visitLogic_data(ctx);
+    }
+
+    @Override
     public Boolean visitId(WenyanRParser.IdContext ctx) {
         return dataVisitor.visitId(ctx);
     }

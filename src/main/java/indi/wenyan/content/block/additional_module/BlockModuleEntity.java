@@ -43,7 +43,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                     assert level != null;
                     for (var pos : BlockPos.betweenClosed(start.offset(getBlockPos()),
                             end.offset(getBlockPos()))) {
-                        if (level.getBlockState(pos).is(Blocks.DIAMOND_ORE)) {
+                        if (level.getBlockState(pos).is(Blocks.ANCIENT_DEBRIS)) {
                             found = true;
                             break;
                         }

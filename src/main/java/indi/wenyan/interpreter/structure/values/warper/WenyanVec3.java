@@ -8,7 +8,10 @@ import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -19,6 +22,15 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     @Override
     public WenyanType<?> type() {
         return TYPE;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
+        if (type == WenyanString.TYPE) {
+            return (T) new WenyanString(toString());
+        }
+        return null;
     }
 
     @Override
@@ -107,5 +119,10 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         public WenyanType<?> type() {
             return TYPE;
         }
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return value.toString();
     }
 }

@@ -15,7 +15,6 @@ grammar WenyanR;
 // store_attr:id (attr, self -> ), store_a_meth:id (self, m -> self), s_a_prop:id (self, p -> self)
 // create_type:id (parent -> self), create_object:argc (arg..., obj_type -> obj_ins)
 // FOR_ITER:label_end (iter -> iter+1, i), FOR_NUM:label_end (i -> i - 1) [remove i f jump out]
-// import:id (->), import_attr:id (STUB package_name(const string) -> remain)
 
 program                     : statements EOF;
 
@@ -61,6 +60,7 @@ data                        : data_type=(STRING_LITERAL|BOOL_VALUE|FLOAT_NUM|INT
                             | PARENT                                                    # parent
                             | data ZHI p=(INT_NUM|DATA_ID_LAST)                         # array_index
                             | data ZHI p=(IDENTIFIER|LONG|CREATE_OBJECT)                # data_child
+                            | data if_logic_op data                                     # logic_data
                             ;
 
 reference_statement         : FU data ;
@@ -73,7 +73,7 @@ declare_write_candy_statement : declare_statement WRITE_KEY_FUNCTION ZHI
                               ;
 
 mod_math_statement          : DIV data pp=(PREPOSITION_LEFT|PREPOSITION_RIGHT) data POST_MOD_MATH_OP ;
-boolean_algebra_statement   : FU data data op=(AND | OR) ;
+boolean_algebra_statement   : FU data data op=(AND_STMT | OR_STMT) ;
 assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGHT_END   # assign_data_statement
                             | ASSIGN_LEFT data ZHE (ASSIGN_RIGHT)? ASSIGN_RIGHT_NULL       # assign_null_statement;
 
@@ -91,9 +91,7 @@ function_call_statement     : call=(CALLING_FUNCTION|CREATE_OBJECT) (data|key_fu
 
 flush_statement             : FLUSH ;
 
-if_statement                : IF_ if_expression ZHE if_=statements (ELSE_ else_=statements)? FOR_IF_END ;
-if_expression               : data                  # if_data
-                            | data if_logic_op data # if_logic ;
+if_statement                : IF_ data ZHE if_=statements (ELSE_ else_=statements)? FOR_IF_END ;
 
 for_statement               : FOR_ARR_START data FOR_ARR_BELONG IDENTIFIER statements FOR_IF_END  # for_arr_statement
                             | FOR_ENUM_START data FOR_ENUM_TIMES statements FOR_IF_END            # for_enum_statement
@@ -122,7 +120,7 @@ if_logic_op                 : op=(EQ|NEQ|LTE|GTE|GT|LT) ;
 
 key_function                : op=(
                               ADD | SUB | MUL | DIV
-                            | UNARY_OP
+                            | AND | OR | UNARY_OP
                             | ARRAY_COMBINE_OP
                             | ARRAY_ADD_OP
                             | WRITE_KEY_FUNCTION
@@ -137,8 +135,10 @@ preposition                 : PREPOSITION_LEFT | PREPOSITION_RIGHT ;
 declare_op                  : LOCAL_DECLARE_OP | GLOBAL_DECLARE_OP ;
 
 POST_MOD_MATH_OP            : '所餘幾何' | '所余几何';
-AND                         : '中無陰乎' | '中无阴乎';
-OR                          : '中有陽乎' | '中有阳乎';
+AND_STMT                    : '中無陰乎' | '中无阴乎';
+OR_STMT                     : '中有陽乎' | '中有阳乎';
+AND                         : '且' ;
+OR                          : '或' ;
 NEQ                         : '不等於' | '不等于';
 LTE                         : '不大於' | '不大于';
 GTE                         : '不小於' | '不小于';
