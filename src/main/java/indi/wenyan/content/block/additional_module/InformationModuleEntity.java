@@ -52,7 +52,7 @@ public class InformationModuleEntity extends AbstractModuleEntity {
                     return WenyanNull.NULL;
                 }
             })
-            .function("書", new ThisCallHandler() {
+            .function("「書」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     StringBuilder result = new StringBuilder();
