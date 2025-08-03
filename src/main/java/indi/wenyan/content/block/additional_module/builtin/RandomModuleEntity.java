@@ -1,5 +1,6 @@
-package indi.wenyan.content.block.additional_module;
+package indi.wenyan.content.block.additional_module.builtin;
 
+import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;

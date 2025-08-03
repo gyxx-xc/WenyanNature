@@ -16,7 +16,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractModuleBlock extends AbstractFuluBlock implements EntityBlock {
-    abstract BlockEntityType<?> getType();
+    protected abstract BlockEntityType<?> getType();
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
