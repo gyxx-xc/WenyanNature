@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
 public class TextFieldWidget extends AbstractScrollWidget {
-    private static final int CURSOR_INSERT_COLOR = 0xffd0d0d0;
+    private static final int CURSOR_INSERT_COLOR = 0xff000000;
     private static final String CURSOR_APPEND_CHARACTER = "_";
 
     private final Font font;
@@ -51,7 +52,9 @@ public class TextFieldWidget extends AbstractScrollWidget {
             double scrollAmount = scrollAmount();
             var displayLines = textField.getDisplayLines();
 
-            int beginIndex = displayLines.get((int) (scrollAmount / font.lineHeight)).beginIndex();
+            int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
+                    displayLines.size()-1);
+            int beginIndex = displayLines.get(lineNo).beginIndex();
             if (textField.getCursor() <= beginIndex) {
                 scrollAmount = textField.getLineAtCursor() * font.lineHeight;
             } else if ((int) ((scrollAmount + height) / font.lineHeight) - 1 < displayLines.size()) {
@@ -172,7 +175,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
         String content = textField.getValue();
         if (!content.isEmpty() || isFocused()) {
             int cursor = textField.getCursor();
-            boolean isCursorRender = isFocused() && (Util.getMillis() - focusedTime) / 300L % 2L == 0L;
+            boolean isCursorRender = isFocused() && (Util.getMillis() - focusedTime) / 500L % 2L == 0L;
             boolean cursorInContent = cursor < content.length();
             int cursorX = 0;
             int currentY = getY() + innerPadding();
@@ -186,8 +189,8 @@ public class TextFieldWidget extends AbstractScrollWidget {
                         // cursor
                         cursorX = getX() + innerPadding() +
                                 font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
-                        guiGraphics.fill(cursorX, currentY - 1,
-                                cursorX + 1, currentY + 1 + font.lineHeight,
+                        guiGraphics.fill(cursorX, currentY,
+                                cursorX + 1, currentY + font.lineHeight,
                                 CURSOR_INSERT_COLOR);
                     }
                     int lastEnd = stringView.beginIndex();
@@ -217,7 +220,8 @@ public class TextFieldWidget extends AbstractScrollWidget {
             int cursorY = currentY - font.lineHeight;
             if (isCursorRender && !cursorInContent &&
                     withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
-                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY, CURSOR_INSERT_COLOR);
+                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY,
+                        CURSOR_INSERT_COLOR, false);
             }
 
             if (textField.hasSelection()) {

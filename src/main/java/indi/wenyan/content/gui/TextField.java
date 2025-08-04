@@ -89,11 +89,15 @@ public class TextField {
     }
 
     public void seekCursorToPoint(double x, double y) {
-        int i = Mth.floor(x);
-        int j = Mth.floor(y / font.lineHeight);
-        StringView stringView = displayLines.get(Mth.clamp(j, 0, displayLines.size() - 1));
-        int k = font.plainSubstrByWidth(value.substring(stringView.beginIndex, stringView.endIndex), i).length();
-        seekCursor(Whence.ABSOLUTE, stringView.beginIndex + k);
+        int cursorY = Mth.floor(y / font.lineHeight);
+        StringView stringView = displayLines.get(Mth.clamp(cursorY, 0, displayLines.size() - 1));
+        String line = value.substring(stringView.beginIndex, stringView.endIndex);
+        int cursorX = font.plainSubstrByWidth(line, Mth.floor(x)).length();
+        if (cursorX < line.length()) {
+            double inChar = x - font.width(line.substring(0, cursorX));
+            cursorX += (inChar / font.width(line.substring(cursorX, cursorX + 1))) > 0.5 ? 1 : 0;
+        }
+        seekCursor(Whence.ABSOLUTE, stringView.beginIndex + cursorX);
     }
 
 
@@ -234,6 +238,8 @@ public class TextField {
 
 
     private void onValueChange() {
+//        value = value.replace("\t", "    ");
+
         // reflowDisplayLines
         displayLines.clear();
         if (value.isEmpty()) {
