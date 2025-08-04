@@ -40,6 +40,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             if (level.isClientSide())
                 Minecraft.getInstance().setScreen(new TextFieldScreen(runner.pages, content -> {
                     runner.pages = content;
+                    runner.setChanged();
                     PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
                 }));
         } else {

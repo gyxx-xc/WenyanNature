@@ -12,7 +12,7 @@ public class ExplosionModuleBlock extends AbstractModuleBlock {
     public static final String ID = "explosion_module_block";
 
     @Override
-    BlockEntityType<?> getType() {
+    protected BlockEntityType<?> getType() {
         return Registration.EXPLOSION_MODULE_ENTITY.get();
     }
 }

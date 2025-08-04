@@ -17,7 +17,7 @@ public class InformationModuleBlock extends AbstractModuleBlock {
     public static final String ID = "information_module_block";
 
     @Override
-    BlockEntityType<?> getType() {
+    protected BlockEntityType<?> getType() {
         return Registration.INFORMATION_MODULE_ENTITY.get();
     }
 
