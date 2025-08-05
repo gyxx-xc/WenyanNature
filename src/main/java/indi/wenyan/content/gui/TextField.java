@@ -61,7 +61,7 @@ public class TextField {
 
     public void insertText(String text) {
         if (!text.isEmpty() || hasSelection()) {
-            String filteredText = StringUtil.filterText(text, true);
+            String filteredText = StringUtil.filterText(text.replace("\t", "    "), true);
             String string = hasCharacterLimit() ?
                     StringUtil.truncateStringIfNecessary(filteredText, characterLimit - value.length(), false)
                     : filteredText;
@@ -238,8 +238,6 @@ public class TextField {
 
 
     private void onValueChange() {
-//        value = value.replace("\t", "    ");
-
         // reflowDisplayLines
         displayLines.clear();
         if (value.isEmpty()) {
