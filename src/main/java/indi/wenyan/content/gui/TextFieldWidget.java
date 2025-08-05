@@ -29,7 +29,8 @@ public class TextFieldWidget extends AbstractScrollWidget {
     private static final String CURSOR_APPEND_CHARACTER = "_";
     private final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/edit.png");
-    public static final int BACKGROUND_WIDTH = 256;
+    public static final int WIDTH = 256;
+    public static final int HEIGH = 192;
 
     private final Font font;
     private long focusedTime = Util.getMillis(); // for blink
@@ -45,6 +46,11 @@ public class TextFieldWidget extends AbstractScrollWidget {
         textField.setValue(content);
         textField.setValueListener(listener);
         textField.setCharacterLimit(maxLength);
+    }
+
+    @Override
+    protected int innerPadding() {
+        return 8;
     }
 
     private void scrollToCursor() {
@@ -266,7 +272,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-        guiGraphics.blit(BACKGROUND, (width - BACKGROUND_WIDTH) / 2, 2, 0, 0, BACKGROUND_WIDTH, 192);
+        guiGraphics.blit(BACKGROUND, getX(), getY(), 0,  (int)scrollAmount(), WIDTH, HEIGH);
     }
 
     // scrolling
