@@ -20,6 +20,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
@@ -41,7 +42,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
                            int maxLength, String content, Consumer<String> listener) {
         super(x, y, width, height, Component.empty());
         this.font = font;
-        textField = new TextField(font, width - totalInnerPadding());
+        textField = new TextField(font, width - totalInnerPadding() - lineNoWidth());
         textField.setCursorListener(this::scrollToCursor);
         textField.setValue(content);
         textField.setValueListener(listener);
@@ -51,6 +52,11 @@ public class TextFieldWidget extends AbstractScrollWidget {
     @Override
     protected int innerPadding() {
         return 8;
+    }
+
+    private int lineNoWidth() {
+        if (textField == null) return innerPadding();
+        return font.width(String.valueOf(textField.getDisplayLines().size())) + innerPadding();
     }
 
     private void scrollToCursor() {
@@ -136,7 +142,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
             textField.setSelecting(Screen.hasShiftDown());
-            textField.seekCursorToPoint(mouseX - getX() - innerPadding(),
+            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
             return true;
         } else {
@@ -149,7 +155,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
             return true;
         } else if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
             textField.setSelecting(true);
-            textField.seekCursorToPoint(mouseX - getX() - innerPadding(),
+            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
             textField.setSelecting(Screen.hasShiftDown());
             return true;
@@ -189,20 +195,26 @@ public class TextFieldWidget extends AbstractScrollWidget {
             int currentY = getY() + innerPadding();
             int styleCounter = 0;
 
-            for (var stringView : textField.getDisplayLines()) {
+            List<TextField.StringView> displayLines = textField.getDisplayLines();
+            for (int i = 0; i < displayLines.size(); i++) {
+                var stringView = displayLines.get(i);
                 if (stringView.beginIndex() != stringView.endIndex() &&
                         withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                    if (isCursorRender && cursorInContent &&
-                            cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
-                        // cursor
-                        cursorX = getX() + innerPadding() +
-                                font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
-                        guiGraphics.fill(cursorX, currentY,
-                                cursorX + 1, currentY + font.lineHeight,
-                                CURSOR_INSERT_COLOR);
+                    if (cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
+                        if (isCursorRender) {
+                            // cursor
+                            cursorX = getX() + innerPadding() + lineNoWidth() +
+                                    font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
+                            guiGraphics.fill(cursorX, currentY,
+                                    cursorX + 1, currentY + font.lineHeight,
+                                    CURSOR_INSERT_COLOR);
+                        }
+                        renderLineNo(guiGraphics, currentY, i + 1, true);
+                    } else {
+                        renderLineNo(guiGraphics, currentY, i + 1, false);
                     }
                     int lastEnd = stringView.beginIndex();
-                    cursorX = getX() + innerPadding();
+                    cursorX = getX() + innerPadding() + lineNoWidth();
                     do {
                         int end;
                         do {
@@ -220,7 +232,17 @@ public class TextFieldWidget extends AbstractScrollWidget {
                         }
                     } while (lastEnd < stringView.endIndex());
                 } else {
-                    cursorX = getX() + innerPadding(); // for last line cursor
+                    cursorX = getX() + innerPadding() + lineNoWidth(); // for last line cursor
+                    if (cursorInContent && cursor == stringView.beginIndex()) {
+                        if (isCursorRender) {
+                            guiGraphics.fill(cursorX, currentY,
+                                    cursorX + 1, currentY + font.lineHeight,
+                                    CURSOR_INSERT_COLOR);
+                        }
+                        renderLineNo(guiGraphics, currentY, i + 1, true);
+                    } else {
+                        renderLineNo(guiGraphics, currentY, i + 1, false);
+                    }
                 }
                 currentY += font.lineHeight;
             }
@@ -234,7 +256,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
 
             if (textField.hasSelection()) {
                 var selected = textField.getSelected();
-                int k1 = getX() + innerPadding();
+                int k1 = getX() + innerPadding() + lineNoWidth();
                 currentY = getY() + innerPadding();
 
                 for (var stringView : textField.getDisplayLines()) {
@@ -260,6 +282,15 @@ public class TextFieldWidget extends AbstractScrollWidget {
                 }
             }
         }
+    }
+
+    private void renderLineNo(GuiGraphics guiGraphics, int currentY, int no, boolean currentLine) {
+        String lineNo = String.valueOf(no);
+        Component component = Component.literal(lineNo)
+                .withStyle(Style.EMPTY.withBold(currentLine));
+        guiGraphics.drawString(font, component,
+                getX() + lineNoWidth() - font.width(component), currentY,
+                0xFF303030, false);
     }
 
     protected void renderDecorations(@NotNull GuiGraphics guiGraphics) {
