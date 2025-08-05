@@ -1,7 +1,7 @@
 package indi.wenyan.content.gui;
 
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
-import lombok.experimental.Delegate;
 import lombok.val;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
@@ -26,46 +27,47 @@ import java.util.function.Consumer;
 public class TextFieldWidget extends AbstractScrollWidget {
     private static final int CURSOR_INSERT_COLOR = 0xff000000;
     private static final String CURSOR_APPEND_CHARACTER = "_";
+    private final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+            "textures/gui/edit.png");
+    public static final int BACKGROUND_WIDTH = 256;
 
     private final Font font;
     private long focusedTime = Util.getMillis(); // for blink
 
-    @Delegate(types = FromTextField.class)
     private final TextField textField;
 
-    @SuppressWarnings("unused") // ide don't know this lombok delegate
-    private interface FromTextField {
-        void setCharacterLimit(int characterLimit);
-
-        void setValueListener(Consumer<String> valueListener);
-
-        void setValue(String fullText);
-
-        String getValue();
-    }
-
-    public TextFieldWidget(Font font, int x, int y, int width, int height) {
+    public TextFieldWidget(Font font, int x, int y, int width, int height,
+                           int maxLength, String content, Consumer<String> listener) {
         super(x, y, width, height, Component.empty());
         this.font = font;
         textField = new TextField(font, width - totalInnerPadding());
-        textField.setCursorListener(() -> {
-            double scrollAmount = scrollAmount();
-            var displayLines = textField.getDisplayLines();
+        textField.setCursorListener(this::scrollToCursor);
+        textField.setValue(content);
+        textField.setValueListener(listener);
+        textField.setCharacterLimit(maxLength);
+    }
 
-            int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
-                    displayLines.size()-1);
-            int beginIndex = displayLines.get(lineNo).beginIndex();
-            if (textField.getCursor() <= beginIndex) {
-                scrollAmount = textField.getLineAtCursor() * font.lineHeight;
-            } else if ((int) ((scrollAmount + height) / font.lineHeight) - 1 < displayLines.size()) {
-                int endIndex = displayLines.get((int) ((scrollAmount + height) / font.lineHeight) - 1).endIndex();
-                if (textField.getCursor() > endIndex) {
-                    scrollAmount = textField.getLineAtCursor() * font.lineHeight - height + font.lineHeight + totalInnerPadding();
-                }
+    private void scrollToCursor() {
+        double scrollAmount = scrollAmount();
+        var displayLines = textField.getDisplayLines();
+
+        int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
+                displayLines.size()-1);
+        int beginIndex = displayLines.get(lineNo).beginIndex();
+        if (textField.getCursor() <= beginIndex) {
+            scrollAmount = textField.getLineAtCursor() * font.lineHeight;
+        } else if ((int) ((scrollAmount + height) / font.lineHeight) - 1 < displayLines.size()) {
+            int endIndex = displayLines.get((int) ((scrollAmount + height) / font.lineHeight) - 1).endIndex();
+            if (textField.getCursor() > endIndex) {
+                scrollAmount = textField.getLineAtCursor() * font.lineHeight - height + font.lineHeight + totalInnerPadding();
             }
+        }
 
-            setScrollAmount(scrollAmount);
-        });
+        setScrollAmount(scrollAmount);
+    }
+
+    public String getValue() {
+        return textField.getValue();
     }
 
     private Style styleFromTokenType(int tokenType) {
@@ -264,7 +266,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-
+        guiGraphics.blit(BACKGROUND, (width - BACKGROUND_WIDTH) / 2, 2, 0, 0, BACKGROUND_WIDTH, 192);
     }
 
     // scrolling
