@@ -50,7 +50,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
         this.font = font;
         textField = new TextField(font, this.width - totalInnerPadding() - lineNoWidth());
         textField.setCursorListener(this::scrollToCursor);
-        textField.setValueListener(this::updateWidth);
+        textField.setValueListener(this::onContentChange);
         textField.setValue(content);
         textField.setCharacterLimit(maxLength);
     }
@@ -58,10 +58,10 @@ public class TextFieldWidget extends AbstractScrollWidget {
     private int lineNoWidth() {
         if (textField == null) return innerPadding();
         // because the width of number is not same, return width of 0, 00, 000, ...
-        return font.width("0")*String.valueOf(textField.getDisplayLines().size()).length() + innerPadding();
+        return font.width("0")*String.valueOf(textField.getLineTotal()).length() + innerPadding();
     }
 
-    private void updateWidth(String s) {
+    private void onContentChange(String s) {
         textField.setWidth(this.width - totalInnerPadding() - lineNoWidth());
     }
 
@@ -193,34 +193,23 @@ public class TextFieldWidget extends AbstractScrollWidget {
     // rendering
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         String content = textField.getValue();
-        if (!content.isEmpty() || isFocused()) {
-            int cursor = textField.getCursor();
-            boolean isCursorRender = isFocused() && (Util.getMillis() - focusedTime) / 500L % 2L == 0L;
-            boolean cursorInContent = cursor < content.length();
-            int cursorX = 0;
-            int currentY = getY() + innerPadding();
-            int styleCounter = 0;
+        int cursor = textField.getCursor();
+        // TODO: not blink when editing (content changed)
+        boolean isCursorRender = isFocused() && (Util.getMillis() - focusedTime) / 500L % 2L == 0L;
+        boolean cursorInContent = cursor < content.length();
+        int cursorX = 0;
+        int currentY = getY() + innerPadding();
+        int lineNo = 1;
+        boolean isContinuedLine = false;
+        int styleCounter = 0;
 
-            List<TextField.StringView> displayLines = textField.getDisplayLines();
-            for (int i = 0; i < displayLines.size(); i++) {
-                var stringView = displayLines.get(i);
-                if (stringView.beginIndex() != stringView.endIndex() &&
-                        withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                    if (cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex()) {
-                        if (isCursorRender) {
-                            // cursor
-                            cursorX = getX() + innerPadding() + lineNoWidth() +
-                                    font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
-                            guiGraphics.fill(cursorX, currentY,
-                                    cursorX + 1, currentY + font.lineHeight,
-                                    CURSOR_INSERT_COLOR);
-                        }
-                        renderLineNo(guiGraphics, currentY, i + 1, true);
-                    } else {
-                        renderLineNo(guiGraphics, currentY, i + 1, false);
-                    }
+        List<TextField.StringView> displayLines = textField.getDisplayLines();
+        for (int i = 0; i < displayLines.size(); i++) {
+            var stringView = displayLines.get(i);
+            if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                cursorX = getX() + innerPadding() + lineNoWidth();
+                if (stringView.beginIndex() != stringView.endIndex()) {
                     int lastEnd = stringView.beginIndex();
-                    cursorX = getX() + innerPadding() + lineNoWidth();
                     do {
                         int end;
                         do {
@@ -237,61 +226,67 @@ public class TextFieldWidget extends AbstractScrollWidget {
                             styleCounter++;
                         }
                     } while (lastEnd < stringView.endIndex());
-                } else {
-                    cursorX = getX() + innerPadding() + lineNoWidth(); // for last line cursor
-                    if (cursorInContent && cursor == stringView.beginIndex()) {
-                        if (isCursorRender) {
-                            guiGraphics.fill(cursorX, currentY,
-                                    cursorX + 1, currentY + font.lineHeight,
-                                    CURSOR_INSERT_COLOR);
+                }
+                boolean isCurLine = cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
+                if (isCurLine && isCursorRender) {
+                    // cursor
+                    cursorX = getX() + innerPadding() + lineNoWidth() +
+                            font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
+                    guiGraphics.fill(cursorX, currentY,
+                            cursorX + 1, currentY + font.lineHeight,
+                            CURSOR_INSERT_COLOR);
+                }
+                renderLineNo(guiGraphics, currentY, lineNo, isContinuedLine, isCurLine);
+            }
+            currentY += font.lineHeight;
+            // it will always be (n, n) for the last line
+            if (i != displayLines.size() - 1 && content.charAt(stringView.endIndex()) == '\n') {
+                lineNo++;
+                isContinuedLine = false;
+            } else {
+                isContinuedLine = true;
+            }
+        }
+
+        int cursorY = currentY - font.lineHeight;
+        if (isCursorRender && !cursorInContent &&
+                withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
+            guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY,
+                    CURSOR_INSERT_COLOR, false);
+        }
+
+        if (textField.hasSelection()) {
+            var selected = textField.getSelected();
+            int k1 = getX() + innerPadding() + lineNoWidth();
+            currentY = getY() + innerPadding();
+
+            for (var stringView : textField.getDisplayLines()) {
+                if (selected.beginIndex() <= stringView.endIndex()) {
+                    if (stringView.beginIndex() > selected.endIndex()) {
+                        break;
+                    }
+
+                    if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                        int i1 = font.width(content.substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
+                        int j1;
+                        if (selected.endIndex() > stringView.endIndex()) {
+                            j1 = width - innerPadding();
+                        } else {
+                            j1 = font.width(content.substring(stringView.beginIndex(), selected.endIndex()));
                         }
-                        renderLineNo(guiGraphics, currentY, i + 1, true);
-                    } else {
-                        renderLineNo(guiGraphics, currentY, i + 1, false);
+                        guiGraphics.fill(RenderType.guiTextHighlight(),
+                                k1 + i1, currentY, k1 + j1, currentY + font.lineHeight,
+                                0xff0000ff);
                     }
                 }
                 currentY += font.lineHeight;
             }
-
-            int cursorY = currentY - font.lineHeight;
-            if (isCursorRender && !cursorInContent &&
-                    withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
-                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY,
-                        CURSOR_INSERT_COLOR, false);
-            }
-
-            if (textField.hasSelection()) {
-                var selected = textField.getSelected();
-                int k1 = getX() + innerPadding() + lineNoWidth();
-                currentY = getY() + innerPadding();
-
-                for (var stringView : textField.getDisplayLines()) {
-                    if (selected.beginIndex() <= stringView.endIndex()) {
-                        if (stringView.beginIndex() > selected.endIndex()) {
-                            break;
-                        }
-
-                        if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                            int i1 = font.width(content.substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
-                            int j1;
-                            if (selected.endIndex() > stringView.endIndex()) {
-                                j1 = width - innerPadding();
-                            } else {
-                                j1 = font.width(content.substring(stringView.beginIndex(), selected.endIndex()));
-                            }
-                            guiGraphics.fill(RenderType.guiTextHighlight(),
-                                    k1 + i1, currentY, k1 + j1, currentY + font.lineHeight,
-                                    0xff0000ff);
-                        }
-                    }
-                    currentY += font.lineHeight;
-                }
-            }
         }
     }
 
-    private void renderLineNo(GuiGraphics guiGraphics, int currentY, int no, boolean currentLine) {
-        Component component = Component.literal(String.valueOf(no))
+    private void renderLineNo(GuiGraphics guiGraphics, int currentY, int no,
+                              boolean isContinued, boolean currentLine) {
+        Component component = Component.literal(isContinued ? ">" : String.valueOf(no))
                 .withStyle(Style.EMPTY.withBold(currentLine));
         guiGraphics.drawString(font, component,
                 getX() + lineNoWidth() - font.width("0")*component.getString().length(), currentY,

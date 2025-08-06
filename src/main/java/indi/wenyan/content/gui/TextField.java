@@ -32,6 +32,7 @@ public class TextField {
     @Getter
     private final List<StyledView> styleMarks = Lists.newArrayList();
     @Getter private String value = "";
+    @Getter private int lineTotal = 0;
 
     @Getter private int cursor = 0;
     private int selectCursor = 0;
@@ -240,6 +241,7 @@ public class TextField {
     private void onValueChange() {
         // reflowDisplayLines
         displayLines.clear();
+        lineTotal = 0;
         if (value.isEmpty()) {
             displayLines.add(StringView.EMPTY);
         } else {
@@ -252,6 +254,7 @@ public class TextField {
                     displayLines.add(new StringView(lineStart, i));
                     lineStart = i + 1;
                     lineWidth = 0;
+                    lineTotal += 1;
                     continue;
                 }
                 int charWidth = font.width(String.valueOf(c));
