@@ -18,11 +18,11 @@ public record BlockRunnerCodePacket(BlockPos pos, String code) implements Custom
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
-                        buffer.writeUtf(packet.code);
+                        buffer.writeUtf(packet.code, 16384);
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
-                        String output = buffer.readUtf();
+                        String output = buffer.readUtf(16384);
                         return new BlockRunnerCodePacket(pos1, output);
                     });
 

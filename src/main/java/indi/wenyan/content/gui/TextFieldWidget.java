@@ -295,11 +295,11 @@ public class TextFieldWidget extends AbstractScrollWidget {
 
     protected void renderDecorations(@NotNull GuiGraphics guiGraphics) {
         super.renderDecorations(guiGraphics);
-        if (textField.hasCharacterLimit()) {
-            int i = textField.getCharacterLimit();
-            Component component = Component.translatable("gui.multiLineEditBox.character_limit", textField.getValue().length(), i);
-            guiGraphics.drawString(this.font, component, this.getX() + this.width - this.font.width(component), this.getY() + this.height + 4, 0xa0a0a0);
-        }
+//        if (textField.hasCharacterLimit()) {
+//            int i = textField.getCharacterLimit();
+//            Component component = Component.translatable("gui.multiLineEditBox.character_limit", textField.getValue().length(), i);
+//            guiGraphics.drawString(this.font, component, this.getX() + this.width - this.font.width(component), this.getY() + this.height + 4, 0xa0a0a0);
+//        }
     }
 
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {

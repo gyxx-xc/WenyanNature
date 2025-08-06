@@ -25,6 +25,7 @@ public class TextFieldScreen extends Screen {
                 .font(font).content(data)
                 .position((width - TextFieldWidget.WIDTH) / 2, 15)
                 .size(TextFieldWidget.WIDTH, TextFieldWidget.HEIGH)
+                .maxLength(16384)
                 .createTextFieldWidget();
         addRenderableWidget(textFieldWidget);
     }

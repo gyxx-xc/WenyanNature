@@ -20,7 +20,7 @@ public record RunnerCodePacket(int slot, String code) implements CustomPacketPay
     public static final StreamCodec<ByteBuf, RunnerCodePacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             RunnerCodePacket::slot,
-            ByteBufCodecs.stringUtf8(8192),
+            ByteBufCodecs.stringUtf8(16384),
             RunnerCodePacket::code,
             RunnerCodePacket::new
     );
