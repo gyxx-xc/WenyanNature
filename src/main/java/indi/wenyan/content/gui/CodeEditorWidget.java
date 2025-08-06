@@ -37,7 +37,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private static final BoxInformation outerPadding = new BoxInformation(4, 4, 4, 4+scrollBarWidth);
 
     private final Font font;
-    private long focusedTime = Util.getMillis(); // for blink
+    private long blinkStart = Util.getMillis(); // for blink
 
     private final StyledTextField textField;
 
@@ -49,7 +49,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 Component.empty());
         this.font = font;
         textField = new StyledTextField(font, this.width - totalInnerPadding() - lineNoWidth());
-        textField.setCursorListener(this::scrollToCursor);
+        textField.setCursorListener(this::onCursorChange);
         textField.setValueListener(this::onContentChange);
         textField.setValue(content);
         textField.setCharacterLimit(maxLength);
@@ -62,10 +62,15 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     }
 
     private void onContentChange(String s) {
+        // update line number width
         textField.setWidth(this.width - totalInnerPadding() - lineNoWidth());
+
+        // reset blink
+        blinkStart = Util.getMillis();
     }
 
-    private void scrollToCursor() {
+    private void onCursorChange() {
+        // scroll to cursor
         double scrollAmount = scrollAmount();
         var displayLines = textField.getDisplayLines();
 
@@ -82,6 +87,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         }
 
         setScrollAmount(scrollAmount);
+
+        // reset blink
+        blinkStart = Util.getMillis();
     }
 
     public String getValue() {
@@ -186,7 +194,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     public void setFocused(boolean focused) {
         super.setFocused(focused);
         if (focused) {
-            focusedTime = Util.getMillis();
+            blinkStart = Util.getMillis();
         }
     }
 
@@ -195,7 +203,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         String content = textField.getValue();
         int cursor = textField.getCursor();
         // TODO: not blink when editing (content changed)
-        boolean isCursorRender = isFocused() && (Util.getMillis() - focusedTime) / 500L % 2L == 0L;
+        boolean isCursorRender = isFocused() &&
+                (Util.getMillis() - blinkStart) < 1000L ||
+                (Util.getMillis() - blinkStart) / 500L % 2L == 0L;
         boolean cursorInContent = cursor < content.length();
         int cursorX = 0;
         int currentY = getY() + innerPadding();
