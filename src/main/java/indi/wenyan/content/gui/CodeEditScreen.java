@@ -12,6 +12,7 @@ public class CodeEditScreen extends Screen {
     private final Consumer<String> saving;
 
     private CodeEditorWidget textFieldWidget;
+    private SnippetWidget snippetWidget;
 
     public CodeEditScreen(String data, Consumer<String> save) {
         super(Component.empty());
@@ -28,6 +29,9 @@ public class CodeEditScreen extends Screen {
                 .maxLength(16384)
                 .createTextFieldWidget();
         addRenderableWidget(textFieldWidget);
+
+        snippetWidget = new SnippetWidget(font, width - 50, 0, 50, height);
+        addRenderableWidget(snippetWidget);
     }
 
     @Override

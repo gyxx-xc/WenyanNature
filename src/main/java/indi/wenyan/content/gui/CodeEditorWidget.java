@@ -326,7 +326,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     }
 
     protected boolean scrollbarVisible() {
-        return textField.getDisplayLines().size() > (height - totalInnerPadding()) / (double) font.lineHeight;
+        return getInnerHeight() > getHeight() - totalInnerPadding();
     }
 
     protected double scrollRate() {
