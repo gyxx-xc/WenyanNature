@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "wenyan_programming:block/money_case"
+      "model": "wenyan_programming:block/crafting_block"
     }
   }
 }
