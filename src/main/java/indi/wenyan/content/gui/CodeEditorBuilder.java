@@ -3,43 +3,43 @@ package indi.wenyan.content.gui;
 import net.minecraft.client.gui.Font;
 
 @SuppressWarnings("unused")
-public class TextFieldWidgetBuilder {
+public class CodeEditorBuilder {
     private Font font;
     private int x;
     private int y;
     private int width;
     private int height;
     private String content;
-    private int maxLength = TextField.NO_CHARACTER_LIMIT;
+    private int maxLength = StyledTextField.NO_CHARACTER_LIMIT;
 
-    public TextFieldWidgetBuilder font(Font font) {
+    public CodeEditorBuilder font(Font font) {
         this.font = font;
         return this;
     }
 
-    public TextFieldWidgetBuilder position(int x, int y) {
+    public CodeEditorBuilder position(int x, int y) {
         this.x = x;
         this.y = y;
         return this;
     }
 
-    public TextFieldWidgetBuilder size(int width, int height) {
+    public CodeEditorBuilder size(int width, int height) {
         this.width = width;
         this.height = height;
         return this;
     }
 
-    public TextFieldWidgetBuilder content(String content) {
+    public CodeEditorBuilder content(String content) {
         this.content = content;
         return this;
     }
 
-    public TextFieldWidgetBuilder maxLength(int maxLength) {
+    public CodeEditorBuilder maxLength(int maxLength) {
         this.maxLength = maxLength;
         return this;
     }
 
-    public TextFieldWidget createTextFieldWidget() {
-        return new TextFieldWidget(font, x, y, width, height, maxLength, content);
+    public CodeEditorWidget createTextFieldWidget() {
+        return new CodeEditorWidget(font, x, y, width, height, maxLength, content);
     }
 }

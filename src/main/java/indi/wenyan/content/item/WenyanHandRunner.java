@@ -3,7 +3,7 @@ package indi.wenyan.content.item;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.HandRunnerEntity;
-import indi.wenyan.content.gui.TextFieldScreen;
+import indi.wenyan.content.gui.CodeEditScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,7 @@ public class WenyanHandRunner extends BlockItem {
     use(Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new TextFieldScreen(
+            Minecraft.getInstance().setScreen(new CodeEditScreen(
                     itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), new ProgramCodeData("")).code(),
                     content -> {
                         int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;

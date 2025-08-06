@@ -24,7 +24,7 @@ import java.util.List;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
-public class TextFieldWidget extends AbstractScrollWidget {
+public class CodeEditorWidget extends AbstractScrollWidget {
     private static final int CURSOR_INSERT_COLOR = 0xff000000;
     private static final String CURSOR_APPEND_CHARACTER = "_";
     private final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
@@ -39,16 +39,16 @@ public class TextFieldWidget extends AbstractScrollWidget {
     private final Font font;
     private long focusedTime = Util.getMillis(); // for blink
 
-    private final TextField textField;
+    private final StyledTextField textField;
 
-    public TextFieldWidget(Font font, int x, int y, int width, int height,
-                           int maxLength, String content) {
+    public CodeEditorWidget(Font font, int x, int y, int width, int height,
+                            int maxLength, String content) {
         super(x+outerPadding.left, y+outerPadding.top,
                 width-outerPadding.left-outerPadding.right,
                 height-outerPadding.top-outerPadding.bottom,
                 Component.empty());
         this.font = font;
-        textField = new TextField(font, this.width - totalInnerPadding() - lineNoWidth());
+        textField = new StyledTextField(font, this.width - totalInnerPadding() - lineNoWidth());
         textField.setCursorListener(this::scrollToCursor);
         textField.setValueListener(this::onContentChange);
         textField.setValue(content);
@@ -203,7 +203,7 @@ public class TextFieldWidget extends AbstractScrollWidget {
         boolean isContinuedLine = false;
         int styleCounter = 0;
 
-        List<TextField.StringView> displayLines = textField.getDisplayLines();
+        List<StyledTextField.StringView> displayLines = textField.getDisplayLines();
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {

@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class TextFieldScreen extends Screen {
+public class CodeEditScreen extends Screen {
     private final String data;
     private final Consumer<String> saving;
 
-    private TextFieldWidget textFieldWidget;
+    private CodeEditorWidget textFieldWidget;
 
-    public TextFieldScreen(String data, Consumer<String> save) {
+    public CodeEditScreen(String data, Consumer<String> save) {
         super(Component.empty());
         this.data = data;
         this.saving = save;
@@ -21,10 +21,10 @@ public class TextFieldScreen extends Screen {
 
     @Override
     protected void init() {
-        textFieldWidget = new TextFieldWidgetBuilder()
+        textFieldWidget = new CodeEditorBuilder()
                 .font(font).content(data)
-                .position((width - TextFieldWidget.WIDTH) / 2, 15)
-                .size(TextFieldWidget.WIDTH, TextFieldWidget.HEIGH)
+                .position((width - CodeEditorWidget.WIDTH) / 2, 15)
+                .size(CodeEditorWidget.WIDTH, CodeEditorWidget.HEIGH)
                 .maxLength(16384)
                 .createTextFieldWidget();
         addRenderableWidget(textFieldWidget);
