@@ -38,7 +38,7 @@ public class TextField {
     @Setter private boolean selecting;
 
     @Setter @Getter private int characterLimit = NO_CHARACTER_LIMIT;
-    private final int width;
+    @Setter private int width;
 
     @Setter private Consumer<String> valueListener = (s) -> {
     };

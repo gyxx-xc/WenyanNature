@@ -21,7 +21,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
@@ -33,30 +32,37 @@ public class TextFieldWidget extends AbstractScrollWidget {
     public static final int WIDTH = 256;
     public static final int HEIGH = 192;
 
+    // NOTE: a minecraft inner padding of 4 is also need to be considered
+    private static final int scrollBarWidth = 8;
+    private static final BoxInformation outerPadding = new BoxInformation(4, 4, 4, 4+scrollBarWidth);
+
     private final Font font;
     private long focusedTime = Util.getMillis(); // for blink
 
     private final TextField textField;
 
     public TextFieldWidget(Font font, int x, int y, int width, int height,
-                           int maxLength, String content, Consumer<String> listener) {
-        super(x, y, width, height, Component.empty());
+                           int maxLength, String content) {
+        super(x+outerPadding.left, y+outerPadding.top,
+                width-outerPadding.left-outerPadding.right,
+                height-outerPadding.top-outerPadding.bottom,
+                Component.empty());
         this.font = font;
-        textField = new TextField(font, width - totalInnerPadding() - lineNoWidth());
+        textField = new TextField(font, this.width - totalInnerPadding() - lineNoWidth());
         textField.setCursorListener(this::scrollToCursor);
+        textField.setValueListener(this::updateWidth);
         textField.setValue(content);
-        textField.setValueListener(listener);
         textField.setCharacterLimit(maxLength);
-    }
-
-    @Override
-    protected int innerPadding() {
-        return 8;
     }
 
     private int lineNoWidth() {
         if (textField == null) return innerPadding();
-        return font.width(String.valueOf(textField.getDisplayLines().size())) + innerPadding();
+        // because the width of number is not same, return width of 0, 00, 000, ...
+        return font.width("0")*String.valueOf(textField.getDisplayLines().size()).length() + innerPadding();
+    }
+
+    private void updateWidth(String s) {
+        textField.setWidth(this.width - totalInnerPadding() - lineNoWidth());
     }
 
     private void scrollToCursor() {
@@ -285,11 +291,10 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     private void renderLineNo(GuiGraphics guiGraphics, int currentY, int no, boolean currentLine) {
-        String lineNo = String.valueOf(no);
-        Component component = Component.literal(lineNo)
+        Component component = Component.literal(String.valueOf(no))
                 .withStyle(Style.EMPTY.withBold(currentLine));
         guiGraphics.drawString(font, component,
-                getX() + lineNoWidth() - font.width(component), currentY,
+                getX() + lineNoWidth() - font.width("0")*component.getString().length(), currentY,
                 0xFF303030, false);
     }
 
@@ -303,7 +308,11 @@ public class TextFieldWidget extends AbstractScrollWidget {
     }
 
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-        guiGraphics.blit(BACKGROUND, getX(), getY(), 0,  (int)scrollAmount(), WIDTH, HEIGH);
+        guiGraphics.blit(BACKGROUND,
+                getX() - outerPadding.left, getY() - outerPadding.top,
+                0,  (int)scrollAmount(),
+                width + outerPadding.left + outerPadding.right,
+                height + outerPadding.top + outerPadding.bottom);
     }
 
     // scrolling
@@ -318,4 +327,6 @@ public class TextFieldWidget extends AbstractScrollWidget {
     protected double scrollRate() {
         return 3 * font.lineHeight;
     }
+
+    public record BoxInformation(int top, int left, int bottom, int right) { }
 }
