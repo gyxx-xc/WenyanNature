@@ -12,7 +12,7 @@ public class CodeEditorBuilder {
     private int width;
     private int height;
     private String content;
-    private int maxLength = StyledTextField.NO_CHARACTER_LIMIT;
+    private int maxLength = CodeField.NO_CHARACTER_LIMIT;
     private Consumer<String> onChange = s -> {};
 
     public CodeEditorBuilder font(Font font) {

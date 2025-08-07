@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 // from net.minecraft.client.gui.components.MultilineTextField;
 @OnlyIn(Dist.CLIENT)
-public class StyledTextField {
+public class CodeField {
     public static final int NO_CHARACTER_LIMIT = Integer.MAX_VALUE;
     private static final int LINE_SEEK_PIXEL_BIAS = 2;
 
@@ -46,7 +46,7 @@ public class StyledTextField {
     @Setter private Runnable cursorListener = () -> {
     };
 
-    public StyledTextField(Font font, int width) {
+    public CodeField(Font font, int width) {
         this.font = font;
         this.width = width;
         onValueChange();

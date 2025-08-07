@@ -43,7 +43,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private long blinkStart = Util.getMillis(); // for blink
 
     @Getter
-    private final StyledTextField textField;
+    private final CodeField textField;
 
     public CodeEditorWidget(Font font, int x, int y, int width, int height,
                             int maxLength, String content, Consumer<String> onChange) {
@@ -52,7 +52,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 height-outerPadding.top-outerPadding.bottom,
                 Component.empty());
         this.font = font;
-        textField = new StyledTextField(font, this.width - totalInnerPadding() - lineNoWidth());
+        textField = new CodeField(font, this.width - totalInnerPadding() - lineNoWidth());
         textField.setCursorListener(()->{
             scrollToCursor();
             // reset blink
@@ -60,7 +60,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         });
         textField.setValueListener((s)->{
             // update line number width
-            textField.setWidth(this.width - totalInnerPadding() - lineNoWidth());
+            textField.setWidth(this.width - totalInnerPadding() - outerPadding.left - lineNoWidth() - outerPadding.right);
             // reset blink
             blinkStart = Util.getMillis();
             // notify change
@@ -214,7 +214,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         boolean isContinuedLine = false;
         int styleCounter = 0;
 
-        List<StyledTextField.StringView> displayLines = textField.getDisplayLines();
+        List<CodeField.StringView> displayLines = textField.getDisplayLines();
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {

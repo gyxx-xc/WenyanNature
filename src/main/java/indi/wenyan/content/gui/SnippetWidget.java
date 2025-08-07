@@ -12,10 +12,10 @@ import java.util.List;
 
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
-    private final StyledTextField textField;
+    private final CodeField textField;
     private final List<String> snippets = List.of("aa", "sss", "ee");
 
-    public SnippetWidget(Font font, int x, int y, int width, int height, StyledTextField textField) {
+    public SnippetWidget(Font font, int x, int y, int width, int height, CodeField textField) {
         super(x, y, width, height, Component.empty());
         this.font = font;
         this.textField = textField;
