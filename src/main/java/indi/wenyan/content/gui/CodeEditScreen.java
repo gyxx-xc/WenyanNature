@@ -3,15 +3,17 @@ package indi.wenyan.content.gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 public class CodeEditScreen extends Screen {
-    private final String data;
+    private String data;
     private final Consumer<String> saving;
 
     private CodeEditorWidget textFieldWidget;
+    @SuppressWarnings("FieldCanBeLocal")
     private SnippetWidget snippetWidget;
 
     public CodeEditScreen(String data, Consumer<String> save) {
@@ -22,15 +24,20 @@ public class CodeEditScreen extends Screen {
 
     @Override
     protected void init() {
+        int textFieldWidth = Mth.clamp(width/2, 50, CodeEditorWidget.WIDTH);
         textFieldWidget = new CodeEditorBuilder()
-                .font(font).content(data)
-                .position((width - CodeEditorWidget.WIDTH) / 2, 15)
-                .size(CodeEditorWidget.WIDTH, CodeEditorWidget.HEIGH)
+                .font(font).content(data, s -> data=s)
+                .position((width - textFieldWidth) / 2, 15)
+                .size(textFieldWidth, Math.min(height-30, CodeEditorWidget.HEIGH))
                 .maxLength(16384)
                 .createTextFieldWidget();
         addRenderableWidget(textFieldWidget);
 
-        snippetWidget = new SnippetWidget(font, width - 50, 0, 50, height);
+        int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
+        snippetWidget = new SnippetWidget(font,
+                width - snippetWidth, 15,
+                snippetWidth, Math.min(height-30, CodeEditorWidget.HEIGH),
+                textFieldWidget.getTextField());
         addRenderableWidget(snippetWidget);
     }
 

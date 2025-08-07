@@ -8,16 +8,28 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
-    public SnippetWidget(Font font, int x, int y, int width, int height) {
+    private final StyledTextField textField;
+    private final List<String> snippets = List.of("aa", "sss", "ee");
+
+    public SnippetWidget(Font font, int x, int y, int width, int height, StyledTextField textField) {
         super(x, y, width, height, Component.empty());
         this.font = font;
+        this.textField = textField;
     }
 
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.drawString(font, "aaa",  mouseX, mouseY, 0xFFFFFF);
+        int currentY = getY() + innerPadding();
+        for (String s : snippets) {
+            if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                guiGraphics.drawString(font, s, getX() + innerPadding(), currentY, 0xFFFFFF, false);
+            }
+            currentY += font.lineHeight;
+        }
     }
 
     @Override
@@ -27,7 +39,7 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     public int getInnerHeight() {
-        return 1;
+        return snippets.size() * font.lineHeight;
     }
 
     protected boolean scrollbarVisible() {
@@ -35,7 +47,6 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     protected double scrollRate() {
-        return 3;
+        return font.lineHeight;
     }
-
 }

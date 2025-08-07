@@ -2,6 +2,7 @@ package indi.wenyan.content.gui;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
+import lombok.Getter;
 import lombok.val;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
@@ -21,6 +22,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
@@ -29,6 +31,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private static final String CURSOR_APPEND_CHARACTER = "_";
     private final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/edit.png");
+    // todo: make it larger (sprite)
     public static final int WIDTH = 256;
     public static final int HEIGH = 192;
 
@@ -39,18 +42,30 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
 
+    @Getter
     private final StyledTextField textField;
 
     public CodeEditorWidget(Font font, int x, int y, int width, int height,
-                            int maxLength, String content) {
+                            int maxLength, String content, Consumer<String> onChange) {
         super(x+outerPadding.left, y+outerPadding.top,
                 width-outerPadding.left-outerPadding.right,
                 height-outerPadding.top-outerPadding.bottom,
                 Component.empty());
         this.font = font;
         textField = new StyledTextField(font, this.width - totalInnerPadding() - lineNoWidth());
-        textField.setCursorListener(this::onCursorChange);
-        textField.setValueListener(this::onContentChange);
+        textField.setCursorListener(()->{
+            scrollToCursor();
+            // reset blink
+            blinkStart = Util.getMillis();
+        });
+        textField.setValueListener((s)->{
+            // update line number width
+            textField.setWidth(this.width - totalInnerPadding() - lineNoWidth());
+            // reset blink
+            blinkStart = Util.getMillis();
+            // notify change
+            onChange.accept(s);
+        });
         textField.setValue(content);
         textField.setCharacterLimit(maxLength);
     }
@@ -61,16 +76,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         return font.width("0")*String.valueOf(textField.getLineTotal()).length() + innerPadding();
     }
 
-    private void onContentChange(String s) {
-        // update line number width
-        textField.setWidth(this.width - totalInnerPadding() - lineNoWidth());
-
-        // reset blink
-        blinkStart = Util.getMillis();
-    }
-
-    private void onCursorChange() {
-        // scroll to cursor
+    private void scrollToCursor() {
         double scrollAmount = scrollAmount();
         var displayLines = textField.getDisplayLines();
 
@@ -87,9 +93,6 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         }
 
         setScrollAmount(scrollAmount);
-
-        // reset blink
-        blinkStart = Util.getMillis();
     }
 
     public String getValue() {
@@ -202,10 +205,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         String content = textField.getValue();
         int cursor = textField.getCursor();
-        // TODO: not blink when editing (content changed)
-        boolean isCursorRender = isFocused() &&
-                (Util.getMillis() - blinkStart) < 1000L ||
-                (Util.getMillis() - blinkStart) / 500L % 2L == 0L;
+        boolean isCursorRender = !isFocused() ||
+                (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
         boolean cursorInContent = cursor < content.length();
         int cursorX = 0;
         int currentY = getY() + innerPadding();
