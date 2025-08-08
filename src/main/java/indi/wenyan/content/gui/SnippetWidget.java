@@ -18,7 +18,6 @@ import java.util.List;
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
     private final CodeEditorWidget editor;
-    public static final List<Snippet> snippets = Utils.STATEMENT_SNIPPET;
 
     public static final WidgetSprites SPRITES = new WidgetSprites(
             ResourceLocation.withDefaultNamespace("widget/button"),
@@ -42,7 +41,7 @@ public class SnippetWidget extends AbstractScrollWidget {
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
-        for (Snippet s : snippets) {
+        for (Snippet s : editor.getCurSnippets()) {
             if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
                 boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                         mouseX < getX() + getWidth() - innerPadding() &&
@@ -68,9 +67,9 @@ public class SnippetWidget extends AbstractScrollWidget {
             double x = mouseX - getX() - innerPadding();
             double y = mouseY - getY() - innerPadding() + scrollAmount();
             int index = Mth.floor(y / ENTRY_HEIGHT);
-            if (index >= 0 && index < snippets.size()) {
+            if (index >= 0 && index < editor.getCurSnippets().size()) {
                 if (x < width) {
-                    editor.getTextField().insertSnippet(snippets.get(index));
+                    editor.getTextField().insertSnippet(editor.getCurSnippets().get(index));
                     return true;
                 }
             }
@@ -85,7 +84,7 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     public int getInnerHeight() {
-        return snippets.size() * font.lineHeight;
+        return editor.getCurSnippets().size() * font.lineHeight;
     }
 
     protected boolean scrollbarVisible() {

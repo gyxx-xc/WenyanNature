@@ -10,13 +10,14 @@ import java.util.regex.Pattern;
 
 public record Snippet(String title, List<String> lines, List<SnippetPlaceholder> insert) {
     public record SnippetPlaceholder(Context context, int row, int colum) { }
+    @Accessors(fluent = true)
     public enum Context {
         STMT(0xFFFF0000),
         DATA(0xFF00FF00),
         ID(0xFF0000FF);
-        @Accessors(fluent = true)
         @Getter
         private final int color;
+
         Context(int color) {
             this.color = color;
         }

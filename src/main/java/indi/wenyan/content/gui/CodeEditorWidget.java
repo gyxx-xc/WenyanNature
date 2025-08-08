@@ -46,6 +46,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     @Getter
     private final CodeField textField;
 
+    @Getter
+    private List<Snippet> curSnippets = Utils.STATEMENT_SNIPPET;
+
     public CodeEditorWidget(Font font, int x, int y, int width, int height,
                             int maxLength, String content, Consumer<String> onChange,
                             List<CodeField.Placeholder> placeholders) {
@@ -55,6 +58,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         this.font = font;
         textField = new CodeField(font, this.width - totalInnerPadding());
         textField.setCursorListener(()->{
+            updateCurrentSnippetContext();
             scrollToCursor();
             // reset blink
             blinkStart = Util.getMillis();
@@ -89,6 +93,21 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         }
 
         setScrollAmount(scrollAmount);
+    }
+
+    private void updateCurrentSnippetContext() {
+        int cursor = textField.getCursor();
+        for (var placeholder : textField.getPlaceholders()) {
+            if (cursor == placeholder.index()) {
+                switch (placeholder.context()) {
+                    case STMT -> curSnippets = Utils.STATEMENT_SNIPPET;
+                    case DATA -> curSnippets = Utils.DATA_SNIPPET;
+                    case ID -> curSnippets = Utils.ID_SNIPPET;
+                }
+                return;
+            }
+        }
+        curSnippets = Utils.STATEMENT_SNIPPET;
     }
 
     public String getValue() {

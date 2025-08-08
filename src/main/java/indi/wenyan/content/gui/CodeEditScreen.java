@@ -38,7 +38,7 @@ public class CodeEditScreen extends Screen {
                 .position((width - textFieldWidth) / 2, 15)
                 .size(textFieldWidth, Math.min(height-30, CodeEditorWidget.HEIGH))
                 .maxLength(16384)
-                .createTextFieldWidget();
+                .create();
         addRenderableWidget(textFieldWidget);
 
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);

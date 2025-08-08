@@ -50,7 +50,7 @@ public class CodeEditorBuilder {
         return this;
     }
 
-    public CodeEditorWidget createTextFieldWidget() {
+    public CodeEditorWidget create() {
         return new CodeEditorWidget(font, x, y, width, height, maxLength, content, onChange, placeholders);
     }
 }
