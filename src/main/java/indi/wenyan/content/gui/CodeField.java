@@ -18,6 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 // from net.minecraft.client.gui.components.MultilineTextField;
 @OnlyIn(Dist.CLIENT)
@@ -32,19 +33,17 @@ public class CodeField {
     @Getter
     private final List<StyledView> styleMarks = Lists.newArrayList();
     @Getter private String value = "";
-    @Getter private int lineTotal = 0;
 
     @Getter private int cursor = 0;
     private int selectCursor = 0;
     @Setter private boolean selecting;
 
     @Setter @Getter private int characterLimit = NO_CHARACTER_LIMIT;
-    @Setter private int width;
+    private final int width;
 
-    @Setter private Consumer<String> valueListener = (s) -> {
-    };
-    @Setter private Runnable cursorListener = () -> {
-    };
+    @Setter private Consumer<String> valueListener = (s) -> {};
+    @Setter private Runnable cursorListener = () -> {};
+    @Setter private Function<String, Integer> widthUpdater = (s) -> 0;
 
     public CodeField(Font font, int width) {
         this.font = font;
@@ -266,7 +265,7 @@ public class CodeField {
     private void onValueChange() {
         // reflowDisplayLines
         displayLines.clear();
-        lineTotal = 0;
+        int codeWidth = width - widthUpdater.apply(value);
         if (value.isEmpty()) {
             displayLines.add(StringView.EMPTY);
         } else {
@@ -279,11 +278,10 @@ public class CodeField {
                     displayLines.add(new StringView(lineStart, i));
                     lineStart = i + 1;
                     lineWidth = 0;
-                    lineTotal += 1;
                     continue;
                 }
                 int charWidth = font.width(String.valueOf(c));
-                if (lineWidth + charWidth > width) {
+                if (lineWidth + charWidth > codeWidth) {
                     displayLines.add(new StringView(lineStart, i));
                     lineStart = i;
                     lineWidth = charWidth;

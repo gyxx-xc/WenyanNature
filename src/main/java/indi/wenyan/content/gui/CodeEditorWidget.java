@@ -52,29 +52,22 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 width-outerPadding.horizontal(), height-outerPadding.vertical(),
                 Component.empty());
         this.font = font;
-        textField = new CodeField(font, this.width - totalInnerPadding() - lineNoWidth());
+        textField = new CodeField(font, this.width - totalInnerPadding());
         textField.setCursorListener(()->{
             scrollToCursor();
             // reset blink
             blinkStart = Util.getMillis();
         });
-        textField.setValueListener((s)->{
-            // update line number width
-            textField.setWidth(this.width - totalInnerPadding() -
-                    outerPadding.horizontal() - lineNoWidth());
-            // reset blink
-            blinkStart = Util.getMillis();
-            // notify change
-            onChange.accept(s);
-        });
+        // notify change
+        textField.setValueListener(onChange);
+        textField.setWidthUpdater(this::lineNoWidth);
         textField.setValue(content);
         textField.setCharacterLimit(maxLength);
     }
 
-    private int lineNoWidth() {
-        if (textField == null) return innerPadding();
+    private int lineNoWidth(String value) {
         // because the width of number is not same, return width of 0, 00, 000, ...
-        return font.width("0")*String.valueOf(textField.getLineTotal()).length() + innerPadding();
+        return font.width("0")*String.valueOf(value.lines().count()).length() + innerPadding();
     }
 
     private void scrollToCursor() {
@@ -160,7 +153,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
             textField.setSelecting(Screen.hasShiftDown());
-            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
+            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(textField.getValue()),
                     mouseY - getY() - innerPadding() + scrollAmount());
             return true;
         } else {
@@ -173,7 +166,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             return true;
         } else if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
             textField.setSelecting(true);
-            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
+            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(textField.getValue()),
                     mouseY - getY() - innerPadding() + scrollAmount());
             textField.setSelecting(Screen.hasShiftDown());
             return true;
@@ -219,7 +212,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                cursorX = getX() + innerPadding() + lineNoWidth();
+                cursorX = getX() + innerPadding() + lineNoWidth(textField.getValue());
                 if (stringView.beginIndex() != stringView.endIndex()) {
                     int lastEnd = stringView.beginIndex();
                     do {
@@ -242,7 +235,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 boolean isCurLine = cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
                 if (isCurLine && isCursorRender) {
                     // cursor
-                    cursorX = getX() + innerPadding() + lineNoWidth() +
+                    cursorX = getX() + innerPadding() + lineNoWidth(textField.getValue()) +
                             font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
                     guiGraphics.fill(cursorX, currentY,
                             cursorX + 1, currentY + font.lineHeight,
@@ -269,7 +262,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
         if (textField.hasSelection()) {
             var selected = textField.getSelected();
-            int k1 = getX() + innerPadding() + lineNoWidth();
+            int k1 = getX() + innerPadding() + lineNoWidth(textField.getValue());
             currentY = getY() + innerPadding();
 
             for (var stringView : textField.getDisplayLines()) {
@@ -301,7 +294,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         Component component = Component.literal(isContinued ? ">" : String.valueOf(no))
                 .withStyle(Style.EMPTY.withBold(currentLine));
         guiGraphics.drawString(font, component,
-                getX() + lineNoWidth() - font.width("0")*component.getString().length(), currentY,
+                getX() + lineNoWidth(textField.getValue()) - font.width("0")*component.getString().length(), currentY,
                 0xFF303030, false);
     }
 
