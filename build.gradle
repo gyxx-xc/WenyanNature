@@ -141,15 +141,8 @@ dependencies {
 
     antlr "org.antlr:antlr4:4.13.1"
 
-    testImplementation platform('org.junit:junit-bom:5.13.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
-
-    testCompileOnly("org.projectlombok:lombok:1.18.38")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -205,11 +198,4 @@ idea {
 
 generateGrammarSource {
     arguments += ["-no-listener", "-visitor", "-encoding", "UTF-8"]
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
 }
