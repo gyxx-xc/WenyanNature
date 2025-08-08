@@ -1,14 +1,18 @@
 package indi.wenyan.content.gui;
 
 import lombok.Setter;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class CodeEditScreen extends Screen {
@@ -52,6 +56,11 @@ public class CodeEditScreen extends Screen {
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderTransparentBackground(guiGraphics);
+    }
+
+    @Override
+    public void setFocused(@Nullable GuiEventListener listener) {
+        super.setFocused(textFieldWidget);
     }
 
     @Override

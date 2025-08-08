@@ -119,8 +119,11 @@ public class CodeField {
             if (i != lines.size() - 1) sb.append('\n');
         }
         insertText(sb.toString());
-        placeholders.addAll(addPlaceholders);
-        placeholders.sort(Comparator.comparingInt(Placeholder::index));
+        if (!addPlaceholders.isEmpty()) {
+            placeholders.addAll(addPlaceholders);
+            selectCursor = cursor = addPlaceholders.getFirst().index();
+            cursorListener.run(); // update cursor for placeholders
+        }
     }
 
     public StringView getSelected() {
@@ -278,6 +281,18 @@ public class CodeField {
                 case GLFW.GLFW_KEY_UP -> seekCursorLine(-1);
                 case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, getCursorLineView(0).beginIndex);
                 case GLFW.GLFW_KEY_END -> seekCursor(Whence.ABSOLUTE, getCursorLineView(0).endIndex);
+                case GLFW.GLFW_KEY_TAB -> {
+                    // tab to next placeholder
+                    Placeholder next = placeholders.stream()
+                            .filter(p -> p.index() > cursor)
+                            .min(Comparator.comparingInt(Placeholder::index))
+                            .orElse(null);
+                    if (next != null) {
+                        seekCursor(Whence.ABSOLUTE, next.index());
+                    } else {
+                        insertText("    ");
+                    }
+                }
                 default -> {
                     return false;
                 }
@@ -285,7 +300,6 @@ public class CodeField {
         }
         return true;
     }
-
 
     private void onValueChange() {
         // reflowDisplayLines

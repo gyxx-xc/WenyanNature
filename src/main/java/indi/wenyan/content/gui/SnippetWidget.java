@@ -78,6 +78,14 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     @Override
+    public void setFocused(boolean focused) {
+        if (focused)
+            editor.setFocused(true);
+        else
+            super.setFocused(false);
+    }
+
+    @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("gui.narrate" +
                 ".editBox", getMessage(), "snippet"));
