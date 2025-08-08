@@ -70,7 +70,7 @@ public class SnippetWidget extends AbstractScrollWidget {
             int index = Mth.floor(y / ENTRY_HEIGHT);
             if (index >= 0 && index < snippets.size()) {
                 if (x < width) {
-                    editor.getTextField().insertText(snippets.get(index).content());
+                    editor.getTextField().insertSnippet(snippets.get(index));
                     return true;
                 }
             }

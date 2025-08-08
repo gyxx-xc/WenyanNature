@@ -74,6 +74,31 @@ public class CodeField {
         }
     }
 
+    public void insertSnippet(Snippet snippet) {
+        // get indent
+        StringBuilder indent = new StringBuilder();
+        if (cursor > 0 && cursor < value.length()) {
+            int lastNewline = value.lastIndexOf('\n', cursor - 1);
+            int firstChar;
+            if (lastNewline >= 0)
+                firstChar = lastNewline + 1;
+            else // first line
+                firstChar = 0;
+            while (firstChar < cursor - 1 && Character.isWhitespace(value.charAt(firstChar))) {
+                indent.append(value.charAt(firstChar));
+                firstChar++;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        List<String> lines = snippet.lines();
+        for (int i = 0; i < lines.size(); i++) {
+            if (i > 0) sb.append(indent);
+            sb.append(lines.get(i));
+            if (i != lines.size() - 1) sb.append('\n');
+        }
+        insertText(sb.toString());
+    }
+
     public StringView getSelected() {
         return new StringView(Math.min(selectCursor, cursor), Math.max(selectCursor, cursor));
     }

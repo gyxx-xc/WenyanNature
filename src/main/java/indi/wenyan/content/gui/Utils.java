@@ -15,19 +15,21 @@ public class Utils {
 
     public static final List<Snippet> STATEMENT_SNIPPET = List.of(
             Snippet.createSnippet("if")
-                    .string("if (").hold(Snippet.Context.DATA).stringLine(") {")
-                    .string("\t").hold(Snippet.Context.STMT).newLine()
-                    .stringLine("}")
+                    .content("""
+                            if ({DATA}) {
+                                {STMT}
+                            }""")
                     .create(),
             Snippet.createSnippet("while")
-                    .string("while (").hold(Snippet.Context.DATA).stringLine(") {")
-                    .string("\t").hold(Snippet.Context.STMT).newLine()
-                    .stringLine("}")
+                    .content("""
+                            while ({DATA}) {
+                                {STMT}
+                            }""")
                     .create(),
             Snippet.createSnippet("for")
-                    .string("for (").hold(Snippet.Context.ID).string(" : ")
-                    .hold(Snippet.Context.DATA).stringLine(") {")
-                    .string("\t").hold(Snippet.Context.STMT).newLine()
-                    .stringLine("}")
+                    .content("""
+                            for ({ID} : {DATA}) {
+                                {STMT}
+                            }""")
                     .create());
 }
