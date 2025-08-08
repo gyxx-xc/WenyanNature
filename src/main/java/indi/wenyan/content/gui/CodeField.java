@@ -16,6 +16,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -32,6 +34,8 @@ public class CodeField {
     private final List<StringView> displayLines = Lists.newArrayList();
     @Getter
     private final List<StyledView> styleMarks = Lists.newArrayList();
+    @Getter
+    private final List<Placeholder> placeholders = Lists.newArrayList();
     @Getter private String value = "";
 
     @Getter private int cursor = 0;
@@ -51,11 +55,11 @@ public class CodeField {
         onValueChange();
     }
 
-
     public void setValue(String fullText) {
         value = hasCharacterLimit() ?
                 StringUtil.truncateStringIfNecessary(fullText, characterLimit, false) : fullText;
         selectCursor = cursor = value.length();
+        placeholders.clear();
         onValueChange();
     }
 
@@ -63,10 +67,22 @@ public class CodeField {
         if (!text.isEmpty() || hasSelection()) {
             String filteredText = StringUtil.filterText(text.replace("\t", "    "), true);
             String string = hasCharacterLimit() ?
-                    StringUtil.truncateStringIfNecessary(filteredText, characterLimit - value.length(), false)
-                    : filteredText;
+                    StringUtil.truncateStringIfNecessary(filteredText,
+                            characterLimit - value.length(), false) : filteredText;
             StringView stringView = getSelected();
-            value = (new StringBuilder(value)).replace(stringView.beginIndex, stringView.endIndex, string).toString();
+            value = (new StringBuilder(value))
+                    .replace(stringView.beginIndex, stringView.endIndex, string).toString();
+            int lengthChanged = string.length() - (stringView.endIndex - stringView.beginIndex);
+            for (var placeholder : new ArrayList<>(placeholders)) {
+                // NOTE: a equal here means if any text of cursor is changed, the placeholder will be removed
+                if (placeholder.index() >= stringView.beginIndex) {
+                    if (placeholder.index() <= stringView.endIndex)
+                        placeholders.remove(placeholder);
+                    else
+                        placeholders.set(placeholders.indexOf(placeholder), new Placeholder(
+                            placeholder.context(), placeholder.index() + lengthChanged));
+                }
+            }
             cursor = stringView.beginIndex + string.length();
             selectCursor = cursor;
             onValueChange();
@@ -89,13 +105,23 @@ public class CodeField {
             }
         }
         StringBuilder sb = new StringBuilder();
+        int start = getSelected().beginIndex();
         List<String> lines = snippet.lines();
-        for (int i = 0; i < lines.size(); i++) {
+        // j for placeholders
+        List<Placeholder> addPlaceholders = new ArrayList<>();
+        for (int i = 0, j = 0; i < lines.size(); i++) {
             if (i > 0) sb.append(indent);
+            while (j < snippet.insert().size() &&
+                    snippet.insert().get(j).row() == i) {
+                var p = snippet.insert().get(j++);
+                addPlaceholders.add(new Placeholder(p.context(), start + sb.length() + p.colum()));
+            }
             sb.append(lines.get(i));
             if (i != lines.size() - 1) sb.append('\n');
         }
         insertText(sb.toString());
+        placeholders.addAll(addPlaceholders);
+        placeholders.sort(Comparator.comparingInt(Placeholder::index));
     }
 
     public StringView getSelected() {
@@ -330,4 +356,7 @@ public class CodeField {
 
     @OnlyIn(Dist.CLIENT)
     public record StyledView(int endIndex, int style) {}
+
+    @OnlyIn(Dist.CLIENT)
+    public record Placeholder(Snippet.Context context, int index) {}
 }

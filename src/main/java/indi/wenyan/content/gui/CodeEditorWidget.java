@@ -93,7 +93,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         return textField.getValue();
     }
 
-    private Style styleFromTokenType(int tokenType) {
+    private static Style styleFromTokenType(int tokenType) {
         val CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);
         val STRING_STYLE = Style.EMPTY.withColor(0x008000);
         val DATA_STYLE = Style.EMPTY.withColor(0x1C00CF);
@@ -207,6 +207,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         int lineNo = 1;
         boolean isContinuedLine = false;
         int styleCounter = 0;
+        int placeholderCounter = 0;
 
         List<CodeField.StringView> displayLines = textField.getDisplayLines();
         for (int i = 0; i < displayLines.size(); i++) {
@@ -240,6 +241,20 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     guiGraphics.fill(cursorX, currentY,
                             cursorX + 1, currentY + font.lineHeight,
                             CURSOR_INSERT_COLOR);
+                }
+                while (placeholderCounter < textField.getPlaceholders().size()) {
+                    var placeholder = textField.getPlaceholders().get(placeholderCounter);
+                    int place = placeholder.index();
+                    if (place > stringView.endIndex())
+                        break;
+                    placeholderCounter++;
+                    if (place < stringView.beginIndex())
+                        continue;
+                    int placeX = getX() + innerPadding() + lineNoWidth(textField.getValue()) +
+                            font.width(content.substring(stringView.beginIndex(), place)) - 1;
+                    guiGraphics.fill(placeX, currentY,
+                            placeX + 1, currentY + font.lineHeight,
+                            placeholder.context().color());
                 }
                 renderLineNo(guiGraphics, currentY, lineNo, isContinuedLine, isCurLine);
             }

@@ -1,16 +1,25 @@
 package indi.wenyan.content.gui;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public record Snippet(String title, List<String> lines, List<Placeholder> insert) {
-    public record Placeholder(Context context, int row, int colum) { }
+public record Snippet(String title, List<String> lines, List<SnippetPlaceholder> insert) {
+    public record SnippetPlaceholder(Context context, int row, int colum) { }
     public enum Context {
-        STMT,
-        DATA,
-        ID
+        STMT(0xFFFF0000),
+        DATA(0xFF00FF00),
+        ID(0xFF0000FF);
+        @Accessors(fluent = true)
+        @Getter
+        private final int color;
+        Context(int color) {
+            this.color = color;
+        }
     }
 
     public static SnippetBuilder createSnippet(String title) {
@@ -21,7 +30,7 @@ public record Snippet(String title, List<String> lines, List<Placeholder> insert
     public static class SnippetBuilder {
         private final String title;
         private StringBuilder sb;
-        private final List<Placeholder> insert = new ArrayList<>();
+        private final List<SnippetPlaceholder> insert = new ArrayList<>();
         private final List<String> lines = new ArrayList<>();
 
         private SnippetBuilder(String title) {
@@ -39,7 +48,7 @@ public record Snippet(String title, List<String> lines, List<Placeholder> insert
                 while (matcher.find()) {
                     sb.append(s, lastEnd, matcher.start());
                     Context context = Context.valueOf(matcher.group(1));
-                    insert.add(new Placeholder(context, lines.size(), sb.length()));
+                    insert.add(new SnippetPlaceholder(context, lines.size(), sb.length()));
                     lastEnd = matcher.end();
                 }
                 sb.append(s, lastEnd, s.length());
@@ -50,6 +59,13 @@ public record Snippet(String title, List<String> lines, List<Placeholder> insert
         }
 
         public Snippet create() {
+            // sort for just in case placeholders are not in order
+            insert.sort((a, b) -> {
+                if (a.row != b.row) {
+                    return Integer.compare(a.row, b.row);
+                }
+                return Integer.compare(a.colum, b.colum);
+            });
             return new Snippet(title, List.copyOf(lines), List.copyOf(insert));
         }
     }
