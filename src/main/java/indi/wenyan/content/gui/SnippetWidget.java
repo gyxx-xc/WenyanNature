@@ -3,33 +3,79 @@ package indi.wenyan.content.gui;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollWidget;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
-    private final CodeField textField;
-    private final List<String> snippets = List.of("aa", "sss", "ee");
+    private final CodeEditorWidget editor;
+    private final List<String> snippets = List.of("例一", "欲行是術", "「向」aaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-    public SnippetWidget(Font font, int x, int y, int width, int height, CodeField textField) {
+    public static final WidgetSprites SPRITES = new WidgetSprites(
+            ResourceLocation.withDefaultNamespace("widget/button"),
+            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
+            ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
+//            new WidgetSprites(
+//            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
+//            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
+//            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"));
+
+    public static final int ENTRY_HEIGHT = 14;
+    private static final Utils.BoxInformation buttonPadding =
+        new Utils.BoxInformation(2, 2, 2, 2);
+
+    public SnippetWidget(Font font, int x, int y, int width, int height, CodeEditorWidget editor) {
         super(x, y, width, height, Component.empty());
         this.font = font;
-        this.textField = textField;
+        this.editor = editor;
     }
 
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
         for (String s : snippets) {
-            if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                guiGraphics.drawString(font, s, getX() + innerPadding(), currentY, 0xFFFFFF, false);
+            if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
+                boolean buttonHovered = mouseX >= getX() + innerPadding() &&
+                        mouseX < getX() + getWidth() - innerPadding() &&
+                        mouseY >= currentY && mouseY < currentY + ENTRY_HEIGHT;
+                guiGraphics.blitSprite(SPRITES.get(this.active, buttonHovered),
+                        getX() + innerPadding(), currentY,
+                        this.getWidth() - totalInnerPadding(), ENTRY_HEIGHT);
+
+                var text = Language.getInstance().getVisualOrder(
+                        font.ellipsize(FormattedText.of(s),
+                                width - totalInnerPadding() - buttonPadding.horizontal()));
+                guiGraphics.drawString(font, text,
+                        getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
+                        0xFFFFFF, false);
             }
-            currentY += font.lineHeight;
+            currentY += ENTRY_HEIGHT;
         }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
+            double x = mouseX - getX() - innerPadding();
+            double y = mouseY - getY() - innerPadding() + scrollAmount();
+            int index = Mth.floor(y / ENTRY_HEIGHT);
+            if (index >= 0 && index < snippets.size()) {
+                if (x < width) {
+                    editor.getTextField().insertText(snippets.get(index));
+                    return true;
+                }
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

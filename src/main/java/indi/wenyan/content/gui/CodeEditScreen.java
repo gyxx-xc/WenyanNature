@@ -37,7 +37,7 @@ public class CodeEditScreen extends Screen {
         snippetWidget = new SnippetWidget(font,
                 width - snippetWidth, 15,
                 snippetWidth, Math.min(height-30, CodeEditorWidget.HEIGH),
-                textFieldWidget.getTextField());
+                textFieldWidget);
         addRenderableWidget(snippetWidget);
     }
 

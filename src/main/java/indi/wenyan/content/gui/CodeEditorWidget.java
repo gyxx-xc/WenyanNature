@@ -37,7 +37,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     // NOTE: a minecraft inner padding of 4 is also need to be considered
     private static final int scrollBarWidth = 8;
-    private static final BoxInformation outerPadding = new BoxInformation(4, 4, 4, 4+scrollBarWidth);
+    private static final Utils.BoxInformation outerPadding =
+            new Utils.BoxInformation(4, 4, 4, 4+scrollBarWidth);
 
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
@@ -47,9 +48,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     public CodeEditorWidget(Font font, int x, int y, int width, int height,
                             int maxLength, String content, Consumer<String> onChange) {
-        super(x+outerPadding.left, y+outerPadding.top,
-                width-outerPadding.left-outerPadding.right,
-                height-outerPadding.top-outerPadding.bottom,
+        super(x+outerPadding.left(), y+outerPadding.top(),
+                width-outerPadding.horizontal(), height-outerPadding.vertical(),
                 Component.empty());
         this.font = font;
         textField = new CodeField(font, this.width - totalInnerPadding() - lineNoWidth());
@@ -60,7 +60,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         });
         textField.setValueListener((s)->{
             // update line number width
-            textField.setWidth(this.width - totalInnerPadding() - outerPadding.left - lineNoWidth() - outerPadding.right);
+            textField.setWidth(this.width - totalInnerPadding() -
+                    outerPadding.horizontal() - lineNoWidth());
             // reset blink
             blinkStart = Util.getMillis();
             // notify change
@@ -304,6 +305,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 0xFF303030, false);
     }
 
+    @SuppressWarnings("CommentedOutCode")
     protected void renderDecorations(@NotNull GuiGraphics guiGraphics) {
         super.renderDecorations(guiGraphics);
 //        if (textField.hasCharacterLimit()) {
@@ -315,10 +317,10 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
         guiGraphics.blit(BACKGROUND,
-                getX() - outerPadding.left, getY() - outerPadding.top,
+                getX() - outerPadding.left(), getY() - outerPadding.top(),
                 0,  (int)scrollAmount(),
-                width + outerPadding.left + outerPadding.right,
-                height + outerPadding.top + outerPadding.bottom);
+                width + outerPadding.horizontal(),
+                height + outerPadding.vertical());
     }
 
     // scrolling
@@ -333,6 +335,4 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     protected double scrollRate() {
         return 3 * font.lineHeight;
     }
-
-    public record BoxInformation(int top, int left, int bottom, int right) { }
 }
