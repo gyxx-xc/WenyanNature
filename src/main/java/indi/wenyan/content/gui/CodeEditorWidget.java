@@ -47,7 +47,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final CodeField textField;
 
     public CodeEditorWidget(Font font, int x, int y, int width, int height,
-                            int maxLength, String content, Consumer<String> onChange) {
+                            int maxLength, String content, Consumer<String> onChange,
+                            List<CodeField.Placeholder> placeholders) {
         super(x+outerPadding.left(), y+outerPadding.top(),
                 width-outerPadding.horizontal(), height-outerPadding.vertical(),
                 Component.empty());
@@ -61,7 +62,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         // notify change
         textField.setValueListener(onChange);
         textField.setWidthUpdater(this::lineNoWidth);
-        textField.setValue(content);
+        textField.setPlaceholders(placeholders);
+        textField.initValue(content);
         textField.setCharacterLimit(maxLength);
     }
 
@@ -233,15 +235,6 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                         }
                     } while (lastEnd < stringView.endIndex());
                 }
-                boolean isCurLine = cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
-                if (isCurLine && isCursorRender) {
-                    // cursor
-                    cursorX = getX() + innerPadding() + lineNoWidth(textField.getValue()) +
-                            font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
-                    guiGraphics.fill(cursorX, currentY,
-                            cursorX + 1, currentY + font.lineHeight,
-                            CURSOR_INSERT_COLOR);
-                }
                 while (placeholderCounter < textField.getPlaceholders().size()) {
                     var placeholder = textField.getPlaceholders().get(placeholderCounter);
                     int place = placeholder.index();
@@ -255,6 +248,15 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     guiGraphics.fill(placeX, currentY,
                             placeX + 1, currentY + font.lineHeight,
                             placeholder.context().color());
+                }
+                boolean isCurLine = cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
+                if (isCurLine && isCursorRender) {
+                    // cursor
+                    cursorX = getX() + innerPadding() + lineNoWidth(textField.getValue()) +
+                            font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
+                    guiGraphics.fill(cursorX, currentY,
+                            cursorX + 1, currentY + font.lineHeight,
+                            CURSOR_INSERT_COLOR);
                 }
                 renderLineNo(guiGraphics, currentY, lineNo, isContinuedLine, isCurLine);
             }

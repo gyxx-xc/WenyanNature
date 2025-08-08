@@ -2,6 +2,7 @@ package indi.wenyan.content.gui;
 
 import net.minecraft.client.gui.Font;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
@@ -14,6 +15,7 @@ public class CodeEditorBuilder {
     private String content;
     private int maxLength = CodeField.NO_CHARACTER_LIMIT;
     private Consumer<String> onChange = s -> {};
+    private List<CodeField.Placeholder> placeholders;
 
     public CodeEditorBuilder font(Font font) {
         this.font = font;
@@ -43,7 +45,12 @@ public class CodeEditorBuilder {
         return this;
     }
 
+    public CodeEditorBuilder placeholders(List<CodeField.Placeholder> placeholders) {
+        this.placeholders = placeholders;
+        return this;
+    }
+
     public CodeEditorWidget createTextFieldWidget() {
-        return new CodeEditorWidget(font, x, y, width, height, maxLength, content, onChange);
+        return new CodeEditorWidget(font, x, y, width, height, maxLength, content, onChange, placeholders);
     }
 }

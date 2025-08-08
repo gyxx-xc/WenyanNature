@@ -34,8 +34,8 @@ public class CodeField {
     private final List<StringView> displayLines = Lists.newArrayList();
     @Getter
     private final List<StyledView> styleMarks = Lists.newArrayList();
-    @Getter
-    private final List<Placeholder> placeholders = Lists.newArrayList();
+    @Setter
+    @Getter private List<Placeholder> placeholders;
     @Getter private String value = "";
 
     @Getter private int cursor = 0;
@@ -55,11 +55,10 @@ public class CodeField {
         onValueChange();
     }
 
-    public void setValue(String fullText) {
+    public void initValue(String fullText) {
         value = hasCharacterLimit() ?
                 StringUtil.truncateStringIfNecessary(fullText, characterLimit, false) : fullText;
         selectCursor = cursor = value.length();
-        placeholders.clear();
         onValueChange();
     }
 
