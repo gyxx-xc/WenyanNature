@@ -18,20 +18,20 @@ import java.util.List;
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
     private final CodeEditorWidget editor;
-    private final List<String> snippets = List.of("例一", "欲行是術", "「向」aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    public static final List<Snippet> snippets = Utils.STATEMENT_SNIPPET;
 
     public static final WidgetSprites SPRITES = new WidgetSprites(
             ResourceLocation.withDefaultNamespace("widget/button"),
             ResourceLocation.withDefaultNamespace("widget/button_disabled"),
             ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
-//            new WidgetSprites(
+    //            new WidgetSprites(
 //            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
 //            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
 //            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"));
 
-    public static final int ENTRY_HEIGHT = 14;
     private static final Utils.BoxInformation buttonPadding =
-        new Utils.BoxInformation(2, 2, 2, 2);
+        new Utils.BoxInformation(3, 3, 3, 3);
+    public static final int ENTRY_HEIGHT = 10 + buttonPadding.vertical();
 
     public SnippetWidget(Font font, int x, int y, int width, int height, CodeEditorWidget editor) {
         super(x, y, width, height, Component.empty());
@@ -42,7 +42,7 @@ public class SnippetWidget extends AbstractScrollWidget {
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
-        for (String s : snippets) {
+        for (Snippet s : snippets) {
             if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
                 boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                         mouseX < getX() + getWidth() - innerPadding() &&
@@ -52,7 +52,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                         this.getWidth() - totalInnerPadding(), ENTRY_HEIGHT);
 
                 var text = Language.getInstance().getVisualOrder(
-                        font.ellipsize(FormattedText.of(s),
+                        font.ellipsize(FormattedText.of(s.title()),
                                 width - totalInnerPadding() - buttonPadding.horizontal()));
                 guiGraphics.drawString(font, text,
                         getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
@@ -70,7 +70,7 @@ public class SnippetWidget extends AbstractScrollWidget {
             int index = Mth.floor(y / ENTRY_HEIGHT);
             if (index >= 0 && index < snippets.size()) {
                 if (x < width) {
-                    editor.getTextField().insertText(snippets.get(index));
+                    editor.getTextField().insertText(snippets.get(index).content());
                     return true;
                 }
             }
