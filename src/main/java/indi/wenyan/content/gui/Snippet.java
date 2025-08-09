@@ -9,7 +9,6 @@ public record Snippet(String title, List<String> lines, List<SnippetPlaceholder>
     public record SnippetPlaceholder(Context context, int row, int colum) { }
 
     public record Context(String value) {
-
         public static int color(Context context) {
             return switch (context.value()) {
                 case "STMT" -> 0xFFFF0000;

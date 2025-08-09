@@ -251,6 +251,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                         }
                     } while (lastEnd < stringView.endIndex());
                 }
+                // -------------------- render placeholders --------------------
                 while (placeholderCounter < textField.getPlaceholders().size()) {
                     var placeholder = textField.getPlaceholders().get(placeholderCounter);
                     int place = placeholder.index();
@@ -265,7 +266,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                             placeX + 1, currentY + font.lineHeight,
                             Snippet.Context.color(placeholder.context()));
                 }
-                boolean isCurLine = cursorInContent && cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
+                // ----------------------- render cursor -----------------------
+                boolean isCurLine = cursorInContent &&
+                        cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
                 if (isCurLine && isCursorRender) {
                     // cursor
                     cursorX = getX() + innerPadding() + lineNoWidth(textField.getValue()) +
@@ -274,7 +277,12 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                             cursorX + 1, currentY + font.lineHeight,
                             CURSOR_INSERT_COLOR);
                 }
-                renderLineNo(guiGraphics, currentY, lineNo, isContinuedLine, isCurLine);
+                // -------------------- render line numbers --------------------
+                Component component = Component.literal(isContinuedLine ? ">" : String.valueOf(lineNo))
+                        .withStyle(Style.EMPTY.withBold(isCurLine));
+                guiGraphics.drawString(font, component,
+                        getX() + lineNoWidth(textField.getValue()) - font.width("0")*component.getString().length(), currentY,
+                        0xFF303030, false);
             }
             currentY += font.lineHeight;
             // it will always be (n, n) for the last line
@@ -320,15 +328,6 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 currentY += font.lineHeight;
             }
         }
-    }
-
-    private void renderLineNo(GuiGraphics guiGraphics, int currentY, int no,
-                              boolean isContinued, boolean currentLine) {
-        Component component = Component.literal(isContinued ? ">" : String.valueOf(no))
-                .withStyle(Style.EMPTY.withBold(currentLine));
-        guiGraphics.drawString(font, component,
-                getX() + lineNoWidth(textField.getValue()) - font.width("0")*component.getString().length(), currentY,
-                0xFF303030, false);
     }
 
     @SuppressWarnings("CommentedOutCode")
