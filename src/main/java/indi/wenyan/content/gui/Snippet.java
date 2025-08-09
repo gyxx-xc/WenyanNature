@@ -1,8 +1,5 @@
 package indi.wenyan.content.gui;
 
-import lombok.Getter;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -10,17 +7,31 @@ import java.util.regex.Pattern;
 
 public record Snippet(String title, List<String> lines, List<SnippetPlaceholder> insert) {
     public record SnippetPlaceholder(Context context, int row, int colum) { }
-    @Accessors(fluent = true)
-    public enum Context {
-        STMT(0xFFFF0000),
-        DATA(0xFF00FF00),
-        ID(0xFF0000FF),
-        NONE(0x99000000);
-        @Getter
-        private final int color;
 
-        Context(int color) {
-            this.color = color;
+    public record Context(String value) {
+
+        public static int color(Context context) {
+            return switch (context.value()) {
+                case "STMT" -> 0xFFFF0000;
+                case "DATA" -> 0xFF00FF00;
+                case "ID" -> 0xFF0000FF;
+                case "NONE" -> 0x99000000;
+                default -> throw new IllegalStateException("Unexpected value: " + context.value());
+            };
+        }
+
+        public static Context of(String name) {
+            return new Context(name);
+        }
+
+        public static List<Utils.SnippetSet> getSnippets(Context context) {
+            return switch (context.value()) {
+                case "STMT" -> Utils.STMT_SNIPPETS;
+                case "DATA" -> List.of(Utils.DATA_SNIPPET, Utils.ID_SNIPPET);
+                case "ID" -> List.of(Utils.ID_SNIPPET);
+                case "NONE" -> Utils.DEFAULT_SNIPPET;
+                default -> throw new IllegalStateException("Unexpected value: " + context.value());
+            };
         }
     }
 
@@ -49,7 +60,7 @@ public record Snippet(String title, List<String> lines, List<SnippetPlaceholder>
                 int lastEnd = 0;
                 while (matcher.find()) {
                     sb.append(s, lastEnd, matcher.start());
-                    Context context = Context.valueOf(matcher.group(1));
+                    Context context = Context.of(matcher.group(1));
                     insert.add(new SnippetPlaceholder(context, lines.size(), sb.length()));
                     lastEnd = matcher.end();
                 }
