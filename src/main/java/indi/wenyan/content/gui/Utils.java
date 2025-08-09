@@ -20,56 +20,51 @@ public enum Utils {;
     }
 
     public static final SnippetSet VARIABLE_SNIPPET = new SnippetSet("variable",
-            Snippet.createSnippet("吾有一數")
-                    .content("""
-                            吾有一數。曰{DATA}。名之曰{ID}。{NONE}""")
-                    .create(),
-            Snippet.createSnippet("昔之")
-                    .content("""
-                            昔之{DATA}者。今{DATA}是矣。{NONE}""")
-                    .create()
+            Snippet.of("吾有一數", "吾有一數。曰{DATA}。名之曰{ID}。{NONE}"),
+            Snippet.of("昔之", "昔之{DATA}者。今{DATA}是矣。{NONE}")
     );
 
     public static final SnippetSet FUNCTION_SNIPPET = new SnippetSet("function",
-            Snippet.createSnippet("function")
-                    .content("""
-                            施{ID}。於{DATA}。{NONE}""")
-                    .create()
+            Snippet.of("function", "施{ID}。於{DATA}。{NONE}")
     );
 
     public static final SnippetSet CONDITION_SNIPPET = new SnippetSet("condition",
-            Snippet.createSnippet("if")
-                    .content("""
-                            若{DATA}者。
-                              {STMT}
-                            也。{NONE}""")
-                    .create(),
-            Snippet.createSnippet("if-else")
-                    .content("""
-                            若{DATA}者。
-                              {STMT}
-                            若非。
-                              {STMT}
-                            也。{NONE}""")
-                    .create()
+            Snippet.of("if", """
+                    若{DATA}者。
+                      {STMT}
+                    也。{NONE}"""),
+            Snippet.of("if-else", """
+                    若{DATA}者。
+                      {STMT}
+                    若非。
+                      {STMT}
+                    也。{NONE}""")
     );
 
     public static final SnippetSet LOOP_SNIPPET = new SnippetSet("condition",
-            Snippet.createSnippet("for")
-                    .content("""
-                            為是{DATA}遍。
-                              {STMT}
-                            云云。{NONE}""")
-                    .create(),
-            Snippet.createSnippet("while")
-                    .content("""
-                            恆為是。
-                              {STMT}
-                            云云。{NONE}""")
-                    .create(),
-            Snippet.createSnippet("break")
-                    .content("乃止。{NONE}")
-                    .create()
+            Snippet.of("for", """
+                    為是{DATA}遍。
+                      {STMT}
+                    云云。{NONE}"""),
+            Snippet.of("while", """
+                    恆為是。
+                      {STMT}
+                    云云。{NONE}"""),
+            Snippet.of("break", "乃止。{NONE}")
+    );
+
+    public static final SnippetSet DATA_SNIPPET = new SnippetSet("data",
+            Snippet.of("0", "零"),
+            Snippet.of("1", "一"),
+            Snippet.of("2", "二"),
+            Snippet.of("3", "三"),
+            Snippet.of("false", "陰"),
+            Snippet.of("gt", "{DATA}大於{DATA}")
+    );
+
+    public static final SnippetSet ID_SNIPPET = new SnippetSet("data",
+            Snippet.of("a", "「甲」"),
+            Snippet.of("b", "「乙」")
     );
 
     public static final List<SnippetSet> STMT_SNIPPETS = List.of(
@@ -77,36 +72,6 @@ public enum Utils {;
             FUNCTION_SNIPPET,
             CONDITION_SNIPPET,
             LOOP_SNIPPET
-    );
-
-    public static final SnippetSet DATA_SNIPPET = new SnippetSet("data",
-            Snippet.createSnippet("0")
-                    .content("零")
-                    .create(),
-            Snippet.createSnippet("1")
-                    .content("一")
-                    .create(),
-            Snippet.createSnippet("2")
-                    .content("二")
-                    .create(),
-            Snippet.createSnippet("3")
-                    .content("三")
-                    .create(),
-            Snippet.createSnippet("false")
-                    .content("陰")
-                    .create(),
-            Snippet.createSnippet("gt")
-                    .content("{DATA}大於{DATA}")
-                    .create()
-    );
-
-    public static final SnippetSet ID_SNIPPET = new SnippetSet("data",
-            Snippet.createSnippet("a")
-                    .content("「甲」")
-                    .create(),
-            Snippet.createSnippet("b")
-                    .content("「乙」")
-                    .create()
     );
 
     public static final List<SnippetSet> DEFAULT_SNIPPET = STMT_SNIPPETS;
