@@ -1,31 +1,43 @@
 package indi.wenyan.content.gui;
 
+import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class CodeEditScreen extends Screen {
-    @Setter
-    private String data;
+public class CodeEditorScreen extends Screen implements CodeField.SavedVariable {
     private final Consumer<String> saving;
 
     // saved for code field
+    @Getter
+    private final StringBuilder content;
+    @Getter
     private final List<CodeField.Placeholder> placeholders = new ArrayList<>();
+    @Getter @Setter
+    private int cursor = 0;
+    @Getter @Setter
+    private int selectCursor = 0;
+    @Getter @Setter
+    private boolean selecting = false;
+
+    public static final int CHARACTER_LIMIT = 16384;
 
     private CodeEditorWidget textFieldWidget;
     @SuppressWarnings("FieldCanBeLocal")
     private SnippetWidget snippetWidget;
 
-    public CodeEditScreen(String data, Consumer<String> save) {
+    public CodeEditorScreen(String content, Consumer<String> save) {
         super(Component.empty());
-        this.data = data;
+        this.content = new StringBuilder(
+                StringUtil.truncateStringIfNecessary(content, CHARACTER_LIMIT, false));
         this.saving = save;
     }
 
@@ -34,10 +46,10 @@ public class CodeEditScreen extends Screen {
         int textFieldWidth = Mth.clamp(width/2, 50, CodeEditorWidget.WIDTH);
         textFieldWidget = new CodeEditorBuilder()
                 // placeholders is pointer
-                .font(font).content(data, this::setData).placeholders(placeholders)
+                .font(font)
+                .content(content).placeholders(placeholders)
                 .position((width - textFieldWidth) / 2, 15)
                 .size(textFieldWidth, Math.min(height-30, CodeEditorWidget.HEIGH))
-                .maxLength(16384)
                 .create();
         addRenderableWidget(textFieldWidget);
 

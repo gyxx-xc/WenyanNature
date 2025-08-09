@@ -22,7 +22,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
@@ -43,15 +42,21 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
 
+    interface SavedVariable {
+        List<CodeField.Placeholder> getPlaceholders();
+        StringBuilder getContent();
+        int getCursor();
+        void setSelecting(boolean selecting);
+    }
+    private SavedVariable screen;
+
     @Getter
     private final CodeField textField;
 
     @Getter
     private List<SnippetSet> curSnippets = Snippets.STMT_SNIPPETS;
 
-    public CodeEditorWidget(Font font, int x, int y, int width, int height,
-                            int maxLength, String content, Consumer<String> onChange,
-                            List<CodeField.Placeholder> placeholders) {
+    public CodeEditorWidget(Font font, int x, int y, int width, int height) {
         super(x+outerPadding.left(), y+outerPadding.top(),
                 width-outerPadding.horizontal(), height-outerPadding.vertical(),
                 Component.empty());
@@ -64,16 +69,15 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             blinkStart = Util.getMillis();
         });
         // notify change
-        textField.setValueListener(onChange);
         textField.setWidthUpdater(this::lineNoWidth);
-        textField.setPlaceholders(placeholders);
-        textField.initValue(content);
-        textField.setCharacterLimit(maxLength);
     }
 
-    private int lineNoWidth(String value) {
+    private int lineNoWidth() {
         // because the width of number is not same, return width of 0, 00, 000, ...
-        return font.width("0")*String.valueOf(value.lines().count()).length() + innerPadding();
+        // logic here: count of lines, get digit of this number, times width of "0"
+        return font.width("0") * ((int) Math.log10(
+                screen.getContent().chars().filter(c -> c == '\n').count() + 1) + 1)
+                + innerPadding();
     }
 
     private void scrollToCursor() {
@@ -83,11 +87,11 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
                 displayLines.size()-1);
         int beginIndex = displayLines.get(lineNo).beginIndex();
-        if (textField.getCursor() <= beginIndex) {
+        if (screen.getCursor() <= beginIndex) {
             scrollAmount = textField.getLineAtCursor() * font.lineHeight;
         } else if ((int) ((scrollAmount + height) / font.lineHeight) - 1 < displayLines.size()) {
             int endIndex = displayLines.get((int) ((scrollAmount + height) / font.lineHeight) - 1).endIndex();
-            if (textField.getCursor() > endIndex) {
+            if (screen.getCursor() > endIndex) {
                 scrollAmount = textField.getLineAtCursor() * font.lineHeight - height + font.lineHeight + totalInnerPadding();
             }
         }
@@ -96,10 +100,10 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     }
 
     private void updateCurrentSnippetContext() {
-        int cursor = textField.getCursor();
-        for (var placeholder : textField.getPlaceholders()) {
+        int cursor = screen.getCursor();
+        for (var placeholder : screen.getPlaceholders()) {
             if (cursor == placeholder.index()) {
-                textField.getPlaceholders().remove(placeholder);
+                screen.getPlaceholders().remove(placeholder);
                 curSnippets = SnippetSet.getSnippets(placeholder.context());
                 return;
             }
@@ -108,7 +112,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     }
 
     public String getValue() {
-        return textField.getValue();
+        return screen.getContent().toString();
     }
 
     private static Style styleFromTokenType(int tokenType) {
@@ -170,8 +174,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     // input
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
-            textField.setSelecting(Screen.hasShiftDown());
-            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(textField.getValue()),
+            screen.setSelecting(Screen.hasShiftDown());
+            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
             return true;
         } else {
@@ -183,10 +187,10 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
             return true;
         } else if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
-            textField.setSelecting(true);
-            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(textField.getValue()),
+            screen.setSelecting(true);
+            textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
-            textField.setSelecting(Screen.hasShiftDown());
+            screen.setSelecting(Screen.hasShiftDown());
             return true;
         } else {
             return false;
@@ -215,8 +219,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     // rendering
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        String content = textField.getValue();
-        int cursor = textField.getCursor();
+        StringBuilder content = screen.getContent();
+        int cursor = screen.getCursor();
         boolean isCursorRender = !isFocused() ||
                 (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
         boolean cursorInContent = cursor < content.length();
@@ -231,7 +235,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                cursorX = getX() + innerPadding() + lineNoWidth(textField.getValue());
+                cursorX = getX() + innerPadding() + lineNoWidth();
                 if (stringView.beginIndex() != stringView.endIndex()) {
                     int lastEnd = stringView.beginIndex();
                     do {
@@ -252,15 +256,15 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     } while (lastEnd < stringView.endIndex());
                 }
                 // -------------------- render placeholders --------------------
-                while (placeholderCounter < textField.getPlaceholders().size()) {
-                    var placeholder = textField.getPlaceholders().get(placeholderCounter);
+                while (placeholderCounter < screen.getPlaceholders().size()) {
+                    var placeholder = screen.getPlaceholders().get(placeholderCounter);
                     int place = placeholder.index();
                     if (place > stringView.endIndex())
                         break;
                     placeholderCounter++;
                     if (place < stringView.beginIndex())
                         continue;
-                    int placeX = getX() + innerPadding() + lineNoWidth(textField.getValue()) +
+                    int placeX = getX() + innerPadding() + lineNoWidth() +
                             font.width(content.substring(stringView.beginIndex(), place)) - 1;
                     guiGraphics.fill(placeX, currentY,
                             placeX + 1, currentY + font.lineHeight,
@@ -271,7 +275,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                         cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
                 if (isCurLine && isCursorRender) {
                     // cursor
-                    cursorX = getX() + innerPadding() + lineNoWidth(textField.getValue()) +
+                    cursorX = getX() + innerPadding() + lineNoWidth() +
                             font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
                     guiGraphics.fill(cursorX, currentY,
                             cursorX + 1, currentY + font.lineHeight,
@@ -281,7 +285,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 Component component = Component.literal(isContinuedLine ? ">" : String.valueOf(lineNo))
                         .withStyle(Style.EMPTY.withBold(isCurLine));
                 guiGraphics.drawString(font, component,
-                        getX() + lineNoWidth(textField.getValue()) - font.width("0")*component.getString().length(), currentY,
+                        getX() + lineNoWidth() - font.width("0")*component.getString().length(), currentY,
                         0xFF303030, false);
             }
             currentY += font.lineHeight;
@@ -303,7 +307,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
         if (textField.hasSelection()) {
             var selected = textField.getSelected();
-            int k1 = getX() + innerPadding() + lineNoWidth(textField.getValue());
+            int k1 = getX() + innerPadding() + lineNoWidth();
             currentY = getY() + innerPadding();
 
             for (var stringView : textField.getDisplayLines()) {
@@ -335,7 +339,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         super.renderDecorations(guiGraphics);
 //        if (textField.hasCharacterLimit()) {
 //            int i = textField.getCharacterLimit();
-//            Component component = Component.translatable("gui.multiLineEditBox.character_limit", textField.getValue().length(), i);
+//            Component component = Component.translatable("gui.multiLineEditBox.character_limit", screen.getContent().length(), i);
 //            guiGraphics.drawString(this.font, component, this.getX() + this.width - this.font.width(component), this.getY() + this.height + 4, 0xa0a0a0);
 //        }
     }

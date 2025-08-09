@@ -2,7 +2,7 @@ package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.CraftingBlockEntity;
-import indi.wenyan.content.gui.CodeEditScreen;
+import indi.wenyan.content.gui.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         assert runner != null;
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
-                Minecraft.getInstance().setScreen(new CodeEditScreen(runner.pages, content -> {
+                Minecraft.getInstance().setScreen(new CodeEditorScreen(runner.pages, content -> {
                     runner.pages = content;
                     runner.setChanged();
                     PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
