@@ -21,9 +21,9 @@ public class SnippetWidget extends AbstractScrollWidget {
             ResourceLocation.withDefaultNamespace("widget/button_disabled"),
             ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
     public static final WidgetSprites DIR_SPRITES = new WidgetSprites(
+            ResourceLocation.withDefaultNamespace("widget/button"),
             ResourceLocation.withDefaultNamespace("widget/button_disabled"),
-            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
-            ResourceLocation.withDefaultNamespace("widget/button_disabled"));
+            ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
 //            new WidgetSprites(
 //            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
 //            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
@@ -49,7 +49,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                 boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                         mouseX < getX() + getWidth() - innerPadding() &&
                         mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
-                guiGraphics.blitSprite(DIR_SPRITES.get(this.active, buttonHovered),
+                guiGraphics.blitSprite(DIR_SPRITES.get(set.fold(), buttonHovered),
                         getX() + innerPadding(), currentY,
                         this.getWidth() - totalInnerPadding(), DIR_HEIGHT);
 
@@ -61,6 +61,8 @@ public class SnippetWidget extends AbstractScrollWidget {
                         0xFFFFFF, false);
             }
             currentY += DIR_HEIGHT;
+            if (set.fold()) continue; // skip snippets in this set if folded
+
             for (SnippetSet.Snippet s : set.snippets()) {
                 if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
                     boolean buttonHovered = mouseX >= getX() + innerPadding() &&
@@ -89,13 +91,17 @@ public class SnippetWidget extends AbstractScrollWidget {
             double currentY = 0;
             for (SnippetSet set : editor.getCurSnippets()) {
                 if (y >= currentY && y < currentY + DIR_HEIGHT) {
+                    // clicked on directory
+                    set.fold(!set.fold());
                     return true;
                 }
                 currentY += DIR_HEIGHT;
+
+                if (set.fold()) continue;
                 for (SnippetSet.Snippet s : set.snippets()) {
                     if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
                         // clicked on snippet
-                        editor.getTextField().insertSnippet(s);
+                        editor.insertSnippet(s);
                         return true;
                     }
                     currentY += ENTRY_HEIGHT;

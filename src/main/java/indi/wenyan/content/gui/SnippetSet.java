@@ -1,13 +1,25 @@
 package indi.wenyan.content.gui;
 
+import lombok.Setter;
+import lombok.Value;
+import lombok.experimental.Accessors;
+import lombok.experimental.NonFinal;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public record SnippetSet(String name, List<Snippet> snippets) {
+@Accessors(fluent = true)
+@Value
+public class SnippetSet {
+    String name;
+    List<Snippet> snippets;
+    @NonFinal @Setter boolean fold = false;
+
     public SnippetSet(String name, Snippet... snippets) {
-        this(name, List.of(snippets));
+        this.name = name;
+        this.snippets = List.of(snippets);
     }
 
     public record Snippet(String title, List<String> lines, List<SnippetPlaceholder> insert) { }
