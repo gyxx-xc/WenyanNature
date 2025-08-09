@@ -99,15 +99,17 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         int cursor = textField.getCursor();
         for (var placeholder : textField.getPlaceholders()) {
             if (cursor == placeholder.index()) {
+                textField.getPlaceholders().remove(placeholder);
                 switch (placeholder.context()) {
                     case STMT -> curSnippets = Utils.STATEMENT_SNIPPET;
                     case DATA -> curSnippets = Utils.DATA_SNIPPET;
                     case ID -> curSnippets = Utils.ID_SNIPPET;
+                    case NONE -> curSnippets = Utils.DEFAULT_SNIPPET;
                 }
                 return;
             }
         }
-        curSnippets = Utils.STATEMENT_SNIPPET;
+        curSnippets = Utils.DEFAULT_SNIPPET;
     }
 
     public String getValue() {

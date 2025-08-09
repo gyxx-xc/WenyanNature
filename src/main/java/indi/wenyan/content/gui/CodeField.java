@@ -91,14 +91,14 @@ public class CodeField {
     public void insertSnippet(Snippet snippet) {
         // get indent
         StringBuilder indent = new StringBuilder();
-        if (cursor > 0 && cursor < value.length()) {
+        if (cursor > 0) {
             int lastNewline = value.lastIndexOf('\n', cursor - 1);
             int firstChar;
             if (lastNewline >= 0)
                 firstChar = lastNewline + 1;
             else // first line
                 firstChar = 0;
-            while (firstChar < cursor - 1 && Character.isWhitespace(value.charAt(firstChar))) {
+            while (firstChar < cursor && Character.isWhitespace(value.charAt(firstChar))) {
                 indent.append(value.charAt(firstChar));
                 firstChar++;
             }
@@ -121,8 +121,11 @@ public class CodeField {
         insertText(sb.toString());
         if (!addPlaceholders.isEmpty()) {
             placeholders.addAll(addPlaceholders);
+            placeholders.sort(Comparator.comparing(Placeholder::index));
             selectCursor = cursor = addPlaceholders.getFirst().index();
             cursorListener.run(); // update cursor for placeholders
+        } else {
+            seekCursorNextPlaceholder();
         }
     }
 
@@ -235,6 +238,19 @@ public class CodeField {
         }
     }
 
+    private boolean seekCursorNextPlaceholder() {
+        Placeholder next = placeholders.stream()
+                .filter(p -> p.index() > cursor)
+                .min(Comparator.comparingInt(Placeholder::index))
+                .orElse(null);
+        if (next != null) {
+            seekCursor(Whence.ABSOLUTE, next.index());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void deleteText(int length) {
         if (!hasSelection())
             selectCursor = Mth.clamp(cursor + length, 0, value.length());
@@ -283,15 +299,8 @@ public class CodeField {
                 case GLFW.GLFW_KEY_END -> seekCursor(Whence.ABSOLUTE, getCursorLineView(0).endIndex);
                 case GLFW.GLFW_KEY_TAB -> {
                     // tab to next placeholder
-                    Placeholder next = placeholders.stream()
-                            .filter(p -> p.index() > cursor)
-                            .min(Comparator.comparingInt(Placeholder::index))
-                            .orElse(null);
-                    if (next != null) {
-                        seekCursor(Whence.ABSOLUTE, next.index());
-                    } else {
+                    if (!seekCursorNextPlaceholder())
                         insertText("    ");
-                    }
                 }
                 default -> {
                     return false;

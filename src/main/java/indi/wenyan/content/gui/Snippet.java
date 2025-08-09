@@ -14,7 +14,8 @@ public record Snippet(String title, List<String> lines, List<SnippetPlaceholder>
     public enum Context {
         STMT(0xFFFF0000),
         DATA(0xFF00FF00),
-        ID(0xFF0000FF);
+        ID(0xFF0000FF),
+        NONE(0x99000000);
         @Getter
         private final int color;
 

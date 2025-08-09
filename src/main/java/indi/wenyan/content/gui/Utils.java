@@ -14,37 +14,78 @@ public enum Utils {;
     }
 
     public static final List<Snippet> STATEMENT_SNIPPET = List.of(
+            Snippet.createSnippet("吾有一數")
+                    .content("""
+                            吾有一數。曰{DATA}。名之曰{ID}。{NONE}""")
+                    .create(),
+            Snippet.createSnippet("昔之")
+                    .content("""
+                            昔之{DATA}者。今{DATA}是矣。{NONE}""")
+                    .create(),
             Snippet.createSnippet("if")
                     .content("""
-                            if ({DATA})
-                                {STMT}
-                            """)
+                            若{DATA}者。
+                              {STMT}
+                            也。{NONE}""")
                     .create(),
-            Snippet.createSnippet("while")
+            Snippet.createSnippet("if-else")
                     .content("""
-                            while ({DATA})
-                                {STMT}
-                            """)
+                            若{DATA}者。
+                              {STMT}
+                            若非。
+                              {STMT}
+                            也。{NONE}""")
                     .create(),
             Snippet.createSnippet("for")
                     .content("""
-                            for ({ID} : {DATA})
-                                {STMT}
-                            """)
-                    .create());
+                            為是{DATA}遍。
+                              {STMT}
+                            云云。{NONE}""")
+                    .create(),
+            Snippet.createSnippet("while")
+                    .content("""
+                            恆為是。
+                              {STMT}
+                            云云。{NONE}""")
+                    .create(),
+            Snippet.createSnippet("break")
+                    .content("乃止。{NONE}")
+                    .create(),
+            Snippet.createSnippet("function")
+                    .content("""
+                            施{ID}。於{DATA}。{NONE}""")
+                    .create()
+    );
 
     public static final List<Snippet> DATA_SNIPPET = List.of(
-            Snippet.createSnippet("true")
-                    .content("true")
+            Snippet.createSnippet("0")
+                    .content("零")
+                    .create(),
+            Snippet.createSnippet("1")
+                    .content("一")
+                    .create(),
+            Snippet.createSnippet("2")
+                    .content("二")
+                    .create(),
+            Snippet.createSnippet("3")
+                    .content("三")
                     .create(),
             Snippet.createSnippet("false")
-                    .content("false")
+                    .content("陰")
+                    .create(),
+            Snippet.createSnippet("gt")
+                    .content("{DATA}大於{DATA}")
                     .create()
     );
 
     public static final List<Snippet> ID_SNIPPET = List.of(
-            Snippet.createSnippet("int")
-                    .content("int {ID}")
+            Snippet.createSnippet("a")
+                    .content("「甲」")
+                    .create(),
+            Snippet.createSnippet("b")
+                    .content("「乙」")
                     .create()
     );
+
+    public static final List<Snippet> DEFAULT_SNIPPET = STATEMENT_SNIPPET;
 }
