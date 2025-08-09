@@ -88,7 +88,7 @@ public class CodeField {
         }
     }
 
-    public void insertSnippet(Snippet snippet) {
+    public void insertSnippet(SnippetSet.Snippet snippet) {
         // get indent
         StringBuilder indent = new StringBuilder();
         if (cursor > 0) {
@@ -380,5 +380,5 @@ public class CodeField {
     public record StyledView(int endIndex, int style) {}
 
     @OnlyIn(Dist.CLIENT)
-    public record Placeholder(Snippet.Context context, int index) {}
+    public record Placeholder(SnippetSet.Context context, int index) {}
 }

@@ -47,7 +47,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final CodeField textField;
 
     @Getter
-    private List<Utils.SnippetSet> curSnippets = Utils.STMT_SNIPPETS;
+    private List<SnippetSet> curSnippets = Snippets.STMT_SNIPPETS;
 
     public CodeEditorWidget(Font font, int x, int y, int width, int height,
                             int maxLength, String content, Consumer<String> onChange,
@@ -100,11 +100,11 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         for (var placeholder : textField.getPlaceholders()) {
             if (cursor == placeholder.index()) {
                 textField.getPlaceholders().remove(placeholder);
-                curSnippets = Snippet.Context.getSnippets(placeholder.context());
+                curSnippets = SnippetSet.getSnippets(placeholder.context());
                 return;
             }
         }
-        curSnippets = Utils.DEFAULT_SNIPPET;
+        curSnippets = Snippets.DEFAULT_SNIPPET;
     }
 
     public String getValue() {
@@ -264,7 +264,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                             font.width(content.substring(stringView.beginIndex(), place)) - 1;
                     guiGraphics.fill(placeX, currentY,
                             placeX + 1, currentY + font.lineHeight,
-                            Snippet.Context.color(placeholder.context()));
+                            SnippetSet.contextColor(placeholder.context()));
                 }
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = cursorInContent &&

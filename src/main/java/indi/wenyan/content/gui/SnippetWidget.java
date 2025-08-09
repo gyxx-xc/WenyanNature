@@ -44,7 +44,7 @@ public class SnippetWidget extends AbstractScrollWidget {
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
         mouseY += (int) scrollAmount();
-        for (Utils.SnippetSet set : editor.getCurSnippets()) {
+        for (SnippetSet set : editor.getCurSnippets()) {
             if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
                 boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                         mouseX < getX() + getWidth() - innerPadding() &&
@@ -61,7 +61,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                         0xFFFFFF, false);
             }
             currentY += DIR_HEIGHT;
-            for (Snippet s : set.snippets()) {
+            for (SnippetSet.Snippet s : set.snippets()) {
                 if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
                     boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                             mouseX < getX() + getWidth() - innerPadding() &&
@@ -87,12 +87,12 @@ public class SnippetWidget extends AbstractScrollWidget {
         if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
             double y = mouseY - getY() - innerPadding() + scrollAmount();
             double currentY = 0;
-            for (Utils.SnippetSet set : editor.getCurSnippets()) {
+            for (SnippetSet set : editor.getCurSnippets()) {
                 if (y >= currentY && y < currentY + DIR_HEIGHT) {
                     return true;
                 }
                 currentY += DIR_HEIGHT;
-                for (Snippet s : set.snippets()) {
+                for (SnippetSet.Snippet s : set.snippets()) {
                     if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
                         // clicked on snippet
                         editor.getTextField().insertSnippet(s);
