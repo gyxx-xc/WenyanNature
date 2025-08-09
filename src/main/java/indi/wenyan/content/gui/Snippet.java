@@ -26,7 +26,7 @@ public record Snippet(String title, List<String> lines, List<SnippetPlaceholder>
         public static List<Utils.SnippetSet> getSnippets(Context context) {
             return switch (context.value()) {
                 case "STMT" -> Utils.STMT_SNIPPETS;
-                case "DATA" -> List.of(Utils.DATA_SNIPPET, Utils.ID_SNIPPET);
+                case "DATA" -> Utils.DATA_SNIPPETS;
                 case "ID" -> List.of(Utils.ID_SNIPPET);
                 case "NONE" -> Utils.DEFAULT_SNIPPET;
                 default -> throw new IllegalStateException("Unexpected value: " + context.value());

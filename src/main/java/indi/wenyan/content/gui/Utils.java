@@ -25,15 +25,15 @@ public enum Utils {;
     );
 
     public static final SnippetSet FUNCTION_SNIPPET = new SnippetSet("function",
-            Snippet.of("function", "施{ID}。於{DATA}。{NONE}")
+            Snippet.of("施", "施{ID}。於{DATA}。{NONE}")
     );
 
     public static final SnippetSet CONDITION_SNIPPET = new SnippetSet("condition",
-            Snippet.of("if", """
+            Snippet.of("若", """
                     若{DATA}者。
                       {STMT}
                     也。{NONE}"""),
-            Snippet.of("if-else", """
+            Snippet.of("若-若非", """
                     若{DATA}者。
                       {STMT}
                     若非。
@@ -41,12 +41,12 @@ public enum Utils {;
                     也。{NONE}""")
     );
 
-    public static final SnippetSet LOOP_SNIPPET = new SnippetSet("condition",
-            Snippet.of("for", """
+    public static final SnippetSet LOOP_SNIPPET = new SnippetSet("loop",
+            Snippet.of("為是...遍", """
                     為是{DATA}遍。
                       {STMT}
                     云云。{NONE}"""),
-            Snippet.of("while", """
+            Snippet.of("恆為是", """
                     恆為是。
                       {STMT}
                     云云。{NONE}"""),
@@ -54,17 +54,24 @@ public enum Utils {;
     );
 
     public static final SnippetSet DATA_SNIPPET = new SnippetSet("data",
-            Snippet.of("0", "零"),
-            Snippet.of("1", "一"),
-            Snippet.of("2", "二"),
-            Snippet.of("3", "三"),
-            Snippet.of("false", "陰"),
-            Snippet.of("gt", "{DATA}大於{DATA}")
+            Snippet.of("零", "零"),
+            Snippet.of("一", "一"),
+            Snippet.of("二", "二"),
+            Snippet.of("三", "三")
     );
 
-    public static final SnippetSet ID_SNIPPET = new SnippetSet("data",
-            Snippet.of("a", "「甲」"),
-            Snippet.of("b", "「乙」")
+    public static final SnippetSet BOOL_SNIPPET = new SnippetSet("bool",
+            Snippet.of("陰", "陰"),
+            Snippet.of("陽", "陽"),
+            Snippet.of("大於", "{DATA}大於{DATA}")
+    );
+
+    public static final SnippetSet ID_SNIPPET = new SnippetSet("id",
+            Snippet.of("甲", "「甲」"),
+            Snippet.of("乙", "「乙」"),
+            Snippet.of("丙", "「丙」"),
+            Snippet.of("丁", "「丁」"),
+            Snippet.of("戊", "「戊」")
     );
 
     public static final List<SnippetSet> STMT_SNIPPETS = List.of(
@@ -72,6 +79,12 @@ public enum Utils {;
             FUNCTION_SNIPPET,
             CONDITION_SNIPPET,
             LOOP_SNIPPET
+    );
+
+    public static final List<SnippetSet> DATA_SNIPPETS = List.of(
+            DATA_SNIPPET,
+            BOOL_SNIPPET,
+            ID_SNIPPET
     );
 
     public static final List<SnippetSet> DEFAULT_SNIPPET = STMT_SNIPPETS;
