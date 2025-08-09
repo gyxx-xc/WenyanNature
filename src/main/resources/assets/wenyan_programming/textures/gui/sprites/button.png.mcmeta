@@ -1,0 +1,12 @@
+// to apply to all button textures in the GUI.
+// ls *.png | xargs -I {} cp temp {}.mcmeta
+{
+  "gui": {
+    "scaling": {
+      "type": "nine_slice",
+      "width": 200,
+      "height": 20,
+      "border": 3
+    }
+  }
+}

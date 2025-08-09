@@ -1,5 +1,6 @@
 package indi.wenyan.content.gui;
 
+import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollWidget;
@@ -17,17 +18,13 @@ public class SnippetWidget extends AbstractScrollWidget {
     private final CodeEditorWidget editor;
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("widget/button"),
-            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
-            ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_highlighted"));
     public static final WidgetSprites DIR_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("widget/button"),
-            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
-            ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
-//            new WidgetSprites(
-//            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
-//            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"),
-//            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "widget/entry"));
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir"),
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_folded"),
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_highlighted"),
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_folded_highlighted"));
 
     private static final Utils.BoxInformation buttonPadding =
         new Utils.BoxInformation(3, 3, 3, 3);
@@ -49,7 +46,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                 boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                         mouseX < getX() + getWidth() - innerPadding() &&
                         mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
-                guiGraphics.blitSprite(DIR_SPRITES.get(set.fold(), buttonHovered),
+                guiGraphics.blitSprite(DIR_SPRITES.get(!set.fold(), buttonHovered),
                         getX() + innerPadding(), currentY,
                         this.getWidth() - totalInnerPadding(), DIR_HEIGHT);
 

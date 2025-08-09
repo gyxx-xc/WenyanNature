@@ -31,6 +31,11 @@ public final class ModDataGeneratorHandler {
                         new ModBlockStateProvider(pOutput, WenyanProgramming.MODID,efh));
         generator.addProvider(
                 event.includeClient(),
+                (DataProvider.Factory<ModSpriteProvider>) pOutput ->
+                        new ModSpriteProvider(pOutput, event.getLookupProvider(),
+                                WenyanProgramming.MODID, efh));
+        generator.addProvider(
+                event.includeClient(),
                 (DataProvider.Factory<CheckerRecipeProvider>) pOutput ->
                         new CheckerRecipeProvider(pOutput,event.getLookupProvider()));
         generator.addProvider(
