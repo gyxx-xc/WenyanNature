@@ -42,13 +42,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
 
-    interface SavedVariable {
-        List<CodeField.Placeholder> getPlaceholders();
-        StringBuilder getContent();
-        int getCursor();
-        void setSelecting(boolean selecting);
-    }
-    private SavedVariable screen;
+    private final CodeField.SavedVariable screen;
 
     @Getter
     private final CodeField textField;
@@ -56,12 +50,13 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     @Getter
     private List<SnippetSet> curSnippets = Snippets.STMT_SNIPPETS;
 
-    public CodeEditorWidget(Font font, int x, int y, int width, int height) {
+    public CodeEditorWidget(Font font, CodeField.SavedVariable screen, int x, int y, int width, int height) {
         super(x+outerPadding.left(), y+outerPadding.top(),
                 width-outerPadding.horizontal(), height-outerPadding.vertical(),
                 Component.empty());
         this.font = font;
-        textField = new CodeField(font, this.width - totalInnerPadding());
+        this.screen = screen;
+        textField = new CodeField(font, screen, this.width - totalInnerPadding());
         textField.setCursorListener(()->{
             updateCurrentSnippetContext();
             scrollToCursor();
@@ -109,10 +104,6 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             }
         }
         curSnippets = Snippets.DEFAULT_SNIPPET;
-    }
-
-    public String getValue() {
-        return screen.getContent().toString();
     }
 
     private static Style styleFromTokenType(int tokenType) {
@@ -168,7 +159,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     }
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("gui.narrate.editBox", getMessage(), getValue()));
+        narrationElementOutput.add(NarratedElementType.TITLE,
+                Component.translatable("gui.narrate.editBox", getMessage(), screen.getContent()));
     }
 
     // input

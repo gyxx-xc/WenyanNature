@@ -44,13 +44,9 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
     @Override
     protected void init() {
         int textFieldWidth = Mth.clamp(width/2, 50, CodeEditorWidget.WIDTH);
-        textFieldWidget = new CodeEditorBuilder()
-                // placeholders is pointer
-                .font(font)
-                .content(content).placeholders(placeholders)
-                .position((width - textFieldWidth) / 2, 15)
-                .size(textFieldWidth, Math.min(height-30, CodeEditorWidget.HEIGH))
-                .create();
+        textFieldWidget = new CodeEditorWidget(font, this,
+                (width - textFieldWidth) / 2, 15,
+                textFieldWidth, Math.min(height-30, CodeEditorWidget.HEIGH));
         addRenderableWidget(textFieldWidget);
 
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
@@ -80,7 +76,7 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
 
     @Override
     public void onClose() {
-        saving.accept(textFieldWidget.getValue());
+        saving.accept(content.toString());
         super.onClose();
     }
 }

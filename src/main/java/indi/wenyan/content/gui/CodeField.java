@@ -35,7 +35,7 @@ public class CodeField {
     @Getter
     private final List<StyledView> styleMarks = Lists.newArrayList();
 
-    interface SavedVariable {
+    public interface SavedVariable {
         List<Placeholder> getPlaceholders();
         StringBuilder getContent();
         int getCursor();
@@ -45,7 +45,7 @@ public class CodeField {
         boolean isSelecting();
         void setSelecting(boolean selecting);
     }
-    private SavedVariable screen;
+    private final SavedVariable screen;
 
     private final int width;
 
@@ -53,8 +53,9 @@ public class CodeField {
     @Setter private Runnable cursorListener = () -> {};
     @Setter private Supplier<Integer> widthUpdater = () -> 0;
 
-    public CodeField(Font font, int width) {
+    public CodeField(Font font, SavedVariable screen, int width) {
         this.font = font;
+        this.screen = screen;
         this.width = width;
         onValueChange();
     }
@@ -156,7 +157,7 @@ public class CodeField {
 
 
     public boolean hasSelection() {
-        return screen.getSelectCursor() == screen.getCursor();
+        return screen.getSelectCursor() != screen.getCursor();
     }
 
     private StringView getPreviousWord() {
