@@ -47,7 +47,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final CodeField textField;
 
     @Getter
-    private List<Snippet> curSnippets = Utils.STATEMENT_SNIPPET;
+    private List<Utils.SnippetSet> curSnippets = Utils.STMT_SNIPPETS;
 
     public CodeEditorWidget(Font font, int x, int y, int width, int height,
                             int maxLength, String content, Consumer<String> onChange,
@@ -101,9 +101,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             if (cursor == placeholder.index()) {
                 textField.getPlaceholders().remove(placeholder);
                 switch (placeholder.context()) {
-                    case STMT -> curSnippets = Utils.STATEMENT_SNIPPET;
-                    case DATA -> curSnippets = Utils.DATA_SNIPPET;
-                    case ID -> curSnippets = Utils.ID_SNIPPET;
+                    case STMT -> curSnippets = Utils.STMT_SNIPPETS;
+                    case DATA -> curSnippets = List.of(Utils.DATA_SNIPPET, Utils.ID_SNIPPET);
+                    case ID -> curSnippets = List.of(Utils.ID_SNIPPET);
                     case NONE -> curSnippets = Utils.DEFAULT_SNIPPET;
                 }
                 return;

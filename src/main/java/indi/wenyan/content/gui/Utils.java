@@ -13,7 +13,13 @@ public enum Utils {;
         }
     }
 
-    public static final List<Snippet> STATEMENT_SNIPPET = List.of(
+    public record SnippetSet(String name, List<Snippet> snippets) {
+        public SnippetSet(String name, Snippet... snippets) {
+            this(name, List.of(snippets));
+        }
+    }
+
+    public static final SnippetSet VARIABLE_SNIPPET = new SnippetSet("variable",
             Snippet.createSnippet("吾有一數")
                     .content("""
                             吾有一數。曰{DATA}。名之曰{ID}。{NONE}""")
@@ -21,7 +27,17 @@ public enum Utils {;
             Snippet.createSnippet("昔之")
                     .content("""
                             昔之{DATA}者。今{DATA}是矣。{NONE}""")
-                    .create(),
+                    .create()
+    );
+
+    public static final SnippetSet FUNCTION_SNIPPET = new SnippetSet("function",
+            Snippet.createSnippet("function")
+                    .content("""
+                            施{ID}。於{DATA}。{NONE}""")
+                    .create()
+    );
+
+    public static final SnippetSet CONDITION_SNIPPET = new SnippetSet("condition",
             Snippet.createSnippet("if")
                     .content("""
                             若{DATA}者。
@@ -35,7 +51,10 @@ public enum Utils {;
                             若非。
                               {STMT}
                             也。{NONE}""")
-                    .create(),
+                    .create()
+    );
+
+    public static final SnippetSet LOOP_SNIPPET = new SnippetSet("condition",
             Snippet.createSnippet("for")
                     .content("""
                             為是{DATA}遍。
@@ -50,14 +69,17 @@ public enum Utils {;
                     .create(),
             Snippet.createSnippet("break")
                     .content("乃止。{NONE}")
-                    .create(),
-            Snippet.createSnippet("function")
-                    .content("""
-                            施{ID}。於{DATA}。{NONE}""")
                     .create()
     );
 
-    public static final List<Snippet> DATA_SNIPPET = List.of(
+    public static final List<SnippetSet> STMT_SNIPPETS = List.of(
+            VARIABLE_SNIPPET,
+            FUNCTION_SNIPPET,
+            CONDITION_SNIPPET,
+            LOOP_SNIPPET
+    );
+
+    public static final SnippetSet DATA_SNIPPET = new SnippetSet("data",
             Snippet.createSnippet("0")
                     .content("零")
                     .create(),
@@ -78,7 +100,7 @@ public enum Utils {;
                     .create()
     );
 
-    public static final List<Snippet> ID_SNIPPET = List.of(
+    public static final SnippetSet ID_SNIPPET = new SnippetSet("data",
             Snippet.createSnippet("a")
                     .content("「甲」")
                     .create(),
@@ -87,5 +109,5 @@ public enum Utils {;
                     .create()
     );
 
-    public static final List<Snippet> DEFAULT_SNIPPET = STATEMENT_SNIPPET;
+    public static final List<SnippetSet> DEFAULT_SNIPPET = STMT_SNIPPETS;
 }
