@@ -48,7 +48,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final CodeField textField;
 
     @Getter
-    private List<SnippetSet> curSnippets = Snippets.STMT_SNIPPETS;
+    private List<SnippetSet> curSnippets = Snippets.STMT_CONTEXT;
 
     public CodeEditorWidget(Font font, CodeField.SavedVariable screen, int x, int y, int width, int height) {
         super(x+outerPadding.left(), y+outerPadding.top(),
@@ -107,7 +107,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 return;
             }
         }
-        curSnippets = Snippets.DEFAULT_SNIPPET;
+        curSnippets = Snippets.DEFAULT_CONTEXT;
     }
 
     private static Style styleFromTokenType(int tokenType) {

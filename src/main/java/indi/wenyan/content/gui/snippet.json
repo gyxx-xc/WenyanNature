@@ -1,0 +1,282 @@
+{
+  "snippet_sets": [
+    {
+      "title": "variable_stmt",
+      "snippets": [
+        {
+          "name": "reference_statement",
+          "content": "夫{DATA}。{NONE}"
+        },
+        {
+          "name": "declare_statement",
+          "content": "吾有一{TYPE}曰{DATA}。{NONE}"
+        },
+        {
+          "name": "define_statement",
+          "content": "名之曰{ID}。{NONE}"
+        },
+        {
+          "name": "assign_statement",
+          "content": "昔之{ID}者。今{DATA}是矣。{NONE}"
+        }
+      ]
+    },
+    {
+      "title": "control_stmt",
+      "snippets": [
+        {
+          "name": "if_statement",
+          "content": "若{BOOL}者。\n  {STMT}\n也。{NONE}"
+        },
+        {
+          "name": "if_else_statement",
+          "content": "若{BOOL}者。\n  {STMT}\n若非。\n  {STMT}\n也。{NONE}"
+        },
+        {
+          "name": "for_statement",
+          "content": "凡{DATA}中之{ID}。\n  {STMT}\n云云。{NONE}"
+        },
+        {
+          "name": "for_enum_statement",
+          "content": "為是{INT}遍。\n  {STMT}\n云云。{NONE}"
+        },
+        {
+          "name": "return_statement",
+          "content": "乃得{DATA}。{NONE}"
+        },
+        {
+          "name": "break",
+          "content": "乃止。"
+        },
+        {
+          "name": "continue",
+          "content": "乃止是遍。"
+        }
+      ]
+    },
+    {
+      "title": "call_statement",
+      "snippets": [
+        {
+          "name": "add_call",
+          "content": "加{DATA}以{DATA}。{NONE}"
+        },
+        {
+          "name": "sub_call",
+          "content": "減{DATA}以{DATA}。{NONE}"
+        },
+        {
+          "name": "mul_call",
+          "content": "乘{DATA}以{DATA}。{NONE}"
+        },
+        {
+          "name": "div_call",
+          "content": "除{DATA}以{DATA}。{NONE}"
+        },
+        {
+          "name": "function_post_call",
+          "content": "取{INT}以施{ID}。{NONE}"
+        },
+        {
+          "name": "function_pre_call",
+          "content": "施{ID}。於{DATA}。{NONE}"
+        }
+      ]
+    },
+    {
+      "title": "int_literal",
+      "snippets": [
+        {
+          "name": "0",
+          "content": "零"
+        },
+        {
+          "name": "1",
+          "content": "一"
+        },
+        {
+          "name": "2",
+          "content": "二"
+        },
+        {
+          "name": "3",
+          "content": "三"
+        },
+        {
+          "name": "4",
+          "content": "四"
+        },
+        {
+          "name": "5",
+          "content": "五"
+        },
+        {
+          "name": "6",
+          "content": "六"
+        },
+        {
+          "name": "7",
+          "content": "七"
+        },
+        {
+          "name": "8",
+          "content": "八"
+        },
+        {
+          "name": "9",
+          "content": "九"
+        },
+        {
+          "name": "10",
+          "content": "十"
+        }
+      ]
+    },
+    {
+      "title": "bool_literal",
+      "snippets": [
+        {
+          "name": "true",
+          "content": "陽"
+        },
+        {
+          "name": "false",
+          "content": "陰"
+        },
+        {
+          "name": "greater_than",
+          "content": "{DATA}大於{DATA}"
+        },
+        {
+          "name": "less_than",
+          "content": "{DATA}小於{DATA}"
+        },
+        {
+          "name": "equal",
+          "content": "{DATA}等於{DATA}"
+        }
+      ]
+    },
+    {
+      "title": "string_literal",
+      "snippets": [
+        {
+          "name": "string",
+          "content": "「「{NONE}」」"
+        }
+      ]
+    },
+    {
+      "title": "type_literal",
+      "snippets": [
+        {
+          "name": "number_type",
+          "content": "數"
+        },
+        {
+          "name": "list_type",
+          "content": "列"
+        },
+        {
+          "name": "string_type",
+          "content": "言"
+        },
+        {
+          "name": "bool_type",
+          "content": "爻"
+        }
+      ]
+    },
+    {
+      "title": "identifier",
+      "snippets": [
+        {
+          "name": "甲",
+            "content": "「甲」"
+        },
+        {
+          "name": "乙",
+          "content": "「乙」"
+        },
+        {
+          "name": "丙",
+          "content": "「丙」"
+        },
+        {
+          "name": "丁",
+          "content": "「丁」"
+        },
+        {
+          "name": "戊",
+          "content": "「戊」"
+        }
+      ]
+    },
+    {
+      "title": "new_line",
+      "snippets": [
+        {
+          "name": "new_line",
+          "content": "\n{STMT}"
+        }
+      ]
+    }
+  ],
+  "default_context": "STMT_CONTEXT",
+  "snippet_context": [
+    {
+      "context": "DATA",
+      "contain": [
+        "int_literal",
+        "bool_literal",
+        "string_literal",
+        "identifier"
+      ],
+      "color": "0xFFB6C1"
+    },
+    {
+      "context": "TYPE",
+      "contain": [
+        "type_literal"
+      ],
+      "color": "0xADD8E6"
+    },
+    {
+      "context": "ID",
+      "contain": [
+        "identifier"
+      ],
+      "color": "0x90EE90"
+    },
+    {
+      "context": "BOOL",
+      "contain": [
+        "bool_literal"
+      ],
+      "color": "0xFFFFE0"
+    },
+    {
+      "context": "INT",
+      "contain": [
+        "int_literal"
+      ],
+      "color": "0xD3D3D3"
+    },
+    {
+      "context": "STMT",
+      "contain": [
+        "variable_stmt",
+        "control_stmt",
+        "call_statement"
+      ],
+      "color": "0xFFFFFF"
+    },
+    {
+      "context": "NONE",
+      "contain": [
+        "new_line"
+      ],
+      "color": "0xF0E68C"
+    }
+  ]
+}
