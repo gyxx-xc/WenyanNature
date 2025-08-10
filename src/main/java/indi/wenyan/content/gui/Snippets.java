@@ -75,7 +75,7 @@ public enum Snippets {;
     );
 
     public static final SnippetSet NEW_LINE = new SnippetSet("new_line",
-        SnippetSet.snippet("new_line", "\n")
+        SnippetSet.snippet("new_line", "\n{STMT}")
     );
 
     
@@ -92,13 +92,13 @@ public enum Snippets {;
 
     public static int contextColor(Context context) {
         return switch (context.value()) {
-            case "DATA" -> 0xFFB6C1;
-            case "TYPE" -> 0xADD8E6;
-            case "ID" -> 0x90EE90;
-            case "BOOL" -> 0xFFFFE0;
-            case "INT" -> 0xD3D3D3;
-            case "STMT" -> 0xFFFFFF;
-            case "NONE" -> 0xF0E68C;
+            case "DATA" -> 0xFFFFB6C1;
+            case "TYPE" -> 0xFFADD8E6;
+            case "ID" -> 0xFF90EE90;
+            case "BOOL" -> 0xFFFFFFE0;
+            case "INT" -> 0xFFD3D3D3;
+            case "STMT" -> 0xFFFFFFFF;
+            case "NONE" -> 0xFFF0E68C;
             default -> throw new IllegalStateException("Unexpected value: " + context.value());
         };
     }

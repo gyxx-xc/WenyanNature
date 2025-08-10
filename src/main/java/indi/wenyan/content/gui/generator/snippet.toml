@@ -1,0 +1,258 @@
+default_context = "STMT_CONTEXT"
+
+[[snippet_sets]]
+title = "variable_stmt"
+
+[[snippet_sets.snippets]]
+name = "reference_statement"
+content = "夫{DATA}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "declare_statement"
+content = "吾有一{TYPE}曰{DATA}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "define_statement"
+content = "名之曰{ID}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "assign_statement"
+content = "昔之{ID}者。今{DATA}是矣。{NONE}"
+
+[[snippet_sets]]
+title = "control_stmt"
+
+[[snippet_sets.snippets]]
+name = "if_statement"
+content = """
+若{BOOL}者。
+  {STMT}
+也。{NONE}"""
+
+[[snippet_sets.snippets]]
+name = "if_else_statement"
+content = """
+若{BOOL}者。
+  {STMT}
+若非。
+  {STMT}
+也。{NONE}"""
+
+[[snippet_sets.snippets]]
+name = "for_statement"
+content = """
+凡{DATA}中之{ID}。
+  {STMT}
+云云。{NONE}"""
+
+[[snippet_sets.snippets]]
+name = "for_enum_statement"
+content = """
+為是{INT}遍。
+  {STMT}
+云云。{NONE}"""
+
+[[snippet_sets.snippets]]
+name = "return_statement"
+content = "乃得{DATA}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "break"
+content = "乃止。"
+
+[[snippet_sets.snippets]]
+name = "continue"
+content = "乃止是遍。"
+
+[[snippet_sets]]
+title = "call_statement"
+
+[[snippet_sets.snippets]]
+name = "add_call"
+content = "加{DATA}以{DATA}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "sub_call"
+content = "減{DATA}以{DATA}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "mul_call"
+content = "乘{DATA}以{DATA}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "div_call"
+content = "除{DATA}以{DATA}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "function_post_call"
+content = "取{INT}以施{ID}。{NONE}"
+
+[[snippet_sets.snippets]]
+name = "function_pre_call"
+content = "施{ID}。於{DATA}。{NONE}"
+
+[[snippet_sets]]
+title = "int_literal"
+
+[[snippet_sets.snippets]]
+name = "0"
+content = "零"
+
+[[snippet_sets.snippets]]
+name = "1"
+content = "一"
+
+[[snippet_sets.snippets]]
+name = "2"
+content = "二"
+
+[[snippet_sets.snippets]]
+name = "3"
+content = "三"
+
+[[snippet_sets.snippets]]
+name = "4"
+content = "四"
+
+[[snippet_sets.snippets]]
+name = "5"
+content = "五"
+
+[[snippet_sets.snippets]]
+name = "6"
+content = "六"
+
+[[snippet_sets.snippets]]
+name = "7"
+content = "七"
+
+[[snippet_sets.snippets]]
+name = "8"
+content = "八"
+
+[[snippet_sets.snippets]]
+name = "9"
+content = "九"
+
+[[snippet_sets.snippets]]
+name = "10"
+content = "十"
+
+[[snippet_sets]]
+title = "bool_literal"
+
+[[snippet_sets.snippets]]
+name = "true"
+content = "陽"
+
+[[snippet_sets.snippets]]
+name = "false"
+content = "陰"
+
+[[snippet_sets.snippets]]
+name = "greater_than"
+content = "{DATA}大於{DATA}"
+
+[[snippet_sets.snippets]]
+name = "less_than"
+content = "{DATA}小於{DATA}"
+
+[[snippet_sets.snippets]]
+name = "equal"
+content = "{DATA}等於{DATA}"
+
+[[snippet_sets]]
+title = "string_literal"
+
+[[snippet_sets.snippets]]
+name = "string"
+content = "「「{NONE}」」"
+
+[[snippet_sets]]
+title = "type_literal"
+
+[[snippet_sets.snippets]]
+name = "number_type"
+content = "數"
+
+[[snippet_sets.snippets]]
+name = "list_type"
+content = "列"
+
+[[snippet_sets.snippets]]
+name = "string_type"
+content = "言"
+
+[[snippet_sets.snippets]]
+name = "bool_type"
+content = "爻"
+
+[[snippet_sets]]
+title = "identifier"
+
+[[snippet_sets.snippets]]
+name = "甲"
+content = "「甲」"
+
+[[snippet_sets.snippets]]
+name = "乙"
+content = "「乙」"
+
+[[snippet_sets.snippets]]
+name = "丙"
+content = "「丙」"
+
+[[snippet_sets.snippets]]
+name = "丁"
+content = "「丁」"
+
+[[snippet_sets.snippets]]
+name = "戊"
+content = "「戊」"
+
+[[snippet_sets]]
+title = "new_line"
+
+[[snippet_sets.snippets]]
+name = "new_line"
+content = "\n{STMT}"
+
+[[snippet_context]]
+context = "DATA"
+contain = [
+    "int_literal",
+    "bool_literal",
+    "string_literal",
+    "identifier"
+]
+color = "0xFFB6C1"
+
+[[snippet_context]]
+context = "TYPE"
+contain = [ "type_literal" ]
+color = "0xADD8E6"
+
+[[snippet_context]]
+context = "ID"
+contain = [ "identifier" ]
+color = "0x90EE90"
+
+[[snippet_context]]
+context = "BOOL"
+contain = [ "bool_literal" ]
+color = "0xFFFFE0"
+
+[[snippet_context]]
+context = "INT"
+contain = [ "int_literal" ]
+color = "0xD3D3D3"
+
+[[snippet_context]]
+context = "STMT"
+contain = [ "variable_stmt", "control_stmt", "call_statement" ]
+color = "0xFFFFFF"
+
+[[snippet_context]]
+context = "NONE"
+contain = [ "new_line" ]
+color = "0xF0E68C"

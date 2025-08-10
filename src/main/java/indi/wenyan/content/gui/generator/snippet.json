@@ -232,35 +232,35 @@
         "string_literal",
         "identifier"
       ],
-      "color": "0xFFB6C1"
+      "color": "0xFFFFB6C1"
     },
     {
       "context": "TYPE",
       "contain": [
         "type_literal"
       ],
-      "color": "0xADD8E6"
+      "color": "0xFFADD8E6"
     },
     {
       "context": "ID",
       "contain": [
         "identifier"
       ],
-      "color": "0x90EE90"
+      "color": "0xFF90EE90"
     },
     {
       "context": "BOOL",
       "contain": [
         "bool_literal"
       ],
-      "color": "0xFFFFE0"
+      "color": "0xFFFFFFE0"
     },
     {
       "context": "INT",
       "contain": [
         "int_literal"
       ],
-      "color": "0xD3D3D3"
+      "color": "0xFFD3D3D3"
     },
     {
       "context": "STMT",
@@ -269,14 +269,14 @@
         "control_stmt",
         "call_statement"
       ],
-      "color": "0xFFFFFF"
+      "color": "0xFFFFFFFF"
     },
     {
       "context": "NONE",
       "contain": [
         "new_line"
       ],
-      "color": "0xF0E68C"
+      "color": "0xFFF0E68C"
     }
   ]
 }

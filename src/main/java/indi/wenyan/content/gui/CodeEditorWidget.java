@@ -50,7 +50,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     @Getter
     private List<SnippetSet> curSnippets = Snippets.STMT_CONTEXT;
 
-    public CodeEditorWidget(Font font, CodeField.SavedVariable screen, int x, int y, int width, int height) {
+
+    public CodeEditorWidget(Font font, CodeField.SavedVariable screen,
+                            int x, int y, int width, int height) {
         super(x+outerPadding.left(), y+outerPadding.top(),
                 width-outerPadding.horizontal(), height-outerPadding.vertical(),
                 Component.empty());

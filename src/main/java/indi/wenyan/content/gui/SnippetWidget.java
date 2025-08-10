@@ -40,6 +40,7 @@ public class SnippetWidget extends AbstractScrollWidget {
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
+        setScrollAmount(scrollAmount());
         mouseY += (int) scrollAmount();
         for (SnippetSet set : editor.getCurSnippets()) {
             if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
