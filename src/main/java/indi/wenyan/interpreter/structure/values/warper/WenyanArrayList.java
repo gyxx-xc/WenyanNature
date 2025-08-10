@@ -6,10 +6,12 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ public record WenyanArrayList(List<IWenyanValue> value)
         implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {
     public static final WenyanType<WenyanArrayList> TYPE = new WenyanType<>("list", WenyanArrayList.class);
 
+    @SuppressWarnings("UnusedReturnValue")
     public WenyanArrayList concat(WenyanArrayList other) {
         value.addAll(other.value);
         return this;
@@ -55,6 +58,15 @@ public record WenyanArrayList(List<IWenyanValue> value)
             case WenyanDataParser.LONG_ID -> new WenyanInteger(value.size());
             default -> throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
         };
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
+        if (type == WenyanBoolean.TYPE) {
+            return (T) new WenyanBoolean(!value.isEmpty());
+        }
+        return null;
     }
 
     @Override

@@ -26,6 +26,9 @@ public record WenyanDouble(Double value)
         if (type == WenyanString.TYPE) {
             return (T) new WenyanString(toString());
         }
+        if (type == WenyanBoolean.TYPE) {
+            return (T) new WenyanBoolean(value != 0);
+        }
         return null;
     }
 

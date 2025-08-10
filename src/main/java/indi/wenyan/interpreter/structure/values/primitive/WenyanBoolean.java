@@ -16,9 +16,10 @@ public record WenyanBoolean(Boolean value) implements IWenyanWarperValue<Boolean
     @Override
     @SuppressWarnings("unchecked")
     public <T extends IWenyanValue> T casting(WenyanType<T> type) {
-        if (type == WenyanString.TYPE) {
+        if (type == WenyanString.TYPE)
             return (T) new WenyanString(toString());
-        }
+        if (type == WenyanInteger.TYPE)
+            return (T) new WenyanInteger(value ? 1 : 0);
         return null;
     }
 

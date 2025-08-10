@@ -51,6 +51,9 @@ public record WenyanInteger(Integer value)
         if (type == WenyanString.TYPE) {
             return (T) new WenyanString(toString());
         }
+        if (type == WenyanBoolean.TYPE) {
+            return (T) new WenyanBoolean(value != 0);
+        }
         return null;
     }
 
