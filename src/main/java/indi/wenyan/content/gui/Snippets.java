@@ -53,6 +53,10 @@ public enum Snippets {;
             SnippetSet.snippet("戊", "「戊」")
     );
 
+    public static final SnippetSet NONE_SNIPPET = new SnippetSet("none",
+            SnippetSet.snippet("new line", "\n")
+    );
+
     public static final List<SnippetSet> STMT_SNIPPETS = List.of(
             VARIABLE_SNIPPET,
             FUNCTION_SNIPPET,
@@ -65,4 +69,26 @@ public enum Snippets {;
             ID_SNIPPET
     );
     public static final List<SnippetSet> DEFAULT_SNIPPET = STMT_SNIPPETS;
+
+    public static int contextColor(Context context) {
+        return switch (context.value()) {
+            case "STMT" -> 0xFFFF0000;
+            case "DATA" -> 0xFF00FF00;
+            case "ID" -> 0xFF0000FF;
+            case "NONE" -> 0x99000000;
+            default -> throw new IllegalStateException("Unexpected value: " + context.value());
+        };
+    }
+
+    public static List<SnippetSet> getSnippets(Context context) {
+        return switch (context.value()) {
+            case "STMT" -> STMT_SNIPPETS;
+            case "DATA" -> DATA_SNIPPETS;
+            case "ID" -> List.of(ID_SNIPPET);
+            case "NONE" -> List.of(NONE_SNIPPET);
+            default -> throw new IllegalStateException("Unexpected value: " + context.value());
+        };
+    }
+
+    public record Context(String value) { }
 }

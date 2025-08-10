@@ -103,7 +103,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         for (var placeholder : screen.getPlaceholders()) {
             if (cursor == placeholder.index()) {
                 screen.getPlaceholders().remove(placeholder);
-                curSnippets = SnippetSet.getSnippets(placeholder.context());
+                curSnippets = Snippets.getSnippets(placeholder.context());
                 return;
             }
         }
@@ -264,7 +264,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                             font.width(content.substring(stringView.beginIndex(), place)) - 1;
                     guiGraphics.fill(placeX, currentY,
                             placeX + 1, currentY + font.lineHeight,
-                            SnippetSet.contextColor(placeholder.context()));
+                            Snippets.contextColor(placeholder.context()));
                 }
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = cursorInContent &&

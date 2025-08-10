@@ -374,5 +374,5 @@ public class CodeField {
     public record StyledView(int endIndex, int style) {}
 
     @OnlyIn(Dist.CLIENT)
-    public record Placeholder(SnippetSet.Context context, int index) {}
+    public record Placeholder(Snippets.Context context, int index) {}
 }
