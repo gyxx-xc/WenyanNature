@@ -7,33 +7,33 @@ import java.util.List;
 public enum Snippets {;
     public record Context(String value) { }
     
-    public static final SnippetSet VARIABLE_STMT = new SnippetSet("variable_stmt",
-        SnippetSet.snippet("reference_statement", "夫{DATA}。{NONE}"),
-        SnippetSet.snippet("declare_statement", "吾有一{TYPE}曰{DATA}。{NONE}"),
-        SnippetSet.snippet("define_statement", "名之曰{ID}。{NONE}"),
-        SnippetSet.snippet("assign_statement", "昔之{ID}者。今{DATA}是矣。{NONE}")
+    public static final SnippetSet VARIABLE_STMT = new SnippetSet("變數",
+        SnippetSet.snippet("夫", "夫{DATA}。{NONE}"),
+        SnippetSet.snippet("吾有", "吾有一{TYPE}曰{DATA}。{NONE}"),
+        SnippetSet.snippet("名之曰", "名之曰{ID}。{NONE}"),
+        SnippetSet.snippet("昔之...今", "昔之{ID}者。今{DATA}是矣。{NONE}")
     );
 
-    public static final SnippetSet CONTROL_STMT = new SnippetSet("control_stmt",
-        SnippetSet.snippet("if_statement", "若{BOOL}者。\n  {STMT}\n也。{NONE}"),
-        SnippetSet.snippet("if_else_statement", "若{BOOL}者。\n  {STMT}\n若非。\n  {STMT}\n也。{NONE}"),
-        SnippetSet.snippet("for_statement", "凡{DATA}中之{ID}。\n  {STMT}\n云云。{NONE}"),
-        SnippetSet.snippet("for_enum_statement", "為是{INT}遍。\n  {STMT}\n云云。{NONE}"),
-        SnippetSet.snippet("return_statement", "乃得{DATA}。{NONE}"),
-        SnippetSet.snippet("break", "乃止。"),
-        SnippetSet.snippet("continue", "乃止是遍。")
+    public static final SnippetSet CONTROL_STMT = new SnippetSet("決策",
+        SnippetSet.snippet("若", "若{BOOL}者。\n  {STMT}\n也。{NONE}"),
+        SnippetSet.snippet("若...若非", "若{BOOL}者。\n  {STMT}\n若非。\n  {STMT}\n也。{NONE}"),
+        SnippetSet.snippet("凡中之", "凡{DATA}中之{ID}。\n  {STMT}\n云云。{NONE}"),
+        SnippetSet.snippet("為是...遍", "為是{INT}遍。\n  {STMT}\n云云。{NONE}"),
+        SnippetSet.snippet("乃得", "乃得{DATA}。{NONE}"),
+        SnippetSet.snippet("乃止", "乃止。"),
+        SnippetSet.snippet("乃止是遍", "乃止是遍。")
     );
 
-    public static final SnippetSet CALL_STATEMENT = new SnippetSet("call_statement",
-        SnippetSet.snippet("add_call", "加{DATA}以{DATA}。{NONE}"),
-        SnippetSet.snippet("sub_call", "減{DATA}以{DATA}。{NONE}"),
-        SnippetSet.snippet("mul_call", "乘{DATA}以{DATA}。{NONE}"),
-        SnippetSet.snippet("div_call", "除{DATA}以{DATA}。{NONE}"),
-        SnippetSet.snippet("function_post_call", "取{INT}以施{ID}。{NONE}"),
-        SnippetSet.snippet("function_pre_call", "施{ID}。於{DATA}。{NONE}")
+    public static final SnippetSet CALL_STATEMENT = new SnippetSet("算術",
+        SnippetSet.snippet("加", "加{INT}以{INT}。{NONE}"),
+        SnippetSet.snippet("減", "減{INT}以{INT}。{NONE}"),
+        SnippetSet.snippet("乘", "乘{INT}以{INT}。{NONE}"),
+        SnippetSet.snippet("除", "除{INT}以{INT}。{NONE}"),
+        SnippetSet.snippet("取以施", "取{INT}以施{ID}。{NONE}"),
+        SnippetSet.snippet("施", "施{ID}。於{DATA}。{NONE}")
     );
 
-    public static final SnippetSet INT_LITERAL = new SnippetSet("int_literal",
+    public static final SnippetSet INT_LITERAL = new SnippetSet("整數",
         SnippetSet.snippet("0", "零"),
         SnippetSet.snippet("1", "一"),
         SnippetSet.snippet("2", "二"),
@@ -47,26 +47,26 @@ public enum Snippets {;
         SnippetSet.snippet("10", "十")
     );
 
-    public static final SnippetSet BOOL_LITERAL = new SnippetSet("bool_literal",
-        SnippetSet.snippet("true", "陽"),
-        SnippetSet.snippet("false", "陰"),
-        SnippetSet.snippet("greater_than", "{DATA}大於{DATA}"),
-        SnippetSet.snippet("less_than", "{DATA}小於{DATA}"),
-        SnippetSet.snippet("equal", "{DATA}等於{DATA}")
+    public static final SnippetSet BOOL_LITERAL = new SnippetSet("布爾",
+        SnippetSet.snippet("陽", "陽"),
+        SnippetSet.snippet("陰", "陰"),
+        SnippetSet.snippet("大於", "{DATA}大於{DATA}"),
+        SnippetSet.snippet("小於", "{DATA}小於{DATA}"),
+        SnippetSet.snippet("等於", "{DATA}等於{DATA}")
     );
 
-    public static final SnippetSet STRING_LITERAL = new SnippetSet("string_literal",
-        SnippetSet.snippet("string", "「「{NONE}」」")
+    public static final SnippetSet STRING_LITERAL = new SnippetSet("言語",
+        SnippetSet.snippet("言語", "「「{NONE}」」")
     );
 
-    public static final SnippetSet TYPE_LITERAL = new SnippetSet("type_literal",
-        SnippetSet.snippet("number_type", "數"),
-        SnippetSet.snippet("list_type", "列"),
-        SnippetSet.snippet("string_type", "言"),
-        SnippetSet.snippet("bool_type", "爻")
+    public static final SnippetSet TYPE_LITERAL = new SnippetSet("類",
+        SnippetSet.snippet("數", "數"),
+        SnippetSet.snippet("列", "列"),
+        SnippetSet.snippet("言", "言"),
+        SnippetSet.snippet("爻", "爻")
     );
 
-    public static final SnippetSet IDENTIFIER = new SnippetSet("identifier",
+    public static final SnippetSet IDENTIFIER = new SnippetSet("變數",
         SnippetSet.snippet("甲", "「甲」"),
         SnippetSet.snippet("乙", "「乙」"),
         SnippetSet.snippet("丙", "「丙」"),
@@ -74,8 +74,8 @@ public enum Snippets {;
         SnippetSet.snippet("戊", "「戊」")
     );
 
-    public static final SnippetSet NEW_LINE = new SnippetSet("new_line",
-        SnippetSet.snippet("new_line", "\n{STMT}")
+    public static final SnippetSet NEW_LINE = new SnippetSet("換行",
+        SnippetSet.snippet("換行", "\n{STMT}")
     );
 
     

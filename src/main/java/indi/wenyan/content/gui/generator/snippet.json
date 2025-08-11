@@ -1,90 +1,90 @@
 {
-  "snippet_sets": [
-    {
-      "title": "variable_stmt",
+  "snippet_sets": {
+    "variable_stmt": {
+      "title": "變數",
       "snippets": [
         {
-          "name": "reference_statement",
+          "name": "夫",
           "content": "夫{DATA}。{NONE}"
         },
         {
-          "name": "declare_statement",
+          "name": "吾有",
           "content": "吾有一{TYPE}曰{DATA}。{NONE}"
         },
         {
-          "name": "define_statement",
+          "name": "名之曰",
           "content": "名之曰{ID}。{NONE}"
         },
         {
-          "name": "assign_statement",
+          "name": "昔之...今",
           "content": "昔之{ID}者。今{DATA}是矣。{NONE}"
         }
       ]
     },
-    {
-      "title": "control_stmt",
+    "control_stmt": {
+      "title": "決策",
       "snippets": [
         {
-          "name": "if_statement",
+          "name": "若",
           "content": "若{BOOL}者。\n  {STMT}\n也。{NONE}"
         },
         {
-          "name": "if_else_statement",
+          "name": "若...若非",
           "content": "若{BOOL}者。\n  {STMT}\n若非。\n  {STMT}\n也。{NONE}"
         },
         {
-          "name": "for_statement",
+          "name": "凡中之",
           "content": "凡{DATA}中之{ID}。\n  {STMT}\n云云。{NONE}"
         },
         {
-          "name": "for_enum_statement",
+          "name": "為是...遍",
           "content": "為是{INT}遍。\n  {STMT}\n云云。{NONE}"
         },
         {
-          "name": "return_statement",
+          "name": "乃得",
           "content": "乃得{DATA}。{NONE}"
         },
         {
-          "name": "break",
+          "name": "乃止",
           "content": "乃止。"
         },
         {
-          "name": "continue",
+          "name": "乃止是遍",
           "content": "乃止是遍。"
         }
       ]
     },
-    {
-      "title": "call_statement",
+    "call_statement": {
+      "title": "算術",
       "snippets": [
         {
-          "name": "add_call",
-          "content": "加{DATA}以{DATA}。{NONE}"
+          "name": "加",
+          "content": "加{INT}以{INT}。{NONE}"
         },
         {
-          "name": "sub_call",
-          "content": "減{DATA}以{DATA}。{NONE}"
+          "name": "減",
+          "content": "減{INT}以{INT}。{NONE}"
         },
         {
-          "name": "mul_call",
-          "content": "乘{DATA}以{DATA}。{NONE}"
+          "name": "乘",
+          "content": "乘{INT}以{INT}。{NONE}"
         },
         {
-          "name": "div_call",
-          "content": "除{DATA}以{DATA}。{NONE}"
+          "name": "除",
+          "content": "除{INT}以{INT}。{NONE}"
         },
         {
-          "name": "function_post_call",
+          "name": "取以施",
           "content": "取{INT}以施{ID}。{NONE}"
         },
         {
-          "name": "function_pre_call",
+          "name": "施",
           "content": "施{ID}。於{DATA}。{NONE}"
         }
       ]
     },
-    {
-      "title": "int_literal",
+    "int_literal": {
+      "title": "整數",
       "snippets": [
         {
           "name": "0",
@@ -132,67 +132,67 @@
         }
       ]
     },
-    {
-      "title": "bool_literal",
+    "bool_literal": {
+      "title": "布爾",
       "snippets": [
         {
-          "name": "true",
+          "name": "陽",
           "content": "陽"
         },
         {
-          "name": "false",
+          "name": "陰",
           "content": "陰"
         },
         {
-          "name": "greater_than",
+          "name": "大於",
           "content": "{DATA}大於{DATA}"
         },
         {
-          "name": "less_than",
+          "name": "小於",
           "content": "{DATA}小於{DATA}"
         },
         {
-          "name": "equal",
+          "name": "等於",
           "content": "{DATA}等於{DATA}"
         }
       ]
     },
-    {
-      "title": "string_literal",
+    "string_literal": {
+      "title": "言語",
       "snippets": [
         {
-          "name": "string",
+          "name": "言語",
           "content": "「「{NONE}」」"
         }
       ]
     },
-    {
-      "title": "type_literal",
+    "type_literal": {
+      "title": "類",
       "snippets": [
         {
-          "name": "number_type",
+          "name": "數",
           "content": "數"
         },
         {
-          "name": "list_type",
+          "name": "列",
           "content": "列"
         },
         {
-          "name": "string_type",
+          "name": "言",
           "content": "言"
         },
         {
-          "name": "bool_type",
+          "name": "爻",
           "content": "爻"
         }
       ]
     },
-    {
-      "title": "identifier",
+    "identifier": {
+      "title": "變數",
       "snippets": [
         {
           "name": "甲",
-            "content": "「甲」"
+          "content": "「甲」"
         },
         {
           "name": "乙",
@@ -212,16 +212,16 @@
         }
       ]
     },
-    {
-      "title": "new_line",
+    "new_line": {
+      "title": "換行",
       "snippets": [
         {
-          "name": "new_line",
+          "name": "換行",
           "content": "\n{STMT}"
         }
       ]
     }
-  ],
+  },
   "default_context": "STMT_CONTEXT",
   "snippet_context": [
     {

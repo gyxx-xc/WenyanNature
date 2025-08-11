@@ -55,10 +55,11 @@ with open("snippet.json", "r", encoding="utf-8") as f:
 #     data = toml.load(f)
 snippet_sets = data["snippet_sets"]
 snippet_code = ""
-for snippet_set in snippet_sets:
+for snippet_set_key in snippet_sets:
+    snippet_set = snippet_sets[snippet_set_key]
     title = snippet_set["title"]
     snippets = snippet_set["snippets"]
-    snippet_set_title_upper = title.upper().replace(" ", "_")
+    snippet_set_title_upper = snippet_set_key.upper().replace(" ", "_")
     snippet_set_title = title.replace(" ", "_").lower()
     snippet_str = ""
     for snippet in snippets:
