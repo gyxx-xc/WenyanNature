@@ -47,7 +47,8 @@ public class SnippetWidget extends AbstractScrollWidget {
                 boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                         mouseX < getX() + getWidth() - innerPadding() &&
                         mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
-                guiGraphics.blitSprite(DIR_SPRITES.get(!set.fold(), buttonHovered),
+                guiGraphics.blitSprite(DIR_SPRITES.get
+                                ((set.snippets().size() != 1 && !set.fold()), buttonHovered),
                         getX() + innerPadding(), currentY,
                         this.getWidth() - totalInnerPadding(), DIR_HEIGHT);
 
@@ -59,8 +60,10 @@ public class SnippetWidget extends AbstractScrollWidget {
                         0xFFFFFF, false);
             }
             currentY += DIR_HEIGHT;
+            if (set.snippets().size() == 1) { // if only one snippet, dir is the snippet
+                continue;
+            }
             if (set.fold()) continue; // skip snippets in this set if folded
-
             for (SnippetSet.Snippet s : set.snippets()) {
                 if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
                     boolean buttonHovered = mouseX >= getX() + innerPadding() &&
@@ -90,12 +93,15 @@ public class SnippetWidget extends AbstractScrollWidget {
             for (SnippetSet set : editor.getCurSnippets()) {
                 if (y >= currentY && y < currentY + DIR_HEIGHT) {
                     // clicked on directory
-                    set.fold(!set.fold());
+                    if (set.snippets().size() == 1) { // if only one snippet, dir is the snippet
+                        editor.insertSnippet(set.snippets().getFirst());
+                    } else {
+                        set.fold(!set.fold());
+                    }
                     return true;
                 }
                 currentY += DIR_HEIGHT;
-
-                if (set.fold()) continue;
+                if (set.snippets().size() == 1 || set.fold()) continue;
                 for (SnippetSet.Snippet s : set.snippets()) {
                     if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
                         // clicked on snippet
