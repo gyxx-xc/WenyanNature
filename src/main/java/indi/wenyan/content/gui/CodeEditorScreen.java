@@ -62,6 +62,7 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
         renderTransparentBackground(guiGraphics);
     }
 
+    // capture input to text field
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (textFieldWidget.keyPressed(keyCode, scanCode, modifiers)) {
@@ -72,6 +73,12 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
         } else {
             return super.keyPressed(keyCode, scanCode, modifiers);
         }
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        setFocused(textFieldWidget);
+        return textFieldWidget.charTyped(codePoint, modifiers);
     }
 
     @Override
