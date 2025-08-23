@@ -5,8 +5,10 @@ import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
+import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -55,6 +57,33 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
                 snippetWidth, Math.min(height-30, CodeEditorWidget.HEIGH),
                 textFieldWidget);
         addRenderableWidget(snippetWidget);
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        // tooltips
+        snippetWidget.getRenderingSnippetTooltip().ifPresent(snippet -> {
+            List<Component> tooltip = Lists.newArrayList();
+            int curInsert = 0;
+            for (String line : snippet.lines()) {
+                int curColum = 0;
+                MutableComponent lineComp = Component.literal("");
+                while (curInsert < snippet.insert().size() &&
+                        snippet.insert().get(curInsert).row() == tooltip.size()) {
+                    var placeholder = snippet.insert().get(curInsert ++);
+                    lineComp.append(line.substring(curColum, placeholder.colum()));
+                    Component placeholderComp = Component.literal(placeholder.context().value())
+                                    .withColor(Snippets.contextColor(placeholder.context()));
+                    lineComp.append(placeholderComp);
+                    curColum = placeholder.colum();
+                }
+                lineComp.append(line.substring(curColum));
+                tooltip.add(lineComp);
+            }
+            guiGraphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
+        });
     }
 
     @Override

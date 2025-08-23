@@ -12,6 +12,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
@@ -31,17 +34,23 @@ public class SnippetWidget extends AbstractScrollWidget {
     public static final int ENTRY_HEIGHT = 9 + buttonPadding.vertical();
     public static final int DIR_HEIGHT = 9 + buttonPadding.vertical();
 
+    @Nullable
+    private SnippetSet.Snippet renderingSnippetTooltip = null;
+
+    public Optional<SnippetSet.Snippet> getRenderingSnippetTooltip() {
+        return Optional.ofNullable(renderingSnippetTooltip);
+    }
+
     public SnippetWidget(Font font, int x, int y, int width, int height, CodeEditorWidget editor) {
         super(x, y, width, height, Component.empty());
         this.font = font;
         this.editor = editor;
     }
-
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
-        setScrollAmount(scrollAmount());
         mouseY += (int) scrollAmount();
+        renderingSnippetTooltip = null;
         for (SnippetSet set : editor.getCurSnippets()) {
             if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
                 boolean buttonHovered = mouseX >= getX() + innerPadding() &&
@@ -58,6 +67,10 @@ public class SnippetWidget extends AbstractScrollWidget {
                 guiGraphics.drawString(font, text,
                         getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
                         0xFFFFFF, false);
+
+                if (set.snippets().size() == 1 && buttonHovered) {
+                    renderingSnippetTooltip = set.snippets().getFirst();
+                }
             }
             currentY += DIR_HEIGHT;
             if (set.snippets().size() == 1) { // if only one snippet, dir is the snippet
@@ -79,6 +92,10 @@ public class SnippetWidget extends AbstractScrollWidget {
                     guiGraphics.drawString(font, text,
                             getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
                             0xFFFFFF, false);
+
+                    if (buttonHovered) {
+                        renderingSnippetTooltip = s;
+                    }
                 }
                 currentY += ENTRY_HEIGHT;
             }
