@@ -11,20 +11,21 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add(Registration.HAND_RUNNER.get(),"符咒");
-        add(Registration.FLOAT_NOTE.get(), "浮签");
-        add(Registration.BAMBOO_PAPER.get(),"松竹纸");
-        add(Registration.CLOUD_PAPER.get(),"云篆纸");
-        add(Registration.STAR_PAPER.get(),"星辉纸");
-        add(Registration.FROST_PAPER.get(),"霜华纸");
-        add(Registration.PHOENIX_PAPER.get(),"凤羽纸");
-        add(Registration.DRAGON_PAPER.get(),"龙鳞纸");
-        add(Registration.ARCANE_INK.get(),"玄武墨");
-        add(Registration.BAMBOO_INK.get(),"松清墨");
-        add(Registration.CELESTIAL_INK.get(),"冥土墨");
-        add(Registration.CINNABAR_INK.get(),"朱砂墨");
-        add(Registration.LUNAR_INK.get(),"月华墨");
-        add(Registration.STARLIGHT_INK.get(),"星光墨");
+        // Keep transliteration for item names
+        add(Registration.HAND_RUNNER.get(),"Shou Pao");
+        add(Registration.FLOAT_NOTE.get(), "Fu Qian");
+        add(Registration.BAMBOO_PAPER.get(),"Zhu Zhi");
+        add(Registration.CLOUD_PAPER.get(),"Yun Zhi");
+        add(Registration.STAR_PAPER.get(),"Xing Zhi");
+        add(Registration.FROST_PAPER.get(),"Shuang Zhi");
+        add(Registration.PHOENIX_PAPER.get(),"Feng Zhi");
+        add(Registration.DRAGON_PAPER.get(),"Long Zhi");
+        add(Registration.ARCANE_INK.get(),"Xuan Mo");
+        add(Registration.BAMBOO_INK.get(),"Zhu Mo");
+        add(Registration.CELESTIAL_INK.get(),"Tian Mo");
+        add(Registration.CINNABAR_INK.get(),"Dan Mo");
+        add(Registration.LUNAR_INK.get(),"Yue Mo");
+        add(Registration.STARLIGHT_INK.get(),"Xing Mo");
 
         add("error.wenyan_programming.variables_not_match","謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
@@ -54,36 +55,41 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add("error.wenyan_programming.type_cannot_be_divided", "謬：類不可相除");
         add("error.wenyan_programming.type_cannot_be_mod", "謬：類不可相餘");
         add("error.wenyan_programming.type_cannot_be_compared", "謬：類不可相比");
+
         add("error.wenyan_programming.for_iter", "謬：不可迭代之物");
         add("error.wenyan_programming.for_num", "謬：不可數之物");
         add("error.wenyan_programming.too_many_variables", "謬：變數過多");
+
+        add("error.wenyan_programming.set_value_to_non_left_value", "謬：非左值不可設也");
+        add("error.wenyan_programming.import_package_not_found", "謬：未尋之籍%s");
 
         add("type.wenyan_programming.int", "數");
         add("type.wenyan_programming.double", "分數");
         add("type.wenyan_programming.bool", "爻");
         add("type.wenyan_programming.string", "言");
         add("type.wenyan_programming.list", "列");
+        add("error.wenyan_programming.already_run", "Already Running");
 
-        add("error.wenyan_programming.already_run", "已在運行");
         add("type.wenyan_programming.null", "空無");
         add("type.wenyan_programming.function", "術");
         add("type.wenyan_programming.object", "物");
         add("type.wenyan_programming.object_type", "類");
 
-        add("title.wenyan_programming.create_tab", "WenyanNature");
+        add("title.wenyan_programming.create_tab", "I Have a Technique");
 
-        add("config.wenyan_programming.main.title", "WenyanNature Configuration Panel");
-        add("config.wenyan_programming.general.title", "General Settings");
+        add("config.wenyan_programming.main.title", "I Have a Technique Configuration Panel");
+        add("config.wenyan_programming.general.title", "General");
         add("config.wenyan_programming.general.test", "Test");
 
         add("config.wenyan_programming.performance.title", "Performance Settings");
         add("config.wenyan_programming.performance.thread_limit", "Thread Limit");
-        add("config.wenyan_programming.performance.thread_limit.description", "Set the maximum number of threads for WenyanNature. A higher value may improve performance, but also cause instability.");
+        add("config.wenyan_programming.performance.thread_limit.description", "Maximum number of threads that can execute charms simultaneously.");
 
-        add("config.wenyan_programming.advanced.title", "进阶设置");
-        add("config.wenyan_programming.advanced.debug_mode", "调试模式");
-        add("config.wenyan_programming.advanced.debug_mode.description", "启用此选项以在控制台中输出调试信息。");
+        add("config.wenyan_programming.advanced.title", "Advanced Settings");
+        add("config.wenyan_programming.advanced.debug_mode", "Debug Mode");
+        add("config.wenyan_programming.advanced.debug_mode.description", "Enable this option to output debug information to the console.");
 
         add("code.wenyan_programming.bracket", "「%s」");
+        add("gui.wenyan.hold_shift", "(Hold Shift to display details)");
     }
 }

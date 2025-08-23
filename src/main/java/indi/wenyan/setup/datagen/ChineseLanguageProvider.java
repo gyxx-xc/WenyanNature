@@ -60,6 +60,9 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add("error.wenyan_programming.for_num", "謬：不可數之物");
         add("error.wenyan_programming.too_many_variables", "謬：變數過多");
 
+        add("error.wenyan_programming.set_value_to_non_left_value", "謬：非左值不可設也");
+        add("error.wenyan_programming.import_package_not_found", "謬：未尋之籍%s");
+
         add("type.wenyan_programming.int", "數");
         add("type.wenyan_programming.double", "分數");
         add("type.wenyan_programming.bool", "爻");
@@ -87,5 +90,6 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add("config.wenyan_programming.advanced.debug_mode.description", "启用此选项以在控制台中输出调试信息。");
 
         add("code.wenyan_programming.bracket", "「%s」");
+        add("gui.wenyan.hold_shift", "（按住Shift以顯示詳情）");
     }
 }
