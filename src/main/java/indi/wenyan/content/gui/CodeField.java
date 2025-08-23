@@ -237,6 +237,7 @@ public class CodeField {
                 .min(Comparator.comparingInt(Placeholder::index))
                 .orElse(null);
         if (next != null) {
+            screen.setSelecting(false);
             seekCursor(Whence.ABSOLUTE, next.index());
             return true;
         } else {

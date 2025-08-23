@@ -2,10 +2,12 @@ package indi.wenyan.content.gui;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import org.apache.commons.compress.utils.Lists;
@@ -64,26 +66,42 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
-        snippetWidget.getRenderingSnippetTooltip().ifPresent(snippet -> {
-            List<Component> tooltip = Lists.newArrayList();
+        snippetWidget.getRenderingSnippetTooltip().ifPresent(s ->
+                renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
+    }
+
+    public void renderSnippetTooltip(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
+                                     SnippetSet.Snippet snippet) {
+        List<Component> tooltip = Lists.newArrayList();
+        tooltip.add(Component.literal(snippet.title()));
+        if (!hasShiftDown()) {
+            tooltip.add(Component.translatable("gui.wenyan.hold_shift").withStyle(ChatFormatting.GRAY));
+        } else {
             int curInsert = 0;
-            for (String line : snippet.lines()) {
+            for (int row = 0; row < snippet.lines().size(); row++) {
+                String line = snippet.lines().get(row);
                 int curColum = 0;
                 MutableComponent lineComp = Component.literal("");
                 while (curInsert < snippet.insert().size() &&
-                        snippet.insert().get(curInsert).row() == tooltip.size()) {
-                    var placeholder = snippet.insert().get(curInsert ++);
-                    lineComp.append(line.substring(curColum, placeholder.colum()));
+                        snippet.insert().get(curInsert).row() == row) {
+                    var placeholder = snippet.insert().get(curInsert++);
+
+                    Component textComp = Component.literal(line.substring(curColum,
+                            placeholder.colum())).withStyle(ChatFormatting.GRAY);
+
                     Component placeholderComp = Component.literal(placeholder.context().value())
-                                    .withColor(Snippets.contextColor(placeholder.context()));
-                    lineComp.append(placeholderComp);
+                            .withStyle(Style.EMPTY.withColor(Snippets.contextColor(placeholder.context())));
+                    System.out.println(placeholderComp);
+                    lineComp.append(textComp).append(placeholderComp);
                     curColum = placeholder.colum();
                 }
-                lineComp.append(line.substring(curColum));
+                Component textComp = Component.literal(line.substring(curColum))
+                        .withStyle(ChatFormatting.GRAY);
+                lineComp.append(textComp);
                 tooltip.add(lineComp);
             }
-            guiGraphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
-        });
+        }
+        guiGraphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
     }
 
     @Override

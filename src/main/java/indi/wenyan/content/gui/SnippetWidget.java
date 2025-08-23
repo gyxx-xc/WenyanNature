@@ -49,6 +49,7 @@ public class SnippetWidget extends AbstractScrollWidget {
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
+        setScrollAmount(scrollAmount()); // clamp scroll amount
         mouseY += (int) scrollAmount();
         renderingSnippetTooltip = null;
         for (SnippetSet set : editor.getCurSnippets()) {
