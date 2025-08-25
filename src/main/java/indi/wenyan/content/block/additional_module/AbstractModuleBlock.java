@@ -13,9 +13,18 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+/**
+ * Base class for module blocks that have an associated block entity.
+ * Handles the creation and ticking of module entities.
+ */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractModuleBlock extends AbstractFuluBlock implements EntityBlock {
+    /**
+     * Gets the block entity type for this module block.
+     *
+     * @return the block entity type
+     */
     protected abstract BlockEntityType<?> getType();
 
     @Override

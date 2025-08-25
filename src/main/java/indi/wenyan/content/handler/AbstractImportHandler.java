@@ -12,6 +12,10 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * Abstract handler for importing packages in Wenyan programs.
+ * Manages import requests in a queue and processes them asynchronously.
+ */
 public abstract class AbstractImportHandler implements IWenyanFunction {
     private final ConcurrentLinkedQueue<ImportRequest> requestQueue = new ConcurrentLinkedQueue<>();
 
@@ -21,6 +25,11 @@ public abstract class AbstractImportHandler implements IWenyanFunction {
         thread.block();
     }
 
+    /**
+     * Processes all pending import requests in the queue.
+     * Resolves package imports and either pushes the package to the result stack
+     * or imports specific attributes from the package.
+     */
     public void handle() {
         while (!requestQueue.isEmpty()) {
             ImportRequest request = requestQueue.poll();
@@ -51,7 +60,17 @@ public abstract class AbstractImportHandler implements IWenyanFunction {
         return IWenyanFunction.TYPE;
     }
 
+    /**
+     * Retrieves a package by its name.
+     *
+     * @param packageName the name of the package to retrieve
+     * @return the requested package
+     * @throws WenyanException.WenyanThrowException if the package cannot be found or accessed
+     */
     public abstract WenyanPackage getPackage(String packageName) throws WenyanException.WenyanThrowException;
 
+    /**
+     * Represents an import request with the thread and arguments.
+     */
     record ImportRequest(WenyanThread thread, List<IWenyanValue> args) {}
 }

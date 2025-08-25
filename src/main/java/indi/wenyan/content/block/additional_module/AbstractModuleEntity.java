@@ -18,6 +18,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Base class for module entities that can execute Wenyan code.
+ * Implements IWenyanDevice for integration with the Wenyan interpreter.
+ */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanDevice {
@@ -33,8 +37,18 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
         super(type, pos, blockState);
     }
 
+    /**
+     * Gets the default package name for this module entity.
+     *
+     * @return the base package name
+     */
     public abstract String getBasePackageName();
 
+    /**
+     * Gets the package that provides execution capabilities for this entity.
+     *
+     * @return the execution package
+     */
     public abstract WenyanPackage getExecPackage();
 
     @Override
@@ -47,6 +61,11 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
         return Objects.requireNonNullElseGet(packageName, this::getBasePackageName);
     }
 
+    /**
+     * Sets the package name for this module entity.
+     *
+     * @param packageName the new package name, or null to use the base package name
+     */
     public void setPackageName(@Nullable String packageName) {
         this.packageName = packageName;
         setChanged();
@@ -64,6 +83,9 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
             packageName = tag.getString("packageName");
     }
 
+    /**
+     * An abstract call handler that uses this module entity as the executor.
+     */
     abstract class ThisCallHandler implements IExecCallHandler {
         @Override
         public Optional<IWenyanDevice> getExecutor() {
@@ -73,6 +95,9 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
         }
     }
 
+    /**
+     * Called every tick to handle execution requests.
+     */
     public void tick() {
         handle();
     }
