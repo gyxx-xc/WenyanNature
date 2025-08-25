@@ -5,9 +5,18 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-
+/**
+ * Provider for generating item models during data generation.
+ * Defines the appearance of items in inventory and when held.
+ */
 public class ModItemModelProvider extends ItemModelProvider {
 
+    /**
+     * Constructs a new item model provider.
+     * @param output The pack output for model generation
+     * @param modid The mod ID
+     * @param existingFileHelper Helper for accessing existing files
+     */
     public ModItemModelProvider(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
         super(output, modid, existingFileHelper);
     }

@@ -4,7 +4,18 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
+/**
+ * Provider for generating Chinese language translations during data generation.
+ * Contains all Chinese translations used in the mod.
+ */
 public class ChineseLanguageProvider extends LanguageProvider {
+
+    /**
+     * Constructs a new Chinese language provider.
+     * @param output The pack output for language file generation
+     * @param modid The mod ID
+     * @param locale The locale code (zh_cn)
+     */
     public ChineseLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
     }

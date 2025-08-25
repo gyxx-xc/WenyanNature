@@ -9,7 +9,18 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
+/**
+ * Provider for generating block states and models during data generation.
+ * Defines the appearance of blocks in the game world.
+ */
 public class ModBlockStateProvider extends BlockStateProvider {
+
+    /**
+     * Constructs a new block state provider.
+     * @param output The pack output for blockstate generation
+     * @param modid The mod ID
+     * @param exFileHelper Helper for accessing existing files
+     */
     public ModBlockStateProvider(PackOutput output, String modid, ExistingFileHelper exFileHelper) {
         super(output, modid, exFileHelper);
     }
@@ -29,6 +40,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         registerModuleBlock(Registration.BLOCK_MODULE_BLOCK);
     }
 
+    /**
+     * Registers a module block with standardized models.
+     * @param deferredBlock The module block to register
+     */
     private void registerModuleBlock(DeferredBlock<?> deferredBlock) {
         String id = deferredBlock.getKey().location().getPath();
         var block = deferredBlock.get();

@@ -4,7 +4,18 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
+/**
+ * Provider for generating English language translations during data generation.
+ * Contains all English translations used in the mod, keeping transliteration for item names.
+ */
 public class EnglishLanguageProvider extends LanguageProvider {
+
+    /**
+     * Constructs a new English language provider.
+     * @param output The pack output for language file generation
+     * @param modid The mod ID
+     * @param locale The locale code (en_us)
+     */
     public EnglishLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
     }

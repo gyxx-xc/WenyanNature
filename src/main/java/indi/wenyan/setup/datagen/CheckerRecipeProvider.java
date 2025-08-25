@@ -11,7 +11,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Provider for generating checker recipes during data generation.
+ * Defines various answering recipes that use checker system.
+ */
 public class CheckerRecipeProvider extends RecipeProvider {
+
+    /**
+     * Constructs a new checker recipe provider.
+     * @param output The pack output for recipe generation
+     * @param registries Future providing registry lookups
+     */
     public CheckerRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
     }
