@@ -5,10 +5,19 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 
+/**
+ * Handles conditional branching operations in the Wenyan interpreter.
+ */
 public class BranchCode extends WenyanCode {
     private final Operation operation;
     private final Condition condition;
 
+    /**
+     * Creates a new BranchCode with the specified condition and operation.
+     *
+     * @param c The condition for branching
+     * @param o The operation to perform
+     */
     public BranchCode(Condition c, Operation o) {
         super(name(c, o));
         condition = c;
@@ -44,6 +53,13 @@ public class BranchCode extends WenyanCode {
         }
     }
 
+    /**
+     * Generates the name of the code based on the condition and operation.
+     *
+     * @param c The condition
+     * @param o The operation
+     * @return The name of the code
+     */
     private static String name(Condition c, Operation o) {
         StringBuilder sb = new StringBuilder();
         sb.append("BRANCH");
@@ -57,12 +73,18 @@ public class BranchCode extends WenyanCode {
         return sb.toString();
     }
 
+    /**
+     * Conditions for branch execution.
+     */
     public enum Condition {
         FALSE,
         TRUE,
         NONE
     }
 
+    /**
+     * Operations that can be performed during branching.
+     */
     public enum Operation {
         POP,
         NONE

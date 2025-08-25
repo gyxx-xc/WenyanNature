@@ -12,9 +12,17 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles function calls in the Wenyan interpreter.
+ */
 public class FunctionCode extends WenyanCode {
     private final Operation operation;
 
+    /**
+     * Creates a new FunctionCode with the specified operation.
+     *
+     * @param o The operation to perform
+     */
     public FunctionCode(Operation o) {
         super(name(o));
         operation = o;
@@ -88,11 +96,20 @@ public class FunctionCode extends WenyanCode {
         }
     }
 
+    /**
+     * Types of function call operations.
+     */
     public enum Operation {
         CALL,
         CALL_ATTR
     }
 
+    /**
+     * Generates the name of the code based on the operation.
+     *
+     * @param op The operation
+     * @return The name of the code
+     */
     private static String name(Operation op) {
         return switch (op) {
             case CALL -> "CALL";

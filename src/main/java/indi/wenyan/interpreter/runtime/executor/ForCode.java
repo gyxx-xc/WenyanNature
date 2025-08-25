@@ -9,8 +9,17 @@ import indi.wenyan.interpreter.structure.values.warper.WenyanIterator;
 
 import java.util.Iterator;
 
+/**
+ * Handles loop operations in the Wenyan interpreter.
+ */
 public class ForCode extends WenyanCode {
     private final Operation operation;
+
+    /**
+     * Creates a new ForCode with the specified operation.
+     *
+     * @param operation The operation to perform in the loop
+     */
     public ForCode(Operation operation) {
         super(name(operation));
         this.operation = operation;
@@ -52,11 +61,20 @@ public class ForCode extends WenyanCode {
         }
     }
 
+    /**
+     * Operations for different types of loops.
+     */
     public enum Operation {
         FOR_ITER,
         FOR_NUM
     }
 
+    /**
+     * Generates the name of the code based on the operation.
+     *
+     * @param op The operation
+     * @return The name of the code
+     */
     public static String name(Operation op) {
         return switch (op) {
             case FOR_ITER -> "FOR_ITER";

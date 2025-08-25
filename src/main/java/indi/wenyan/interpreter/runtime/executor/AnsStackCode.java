@@ -7,9 +7,17 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles operations related to the result stack in the Wenyan interpreter.
+ */
 public class AnsStackCode extends WenyanCode {
     private final Operation operation;
 
+    /**
+     * Creates a new AnsStackCode with the specified operation.
+     *
+     * @param o The operation to perform on the result stack
+     */
     public AnsStackCode(Operation o) {
         super(name(o));
         operation = o;
@@ -24,7 +32,7 @@ public class AnsStackCode extends WenyanCode {
             case PEEK -> runtime.processStack.push(runtime.resultStack.peek());
             case PEEK_N -> {
                 List<IWenyanValue> list = new ArrayList<>();
-                for (int i = 0; i < args; i ++) {
+                for (int i = 0; i < args; i++) {
                     list.add(runtime.resultStack.pop());
                     runtime.processStack.push(list.getLast());
                 }
@@ -44,6 +52,9 @@ public class AnsStackCode extends WenyanCode {
         return super.getStep(args, thread);
     }
 
+    /**
+     * Operations that can be performed on the result stack.
+     */
     public enum Operation {
         PUSH,
         POP,
@@ -52,6 +63,12 @@ public class AnsStackCode extends WenyanCode {
         FLUSH
     }
 
+    /**
+     * Generates the name of the code based on the operation.
+     *
+     * @param op The operation
+     * @return The name of the code
+     */
     private static String name(Operation op) {
         return switch (op) {
             case PUSH -> "PUSH_ANS";

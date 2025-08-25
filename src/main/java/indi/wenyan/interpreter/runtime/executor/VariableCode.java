@@ -11,9 +11,17 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
 import net.minecraft.network.chat.Component;
 
+/**
+ * Handles variable operations in the Wenyan interpreter.
+ */
 public class VariableCode extends WenyanCode {
     private final Operation operation;
 
+    /**
+     * Creates a new VariableCode with the specified operation.
+     *
+     * @param o The operation to perform on variables
+     */
     public VariableCode(Operation o) {
         super(name(o));
         operation = o;
@@ -71,6 +79,9 @@ public class VariableCode extends WenyanCode {
         return super.getStep(args, thread);
     }
 
+    /**
+     * Types of variable operations.
+     */
     public enum Operation {
         LOAD,
         STORE,
@@ -78,6 +89,12 @@ public class VariableCode extends WenyanCode {
         CAST
     }
 
+    /**
+     * Generates the name of the code based on the operation.
+     *
+     * @param op The operation
+     * @return The name of the code
+     */
     private static String name(Operation op) {
         return switch (op) {
             case LOAD -> "LOAD";

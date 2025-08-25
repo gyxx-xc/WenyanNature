@@ -6,9 +6,17 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObjectType;
 
+/**
+ * Handles object-related operations in the Wenyan interpreter.
+ */
 public class ObjectCode extends WenyanCode {
     private final Operation operation;
 
+    /**
+     * Creates a new ObjectCode with the specified operation.
+     *
+     * @param operation The operation to perform on objects
+     */
     public ObjectCode(Operation operation) {
         super(name(operation));
         this.operation = operation;
@@ -65,6 +73,12 @@ public class ObjectCode extends WenyanCode {
         }
     }
 
+    /**
+     * Generates the name of the code based on the operation.
+     *
+     * @param op The operation
+     * @return The name of the code
+     */
     private static String name(Operation op) {
         return switch (op) {
             case ATTR -> "LOAD_ATTR";
@@ -76,6 +90,9 @@ public class ObjectCode extends WenyanCode {
         };
     }
 
+    /**
+     * Operations that can be performed on objects.
+     */
     public enum Operation {
         ATTR,
         ATTR_REMAIN,
