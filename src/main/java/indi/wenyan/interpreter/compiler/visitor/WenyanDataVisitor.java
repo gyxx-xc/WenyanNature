@@ -12,7 +12,16 @@ import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.network.chat.Component;
 
+/**
+ * Visitor for handling data expressions and literals in Wenyan language.
+ * Responsible for compiling primitive values, identifiers, array access,
+ * and object property access.
+ */
 public class WenyanDataVisitor extends WenyanVisitor {
+    /**
+     * Constructs a data visitor with the given bytecode environment
+     * @param bytecode The compiler environment to emit bytecode to
+     */
     public WenyanDataVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }

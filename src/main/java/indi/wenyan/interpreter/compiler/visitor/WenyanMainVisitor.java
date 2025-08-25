@@ -7,7 +7,15 @@ import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+/**
+ * Main visitor for Wenyan language that orchestrates other specialized visitors.
+ * Delegates to appropriate visitor implementations based on statement type.
+ */
 public class WenyanMainVisitor extends WenyanVisitor {
+    /**
+     * Constructs a main visitor with the given bytecode environment
+     * @param bytecode The compiler environment to emit bytecode to
+     */
     public WenyanMainVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }

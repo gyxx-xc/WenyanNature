@@ -9,14 +9,25 @@ import indi.wenyan.interpreter.utils.WenyanDataParser;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.network.chat.Component;
 
+/**
+ * Visitor for handling candy statements in the Wenyan language.
+ * Deals with special syntactic sugar constructs such as combined declarations
+ * with write operations and boolean algebra.
+ */
 public class WenyanCandyVisitor extends WenyanVisitor {
 
+    /**
+     * Expression visitor for evaluating expressions within candy statements
+     */
+    private final WenyanExprVisitor exprVisitor = new WenyanExprVisitor(bytecode);
 
+    /**
+     * Constructs a candy visitor with the given bytecode environment
+     * @param bytecode The compiler environment to emit bytecode to
+     */
     public WenyanCandyVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }
-
-    private final WenyanExprVisitor exprVisitor = new WenyanExprVisitor(bytecode);
 
     @Override
     public Boolean visitDeclare_write_candy_statement(WenyanRParser.Declare_write_candy_statementContext ctx) {

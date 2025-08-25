@@ -12,13 +12,35 @@ import indi.wenyan.interpreter.utils.WenyanDataParser;
 // for_statement
 // return_statement
 // BREAK
+
+/**
+ * Visitor for handling control flow statements in Wenyan language.
+ * Processes control structures such as:
+ * - flush statements
+ * - if-else conditionals
+ * - for/while loops
+ * - return statements
+ * - break/continue statements
+ */
 public class WenyanControlVisitor extends WenyanVisitor {
+    /**
+     * Visitor for handling expressions in control statements
+     */
+    private final WenyanExprVisitor exprVisitor = new WenyanExprVisitor(bytecode);
+
+    /**
+     * Visitor for handling statement bodies in control structures
+     */
+    private final WenyanMainVisitor bodyVisitor = new WenyanMainVisitor(bytecode);
+
+    /**
+     * Constructs a control visitor with the given bytecode environment
+     *
+     * @param bytecode The compiler environment to emit bytecode to
+     */
     public WenyanControlVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }
-
-    private final WenyanExprVisitor exprVisitor = new WenyanExprVisitor(bytecode);
-    private final WenyanMainVisitor bodyVisitor = new WenyanMainVisitor(bytecode);
 
     @Override
     public Boolean visitFlush_statement(WenyanRParser.Flush_statementContext ctx) {

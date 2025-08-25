@@ -16,8 +16,21 @@ import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 
+/**
+ * Visitor for handling expressions in Wenyan language.
+ * Processes variable declarations, assignments, function definitions and calls,
+ * object creation and member access.
+ */
 public class WenyanExprVisitor extends WenyanVisitor {
+    /**
+     * Delegate visitor for handling data expressions
+     */
+    private final WenyanDataVisitor dataVisitor = new WenyanDataVisitor(bytecode);
 
+    /**
+     * Constructs an expression visitor with the given bytecode environment
+     * @param bytecode The compiler environment to emit bytecode to
+     */
     public WenyanExprVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }
@@ -287,7 +300,6 @@ public class WenyanExprVisitor extends WenyanVisitor {
         return true;
     }
 
-    private final WenyanDataVisitor dataVisitor = new WenyanDataVisitor(bytecode);
 
     @Override
     public Boolean visitData_child(WenyanRParser.Data_childContext ctx) {
