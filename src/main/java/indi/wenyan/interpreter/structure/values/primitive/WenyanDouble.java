@@ -8,6 +8,10 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a double-precision floating point value in Wenyan language.
+ * Supports arithmetic operations and comparisons.
+ */
 public record WenyanDouble(Double value)
         implements IWenyanWarperValue<Double>, IWenyanComputable, IWenyanComparable {
     public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>("double", WenyanDouble.class);

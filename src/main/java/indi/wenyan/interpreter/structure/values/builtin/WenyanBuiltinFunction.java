@@ -14,6 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * A built-in function implementation for Wenyan.
+ * Represents a function created in Wenyan code.
+ */
 public record WenyanBuiltinFunction(List<Arg> args, WenyanBytecode bytecode) implements IWenyanFunction {
     public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
 
@@ -55,6 +59,9 @@ public record WenyanBuiltinFunction(List<Arg> args, WenyanBytecode bytecode) imp
         return TYPE;
     }
 
+    /**
+     * Represents a function argument with a type and identifier.
+     */
     public record Arg(WenyanType<?> type, String id){
         @Override
         public @NotNull String toString() {

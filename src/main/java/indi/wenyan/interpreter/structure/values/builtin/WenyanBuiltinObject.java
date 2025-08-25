@@ -7,11 +7,20 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A built-in object implementation for Wenyan.
+ * Represents an object created in Wenyan code.
+ */
 public class WenyanBuiltinObject implements IWenyanObject {
     private final WenyanBuiltinObjectType type;
     private final Map<String, IWenyanValue> variable = new HashMap<>();
     public static final WenyanType<WenyanBuiltinObject> TYPE = new WenyanType<>("dict_object", WenyanBuiltinObject.class);
 
+    /**
+     * Creates a new built-in object of the specified type.
+     *
+     * @param type the type of the object
+     */
     public WenyanBuiltinObject(WenyanBuiltinObjectType type) {
         this.type = type;
     }
@@ -30,6 +39,11 @@ public class WenyanBuiltinObject implements IWenyanObject {
         variable.put(name, value);
     }
 
+    /**
+     * Gets the object type of this object.
+     *
+     * @return the object type
+     */
     public WenyanBuiltinObjectType getObjectType() {
         return type;
     }

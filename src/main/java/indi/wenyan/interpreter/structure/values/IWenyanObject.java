@@ -2,6 +2,10 @@ package indi.wenyan.interpreter.structure.values;
 
 import indi.wenyan.interpreter.structure.WenyanType;
 
+/**
+ * Interface representing an object in Wenyan language.
+ * Objects have attributes that can be accessed and modified.
+ */
 public interface IWenyanObject extends IWenyanValue {
     WenyanType<IWenyanObject> TYPE = new WenyanType<>("object", IWenyanObject.class);
 

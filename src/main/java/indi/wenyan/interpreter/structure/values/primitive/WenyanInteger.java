@@ -9,6 +9,10 @@ import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents an integer value in Wenyan language.
+ * Supports arithmetic operations and comparisons.
+ */
 public record WenyanInteger(Integer value)
         implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable {
     public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);

@@ -52,6 +52,7 @@ public interface IWenyanDevice {
      * Queue for handling JavacallContext requests
      */
     class ExecQueue {
+
         private final Queue<JavacallContext> queue = new ConcurrentLinkedQueue<>();
 
         /**

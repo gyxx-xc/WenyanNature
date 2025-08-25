@@ -15,20 +15,42 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * A Wenyan array list implementation that wraps a Java List.
+ */
 public record WenyanArrayList(List<IWenyanValue> value)
         implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {
     public static final WenyanType<WenyanArrayList> TYPE = new WenyanType<>("list", WenyanArrayList.class);
 
+    /**
+     * Concatenates another list to this list.
+     *
+     * @param other the list to concatenate
+     * @return this list after concatenation
+     */
     @SuppressWarnings("UnusedReturnValue")
     public WenyanArrayList concat(WenyanArrayList other) {
         value.addAll(other.value);
         return this;
     }
 
+    /**
+     * Adds a value to this list.
+     *
+     * @param wenyanValue the value to add
+     */
     public void add(IWenyanValue wenyanValue) {
         value.add(wenyanValue);
     }
 
+    /**
+     * Gets a value from this list at the specified index.
+     * Note: Wenyan uses 1-based indexing.
+     *
+     * @param index the 1-based index
+     * @return the value at the specified index
+     * @throws WenyanException.WenyanThrowException if the index is out of bounds
+     */
     public IWenyanValue get(int index) throws WenyanException.WenyanThrowException {
         try {
             return value.get(index - 1);

@@ -5,6 +5,10 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a boolean value in Wenyan language.
+ * Values are represented as "陽" (true) and "陰" (false).
+ */
 public record WenyanBoolean(Boolean value) implements IWenyanWarperValue<Boolean> {
     public static final WenyanType<WenyanBoolean> TYPE = new WenyanType<>("bool", WenyanBoolean.class);
 

@@ -7,6 +7,10 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a string value in Wenyan language.
+ * Supports concatenation through addition operation.
+ */
 public record WenyanString(String value)
         implements IWenyanWarperValue<String>, IWenyanComputable {
     public static final WenyanType<WenyanString> TYPE = new WenyanType<>("string", WenyanString.class);

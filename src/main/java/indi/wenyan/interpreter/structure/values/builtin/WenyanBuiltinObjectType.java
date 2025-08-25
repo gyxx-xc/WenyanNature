@@ -14,6 +14,10 @@ import net.minecraft.network.chat.Component;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Built-in object type implementation for Wenyan language.
+ * Represents an object type created in Wenyan code.
+ */
 public class WenyanBuiltinObjectType implements IWenyanObjectType {
     @Getter
     private final WenyanBuiltinObjectType parent;

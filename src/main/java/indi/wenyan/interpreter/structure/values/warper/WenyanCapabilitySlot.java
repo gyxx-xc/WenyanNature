@@ -8,6 +8,10 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents an item slot with position and capability information.
+ * Used for interacting with inventory slots in the Minecraft environment.
+ */
 public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slot) implements IWenyanObject {
     public static final WenyanType<WenyanCapabilitySlot> TYPE = new WenyanType<>("item_slot",
             WenyanCapabilitySlot.class);
