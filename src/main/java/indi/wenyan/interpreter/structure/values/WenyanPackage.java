@@ -6,12 +6,21 @@ import lombok.Getter;
 
 import java.util.Map;
 
+/**
+ * Represents a package (collection of variables/functions) in Wenyan
+ */
 public class WenyanPackage implements IWenyanObject {
+    /** Type descriptor for packages */
     WenyanType<WenyanPackage> TYPE = new WenyanType<>("package", WenyanPackage.class);
 
+    /** Map of variable names to values */
     @Getter
     private final Map<String, IWenyanValue> variables;
 
+    /**
+     * Creates a new package with the specified variables
+     * @param variables Map of variable names to values
+     */
     public WenyanPackage(Map<String, IWenyanValue> variables) {
         this.variables = variables;
     }

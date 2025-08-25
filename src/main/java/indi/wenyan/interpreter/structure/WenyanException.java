@@ -5,6 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.antlr.v4.runtime.ParserRuleContext;
 
+/**
+ * Base exception class for Wenyan interpreter errors
+ */
 public class WenyanException extends RuntimeException {
     public WenyanException(String message) {
         super(message);
@@ -18,42 +21,65 @@ public class WenyanException extends RuntimeException {
         super(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine()+" "+ctx.getText()+"\n"+e.getMessage());
     }
 
+    /**
+     * Exception for numerical errors
+     */
     public static class WenyanNumberException extends WenyanThrowException {
         public WenyanNumberException(String message) {
             super(message);
         }
     }
 
+    /**
+     * Exception for data handling errors
+     */
     public static class WenyanDataException extends WenyanThrowException {
         public WenyanDataException(String message) {
             super(message);
         }
     }
 
+    /**
+     * Exception for variable errors
+     */
     public static class WenyanVarException extends WenyanThrowException {
         public WenyanVarException(String message) {
             super(message);
         }
     }
 
+    /**
+     * Exception for type errors
+     */
     public static class WenyanTypeException extends WenyanThrowException {
         public WenyanTypeException(String message) {
             super(message);
         }
     }
 
+    /**
+     * Exception for code validation errors
+     */
     public static class WenyanCheckerError extends WenyanThrowException {
         public WenyanCheckerError(String message) {
             super(message);
         }
     }
 
+    /**
+     * Base class for exceptions that can be thrown during Wenyan execution
+     */
     public static abstract class WenyanThrowException extends Exception {
         protected WenyanThrowException(String message) {
             super(message);
         }
     }
 
+    /**
+     * Handles an exception by displaying it to the player
+     * @param player Player to notify
+     * @param message Error message
+     */
     public static void handleException(Player player, String message) {
         System.out.println(message);
         player.displayClientMessage(Component.literal(message).withStyle(ChatFormatting.RED), true);
