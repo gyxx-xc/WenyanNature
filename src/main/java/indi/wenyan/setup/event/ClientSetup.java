@@ -18,8 +18,14 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
+/**
+ * Client-side event handler for registering renderers, screens, and particle providers
+ */
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public enum ClientSetup {;
+    /**
+     * Registers entity and block entity renderers
+     */
     @SubscribeEvent
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
@@ -30,11 +36,17 @@ public enum ClientSetup {;
         event.registerBlockEntityRenderer(Registration.PEDESTAL_ENTITY.get(), PedestalBlockRender::new);
     }
 
+    /**
+     * Registers menu screens
+     */
     @SubscribeEvent
     public static void registerScreen(RegisterMenuScreensEvent event) {
         event.register(Registration.CRAFTING_CONTAINER.get(), CraftingBlockScreen::new);
     }
 
+    /**
+     * Registers particle providers
+     */
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(Registration.COMMUNICATION_PARTICLES.get(), CommunicationParticle.Provider::new);

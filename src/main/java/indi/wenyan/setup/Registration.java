@@ -51,8 +51,14 @@ import java.util.function.Supplier;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
+/**
+ * Central registration class for all mod content
+ */
 public final class Registration {
 
+    /**
+     * Registers all content with the mod event bus
+     */
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
@@ -68,6 +74,7 @@ public final class Registration {
         modEventBus.addListener(Registration::onRegisterPayloadHandler);
     }
 
+    // Registry objects
     public static final DeferredRegister.Blocks BLOCKS;
     public static final DeferredRegister.Items ITEMS;
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY;
@@ -79,6 +86,7 @@ public final class Registration {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE;
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES;
 
+    // Hand Runner items
     public static final DeferredItem<Item> HAND_RUNNER;
     public static final DeferredItem<Item> HAND_RUNNER_1;
     public static final DeferredItem<Item> HAND_RUNNER_2;
@@ -86,6 +94,7 @@ public final class Registration {
 
     public static final DeferredItem<Item> FLOAT_NOTE;
 
+    // Paper items
     public static final DeferredItem<Item> BAMBOO_PAPER;
     public static final DeferredItem<Item> CLOUD_PAPER;
     public static final DeferredItem<Item> DRAGON_PAPER;
@@ -93,6 +102,7 @@ public final class Registration {
     public static final DeferredItem<Item> PHOENIX_PAPER;
     public static final DeferredItem<Item> STAR_PAPER;
 
+    // Ink items
     public static final DeferredItem<Item> ARCANE_INK;
     public static final DeferredItem<Item> BAMBOO_INK;
     public static final DeferredItem<Item> CELESTIAL_INK;
@@ -153,6 +163,9 @@ public final class Registration {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
 
+    /**
+     * Registers network packet handlers
+     */
     private static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MODID)
                 .versioned("1.0")
@@ -174,6 +187,7 @@ public final class Registration {
                 BlockPosRangePacket.HANDLER);
     }
 
+    // Static initialization block
     static {
         CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
         ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);

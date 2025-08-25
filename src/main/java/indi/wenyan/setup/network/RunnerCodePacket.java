@@ -13,10 +13,19 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Packet for sending code to a handheld runner
+ */
 public record RunnerCodePacket(int slot, String code) implements CustomPacketPayload {
+    /**
+     * Packet type identifier
+     */
     public static final Type<RunnerCodePacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "runner_code"));
 
+    /**
+     * Codec for serializing and deserializing the packet
+     */
     public static final StreamCodec<ByteBuf, RunnerCodePacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             RunnerCodePacket::slot,
@@ -25,6 +34,9 @@ public record RunnerCodePacket(int slot, String code) implements CustomPacketPay
             RunnerCodePacket::new
     );
 
+    /**
+     * Handler for processing the packet
+     */
     public static final IPayloadHandler<RunnerCodePacket> HANDLER = (packet, context) -> {
         if (context.flow().isServerbound()) {
             Player player = context.player();

@@ -8,8 +8,14 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
+/**
+ * Common mod setup handling events
+ */
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
 public enum ModSetup {;
+    /**
+     * Registers capabilities for mod blocks and entities
+     */
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(

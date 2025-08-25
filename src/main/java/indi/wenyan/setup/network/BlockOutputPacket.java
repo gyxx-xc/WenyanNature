@@ -10,10 +10,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Packet for sending output text to a block entity
+ */
 public record BlockOutputPacket(BlockPos pos, String output) implements CustomPacketPayload {
+    /**
+     * Packet type identifier
+     */
     public static final Type<BlockOutputPacket> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "output_text"));
 
+    /**
+     * Codec for serializing and deserializing the packet
+     */
     public static final StreamCodec<FriendlyByteBuf, BlockOutputPacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
@@ -26,6 +35,9 @@ public record BlockOutputPacket(BlockPos pos, String output) implements CustomPa
                         return new BlockOutputPacket(pos1, output1);
                     });
 
+    /**
+     * Handler for processing the packet
+     */
     public static final IPayloadHandler<BlockOutputPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
