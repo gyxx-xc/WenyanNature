@@ -1,6 +1,7 @@
-package indi.wenyan.content.gui;
+package indi.wenyan.content.gui.code_editor;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.gui.Utils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollWidget;

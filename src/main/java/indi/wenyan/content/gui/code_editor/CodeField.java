@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui;
+package indi.wenyan.content.gui.code_editor;
 
 import com.google.common.collect.Lists;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;

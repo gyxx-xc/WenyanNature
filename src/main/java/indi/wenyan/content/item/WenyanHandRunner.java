@@ -3,7 +3,7 @@ package indi.wenyan.content.item;
 import indi.wenyan.content.data.ProgramCodeData;
 import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.HandRunnerEntity;
-import indi.wenyan.content.gui.CodeEditorScreen;
+import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import net.minecraft.client.Minecraft;

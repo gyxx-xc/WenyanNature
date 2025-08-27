@@ -1,6 +1,7 @@
-package indi.wenyan.content.gui;
+package indi.wenyan.content.gui.code_editor;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.gui.Utils;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import lombok.Getter;
 import lombok.val;
