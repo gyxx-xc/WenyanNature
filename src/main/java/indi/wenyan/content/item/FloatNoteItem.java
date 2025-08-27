@@ -1,6 +1,9 @@
 package indi.wenyan.content.item;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
+import indi.wenyan.content.gui.float_note.FloatNoteNamingScreen;
+import indi.wenyan.setup.Registration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -24,11 +27,12 @@ public class FloatNoteItem extends Item {
 
     public @NotNull InteractionResult interactLivingEntity(
             @NotNull ItemStack stack, @NotNull Player player, @NotNull LivingEntity target, @NotNull InteractionHand hand) {
-        Component component = getNamingComponent(stack);
-        if (component != null && !(target instanceof Player)) {
-            if (!player.level().isClientSide && target.isAlive()) {
-                target.setCustomName(component);
-                if (target instanceof Mob mob) {
+        if (!(target instanceof Player)) {
+            if (target.isAlive()) {
+                if (player.level().isClientSide) {
+                    Minecraft.getInstance().setScreen(new FloatNoteNamingScreen(
+                            target::setCustomName));
+                } else if (target instanceof Mob mob) {
                     mob.setPersistenceRequired();
                 }
             }
@@ -45,11 +49,11 @@ public class FloatNoteItem extends Item {
         BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
 
         if (blockEntity instanceof AbstractModuleEntity entity) {
-            Component component = getNamingComponent(context.getItemInHand());
-            if (component != null) {
-                entity.setPackageName(component.getString());
-                return InteractionResult.sidedSuccess(level.isClientSide);
+            if (level.isClientSide()) {
+                Minecraft.getInstance().setScreen(new FloatNoteNamingScreen(
+                        component -> entity.setPackageName(component.getString())));
             }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
