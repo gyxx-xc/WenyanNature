@@ -1,7 +1,9 @@
 package indi.wenyan.content.gui.float_note;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -39,18 +41,26 @@ public class FloatNoteNamingScreen extends Screen {
         this.name.setTextColorUneditable(-1);
         this.name.setBordered(false);
         this.name.setMaxLength(18);
-        this.name.setResponder(this::onNameChanged);
         this.name.setValue("");
         addRenderableWidget(name);
+
+        Button confirmButton = Button.builder(Component.translatable("gui.done"), button -> onClose())
+                .bounds(this.width / 2 + 4, 52, 50, 20)
+                .tooltip(Tooltip.create(Component.empty()))
+                .build();
+        addRenderableWidget(confirmButton);
+
+        Button lockButton = new LockIconButton(this.width / 2 - 54, 52, button -> {
+            ((LockIconButton) button).setLocked(!((LockIconButton) button).isLocked());
+            name.setEditable(!((LockIconButton) button).isLocked());
+        });
+        addRenderableWidget(lockButton);
     }
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.blitSprite(TEXT_FIELD_SPRITE, 59, 20, 110, 16);
         renderTransparentBackground(guiGraphics);
-    }
-
-    private void onNameChanged(String name) {
     }
 
     @Override
