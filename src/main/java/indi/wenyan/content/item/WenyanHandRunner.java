@@ -1,7 +1,5 @@
 package indi.wenyan.content.item;
 
-import indi.wenyan.content.data.ProgramCodeData;
-import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
@@ -37,7 +35,7 @@ public class WenyanHandRunner extends BlockItem {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
             Minecraft.getInstance().setScreen(new CodeEditorScreen(
-                    itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), new ProgramCodeData("")).code(),
+                    itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
                     content -> {
                         int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
                         PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
@@ -52,7 +50,7 @@ public class WenyanHandRunner extends BlockItem {
             var codeData = item.get(Registration.PROGRAM_CODE_DATA.get());
             if (codeData != null) {
                 HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player,
-                        codeData.code(), runningLevel);
+                        codeData, runningLevel);
                 player.level().addFreshEntity(handRunnerEntity);
 
                 item.shrink(1);
@@ -65,8 +63,7 @@ public class WenyanHandRunner extends BlockItem {
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
         if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown()) {
-            context.getItemInHand().set(Registration.TIER_DATA.get(),
-                    new RunnerTierData(runningLevel));
+            context.getItemInHand().set(Registration.RUNNING_TIER_DATA.get(), runningLevel);
             return super.useOn(context);
         }
         return InteractionResult.PASS;

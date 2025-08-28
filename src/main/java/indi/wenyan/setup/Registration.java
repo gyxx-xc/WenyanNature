@@ -1,6 +1,7 @@
 package indi.wenyan.setup;
 
 import com.mojang.datafixers.DSL;
+import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.CraftingBlock;
 import indi.wenyan.content.block.CraftingBlockEntity;
@@ -10,9 +11,6 @@ import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.content.data.OutputData;
-import indi.wenyan.content.data.ProgramCodeData;
-import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
@@ -28,6 +26,8 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
@@ -156,9 +156,9 @@ public final class Registration {
 
     public static final Supplier<SimpleParticleType> COMMUNICATION_PARTICLES;
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<RunnerTierData>> TIER_DATA;
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<OutputData>> OUTPUT_DATA;
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ProgramCodeData>> PROGRAM_CODE_DATA;
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RUNNING_TIER_DATA;
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> OUTPUT_DATA;
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA;
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
@@ -338,19 +338,19 @@ public final class Registration {
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
 //                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
 
-        TIER_DATA = DATA.register(RunnerTierData.ID,
-                () -> DataComponentType.<RunnerTierData>builder()
-                        .persistent(RunnerTierData.CODEC)
+        RUNNING_TIER_DATA = DATA.register("runner_tier_data",
+                () -> DataComponentType.<Integer>builder()
+                        .persistent(ExtraCodecs.intRange(0, 3))
                         .build());
-        OUTPUT_DATA = DATA.register(OutputData.ID,
-                () -> DataComponentType.<OutputData>builder()
-                        .persistent(OutputData.CODEC)
-                        .networkSynchronized(OutputData.STREAM_CODEC)
+        OUTPUT_DATA = DATA.register("output_data",
+                () -> DataComponentType.<String>builder()
+                        .persistent(Codec.STRING)
+                        .networkSynchronized(ByteBufCodecs.STRING_UTF8)
                         .build());
-        PROGRAM_CODE_DATA = DATA.register(ProgramCodeData.ID,
-                () -> DataComponentType.<ProgramCodeData>builder()
-                        .persistent(ProgramCodeData.CODEC)
-                        .networkSynchronized(ProgramCodeData.STREAM_CODEC)
+        PROGRAM_CODE_DATA = DATA.register("program_code_data",
+                () -> DataComponentType.<String>builder()
+                        .persistent(Codec.STRING)
+                        .networkSynchronized(ByteBufCodecs.STRING_UTF8)
                         .build());
 
         ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register(AnsweringRecipe.ID,

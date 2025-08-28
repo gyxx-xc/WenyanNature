@@ -1,8 +1,6 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.content.data.ProgramCodeData;
-import indi.wenyan.content.data.RunnerTierData;
 import indi.wenyan.content.handler.AbstractImportHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
@@ -177,8 +175,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
-        pages = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), new ProgramCodeData("")).code();
-        int speedTier = componentInput.getOrDefault(Registration.TIER_DATA.get(), new RunnerTierData(0)).tier();
+        pages = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
+        int speedTier = componentInput.getOrDefault(Registration.RUNNING_TIER_DATA.get(), 0);
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
     }
 }
