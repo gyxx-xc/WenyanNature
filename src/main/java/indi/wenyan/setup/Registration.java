@@ -159,6 +159,7 @@ public final class Registration {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RUNNING_TIER_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> OUTPUT_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA;
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> NOTE_LOCK_DATA;
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
@@ -173,6 +174,9 @@ public final class Registration {
         registrar.playToServer(RunnerCodePacket.TYPE,
                 RunnerCodePacket.STREAM_CODEC,
                 RunnerCodePacket.HANDLER);
+        registrar.playToServer(FloatNotePacket.TYPE,
+                FloatNotePacket.STREAM_CODEC,
+                FloatNotePacket.HANDLER);
         registrar.playToServer(BlockRunnerCodePacket.TYPE,
                 BlockRunnerCodePacket.STREAM_CODEC,
                 BlockRunnerCodePacket.HANDLER);
@@ -351,6 +355,11 @@ public final class Registration {
                 () -> DataComponentType.<String>builder()
                         .persistent(Codec.STRING)
                         .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                        .build());
+        NOTE_LOCK_DATA = DATA.register("note_lock_data",
+                () -> DataComponentType.<Boolean>builder()
+                        .persistent(Codec.BOOL)
+                        .networkSynchronized(ByteBufCodecs.BOOL)
                         .build());
 
         ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register(AnsweringRecipe.ID,
