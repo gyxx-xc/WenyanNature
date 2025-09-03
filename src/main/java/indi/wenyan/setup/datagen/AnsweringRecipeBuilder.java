@@ -1,7 +1,6 @@
 package indi.wenyan.setup.datagen;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.recipe.AnsweringRecipe;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -87,7 +86,7 @@ public final class AnsweringRecipeBuilder {
      * @return This builder for chaining
      */
     public AnsweringRecipeBuilder addInput(ItemStack itemStack) {
-        return addInput(Ingredient.of(itemStack));
+        return addInput(Ingredient.of(itemStack.getItem()));
     }
 
     /**
@@ -129,12 +128,12 @@ public final class AnsweringRecipeBuilder {
      */
     public void save(RecipeOutput recipeOutput, String recipeName) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, recipeName);
-        recipeOutput.accept(
-                id,
-                new AnsweringRecipe(input, question, output),
-                recipeOutput.advancement()
-                        .addCriterion("has_" + recipeName, criterion)
-                        .build(id.withPrefix("recipes/"))
-        );
+//        recipeOutput.accept(
+//                id,
+//                new AnsweringRecipe(input, question, output),
+//                recipeOutput.advancement()
+//                        .addCriterion("has_" + recipeName, criterion)
+//                        .build(id.withPrefix("recipes/"))
+//        );
     }
 }

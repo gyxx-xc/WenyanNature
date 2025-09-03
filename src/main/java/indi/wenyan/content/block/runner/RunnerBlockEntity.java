@@ -14,9 +14,8 @@ import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -127,17 +126,17 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null)
             tag.putString("pages", pages);
-        if (additionalPages != null && !additionalPages.isEmpty()) {
-            ListTag additionalPagesTag = new ListTag();
-            for (BlockPos pos : additionalPages) {
-                var posTag = new CompoundTag();
-                posTag.putInt("x", pos.getX());
-                posTag.putInt("y", pos.getY());
-                posTag.putInt("z", pos.getZ());
-                additionalPagesTag.add(posTag);
-            }
-            tag.put("additional_pages", additionalPagesTag);
-        }
+//        if (additionalPages != null && !additionalPages.isEmpty()) {
+//            ListTag additionalPagesTag = new ListTag();
+//            for (BlockPos pos : additionalPages) {
+//                var posTag = new CompoundTag();
+//                posTag.putInt("x", pos.getX());
+//                posTag.putInt("y", pos.getY());
+//                posTag.putInt("z", pos.getZ());
+//                additionalPagesTag.add(posTag);
+//            }
+//            tag.put("additional_pages", additionalPagesTag);
+//        }
         tag.putDouble("communicate_x", communicate != null ? communicate.x : 0.0);
         tag.putDouble("communicate_y", communicate != null ? communicate.y : 0.0);
         tag.putDouble("communicate_z", communicate != null ? communicate.z : 0.0);
@@ -148,33 +147,33 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Override
     protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
 
-        if (tag.contains("pages")) {
-            pages = tag.getString("pages");
-        }
+        tag.getString("pages").ifPresent(s -> pages = s);
 
         if (tag.contains("communicate_x")) {
-            communicate = new Vec3(tag.getDouble("communicate_x"), tag.getDouble("communicate_y"), tag.getDouble("communicate_z"));
+            communicate = new Vec3(tag.getDoubleOr("communicate_x", 0),
+                    tag.getDoubleOr("communicate_y", 0),
+                    tag.getDoubleOr("communicate_z", 0));
             isCommunicating = true;
         } else {
             isCommunicating = false;
         }
-        if (tag.contains("additional_pages")) {
-            additionalPages = new ArrayList<>();
-            ListTag additionalPagesTag = tag.getList("additional_pages", Tag.TAG_COMPOUND);
-            for (Tag posTag : additionalPagesTag) {
-                if (posTag instanceof CompoundTag compoundTag) {
-                    int x = compoundTag.getInt("x");
-                    int y = compoundTag.getInt("y");
-                    int z = compoundTag.getInt("z");
-                    additionalPages.add(new BlockPos(x, y, z));
-                }
-            }
-        }
-        speed = tag.getInt("speed");
+//        if (tag.contains("additional_pages")) {
+//            additionalPages = new ArrayList<>();
+//            ListTag additionalPagesTag = tag.getList("additional_pages");
+//            for (Tag posTag : additionalPagesTag) {
+//                if (posTag instanceof CompoundTag compoundTag) {
+//                    int x = compoundTag.getInt("x");
+//                    int y = compoundTag.getInt("y");
+//                    int z = compoundTag.getInt("z");
+//                    additionalPages.add(new BlockPos(x, y, z));
+//                }
+//            }
+//        }
+        speed = tag.getIntOr("speed", 1);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         pages = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
         int speedTier = componentInput.getOrDefault(Registration.RUNNING_TIER_DATA.get(), 0);
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));

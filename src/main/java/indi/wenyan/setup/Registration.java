@@ -27,6 +27,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -191,17 +193,27 @@ public final class Registration {
                 BlockPosRangePacket.HANDLER);
     }
 
+    private static void addBlockEntity() {
+        INTERACT_MODULE_BLOCK = BLOCKS.register(InteractModuleBlock.ID, InteractModuleBlock::new);
+        INTERACT_MODULE_BLOCK_ITEM = ITEMS.registerItem(InteractModuleBlock.ID,
+                (properties) -> new BlockItem(INTERACT_MODULE_BLOCK.get(), properties));
+        INTERACT_MODULE_ENTITY = BLOCK_ENTITY.register(InteractModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(InteractModuleEntity::new, INTERACT_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+    }
+
     // Static initialization block
     static {
-        CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-        ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
-        BLOCK_ENTITY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
-        MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
+        CREATIVE_MODE_TABS = DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, MODID);
+        ENTITY = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
+        BLOCK_ENTITY = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MODID);
+        MENU_TYPE = DeferredRegister.create(BuiltInRegistries.MENU, MODID);
         ITEMS = DeferredRegister.createItems(MODID);
         BLOCKS = DeferredRegister.createBlocks(MODID);
-        DATA = DeferredRegister.createDataComponents(MODID);
-        SERIALIZER = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
-        RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
+        DATA = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
+        SERIALIZER = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
+        RECIPE_TYPE = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, MODID);
         PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
 
         HAND_RUNNER = ITEMS.registerItem(HandRunnerEntity.ID_0,
@@ -215,14 +227,15 @@ public final class Registration {
 
         RUNNER_BLOCK = BLOCKS.register(RunnerBlock.ID, RunnerBlock::new);
         RUNNER_BLOCK_ENTITY = BLOCK_ENTITY.register(RunnerBlock.ID,
-                () -> BlockEntityType.Builder
-                        .of(RunnerBlockEntity::new, RUNNER_BLOCK.get())
-                        .build(DSL.remainderType()));
+                () -> new BlockEntityType<>(RunnerBlockEntity::new, RUNNER_BLOCK.get()));
         HAND_RUNNER_ENTITY = ENTITY.register(HandRunnerEntity.ID_1,
                 () -> EntityType.Builder
                         .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
                         .sized(0.45f, 1.0f)
-                        .build(HandRunnerEntity.ID_1));
+                        .build(ResourceKey.create(
+                                Registries.ENTITY_TYPE,
+                                ResourceLocation.fromNamespaceAndPath(MODID, HandRunnerEntity.ID_1))
+                        ));
 
         FLOAT_NOTE = ITEMS.registerItem(FloatNoteItem.ID, FloatNoteItem::new);
 
