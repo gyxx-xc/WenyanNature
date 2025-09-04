@@ -11,7 +11,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
  * Central handler for data generation.
  * Registers all data providers to be executed during data generation.
  */
-@EventBusSubscriber(modid = WenyanProgramming.MODID,bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = WenyanProgramming.MODID)
 public final class ModDataGeneratorHandler {
 
     /**

@@ -102,5 +102,8 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
         add("code.wenyan_programming.bracket", "「%s」");
         add("gui.wenyan.hold_shift", "(Hold Shift to display details)");
+
+        add("book.wenyan_programming.shuo_wen.name", "說文");
+        add("book.wenyan_programming.shuo_wen.landing_text", "编程者，制机之令也。机铁无知，唯识原语。乃作典言，上合人意，下译机识，若算经然。");
     }
 }
