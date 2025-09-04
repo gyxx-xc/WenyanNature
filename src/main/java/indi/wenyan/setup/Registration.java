@@ -199,7 +199,7 @@ public final class Registration {
         MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
         ITEMS = DeferredRegister.createItems(MODID);
         BLOCKS = DeferredRegister.createBlocks(MODID);
-        DATA = DeferredRegister.createDataComponents(MODID);
+        DATA = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, MODID);
         SERIALIZER = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
         RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
         PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);

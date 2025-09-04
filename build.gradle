@@ -21,6 +21,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url "https://maven.shedaniel.me/" }
+    maven { url 'https://maven.blamejared.com' }
 }
 
 base {
@@ -138,6 +139,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
+    compileOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE:api"
+    runtimeOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE"
 
     antlr "org.antlr:antlr4:4.13.1"
 

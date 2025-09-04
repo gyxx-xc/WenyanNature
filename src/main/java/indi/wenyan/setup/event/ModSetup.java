@@ -11,7 +11,7 @@ import static indi.wenyan.WenyanProgramming.MODID;
 /**
  * Common mod setup handling events
  */
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MODID)
 public enum ModSetup {;
     /**
      * Registers capabilities for mod blocks and entities

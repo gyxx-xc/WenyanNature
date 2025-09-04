@@ -21,7 +21,7 @@ import static indi.wenyan.WenyanProgramming.MODID;
 /**
  * Client-side event handler for registering renderers, screens, and particle providers
  */
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public enum ClientSetup {;
     /**
      * Registers entity and block entity renderers
