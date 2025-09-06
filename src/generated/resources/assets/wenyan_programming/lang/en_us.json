@@ -1,6 +1,6 @@
 {
   "block.wenyan_programming.runner_block": "Shou Pao",
-  "book.wenyan_programming.shuo_wen.landing_text": "夫唐、虞之世，結繩而足治，屈指而足算。是時豈料百代之後，計算機械之巧，精於公輸之木鳶，善於武侯之流馬；程式語言之多，繁若《天官》之星宿，奇勝《山經》之走獸。鼠、蟹、鑽、魚，或以速稱。蛇、象、駱、犀，各爭文采。方知鬼之所以夜哭，天之所以雨粟。然以文言編程者 ，似所未有。此誠非文脈之所以傳，文心之所以保。嗟予小子，遂有斯志。然則數寸之烏絲猶覆於頭，萬卷之素書未破於手；一身長羈於遠邦，兩耳久曠于雅言。然夫文章者吾之所宿好，程式者偶承時人之謬譽。故希孟不慚年少，莊生不望無涯。乃作斯言。誠未能嘔瀝長吉之心血，亦庶幾免於義山之流沫。既成之後，復學干將鑄劍而自飼，越王嚐糞而當先。自謂偶追《十書》之筆意，但恨少八家之淋漓。此子山所謂士衡撫掌而甘心，平子見陋而固宜。然則雖實覆甕之質，尚存斧正之望；雖乏呂相之金，易字之渴蓋同。此亦開源之大義，吾輩之所以勉勵也。一笑。",
+  "book.wenyan_programming.shuo_wen.landing_text": "编程者，制机之令也。机铁无知，唯识原语。乃作典言，上合人意，下译机识，若算经然。",
   "book.wenyan_programming.shuo_wen.name": "說文",
   "code.wenyan_programming.bracket": "「%s」",
   "config.wenyan_programming.advanced.debug_mode": "Debug Mode",
