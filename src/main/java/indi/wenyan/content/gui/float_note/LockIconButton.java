@@ -11,15 +11,15 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@Setter
-@Getter
 @OnlyIn(Dist.CLIENT)
 public class LockIconButton extends Button {
+    @Setter @Getter
     private boolean locked;
 
-    public LockIconButton(int x, int y, Button.OnPress onPress) {
+    public LockIconButton(int x, int y, OnPress onPress) {
         super(x, y, 20, 20,
-                Component.empty(), onPress, DEFAULT_NARRATION);
+                Component.empty(), button -> onPress.onPress((LockIconButton) button),
+                DEFAULT_NARRATION);
         setTooltip(Tooltip.create(Component.translatable("gui.wenyan.lock")));
     }
 
@@ -50,5 +50,10 @@ public class LockIconButton extends Button {
         Icon(ResourceLocation sprite) {
             this.sprite = sprite;
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public interface OnPress {
+        void onPress(LockIconButton var1);
     }
 }

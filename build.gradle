@@ -2,8 +2,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'antlr'
-    id 'net.neoforged.moddev' version '2.0.107'
-    id 'idea'
+    id 'net.neoforged.moddev' version '1.0.17'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -68,7 +67,7 @@ neoForge {
         }
 
         data {
-            clientData()
+            data()
 
             // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
             // gameDirectory = project.file('run-data')

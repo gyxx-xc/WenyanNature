@@ -4,6 +4,8 @@ import indi.wenyan.content.block.additional_module.BlockModuleRender;
 import indi.wenyan.content.block.additional_module.InformationModuleRender;
 import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
+import indi.wenyan.content.entity.BulletRender;
+import indi.wenyan.content.entity.HandRunnerRender;
 import indi.wenyan.content.gui.CraftingBlockScreen;
 import indi.wenyan.content.particle.CommunicationParticle;
 import indi.wenyan.setup.Registration;
@@ -19,15 +21,15 @@ import static indi.wenyan.WenyanProgramming.MODID;
 /**
  * Client-side event handler for registering renderers, screens, and particle providers
  */
-@EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public enum ClientSetup {;
     /**
      * Registers entity and block entity renderers
      */
     @SubscribeEvent
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
-//        event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
-//        event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
+        event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
+        event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
         event.registerBlockEntityRenderer(Registration.RUNNER_BLOCK_ENTITY.get(), RunnerBlockRender::new);
         event.registerBlockEntityRenderer(Registration.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
         event.registerBlockEntityRenderer(Registration.INFORMATION_MODULE_ENTITY.get(), InformationModuleRender::new);

@@ -1,6 +1,5 @@
 package indi.wenyan.setup.datagen;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -14,9 +13,11 @@ public class ChineseLanguageProvider extends LanguageProvider {
     /**
      * Constructs a new Chinese language provider.
      * @param output The pack output for language file generation
+     * @param modid The mod ID
+     * @param locale The locale code (zh_cn)
      */
-    public ChineseLanguageProvider(PackOutput output) {
-        super(output, WenyanProgramming.MODID, "zh_cn");
+    public ChineseLanguageProvider(PackOutput output, String modid, String locale) {
+        super(output, modid, locale);
     }
 
     @Override
