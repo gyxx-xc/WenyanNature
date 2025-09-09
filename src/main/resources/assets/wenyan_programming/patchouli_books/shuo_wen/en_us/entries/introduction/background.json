@@ -2,6 +2,7 @@
   "name": "项目故事",
   "icon": "wenyan_programming:hand_runner_0",
   "category": "wenyan_programming:introduction",
+  "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",

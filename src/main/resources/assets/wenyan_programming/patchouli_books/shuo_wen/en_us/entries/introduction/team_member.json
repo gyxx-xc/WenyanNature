@@ -1,0 +1,13 @@
+{
+    "name": "制作团队",
+    "icon": "minecraft:golden_axe",
+    "category": "wenyan_programming:introduction",
+    "sortnum": 2,
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "text": "妙思匠心 $(br2) 于幽微之处，皆有洞天。"
+      }
+    ]
+  }
+  

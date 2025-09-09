@@ -1,7 +1,8 @@
 {
   "name": "§l符咒 ",
   "icon": "wenyan_programming:bamboo_paper",
-  "category": "wenyan_programming:quick_start",
+  "category": "wenyan_programming:core_concept",
+  "sortnum": 3,
   "pages": [
     {
       "type": "patchouli:spotlight",

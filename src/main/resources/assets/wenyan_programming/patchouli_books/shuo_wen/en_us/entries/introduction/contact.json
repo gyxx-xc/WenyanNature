@@ -1,0 +1,13 @@
+{
+    "name": "联系方式与反馈",
+    "icon": "minecraft:enchanted_book",
+    "category": "wenyan_programming:introduction",
+    "sortnum": 1,
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "text": "如果你有任何问题或建议，请在github发送issue提出你的宝贵建议：$(br2)https://github.com/gyxx-xc/WenyanNature/issues"
+      }
+    ]
+  }
+  

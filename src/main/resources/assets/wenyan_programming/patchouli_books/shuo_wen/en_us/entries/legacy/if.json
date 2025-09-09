@@ -1,7 +1,7 @@
 {
   "name": "If Statement",
   "icon": "minecraft:writable_book",
-  "category": "wenyan_programming:language",
+  "category": "wenyan_programming:legacy",
   "pages": [
     {
       "type": "wenyan_programming:code_component",
