@@ -1,0 +1,14 @@
+{
+  "name": "§l指令",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l指令",
+      "text": "模组提供的文言指令，$(br)输入指令以完成想做的操作"
+    }
+  ]
+}
+
+

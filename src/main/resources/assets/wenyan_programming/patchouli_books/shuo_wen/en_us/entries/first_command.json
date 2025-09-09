@@ -1,0 +1,18 @@
+{
+  "name": "第一条指令",
+  "icon": "minecraft:oak_sign",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+     "为了完成第一个脚本，我们需要准备下列内容。$(br2)§l初级符咒 x1§r§l $(br2)§lScreenBlock x1§r§l",
+    {
+      "type": "patchouli:spotlight",
+      "item": "wenyan_programming:hand_runner_0#1",
+      "text": "初级符咒 x1"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:stone#1",
+      "text": "Screenblock x1"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "§l方块库",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l方块库",
+      "text": "与符咒进行通讯，从而提供额外功能。$(br2)在世界中可表现为§l多方块结构/工作台 GUI 插槽§r：把传感器、执行器、存储模块插上去即可被脚本调用。"
+    }
+  ]
+}
+
+

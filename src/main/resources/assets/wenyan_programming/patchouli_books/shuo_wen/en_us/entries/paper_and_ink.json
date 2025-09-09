@@ -1,0 +1,14 @@
+{
+  "name": "§l纸和墨水（材料）",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l纸和墨水（材料）",
+      "text": "§l纸§r/§l和§l墨水§r/§l 将用于制作更高级的符咒的材料。"
+    }
+  ]
+}
+
+

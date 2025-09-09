@@ -1,0 +1,14 @@
+{
+  "name": "§l符力与符咒等级",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l符力与符咒等级",
+      "text": "§l符力§r：符咒运行脚本所需资源；随时间恢复或由材料供给。$(br2)§l符咒等级§r：决定执行速度与可调用 API 等级。$(br2)§l等级越高§r：$(br)每 Tick 步数上限↑、$(br)可并发线程数↑ $(br)可访问的设备能力↑"
+    }
+  ]
+}
+
+

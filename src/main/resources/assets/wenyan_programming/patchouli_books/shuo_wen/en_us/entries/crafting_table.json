@@ -1,0 +1,14 @@
+{
+  "name": "§l合成台",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l合成台",
+      "text": "用于制作更高级的符咒和升级材料。$(br2)升级配方在本手册内 “配方” 部分。"
+    }
+  ]
+}
+
+

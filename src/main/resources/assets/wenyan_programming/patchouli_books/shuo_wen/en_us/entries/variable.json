@@ -1,0 +1,14 @@
+{
+  "name": "§l变量",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l变量",
+      "text": "一些可以变的数据，$(br)数据的内容可以根据情况进行改变"
+    }
+  ]
+}
+
+

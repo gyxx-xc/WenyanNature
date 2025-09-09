@@ -1,0 +1,14 @@
+{
+  "name": "§l脚本",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l脚本",
+      "text": "写在符咒内，以“文言”语法编写。$(br)脚本代表一组指令 （一个指令集）"
+    }
+  ]
+}
+
+

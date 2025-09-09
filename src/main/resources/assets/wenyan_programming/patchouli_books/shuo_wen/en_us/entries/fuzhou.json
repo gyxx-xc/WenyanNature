@@ -1,0 +1,14 @@
+{
+  "name": "§l符咒 ",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "wenyan_programming:hand_runner_0#1",
+      "text": "执行平台，负责运行脚本（运行指令）。$(br2)每个符咒有§l符咒等级§r与§l执行预算§r（每 Tick 可以完成的指令数）。$(br2)运行时会§l扣符力§r。"
+    }
+  ]
+}
+
+
