@@ -15,26 +15,12 @@ import java.util.function.UnaryOperator;
 
 @SuppressWarnings("unused")
 public class ComponentCustomTest implements ICustomComponent {
-    private transient int x, y;
     private transient StringBuilder code;
     private transient CodeDisplayWidget textFieldWidget;
     private int width, height;
 
     @Override
     public void build(int componentX, int componentY, int pageNum) {
-        x = componentX;
-        y = componentY;
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float pTicks,
-                       int mouseX, int mouseY) {
-        textFieldWidget.render(graphics);
-    }
-
-    @Override
-    public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
-        code = new StringBuilder(lookup.apply(IVariable.wrap("#code#", registries)).asString());
         int textFieldWidth = Mth.clamp(width, 50, CodeEditorWidget.WIDTH);
         textFieldWidget = new CodeDisplayWidget(Minecraft.getInstance().font, new CodeField.SavedVariable() {
             @Override
@@ -77,7 +63,17 @@ public class ComponentCustomTest implements ICustomComponent {
 
             }
         },
-                x, y,
-                textFieldWidth, Math.min(height, CodeEditorWidget.HEIGH));
+                componentX, componentY, textFieldWidth, Math.min(height, CodeEditorWidget.HEIGH));
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, IComponentRenderContext context, float pTicks,
+                       int mouseX, int mouseY) {
+        textFieldWidget.render(graphics);
+    }
+
+    @Override
+    public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
+        code = new StringBuilder(lookup.apply(IVariable.wrap("#code#", registries)).asString());
     }
 }
