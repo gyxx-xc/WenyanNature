@@ -1,0 +1,47 @@
+{
+  "name": "核心概念",
+  "icon": "wenyan_programming:bamboo_paper",
+  "category": "wenyan_programming:introduction",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "指令",
+      "text": "- 模组提供的文言指令$(br)- 输入指令以完成你想做的操作"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "脚本",
+      "text": "- 写在符咒内，以“文言”语法编写。$(br)- 一个指令集（一组指令）"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "变量",
+      "text": "- 一些可以变的数据$(br)- 数据内容可以根据情况进行改变"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "符咒 (Fuzhou)",
+      "text": "- 执行平台，负责运行脚本（运行指令）。$(br)- 每个符咒有§l符咒等级§r与§l执行预算§r（每 Tick 可以完成的指令数）。$(br)- 运行时会§l扣符力§r（见下）。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "符力与符咒等级",
+      "text": "- §l符力§r：符咒运行脚本所需资源；随时间恢复或由材料供给。$(br)- §l符咒等级§r：决定执行速度与可调用 API 等级。$(br2) 等级越高：每 Tick 步数上限↑、可并发线程数↑、可访问的设备能力↑；但失败惩罚与消耗也更高。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "方块库",
+      "text": "- 与符咒进行通讯，从而提供额外功能。$(br)- 在世界中可表现为§l多方块结构§r/§l工作台 GUI 插槽§r：把传感器、执行器、存储模块插上去即可被脚本调用。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "合成台",
+      "text": "- 用于制作更高级的符咒和升级材料。$(br) - 升级配方在本手册内 “配方” 部分。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "合成台",
+      "text": "- 纸和墨水 用于制作更高级的符咒的材料。"
+    }
+  ]
+}
