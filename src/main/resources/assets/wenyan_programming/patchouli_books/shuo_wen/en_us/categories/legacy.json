@@ -1,5 +1,6 @@
 {
   "name": "Language",
   "description": "grammar and syntax of Wenyan programming language",
-  "icon": "minecraft:redstone"
+  "icon": "minecraft:redstone",
+  "sortnum": 9999
 }
