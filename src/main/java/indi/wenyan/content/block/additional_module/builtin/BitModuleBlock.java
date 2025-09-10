@@ -10,7 +10,8 @@ public class BitModuleBlock extends AbstractFuluBlock implements AbstractModuleB
     public static final String ID = "bit_module_block";
 
     @Override
-    protected @NotNull BlockEntityType<?> getType() {
+    @NotNull
+    public BlockEntityType<?> getType() {
         return Registration.BIT_MODULE_ENTITY.get();
     }
 }

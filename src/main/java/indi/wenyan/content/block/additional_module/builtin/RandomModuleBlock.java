@@ -11,7 +11,8 @@ public class RandomModuleBlock extends AbstractFuluBlock implements AbstractModu
     public static final String ID = "random_module_block";
 
     @Override
-    protected @NotNull BlockEntityType<?> getType() {
+    @NotNull
+    public BlockEntityType<?> getType() {
         return Registration.RANDOM_MODULE_ENTITY.get();
     }
 }

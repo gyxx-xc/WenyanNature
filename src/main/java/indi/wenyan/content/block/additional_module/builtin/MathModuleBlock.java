@@ -10,7 +10,8 @@ public class MathModuleBlock extends AbstractFuluBlock implements AbstractModule
     public static final String ID = "math_module_block";
 
     @Override
-    protected @NotNull BlockEntityType<?> getType() {
+    @NotNull
+    public BlockEntityType<?> getType() {
         return Registration.MATH_MODULE_ENTITY.get();
     }
 }

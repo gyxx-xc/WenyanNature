@@ -10,8 +10,8 @@ public class Vec3ModuleBlock extends AbstractFuluBlock implements AbstractModule
     public static final String ID = "vec3_module_block";
 
     @Override
-    protected @NotNull BlockEntityType<?> getType() {
+    @NotNull
+    public BlockEntityType<?> getType() {
         return Registration.VEC3_MODULE_ENTITY.get();
     }
 }
-
