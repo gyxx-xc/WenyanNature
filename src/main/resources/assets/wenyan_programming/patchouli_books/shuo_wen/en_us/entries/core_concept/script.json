@@ -1,5 +1,5 @@
 {
-  "name": "§l脚本",
+  "name": "脚本",
   "icon": "wenyan_programming:bamboo_paper",
   "category": "wenyan_programming:core_concept",
   "sortnum": 1,
@@ -11,5 +11,3 @@
     }
   ]
 }
-
-

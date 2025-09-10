@@ -1,5 +1,5 @@
 {
-  "name": "§l纸和墨水（材料）",
+  "name": "纸和墨水（材料）",
   "icon": "wenyan_programming:bamboo_paper",
   "category": "wenyan_programming:core_concept",
   "sortnum": 7,
@@ -11,5 +11,3 @@
     }
   ]
 }
-
-

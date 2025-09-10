@@ -1,5 +1,5 @@
 {
-  "name": "§l方块库",
+  "name": "方块库",
   "icon": "wenyan_programming:cinnabar_ink",
   "category": "wenyan_programming:core_concept",
   "sortnum": 5,
@@ -11,5 +11,3 @@
     }
   ]
 }
-
-

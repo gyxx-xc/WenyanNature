@@ -6,7 +6,7 @@
     "pages": [
       {
         "type": "patchouli:text",
-        "text": "妙思匠心 $(br2) 于幽微之处，皆有洞天。"
+        "text": "妙思匠心$(br2)于幽微之处，皆有洞天。"
       }
     ]
   }
