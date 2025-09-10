@@ -1,5 +1,8 @@
 package indi.wenyan.interpreter.structure.values.primitive;
 
+import com.ibm.icu.text.NumberFormat;
+import com.ibm.icu.text.RuleBasedNumberFormat;
+import com.ibm.icu.util.ULocale;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
@@ -63,16 +66,9 @@ public record WenyanDouble(Double value)
 
     @Override
     public @NotNull String toString() {
-        String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
-        String dot = "又";
-        StringBuilder result = new StringBuilder();
-        double v = value;
-        if (v < 0) {
-            result.append("負");
-            v = -v;
-        }
-        for (char digit : Double.toString(v).toCharArray())
-            result.append(digit == '.' ? dot : numerals[Character.getNumericValue(digit)]);
-        return result.toString();
+        ULocale locale = ULocale.forLanguageTag("zh-Hant");
+        NumberFormat formatter = new RuleBasedNumberFormat(locale, RuleBasedNumberFormat.SPELLOUT);
+        // replace "點" with "又"
+        return formatter.format(value).replace("點", "又");
     }
 }
