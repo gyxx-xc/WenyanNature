@@ -1,6 +1,5 @@
 package indi.wenyan.content.block.additional_module;
 
-import indi.wenyan.content.block.AbstractFuluBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -13,27 +12,25 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-/**
- * Base class for module blocks that have an associated block entity.
- * Handles the creation and ticking of module entities.
- */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractModuleBlock extends AbstractFuluBlock implements EntityBlock {
+public interface AbstractModuleBlock extends EntityBlock {
     /**
      * Gets the block entity type for this module block.
      *
      * @return the block entity type
      */
-    protected abstract BlockEntityType<?> getType();
+    BlockEntityType<?> getType();
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    @Nullable
+    default BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return getType().create(blockPos, blockState);
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T>
+    @Nullable
+    default <T extends BlockEntity> BlockEntityTicker<T>
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == getType())
