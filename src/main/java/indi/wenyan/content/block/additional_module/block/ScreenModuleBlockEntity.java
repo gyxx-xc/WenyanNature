@@ -1,11 +1,11 @@
-package indi.wenyan.content.block.additional_module;
+package indi.wenyan.content.block.additional_module.block;
 
+import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
@@ -20,39 +20,20 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.LinkedList;
 import java.util.List;
 
-public class InformationModuleEntity extends AbstractModuleEntity implements BlockOutputPacket.IDisplayable {
-    @Getter
-    private final String basePackageName = "「信」";
+public class ScreenModuleBlockEntity extends AbstractModuleEntity implements BlockOutputPacket.IDisplayable {
+    public ScreenModuleBlockEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.SCREEN_MODULE_BLOCK_ENTITY.get(), pos, blockState);
+    }
 
     @Getter
     private final List<String> output = new LinkedList<>();
 
     @Getter
-    private int signal = 0;
+    public final String basePackageName = "builtin";
 
-    // redstone get/set, show text, entity detection
     @Getter
-    private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「量」", new ThisCallHandler() {
-                @Override
-                public IWenyanValue handle(JavacallContext context) {
-                    int value = 0;
-                    if (getLevel() != null) {
-                        value = getLevel().getBestNeighborSignal(getBlockPos());
-                    }
-                    return new WenyanInteger(value);
-                }
-            })
-            .function("「輸能」", new ThisCallHandler() {
-                @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    signal = context.args().getFirst().as(WenyanInteger.TYPE).value();
-                    assert getLevel() != null;
-                    InformationModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
-                    return WenyanNull.NULL;
-                }
-            })
-            .function("「書」", new ThisCallHandler() {
+    public final WenyanPackage execPackage = WenyanPackageBuilder.create()
+            .function("書", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     StringBuilder result = new StringBuilder();
@@ -62,7 +43,7 @@ public class InformationModuleEntity extends AbstractModuleEntity implements Blo
                     if (getLevel() instanceof ServerLevel sl) {
                         PacketDistributor.sendToPlayersTrackingChunk(sl,
                                 new ChunkPos(getBlockPos()), new BlockOutputPacket(getBlockPos(),
-                                 result.toString()));
+                                        result.toString()));
                     }
                     return WenyanNull.NULL;
                 }
@@ -77,9 +58,5 @@ public class InformationModuleEntity extends AbstractModuleEntity implements Blo
         if (output.size() > 10) {
             output.removeFirst();
         }
-    }
-
-    public InformationModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.INFORMATION_MODULE_ENTITY.get(), pos, blockState);
     }
 }

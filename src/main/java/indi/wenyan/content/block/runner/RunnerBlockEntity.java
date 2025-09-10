@@ -74,6 +74,13 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Override
     public void initEnvironment(WenyanRuntime baseEnvironment) {
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
+        var attachedPos = RunnerBlock.getConnectedDirection(getBlockState()).getOpposite();
+        BlockPos attached = getBlockPos().relative(attachedPos);
+        assert getLevel() != null;
+        if (getLevel().getBlockEntity(attached) instanceof IWenyanDevice device) {
+            for (String id : device.getExecPackage().getAttributeSet())
+                baseEnvironment.setVariable(id, device.getExecPackage().getAttribute(id));
+        }
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
@@ -106,9 +113,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             return;
         }
         var from = getBlockPos().getCenter();
-        level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
-                from.x(), from.y(), from.z(),
-                to.x(), to.y(), to.z());
+        // distance limit
+        if (from.distanceTo(to) >= 2)
+            level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
+                    from.x(), from.y(), from.z(),
+                    to.x(), to.y(), to.z());
     }
 
     @Override

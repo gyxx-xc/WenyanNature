@@ -6,6 +6,8 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.CraftingBlock;
 import indi.wenyan.content.block.CraftingBlockEntity;
 import indi.wenyan.content.block.additional_module.*;
+import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
+import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
@@ -148,6 +150,10 @@ public final class Registration {
     public static final DeferredBlock<Vec3ModuleBlock> VEC3_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> VEC3_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<Vec3ModuleEntity>> VEC3_MODULE_ENTITY;
+
+    public static final DeferredBlock<ScreenModuleBlock> SCREEN_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<ScreenModuleBlockEntity>> SCREEN_MODULE_BLOCK_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -337,6 +343,13 @@ public final class Registration {
                         .of(Vec3ModuleEntity::new, VEC3_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        SCREEN_MODULE_BLOCK = BLOCKS.register(ScreenModuleBlock.ID, ScreenModuleBlock::new);
+        SCREEN_MODULE_BLOCK_ITEM = ITEMS.registerItem(ScreenModuleBlock.ID,
+                (properties) -> new BlockItem(SCREEN_MODULE_BLOCK.get(), properties));
+        SCREEN_MODULE_BLOCK_ENTITY = BLOCK_ENTITY.register(ScreenModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(ScreenModuleBlockEntity::new, SCREEN_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
 
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,

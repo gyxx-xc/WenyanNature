@@ -86,7 +86,7 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     /**
      * An abstract call handler that uses this module entity as the executor.
      */
-    abstract class ThisCallHandler implements IExecCallHandler {
+    protected abstract class ThisCallHandler implements IExecCallHandler {
         @Override
         public Optional<IWenyanDevice> getExecutor() {
             if (isRemoved())

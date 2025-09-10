@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import lombok.Getter;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents a package (collection of variables/functions) in Wenyan
@@ -23,6 +24,10 @@ public class WenyanPackage implements IWenyanObject {
      */
     public WenyanPackage(Map<String, IWenyanValue> variables) {
         this.variables = variables;
+    }
+
+    public Set<String> getAttributeSet() {
+        return variables.keySet();
     }
 
     @Override

@@ -33,6 +33,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlock(Registration.CRAFTING_BLOCK.get(),
                 new ModelFile.UncheckedModelFile(
                         ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/crafting_block")));
+        simpleBlock(Registration.SCREEN_MODULE_BLOCK.get());
         registerModuleBlock(Registration.INFORMATION_MODULE_BLOCK);
         registerModuleBlock(Registration.INTERACT_MODULE_BLOCK);
         registerModuleBlock(Registration.BIT_MODULE_BLOCK);
