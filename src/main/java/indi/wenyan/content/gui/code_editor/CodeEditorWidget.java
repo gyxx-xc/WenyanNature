@@ -167,7 +167,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE,
-                Component.translatable("gui.narrate.editBox", getMessage(), screen.getContent()));
+                Component.translatable("gui.narrate.editBox", getMessage(), screen.getContent().toString()));
     }
 
     // input
