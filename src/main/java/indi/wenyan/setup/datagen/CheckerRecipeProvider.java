@@ -34,11 +34,11 @@ public class CheckerRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(@NotNull RecipeOutput recipeOutput) {
         AnsweringRecipeBuilder
-                .create(Registration.HAND_RUNNER_1.get())
+                .create(Registration.HAND_RUNNER.get())
                 .addInput(Items.PAPER)
                 .question(CheckerFactory.PLUS_CHECKER)
                 .unlock(has(Registration.HAND_RUNNER.get()))
-                .save(recipeOutput, "hand_runner_1");
+                .save(recipeOutput, "hand_runner");
         AnsweringRecipeBuilder
                 .create(Items.DIAMOND)
                 .addInput(Items.COAL, 2)
@@ -61,14 +61,14 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .addInput(Items.BLACK_DYE,1)
                 .question(CheckerFactory.PLUS_CHECKER) //Need change
                 .unlock(has(Registration.HAND_RUNNER_1.get()))
-                .save(recipeOutput, "hand_runner_2");
+                .save(recipeOutput, "bamboo_ink");
         AnsweringRecipeBuilder //bamboo paper
                 .create(Registration.BAMBOO_PAPER.get())
                 .addInput(Items.PAPER, 1)
                 .addInput(Items.BAMBOO,1)
                 .question(CheckerFactory.PLUS_CHECKER) //Need change
                 .unlock(has(Registration.BAMBOO_PAPER.get()))
-                .save(recipeOutput, "bamboo_ink");
+                .save(recipeOutput, "bamboo_paper");
         AnsweringRecipeBuilder //Hand Runner 1
                 .create(Registration.HAND_RUNNER_1.get())
                 .addInput(Registration.BAMBOO_INK.get(), 1)
@@ -114,6 +114,29 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .addInput(Items.GLOWSTONE_DUST,1)
                 .question(CheckerFactory.PLUS_CHECKER) //Need change
                 .unlock(has(Registration.STAR_PAPER.get()))
-                .save(recipeOutput, "starlight_paper");
+                .save(recipeOutput, "star_paper");
+        AnsweringRecipeBuilder //Hand Runner 3
+                .create(Registration.HAND_RUNNER_3.get())
+                .addInput(Registration.STARLIGHT_INK.get(), 1)
+                .addInput(Registration.STAR_PAPER.get(), 1)
+                .question(CheckerFactory.PLUS_CHECKER) //Need change
+                .unlock(has(Registration.HAND_RUNNER_2.get()))
+                .save(recipeOutput, "hand_runner_3");
+        
+        AnsweringRecipeBuilder //Lunar ink
+                .create(Registration.LUNAR_INK.get())
+                .addInput(Registration.STARLIGHT_INK.get(),1)
+                .addInput(Items.BLACK_DYE,1)
+                .question(CheckerFactory.PLUS_CHECKER) //Need Change
+                .unlock(has(Registration.HAND_RUNNER_2.get()))
+                .save(recipeOutput,"lunar_ink");
+        AnsweringRecipeBuilder //frost_paper
+                .create(Registration.FROST_PAPER.get())
+                .addInput(Items.SNOWBALL,1)
+                .addInput(Items.GOLD_NUGGET,1)
+                .addInput(Items.PAPER,1)
+                .question(CheckerFactory.PLUS_CHECKER)
+                .unlock(has(Registration.HAND_RUNNER_3.get()))
+                .save(recipeOutput,"frost_paper");
     }
 }
