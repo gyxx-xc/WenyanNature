@@ -57,7 +57,5 @@ public class ScreenModuleBlockRenderer implements BlockEntityRenderer<ScreenModu
         if (!out.isEmpty())
             lastOutput = out.hashCode();
         poseStack.popPose();
-
     }
-
 }

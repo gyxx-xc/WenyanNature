@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class InformationModuleBlock extends AbstractFuluBlock implements AbstractModuleBlock {
+public class InformationModuleBlock extends AbstractFuluBlock implements IModulerBlock {
     public static final String ID = "information_module_block";
 
     @Override

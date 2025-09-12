@@ -5,7 +5,7 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
-public class InventoryModuleBlock extends AbstractFuluBlock implements AbstractModuleBlock {
+public class InventoryModuleBlock extends AbstractFuluBlock implements IModulerBlock {
     public static final String ID = "inventory_module_block";
 
     @Override

@@ -5,7 +5,7 @@ import indi.wenyan.setup.Registration;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
-public class InteractModuleBlock extends AbstractFuluBlock implements AbstractModuleBlock {
+public class InteractModuleBlock extends AbstractFuluBlock implements IModulerBlock {
     public static final String ID = "interact_module_block";
 
     @Override

@@ -9,7 +9,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class ExplosionModuleBlock extends AbstractFuluBlock implements AbstractModuleBlock {
+public class ExplosionModuleBlock extends AbstractFuluBlock implements IModulerBlock {
     public static final String ID = "explosion_module_block";
 
     @Override

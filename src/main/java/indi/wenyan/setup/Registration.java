@@ -6,6 +6,8 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.CraftingBlock;
 import indi.wenyan.content.block.CraftingBlockEntity;
 import indi.wenyan.content.block.additional_module.*;
+import indi.wenyan.content.block.additional_module.block.BlockOperationModuleBlock;
+import indi.wenyan.content.block.additional_module.block.BlockOperationModuleBlockEntity;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
 import indi.wenyan.content.block.additional_module.builtin.*;
@@ -425,6 +427,8 @@ public final class Registration {
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
                     output.accept(INVENTORY_MODULE_BLOCK_ITEM.get());
                     output.accept(VEC3_MODULE_BLOCK_ITEM.get());
+
+                    output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
                 }).build());
     }
 }
