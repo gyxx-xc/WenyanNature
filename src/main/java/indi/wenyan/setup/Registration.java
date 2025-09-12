@@ -378,7 +378,7 @@ public final class Registration {
         ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register(AnsweringRecipe.ID,
                 AnsweringRecipe.Serializer::new);
         ANSWERING_RECIPE_TYPE = RECIPE_TYPE.register(AnsweringRecipe.ID,
-                () -> new RecipeType<>() {
+                () -> new RecipeType<AnsweringRecipe>() {
                     @Override
                     public String toString() {
                         return AnsweringRecipe.ID;

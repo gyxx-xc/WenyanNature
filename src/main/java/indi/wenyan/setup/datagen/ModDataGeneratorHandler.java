@@ -6,6 +6,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
+import java.util.List;
 
 /**
  * Central handler for data generation.
@@ -52,5 +54,13 @@ public final class ModDataGeneratorHandler {
                 event.includeClient(),
                 (DataProvider.Factory<ModParticleDescriptionProvider>) pOutput ->
                         new ModParticleDescriptionProvider(pOutput, efh));
+        generator.addProvider(
+                event.includeServer(),
+                (DataProvider.Factory<AdvancementProvider>) pOutput ->
+                        new AdvancementProvider(pOutput, event.getLookupProvider(), efh,
+                                List.of((registries, saver, existingFileHelper) -> {
+                                    var provider = new indi.wenyan.setup.datagen.AdvancementProvider();
+                                    provider.generate(registries, saver, existingFileHelper);
+                                })));
     }
 }

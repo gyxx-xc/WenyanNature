@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": { "item": "wenyan_programming:hand_runner_0" },
+    "title": { "text": "吾有一术" },
+    "description": { "text": "合成 HAND_RUNNER" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_hand_runner": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [ "wenyan_programming:hand_runner_0" ] }
+        ]
+      }
+    }
+  }
+}
+
+
