@@ -44,6 +44,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         basicItem(Registration.FLOAT_NOTE.get());
 
+        basicItem(Registration.SCREEN_MODULE_BLOCK_ITEM.get());
+
 //        withExistingParent(Registration.ADDITIONAL_PAPER_BLOCK.getId().getPath(),
 //                modLoc("block/runner_block"));
     }
