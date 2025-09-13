@@ -159,6 +159,10 @@ public final class Registration {
     public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<CommunicateModuleEntity>> COMMUNICATE_MODULE_ENTITY;
 
+    public static final DeferredBlock<SemaphoreModuleBlock> SEMAPHORE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> SEMAPHORE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<SemaphoreModuleEntity>> SEMAPHORE_MODULE_ENTITY;
+
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
@@ -363,6 +367,14 @@ public final class Registration {
                         .of(CommunicateModuleEntity::new, COMMUNICATE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        SEMAPHORE_MODULE_BLOCK = BLOCKS.register(SemaphoreModuleBlock.ID, SemaphoreModuleBlock::new);
+        SEMAPHORE_MODULE_BLOCK_ITEM = ITEMS.registerItem(SemaphoreModuleBlock.ID,
+                (properties) -> new BlockItem(SEMAPHORE_MODULE_BLOCK.get(), properties));
+        SEMAPHORE_MODULE_ENTITY = BLOCK_ENTITY.register(SemaphoreModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(SemaphoreModuleEntity::new, SEMAPHORE_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
 //                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
@@ -437,6 +449,8 @@ public final class Registration {
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
                     output.accept(INVENTORY_MODULE_BLOCK_ITEM.get());
                     output.accept(VEC3_MODULE_BLOCK_ITEM.get());
+                    output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
+                    output.accept(SEMAPHORE_MODULE_BLOCK_ITEM.get());
 
                     output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
                 }).build());
