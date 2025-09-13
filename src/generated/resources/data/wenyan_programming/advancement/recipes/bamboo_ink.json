@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hand_runner_1": {
+    "has_bamboo_ink": {
       "conditions": {
         "items": [
           {
@@ -14,7 +14,7 @@
   },
   "requirements": [
     [
-      "has_hand_runner_1"
+      "has_bamboo_ink"
     ]
   ]
 }

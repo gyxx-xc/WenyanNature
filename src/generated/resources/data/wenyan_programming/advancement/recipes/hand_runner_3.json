@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hand_runner_1": {
+    "has_hand_runner_3": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:hand_runner"
+            "items": "wenyan_programming:hand_runner_2"
           }
         ]
       },
@@ -14,7 +14,7 @@
   },
   "requirements": [
     [
-      "has_hand_runner_1"
+      "has_hand_runner_3"
     ]
   ]
 }

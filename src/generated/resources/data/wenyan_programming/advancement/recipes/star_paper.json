@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hand_runner_1": {
+    "has_star_paper": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:hand_runner"
+            "items": "wenyan_programming:star_paper"
           }
         ]
       },
@@ -14,7 +14,7 @@
   },
   "requirements": [
     [
-      "has_hand_runner_1"
+      "has_star_paper"
     ]
   ]
 }

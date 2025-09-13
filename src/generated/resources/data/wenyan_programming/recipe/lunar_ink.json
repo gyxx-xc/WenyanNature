@@ -2,15 +2,15 @@
   "type": "wenyan_programming:answering_recipe",
   "input": [
     {
-      "item": "wenyan_programming:bamboo_ink"
+      "item": "wenyan_programming:starlight_ink"
     },
     {
-      "item": "wenyan_programming:bamboo_paper"
+      "item": "minecraft:black_dye"
     }
   ],
   "output": {
     "count": 1,
-    "id": "wenyan_programming:hand_runner"
+    "id": "wenyan_programming:lunar_ink"
   },
   "question": "plus"
 }
