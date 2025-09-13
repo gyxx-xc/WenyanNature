@@ -1,5 +1,7 @@
-package indi.wenyan.content.block.additional_module;
+package indi.wenyan.content.block.additional_module.paper;
 
+import indi.wenyan.content.block.AbstractFuluBlock;
+import indi.wenyan.content.block.additional_module.IModulerBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -13,11 +15,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class InformationModuleBlock extends AbstractModuleBlock {
+public class InformationModuleBlock extends AbstractFuluBlock implements IModulerBlock {
     public static final String ID = "information_module_block";
 
     @Override
-    protected BlockEntityType<?> getType() {
+    public BlockEntityType<?> getType() {
         return Registration.INFORMATION_MODULE_ENTITY.get();
     }
 

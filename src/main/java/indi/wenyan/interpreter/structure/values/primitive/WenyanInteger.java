@@ -1,5 +1,8 @@
 package indi.wenyan.interpreter.structure.values.primitive;
 
+import com.ibm.icu.text.NumberFormat;
+import com.ibm.icu.text.RuleBasedNumberFormat;
+import com.ibm.icu.util.ULocale;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
@@ -68,15 +71,8 @@ public record WenyanInteger(Integer value)
 
     @Override
     public @NotNull String toString() {
-        String[] numerals = {"零", "壹", "貳", "參", "肆", "伍", "陸", "柒", "捌", "玖"};
-        StringBuilder result = new StringBuilder();
-        int v = value;
-        if (v < 0) {
-            result.append("負");
-            v = -v;
-        }
-        for (char digit : Integer.toString(v).toCharArray())
-            result.append(numerals[Character.getNumericValue(digit)]);
-        return result.toString();
+        ULocale locale = ULocale.forLanguageTag("zh-Hant");
+        NumberFormat formatter = new RuleBasedNumberFormat(locale, RuleBasedNumberFormat.SPELLOUT);
+        return formatter.format(value);
     }
 }

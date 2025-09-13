@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
  *
  * @param <T> The Java class corresponding to this Wenyan type
  */
+@SuppressWarnings("ClassCanBeRecord") // no it can't
 public class WenyanType<T extends IWenyanValue> {
 
     /** The name of this type */

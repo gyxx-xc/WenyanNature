@@ -6,11 +6,10 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
+import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 /**
  * Interface for all Wenyan language values
@@ -172,7 +171,7 @@ public interface IWenyanValue {
         if (type == WenyanDouble.TYPE) return new WenyanDouble(0.0);
         if (type == WenyanBoolean.TYPE) return new WenyanBoolean(false);
         if (type == WenyanString.TYPE) return new WenyanString("");
-        if (type == WenyanArrayList.TYPE) return new WenyanArrayList(new ArrayList<>());
+        if (type == WenyanList.TYPE) return new WenyanList();
         throw new WenyanException("unreached");
     }
 }

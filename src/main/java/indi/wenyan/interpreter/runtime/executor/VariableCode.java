@@ -8,7 +8,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
+import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -57,7 +57,7 @@ public class VariableCode extends WenyanCode {
                         case 2 -> var.as(WenyanDouble.TYPE);
                         case 3 -> var.as(WenyanBoolean.TYPE);
                         case 4 -> var.as(WenyanString.TYPE);
-                        case 5 -> var.as(WenyanArrayList.TYPE);
+                        case 5 -> var.as(WenyanList.TYPE);
                         case 6 -> var.as(IWenyanObject.TYPE);
                         case 7 -> var.as(IWenyanObjectType.TYPE);
                         case 8 -> var.as(IWenyanFunction.TYPE);

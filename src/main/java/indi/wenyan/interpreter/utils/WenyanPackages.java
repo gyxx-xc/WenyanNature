@@ -2,10 +2,11 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanLeftValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
+import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import net.minecraft.network.chat.Component;
 
 public enum WenyanPackages {;
@@ -26,17 +27,17 @@ public enum WenyanPackages {;
             .function(new String[]{"銜","衔"}, (self, args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
-                WenyanArrayList value = args.getFirst().as(WenyanArrayList.TYPE);
+                WenyanList value = args.getFirst().as(WenyanList.TYPE);
                 for (IWenyanValue v : args.subList(1, args.size())) {
-                    value.concat(v.as(WenyanArrayList.TYPE));
+                    value.concat(v.as(WenyanList.TYPE));
                 }
                 return value;
             })
             .function("充", (self, args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
-                WenyanArrayList value = args.getFirst().as(WenyanArrayList.TYPE);
-                args.subList(1, args.size()).forEach(value::add);
+                WenyanList value = args.getFirst().as(WenyanList.TYPE);
+                args.subList(1, args.size()).forEach((v) -> value.add(WenyanLeftValue.varOf(v)));
                 return value;
             })
 

@@ -5,10 +5,10 @@ import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.CraftingBlock;
 import indi.wenyan.content.block.CraftingBlockEntity;
-import indi.wenyan.content.block.additional_module.*;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
 import indi.wenyan.content.block.additional_module.builtin.*;
+import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
@@ -154,6 +154,14 @@ public final class Registration {
     public static final DeferredBlock<ScreenModuleBlock> SCREEN_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<ScreenModuleBlockEntity>> SCREEN_MODULE_BLOCK_ENTITY;
+
+    public static final DeferredBlock<CommunicateModuleBlock> COMMUNICATE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<CommunicateModuleEntity>> COMMUNICATE_MODULE_ENTITY;
+
+    public static final DeferredBlock<SemaphoreModuleBlock> SEMAPHORE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> SEMAPHORE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<SemaphoreModuleEntity>> SEMAPHORE_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -351,6 +359,22 @@ public final class Registration {
                         .of(ScreenModuleBlockEntity::new, SCREEN_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        COMMUNICATE_MODULE_BLOCK = BLOCKS.register(CommunicateModuleBlock.ID, CommunicateModuleBlock::new);
+        COMMUNICATE_MODULE_BLOCK_ITEM = ITEMS.registerItem(CommunicateModuleBlock.ID,
+                (properties) -> new BlockItem(COMMUNICATE_MODULE_BLOCK.get(), properties));
+        COMMUNICATE_MODULE_ENTITY = BLOCK_ENTITY.register(CommunicateModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(CommunicateModuleEntity::new, COMMUNICATE_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
+        SEMAPHORE_MODULE_BLOCK = BLOCKS.register(SemaphoreModuleBlock.ID, SemaphoreModuleBlock::new);
+        SEMAPHORE_MODULE_BLOCK_ITEM = ITEMS.registerItem(SemaphoreModuleBlock.ID,
+                (properties) -> new BlockItem(SEMAPHORE_MODULE_BLOCK.get(), properties));
+        SEMAPHORE_MODULE_ENTITY = BLOCK_ENTITY.register(SemaphoreModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(SemaphoreModuleEntity::new, SEMAPHORE_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
 //                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
@@ -425,6 +449,10 @@ public final class Registration {
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
                     output.accept(INVENTORY_MODULE_BLOCK_ITEM.get());
                     output.accept(VEC3_MODULE_BLOCK_ITEM.get());
+                    output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
+                    output.accept(SEMAPHORE_MODULE_BLOCK_ITEM.get());
+
+                    output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
                 }).build());
     }
 }
