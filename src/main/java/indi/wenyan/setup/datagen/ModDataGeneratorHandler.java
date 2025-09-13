@@ -33,12 +33,12 @@ public final class ModDataGeneratorHandler {
                         new EnglishLanguageProvider(pOutput, WenyanProgramming.MODID,"en_us"));
         generator.addProvider(
                 event.includeClient(),
-                (DataProvider.Factory<ModItemModelProvider>) pOutput ->
-                        new ModItemModelProvider(pOutput, WenyanProgramming.MODID,efh));
-        generator.addProvider(
-                event.includeClient(),
                 (DataProvider.Factory<ModBlockStateProvider>) pOutput ->
                         new ModBlockStateProvider(pOutput, WenyanProgramming.MODID,efh));
+        generator.addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModItemModelProvider>) pOutput ->
+                        new ModItemModelProvider(pOutput, WenyanProgramming.MODID,efh));
         generator.addProvider(
                 event.includeClient(),
                 (DataProvider.Factory<ModSpriteProvider>) pOutput ->

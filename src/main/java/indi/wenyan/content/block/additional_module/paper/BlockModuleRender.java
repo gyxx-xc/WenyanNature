@@ -1,4 +1,4 @@
-package indi.wenyan.content.block.additional_module;
+package indi.wenyan.content.block.additional_module.paper;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;

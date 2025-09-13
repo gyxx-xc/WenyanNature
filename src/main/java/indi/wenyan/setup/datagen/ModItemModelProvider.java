@@ -1,5 +1,6 @@
 package indi.wenyan.setup.datagen;
 
+import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -44,9 +45,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         basicItem(Registration.FLOAT_NOTE.get());
 
-        basicItem(Registration.SCREEN_MODULE_BLOCK_ITEM.get());
+        blockItem(ScreenModuleBlock.ID);
+    }
 
-//        withExistingParent(Registration.ADDITIONAL_PAPER_BLOCK.getId().getPath(),
-//                modLoc("block/runner_block"));
+    private void blockItem(String item) {
+        withExistingParent(item, modLoc("block/" + item));
     }
 }

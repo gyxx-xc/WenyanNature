@@ -1,5 +1,6 @@
-package indi.wenyan.content.block.additional_module;
+package indi.wenyan.content.block.additional_module.paper;
 
+import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;

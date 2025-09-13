@@ -1,8 +1,8 @@
 package indi.wenyan.setup.event;
 
-import indi.wenyan.content.block.additional_module.BlockModuleRender;
-import indi.wenyan.content.block.additional_module.InformationModuleRender;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockRenderer;
+import indi.wenyan.content.block.additional_module.paper.BlockModuleRender;
+import indi.wenyan.content.block.additional_module.paper.InformationModuleRender;
 import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
 import indi.wenyan.content.entity.BulletRender;
