@@ -4,7 +4,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.structure.values.WenyanLeftValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
+import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class CommunicateModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .constant("「我」", new WenyanArrayList(Collections.nCopies(8,
+            .constant("「我」", new WenyanList(Collections.nCopies(8,
                     new WenyanLeftValue(WenyanNull.NULL))))
             .build();
 

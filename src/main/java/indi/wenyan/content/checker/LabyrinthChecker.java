@@ -10,7 +10,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
+import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import net.minecraft.util.RandomSource;
 
@@ -66,7 +66,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                     case "「下」" -> DOWN;
                     case "「左」" -> LEFT;
                     case "「右」" -> RIGHT;
-                    case "「方向」" -> new WenyanArrayList(List.copyOf(DIRECTIONS));
+                    case "「方向」" -> new WenyanList(List.copyOf(DIRECTIONS));
                     case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };

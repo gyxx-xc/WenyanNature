@@ -18,12 +18,15 @@ import java.util.List;
 
 /**
  * A Wenyan array list implementation that wraps a Java List.
+ * <p>
+ * to make the list element mutable, use the left value as the element
+ * to make the list immutable, use a immutable list as the value
  */
-public record WenyanArrayList(List<IWenyanValue> value)
+public record WenyanList(List<IWenyanValue> value)
         implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {
-    public static final WenyanType<WenyanArrayList> TYPE = new WenyanType<>("list", WenyanArrayList.class);
+    public static final WenyanType<WenyanList> TYPE = new WenyanType<>("list", WenyanList.class);
 
-    public WenyanArrayList() {
+    public WenyanList() {
         this(new ArrayList<>());
     }
 
@@ -34,7 +37,7 @@ public record WenyanArrayList(List<IWenyanValue> value)
      * @return this list after concatenation
      */
     @SuppressWarnings("UnusedReturnValue")
-    public WenyanArrayList concat(WenyanArrayList other) {
+    public WenyanList concat(WenyanList other) {
         value.addAll(other.value);
         return this;
     }

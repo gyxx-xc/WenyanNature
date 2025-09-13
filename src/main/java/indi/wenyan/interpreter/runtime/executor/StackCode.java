@@ -2,7 +2,6 @@ package indi.wenyan.interpreter.runtime.executor;
 
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.values.WenyanLeftValue;
 
 /**
  * Handles stack operations in the Wenyan interpreter.
@@ -25,7 +24,7 @@ public class StackCode extends WenyanCode {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             // TODO: may check why left?
-            case PUSH -> runtime.processStack.push(WenyanLeftValue.varOf(runtime.bytecode.getConst(args)));
+            case PUSH -> runtime.processStack.push(runtime.bytecode.getConst(args));
             case POP -> runtime.processStack.pop();
         }
     }
