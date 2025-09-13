@@ -10,7 +10,6 @@ import indi.wenyan.interpreter.structure.values.warper.WenyanArrayList;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 /**
  * Interface for all Wenyan language values
@@ -172,7 +171,7 @@ public interface IWenyanValue {
         if (type == WenyanDouble.TYPE) return new WenyanDouble(0.0);
         if (type == WenyanBoolean.TYPE) return new WenyanBoolean(false);
         if (type == WenyanString.TYPE) return new WenyanString("");
-        if (type == WenyanArrayList.TYPE) return new WenyanArrayList(new ArrayList<>());
+        if (type == WenyanArrayList.TYPE) return new WenyanArrayList();
         throw new WenyanException("unreached");
     }
 }

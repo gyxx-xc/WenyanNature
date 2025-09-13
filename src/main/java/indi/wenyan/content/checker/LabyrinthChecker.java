@@ -66,7 +66,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                     case "「下」" -> DOWN;
                     case "「左」" -> LEFT;
                     case "「右」" -> RIGHT;
-                    case "「方向」" -> new WenyanArrayList(new ArrayList<>(DIRECTIONS));
+                    case "「方向」" -> new WenyanArrayList(List.copyOf(DIRECTIONS));
                     case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };

@@ -155,6 +155,10 @@ public final class Registration {
     public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<ScreenModuleBlockEntity>> SCREEN_MODULE_BLOCK_ENTITY;
 
+    public static final DeferredBlock<CommunicateModuleBlock> COMMUNICATE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<CommunicateModuleEntity>> COMMUNICATE_MODULE_ENTITY;
+
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
@@ -349,6 +353,14 @@ public final class Registration {
         SCREEN_MODULE_BLOCK_ENTITY = BLOCK_ENTITY.register(ScreenModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(ScreenModuleBlockEntity::new, SCREEN_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
+        COMMUNICATE_MODULE_BLOCK = BLOCKS.register(CommunicateModuleBlock.ID, CommunicateModuleBlock::new);
+        COMMUNICATE_MODULE_BLOCK_ITEM = ITEMS.registerItem(CommunicateModuleBlock.ID,
+                (properties) -> new BlockItem(COMMUNICATE_MODULE_BLOCK.get(), properties));
+        COMMUNICATE_MODULE_ENTITY = BLOCK_ENTITY.register(CommunicateModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(CommunicateModuleEntity::new, COMMUNICATE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
