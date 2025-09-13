@@ -23,7 +23,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        basicItem(Registration.HAND_RUNNER.get());
+        basicItem(Registration.HAND_RUNNER_0.get());
         basicItem(Registration.HAND_RUNNER_1.get());
         basicItem(Registration.HAND_RUNNER_2.get());
         basicItem(Registration.HAND_RUNNER_3.get());

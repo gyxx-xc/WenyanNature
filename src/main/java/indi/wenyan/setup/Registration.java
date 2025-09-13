@@ -89,7 +89,7 @@ public final class Registration {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES;
 
     // Hand Runner items
-    public static final DeferredItem<Item> HAND_RUNNER;
+    public static final DeferredItem<Item> HAND_RUNNER_0;
     public static final DeferredItem<Item> HAND_RUNNER_1;
     public static final DeferredItem<Item> HAND_RUNNER_2;
     public static final DeferredItem<Item> HAND_RUNNER_3;
@@ -210,7 +210,7 @@ public final class Registration {
         RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
         PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
 
-        HAND_RUNNER = ITEMS.registerItem(HandRunnerEntity.ID_0,
+        HAND_RUNNER_0 = ITEMS.registerItem(HandRunnerEntity.ID_0,
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 0));
         HAND_RUNNER_1 = ITEMS.registerItem(HandRunnerEntity.ID_1,
                 (Item.Properties properties) -> new WenyanHandRunner(properties, 1));
@@ -378,7 +378,7 @@ public final class Registration {
         ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register(AnsweringRecipe.ID,
                 AnsweringRecipe.Serializer::new);
         ANSWERING_RECIPE_TYPE = RECIPE_TYPE.register(AnsweringRecipe.ID,
-                () -> new RecipeType<AnsweringRecipe>() {
+                () -> new RecipeType<>() {
                     @Override
                     public String toString() {
                         return AnsweringRecipe.ID;
@@ -393,7 +393,7 @@ public final class Registration {
                 .withTabsBefore(CreativeModeTabs.COMBAT)
                 .icon(() -> HAND_RUNNER_1.get().getDefaultInstance())
                 .displayItems((parameters, output) -> {
-                    output.accept(HAND_RUNNER.get());
+                    output.accept(HAND_RUNNER_0.get());
                     output.accept(HAND_RUNNER_1.get());
                     output.accept(HAND_RUNNER_2.get());
                     output.accept(HAND_RUNNER_3.get());

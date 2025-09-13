@@ -22,7 +22,7 @@ public class ChineseLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add(Registration.HAND_RUNNER.get(),"符咒");
+        add(Registration.HAND_RUNNER_0.get(),"符咒");
         add(Registration.FLOAT_NOTE.get(), "浮签");
         add(Registration.BAMBOO_PAPER.get(),"松竹纸");
         add(Registration.CLOUD_PAPER.get(),"云篆纸");

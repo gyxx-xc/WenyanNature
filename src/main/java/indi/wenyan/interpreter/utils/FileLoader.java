@@ -86,7 +86,7 @@ public enum FileLoader {
             case 2 -> runnerItem = Registration.HAND_RUNNER_2;
             case 3 -> runnerItem = Registration.HAND_RUNNER_3;
 
-            default -> runnerItem = Registration.HAND_RUNNER;
+            default -> runnerItem = Registration.HAND_RUNNER_0;
         }
 
 

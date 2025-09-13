@@ -23,7 +23,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         // Keep transliteration for item names
-        add(Registration.HAND_RUNNER.get(),"Shou Pao");
+        add(Registration.HAND_RUNNER_0.get(),"Shou Pao");
         add(Registration.FLOAT_NOTE.get(), "Fu Qian");
         add(Registration.BAMBOO_PAPER.get(),"Zhu Zhi");
         add(Registration.CLOUD_PAPER.get(),"Yun Zhi");
