@@ -1,0 +1,4 @@
+mkdocs
+mkdocs-material
+mkdocs-nav-weight
+mkdocs-static-i18n

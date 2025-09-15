@@ -25,6 +25,12 @@ theme:
         icon: material/brightness-4
         name: Switch to system preference
 plugins:
+  - search
+  - mkdocs-nav-weight:
+      warning: true
+      reverse: false
+      headless_included: false
+      default_page_weight: 1000
   - i18n:
       docs_structure: suffix
       languages:
