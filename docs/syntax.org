@@ -1,0 +1,173 @@
+* introduction
+The simplest programming prints "Hello, world." Code:
+吾有一數 曰三。名之曰「甲」。
+為是「甲」遍。
+    吾有一言 曰「「問天地好在。」」。書之。
+云云。
+Output:
+問天地好在。
+問天地好在。
+問天地好在。
+Three times to show "looping"—repeating an action, or:
+為是五遍。
+    吾有一言 曰「「問天地好在。」」。書之。
+云云。
+
+為是千遍。
+    吾有一言 曰「「問天地好在。」」。書之。
+云云。
+「甲」 are arbitrary, pointing to values. "A" is a variable, holding
+data as needed. Consider:
+吾有一數曰三。名之曰「甲」。
+吾有一言曰「「問天地好在。」」。書之。
+數 and 言 define variable types: 數 for numbers, 言 for strings.
+三 or 「「問天地好在。」」 sets the value. Later, change "A" to 4:
+昔之「甲」者 今四是矣。
+
+Single quotes mark variables, double quotes mark strings, avoiding
+ambiguity. Punctuation? Optional, for readability. Code can be:
+吾有一數曰三名之曰「甲」為是「甲」遍吾有一言曰「「問天地好在」」書之云云
+* data type
+** LITERAL
+*** 數
+一万一千零五 11005
+一一四五一四 114514
+負一又二分三毫 -1.203
+*** 言
+「「xxx」」 "xxx"
+*** 爻
+陰 false
+陽 true
+** non-LITERAL
+列 see array_operation
+物 see object
+术 see function
+* varible
+all id is in format of 「xxx」
+
+however, there's two spicial varible, 其 and 之 refer to the previous
+data produced by the statement before, see result stack for more.
+** declare
+吾有一數 曰十三。名之曰「甲」。
+有數十三。名之曰「甲」。
+夫十三。名之曰「甲」。
+above three is same refer to
+var 甲 = 13
+notiablely, the first type of declare will assigned the value with the
+type it declare to, e.g.:
+吾有一言 曰一二三。名之曰「甲」。
+where the value of 甲 is string 「「一百二十三」」 instead of 123.
+
+futher more, muti-declaration can be write with:
+吾有二數 曰十三 曰十五。名之曰「甲」曰「乙」。
+(var 甲 = 13, 乙 = 15)
+As you might notice, the naming syntax is an statement, it can be used
+like:
+有數十三。夫十五。名之曰「甲」曰「乙」。
+is same meaning of the above
+** assign
+昔之「甲」者 今三是矣。
+昔之「乙」者 今「甲」是矣。
+can be refer to
+甲 = 3
+乙 = 甲
+another special assignment is assign null:
+昔之「甲」者 今不复存矣。 or 昔之「甲」者 不复存矣。
+* control
+** if
+吾有一數。曰四十九。名之曰「貯」。
+若「貯」大於五十者。
+    加「貯」以一。昔之「貯」者。今其是矣。
+若非。
+    減「貯」以一。昔之「貯」者。今其是矣。
+也。
+也 marks sentence end, resolving ambiguity, can be replaced with 云云. Omitting 若非 is
+allowed if irrelevant.
+
+Comparison methods: six for numbers (等於, 不等於, 大於, 小於, 不大於,
+不小於), two for objects (等於, 不等於).
+
+bool can be also used as comparesion
+吾有一爻。曰陽。名之曰「甲」。
+若「甲」者。
+    吾有一言。曰「「陽者。歲之主也。」」書之。
+若非。
+    吾有一言。曰「「陰者。陽之助也。」」書之。
+也。
+
+(not impl)
+For complex cases, use 或若 for sequential comparisons, acting on the
+first true condition or 若非 if none are true.
+** loop
+Three types of loop
+恆為是。
+    吾有一言。曰「「天地長不沒。山川無改時。」」書之。
+云云。
+
+為是百遍。
+    吾有一言。曰「「讀書百遍。其義自見。」」書之。
+云云。
+
+凡「列」中之「元」
+    吾有二言。曰「元」。曰「「者。亦列中之物也。」」書之。
+云云。
+note that 「列」 is a list(a link to list)
+乃止: break, Breaks the loop entirely.
+乃止是遍: continue, Skips to the next iteration.
+* calculation
+加一以二。夫之等於三。
+減二以一。夫之等於一。
+乘二以三。夫之等於六。
+除八以四。夫之等於二。
+除五以三。所餘幾何。夫之等於二。
+
+and some extra grammar
+且陰以陽。夫之等於陰。
+或陽以陰。夫之等於陽。
+變陰。夫之等於陽。
+
+the preposion can have 於 or 以, which change the order of the number
+on left or right of the operation. e.g.
+減二以一。夫之等於一。
+減二於一。夫之等於負一。
+
+to make the calculation longer, with the useage of pronoun(link)
+加七十五以二。乘其以九。減其以三十六。除其以二。加其以五百。書之。
+
+a more complex example
+吾有二數。曰三十五。曰九十四。名之曰「頭」曰「足」。
+除「足」以二。減其以「頭」。名之曰「兔」。
+減「頭」以「兔」。名之曰「雉」。
+夫「雉」夫「兔」。取二以書。
+
+the data can be converted to the corresponding type when needed, e.g.
+或陰以三。夫之等於陽。
+加二以陽。夫之等於三。
+乘三以陰。夫之等於零。
+加二以「「者」」。夫之等於「「二者」」。
+* function
+** call
+施「甲」於一於四。
+夫一。夫四。取三以施「甲」。
+there're two ways of calling function, both has the same meaning. the
+second way will get the pervious result as the args, which will be
+usefull when need calculated data. The calculation, in the meanwhile,
+is also a funcion, however, they are spiecal that can be called key
+function. thwy don't need the bracket and the calling key word to
+work. e.g.
+加一以二
+夫一。夫二。取二以加。
+** define
+
+* others
+其 refer to the result of pervious command, and replace the pervious
+result. On the other hand, 之 do the same things, but add the
+result. this can be show in the muti-args function post call. e.g.
+夫一。夫之。夫之。
+取三以加。 // OK
+夫一。夫其。夫其。
+取三以加。 // error
+
+
+comment can be used as 注曰/疏曰/批曰「「xxx」」。. witch will be
+directly ignored by compiler

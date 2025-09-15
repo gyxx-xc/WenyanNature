@@ -80,13 +80,13 @@ assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGH
 function_define_statement   : LOCAL_DECLARE_OP INT_NUM FUNCTION_TYPE NAMING YUE IDENTIFIER
                               function_define_body IDENTIFIER FUNCTION_DEFINE_END ;
 
-function_call_statement     : call=(CALLING_FUNCTION|CREATE_OBJECT) (data|key_function)
+function_call_statement     : ((call= (CALLING_FUNCTION|CREATE_OBJECT) data) | key_function)
                               (preposition (args+=data))?
                               (preposition args+=data)*                         # function_pre_call
                             | key_function (data)
                               (pp+=(PREPOSITION_LEFT|PREPOSITION_RIGHT) data)*  # key_function_call
-                            | FUNCTION_GET_ARGS INT_NUM PREPOSITION_RIGHT call=(CALLING_FUNCTION|CREATE_OBJECT)
-                              (data|key_function)                               # function_post_call
+                            | FUNCTION_GET_ARGS INT_NUM PREPOSITION_RIGHT
+                              ((call= (CALLING_FUNCTION|CREATE_OBJECT) data) | key_function) # function_post_call
                             ;
 
 flush_statement             : FLUSH ;

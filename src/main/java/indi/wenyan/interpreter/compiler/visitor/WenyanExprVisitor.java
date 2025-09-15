@@ -209,7 +209,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             else
                 visit(ctx.data(0));
 
-            if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
+            if (ctx.call != null && ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
                 bytecode.add(WenyanCodes.CAST, IWenyanObjectType.TYPE.ordinal());
             bytecode.add(WenyanCodes.CALL, ctx.args.size());
         }
@@ -245,7 +245,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             else
                 visit(ctx.data());
 
-            if (ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
+            if (ctx.call != null && ctx.call.getType() == WenyanRParser.CREATE_OBJECT)
                 bytecode.add(WenyanCodes.CAST, IWenyanObjectType.TYPE.ordinal());
             bytecode.add(WenyanCodes.CALL, count);
         }
