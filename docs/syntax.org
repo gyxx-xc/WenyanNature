@@ -158,7 +158,42 @@ work. e.g.
 加一以二
 夫一。夫二。取二以加。
 ** define
+吾有一術。名之曰「法」。是術曰。
+    xxx
+是謂「法」之術也。
 
+吾有一術 名之曰「三法」。
+欲行是術 必先得 二數曰「甲」曰「乙」。一言曰「丙」。是術曰。
+    xxx
+是謂「三法」之術也。
+define the funcion with or without args. please note that the args is
+typed, which means the args that input to the function will be auto
+casting to the corresponding type. e.g.
+
+吾有一術 名之曰「法」。
+欲行是術 必先得一言曰「甲」。是術曰。
+    加「甲」以一。書之。
+是謂「法」之術也。
+施「法」於二
+this will print 二一 instead of 三
+
+It's able to define a function inside a function, and the function can
+be passed as a args or return value.
+** return and misc
+乃得一
+乃得矣
+乃歸
+these three will return the function, first one return 1, second
+return the last result, the third will return without data.
+
+to use the returned data, use 其 or 之. e.g.
+施「法」。加之以一。加之以一。
+取三以施「三法」。名之曰「甲」。
+
+about the varible, the statement inside the funcion can directly
+access the varible outside the function, like python, and all the
+varible declared inside function will disappear with the return of the
+function.
 * others
 其 refer to the result of pervious command, and replace the pervious
 result. On the other hand, 之 do the same things, but add the
@@ -167,7 +202,6 @@ result. this can be show in the muti-args function post call. e.g.
 取三以加。 // OK
 夫一。夫其。夫其。
 取三以加。 // error
-
 
 comment can be used as 注曰/疏曰/批曰「「xxx」」。. witch will be
 directly ignored by compiler
