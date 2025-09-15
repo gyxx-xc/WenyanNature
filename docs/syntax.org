@@ -201,14 +201,19 @@ method of defining objects is retained as static variables of the
 class.
 
 Functions can be declared as `物之「甲」者術....`
-To declare non-static variables, define attributes in the constructor,
-e.g., `名之曰己之「甲」`, similar to Python.
+To declare non-static variables, define attributes in the constructor
+i.e. a key-funcion 造, similar to Python.
 
-吾有一物。名之曰「精衛」。其物如是。
-    物之「「名」」者。言曰「「女娃」」。
-    物之「「足數」」者。數曰二。
-    物之「「喙數」」者。數曰一。
-是謂「精衛」之物也。
+吾有一物。名之曰「物」。其物如是。
+    物之「甲」者數 曰二。 // static
+    物之造者術 是術曰。
+        夫一。名之曰己之「甲」。 // parameter
+    是謂造之術也。
+是謂「物」之物也。
+
+造「物」。名之曰「甲」。
+夫「物」之「甲」。夫「甲」之「甲」。
+取二以書。
 
 Objects can be extended using `繼「物」` after `吾有一物`. This
 only extends functions.
@@ -216,6 +221,20 @@ Two new variables are introduced: `己`, which refers to the instance
 of the class, and `父`, which refers to the superclass type.
 Functions can be static by omitting `己`.
 Use one backtick for attribute
+
+吾有一物。名之曰「甲」。其物如是。
+    物之造者術是術曰。
+        夫一名之曰己之「甲」
+    是謂造之術也。
+是謂「甲」之物也。
+
+吾有一物繼「甲」。名之曰「乙」。其物如是。
+    物之造者術 是術曰。
+        施父之造。 // do not use 造父
+        昔之己之「甲」者 今二是矣。
+        夫一。名之曰己之「乙」。
+    是謂造之術也。
+是謂「乙」之物也。
 
 * others
 其 refer to the result of pervious command, and replace the pervious
