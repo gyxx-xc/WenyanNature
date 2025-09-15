@@ -1,143 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-        <loc>Nonedevelopment/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/development/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonedevelopment/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/development/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/"/>
     </url>
     <url>
-        <loc>Noneusage/calculation/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/calculation/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/calculation/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/calculation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/calculation/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/calculation/"/>
     </url>
     <url>
-        <loc>Noneusage/control/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/control/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/control/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/control/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/control/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/control/"/>
     </url>
     <url>
-        <loc>Noneusage/data_type/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/data_type/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/data_type/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/data_type/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/data_type/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/data_type/"/>
     </url>
     <url>
-        <loc>Noneusage/function/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/function/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/function/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/function/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/function/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/function/"/>
     </url>
     <url>
-        <loc>Noneusage/misc/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/misc/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/misc/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/misc/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/misc/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/misc/"/>
     </url>
     <url>
-        <loc>Noneusage/object/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/object/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/object/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/object/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/object/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/object/"/>
     </url>
     <url>
-        <loc>Noneusage/quick_start/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/quick_start/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/quick_start/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/quick_start/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/quick_start/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/quick_start/"/>
     </url>
     <url>
-        <loc>Noneusage/syntax/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/syntax/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/syntax/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/syntax/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/syntax/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/syntax/"/>
     </url>
     <url>
-        <loc>Noneusage/varible/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/usage/varible/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/varible/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/varible/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/varible/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/varible/"/>
     </url>
     <url>
-        <loc>Nonezh/development/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/development/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/development/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonedevelopment/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/calculation/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/calculation/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/calculation/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/calculation/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/calculation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/calculation/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/control/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/control/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/control/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/control/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/control/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/control/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/data_type/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/data_type/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/data_type/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/data_type/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/data_type/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/data_type/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/function/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/function/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/function/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/function/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/function/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/function/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/misc/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/misc/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/misc/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/misc/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/misc/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/misc/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/object/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/object/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/object/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/object/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/object/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/object/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/quick_start/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/quick_start/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/quick_start/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/quick_start/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/quick_start/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/quick_start/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/syntax/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/syntax/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/syntax/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/syntax/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/syntax/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/syntax/"/>
     </url>
     <url>
-        <loc>Nonezh/usage/varible/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/usage/varible/</loc>
         <lastmod>2025-09-15</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="Nonezh/usage/varible/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneusage/varible/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/usage/varible/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/usage/varible/"/>
     </url>
 </urlset>
