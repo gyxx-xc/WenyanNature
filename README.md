@@ -1,6 +1,6 @@
 [English](README.md) | [简体中文](docs/README.zh_CHS.md) | [繁体中文](docs/README.zh_CHT.md)
 
-<p><img src="docs/title.png" alt="Logo" width="720"></p>
+<p><img src="docs/mkdocs/docs/title.png" alt="Logo" width="720"></p>
 
 <h1>Wenyan Nature  <br>
 	<a href="https://github.com/gyxx-xc/WenyanNature/blob/master/LICENSE"><img src="https://img.shields.io/github/license/gyxx-xc/WenyanNature?style=flat&color=900c3f" alt="License"></a>
