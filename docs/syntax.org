@@ -194,6 +194,29 @@ about the varible, the statement inside the funcion can directly
 access the varible outside the function, like python, and all the
 varible declared inside function will disappear with the return of the
 function.
+* object
+Object definitions now define a type, and objects can be instantiated
+using `造「物」` or `施「物」` to call their constructor. The original
+method of defining objects is retained as static variables of the
+class.
+
+Functions can be declared as `物之「甲」者術....`
+To declare non-static variables, define attributes in the constructor,
+e.g., `名之曰己之「甲」`, similar to Python.
+
+吾有一物。名之曰「精衛」。其物如是。
+    物之「「名」」者。言曰「「女娃」」。
+    物之「「足數」」者。數曰二。
+    物之「「喙數」」者。數曰一。
+是謂「精衛」之物也。
+
+Objects can be extended using `繼「物」` after `吾有一物`. This
+only extends functions.
+Two new variables are introduced: `己`, which refers to the instance
+of the class, and `父`, which refers to the superclass type.
+Functions can be static by omitting `己`.
+Use one backtick for attribute
+
 * others
 其 refer to the result of pervious command, and replace the pervious
 result. On the other hand, 之 do the same things, but add the
@@ -202,6 +225,9 @@ result. this can be show in the muti-args function post call. e.g.
 取三以加。 // OK
 夫一。夫其。夫其。
 取三以加。 // error
+
+using mutiple 其 inside one statement will causing unexcepted
+behaviour.
 
 comment can be used as 注曰/疏曰/批曰「「xxx」」。. witch will be
 directly ignored by compiler
