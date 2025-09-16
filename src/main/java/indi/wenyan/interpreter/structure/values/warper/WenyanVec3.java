@@ -128,6 +128,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
 
     @Override
     public @NotNull String toString() {
-        return value.toString();
+        return "(" + new WenyanDouble(value().x()) + ", " +
+                new WenyanDouble(value().y()) + ", " + new WenyanDouble(value().z()) + ")";
     }
 }

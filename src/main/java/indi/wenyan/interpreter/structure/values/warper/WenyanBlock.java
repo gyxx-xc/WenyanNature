@@ -13,6 +13,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockState>, IWenyanObject {
     public static final WenyanType<WenyanBlock> TYPE = new WenyanType<>("block", WenyanBlock.class);
@@ -65,4 +66,8 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
         }
     }
 
+    @Override
+    public @NotNull String toString() {
+        return value.getBlock().getName().getString();
+    }
 }

@@ -46,6 +46,8 @@ public interface IWenyanValue {
         }
         if (casting(type) != null) {
             return casting(type);
+        } else if (type == WenyanString.TYPE) {
+            return (T) new WenyanString(toString());
         }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_programming.cannot_cast_").getString() +
                 type() + Component.translatable("error.wenyan_programming._to_").getString() + type);
