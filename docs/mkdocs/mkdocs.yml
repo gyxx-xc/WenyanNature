@@ -5,6 +5,8 @@ theme:
   name: material
   features:
     - navigation.tabs
+    - navigation.instant
+    - navigation.indexes
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
@@ -27,6 +29,7 @@ theme:
         name: Switch to system preference
 plugins:
   - search
+  - awesome-nav
   - mkdocs-nav-weight:
       warning: true
       reverse: false

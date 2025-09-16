@@ -1,4 +1,10 @@
-[English](../README.md) | [简体中文](README.zh_CHS.md) | [繁体中文](README.zh_CHT.md)
+---
+title: 吾有一术
+weight: -10
+hide:
+  - navigation
+  - toc
+---
 
 <p><img src="title.png" alt="Logo" width="720"></p>
 
@@ -20,11 +26,11 @@
 
 ## 开发计划
 
-* [ ]  **虚拟化领域**：沙盒运行环境，用于隔离代码执行。
-* [ ]  **即时编译（JIT）**：实时字节码编译，即使区块卸载也能保留进度。
-* [ ]  **代码合成**：设计代码并解开神秘的谜题以解锁新的物品。
-* [ ]  **优化符咒编辑界面**：增强代码编辑功能，包括自动补全、语法高亮等。
-* [ ]  **拓展 Minecraft 魔法系统**：与 Minecraft 的游戏机制进行深度整合。
+* **虚拟化领域**：沙盒运行环境，用于隔离代码执行。
+* **即时编译（JIT）**：实时字节码编译，即使区块卸载也能保留进度。
+* **代码合成**：设计代码并解开神秘的谜题以解锁新的物品。
+* **优化符咒编辑界面**：增强代码编辑功能，包括自动补全、语法高亮等。
+* **拓展 Minecraft 魔法系统**：与 Minecraft 的游戏机制进行深度整合。
 
 ## Docs
 [Quick start](usage/quick_start.md) | [Development](development/index.md)
