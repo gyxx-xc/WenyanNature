@@ -14,7 +14,7 @@
         <link rel="prev" href="../function/">
       
       
-        <link rel="next" href="../data_type/">
+        <link rel="next" href="../misc/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -249,7 +249,7 @@
   
     
   
-  Index
+  吾有一术
 
       </a>
     </li>
@@ -266,11 +266,13 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../quick_start/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
-  Usage
+    
+  
+  文言语法
 
         </a>
       </li>
@@ -289,6 +291,8 @@
         <a href="../../development/" class="md-tabs__link">
           
   
+  
+    
   
   Development
 
@@ -343,7 +347,7 @@
   
   
   <span class="md-ellipsis">
-    Index
+    吾有一术
     
   </span>
   
@@ -363,6 +367,26 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
     
     
       
@@ -379,25 +403,34 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
-    Usage
+    文言语法
     
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Usage
+            文言语法
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -554,58 +587,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../data_type/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    数据类型
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../misc/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     补充说明
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../syntax/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Syntax
     
   </span>
   
@@ -631,6 +618,12 @@
   
     
     
+      
+        
+          
+        
+      
+    
     
     
       
@@ -644,8 +637,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../../development/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -654,8 +648,9 @@
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
@@ -664,27 +659,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../development/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Strusture
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
           </ul>
@@ -731,7 +705,8 @@
 <h1 id="_1">格物第六</h1>
 <p>现今，物的定义为一种类型，而实例化物件之际，只需以<code>造「物」</code>或<code>施「物」</code>调用构造器者即可。往日定义物件之法，并未丢弃，依然可作为类别之静态变量存留。</p>
 <p>函数的声明，可用<code>物之「甲」者術....</code>此一形式。至于非静态变量，则须在构造器内定义属性，即通过一个关键函数“造”为之，与Python中的做法相似。</p>
-<pre><code>    物之「甲」者數 曰二。 // static
+<pre><code>吾有一物。名之曰「物」。其物如是。
+    物之「甲」者數 曰二。 // static
     物之造者術 是術曰。
         夫一。名之曰己之「甲」。 // parameter
     是謂造之術也。
@@ -742,7 +717,8 @@
 取二以書。
 </code></pre>
 <p>继承物时，可在<code>吾有一物</code>之后添加<code>繼「物」</code>。然此仅能继承函数。此时会引入两个新变量：一为<code>己</code>，指代该类之实例；二为<code>父</code>，指代超类之类型。若函数中省略<code>己</code>，则该函数即为静态。用单引号表示属性。</p>
-<pre><code>    物之造者術是術曰。
+<pre><code>吾有一物。名之曰「甲」。其物如是。
+    物之造者術是術曰。
         夫一名之曰己之「甲」
     是謂造之術也。
 是謂「甲」之物也。
@@ -806,7 +782,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.instant", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
