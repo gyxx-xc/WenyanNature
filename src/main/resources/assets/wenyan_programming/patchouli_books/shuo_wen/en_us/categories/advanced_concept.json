@@ -2,6 +2,6 @@
     "name": "进阶内容",
     "description": "本章将会进一步说明《吾有一术》中的进阶内容，包括符咒代码的运行逻辑、运行流程、符咒线程、世界交互逻辑等进阶内容。",
     "icon": "minecraft:command_block",
-    "sortnum": 5
+    "sortnum": 6
   }
   
