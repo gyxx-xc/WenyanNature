@@ -1,4 +1,4 @@
-package indi.wenyan.content.block.additional_module.paper;
+package indi.wenyan.content.block.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.structure.JavacallContext;
@@ -47,4 +47,3 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
         super(Registration.SEMAPHORE_MODULE_ENTITY.get(), pos, blockState);
     }
 }
-

@@ -15,7 +15,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class InformationModuleBlock extends AbstractFuluBlock implements IModulerBlock {
+public class WorldModuleBlock extends AbstractFuluBlock implements IModulerBlock {
     public static final String ID = "information_module_block";
 
     @Override
@@ -31,7 +31,7 @@ public class InformationModuleBlock extends AbstractFuluBlock implements IModule
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         var entity = level.getBlockEntity(pos);
-        if (entity instanceof InformationModuleEntity module)
+        if (entity instanceof WorldModuleEntity module)
             return module.getSignal();
         return 0;
     }

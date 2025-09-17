@@ -1,6 +1,5 @@
 package indi.wenyan.content.item;
 
-import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
@@ -44,21 +43,22 @@ public class WenyanHandRunner extends BlockItem {
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
-    @Override
-    public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
-        if (!player.isShiftKeyDown()) {
-            var codeData = item.get(Registration.PROGRAM_CODE_DATA.get());
-            if (codeData != null) {
-                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player,
-                        codeData, runningLevel);
-                player.level().addFreshEntity(handRunnerEntity);
-
-                item.shrink(1);
-                return false; // not gen an item entity
-            } // else : go outside
-        }
-        return super.onDroppedByPlayer(item, player);
-    }
+    // FIXME
+//    @Override
+//    public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
+//        if (!player.isShiftKeyDown()) {
+//            var codeData = item.get(Registration.PROGRAM_CODE_DATA.get());
+//            if (codeData != null) {
+//                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player,
+//                        codeData, runningLevel);
+//                player.level().addFreshEntity(handRunnerEntity);
+//
+//                item.shrink(1);
+//                return false; // not gen an item entity
+//            } // else : go outside
+//        }
+//        return super.onDroppedByPlayer(item, player);
+//    }
 
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {

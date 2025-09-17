@@ -7,6 +7,8 @@ import indi.wenyan.content.block.CraftingBlock;
 import indi.wenyan.content.block.CraftingBlockEntity;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
+import indi.wenyan.content.block.additional_module.block.SemaphoreModuleBlock;
+import indi.wenyan.content.block.additional_module.block.SemaphoreModuleEntity;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
@@ -126,12 +128,9 @@ public final class Registration {
     public static final DeferredBlock<ExplosionModuleBlock> EXPLOSION_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> EXPLOSION_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<ExplosionModuleEntity>> EXPLOSION_MODULE_ENTITY;
-    public static final DeferredBlock<InformationModuleBlock> INFORMATION_MODULE_BLOCK;
+    public static final DeferredBlock<WorldModuleBlock> INFORMATION_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> INFORMATION_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<InformationModuleEntity>> INFORMATION_MODULE_ENTITY;
-    public static final DeferredBlock<InteractModuleBlock> INTERACT_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> INTERACT_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<InteractModuleEntity>> INTERACT_MODULE_ENTITY;
+    public static final Supplier<BlockEntityType<WorldModuleEntity>> INFORMATION_MODULE_ENTITY;
     public static final DeferredBlock<MathModuleBlock> MATH_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> MATH_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<MathModuleEntity>> MATH_MODULE_ENTITY;
@@ -144,9 +143,9 @@ public final class Registration {
     public static final DeferredBlock<RandomModuleBlock> RANDOM_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> RANDOM_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<RandomModuleEntity>> RANDOM_MODULE_ENTITY;
-    public static final DeferredBlock<InventoryModuleBlock> INVENTORY_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> INVENTORY_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<InventoryModuleEntity>> INVENTORY_MODULE_ENTITY;
+    public static final DeferredBlock<ItemModuleBlock> ITEM_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> ITEM_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<ItemModuleEntity>> ITEM_MODULE_ENTITY;
     public static final DeferredBlock<Vec3ModuleBlock> VEC3_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> VEC3_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<Vec3ModuleEntity>> VEC3_MODULE_ENTITY;
@@ -288,22 +287,15 @@ public final class Registration {
                         .of(ExplosionModuleEntity::new, EXPLOSION_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        INFORMATION_MODULE_BLOCK = BLOCKS.register(InformationModuleBlock.ID,
-                InformationModuleBlock::new);
-        INFORMATION_MODULE_BLOCK_ITEM = ITEMS.registerItem(InformationModuleBlock.ID,
+        INFORMATION_MODULE_BLOCK = BLOCKS.register(WorldModuleBlock.ID,
+                WorldModuleBlock::new);
+        INFORMATION_MODULE_BLOCK_ITEM = ITEMS.registerItem(WorldModuleBlock.ID,
                 (properties) -> new BlockItem(INFORMATION_MODULE_BLOCK.get(), properties));
-        INFORMATION_MODULE_ENTITY = BLOCK_ENTITY.register(InformationModuleBlock.ID,
+        INFORMATION_MODULE_ENTITY = BLOCK_ENTITY.register(WorldModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(InformationModuleEntity::new, INFORMATION_MODULE_BLOCK.get())
+                        .of(WorldModuleEntity::new, INFORMATION_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        INTERACT_MODULE_BLOCK = BLOCKS.register(InteractModuleBlock.ID, InteractModuleBlock::new);
-        INTERACT_MODULE_BLOCK_ITEM = ITEMS.registerItem(InteractModuleBlock.ID,
-                (properties) -> new BlockItem(INTERACT_MODULE_BLOCK.get(), properties));
-        INTERACT_MODULE_ENTITY = BLOCK_ENTITY.register(InteractModuleBlock.ID,
-                () -> BlockEntityType.Builder
-                        .of(InteractModuleEntity::new, INTERACT_MODULE_BLOCK.get())
-                        .build(DSL.remainderType()));
         MATH_MODULE_BLOCK = BLOCKS.register(MathModuleBlock.ID, MathModuleBlock::new);
         MATH_MODULE_BLOCK_ITEM = ITEMS.registerItem(MathModuleBlock.ID,
                 (properties) -> new BlockItem(MATH_MODULE_BLOCK.get(), properties));
@@ -335,12 +327,12 @@ public final class Registration {
                         .of(RandomModuleEntity::new, RANDOM_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        INVENTORY_MODULE_BLOCK = BLOCKS.register(InventoryModuleBlock.ID, InventoryModuleBlock::new);
-        INVENTORY_MODULE_BLOCK_ITEM = ITEMS.registerItem(InventoryModuleBlock.ID,
-                (properties) -> new BlockItem(INVENTORY_MODULE_BLOCK.get(), properties));
-        INVENTORY_MODULE_ENTITY = BLOCK_ENTITY.register(InventoryModuleBlock.ID,
+        ITEM_MODULE_BLOCK = BLOCKS.register(ItemModuleBlock.ID, ItemModuleBlock::new);
+        ITEM_MODULE_BLOCK_ITEM = ITEMS.registerItem(ItemModuleBlock.ID,
+                (properties) -> new BlockItem(ITEM_MODULE_BLOCK.get(), properties));
+        ITEM_MODULE_ENTITY = BLOCK_ENTITY.register(ItemModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(InventoryModuleEntity::new, INVENTORY_MODULE_BLOCK.get())
+                        .of(ItemModuleEntity::new, ITEM_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
         VEC3_MODULE_BLOCK = BLOCKS.register(Vec3ModuleBlock.ID, Vec3ModuleBlock::new);
@@ -442,12 +434,11 @@ public final class Registration {
                     output.accept(PEDESTAL_BLOCK_ITEM.get());
                     output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
                     output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
-                    output.accept(INTERACT_MODULE_BLOCK_ITEM.get());
                     output.accept(MATH_MODULE_BLOCK_ITEM.get());
                     output.accept(BIT_MODULE_BLOCK_ITEM.get());
                     output.accept(BLOCK_MODULE_BLOCK_ITEM.get());
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
-                    output.accept(INVENTORY_MODULE_BLOCK_ITEM.get());
+                    output.accept(ITEM_MODULE_BLOCK_ITEM.get());
                     output.accept(VEC3_MODULE_BLOCK_ITEM.get());
                     output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
                     output.accept(SEMAPHORE_MODULE_BLOCK_ITEM.get());
