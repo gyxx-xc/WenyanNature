@@ -91,7 +91,8 @@ function_call_statement     : call=(CALLING_FUNCTION|CREATE_OBJECT) (data|key_fu
 
 flush_statement             : FLUSH ;
 
-if_statement                : IF_ data ZHE if_=statements (ELSE_ else_=statements)? FOR_IF_END ;
+if_statement                : IF_ data ZHE if_=statements (ELIF el_data+=data ZHE elif+=statements)*
+                              (ELSE_ else_=statements)? FOR_IF_END ;
 
 for_statement               : FOR_ARR_START data FOR_ARR_BELONG IDENTIFIER statements FOR_IF_END  # for_arr_statement
                             | FOR_ENUM_START data FOR_ENUM_TIMES statements FOR_IF_END            # for_enum_statement
@@ -159,8 +160,9 @@ ASSIGN_RIGHT_NULL            : '不复存矣' | '不復存矣';
 ASSIGN_RIGHT_END             : '是矣' ;
 ASSIGN_RIGHT                 : '今' ;
 
-ELSE_                        : '若非' ;
 IF_                          : '若' ;
+ELIF                         : '或若' ;
+ELSE_                        : '若非' ;
 
 FOR_WHILE_SART               : '恒为是' | '恆為是';
 FOR_ARR_BELONG               : '中之' ;
