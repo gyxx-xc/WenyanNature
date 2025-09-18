@@ -162,6 +162,10 @@ public final class Registration {
     public static final DeferredItem<BlockItem> SEMAPHORE_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<SemaphoreModuleEntity>> SEMAPHORE_MODULE_ENTITY;
 
+    public static final DeferredBlock<CollectionModuleBlock> COLLECTION_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> COLLECTION_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<CollectionModuleEntity>> COLLECTION_MODULE_ENTITY;
+
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
@@ -367,6 +371,14 @@ public final class Registration {
                         .of(SemaphoreModuleEntity::new, SEMAPHORE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        COLLECTION_MODULE_BLOCK = BLOCKS.register(CollectionModuleBlock.ID, CollectionModuleBlock::new);
+        COLLECTION_MODULE_BLOCK_ITEM = ITEMS.registerItem(CollectionModuleBlock.ID,
+                (properties) -> new BlockItem(COLLECTION_MODULE_BLOCK.get(), properties));
+        COLLECTION_MODULE_ENTITY = BLOCK_ENTITY.register(CollectionModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(CollectionModuleEntity::new, COLLECTION_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
 //                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
@@ -432,17 +444,21 @@ public final class Registration {
 //                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());
                     output.accept(CRAFTING_BLOCK_ITEM.get());
                     output.accept(PEDESTAL_BLOCK_ITEM.get());
-                    output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
-                    output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
-                    output.accept(MATH_MODULE_BLOCK_ITEM.get());
+
                     output.accept(BIT_MODULE_BLOCK_ITEM.get());
-                    output.accept(BLOCK_MODULE_BLOCK_ITEM.get());
-                    output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
-                    output.accept(ITEM_MODULE_BLOCK_ITEM.get());
+                    output.accept(MATH_MODULE_BLOCK_ITEM.get());
                     output.accept(VEC3_MODULE_BLOCK_ITEM.get());
+                    output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
+                    output.accept(COLLECTION_MODULE_BLOCK_ITEM.get());
+
+                    output.accept(ITEM_MODULE_BLOCK_ITEM.get());
+                    output.accept(BLOCK_MODULE_BLOCK_ITEM.get());
+                    output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
+
+                    output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
+
                     output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
                     output.accept(SEMAPHORE_MODULE_BLOCK_ITEM.get());
-
                     output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
                 }).build());
     }

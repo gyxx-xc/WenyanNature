@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.structure.values.primitive;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,9 +22,9 @@ public record WenyanBoolean(Boolean value) implements IWenyanWarperValue<Boolean
     @SuppressWarnings("unchecked")
     public <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE)
-            return (T) new WenyanString(toString());
+            return (T) WenyanValues.of(toString());
         if (type == WenyanInteger.TYPE)
-            return (T) new WenyanInteger(value ? 1 : 0);
+            return (T) WenyanValues.of(value ? 1 : 0);
         return null;
     }
 

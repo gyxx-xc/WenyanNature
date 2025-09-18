@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
                     if (getLevel() != null) {
                         value = getLevel().getBestNeighborSignal(getBlockPos());
                     }
-                    return new WenyanInteger(value);
+                    return WenyanValues.of(value);
                 }
             })
             .function("「輸能」", new ThisCallHandler() {

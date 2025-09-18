@@ -1,8 +1,11 @@
 package indi.wenyan.interpreter.structure.values;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
 
 public interface IWenyanComparable extends IWenyanValue {
+    WenyanType<IWenyanComparable> TYPE = new WenyanType<>("comparable", IWenyanComparable.class);
+
     /**
      * Compare this value with another value.
      *

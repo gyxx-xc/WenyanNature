@@ -5,11 +5,11 @@ import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.warper.WenyanBlock;
 import indi.wenyan.interpreter.structure.values.warper.WenyanCapabilitySlot;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockPosRangePacket;
 import lombok.Getter;
@@ -79,7 +79,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                         PacketDistributor.sendToPlayersTrackingChunk(serverLevel,
                                 new ChunkPos(getBlockPos()),
                                 new BlockPosRangePacket(getBlockPos(), start, end, found));
-                    return new WenyanBoolean(found);
+                    return WenyanValues.of(found);
                 }
             })
             .function("「取」", new ThisCallHandler() {
@@ -89,7 +89,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                     BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
                     assert level != null;
                     BlockState state = level.getBlockState(pos);
-                    return new WenyanBlock(state);
+                    return WenyanValues.of(state);
                 }
             })
             .function("「附」", new ThisCallHandler() {
@@ -100,7 +100,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                     BlockPos pos = getBlockPos().relative(attachedDirection);
                     assert level != null;
                     BlockState state = level.getBlockState(pos);
-                    return new WenyanBlock(state);
+                    return WenyanValues.of(state);
                 }
             })
             .build();

@@ -7,6 +7,7 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.structure.values.warper.WenyanList;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
@@ -47,7 +48,7 @@ public interface IWenyanValue {
         if (casting(type) != null) {
             return casting(type);
         } else if (type == WenyanString.TYPE) {
-            return (T) new WenyanString(toString());
+            return (T) WenyanValues.of(toString());
         }
         throw new WenyanException.WenyanTypeException(Component.translatable("error.wenyan_programming.cannot_cast_").getString() +
                 type() + Component.translatable("error.wenyan_programming._to_").getString() + type);
@@ -170,9 +171,9 @@ public interface IWenyanValue {
      * @return Empty value of the specified type
      */
     static IWenyanValue emptyOf(WenyanType<?> type) {
-        if (type == WenyanDouble.TYPE) return new WenyanDouble(0.0);
-        if (type == WenyanBoolean.TYPE) return new WenyanBoolean(false);
-        if (type == WenyanString.TYPE) return new WenyanString("");
+        if (type == WenyanDouble.TYPE) return WenyanValues.of(0.0);
+        if (type == WenyanBoolean.TYPE) return WenyanValues.of(false);
+        if (type == WenyanString.TYPE) return WenyanValues.of("");
         if (type == WenyanList.TYPE) return new WenyanList();
         throw new WenyanException("unreached");
     }

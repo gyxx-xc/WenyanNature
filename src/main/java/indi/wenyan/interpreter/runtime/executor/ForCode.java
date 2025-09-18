@@ -6,6 +6,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.warper.WenyanIterator;
+import indi.wenyan.interpreter.utils.WenyanValues;
 
 import java.util.Iterator;
 
@@ -49,7 +50,7 @@ public class ForCode extends WenyanCode {
                 try {
                     int num = value.as(WenyanInteger.TYPE).value();
                     if (num > 0) {
-                        runtime.processStack.push(new WenyanInteger(num - 1));
+                        runtime.processStack.push(WenyanValues.of(num - 1));
                     } else {
                         runtime.programCounter = runtime.bytecode.getLabel(args);
                         runtime.PCFlag = true;

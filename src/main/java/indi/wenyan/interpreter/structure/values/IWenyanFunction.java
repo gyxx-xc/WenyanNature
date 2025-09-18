@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface IWenyanFunction extends IWenyanValue {
     @SuppressWarnings("unchecked")
     default <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE) {
-            return (T) new WenyanString(this.toString());
+            return (T) WenyanValues.of(this.toString());
         }
         return null;
     }

@@ -3,7 +3,7 @@ package indi.wenyan.content.checker;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -22,7 +22,7 @@ public class EchoChecker extends CraftingAnswerChecker {
     @Override
     public void init(WenyanProgram program) {
         super.init(program);
-        ans = new WenyanInteger(random.nextInt());
+        ans = WenyanValues.of(random.nextInt());
         setVariable(0, ans);
     }
 

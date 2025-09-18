@@ -2,9 +2,9 @@ package indi.wenyan.interpreter.compiler.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanPackages;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
@@ -41,8 +41,8 @@ public class WenyanMainVisitor extends WenyanVisitor {
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
         // stack: id1, id2, ..., package, import
         for (TerminalNode id : ctx.IDENTIFIER().subList(1, ctx.IDENTIFIER().size()))
-            bytecode.add(WenyanCodes.PUSH, new WenyanString(id.getText()));
-        bytecode.add(WenyanCodes.PUSH, new WenyanString(ctx.IDENTIFIER(0).getText()));
+            bytecode.add(WenyanCodes.PUSH, WenyanValues.of(id.getText()));
+        bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.IDENTIFIER(0).getText()));
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size());
         return true;
