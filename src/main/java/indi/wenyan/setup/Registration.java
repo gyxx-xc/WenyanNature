@@ -166,6 +166,10 @@ public final class Registration {
     public static final DeferredItem<BlockItem> COLLECTION_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<CollectionModuleEntity>> COLLECTION_MODULE_ENTITY;
 
+    public static final DeferredBlock<StringModuleBlock> STRING_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> STRING_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<StringModuleEntity>> STRING_MODULE_ENTITY;
+
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
@@ -379,6 +383,14 @@ public final class Registration {
                         .of(CollectionModuleEntity::new, COLLECTION_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        STRING_MODULE_BLOCK = BLOCKS.register(StringModuleBlock.ID, StringModuleBlock::new);
+        STRING_MODULE_BLOCK_ITEM = ITEMS.registerItem(StringModuleBlock.ID,
+                (properties) -> new BlockItem(STRING_MODULE_BLOCK.get(), properties));
+        STRING_MODULE_ENTITY = BLOCK_ENTITY.register(StringModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(StringModuleEntity::new, STRING_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
 //                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
@@ -449,6 +461,7 @@ public final class Registration {
                     output.accept(MATH_MODULE_BLOCK_ITEM.get());
                     output.accept(VEC3_MODULE_BLOCK_ITEM.get());
                     output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
+                    output.accept(STRING_MODULE_BLOCK_ITEM.get());
                     output.accept(COLLECTION_MODULE_BLOCK_ITEM.get());
 
                     output.accept(ITEM_MODULE_BLOCK_ITEM.get());
