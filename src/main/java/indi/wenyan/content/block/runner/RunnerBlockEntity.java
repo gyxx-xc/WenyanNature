@@ -39,9 +39,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public List<BlockPos> additionalPages = new ArrayList<>();
 
-    public Vec3 communicate;
-    public boolean isCommunicating;
-
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final AbstractImportHandler importFunction = new AbstractImportHandler() {
         @Override
@@ -93,10 +90,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             program.step(speed);
             importFunction.handle();
         }
-
-        if (isCommunicating) {
-            isCommunicating = false;
-        }
     }
 
     public void run(Player player) {
@@ -114,7 +107,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
         var from = getBlockPos().getCenter();
         // distance limit
-        if (from.distanceTo(to) >= 2)
+        if (from.distanceToSqr(to) >= 2)
             level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
                     from.x(), from.y(), from.z(),
                     to.x(), to.y(), to.z());
@@ -147,9 +140,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             }
             tag.put("additional_pages", additionalPagesTag);
         }
-        tag.putDouble("communicate_x", communicate != null ? communicate.x : 0.0);
-        tag.putDouble("communicate_y", communicate != null ? communicate.y : 0.0);
-        tag.putDouble("communicate_z", communicate != null ? communicate.z : 0.0);
         tag.putInt("speed", speed);
     }
 
@@ -161,12 +151,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             pages = tag.getString("pages");
         }
 
-        if (tag.contains("communicate_x")) {
-            communicate = new Vec3(tag.getDouble("communicate_x"), tag.getDouble("communicate_y"), tag.getDouble("communicate_z"));
-            isCommunicating = true;
-        } else {
-            isCommunicating = false;
-        }
         if (tag.contains("additional_pages")) {
             additionalPages = new ArrayList<>();
             ListTag additionalPagesTag = tag.getList("additional_pages", Tag.TAG_COMPOUND);

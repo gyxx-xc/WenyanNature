@@ -34,7 +34,7 @@ public class WenyanCompilerEnvironment {
     /**
      * Represents a debug context with source location information.
      */
-    private record Context(int line, int column, String content) {}
+    private record Context(int line, int column, int contentStart, int contentEnd) {}
 
     /**
      * Creates a new compiler environment with the specified bytecode.
@@ -176,16 +176,18 @@ public class WenyanCompilerEnvironment {
      * Enters a new debug context.
      * @param line Line number
      * @param column Column number
-     * @param content Source content
+     * @param contentStart Start index
+     * @param contentEnd End index
      */
-    public void enterContext(int line, int column, String content) {
+    public void enterContext(int line, int column, int contentStart, int contentEnd) {
         if (!debugContextStack.isEmpty()) {
             Context curContext = debugContextStack.peek();
             if (bytecode.size() != lastContextStart)
-                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size(), curContext.content);
+                bytecode.addContext(curContext.line, curContext.column, lastContextStart,
+                        bytecode.size(), curContext.contentStart, curContext.contentEnd);
         }
         lastContextStart = bytecode.size();
-        debugContextStack.push(new Context(line, column, content));
+        debugContextStack.push(new Context(line, column, contentStart, contentEnd));
     }
 
     /**
@@ -195,7 +197,8 @@ public class WenyanCompilerEnvironment {
         if (!debugContextStack.isEmpty()) {
             Context curContext = debugContextStack.pop();
             if (bytecode.size() != lastContextStart)
-                bytecode.addContext(curContext.line, curContext.column, lastContextStart, bytecode.size(), curContext.content);
+                bytecode.addContext(curContext.line, curContext.column, lastContextStart,
+                        bytecode.size(), curContext.contentStart, curContext.contentEnd);
             lastContextStart = bytecode.size();
         }
     }

@@ -95,14 +95,16 @@ public class WenyanBytecode {
 
     /**
      * Adds debug context information.
-     * @param line Line number
-     * @param column Column number
-     * @param start Start index
-     * @param end End index
-     * @param content Source content
+     *
+     * @param line         Line number
+     * @param column       Column number
+     * @param start        Start index
+     * @param end          End index
+     * @param contentStart Start index of source content
+     * @param contentEnd   End index of source content
      */
-    public void addContext(int line, int column, int start, int end, String content) {
-        debugTable.add(new Context(line, column, start, end, content));
+    public void addContext(int line, int column, int start, int end, int contentStart, int contentEnd) {
+        debugTable.add(new Context(line, column, start, end, contentStart, contentEnd));
     }
 
     /**
@@ -113,7 +115,7 @@ public class WenyanBytecode {
     public Context getContext(int index) {
         // change to binary search
         for (Context context : debugTable) {
-            if (context.start <= index && index < context.end) {
+            if (context.bytecodeStart <= index && index < context.bytecodeEnd) {
                 return context;
             }
         }
@@ -154,7 +156,7 @@ public class WenyanBytecode {
         sb.append("labelTable=").append(labelTable).append("\n");
         int j = 0;
         for (int i = 0; i < bytecode.size(); i++) {
-            if (j < debugTable.size() && i >= debugTable.get(j).start) {
+            if (j < debugTable.size() && i >= debugTable.get(j).bytecodeStart) {
                 sb.append("Context: ").append(debugTable.get(j)).append("\n");
                 j++;
             }
@@ -166,5 +168,7 @@ public class WenyanBytecode {
     /**
      * Represents debug context information for a segment of bytecode.
      */
-    public record Context(int line, int column, int start, int end, String content){}
+    public record Context(int line, int column,
+                          int bytecodeStart, int bytecodeEnd,
+                          int contentStart, int contentEnd){}
 }

@@ -18,7 +18,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-public class InventoryModuleEntity extends AbstractModuleEntity {
+public class ItemModuleEntity extends AbstractModuleEntity {
     @Getter
     public final String BasePackageName = "「仓」";
 
@@ -52,12 +52,12 @@ public class InventoryModuleEntity extends AbstractModuleEntity {
             })
             .build();
 
-    public InventoryModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.INVENTORY_MODULE_ENTITY.get(), pos, blockState);
+    public ItemModuleEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.ITEM_MODULE_ENTITY.get(), pos, blockState);
     }
 
     private IItemHandler getItemHandlerCapability() {
-        var attached = InteractModuleBlock.getConnectedDirection(getBlockState()).getOpposite();
+        var attached = ItemModuleBlock.getConnectedDirection(getBlockState()).getOpposite();
         assert level != null;
         return level.getCapability(Capabilities.ItemHandler.BLOCK,
                 getBlockPos().relative(attached), attached.getOpposite());

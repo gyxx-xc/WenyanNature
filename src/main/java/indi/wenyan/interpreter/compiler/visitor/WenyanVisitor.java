@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
 
 /**
  * Base visitor for Wenyan language that provides common functionality.
@@ -28,15 +29,43 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
         this.bytecode = bytecode;
     }
 
+    // HACK: enter/exit context for every node
     @Override
     public Boolean visit(ParseTree tree) {
+        Boolean result;
         if (tree instanceof ParserRuleContext ctx) {
-            bytecode.enterContext(ctx.start.getLine(), ctx.start.getCharPositionInLine(), ctx.getText());
-        }
-        Boolean result = super.visit(tree);
-        if (tree instanceof ParserRuleContext) {
+            bytecode.enterContext(ctx.start.getLine(), ctx.start.getCharPositionInLine(),
+                    ctx.start.getStartIndex(), ctx.stop.getStopIndex() + 1);
+            result = super.visit(tree);
             bytecode.exitContext();
+        } else {
+            result = super.visit(tree);
         }
+        return result;
+    }
+
+    @Override
+    public Boolean visitChildren(RuleNode node) {
+        Boolean result = defaultResult();
+        int n = node.getChildCount();
+        for (int i=0; i<n; i++) {
+            if (!shouldVisitNextChild(node, result)) {
+                break;
+            }
+
+            ParseTree c = node.getChild(i);
+            Boolean childResult;
+            if (c instanceof ParserRuleContext ctx) {
+                bytecode.enterContext(ctx.start.getLine(), ctx.start.getCharPositionInLine(),
+                        ctx.start.getStartIndex(), ctx.stop.getStopIndex() + 1);
+                childResult = c.accept(this);
+                bytecode.exitContext();
+            } else {
+                childResult = c.accept(this);
+            }
+            result = aggregateResult(result, childResult);
+        }
+
         return result;
     }
 

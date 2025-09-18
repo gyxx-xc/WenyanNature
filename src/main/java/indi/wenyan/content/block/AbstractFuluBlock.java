@@ -99,7 +99,7 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
         builder.add(FACING, FACE);
     }
 
-    public static @NotNull Direction getConnectedDirection(BlockState state) {
+    public static Direction getConnectedDirection(BlockState state) {
         return switch (state.getValue(FACE)) {
             case CEILING -> Direction.DOWN;
             case FLOOR -> Direction.UP;

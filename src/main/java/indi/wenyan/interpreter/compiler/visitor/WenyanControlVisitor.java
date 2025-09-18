@@ -50,21 +50,31 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitIf_statement(WenyanRParser.If_statementContext ctx) {
-        exprVisitor.visit(ctx.data());
-        int ifEnds = bytecode.getNewLabel();
-        bytecode.add(WenyanCodes.BRANCH_POP_FALSE, ifEnds);
+        exprVisitor.visit(ctx.data(0));
+        int lastIfBody = bytecode.getNewLabel();
+        bytecode.add(WenyanCodes.BRANCH_POP_FALSE, lastIfBody);
         bodyVisitor.visit(ctx.if_); // if body
-        if (ctx.else_ == null) {
-            bytecode.setLabel(ifEnds);
-        } else {
-            int elseEnds = bytecode.getNewLabel();
-            bytecode.add(WenyanCodes.JMP, elseEnds);
 
-            bytecode.setLabel(ifEnds);
-            bodyVisitor.visit(ctx.else_);
+        int endStmt = bytecode.getNewLabel();
+        for (int i = 0; i < ctx.el_data.size(); i++) {
+            bytecode.add(WenyanCodes.JMP, endStmt);
 
-            bytecode.setLabel(elseEnds);
+            bytecode.setLabel(lastIfBody);
+            exprVisitor.visit(ctx.el_data.get(i));
+            lastIfBody = bytecode.getNewLabel();
+            bytecode.add(WenyanCodes.BRANCH_POP_FALSE, lastIfBody);
+            bodyVisitor.visit(ctx.elif.get(i));
         }
+
+        if (ctx.else_ == null) {
+            bytecode.setLabel(lastIfBody);
+        } else {
+            bytecode.add(WenyanCodes.JMP, endStmt);
+
+            bytecode.setLabel(lastIfBody);
+            bodyVisitor.visit(ctx.else_);
+        }
+        bytecode.setLabel(endStmt);
         return true;
     }
 

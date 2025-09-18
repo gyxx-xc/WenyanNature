@@ -6,15 +6,19 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.interpreter.structure.values.warper.WenyanBlock;
+import indi.wenyan.interpreter.structure.values.warper.WenyanCapabilitySlot;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockPosRangePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -32,7 +36,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「識」", new ThisCallHandler() {
+            .function("「尋」", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                     Vec3 s = context.args().get(0).as(WenyanVec3.TYPE).value();
@@ -40,14 +44,35 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                     Vec3 e = context.args().get(1).as(WenyanVec3.TYPE).value();
                     BlockPos end = new BlockPos((int) e.x, (int) e.y, (int) e.z);
                     boolean found = false;
-                    // search from start to end
-                    assert level != null;
-                    for (var pos : BlockPos.betweenClosed(start.offset(getBlockPos()),
-                            end.offset(getBlockPos()))) {
-                        if (level.getBlockState(pos).is(Blocks.ANCIENT_DEBRIS)) {
-                            found = true;
-                            break;
+                    var compare = context.args().get(2);
+                    if (compare.is(WenyanCapabilitySlot.TYPE)) {
+                        Item item = compare.as(WenyanCapabilitySlot.TYPE).getStack().getItem();
+                        if (item instanceof BlockItem blockItem) {
+                            // search from start to end
+                            var target = blockItem.getBlock();
+                            assert level != null;
+                            for (var pos : BlockPos.betweenClosed(start.offset(getBlockPos()),
+                                    end.offset(getBlockPos()))) {
+                                if (level.getBlockState(pos).is(target)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            throw new WenyanException("參數必須是方塊物品");
                         }
+                    } else if (compare.is(WenyanBlock.TYPE)) {
+                        BlockState target = compare.as(WenyanBlock.TYPE).value();
+                        assert level != null;
+                        for (var pos : BlockPos.betweenClosed(start.offset(getBlockPos()),
+                                end.offset(getBlockPos()))) {
+                            if (level.getBlockState(pos).is(target.getBlock())) {
+                                found = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        throw new WenyanException("參數必須是方塊物品");
                     }
 
                     if (level instanceof ServerLevel serverLevel)
@@ -55,6 +80,27 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                                 new ChunkPos(getBlockPos()),
                                 new BlockPosRangePacket(getBlockPos(), start, end, found));
                     return new WenyanBoolean(found);
+                }
+            })
+            .function("「取」", new ThisCallHandler() {
+                @Override
+                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                    Vec3 p = context.args().getFirst().as(WenyanVec3.TYPE).value();
+                    BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
+                    assert level != null;
+                    BlockState state = level.getBlockState(pos);
+                    return new WenyanBlock(state);
+                }
+            })
+            .function("「附」", new ThisCallHandler() {
+                @Override
+                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                    Direction attachedDirection = BlockModuleBlock
+                            .getConnectedDirection(getBlockState()).getOpposite();
+                    BlockPos pos = getBlockPos().relative(attachedDirection);
+                    assert level != null;
+                    BlockState state = level.getBlockState(pos);
+                    return new WenyanBlock(state);
                 }
             })
             .build();
