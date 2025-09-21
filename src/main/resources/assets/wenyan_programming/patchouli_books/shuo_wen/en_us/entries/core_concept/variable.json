@@ -6,8 +6,27 @@
   "pages": [
     {
       "type": "patchouli:text",
+      "title": "§l典故·變數",
+      "text": "古者術士演算天地，嘗以定數為基，然世事無常，數亦多變。$(br2)於是立『變數』之名，以器收之，使可隨時改換，應萬端之需。"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/core_concept/variable.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": ""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§l變量",
+      "text": "變量者，數據之可易者也。$(br)其內所載，可隨境而遷，或改或復，不拘於一。$(br2)用之則術靈活，能應無窮之變，如算數、明辨是非。"
+    },
+    {
+      "type": "patchouli:text",
       "title": "§l变量",
-      "text": "一些可以变的数据，$(br)数据的内容可以根据情况进行改变"
+      "text": "变量就是可以变化的数据。$(br)它里面存放的内容是可以随着情况随时修改。$(br2)使用变量能让符咒更加灵活，适应不同的需求和场景，例如计算，判断。$(br2) 下一部分:  $(l:core_concept/fuzhou)符咒$()  "
     }
   ]
 }

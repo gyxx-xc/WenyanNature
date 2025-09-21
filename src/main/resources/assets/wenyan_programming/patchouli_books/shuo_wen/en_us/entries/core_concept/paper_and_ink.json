@@ -6,8 +6,28 @@
   "pages": [
     {
       "type": "patchouli:text",
+      "title": "§l典故·紙與墨",
+      "text": "昔有道士，觀紙能載言，墨可傳意，乃合而為符。$(br2)一筆一劃，皆承天地靈氣，自此萬法可記，符咒得生。"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/core_concept/paper_and_ink.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": ""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§l紙與墨水（材料）",
+      "text": "§l紙§r者，符咒之基，載術以形。$(br2)§l墨水§r者，傳令之質，筆之所至，符意乃現。$(br2)二物合用，則可製更高等之符咒。"
+    },
+    {
+      "type": "patchouli:text",
       "title": "§l纸和墨水（材料）",
-      "text": "§l纸§r/§l和§l墨水§r/§l 将用于制作更高级的符咒的材料。"
+      "text": "§l纸§r是承载符咒的基础，用来写下符文。$(br2)§l墨水§r则是传达指令的媒介，写出的每一笔都赋予符咒力量。$(br2)两者结合后，就能制作更高级的符咒。"
     }
+
   ]
 }

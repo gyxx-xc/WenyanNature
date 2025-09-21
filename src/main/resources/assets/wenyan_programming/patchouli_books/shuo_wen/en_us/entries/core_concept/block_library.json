@@ -6,8 +6,27 @@
   "pages": [
     {
       "type": "patchouli:text",
+      "title": "§l故事·方塊之庫",
+      "text": "昔有工匠輔道士，以器通符，納於方塊，列若庫藏。$(br2)自此符咒不獨自運，得與萬物相應，或感外境，或動器械，功能大增。"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/core_concept/block_library.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": ""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§l方塊庫",
+      "text": "方塊庫者，符咒之佐也。$(br)能與符咒交通，使其得展餘功。$(br2)於世間則見於多方塊之構，或若工作臺之槽。$(br2)以感測、施行、儲存之模組插之，則脚本可取而用焉。"
+    },
+    {
+      "type": "patchouli:text",
       "title": "§l方块库",
-      "text": "与符咒进行通讯，从而提供额外功能。$(br2)在世界中可表现为§l多方块结构/工作台 GUI 插槽§r：把传感器、执行器、存储模块插上去即可被脚本调用。"
+      "text": "方块库是符咒的扩展模块。$(br)它能和符咒通信，从而提供额外功能。$(br2)在游戏世界里，方块库通常表现为多方块结构或工作台 GUI 插槽。$(br2)把传感器、执行器、存储模块插进去，脚本就能调用它们来实现更多功能。 $(br2)下一部分:  $(l:core_concept/crafting_table)合成台$()"
     }
   ]
 }
