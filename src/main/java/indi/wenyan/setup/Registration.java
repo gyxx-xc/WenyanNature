@@ -170,6 +170,10 @@ public final class Registration {
     public static final DeferredItem<BlockItem> STRING_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<StringModuleEntity>> STRING_MODULE_ENTITY;
 
+    public static final DeferredBlock<EntityModuleBlock> ENTITY_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> ENTITY_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<EntityModuleEntity>> ENTITY_MODULE_ENTITY;
+
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
@@ -391,6 +395,14 @@ public final class Registration {
                         .of(StringModuleEntity::new, STRING_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        ENTITY_MODULE_BLOCK = BLOCKS.register(EntityModuleBlock.ID, EntityModuleBlock::new);
+        ENTITY_MODULE_BLOCK_ITEM = ITEMS.registerItem(EntityModuleBlock.ID,
+                (properties) -> new BlockItem(ENTITY_MODULE_BLOCK.get(), properties));
+        ENTITY_MODULE_ENTITY = BLOCK_ENTITY.register(EntityModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(EntityModuleEntity::new, ENTITY_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
 //                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
@@ -466,6 +478,7 @@ public final class Registration {
 
                     output.accept(ITEM_MODULE_BLOCK_ITEM.get());
                     output.accept(BLOCK_MODULE_BLOCK_ITEM.get());
+                    output.accept(ENTITY_MODULE_BLOCK_ITEM.get());
                     output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
 
                     output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
