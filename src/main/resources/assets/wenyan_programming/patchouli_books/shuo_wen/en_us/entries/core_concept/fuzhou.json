@@ -8,7 +8,7 @@
       "type": "patchouli:text",
       "title": "§l典故·符咒",
       "item": "wenyan_programming:hand_runner_0",
-      "text": "道士苦於諸令繁雜難記，且多令並行不便。後悟以術力注紙，可令其有靈，自行施令，遂創『符咒』。"
+      "text": "§l典故·符咒§r $(br2)術士苦於諸令繁雜難記，且多令並行不便。後悟以術力注紙，可令其有靈，自行施令，遂創『符咒』。"
     },
     {
       "type": "patchouli:image",
@@ -21,14 +21,15 @@
     },
     {
       "type": "patchouli:text",
+      "title": "§l符咒",
       "item": "wenyan_programming:hand_runner_0",
-      "text": "此乃施行之臺，主以運行篇章（行令）。$(br2)諸符各有§l品級§r與§l額度§r（每刻可成之令數）。$(br2)運行之時，則§l耗符力§r。"
+      "text": "此乃施行之臺，主以行令。$(br2)諸符各有§l品級§r與§l額度§r（每刻可成之令數）。$(br2)運行之時，則§l耗符力§r。"
     },
     {
       "type": "patchouli:spotlight",
       "item": "wenyan_programming:hand_runner_0",
       "title": "§l符咒",
-      "text": "符咒运行是指令的执行平台。$(br2)指令太多、难以记忆，便可使用符咒用来自动执行写好的符文脚本。$(br2)每个符咒都拥有§l符咒等级§r，用来体现力量高低；同时也有§l执行预算§r，决定每个 Tick 能完成多少条指令。$(br2)在运行时会§l消耗符力。 $(br2) 下一部分:  $(l:core_concept/fuzhou_level)符力与符咒等级$() "
+      "text": "符咒是指令的执行平台。$(br2)编写大量指令的时候，便可使用符咒用来自动执行写好的指令集（脚本）。$(br2)每个符咒都拥有§l符咒等级§r，用来体现符咒的强度；同时也有§l符咒速率§r，决定每个 Tick 能完成多少条指令。$(br2)在运行时会消耗玩家自身的§l符力。 $(br2) 下一部分:  $(l:core_concept/fuzhou_level)符力与符咒等级$() "
     }
   ]
 }
