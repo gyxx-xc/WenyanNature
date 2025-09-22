@@ -3,8 +3,8 @@ package indi.wenyan.content.block.additional_module.builtin;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,7 @@ public class RandomModuleEntity extends AbstractModuleEntity {
             })
             .doubleFunction("「占分」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble())
             .doubleFunction("「占偏」", args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle(args.getFirst(), args.get(1)))
-            .function("「占爻」", (self, args) -> new WenyanBoolean(Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean()))
+            .function("「占爻」", (self, args) -> WenyanValues.of(Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean()))
             .build();
 
     public RandomModuleEntity(BlockPos pos, BlockState blockState) {

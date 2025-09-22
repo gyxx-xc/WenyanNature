@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,13 +29,13 @@ public record WenyanDouble(Double value)
     @SuppressWarnings("unchecked")
     public <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanInteger.TYPE) {
-            return (T) new WenyanInteger(value.intValue());
+            return (T) WenyanValues.of(value.intValue());
         }
         if (type == WenyanString.TYPE) {
-            return (T) new WenyanString(toString());
+            return (T) WenyanValues.of(toString());
         }
         if (type == WenyanBoolean.TYPE) {
-            return (T) new WenyanBoolean(value != 0);
+            return (T) WenyanValues.of(value != 0);
         }
         return null;
     }

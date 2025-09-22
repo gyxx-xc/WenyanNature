@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,7 +28,7 @@ public record WenyanString(String value)
 
     @Override
     public IWenyanValue add(IWenyanValue other) throws WenyanException.WenyanThrowException {
-        return new WenyanString(value+ other.as(TYPE).value);
+        return WenyanValues.of(value+ other.as(TYPE).value);
     }
 
     @Override

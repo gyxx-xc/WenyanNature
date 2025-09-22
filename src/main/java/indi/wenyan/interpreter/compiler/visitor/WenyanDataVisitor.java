@@ -4,12 +4,10 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -30,10 +28,10 @@ public class WenyanDataVisitor extends WenyanVisitor {
     public Boolean visitData_primary(WenyanRParser.Data_primaryContext ctx) {
         try {
             IWenyanValue value = switch (ctx.data_type.getType()) {
-                case WenyanRParser.BOOL_VALUE -> new WenyanBoolean(WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()));
-                case WenyanRParser.INT_NUM -> new WenyanInteger(WenyanDataParser.parseInt(ctx.INT_NUM().getText()));
-                case WenyanRParser.FLOAT_NUM -> new WenyanDouble(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));
-                case WenyanRParser.STRING_LITERAL -> new WenyanString(WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()));
+                case WenyanRParser.BOOL_VALUE -> WenyanValues.of(WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()));
+                case WenyanRParser.INT_NUM -> WenyanValues.of(WenyanDataParser.parseInt(ctx.INT_NUM().getText()));
+                case WenyanRParser.FLOAT_NUM -> WenyanValues.of(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));
+                case WenyanRParser.STRING_LITERAL -> WenyanValues.of(WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()));
                 default -> throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString(), ctx);
             };
             bytecode.add(WenyanCodes.PUSH, value);
