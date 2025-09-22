@@ -8,10 +8,9 @@ import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
@@ -36,8 +35,8 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         @Override
         public IWenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「上下」" -> new WenyanInteger(x);
-                case "「左右」" -> new WenyanInteger(y);
+                case "「上下」" -> WenyanValues.of(x);
+                case "「左右」" -> WenyanValues.of(y);
                 case "「偏移」" -> new WenyanBuiltinFunction(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(TYPE) instanceof Position(int dx, int dy)) {
                         return new Position(self.as(TYPE).x + dx, self.as(TYPE).y + dy);
@@ -66,7 +65,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                     case "「下」" -> DOWN;
                     case "「左」" -> LEFT;
                     case "「右」" -> RIGHT;
-                    case "「方向」" -> new WenyanList(List.copyOf(DIRECTIONS));
+                    case "「方向」" -> WenyanValues.of(List.copyOf(DIRECTIONS));
                     case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };
@@ -104,13 +103,13 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         public IWenyanValue getAttribute(String name) {
             return switch (name) {
                 case "「终」" -> new Position(EndX + 1, EndY + 1);
-                case "「長」" -> new WenyanInteger(maxX);
-                case "「寬」" -> new WenyanInteger(maxY);
+                case "「長」" -> WenyanValues.of(maxX);
+                case "「寬」" -> WenyanValues.of(maxY);
                 case "「尋路」" -> new WenyanBuiltinFunction(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
-                        return new WenyanBoolean(!isWall(x - 1, y - 1));
+                        return WenyanValues.of(!isWall(x - 1, y - 1));
                     } else {
-                        return new WenyanBoolean(!isWall(args.get(0).as(WenyanInteger.TYPE).value() - 1,
+                        return WenyanValues.of(!isWall(args.get(0).as(WenyanInteger.TYPE).value() - 1,
                                 args.get(1).as(WenyanInteger.TYPE).value() - 1));
                     }
                 }));

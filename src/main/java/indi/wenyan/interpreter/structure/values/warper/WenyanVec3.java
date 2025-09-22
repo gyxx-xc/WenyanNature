@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE) {
-            return (T) new WenyanString(toString());
+            return (T) WenyanValues.of(toString());
         }
         return null;
     }
@@ -41,15 +42,15 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     @Override
     public IWenyanValue getAttribute(String name) {
         return switch (name) {
-            case "「上下」" -> new WenyanDouble(value.y);
-            case "「東西」" -> new WenyanDouble(value.x);
-            case "「南北」" -> new WenyanDouble(value.z);
-            case "「長」" -> new WenyanDouble(value.length());
-            case "「方長」" -> new WenyanDouble(value.lengthSqr());
+            case "「上下」" -> WenyanValues.of(value.y);
+            case "「東西」" -> WenyanValues.of(value.x);
+            case "「南北」" -> WenyanValues.of(value.z);
+            case "「長」" -> WenyanValues.of(value.length());
+            case "「方長」" -> WenyanValues.of(value.lengthSqr());
             case "「偏移」" -> new WenyanBuiltinFunction(
                     (self, args) -> {
                         if (args.size() == 1) {
-                            return new WenyanVec3(value.add(args.getFirst().as(TYPE).value));
+                            return WenyanValues.of(value.add(args.getFirst().as(TYPE).value));
                         } else if (args.size() == 3) {
                             return new WenyanVec3(value.add(
                                     args.get(0).as(WenyanDouble.TYPE).value(),
@@ -111,13 +112,13 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         }
 
         static {
-            ZERO = new WenyanVec3(Vec3.ZERO);
-            UP = new WenyanVec3(new Vec3(0, 1, 0));
-            DOWN = new WenyanVec3(new Vec3(0, -1, 0));
-            EAST = new WenyanVec3(new Vec3(1, 0, 0));
-            WEST = new WenyanVec3(new Vec3(-1, 0, 0));
-            SOUTH = new WenyanVec3(new Vec3(0, 0, 1));
-            NORTH = new WenyanVec3(new Vec3(0, 0, -1));
+            ZERO = WenyanValues.of(Vec3.ZERO);
+            UP = WenyanValues.of(new Vec3(0, 1, 0));
+            DOWN = WenyanValues.of(new Vec3(0, -1, 0));
+            EAST = WenyanValues.of(new Vec3(1, 0, 0));
+            WEST = WenyanValues.of(new Vec3(-1, 0, 0));
+            SOUTH = WenyanValues.of(new Vec3(0, 0, 1));
+            NORTH = WenyanValues.of(new Vec3(0, 0, -1));
         }
 
         @Override
@@ -128,7 +129,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
 
     @Override
     public @NotNull String toString() {
-        return "(" + new WenyanDouble(value().x()) + ", " +
-                new WenyanDouble(value().y()) + ", " + new WenyanDouble(value().z()) + ")";
+        return "(" + WenyanValues.of(value().x()) + ", " +
+                WenyanValues.of(value().y()) + ", " + new WenyanDouble(value().z()) + ")";
     }
 }

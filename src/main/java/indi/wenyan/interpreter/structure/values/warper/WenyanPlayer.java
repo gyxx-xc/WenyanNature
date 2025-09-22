@@ -5,7 +5,7 @@ import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.world.entity.player.Player;
 
 public record WenyanPlayer(WenyanEntity valueWarper)
@@ -21,8 +21,8 @@ public record WenyanPlayer(WenyanEntity valueWarper)
             return valueWarper.getAttribute(name);
         } catch (WenyanException e) {
             return switch (name) {
-                case "name" -> new WenyanString(value().getName().getString());
-                case "uuid" -> new WenyanString(value().getUUID().toString());
+                case "name" -> WenyanValues.of(value().getName().getString());
+                case "uuid" -> WenyanValues.of(value().getUUID().toString());
                 default -> throw new WenyanException("玩家没有这个属性: " + name);
             };
         }

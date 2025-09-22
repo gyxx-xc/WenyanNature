@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,22 +23,22 @@ public record WenyanInteger(Integer value)
 
     @Override
     public IWenyanValue add(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return new WenyanInteger(value + other.as(TYPE).value);
+        return WenyanValues.of(value + other.as(TYPE).value);
     }
 
     @Override
     public IWenyanValue subtract(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return new WenyanInteger(value - other.as(TYPE).value);
+        return WenyanValues.of(value - other.as(TYPE).value);
     }
 
     @Override
     public IWenyanValue multiply(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return new WenyanInteger(value * other.as(TYPE).value);
+        return WenyanValues.of(value * other.as(TYPE).value);
     }
 
     @Override
     public IWenyanValue divide(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return new WenyanDouble((double)value / other.as(TYPE).value);
+        return WenyanValues.of((double)value / other.as(TYPE).value);
     }
 
     public WenyanInteger mod(WenyanInteger other) {
@@ -53,13 +54,13 @@ public record WenyanInteger(Integer value)
     @SuppressWarnings("unchecked")
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanDouble.TYPE) {
-            return (T) new WenyanDouble(value.doubleValue());
+            return (T) WenyanValues.of(value.doubleValue());
         }
         if (type == WenyanString.TYPE) {
-            return (T) new WenyanString(toString());
+            return (T) WenyanValues.of(toString());
         }
         if (type == WenyanBoolean.TYPE) {
-            return (T) new WenyanBoolean(value != 0);
+            return (T) WenyanValues.of(value != 0);
         }
         return null;
     }

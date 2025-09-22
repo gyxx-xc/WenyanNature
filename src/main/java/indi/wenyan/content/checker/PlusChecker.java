@@ -2,7 +2,7 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -23,9 +23,9 @@ public class PlusChecker extends CraftingAnswerChecker {
         super.init(program);
         int a = random.nextInt(100);
         int b = random.nextInt(100);
-        setVariable(0, new WenyanInteger(a));
-        setVariable(1, new WenyanInteger(b));
-        ans = new WenyanInteger(a + b);
+        setVariable(0, WenyanValues.of(a));
+        setVariable(1, WenyanValues.of(b));
+        ans = WenyanValues.of(a + b);
     }
 
     @Override

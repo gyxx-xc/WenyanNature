@@ -6,8 +6,8 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -28,9 +28,9 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
                 public IWenyanValue handle(JavacallContext context) throws WenyanException {
                     try {
                         semaphore.acquire();
-                        return new WenyanBoolean(true);
+                        return WenyanValues.of(true);
                     } catch (InterruptedException e) {
-                        return new WenyanBoolean(false);
+                        return WenyanValues.of(false);
                     }
                 }
             })
