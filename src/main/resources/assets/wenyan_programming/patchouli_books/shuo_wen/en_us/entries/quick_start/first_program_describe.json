@@ -1,0 +1,12 @@
+{
+  "name": "第一个符咒",
+  "icon": "wenyan_programming:hand_runner_0",
+  "category": "wenyan_programming:quick_start",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "环境准备",
+      "text": "为了运行第一个符咒，我们需要准备下列内容：$(br)初级符咒 x1$(br)ScreenBlock x1"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+    "name": "基本所需物品·万物之始",
+    "icon": "wenyan_programming:hand_runner_0",
+    "category": "wenyan_programming:quick_start",
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "title": "§l典故·萬物之始",
+        "text": "§l典故·萬物之始§r $(br2)古有術士，初入道門，欲學施法之術。$(br2)師傅告之曰：『施法如建屋，必先備材。符咒如筆墨，ScreenBlock如紙張，缺一則法不成。』$(br2)術士謹記師言，備齊二物，日夜苦練，終成一代法師。$(br2)自此，後人皆知：施法之始，必備符咒與ScreenBlock。"
+      },
+      {
+        "type": "patchouli:image",
+        "images": [
+          "wenyan_programming:textures/patchouli/entries/quick_start/required_item.png"
+        ],
+        "title": "",
+        "border": "false",
+        "text": ""
+      },
+      {
+        "type": "patchouli:text",
+        "title": "§l基本之所需",
+        "text": "§l基本之所需§r $(br2)為完成腳本，需備以下物品：$(br)初級符咒一枚$(br)ScreenBlock一方$(br2)此二物乃施法之基，缺一不可。"
+      },
+      {
+        "type": "patchouli:text",
+        "title": "§l基本所需物品",
+        "text": "§l基本之所需§r $(br2)为了完成第一个脚本，我们需要准备下列内容：$(br)初级符咒 x1$(br)ScreenBlock x1$(br2)这两样东西是施法的基础，缺一不可。"
+      }
+    ]
+  }

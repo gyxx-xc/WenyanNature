@@ -1,0 +1,42 @@
+{
+    "name": "初级符咒的合成",
+    "icon": "wenyan_programming:hand_runner_0",
+    "category": "wenyan_programming:quick_start",
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "title": "§l典故·初级符咒",
+        "text": "§l典故·初級符咒§r $(br2)初學術士苦於施法不便，乃思以符載令，使可重複使用。$(br2)遂取竹紙，書寫簡單符紋，注入術力，製成『初級符咒』。$(br2)自此，新手亦可憑符施法，雖非萬物通達，然已入門。"
+      },
+      {
+        "type": "patchouli:image",
+        "images": [
+          "wenyan_programming:textures/patchouli/entries/crafting_fuzhou.png"
+        ],
+        "title": "",
+        "border": "false",
+        "text": ""
+      },
+      {
+        "type": "patchouli:text",
+        "title": "§l初級符咒製作之法",
+        "text": "§l初級符咒製作之法§r $(br2)取紙八張，書寫符紋，按才之位排列。$(br2)以術力灌注，使符紋與法力相融，初級符咒即成。$(br2)此符雖簡，然已具施法之能，為施法之道之始。"
+      },
+      {
+        "type": "patchouli:crafting",
+        "title": "初级符咒的配方",
+        "recipe": "wenyan_programming:hand_runner_0"
+      },
+      {
+        "type": "patchouli:text",
+        "title": "§l初级符咒制作之法",
+        "text": "§l初级符咒制作之法§r $(br2)取八张纸，按顺序排列。$(br2)用术力灌注，让纸与法力融合，初级符咒就做好了。$(br2)这个符咒虽然简单，但已经能施法，是踏入法术之道的起点。"
+      },
+      {
+        "type": "patchouli:crafting",
+        "title": "初级符咒的配方",
+        "recipe": "wenyan_programming:hand_runner_0"
+      }
+    ]
+  }
+  

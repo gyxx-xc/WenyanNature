@@ -1,0 +1,36 @@
+{
+    "name": "ScreenBlock的合成",
+    "icon": "wenyan_programming:hand_runner_0",
+    "category": "wenyan_programming:quick_start",
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "title": "§l典故·ScreenBlock",
+        "text": ""
+      },
+      {
+        "type": "patchouli:image",
+        "images": [
+          "wenyan_programming:textures/patchouli/entries/core_concept/script.png"
+        ],
+        "title": "",
+        "border": "false",
+        "text": ""
+      },
+      {
+        "type": "patchouli:text",
+        "title": "§lScreenBlock製作之法",
+        "text": ""
+      },
+      {
+        "type": "patchouli:text",
+        "title": "§lScreenBlock制作之法",
+        "text": ""
+      },
+      {
+        "type": "patchouli:crafting",
+        "title": "ScreenBlock的配方",
+        "recipe": "wenyan_programming:hand_runner_0"
+      }
+    ]
+  }
