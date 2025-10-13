@@ -2,6 +2,7 @@
     "name": "初级符咒的合成",
     "icon": "wenyan_programming:hand_runner_0",
     "category": "wenyan_programming:quick_start",
+    "sortnum": 2,
     "pages": [
       {
         "type": "patchouli:text",
@@ -20,7 +21,7 @@
       {
         "type": "patchouli:text",
         "title": "§l初級符咒製作之法",
-        "text": "§l初級符咒製作之法§r $(br2)取紙八張，書寫符紋，按才之位排列。$(br2)以術力灌注，使符紋與法力相融，初級符咒即成。$(br2)此符雖簡，然已具施法之能，為施法之道之始。"
+        "text": "$(br2)取紙八張，書寫符紋，按才之位排列。$(br2)以術力灌注，使符紋與法力相融，初級符咒即成。$(br2)此符雖簡，然已具施法之能，為施法之道之始。"
       },
       {
         "type": "patchouli:crafting",
@@ -30,7 +31,7 @@
       {
         "type": "patchouli:text",
         "title": "§l初级符咒制作之法",
-        "text": "§l初级符咒制作之法§r $(br2)取八张纸，按顺序排列。$(br2)用术力灌注，让纸与法力融合，初级符咒就做好了。$(br2)这个符咒虽然简单，但已经能施法，是踏入法术之道的起点。"
+        "text": "$(br2)取八张纸，按顺序排列。$(br2)用术力灌注，让纸与法力融合，初级符咒就做好了。$(br2)这个符咒虽然简单，但已经能施法，是踏入法术之道的起点。 $(br2)下一部分: $(l:quick_start/command_print) 指令·「書」$()"
       },
       {
         "type": "patchouli:crafting",

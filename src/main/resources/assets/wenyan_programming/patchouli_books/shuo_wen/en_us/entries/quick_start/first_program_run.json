@@ -1,0 +1,22 @@
+{
+  "name": "运行第一个程序",
+  "icon": "wenyan_programming:hand_runner_0",
+  "category": "wenyan_programming:quick_start",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "第一个符咒！",
+      "text": "右键初级符咒，看看会发生什么吧！$(br2)如果一切顺利，你应该会在屏幕上看到「吾有一术」的字样。恭喜你，成功运行了你的第一个程序！$(br2)接下来，我们将继续探索更多进阶内容，创造更多的可能！"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/first_program_run.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": "符咒的运行效果"
+    }
+  ]
+}

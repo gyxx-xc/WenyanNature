@@ -2,11 +2,12 @@
     "name": "ScreenBlock的合成",
     "icon": "wenyan_programming:hand_runner_0",
     "category": "wenyan_programming:quick_start",
+    "sortnum": 4,
     "pages": [
       {
         "type": "patchouli:text",
-        "title": "§l典故·ScreenBlock",
-        "text": ""
+        "title": "§l典故·ScreenBlock§r",
+        "text": "昔有術士，苦於心思難示，手下咒成，唯留氣痕。$(br2)乃以靈晶為骨，符紙為膚，構「靈幕」以觀其形。$(br2)法成之日，屏上光現，文理自動。$(br2)師見之曰：『此物可觀心中之術，當名曰——ScreenBlock。』$(br2)自此，後世施法之人，皆以之為顯象之器。"
       },
       {
         "type": "patchouli:image",
@@ -19,17 +20,22 @@
       },
       {
         "type": "patchouli:text",
-        "title": "§lScreenBlock製作之法",
-        "text": ""
-      },
-      {
-        "type": "patchouli:text",
-        "title": "§lScreenBlock制作之法",
-        "text": ""
+        "title": "§lScreenblock的配方",
+        "text": "§lScreenblock的配方§r $(br2)取羊毛八塊，置紅石於中，二者相合。$(br2)以術力灌注，使紙與石相融，ScreenBlock即成。$(br2)此物可顯心中之術，為施法之器。 $(br2)下一部分: $(l:quick_start/basic_exe_unit) 基本執行單元$()"
       },
       {
         "type": "patchouli:crafting",
-        "title": "ScreenBlock的配方",
+        "title": "Screenblock製作之法",
+        "recipe": "wenyan_programming:hand_runner_0"
+      },
+      {
+        "type": "patchouli:text",
+        "title": "§lScreenblock的配方§r",
+        "text": "§lScreenblock的配方§r $(br2)取八块羊毛，将红石放在中央，两者合成即可。$(br2)注入符力，使纸与石的能量相融，便能得到 ScreenBlock。$(br2)此方块能将符咒结果呈现在屏幕上，是术士施法时最重要的显示工具。$(br2)下一部分: $(l:quick_start/basic_exe_unit)基本执行单元$()"
+      },
+      {
+        "type": "patchouli:crafting",
+        "title": "Screenblock的配方",
         "recipe": "wenyan_programming:hand_runner_0"
       }
     ]

@@ -2,11 +2,17 @@
   "name": "第一个符咒",
   "icon": "wenyan_programming:hand_runner_0",
   "category": "wenyan_programming:quick_start",
+  "sortnum": 0,
   "pages": [
     {
       "type": "patchouli:text",
-      "title": "环境准备",
-      "text": "为了运行第一个符咒，我们需要准备下列内容：$(br)初级符咒 x1$(br)ScreenBlock x1"
+      "title": "§l初咒·啟篇§r",
+      "text": "符道之始，在於「書」字。$(br2)今將於屏上現句曰：「吾有一術」。$(br2)此乃啟法之印，學者當以筆代心，以咒為言。$(br2)隨卷而進，汝將識符之形，書之法，運之理。$(br2)由是始，可入術門。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "第一个符咒·基本介绍",
+      "text": "符咒的学习从一个简单的指令开始。$(br2)我们将在屏幕上显示一句话——「吾有一术」。$(br2)这是学习符法的第一步，就像写下启程的印记。$(br2)在接下来的章节中，我们将一步步引导你完成这个符咒的制作与运行。$(br2)下一部分: $(l:quick_start/required_item)所需物品$()"
     }
   ]
 }

@@ -1,0 +1,50 @@
+{
+  "name": "基本执行单元",
+  "icon": "wenyan_programming:hand_runner_0",
+  "category": "wenyan_programming:quick_start",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l典故·基本執行單元§r",
+      "text": "昔有匠人，欲造自動之器，然機構繁多，終不得運。$(br2)一日，老術士過之，笑曰：『萬器雖異，運之則同。汝缺者，非形也，乃心也。』$(br2)遂授以「執行單元」，匠人依訣而作，百機齊轉，聲若龍吟。$(br2)後人遂知：器之能動，咒之能行，皆本於一執行之心。"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/crafting_fuzhou.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": ""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§l基本執行單元§r",
+      "text": "§l基本執行單元§r $(br2)於文言程式中，諸般運算與操作，皆賴此單元以行。$(br2)無其則術不成，有其則萬法可演。$(br2) 如圖所示，即可構建基本算術單元$(br2)下一部分: $(l:quick_start/first_program_run)運行第一程序$()"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/core_concept/variable.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": ""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§基本执行单元",
+      "text": "§l基本执行单元§r $(br2)在文言程式中，所有的操作和计算都依赖于基本的执行单元。$(br2) 像图片一样摆放，即可得到最基础的运行单元 $(br2)下一部分: $(l:quick_start/first_program_run) 运行第一个程序$()"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/basic_exe_unit_demo.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": ""
+    }
+  ]
+}

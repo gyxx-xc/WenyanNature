@@ -2,6 +2,7 @@
     "name": "基本所需物品·万物之始",
     "icon": "wenyan_programming:hand_runner_0",
     "category": "wenyan_programming:quick_start",
+    "sortnum": 1,
     "pages": [
       {
         "type": "patchouli:text",
@@ -20,12 +21,12 @@
       {
         "type": "patchouli:text",
         "title": "§l基本之所需",
-        "text": "§l基本之所需§r $(br2)為完成腳本，需備以下物品：$(br)初級符咒一枚$(br)ScreenBlock一方$(br2)此二物乃施法之基，缺一不可。"
+        "text": "§l基本之所需§r $(br2)為完成腳本，需備以下物品：$(br2)初級符咒一枚$(br)ScreenBlock一方$(br2)此二物乃施法之基，缺一不可。"
       },
       {
         "type": "patchouli:text",
         "title": "§l基本所需物品",
-        "text": "§l基本之所需§r $(br2)为了完成第一个脚本，我们需要准备下列内容：$(br)初级符咒 x1$(br)ScreenBlock x1$(br2)这两样东西是施法的基础，缺一不可。"
+        "text": "§l基本之所需§r $(br2)为了完成第一个脚本，我们需要准备下列内容：$(br2)初级符咒 x1$(br)ScreenBlock x1$(br2)这两样东西是施法的基础，缺一不可。 $(br2)下一部分: $(l:quick_start/crafting_fuzhou)初级符咒的合成方法$()"
       }
     ]
   }

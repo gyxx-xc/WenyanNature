@@ -1,0 +1,42 @@
+{
+  "name": "指令·「書」",
+  "icon": "wenyan_programming:hand_runner_0",
+  "category": "wenyan_programming:quick_start",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "§l典故·「書」",
+      "text": "§l典故·書之道§r $(br2)昔有童子，欲記萬法於卷。$(br2)師曰：『不書，則法不傳；書之，則理可久存。』$(br2)童子悟而勤書，墨盡千斗，終成道錄。$(br2)自此，修者皆敬「書」為傳道之術。"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "wenyan_programming:textures/patchouli/entries/crafting_fuzhou.png"
+      ],
+      "title": "",
+      "border": "false",
+      "text": ""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§l指令·「書」§r",
+      "text": "§l書§r者，記載之術也。$(br2)昔者術士演法，必以符記其行，筆落則意成，墨乾而理定。$(br2)凡施咒、記數、陳詞、製符，皆以「書」為本。$(br2)「書」不僅留跡於卷，亦能令意化形，使術有續，使理可傳。$(br2)故曰：書者，傳道之根，立法之本。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§l指令·「書」§r",
+      "text": "§l書§r：用于将内容记录或输出的指令。$(br2)在程序中，『書』即是让信息留下痕迹的手段。$(br2)无论是输出结果、记录数据，还是制作符文与卷轴，皆以此为始。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "§l「書」的使用§r",
+      "text": "打开符咒，在第一行写下右侧的内容。 $(br2) 这样，我们就完成了第一个符咒。 $(br2) 接下来，我们还需要Screenblock来输出内容。 $(br2) 下一部分: $(l:quick_start/crafting_screenblock)Screenblock的合成方法$()"
+    },
+    {
+      "type": "wenyan_programming:code_page",
+      "title": "",
+      "text": "書「「吾有一术」」"
+    }
+  ]
+}
