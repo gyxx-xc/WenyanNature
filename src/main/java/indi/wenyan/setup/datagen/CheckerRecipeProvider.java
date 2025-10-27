@@ -4,8 +4,10 @@ import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,5 +42,11 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .question(CheckerFactory.LABYRINTH_CHECKER)
                 .unlock(has(Items.DIAMOND))
                 .save(recipeOutput, "diamond_labyrinth_checker");
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, Registration.FLOAT_NOTE.get())
+                .requires(Items.NAME_TAG)
+                .requires(Items.PAPER, 5)
+                .unlockedBy("has_name_tag", has(Items.NAME_TAG))
+                .save(recipeOutput);
     }
 }
