@@ -15,10 +15,12 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
@@ -28,7 +30,7 @@ public class FloatNoteItem extends Item {
     public static final String ID = "float_note";
 
     public FloatNoteItem(Properties properties) {
-        super(properties);
+        super(properties.durability(10));
     }
 
     public InteractionResult interactLivingEntity(
@@ -39,7 +41,7 @@ public class FloatNoteItem extends Item {
                     openGui(player.level(), target::setCustomName, stack);
                     return InteractionResult.sidedSuccess(player.level().isClientSide());
                 }
-                setName(player.level(), target::setCustomName, stack);
+                setName(player.level(), target::setCustomName, stack, player, hand);
                 if (!player.level().isClientSide() && target instanceof Mob mob) {
                     mob.setPersistenceRequired();
                 }
@@ -66,13 +68,11 @@ public class FloatNoteItem extends Item {
                         context.getItemInHand());
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
-            setName(level, component -> entity.setPackageName(component.getString()), context.getItemInHand());
+            setName(level, component -> entity.setPackageName(component.getString()), context);
             return InteractionResult.sidedSuccess(level.isClientSide());
         } else {
             if (context.getPlayer().isShiftKeyDown()) {
-                setName(level, component -> {
-
-                }, context.getItemInHand());
+                setName(level, component -> {}, context);
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
         }
@@ -94,12 +94,24 @@ public class FloatNoteItem extends Item {
         return InteractionResultHolder.pass(item);
     }
 
-    private void setName(Level level, Consumer<Component> setNameFunc, ItemStack stack) {
+    private void setName(Level level, Consumer<Component> setNameFunc, UseOnContext context) {
+        ItemStack stack = context.getItemInHand();
+        setName(level, setNameFunc, stack, context.getPlayer(), context.getHand());
+    }
+
+    private void setName(Level level, Consumer<Component> setNameFunc, ItemStack stack, @Nullable Player player, InteractionHand hand) {
         if (stack.getOrDefault(Registration.NOTE_LOCK_DATA.get(), false)) {
             setNameFunc.accept(stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()));
         } else {
             openGui(level, setNameFunc, stack);
         }
+        if (player != null)
+            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
+        return repairCandidate.is(Items.PAPER) || super.isValidRepairItem(stack, repairCandidate);
     }
 
     private void openGui(Level level, Consumer<Component> setNameFunc, ItemStack stack) {

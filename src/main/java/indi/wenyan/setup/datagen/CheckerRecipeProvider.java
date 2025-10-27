@@ -8,6 +8,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +43,12 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .question(CheckerFactory.LABYRINTH_CHECKER)
                 .unlock(has(Items.DIAMOND))
                 .save(recipeOutput, "diamond_labyrinth_checker");
+        ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, Registration.FLOAT_NOTE.get())
+                .requires(Items.NAME_TAG)
+                .requires(Items.PAPER, 5)
+                .unlockedBy("has_name_tag", has(Items.NAME_TAG))
+                .save(recipeOutput);
 
         ShapedRecipeBuilder //Hand Runner 0
                 .shaped(RecipeCategory.MISC,Registration.HAND_RUNNER_0.get())
@@ -119,7 +126,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .question(CheckerFactory.PLUS_CHECKER) //Need change
                 .unlock(has(Registration.HAND_RUNNER_2.get()))
                 .save(recipeOutput, "hand_runner_3");
-        
+
         AnsweringRecipeBuilder //Lunar ink
                 .create(Registration.LUNAR_INK.get())
                 .addInput(Registration.STARLIGHT_INK.get(),1)
