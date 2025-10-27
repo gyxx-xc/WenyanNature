@@ -1,4 +1,4 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.crafting_block;
 
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;

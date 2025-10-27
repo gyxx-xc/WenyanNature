@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.block.CraftingBlockEntity;
+import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;

@@ -1,4 +1,4 @@
-package indi.wenyan.content.block;
+package indi.wenyan.content.block.crafting_block;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
