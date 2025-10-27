@@ -29,3 +29,5 @@ repo
 project
 /.github/git-commit-instructions.md
 /docs/mkdocs/site/
+
+__pycache__

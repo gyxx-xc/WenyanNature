@@ -27,6 +27,20 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
+
+hooks:
+  - mc_recipe.py
+
+markdown_extensions:
+  - admonition
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+
+extra_css:
+  - css/quote.css
+  - css/recipe.css
+
 plugins:
   - search
   - awesome-nav
