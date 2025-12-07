@@ -69,7 +69,7 @@ public record WenyanList(List<IWenyanValue> value)
     }
 
     @Override
-    public void setVariable(String name, IWenyanValue value) {
+    public void setAttribute(String name, IWenyanValue value) {
         throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
     }
 

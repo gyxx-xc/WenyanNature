@@ -26,5 +26,5 @@ public interface IWenyanObject extends IWenyanValue {
      * @param name  the name of the variable
      * @param value the value to set
      */
-    void setVariable(String name, IWenyanValue value);
+    void setAttribute(String name, IWenyanValue value);
 }

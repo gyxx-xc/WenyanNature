@@ -36,7 +36,7 @@ public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slo
     }
 
     @Override
-    public void setVariable(String name, IWenyanValue value) {
+    public void setAttribute(String name, IWenyanValue value) {
 
     }
 }

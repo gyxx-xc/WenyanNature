@@ -55,7 +55,7 @@ public class ObjectCode extends WenyanCode {
                     // currently only used at define (mzy SELF ZHI STRING)
                     IWenyanObject self = runtime.processStack.pop().as(IWenyanObject.TYPE);
                     IWenyanValue value = WenyanLeftValue.varOf(runtime.processStack.pop());
-                    self.setVariable(id, value);
+                    self.setAttribute(id, value);
                 }
                 case CREATE_TYPE -> {
                     var parent = runtime.processStack.pop();
