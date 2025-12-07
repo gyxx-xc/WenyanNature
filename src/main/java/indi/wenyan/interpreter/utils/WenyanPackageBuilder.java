@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.content.handler.IJavacallHandler;
-import indi.wenyan.content.handler.WenyanBuiltinFunction;
+import indi.wenyan.content.handler.WenyanInlineFunction;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
@@ -105,7 +105,7 @@ public final class WenyanPackageBuilder {
      * @param function The function implementation
      * @return This builder
      */
-    public WenyanPackageBuilder function(String name, WenyanBuiltinFunction.BuiltinFunction function) {
+    public WenyanPackageBuilder function(String name, WenyanInlineFunction.BuiltinFunction function) {
         return function(name, function, new WenyanType[0]);
     }
 
@@ -115,7 +115,7 @@ public final class WenyanPackageBuilder {
      * @param function The function implementation
      * @return This builder
      */
-    public WenyanPackageBuilder function(String[] name, WenyanBuiltinFunction.BuiltinFunction function) {
+    public WenyanPackageBuilder function(String[] name, WenyanInlineFunction.BuiltinFunction function) {
         for (String n : name) {
             function(n, function);
         }
@@ -129,8 +129,8 @@ public final class WenyanPackageBuilder {
      * @param argTypes Array of required argument types
      * @return This builder
      */
-    public WenyanPackageBuilder function(String name, WenyanBuiltinFunction.BuiltinFunction function, WenyanType<?>[] argTypes) {
-        return function(name, new WenyanBuiltinFunction(function), argTypes);
+    public WenyanPackageBuilder function(String name, WenyanInlineFunction.BuiltinFunction function, WenyanType<?>[] argTypes) {
+        return function(name, new WenyanInlineFunction(function), argTypes);
     }
 
     /**
@@ -184,7 +184,7 @@ public final class WenyanPackageBuilder {
      * @param function The binary operation to apply
      * @return A builtin function that reduces arguments
      */
-    public static WenyanBuiltinFunction.BuiltinFunction reduceWith(ReduceFunction function) {
+    public static WenyanInlineFunction.BuiltinFunction reduceWith(ReduceFunction function) {
         return (self, args) -> {
             if (args.size() <= 1)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
@@ -201,7 +201,7 @@ public final class WenyanPackageBuilder {
      * @param function The binary boolean operation
      * @return A builtin function that applies the operation
      */
-    public static WenyanBuiltinFunction.BuiltinFunction boolBinaryOperation(BiFunction<Boolean, Boolean, Boolean> function) {
+    public static WenyanInlineFunction.BuiltinFunction boolBinaryOperation(BiFunction<Boolean, Boolean, Boolean> function) {
         return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
@@ -215,7 +215,7 @@ public final class WenyanPackageBuilder {
      * @param function The comparison function
      * @return A builtin function that compares values
      */
-    public static WenyanBuiltinFunction.BuiltinFunction compareOperation(CompareFunction function) {
+    public static WenyanInlineFunction.BuiltinFunction compareOperation(CompareFunction function) {
         return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());

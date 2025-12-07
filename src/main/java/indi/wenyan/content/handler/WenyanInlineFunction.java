@@ -10,7 +10,7 @@ import java.util.List;
  * Wrapper for builtin functions in the Wenyan interpreter.
  * Manages function execution and result handling.
  */
-public class WenyanBuiltinFunction implements IJavacallHandler {
+public class WenyanInlineFunction implements IJavacallHandler {
     private final BuiltinFunction function;
 
     /**
@@ -18,7 +18,7 @@ public class WenyanBuiltinFunction implements IJavacallHandler {
      *
      * @param function the function implementation
      */
-    public WenyanBuiltinFunction(BuiltinFunction function) {
+    public WenyanInlineFunction(BuiltinFunction function) {
         this.function = function;
     }
 

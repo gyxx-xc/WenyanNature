@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
-import indi.wenyan.content.handler.WenyanBuiltinFunction;
+import indi.wenyan.content.handler.WenyanInlineFunction;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
@@ -47,7 +47,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
             case "「南北」" -> WenyanValues.of(value.z);
             case "「長」" -> WenyanValues.of(value.length());
             case "「方長」" -> WenyanValues.of(value.lengthSqr());
-            case "「偏移」" -> new WenyanBuiltinFunction(
+            case "「偏移」" -> new WenyanInlineFunction(
                     (self, args) -> {
                         if (args.size() == 1) {
                             return WenyanValues.of(value.add(args.getFirst().as(TYPE).value));

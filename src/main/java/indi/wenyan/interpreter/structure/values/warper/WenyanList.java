@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
-import indi.wenyan.content.handler.WenyanBuiltinFunction;
+import indi.wenyan.content.handler.WenyanInlineFunction;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
@@ -71,44 +71,44 @@ public record WenyanList(List<IWenyanValue> value)
     @Override
     public IWenyanValue getAttribute(String name) {
         return switch (name) {
-            case WenyanDataParser.ARRAY_GET_ID -> new WenyanBuiltinFunction((self, args) -> {
+            case WenyanDataParser.ARRAY_GET_ID -> new WenyanInlineFunction((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return self.as(TYPE).get(args.getFirst().as(WenyanInteger.TYPE).value());
             });
-            case WenyanDataParser.ITER_ID -> new WenyanBuiltinFunction((self, args) -> {
+            case WenyanDataParser.ITER_ID -> new WenyanInlineFunction((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return new WenyanIterator(self.as(TYPE).value.iterator());
             });
             case WenyanDataParser.LONG_ID -> WenyanValues.of(value.size());
-            case "「移除」" -> new WenyanBuiltinFunction((self, args) -> {
+            case "「移除」" -> new WenyanInlineFunction((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return WenyanValues.of(self.as(TYPE).value.remove(args.getFirst()));
             });
-            case "「包含」" -> new WenyanBuiltinFunction((self, args) -> {
+            case "「包含」" -> new WenyanInlineFunction((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return WenyanValues.of(self.as(TYPE).value.contains(args.getFirst()));
             });
-            case "「清空」" -> new WenyanBuiltinFunction((self, args) -> {
+            case "「清空」" -> new WenyanInlineFunction((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 self.as(TYPE).value.clear();
                 return self;
             });
-            case "「非空」" -> new WenyanBuiltinFunction((self, args) -> {
+            case "「非空」" -> new WenyanInlineFunction((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return WenyanValues.of(!self.as(TYPE).value.isEmpty());
             });
-            case "「索引」" -> new WenyanBuiltinFunction((self, args) -> {
+            case "「索引」" -> new WenyanInlineFunction((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 return WenyanValues.of(self.as(TYPE).value.indexOf(args.getFirst()) + 1); // 1-based index
             });
-            case "「子列」" -> new WenyanBuiltinFunction((self, args) -> {
+            case "「子列」" -> new WenyanInlineFunction((self, args) -> {
                 if (args.size() != 2)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 int fromIndex = args.getFirst().as(WenyanInteger.TYPE).value() - 1; // 1-based to 0-based
