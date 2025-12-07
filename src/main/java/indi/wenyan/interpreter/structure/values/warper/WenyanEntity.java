@@ -19,7 +19,7 @@ public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, 
             case "「向」" -> WenyanValues.of(value().getLookAngle());
             case "「活」" -> WenyanValues.of(value().isAlive());
             case "「名」" -> WenyanValues.of(value().getDisplayName().getString());
-            case "「高」" -> WenyanValues.of((double) value().getBbHeight());
+            case "「高」" -> WenyanValues.of(value().getBbHeight());
             default -> throw new WenyanException("实体没有这个属性: " + name);
         };
     }

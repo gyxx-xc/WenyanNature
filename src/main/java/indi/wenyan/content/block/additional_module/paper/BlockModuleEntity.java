@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.warper.WenyanBlock;
 import indi.wenyan.interpreter.structure.values.warper.WenyanCapabilitySlot;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockPosRangePacket;
@@ -25,7 +26,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class BlockModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = "「塊」";
+    private final String basePackageName = WenyanSymbol.var("BlockModule");
 
     @Getter
     private int continueCount = 0;
@@ -36,7 +37,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「尋」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("BlockModule.search"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                     Vec3 s = context.args().get(0).as(WenyanVec3.TYPE).value();
@@ -82,7 +83,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                     return WenyanValues.of(found);
                 }
             })
-            .function("「取」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("BlockModule.get"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     Vec3 p = context.args().getFirst().as(WenyanVec3.TYPE).value();
@@ -92,7 +93,8 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                     return WenyanValues.of(state);
                 }
             })
-            .function("「附」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("BlockModule.attach"), new ThisCallHandler() {
+                @SuppressWarnings("RedundantThrows")
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     Direction attachedDirection = BlockModuleBlock

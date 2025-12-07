@@ -136,8 +136,8 @@ public class SnippetWidget extends AbstractScrollWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("gui.narrate" +
-                ".editBox", getMessage(), "snippet"));
+        narrationElementOutput.add(NarratedElementType.TITLE,
+                Component.translatable("gui.narrate.editBox", getMessage(), "snippet"));
     }
 
     public int getInnerHeight() {

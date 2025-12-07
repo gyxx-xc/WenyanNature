@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.warper.WenyanCapabilitySlot;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -20,11 +21,11 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class ItemModuleEntity extends AbstractModuleEntity {
     @Getter
-    public final String BasePackageName = "「仓」";
+    public final String BasePackageName = WenyanSymbol.var("ItemModule");
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「移」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("ItemModule.transfer"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     IItemHandler capability = getItemHandlerCapability();
@@ -38,7 +39,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
                     return WenyanNull.NULL;
                 }
             })
-            .function("「讀」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("ItemModule.read"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     var capability = getItemHandlerCapability();

@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class WorldModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = "「信」";
+    private final String basePackageName = WenyanSymbol.var("WorldModule");
 
     @Getter
     private final List<String> output = new LinkedList<>();
@@ -33,7 +34,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     // redstone get/set, show text, entity detection
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「量」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("WorldModule.signalStrength"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {
                     int value = 0;
@@ -43,7 +44,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
                     return WenyanValues.of(value);
                 }
             })
-            .function("「輸能」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("WorldModule.emitSignal"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     signal = context.args().getFirst().as(WenyanInteger.TYPE).value();
@@ -52,7 +53,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
                     return WenyanNull.NULL;
                 }
             })
-            .function("「觸」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("WorldModule.trigger"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     int dx = Math.clamp(context.args().get(0).as(WenyanInteger.TYPE).value(),
@@ -73,7 +74,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
                     return WenyanNull.NULL;
                 }
             })
-            .function("「變天」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("WorldModule.changeWeather"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     if (getLevel() instanceof ServerLevel serverLevel) {

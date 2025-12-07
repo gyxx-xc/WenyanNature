@@ -73,13 +73,13 @@ public class ChineseLanguageProvider extends LanguageProvider {
 
         add("error.wenyan_programming.set_value_to_non_left_value", "謬：非左值不可設也");
         add("error.wenyan_programming.import_package_not_found", "謬：未尋之籍%s");
+        add("error.wenyan_programming.already_run", "已在運行");
 
         add("type.wenyan_programming.int", "數");
         add("type.wenyan_programming.double", "分數");
         add("type.wenyan_programming.bool", "爻");
         add("type.wenyan_programming.string", "言");
         add("type.wenyan_programming.list", "列");
-        add("error.wenyan_programming.already_run", "已在運行");
 
         add("type.wenyan_programming.null", "空無");
         add("type.wenyan_programming.function", "術");

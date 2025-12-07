@@ -8,6 +8,7 @@ import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
@@ -23,11 +24,11 @@ import java.util.List;
 
 public class EntityModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = "「实」";
+    private final String basePackageName = WenyanSymbol.var("EntityModule");
 
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「察域之实」", new ThisCallHandler() { // "察域之实" means "Inspect entities within a range"
+            .function(WenyanSymbol.var("EntityModule.inspectRange"), new ThisCallHandler() { // "察域之实" means "Inspect entities within a range"
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                     assert getLevel() != null;
@@ -39,7 +40,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                     return WenyanValues.of(entities.stream().map(WenyanValues::of).toList());
                 }
             })
-            .function("「近域之实」", new ThisCallHandler() { // "近域之实" means "Entities near a point"
+            .function(WenyanSymbol.var("EntityModule.nearby"), new ThisCallHandler() { // "近域之实" means "Entities near a point"
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                     assert getLevel() != null;
@@ -51,7 +52,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                     return WenyanValues.of(entities.stream().map(WenyanValues::of).toList());
                 }
             })
-            .function("「实之视」", new ThisCallHandler() { // "视域之实" means "Entities in line of sight"
+            .function(WenyanSymbol.var("EntityModule.lineOfSight"), new ThisCallHandler() { // "视域之实" means "Entities in line of sight"
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
                     var origin = context.args().getFirst().as(WenyanVec3.TYPE).value();

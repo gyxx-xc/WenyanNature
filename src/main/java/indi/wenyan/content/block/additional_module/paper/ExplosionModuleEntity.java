@@ -8,6 +8,7 @@ import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -31,12 +32,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class ExplosionModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = "「爆」";
+    private final String basePackageName = WenyanSymbol.var("ExplosionModule");
 
     // lighting fire heat harm
     @Getter
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「雷」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("ExplosionModule.lightning"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {
                     assert getLevel() != null;
@@ -49,7 +50,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                     return WenyanNull.NULL;
                 }
             })
-            .function("「爆」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("ExplosionModule.explode"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) {
                     assert level != null;
@@ -59,7 +60,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                     return WenyanNull.NULL;
                 }
             })
-            .function("「燃」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("ExplosionModule.ignite"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     var offset = context.args().getFirst().as(WenyanVec3.TYPE).value();
@@ -76,7 +77,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                     return WenyanNull.NULL;
                 }
             })
-            .function("「火球」", new ThisCallHandler() {
+            .function(WenyanSymbol.var("ExplosionModule.fireball"), new ThisCallHandler() {
                 @Override
                 public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
                     var speed = context.args().getFirst().as(WenyanVec3.TYPE).value();
