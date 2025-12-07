@@ -42,11 +42,6 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
     }
 
     @Override
-    public void setAttribute(String name, IWenyanValue value) {
-        throw new WenyanException("Cannot set attribute of block");
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (o instanceof WenyanBlock(BlockState that))
             return value.equals(that);

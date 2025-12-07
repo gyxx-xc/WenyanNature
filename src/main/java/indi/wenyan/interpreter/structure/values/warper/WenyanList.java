@@ -69,11 +69,6 @@ public record WenyanList(List<IWenyanValue> value)
     }
 
     @Override
-    public void setAttribute(String name, IWenyanValue value) {
-        throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
-    }
-
-    @Override
     public IWenyanValue getAttribute(String name) {
         return switch (name) {
             case WenyanDataParser.ARRAY_GET_ID -> new WenyanBuiltinFunction((self, args) -> {

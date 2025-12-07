@@ -34,8 +34,7 @@ public class WenyanBuiltinObject implements IWenyanObject {
         return value;
     }
 
-    @Override
-    public void setAttribute(String name, IWenyanValue value) {
+    public void createAttribute(String name, IWenyanValue value) {
         variable.put(name, value);
     }
 

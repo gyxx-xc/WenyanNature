@@ -29,11 +29,6 @@ public record WenyanPlayer(WenyanEntity valueWarper)
     }
 
     @Override
-    public void setAttribute(String name, IWenyanValue value) {
-        throw new WenyanException("not reached");
-    }
-
-    @Override
     public WenyanType<?> type() {
         return null;
     }

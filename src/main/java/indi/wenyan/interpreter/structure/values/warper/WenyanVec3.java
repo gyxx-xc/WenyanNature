@@ -65,11 +65,6 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         };
     }
 
-    @Override
-    public void setAttribute(String name, IWenyanValue value) {
-        throw new WenyanException("Cannot set variable on Vec3 object: " + name);
-    }
-
     // store all static information
     public static class Vec3ObjectType implements IWenyanObjectType {
         public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>("vec3_object_type", Vec3ObjectType.class);

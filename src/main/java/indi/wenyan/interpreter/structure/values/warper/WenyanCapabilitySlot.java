@@ -35,8 +35,4 @@ public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slo
         return null;
     }
 
-    @Override
-    public void setAttribute(String name, IWenyanValue value) {
-
-    }
 }

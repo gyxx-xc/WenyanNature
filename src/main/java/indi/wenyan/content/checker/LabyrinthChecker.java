@@ -49,11 +49,6 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
             };
         }
 
-        @Override
-        public void setAttribute(String name, IWenyanValue value) {
-            throw new UnsupportedOperationException("Cannot set variable on Direction object: " + name);
-        }
-
         enum PositionType implements IWenyanObjectType {
             POSITION_TYPE;
             public static final WenyanType<PositionType> TYPE = new WenyanType<>("position_type", PositionType.class);
@@ -115,11 +110,6 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                 }));
                 default -> throw new UnsupportedOperationException("Unknown Map attribute: " + name);
             };
-        }
-
-        @Override
-        public void setAttribute(String name, IWenyanValue value) {
-
         }
 
         private Map() {

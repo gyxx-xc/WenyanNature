@@ -25,11 +25,6 @@ public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, 
     }
 
     @Override
-    public void setAttribute(String name, IWenyanValue value) {
-        throw new WenyanException("not reached");
-    }
-
-    @Override
     public WenyanType<?> type() {
         return TYPE;
     }

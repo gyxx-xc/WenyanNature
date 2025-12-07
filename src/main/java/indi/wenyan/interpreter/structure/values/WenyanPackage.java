@@ -38,11 +38,6 @@ public class WenyanPackage implements IWenyanObject {
     }
 
     @Override
-    public void setAttribute(String name, IWenyanValue value) {
-        throw new WenyanException("Cannot set variable on package: " + name);
-    }
-
-    @Override
     public WenyanType<?> type() {
         return TYPE;
     }

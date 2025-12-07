@@ -19,12 +19,4 @@ public interface IWenyanObject extends IWenyanValue {
      * @return the value of the attribute
      */
     IWenyanValue getAttribute(String name);
-
-    /**
-     * Set a variable in this object.
-     *
-     * @param name  the name of the variable
-     * @param value the value to set
-     */
-    void setAttribute(String name, IWenyanValue value);
 }

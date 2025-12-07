@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.*;
+import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObject;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObjectType;
 
 /**
@@ -53,9 +54,9 @@ public class ObjectCode extends WenyanCode {
                 }
                 case STORE_ATTR -> {
                     // currently only used at define (mzy SELF ZHI STRING)
-                    IWenyanObject self = runtime.processStack.pop().as(IWenyanObject.TYPE);
+                    WenyanBuiltinObject self = runtime.processStack.pop().as(WenyanBuiltinObject.TYPE);
                     IWenyanValue value = WenyanLeftValue.varOf(runtime.processStack.pop());
-                    self.setAttribute(id, value);
+                    self.createAttribute(id, value);
                 }
                 case CREATE_TYPE -> {
                     var parent = runtime.processStack.pop();
