@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.utils;
 
 import java.util.HashMap;
 
+// TODO: solve the problem of custom ids
 public class WenyanSymbol {
     public static final HashMap<String, String> SYMBOLS = new HashMap<>();
     public static final String SYMBOL_FORMAT = "「%s」";
@@ -117,5 +118,7 @@ public class WenyanSymbol {
         addSymbol("WorldModule.emitSignal", "輸能");
         addSymbol("WorldModule.trigger", "觸");
         addSymbol("WorldModule.changeWeather", "變天");
+
+        addSymbol("Null", "");
     }
 }

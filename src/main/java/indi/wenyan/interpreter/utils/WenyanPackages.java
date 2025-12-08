@@ -53,6 +53,6 @@ public enum WenyanPackages {;
             .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) > 0))
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
-            .function("「」", (self, args) -> WenyanNull.NULL)
+            .function(WenyanSymbol.var("Null"), (self, args) -> WenyanNull.NULL)
             .build();
 }
