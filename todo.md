@@ -1,0 +1,20 @@
+- [ ] annotation wenyan value processor
+  - need source level annotation processing
+- [ ] docs
+- [ ] variable symbol unify
+  - variable symbol in runtime need to separate to wenyan grammar
+  - at least able to change the whole pre-defined variable symbol set
+- [ ] CHS/CHT opencc version
+  - opencc library
+  - CHT to CHS will make different character to same. e.g. 隣邻
+  - treatment to symbols
+- [ ] power generate and consume
+  - two types of power, disappear every 2 tick, need to calculate power generate and consume every tick
+- [ ] crafting
+  - test needed
+- [ ] error handler
+  - may need to totally rewrite
+  - show error on gui
+- [ ] non-block runner logic
+- [ ] running state save and load
+- [ ] asm jit compiler
