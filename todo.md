@@ -10,8 +10,11 @@
   - treatment to symbols
 - [ ] power generate and consume
   - two types of power, disappear every 2 tick, need to calculate power generate and consume every tick
+  - small power (天意) gen by a**b mod 100000007 O(log b) about 27 op (1 tick for fastest)
+  - large power (天机) gen by log_a(b) mod 100000007 O(sqrt(b)) about 1e4 op (0.5*c sec for fastest)
+  - design power consume api
 - [ ] crafting
-  - test needed
+  - change needed
 - [ ] error handler
   - may need to totally rewrite
   - show error on gui

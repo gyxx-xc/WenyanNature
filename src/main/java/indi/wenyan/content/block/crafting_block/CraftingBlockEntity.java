@@ -36,9 +36,12 @@ import java.util.function.Consumer;
 
 // two logic of running it
 // 1. accept the function for the answer
-// > impl: may need builtin function with handwritten bytecode?
+// > impl: may need to change the compile environment to
+//   get a generated java code of a function
+// > need to disable it if it is interacting
 // 2. provide the corresponding vars and provide print function to check the answer
 // > impl: logic for changed question within the round of running problem
+// > provide function of 1. get_vars(n) 2. print(ans)
 
 // Item -> recipe -> checker
 @ParametersAreNonnullByDefault
