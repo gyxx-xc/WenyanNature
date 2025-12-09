@@ -150,7 +150,7 @@ public class WenyanThread {
     public void die() {
         if (state == State.DYING)
             throw new RuntimeException("WenyanThread is already dying");
-        program.runningCounter.decrementAndGet();
+        program.runningThreadsNumber.decrementAndGet();
         state = State.DYING;
     }
 

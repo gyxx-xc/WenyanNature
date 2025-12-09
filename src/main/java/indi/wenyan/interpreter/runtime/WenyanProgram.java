@@ -31,7 +31,7 @@ public class WenyanProgram {
     public final WenyanRuntime baseEnvironment;
 
     /** Counter for currently running threads */
-    public AtomicInteger runningCounter = new AtomicInteger(0);
+    public AtomicInteger runningThreadsNumber = new AtomicInteger(0);
 
     /** Queue of threads ready to run */
     public final Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
@@ -39,8 +39,8 @@ public class WenyanProgram {
     /** Semaphore controlling execution steps across threads */
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
-    /** The Java thread that runs the scheduler */
-    private final Thread programJavaThread;
+    /** The Java thread that runs the programs (scheduler as master) */
+    private final Thread programJavaThread = new Thread(this::scheduler);
 
     // STUB: used in error handler, might changed
     public final Player holder;
@@ -74,14 +74,19 @@ public class WenyanProgram {
         baseEnvironment.importEnvironment(WenyanPackages.WENYAN_BASIC_PACKAGES);
         platform.initEnvironment(baseEnvironment);
         this.holder = holder;
-        programJavaThread = new Thread(this::scheduler);
-        programJavaThread.start();
     }
 
     /**
      * Creates a new thread for this program with the base environment.
      */
     public void createThread() {
+        if (!programJavaThread.isAlive()) {
+            // DCL? what is that
+            try {
+                programJavaThread.start();
+            } catch (IllegalThreadStateException ignored) {}
+        }
+
         WenyanThread thread = new WenyanThread(this);
         thread.call(baseEnvironment);
         // although it only need two lines if not using WenyanBuiltinFunction
@@ -93,7 +98,7 @@ public class WenyanProgram {
             throw new WenyanException("unreached");
         }
         readyQueue.add(thread);
-        runningCounter.getAndIncrement();
+        runningThreadsNumber.getAndIncrement();
     }
 
     /**
@@ -102,6 +107,9 @@ public class WenyanProgram {
      * @param steps Number of execution steps to allocate
      */
     public void step(int steps) {
+        if (!isRunning()) {
+            throw new IllegalStateException("unreached: Program is not running");
+        }
         accumulatedSteps.release(steps);
     }
 
@@ -109,7 +117,10 @@ public class WenyanProgram {
      * Stops the program by interrupting the scheduler thread.
      */
     public void stop() {
-        programJavaThread.interrupt();
+        if (programJavaThread.isAlive()) {
+            programJavaThread.interrupt();
+        }
+        runningThreadsNumber.set(0);
     }
 
     /**
@@ -133,7 +144,7 @@ public class WenyanProgram {
      * @return True if the program has running threads, false otherwise
      */
     public boolean isRunning() {
-        return runningCounter.get() > 0;
+        return runningThreadsNumber.get() > 0;
     }
 
     /**
