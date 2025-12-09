@@ -35,7 +35,7 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
     public final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function("書", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
                     StringBuilder result = new StringBuilder();
                     for (IWenyanValue arg : context.args()) {
                         result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));

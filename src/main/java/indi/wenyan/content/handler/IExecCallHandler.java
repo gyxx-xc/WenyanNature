@@ -21,7 +21,7 @@ public interface IExecCallHandler extends IJavacallHandler {
      * @return the result value
      * @throws WenyanException.WenyanThrowException if an error occurs during handling
      */
-    IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException;
+    Optional<IWenyanValue> handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
     /**
      * Gets the device that executes this handler.

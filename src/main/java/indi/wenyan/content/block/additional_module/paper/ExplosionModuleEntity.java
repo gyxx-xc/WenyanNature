@@ -39,7 +39,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("ExplosionModule.lightning"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) {
+                public IWenyanValue handleOnce(JavacallContext context) {
                     assert getLevel() != null;
                     Entity e = EntityType.LIGHTNING_BOLT.create(getLevel());
                     if (e == null) {
@@ -52,7 +52,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("ExplosionModule.explode"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) {
+                public IWenyanValue handleOnce(JavacallContext context) {
                     assert level != null;
                     level.explode(null,
                             getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
@@ -62,7 +62,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("ExplosionModule.ignite"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
                     var offset = context.args().getFirst().as(WenyanVec3.TYPE).value();
                     BlockPos pos = getBlockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
                     if (!(getLevel() instanceof ServerLevel serverLevel)) {
@@ -79,7 +79,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("ExplosionModule.fireball"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
                     var speed = context.args().getFirst().as(WenyanVec3.TYPE).value();
                     assert getLevel() != null;
                     Entity e = EntityType.FIREBALL.create(getLevel());

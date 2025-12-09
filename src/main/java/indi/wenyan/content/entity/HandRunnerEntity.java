@@ -1,7 +1,7 @@
 package indi.wenyan.content.entity;
 
 import com.google.common.collect.Lists;
-import indi.wenyan.content.handler.IExecCallHandler;
+import indi.wenyan.content.handler.ISingleTickExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
@@ -64,7 +64,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
         return WenyanPackageBuilder.create()
                 .function("a", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
                         Vec3 dir = new Vec3(
                                 Math.max(-10, Math.min(10, context.args().get(0).as(WenyanDouble.TYPE).value())),
                                 Math.max(-10, Math.min(10, context.args().get(1).as(WenyanDouble.TYPE).value())),
@@ -81,7 +81,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 })
                 .function("b", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
                         List<Double> newArgs = Lists.newArrayList();
                         newArgs.add(Math.max(-20, Math.min(20, context.args().get(0).as(WenyanDouble.TYPE).value())));
                         newArgs.add(Math.max(-20, Math.min(20, context.args().get(1).as(WenyanDouble.TYPE).value())));
@@ -94,7 +94,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 })
                 .function("「爆」", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
                         level().explode(HandRunnerEntity.this, getX(), getY(), getZ(),
                                 (float) Math.max(1, Math.min(20,
                                         context.args().getFirst().as(WenyanDouble.TYPE).value())),
@@ -207,7 +207,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
         super.readAdditionalSaveData(compound);
     }
 
-    abstract class ThisCallHandler implements IExecCallHandler {
+    abstract class ThisCallHandler implements ISingleTickExecCallHandler {
         @Override
         public Optional<IWenyanDevice> getExecutor() {
             if (isRemoved())
@@ -215,5 +215,4 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
             return Optional.of(HandRunnerEntity.this);
         }
     }
-
 }

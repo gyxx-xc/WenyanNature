@@ -39,7 +39,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("BlockModule.search"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
                     Vec3 s = context.args().get(0).as(WenyanVec3.TYPE).value();
                     BlockPos start = new BlockPos((int) s.x, (int) s.y, (int) s.z);
                     Vec3 e = context.args().get(1).as(WenyanVec3.TYPE).value();
@@ -85,7 +85,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("BlockModule.get"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
                     Vec3 p = context.args().getFirst().as(WenyanVec3.TYPE).value();
                     BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
                     assert level != null;
@@ -96,7 +96,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             .function(WenyanSymbol.var("BlockModule.attach"), new ThisCallHandler() {
                 @SuppressWarnings("RedundantThrows")
                 @Override
-                public IWenyanValue handle(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
                     Direction attachedDirection = BlockModuleBlock
                             .getConnectedDirection(getBlockState()).getOpposite();
                     BlockPos pos = getBlockPos().relative(attachedDirection);

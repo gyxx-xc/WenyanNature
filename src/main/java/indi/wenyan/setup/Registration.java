@@ -121,7 +121,7 @@ public final class Registration {
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK;
     public static final DeferredItem<BlockItem> CRAFTING_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_ENTITY;
+    public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_BLOCK_ENTITY;
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
@@ -276,7 +276,7 @@ public final class Registration {
         CRAFTING_BLOCK = BLOCKS.register(CraftingBlock.ID, CraftingBlock::new);
         CRAFTING_BLOCK_ITEM = ITEMS.registerItem(CraftingBlock.ID,
                 (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
-        CRAFTING_ENTITY = BLOCK_ENTITY.register(CraftingBlock.ID,
+        CRAFTING_BLOCK_ENTITY = BLOCK_ENTITY.register(CraftingBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(CraftingBlockEntity::new, CRAFTING_BLOCK.get())
                         .build(DSL.remainderType()));

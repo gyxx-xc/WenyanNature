@@ -6,6 +6,8 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -67,16 +69,19 @@ public interface IWenyanDevice {
          * Processes all pending requests in the queue
          */
         public void handle() {
+            Collection<JavacallContext> undoneRequests = new ArrayList<>();
             while (!queue.isEmpty()) {
                 JavacallContext request = queue.remove();
                 try {
-                    request.thread().currentRuntime().processStack
-                            .push(request.handler().handle(request));
-                    WenyanProgram.unblock(request.thread());
+                    request.handler().handle(request).ifPresentOrElse((result) -> {
+                        request.thread().currentRuntime().processStack.push(result);
+                        WenyanProgram.unblock(request.thread());
+                    }, () -> undoneRequests.add(request));
                 } catch (WenyanException.WenyanThrowException | WenyanException e) {
                     request.thread().dieWithException(e);
                 }
             }
+            queue.addAll(undoneRequests); // These are for next tick
         }
     }
 }

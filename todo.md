@@ -16,5 +16,8 @@
   - may need to totally rewrite
   - show error on gui
 - [ ] non-block runner logic
+  - running as same, slot in the inventory for import
 - [ ] running state save and load
 - [ ] asm jit compiler
+- [ ] docker
+- [ ] muti-tick javacall
