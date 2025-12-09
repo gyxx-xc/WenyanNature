@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
-import indi.wenyan.content.handler.WenyanInlineFunction;
+import indi.wenyan.content.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
@@ -26,13 +26,13 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
     public IWenyanValue getAttribute(String name) {
         return switch (name) {
             case "「名」" -> WenyanValues.of(value.getBlock().getName().toString());
-            case "「同物」" -> new WenyanInlineFunction((self, args) -> {
+            case "「同物」" -> new WenyanInlineJavacall((self, args) -> {
                 if (args.getFirst().as(WenyanCapabilitySlot.TYPE).getStack().getItem() instanceof BlockItem blockItem)
                     return WenyanValues.of(value.is(blockItem.getBlock()));
                 else
                     throw new WenyanException("參數必須是方塊物品");
             });
-            case "「同塊」" -> new WenyanInlineFunction((self, args) ->
+            case "「同塊」" -> new WenyanInlineJavacall((self, args) ->
                     WenyanValues.of(value.is(args.getFirst().as(WenyanBlock.TYPE).value.getBlock()))
             );
             case "「有實」" -> WenyanValues.of(value.hasBlockEntity());

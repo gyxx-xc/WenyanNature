@@ -5,10 +5,12 @@ import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -82,7 +84,14 @@ public class WenyanProgram {
     public void createThread() {
         WenyanThread thread = new WenyanThread(this);
         thread.call(baseEnvironment);
-        thread.call(new WenyanRuntime(baseBytecode));
+        // although it only need two lines if not using WenyanBuiltinFunction
+        // but here still use it for consistency
+        var mainFunction = new WenyanBuiltinFunction(List.of(), baseBytecode);
+        try {
+            mainFunction.call(null, thread, List.of());
+        } catch (WenyanException.WenyanThrowException e) { // it should not happen
+            throw new WenyanException("unreached");
+        }
         readyQueue.add(thread);
         runningCounter.getAndIncrement();
     }

@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure.values.annotation;
 
-import indi.wenyan.content.handler.WenyanInlineFunction;
+import indi.wenyan.content.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 
@@ -31,7 +31,7 @@ public class TestAnnotationWenyanValue {
     public static final Map<String, Function<TestAnnotationWenyanValue, IWenyanValue>> members = new HashMap<>();
     Function<TestAnnotationWenyanValue, IWenyanValue> sample1 = (instance) -> instance.attribute;
     Function<TestAnnotationWenyanValue, IWenyanValue> sample2 = TestAnnotationWenyanValue::method;
-    Function<TestAnnotationWenyanValue, IWenyanValue> sample3 = (instance) -> new WenyanInlineFunction(instance::meth);
+    Function<TestAnnotationWenyanValue, IWenyanValue> sample3 = (instance) -> new WenyanInlineJavacall(instance::meth);
     public IWenyanValue getAttribute(String name) {
         return members.get(name).apply(this);
     }

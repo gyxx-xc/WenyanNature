@@ -35,6 +35,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+// two logic of running it
+// 1. accept the function for the answer
+// > impl: may need builtin function with handwritten bytecode?
+// 2. provide the corresponding vars and provide print function to check the answer
+// > impl: logic for changed question within the round of running problem
+
 // Item -> recipe -> checker
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -52,7 +58,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
     private static final int RANGE = 3; // the offset to search for pedestals
 
     public CraftingBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.CRAFTING_ENTITY.get(), pos, blockState);
+        super(Registration.CRAFTING_BLOCK_ENTITY.get(), pos, blockState);
         data = new ContainerData() {
             @Override
             public int get(int i) {
