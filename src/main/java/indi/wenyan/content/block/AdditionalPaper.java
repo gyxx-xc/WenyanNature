@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -42,7 +41,7 @@ public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock impl
     public static final String ID = "additional_paper_block";
 
     @Override
-    protected @NotNull MapCodec<RunnerBlock> codec() {
+    protected MapCodec<RunnerBlock> codec() {
         return CODEC;
     }
 
@@ -56,7 +55,7 @@ public class AdditionalPaper extends FaceAttachedHorizontalDirectionalBlock impl
     }
 
     @Override
-    public @NotNull VoxelShape
+    public VoxelShape
     getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         Direction direction = pState.getValue(FACING);
         switch (pState.getValue(FACE)) {

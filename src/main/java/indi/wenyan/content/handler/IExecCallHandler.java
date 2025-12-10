@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface IExecCallHandler extends IJavacallHandler {
     /**
      * Handles the execution call.
+     * if not finish return empty
      *
      * @param context the context of the call
      * @return the result value
@@ -25,6 +26,7 @@ public interface IExecCallHandler extends IJavacallHandler {
 
     /**
      * Gets the device that executes this handler.
+     * optional happened when device is destroyed (chunk unload / dig) when running
      *
      * @return an optional containing the executor device, or empty if none is available
      */
@@ -38,15 +40,16 @@ public interface IExecCallHandler extends IJavacallHandler {
      * @param argsList the arguments for the call
      * @throws WenyanException.WenyanThrowException if an error occurs during the call
      */
+    @Override
     default void call(IWenyanValue self, WenyanThread thread,
                       List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException {
+        if (getExecutor().isEmpty())
+            throw new WenyanException("killed by no executor");
+
         JavacallContext context = new JavacallContext(self, argsList,
                 thread, this, thread.program.holder);
-
-        getExecutor().ifPresentOrElse((executor) -> thread.program.platform.accept(context), () -> {
-            throw new WenyanException("killed by no executor");
-        });
+        thread.program.platform.accept(context);
         thread.block();
     }
 }

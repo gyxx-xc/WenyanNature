@@ -11,6 +11,7 @@ import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Interface for all Wenyan language values
@@ -65,6 +66,20 @@ public interface IWenyanValue {
             return true;
         } catch (WenyanException.WenyanTypeException e) {
             return false;
+        }
+    }
+
+    /**
+     * Attempts to cast this value to the specified type and returns an Optional
+     * @param type Target type
+     * @param <T> Type parameter
+     * @return Optional containing the casted value or empty if casting fails
+     */
+    default <T extends IWenyanValue> Optional<T> tryAs(WenyanType<T> type) {
+        try {
+            return Optional.of(as(type));
+        } catch (WenyanException.WenyanTypeException e) {
+            return Optional.empty();
         }
     }
 

@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -42,7 +41,7 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
             }
 
             @Override
-            protected int getStackLimit(int slot, @NotNull ItemStack stack) {
+            protected int getStackLimit(int slot, ItemStack stack) {
                 return 1;
             }
         };

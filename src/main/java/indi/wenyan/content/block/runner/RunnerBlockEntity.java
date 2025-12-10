@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.content.handler.AbstractImportHandler;
+import indi.wenyan.content.handler.IImportHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallContext;
@@ -12,6 +12,7 @@ import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +30,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
@@ -37,10 +39,13 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public String pages;
     public int speed;
 
+    @Deprecated
     public List<BlockPos> additionalPages = new ArrayList<>();
 
+    @Getter
+    public static final ImportExecQueue importExecQueue = new ImportExecQueue();
     public static final int DEVICE_SEARCH_RANGE = 3;
-    private final AbstractImportHandler importFunction = new AbstractImportHandler() {
+    private final IImportHandler importFunction = new IImportHandler() {
         @Override
         public WenyanPackage getPackage(String packageName) throws WenyanException.WenyanThrowException {
             IWenyanDevice wenyanExecutor = null;
@@ -66,18 +71,23 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             }
             return wenyanExecutor.getExecPackage();
         }
+
+        @Override
+        public Optional<IWenyanPlatform> getPlatform() {
+            if (isRemoved()) return Optional.empty();
+            else return Optional.of(RunnerBlockEntity.this);
+        }
     };
 
     @Override
     public void initEnvironment(WenyanRuntime baseEnvironment) {
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
-        var attachedPos = RunnerBlock.getConnectedDirection(getBlockState()).getOpposite();
-        BlockPos attached = getBlockPos().relative(attachedPos);
+
         assert getLevel() != null;
-        if (getLevel().getBlockEntity(attached) instanceof IWenyanDevice device) {
-            for (String id : device.getExecPackage().getAttributeSet())
-                baseEnvironment.setVariable(id, device.getExecPackage().getAttribute(id));
-        }
+        BlockPos attached = getBlockPos().relative(
+                RunnerBlock.getConnectedDirection(getBlockState()).getOpposite());
+        if (getLevel().getBlockEntity(attached) instanceof IWenyanDevice device)
+            baseEnvironment.importPackage(device.getExecPackage());
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
@@ -88,7 +98,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide && program != null && program.isRunning()) {
             program.step(speed);
-            importFunction.handle();
+            handleImport();
         }
     }
 
@@ -98,7 +108,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             return;
         }
         program = new WenyanProgram(pages, player, this);
-        program.createThread();
+        program.createMainThread();
     }
 
     public void setCommunicate(Vec3 to) {

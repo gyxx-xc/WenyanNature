@@ -16,6 +16,7 @@ import indi.wenyan.interpreter.utils.IWenyanDevice;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
+import lombok.Getter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
@@ -41,6 +42,9 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
     public WenyanProgram program;
     public boolean hasRun = false;
     public int speed;
+
+    @Getter
+    public static final ImportExecQueue importExecQueue = new ImportExecQueue();
 
     private final ExecQueue execQueue = new ExecQueue();
 
@@ -118,7 +122,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
 
     @Override
     public void initEnvironment(WenyanRuntime baseEnvironment) {
-        baseEnvironment.importEnvironment(getExecPackage());
+        baseEnvironment.importPackage(getExecPackage());
     }
 
     @Override
@@ -137,7 +141,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
             if (getDeltaMovement().length() < 0.01) {
                 setDeltaMovement(Vec3.ZERO);
                 if (!level().isClientSide())
-                    program.createThread();
+                    program.createMainThread();
                 hasRun = true;
             } else {
                 setDeltaMovement(getDeltaMovement().scale(0.5));

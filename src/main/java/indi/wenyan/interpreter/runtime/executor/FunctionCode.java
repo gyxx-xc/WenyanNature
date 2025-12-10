@@ -82,18 +82,12 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public int getStep(int args, WenyanThread thread) {
-        IWenyanFunction sign;
-        try {
-            sign = thread.currentRuntime().processStack.peek()
-                    .as(IWenyanFunction.TYPE);
-        } catch (WenyanException.WenyanTypeException e) {
-            throw new WenyanException(e.getMessage());
-        }
-        if (sign instanceof IJavacallHandler javacall) {
-            return javacall.getStep(args, thread);
-        } else {
-            return args;
-        }
+        var function = thread.currentRuntime().processStack.peek();
+        if (!function.is(IWenyanFunction.TYPE))
+            throw new WenyanException("無法調用非函數類型的值");
+        return function.tryAs(IJavacallHandler.TYPE)
+                .map(handler -> handler.getStep(args, thread))
+                .orElse(args);
     }
 
     /**

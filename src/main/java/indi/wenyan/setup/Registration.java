@@ -182,7 +182,6 @@ public final class Registration {
     public static final Supplier<SimpleParticleType> COMMUNICATION_PARTICLES;
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RUNNING_TIER_DATA;
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> OUTPUT_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> NOTE_LOCK_DATA;
 
@@ -410,11 +409,6 @@ public final class Registration {
         RUNNING_TIER_DATA = DATA.register("runner_tier_data",
                 () -> DataComponentType.<Integer>builder()
                         .persistent(ExtraCodecs.intRange(0, 3))
-                        .build());
-        OUTPUT_DATA = DATA.register("output_data",
-                () -> DataComponentType.<String>builder()
-                        .persistent(Codec.STRING)
-                        .networkSynchronized(ByteBufCodecs.STRING_UTF8)
                         .build());
         PROGRAM_CODE_DATA = DATA.register("program_code_data",
                 () -> DataComponentType.<String>builder()

@@ -21,7 +21,7 @@ import java.util.List;
  * A Wenyan array list implementation that wraps a Java List.
  * <p>
  * to make the list element mutable, use the left value as the element
- * to make the list immutable, use a immutable list as the value
+ * to make the list immutable, use an immutable list as the value
  */
 public record WenyanList(List<IWenyanValue> value)
         implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {

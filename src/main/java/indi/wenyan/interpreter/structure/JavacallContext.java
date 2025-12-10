@@ -28,5 +28,6 @@ public class JavacallContext {
     IExecCallHandler handler;
 
     /** Player who triggered the call */
+    @Deprecated
     Player holder;
 }

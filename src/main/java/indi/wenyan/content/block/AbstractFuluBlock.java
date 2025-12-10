@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -41,7 +40,7 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
     }
 
     @Override
-    protected @NotNull MapCodec<RunnerBlock> codec() {
+    protected MapCodec<RunnerBlock> codec() {
         return CODEC;
     }
 
@@ -53,7 +52,7 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
     }
 
     @Override
-    public @NotNull VoxelShape
+    public VoxelShape
     getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         Direction direction = pState.getValue(FACING);
         switch (pState.getValue(FACE)) {

@@ -31,7 +31,7 @@ public class WenyanProgram {
     public final WenyanRuntime baseEnvironment;
 
     /** Counter for currently running threads */
-    public AtomicInteger runningThreadsNumber = new AtomicInteger(0);
+    public final AtomicInteger runningThreadsNumber = new AtomicInteger(0);
 
     /** Queue of threads ready to run */
     public final Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
@@ -71,7 +71,7 @@ public class WenyanProgram {
             WenyanException.handleException(holder, e.getMessage());
         }
         this.baseEnvironment = new WenyanRuntime(null);
-        baseEnvironment.importEnvironment(WenyanPackages.WENYAN_BASIC_PACKAGES);
+        baseEnvironment.importPackage(WenyanPackages.WENYAN_BASIC_PACKAGES);
         platform.initEnvironment(baseEnvironment);
         this.holder = holder;
     }
@@ -79,7 +79,7 @@ public class WenyanProgram {
     /**
      * Creates a new thread for this program with the base environment.
      */
-    public void createThread() {
+    public void createMainThread() {
         if (!programJavaThread.isAlive()) {
             // DCL? what is that
             try {
@@ -159,6 +159,7 @@ public class WenyanProgram {
             while (true) {
                 accumulatedSteps.acquire(SWITCH_COST);
                 if (readyQueue.isEmpty()) {
+                    // TODO: make it not busy wait
                     accumulatedSteps.drainPermits();
                     continue;
                 }

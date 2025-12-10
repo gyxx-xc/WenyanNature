@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 // > need to disable it if it is interacting
 // 2. provide the corresponding vars and provide print function to check the answer
 // > impl: logic for changed question within the round of running problem
-// > provide function of 1. get_vars(n) 2. print(ans)
+// > provide function of 1. global var(n) 2. print(ans)
 
 // Item -> recipe -> checker
 @ParametersAreNonnullByDefault
@@ -115,7 +115,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
 //                            WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
 //                            player, checker);
                     checker.init(runner.program);
-                    runner.program.createThread();
+                    runner.program.createMainThread();
                 }
             }
         }
@@ -128,6 +128,7 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
             return;
         }
 
+// from here
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         forNearbyPedestal(level, getBlockPos(), p -> pedestalItems.add(p.getItem(0)));
         var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
@@ -145,13 +146,14 @@ public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
             WenyanException.handleException(player, Component.translatable("error.wenyan_programming.function_not_found_").getString());
             return;
         }
+// to here for get recipe and checker
 
         this.runner = runner;
         round = 0;
 //        runner.program = new WenyanProgram(runner.pages,
 //                WenyanPackages.CRAFTING_BASE_ENVIRONMENT, player, checker);
         checker.init(runner.program);
-        runner.program.createThread();
+        runner.program.createMainThread();
         isCrafting = true;
     }
 

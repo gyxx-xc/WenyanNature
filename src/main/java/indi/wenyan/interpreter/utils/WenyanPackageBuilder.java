@@ -26,7 +26,7 @@ import java.util.function.Function;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class WenyanPackageBuilder {
     /** Map of variables to include in the package */
-    Map<String, IWenyanValue> variables = new HashMap<>();
+    private final Map<String, IWenyanValue> variables = new HashMap<>();
 
     /**
      * Creates a new package builder
@@ -42,7 +42,7 @@ public final class WenyanPackageBuilder {
      * @return This builder
      */
     public WenyanPackageBuilder environment(WenyanPackage environment) {
-        variables.putAll(environment.getVariables());
+        variables.putAll(environment.variables());
         return this;
     }
 

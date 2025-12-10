@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -16,7 +17,7 @@ public class WenyanRuntime {
     public final WenyanBytecode bytecode;
 
     /** Storage for program variables */
-    public final HashMap<String, IWenyanValue> variables = new HashMap<>();
+    public final Map<String, IWenyanValue> variables = new HashMap<>();
 
     /** Stack for operation results */
     public final WenyanStack resultStack = new WenyanStack();
@@ -55,9 +56,9 @@ public class WenyanRuntime {
     /**
      * Imports all variables from a package into this runtime.
      *
-     * @param environment The package containing variables to import
+     * @param aPackage The package containing variables to import
      */
-    public void importEnvironment(WenyanPackage environment) {
-        variables.putAll(environment.getVariables());
+    public void importPackage(WenyanPackage aPackage) {
+        variables.putAll(aPackage.variables());
     }
 }

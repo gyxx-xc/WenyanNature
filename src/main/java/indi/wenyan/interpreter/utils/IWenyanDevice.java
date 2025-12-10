@@ -46,6 +46,8 @@ public interface IWenyanDevice {
     }
 
     /**
+     * For connecting effect only
+     *
      * @return The position of this device in the world
      */
     Vec3 getPosition();
