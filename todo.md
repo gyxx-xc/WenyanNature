@@ -1,26 +1,26 @@
-- [ ] annotation wenyan value processor
-  - need source level annotation processing
-- [ ] docs
-- [ ] variable symbol unify
-  - variable symbol in runtime need to separate to wenyan grammar
-  - at least able to change the whole pre-defined variable symbol set
-- [ ] CHS/CHT opencc version
-  - opencc library
-  - CHT to CHS will make different character to same. e.g. 隣邻
-  - treatment to symbols
+- [x] crafting
+  - change needed
+- [x] muti-tick javacall
+- [ ] non-block runner logic
+  - running as same, slot in the inventory for import
 - [ ] power generate and consume
   - two types of power, disappear every 2 tick, need to calculate power generate and consume every tick
   - small power (天意) gen by a**b mod 100000007 O(log b) about 27 op (1 tick for fastest)
   - large power (天机) gen by log_a(b) mod 100000007 O(sqrt(b)) about 1e4 op (0.5*c sec for fastest)
   - design power consume api
-- [x] crafting
-  - change needed
+- [ ] running state save and load
+- [ ] docker block
+- [ ] docs
+- [ ] CHS/CHT opencc version
+  - opencc library
+  - CHT to CHS will make different character to same. e.g. 隣邻
+  - treatment to symbols
 - [ ] error handler
   - may need to totally rewrite
   - show error on gui
-- [ ] non-block runner logic
-  - running as same, slot in the inventory for import
-- [ ] running state save and load
 - [ ] asm jit compiler
-- [ ] docker
-- [ ] muti-tick javacall
+- [ ] annotation wenyan value processor
+  - need source level annotation processing
+- [ ] variable symbol unify
+  - variable symbol in runtime need to separate to wenyan grammar
+  - at least able to change the whole pre-defined variable symbol set
