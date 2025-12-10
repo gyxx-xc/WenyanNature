@@ -44,7 +44,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
     public int speed;
 
     @Getter
-    public static final ImportExecQueue importExecQueue = new ImportExecQueue();
+    public final ImportExecQueue importExecQueue = new ImportExecQueue();
 
     private final ExecQueue execQueue = new ExecQueue();
 

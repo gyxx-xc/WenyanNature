@@ -1,6 +1,5 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanValues;
@@ -20,8 +19,8 @@ public class EchoChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void init(WenyanProgram program) {
-        super.init(program);
+    public void init() {
+        super.init();
         ans = WenyanValues.of(random.nextInt());
         setVariable(0, ans);
     }
@@ -30,12 +29,13 @@ public class EchoChecker extends CraftingAnswerChecker {
     public void accept(IWenyanValue value) {
         try {
             if (IWenyanValue.equals(value, ans)){
-                setStatus(Result.ANSWER_CORRECT);
+                setResult(ResultStatus.ANSWER_CORRECT);
                 return;
             }
         } catch (WenyanException.WenyanThrowException e) {
+            setResult(ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }
-        setStatus(Result.WRONG_ANSWER);
+        setResult(ResultStatus.WRONG_ANSWER);
     }
 }

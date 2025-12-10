@@ -22,6 +22,7 @@ public final class AnsweringRecipeBuilder {
     private final ItemStack output;
     private String question;
     private Criterion<?> criterion;
+    private int round = 1;
 
     /**
      * Private constructor to enforce use of factory methods.
@@ -122,6 +123,11 @@ public final class AnsweringRecipeBuilder {
         return this;
     }
 
+    public AnsweringRecipeBuilder round(int round) {
+        this.round = round;
+        return this;
+    }
+
     /**
      * Saves the recipe to the recipe output with the given name.
      * @param recipeOutput The recipe output to save to
@@ -131,7 +137,7 @@ public final class AnsweringRecipeBuilder {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, recipeName);
         recipeOutput.accept(
                 id,
-                new AnsweringRecipe(input, question, output),
+                new AnsweringRecipe(input, question, output, round),
                 recipeOutput.advancement()
                         .addCriterion("has_" + recipeName, criterion)
                         .build(id.withPrefix("recipes/"))

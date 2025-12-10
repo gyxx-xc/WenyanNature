@@ -4,11 +4,7 @@ import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +31,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .create(Registration.HAND_RUNNER_0.get())
                 .addInput(Items.PAPER)
                 .question(CheckerFactory.PLUS_CHECKER)
+                .round(8)
                 .unlock(has(Registration.HAND_RUNNER_0.get()))
                 .save(recipeOutput, "hand_runner");
         AnsweringRecipeBuilder

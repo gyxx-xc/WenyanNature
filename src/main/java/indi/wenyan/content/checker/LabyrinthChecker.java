@@ -1,7 +1,6 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.content.handler.WenyanInlineJavacall;
-import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
@@ -181,8 +180,8 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void init(WenyanProgram program) {
-        super.init(program);
+    public void init() {
+        super.init();
 
         curX = 0;
         curY = 0;
@@ -198,7 +197,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         try {
             if (value.as(Position.TYPE) instanceof Position(int dx, int dy)) {
                 if (Math.abs(dx) + Math.abs(dy) != 1) {
-                    setStatus(Result.WRONG_ANSWER);
+                    setResult(ResultStatus.WRONG_ANSWER);
                     throw new WenyanException.WenyanCheckerError("wrong");
                 }
 
@@ -206,17 +205,17 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                 curY = curY + dy;
 
                 if (curX == input.EndX && curY == input.EndY) {
-                    setStatus(Result.ANSWER_CORRECT);
+                    setResult(ResultStatus.ANSWER_CORRECT);
                     return;
                 }
 
                 if (input.isWall(curX, curY)) {
-                    setStatus(Result.WRONG_ANSWER);
+                    setResult(ResultStatus.WRONG_ANSWER);
                     throw new WenyanException.WenyanCheckerError("wrong");
                 }
             }
         } catch (WenyanException.WenyanTypeException e) {
-            setStatus(Result.RUNTIME_ERROR);
+            setResult(ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }
     }

@@ -1,21 +1,23 @@
 package indi.wenyan.content.block.crafting_block;
 
-import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
-import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.checker.CheckerFactory;
-import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.structure.values.WenyanPackage;
+import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
+import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,140 +47,122 @@ import java.util.function.Consumer;
 // Item -> recipe -> checker
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CraftingBlockEntity extends BlockEntity implements MenuProvider {
-    private boolean isCrafting;
-    private RunnerBlockEntity runner;
-    private CraftingAnswerChecker checker;
-    private RecipeHolder<AnsweringRecipe> recipeHolder;
+public class CraftingBlockEntity extends AbstractModuleEntity implements MenuProvider {
+    private int craftingProgress;
+    private IAnsweringChecker checker = null;
+    private RecipeHolder<AnsweringRecipe> recipeHolder = null;
 
     // for gui
-    public IAnsweringChecker.Result result;
-    public int round;
-    public final int maxRound = 16;
-    protected final ContainerData data;
+    public IAnsweringChecker.ResultStatus result;
+    protected final ContainerData data = new ContainerData() {
+        @Override
+        public int get(int i) {
+            return switch (i) {
+                case 0 -> craftingProgress;
+                case 1 -> result != null ? result.ordinal() : -1;
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int i, int v) {
+            // do nothing
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
     private static final int RANGE = 3; // the offset to search for pedestals
+
+    @Getter
+    public final String basePackageName = "builtin";
+
+    @Getter
+    public final WenyanPackage execPackage = WenyanPackageBuilder.create()
+            .function("「参」", new ThisCallHandler() {
+                @Override
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    if (!context.args().isEmpty()) throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
+                    return getChecker().getArgs();
+                }
+            })
+            .function("书", new ThisCallHandler() {
+                @Override
+                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    getChecker().accept(context.args().getFirst());
+                    switch (checker.getResult()) {
+                        case RUNNING -> {}
+                        case WRONG_ANSWER -> {
+                            craftingProgress = 0;
+                            checker.init();
+                        }
+                        case ANSWER_CORRECT -> {
+                            craftingProgress ++;
+                            checker.init();
+                            if (craftingProgress >= recipeHolder.value().round()) {
+                                // prevent sudden change of recipe, although not needed since one tick
+                                getChecker();
+                                craftingProgress = 0;
+                                craftAndEjectItem();
+                            }
+                        }
+                    }
+                    return WenyanNull.NULL;
+                }
+            })
+            // TODO: .const of a builtin function
+            .build();
 
     public CraftingBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.CRAFTING_BLOCK_ENTITY.get(), pos, blockState);
-        data = new ContainerData() {
-            @Override
-            public int get(int i) {
-                return switch (i) {
-                    case 0 -> round;
-                    case 1 -> maxRound;
-                    case 2 -> isCrafting ? 1 : 0;
-                    case 3 -> result != null ? result.ordinal() : -1;
-                    default -> 0;
-                };
-            }
-
-            @Override
-            public void set(int i, int v) {
-                // do nothing
-            }
-
-            @Override
-            public int getCount() {
-                return 4;
-            }
-        };
     }
 
-    @SuppressWarnings("unused")
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide()) {
-            if (isCrafting && !runner.program.isRunning()) {
-                round ++;
-                result = checker.getResult();
-
-                // Check if the crafting is still valid
-                ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-                forNearbyPedestal(level, pos, p -> pedestalItems.add(p.getItem(0)));
-                var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
-                        new AnsweringRecipeInput(pedestalItems), level);
-                if (recipeHolder.isEmpty() || !recipeHolder.get().equals(this.recipeHolder)) {
-                    result = IAnsweringChecker.Result.RUNTIME_ERROR;
-                }
-
-                // handle the result
-                if (result != IAnsweringChecker.Result.ANSWER_CORRECT) {
-                    isCrafting = false;
-                } else if (round >= maxRound) {
-                    isCrafting = false;
-                    forNearbyPedestal(level, pos, p -> p.removeItem(0, p.getMaxStackSize()));
-                    // TODO: not eject, may copy ComposterBlock
-                    ejectItem();
-                } else {
-                    // continue
-//                    runner.program = new WenyanProgram(runner.pages,
-//                            WenyanPackages.CRAFTING_BASE_ENVIRONMENT,
-//                            player, checker);
-                    checker.init(runner.program);
-                    runner.program.createMainThread();
-                }
-            }
-        }
-    }
-
-    public void run(RunnerBlockEntity runner, Player player) {
+    // logic: if cached, if check recipe consistence -> return cached
+    // else: recreate the checker
+    private IAnsweringChecker getChecker() {
+        Level level = getLevel();
         assert level != null;
-        if (isCrafting) {
-            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.already_run").getString());
-            return;
-        }
-
-// from here
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        forNearbyPedestal(level, getBlockPos(), p -> pedestalItems.add(p.getItem(0)));
+        forNearbyPedestal(level, getBlockPos(), pedestal -> pedestalItems.add(pedestal.getItem(0)));
         var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
-                new AnsweringRecipeInput(pedestalItems), level);
+                new AnsweringRecipeInput(pedestalItems), level, this.recipeHolder); // set last recipe as hint
         if (recipeHolder.isEmpty()) {
-            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.function_not_found_").getString());
-            return;
+            resetCrafting();
+            throw new WenyanException("No valid recipe found for the current pedestal items.");
         }
 
+        if (this.recipeHolder != null) {
+            if(this.recipeHolder.equals(recipeHolder.get()))
+                return checker;
+            else resetCrafting();
+        } // else resetCrafting(); (it should be already reset)
         this.recipeHolder = recipeHolder.get();
         var question = recipeHolder.get().value().question();
-        checker = CheckerFactory.produce(question, level.getRandom());
-        if (checker == null) {
-            WenyanProgramming.LOGGER.error("Failed to create checker for question: {}", question);
-            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.function_not_found_").getString());
-            return;
+        var result = CheckerFactory.produce(question, level.getRandom());
+        if (result == null) {
+            resetCrafting();
+            throw new WenyanException("unreached: Failed to create checker for question: " + question);
         }
-// to here for get recipe and checker
-
-        this.runner = runner;
-        round = 0;
-//        runner.program = new WenyanProgram(runner.pages,
-//                WenyanPackages.CRAFTING_BASE_ENVIRONMENT, player, checker);
-        checker.init(runner.program);
-        runner.program.createMainThread();
-        isCrafting = true;
+        checker = result;
+        checker.init(); // recreated, reset the checker state
+        return result;
     }
 
-    public void ejectItem() {
-        BlockPos pos = worldPosition.relative(Direction.UP);
+    public void craftAndEjectItem() {
         assert level != null;
-        Block.popResource(level, pos, recipeHolder.value().output());
+        // TODO: for recipe with remaining item
+        forNearbyPedestal(level, getBlockPos(), pedestal -> pedestal.setItem(0, ItemStack.EMPTY));
+        BlockPos pos = worldPosition.relative(Direction.UP);
+        Block.popResource(level, pos, recipeHolder.value().output().copy());
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-    }
-
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return super.getUpdateTag(registries);
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+    private void resetCrafting() {
+        this.craftingProgress = 0;
+        this.checker = null;
+        this.recipeHolder = null;
+        this.result = null;
     }
 
     @Override

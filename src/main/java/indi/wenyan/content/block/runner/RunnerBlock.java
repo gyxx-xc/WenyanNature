@@ -1,7 +1,6 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
@@ -45,14 +44,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 }));
         } else {
             if (!level.isClientSide()) {
-                var maybeCrafting = level.getBlockEntity(
-                        pos.relative(getConnectedDirection(state).getOpposite()));
-
-                if (maybeCrafting instanceof CraftingBlockEntity cb) {
-                    cb.run(runner, player);
-                } else {
-                    runner.run(player);
-                }
+                runner.run(player);
             }
         }
         return ItemInteractionResult.SUCCESS;

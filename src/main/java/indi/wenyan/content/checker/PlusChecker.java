@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.runtime.WenyanProgram;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
@@ -19,8 +19,8 @@ public class PlusChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void init(WenyanProgram program) {
-        super.init(program);
+    public void init() {
+        super.init();
         int a = random.nextInt(100);
         int b = random.nextInt(100);
         setVariable(0, WenyanValues.of(a));
@@ -32,12 +32,13 @@ public class PlusChecker extends CraftingAnswerChecker {
     public void accept(IWenyanValue value) {
         try {
             if (IWenyanValue.equals(value, ans)) {
-                setStatus(Result.ANSWER_CORRECT);
+                setResult(ResultStatus.ANSWER_CORRECT);
             } else {
-                setStatus(Result.WRONG_ANSWER);
+                setResult(ResultStatus.WRONG_ANSWER);
             }
         } catch (Exception e) {
-            setStatus(Result.RUNTIME_ERROR);
+            setResult(ResultStatus.WRONG_ANSWER);
+            throw new WenyanException(e.getMessage());
         }
     }
 }

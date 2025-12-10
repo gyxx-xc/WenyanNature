@@ -43,7 +43,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public List<BlockPos> additionalPages = new ArrayList<>();
 
     @Getter
-    public static final ImportExecQueue importExecQueue = new ImportExecQueue();
+    public final ImportExecQueue importExecQueue = new ImportExecQueue();
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final IImportHandler importFunction = new IImportHandler() {
         @Override

@@ -23,7 +23,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack output) implements Recipe<AnsweringRecipeInput> {
+public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round) implements Recipe<AnsweringRecipeInput> {
 
     public static final String ID = "answering_recipe";
 
@@ -41,6 +41,8 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
         for (ItemStack stack : item)
             stackedContents.accountStack(stack, 1);
 
+        // not sure why IntelliJ not see the @Nullable annotation
+        //noinspection ConstantValue
         return RecipeMatcher.findMatches(item, input) != null;
     }
 
@@ -73,7 +75,8 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
         public static final MapCodec<AnsweringRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC.listOf().fieldOf("input").forGetter(AnsweringRecipe::input),
                 Codec.STRING.fieldOf("question").forGetter(AnsweringRecipe::question),
-                ItemStack.CODEC.fieldOf("output").forGetter(AnsweringRecipe::output)
+                ItemStack.CODEC.fieldOf("output").forGetter(AnsweringRecipe::output),
+                Codec.INT.fieldOf("round").forGetter(AnsweringRecipe::round)
         ).apply(inst, AnsweringRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AnsweringRecipe> STREAM_CODEC =
@@ -81,6 +84,7 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
                         Serializers.INGREDIENT_LIST_STREAM, AnsweringRecipe::input,
                         ByteBufCodecs.STRING_UTF8, AnsweringRecipe::question,
                         ItemStack.STREAM_CODEC, AnsweringRecipe::output,
+                        ByteBufCodecs.INT, AnsweringRecipe::round,
                         AnsweringRecipe::new);
 
         @Override

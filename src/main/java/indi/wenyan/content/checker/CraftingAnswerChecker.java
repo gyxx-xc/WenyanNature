@@ -1,9 +1,16 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.util.RandomSource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for checkers that validate answers in crafting recipes.
@@ -12,29 +19,11 @@ import net.minecraft.util.RandomSource;
 public abstract class CraftingAnswerChecker implements IAnsweringChecker {
     /** Random source for generating test cases */
     protected final RandomSource random;
-    /** The Wenyan program being checked */
-    protected WenyanProgram program;
 
-    private Result result = Result.WRONG_ANSWER;
-
-    /** Default variable names used for inputs */
-    private static final String[] DEFAULT_INPUT_NAME =
-            {"「甲」", "「乙」", "「丙」", "「丁」", "「戊」", "「己」", "「庚」", "「辛」", "「壬」", "「癸」"};
-
-    /**
-     * Sets the result status of the checker.
-     *
-     * @param result the new result status
-     */
-    protected void setStatus(Result result) {
-        this.result = result;
-    }
-
-    @Override
-    public Result getResult() {
-        // TODO: if tle: return tle
-        return result;
-    }
+    @Getter @Setter(AccessLevel.PROTECTED)
+    private ResultStatus result;
+    @Getter
+    private CheckerWenyanObject args = null;
 
     /**
      * Creates a new checker with the specified random source.
@@ -45,20 +34,10 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
         this.random = random;
     }
 
-    /**
-     * Processes a collection of values for checking.
-     *
-     * @param value the values to check
-     * @throws WenyanException.WenyanCheckerError if a checking error occurs
-     */
-    public void accept(Iterable<IWenyanValue> value) throws WenyanException.WenyanCheckerError {
-        for (var v : value)
-            accept(v);
-    }
-
     @Override
-    public void init(WenyanProgram program) {
-        this.program = program;
+    public void init() {
+        args = new CheckerWenyanObject();
+        result = ResultStatus.RUNNING;
     }
 
     /**
@@ -69,9 +48,9 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
      * @throws IllegalStateException if the program is not initialized
      */
     protected void setVariable(int i, IWenyanValue value) {
-        if (program == null)
+        if (args == null)
             throw new IllegalStateException("Program is not initialized");
-        program.baseEnvironment.setVariable(DEFAULT_INPUT_NAME[i], value);
+        args.addAttribute(DEFAULT_INPUT_NAME[i], value);
     }
 
     /**
@@ -82,8 +61,37 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
      * @throws IllegalStateException if the program is not initialized
      */
     protected void setAttribute(String name, IWenyanValue value) {
-        if (program == null)
+        if (args == null)
             throw new IllegalStateException("Program is not initialized");
-        program.baseEnvironment.setVariable(name, value);
+        args.addAttribute(name, value);
+    }
+
+    /** Default variable names used for inputs */
+    private static final String[] DEFAULT_INPUT_NAME =
+            {"「甲」", "「乙」", "「丙」", "「丁」", "「戊」", "「己」", "「庚」", "「辛」", "「壬」", "「癸」"};
+
+    // TODO: RW Lock
+    protected static class CheckerWenyanObject implements IWenyanObject {
+        public static final WenyanType<CheckerWenyanObject> TYPE =
+                new WenyanType<>("checker_object", CheckerWenyanObject.class);
+
+        public final Map<String, IWenyanValue> attributes = new HashMap<>();
+
+        protected void addAttribute(String name, IWenyanValue value) {
+            attributes.put(name, value);
+        }
+
+        @Override
+        public IWenyanValue getAttribute(String name) {
+             if (attributes.containsKey(name)) {
+                 return attributes.get(name);
+             }
+             throw new WenyanException("Checker object has no such attribute: " + name);
+        }
+
+        @Override
+        public WenyanType<?> type() {
+            return TYPE;
+        }
     }
 }

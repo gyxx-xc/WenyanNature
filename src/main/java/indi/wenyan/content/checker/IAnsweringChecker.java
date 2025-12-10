@@ -1,7 +1,7 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 /**
@@ -11,10 +11,8 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 public interface IAnsweringChecker {
     /**
      * Initializes the checker with a Wenyan program.
-     *
-     * @param program the program to check
      */
-    void init(WenyanProgram program);
+    void init();
 
     /**
      * Processes a value for checking.
@@ -24,21 +22,29 @@ public interface IAnsweringChecker {
      */
     void accept(IWenyanValue value) throws WenyanException.WenyanCheckerError;
 
+    default void accept(Iterable<IWenyanValue> value) throws WenyanException.WenyanCheckerError {
+        for (var v : value)
+            accept(v);
+    }
+
+    IWenyanObject getArgs();
+
     /**
      * Gets the current result status of the checker.
      *
      * @return the result status
      */
-    IAnsweringChecker.Result getResult();
+    ResultStatus getResult();
 
     /**
      * Possible result states for an answer checker.
      */
-    enum Result {
+    enum ResultStatus {
+        RUNNING,
         ANSWER_CORRECT,
         WRONG_ANSWER,
-        RUNTIME_ERROR,
-        COMPILE_ERROR,
-        TIME_LIMIT_EXCEEDED,
+//        RUNTIME_ERROR,
+//        COMPILE_ERROR,
+//        TIME_LIMIT_EXCEEDED,
     }
 }

@@ -67,16 +67,15 @@ public class CodeField {
             StringView stringView = getSelected();
             screen.getContent().replace(stringView.beginIndex(), stringView.endIndex(), string);
             int lengthChanged = string.length() - (stringView.endIndex() - stringView.beginIndex());
-            ArrayList<Placeholder> placeholderArrayList = new ArrayList<>(screen.getPlaceholders());
-            for (int i = 0; i < placeholderArrayList.size(); i++) {
-                var placeholder = placeholderArrayList.get(i);
+            for (int i = 0; i < screen.getPlaceholders().size(); i++) {
+                var placeholder = screen.getPlaceholders().get(i);
                 // NOTE: a equal here means if any text of cursor is changed, the placeholder will be removed
                 if (placeholder.index() >= stringView.beginIndex()) {
-                    if (placeholder.index() <= stringView.endIndex())
+                    if (placeholder.index() <= stringView.endIndex()) {
                         screen.getPlaceholders().remove(placeholder);
-                    else
-                        screen.getPlaceholders().set(i, new Placeholder(
-                                placeholder.context(), placeholder.index() + lengthChanged));
+                        i --;
+                    } else screen.getPlaceholders().set(i, new Placeholder(
+                            placeholder.context(), placeholder.index() + lengthChanged));
                 }
             }
             screen.setCursor(stringView.beginIndex() + string.length());
