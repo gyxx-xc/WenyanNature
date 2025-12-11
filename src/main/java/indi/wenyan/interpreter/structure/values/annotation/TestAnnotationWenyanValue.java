@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 // TODO: we may need a compile level solution of it,
 //   so, maybe delaying forever
+@SuppressWarnings("ALL")
 @Deprecated
 public class TestAnnotationWenyanValue {
 

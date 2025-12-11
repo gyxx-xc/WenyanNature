@@ -30,9 +30,9 @@ public enum ClientSetup {;
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
         event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
-        event.registerBlockEntityRenderer(Registration.RUNNER_BLOCK_ENTITY.get(), RunnerBlockRender::new);
+        event.registerBlockEntityRenderer(Registration.RUNNER_BLOCK_ENTITY.get(), context1 -> new RunnerBlockRender());
         event.registerBlockEntityRenderer(Registration.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
-        event.registerBlockEntityRenderer(Registration.PEDESTAL_ENTITY.get(), PedestalBlockRender::new);
+        event.registerBlockEntityRenderer(Registration.PEDESTAL_ENTITY.get(), context -> new PedestalBlockRender());
         event.registerBlockEntityRenderer(Registration.SCREEN_MODULE_BLOCK_ENTITY.get(), ScreenModuleBlockRenderer::new);
     }
 

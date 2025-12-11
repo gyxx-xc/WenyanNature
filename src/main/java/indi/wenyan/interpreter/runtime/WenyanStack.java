@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
  * A specialized stack implementation for Wenyan values with a size limit.
  * Null values are not pushed to the stack.
  */
+@WenyanThreading
 public class WenyanStack {
     /** Underlying data structure for the stack */
     private final Deque<IWenyanValue> stack = new LinkedList<>();

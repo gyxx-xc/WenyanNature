@@ -50,8 +50,9 @@ public class FunctionCode extends WenyanCode {
             if (operation == Operation.CALL_ATTR)
                 self = runtime.processStack.pop();
 
+            // TODO: check the logic and use the tryAs
             // object_type
-            if (func.type() == IWenyanObjectType.TYPE) {
+            if (func.is(IWenyanObjectType.TYPE)) {
                 callable = func.as(IWenyanObjectType.TYPE);
             } else { // function
                 // handleWarper self first
@@ -71,9 +72,9 @@ public class FunctionCode extends WenyanCode {
             for (int i = 0; i < args; i++)
                 argsList.add(runtime.processStack.pop());
 
-            // must make the callF at end, because it may block thread
-            // which is a fake block, it will still run the rest command before blocked
-            // it will only block the next WenyanCode being executed
+            // NOTE: must make the callF at end, because it may block thread
+            //   which is a fake block, it will still run the rest command before blocked
+            //   it will only block the next WenyanCode being executed
             callable.call(self, thread, argsList);
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage());

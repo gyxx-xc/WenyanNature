@@ -4,6 +4,7 @@ import indi.wenyan.WenyanProgramming;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 
+@SuppressWarnings("ALL")
 @Config(name = WenyanProgramming.MODID)
 public final class WenyanConfig implements ConfigData {
     // RTFM Use https://shedaniel.gitbook.io/cloth-config/auto-config/introduction-to-auto-config-1u

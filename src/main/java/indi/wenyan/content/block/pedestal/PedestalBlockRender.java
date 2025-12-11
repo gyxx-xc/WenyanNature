@@ -4,14 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
 
 public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEntity> {
 
-    public PedestalBlockRender(BlockEntityRendererProvider.Context context) {
+    public PedestalBlockRender() {
     }
 
     // copy from arsnouveau

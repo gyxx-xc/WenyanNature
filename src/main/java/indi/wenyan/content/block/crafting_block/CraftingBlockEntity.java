@@ -91,7 +91,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             .function("书", new ThisCallHandler() {
                 @Override
                 public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
-                    getChecker().accept(context.args().getFirst());
+                    getChecker().accept(context.args());
                     switch (checker.getResult()) {
                         case RUNNING -> {}
                         case WRONG_ANSWER -> {

@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import indi.wenyan.content.item.WenyanHandRunner;
+import indi.wenyan.content.item.RunnerItem;
 import indi.wenyan.setup.Registration;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,7 +28,7 @@ import java.util.List;
 
 import static indi.wenyan.WenyanProgramming.LOGGER;
 
-
+@SuppressWarnings("ALL") // TODO: refactor
 public enum FileLoader {
     ;
 
@@ -90,7 +90,7 @@ public enum FileLoader {
         }
 
 
-        WenyanHandRunner bookItem = (WenyanHandRunner) runnerItem.get();
+        RunnerItem bookItem = (RunnerItem) runnerItem.get();
         ItemStack handRunnerStack = new ItemStack(bookItem, 1);
         //Create pages
         List<Filterable<String>> pages = new ArrayList<>();

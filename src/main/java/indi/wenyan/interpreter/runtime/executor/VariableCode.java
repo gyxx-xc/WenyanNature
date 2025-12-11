@@ -52,6 +52,7 @@ public class VariableCode extends WenyanCode {
             case CAST -> {
                 IWenyanValue var = runtime.processStack.pop();
                 try {
+                    // TODO: use const with TYPE in bytecode?
                     switch (args) {
                         case 1 -> var.as(WenyanInteger.TYPE);
                         case 2 -> var.as(WenyanDouble.TYPE);

@@ -14,6 +14,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("ALL") // TODO: check needed
 /**
  * Generates advancements for the Wenyan Programming mod.
  */

@@ -35,7 +35,6 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
     public static final int CHARACTER_LIMIT = 16384;
 
     private CodeEditorWidget textFieldWidget;
-    @SuppressWarnings("FieldCanBeLocal")
     private SnippetWidget snippetWidget;
 
     public CodeEditorScreen(String content, Consumer<String> save) {

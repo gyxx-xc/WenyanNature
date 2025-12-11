@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +13,13 @@ import java.util.Stack;
  * Represents the runtime environment for executing Wenyan bytecode.
  * Stores variables, execution state, and handles the program flow.
  */
+@WenyanThreading
 public class WenyanRuntime {
     /** The bytecode to be executed */
     public final WenyanBytecode bytecode;
 
     /** Storage for program variables */
+    // TODO: thread safety check
     public final Map<String, IWenyanValue> variables = new HashMap<>();
 
     /** Stack for operation results */

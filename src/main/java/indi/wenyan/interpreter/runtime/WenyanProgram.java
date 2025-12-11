@@ -8,6 +8,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.interpreter.utils.IWenyanPlatform;
 import indi.wenyan.interpreter.utils.WenyanPackages;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -43,6 +44,8 @@ public class WenyanProgram {
     private final Thread programJavaThread = new Thread(this::scheduler);
 
     // STUB: used in error handler, might changed
+    //   should not be used in new code
+    @Deprecated
     public final Player holder;
 
     /** Platform-specific integration */
@@ -79,6 +82,7 @@ public class WenyanProgram {
     /**
      * Creates a new thread for this program with the base environment.
      */
+    @WenyanThreading(planning = true)
     public void createMainThread() {
         if (!programJavaThread.isAlive()) {
             // DCL? what is that
@@ -151,7 +155,7 @@ public class WenyanProgram {
      * The scheduler loop that runs on a separate Java thread.
      * Manages thread execution and switching.
      */
-    // NOTE: this on other thread
+    @WenyanThreading
     public void scheduler() {
         try {
             // not stop until interrupted (object unloaded)

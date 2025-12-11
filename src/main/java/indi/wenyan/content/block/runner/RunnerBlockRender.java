@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -12,7 +11,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity> {
 
-    public RunnerBlockRender(BlockEntityRendererProvider.Context context) {
+    public RunnerBlockRender() {
     }
 
     @Override

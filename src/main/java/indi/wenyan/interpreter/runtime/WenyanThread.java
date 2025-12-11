@@ -4,6 +4,7 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 import net.minecraft.network.chat.Component;
 
 import java.util.Stack;
@@ -13,6 +14,7 @@ import java.util.concurrent.Semaphore;
  * Represents a thread of execution in a Wenyan program.
  * Manages its execution state and runtime stack.
  */
+@WenyanThreading
 public class WenyanThread {
     /** Stack of runtime environments */
     public final Stack<WenyanRuntime> runtimes = new Stack<>();
