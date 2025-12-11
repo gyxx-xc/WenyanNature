@@ -3,7 +3,7 @@ package indi.wenyan.content.block.additional_module;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.content.handler.ISingleTickExecCallHandler;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.utils.IWenyanDevice;
+import indi.wenyan.interpreter.utils.*;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanDevice {
+public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanBlockDevice {
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
 
@@ -86,9 +86,10 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     /**
      * An abstract call handler that uses this module entity as the executor.
      */
+    @WenyanThreading
     protected abstract class ThisCallHandler implements ISingleTickExecCallHandler {
         @Override
-        public Optional<IWenyanDevice> getExecutor() {
+        public Optional<IExecReceiver> getExecutor() {
             if (isRemoved())
                 return Optional.empty();
             return Optional.of(AbstractModuleEntity.this);
@@ -99,6 +100,6 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
      * Called every tick to handle execution requests.
      */
     public void tick() {
-        handle();
+        handle(IHandleContext.NONE);
     }
 }

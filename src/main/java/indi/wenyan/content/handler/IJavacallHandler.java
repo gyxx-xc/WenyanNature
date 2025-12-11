@@ -24,7 +24,7 @@ public interface IJavacallHandler extends IWenyanFunction {
      * @param thread the thread executing this handler
      * @return the step of this handler
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "SameReturnValue"})
     default int getStep(int args, WenyanThread thread) {
         return 1;
     }

@@ -18,8 +18,9 @@ import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.entity.BulletEntity;
 import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
+import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.content.item.FloatNoteItem;
-import indi.wenyan.content.item.WenyanHandRunner;
+import indi.wenyan.content.item.RunnerItem;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
@@ -95,6 +96,8 @@ public final class Registration {
     public static final DeferredItem<Item> HAND_RUNNER_1;
     public static final DeferredItem<Item> HAND_RUNNER_2;
     public static final DeferredItem<Item> HAND_RUNNER_3;
+
+    public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM;
 
     public static final DeferredItem<Item> FLOAT_NOTE;
 
@@ -228,25 +231,28 @@ public final class Registration {
         RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
         PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
 
-        HAND_RUNNER_0 = ITEMS.registerItem(HandRunnerEntity.ID_0,
-                (Item.Properties properties) -> new WenyanHandRunner(properties, 0));
-        HAND_RUNNER_1 = ITEMS.registerItem(HandRunnerEntity.ID_1,
-                (Item.Properties properties) -> new WenyanHandRunner(properties, 1));
-        HAND_RUNNER_2 = ITEMS.registerItem(HandRunnerEntity.ID_2,
-                (Item.Properties properties) -> new WenyanHandRunner(properties, 2));
-        HAND_RUNNER_3 = ITEMS.registerItem(HandRunnerEntity.ID_3,
-                (Item.Properties properties) -> new WenyanHandRunner(properties, 3));
+        HAND_RUNNER_0 = ITEMS.registerItem(RunnerItem.ID_0,
+                (Item.Properties properties) -> new RunnerItem(properties, 0));
+        HAND_RUNNER_1 = ITEMS.registerItem(RunnerItem.ID_1,
+                (Item.Properties properties) -> new RunnerItem(properties, 1));
+        HAND_RUNNER_2 = ITEMS.registerItem(RunnerItem.ID_2,
+                (Item.Properties properties) -> new RunnerItem(properties, 2));
+        HAND_RUNNER_3 = ITEMS.registerItem(RunnerItem.ID_3,
+                (Item.Properties properties) -> new RunnerItem(properties, 3));
+
+        EQUIPABLE_RUNNER_ITEM = ITEMS.registerItem(EquipableRunnerItem.ID_1,
+                (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
 
         RUNNER_BLOCK = BLOCKS.register(RunnerBlock.ID, RunnerBlock::new);
         RUNNER_BLOCK_ENTITY = BLOCK_ENTITY.register(RunnerBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(RunnerBlockEntity::new, RUNNER_BLOCK.get())
                         .build(DSL.remainderType()));
-        HAND_RUNNER_ENTITY = ENTITY.register(HandRunnerEntity.ID_1,
+        HAND_RUNNER_ENTITY = ENTITY.register(RunnerItem.ID_1,
                 () -> EntityType.Builder
                         .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
                         .sized(0.45f, 1.0f)
-                        .build(HandRunnerEntity.ID_1));
+                        .build(RunnerItem.ID_1));
 
         FLOAT_NOTE = ITEMS.registerItem(FloatNoteItem.ID, FloatNoteItem::new);
 
@@ -480,6 +486,7 @@ public final class Registration {
                     output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
                     output.accept(SEMAPHORE_MODULE_BLOCK_ITEM.get());
                     output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
+                    output.accept(EQUIPABLE_RUNNER_ITEM.get());
                 }).build());
     }
 }

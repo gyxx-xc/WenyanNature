@@ -6,9 +6,8 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 import java.util.Optional;
 
-public interface ISingleTickExecCallHandler extends IExecCallHandler {
-    @Override
-    default Optional<IWenyanValue> handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+public interface ISingleTickExecCallHandler extends IReturnExecCallHandler {
+    default Optional<IWenyanValue> handleAndReturn(JavacallContext context) throws WenyanException.WenyanThrowException {
         return Optional.of(handleOnce(context));
     }
 

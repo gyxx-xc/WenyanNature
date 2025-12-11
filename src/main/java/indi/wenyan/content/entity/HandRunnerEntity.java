@@ -12,9 +12,7 @@ import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
-import indi.wenyan.interpreter.utils.IWenyanDevice;
-import indi.wenyan.interpreter.utils.IWenyanPlatform;
-import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.*;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.nbt.CompoundTag;
@@ -33,19 +31,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWenyanDevice {
-    public static final String ID_1 = "hand_runner";
-    // String constants for registry names and entity IDs
-    public static final String ID_0 = "hand_runner_0";
-    public static final String ID_2 = "hand_runner_2";
-    public static final String ID_3 = "hand_runner_3";
+public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWenyanBlockDevice {
     public WenyanProgram program;
     public boolean hasRun = false;
     public int speed;
 
     @Getter
-    public final ImportExecQueue importExecQueue = new ImportExecQueue();
-
     private final ExecQueue execQueue = new ExecQueue();
 
     public HandRunnerEntity(EntityType<HandRunnerEntity> entityType, Level level) {
@@ -78,7 +69,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                                 dir, Math.max(1,
                                 Math.min(20, context.args().get(3).as(WenyanDouble.TYPE).value())) / 10,
                                 Math.max(1, Math.min(200, context.args().get(4).as(WenyanInteger.TYPE).value())),
-                                context.holder());
+                                context.thread().program.holder);
                         level().addFreshEntity(bullet);
                         return WenyanNull.NULL;
                     }
@@ -116,18 +107,8 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
     }
 
     @Override
-    public void accept(JavacallContext context) {
-        context.handler().getExecutor().ifPresent((device) -> device.receive(context));
-    }
-
-    @Override
     public void initEnvironment(WenyanRuntime baseEnvironment) {
         baseEnvironment.importPackage(getExecPackage());
-    }
-
-    @Override
-    public ExecQueue getExecQueue() {
-        return execQueue;
     }
 
     @Override
@@ -152,7 +133,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 discard();
                 return;
             }
-            execQueue.handle();
+            handle(IHandleContext.NONE);
             program.step(speed);
         }
         checkInsideBlocks();
@@ -211,9 +192,10 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
         super.readAdditionalSaveData(compound);
     }
 
+    @WenyanThreading
     abstract class ThisCallHandler implements ISingleTickExecCallHandler {
         @Override
-        public Optional<IWenyanDevice> getExecutor() {
+        public Optional<IExecReceiver> getExecutor() {
             if (isRemoved())
                 return Optional.empty();
             return Optional.of(HandRunnerEntity.this);

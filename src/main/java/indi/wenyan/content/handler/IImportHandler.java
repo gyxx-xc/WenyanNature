@@ -1,20 +1,16 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.interpreter.runtime.WenyanThread;
+import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
-import indi.wenyan.interpreter.utils.IWenyanPlatform;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Abstract handler for importing packages in Wenyan programs.
  * Manages import requests in a queue and processes them asynchronously.
  */
-public interface IImportHandler extends IJavacallHandler {
+public interface IImportHandler extends IExecCallHandler {
 
     /**
      * Retrieves a package by its name.
@@ -24,9 +20,8 @@ public interface IImportHandler extends IJavacallHandler {
      * @throws WenyanException.WenyanThrowException if the package cannot be found or accessed
      */
     WenyanPackage getPackage(String packageName) throws WenyanException.WenyanThrowException;
-    Optional<IWenyanPlatform> getPlatform();
 
-    default void handleImport(ImportContext request) throws WenyanException.WenyanThrowException {
+    default boolean handle(JavacallContext request) throws WenyanException.WenyanThrowException {
         WenyanPackage execPackage =
                 getPackage(request.args().getFirst().as(WenyanString.TYPE).value());
         if (request.args().size() == 1) {
@@ -40,21 +35,6 @@ public interface IImportHandler extends IJavacallHandler {
                         execPackage.getAttribute(id));
             }
         }
+        return true;
     }
-
-    @Override
-    default void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
-        if (self != null)
-            throw new WenyanException("unreached");
-
-        getPlatform().ifPresentOrElse(
-                platform -> platform.receiveImport(
-                        new ImportContext(thread, argsList, this)),
-                () -> {throw new WenyanException("killed by no platform");}
-        );
-        thread.block();
-    }
-
-    record ImportContext(WenyanThread thread, List<IWenyanValue> args,
-                                IImportHandler handler) { }
 }

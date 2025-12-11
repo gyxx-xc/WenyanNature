@@ -3,6 +3,7 @@ package indi.wenyan.content.item;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,22 +16,30 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
-public class WenyanHandRunner extends BlockItem {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class RunnerItem extends BlockItem {
+    public static final String ID_1 = "hand_runner";
+    // String constants for registry names and entity IDs
+    public static final String ID_0 = "hand_runner_0";
+    public static final String ID_2 = "hand_runner_2";
+    public static final String ID_3 = "hand_runner_3";
+
     public final int runningLevel;
 
-    public WenyanHandRunner(Properties properties, int runningLevel) {
+    public RunnerItem(Properties properties, int runningLevel) {
         super(Registration.RUNNER_BLOCK.get(), properties);
         this.runningLevel = runningLevel;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public @NotNull InteractionResultHolder<ItemStack>
-    use(Level level, Player player, @NotNull InteractionHand hand) {
+    public InteractionResultHolder<ItemStack>
+    use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
             Minecraft.getInstance().setScreen(new CodeEditorScreen(
@@ -61,7 +70,7 @@ public class WenyanHandRunner extends BlockItem {
 //    }
 
     @Override
-    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown()) {
             context.getItemInHand().set(Registration.RUNNING_TIER_DATA.get(), runningLevel);
             return super.useOn(context);

@@ -3,17 +3,25 @@ package indi.wenyan.interpreter.structure;
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import lombok.Value;
+import indi.wenyan.interpreter.utils.WenyanThreading;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.Accessors;
-import net.minecraft.world.entity.player.Player;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
 /**
  * Represents the context for calling Java code from Wenyan
  */
+@WenyanThreading
 @Accessors(fluent = true)
-@Value
+//@Value // since we may want a non-final class
+@Getter
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+@AllArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
 public class JavacallContext {
     /** The Wenyan value acting as 'this' */
     IWenyanValue self;
@@ -26,8 +34,4 @@ public class JavacallContext {
 
     /** Handler for execution */
     IExecCallHandler handler;
-
-    /** Player who triggered the call */
-    @Deprecated
-    Player holder;
 }

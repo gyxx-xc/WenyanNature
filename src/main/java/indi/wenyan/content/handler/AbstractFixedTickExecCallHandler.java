@@ -7,7 +7,9 @@ import lombok.Getter;
 
 import java.util.Optional;
 
-public abstract class AbstractFixedTickExecCallHandler implements IExecCallHandler {
+@Deprecated // needed to be tested
+@SuppressWarnings("ALL")
+public abstract class AbstractFixedTickExecCallHandler implements IReturnExecCallHandler {
     private int tickCounter = 0;
     @Getter
     private final int tickInterval;
@@ -27,7 +29,7 @@ public abstract class AbstractFixedTickExecCallHandler implements IExecCallHandl
     }
 
     @Override
-    public Optional<IWenyanValue> handle(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public Optional<IWenyanValue> handleAndReturn(JavacallContext context) throws WenyanException.WenyanThrowException {
         if (getRemainingTicks() <= 0) {
             return Optional.of(handleFinalTick(context));
         }

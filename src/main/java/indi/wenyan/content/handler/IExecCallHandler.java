@@ -4,7 +4,8 @@ import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.JavacallContext;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.IWenyanDevice;
+import indi.wenyan.interpreter.utils.IExecReceiver;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public interface IExecCallHandler extends IJavacallHandler {
      * @return the result value
      * @throws WenyanException.WenyanThrowException if an error occurs during handling
      */
-    Optional<IWenyanValue> handle(JavacallContext context) throws WenyanException.WenyanThrowException;
+    boolean handle(JavacallContext context) throws WenyanException.WenyanThrowException;
 
     /**
      * Gets the device that executes this handler.
@@ -30,7 +31,8 @@ public interface IExecCallHandler extends IJavacallHandler {
      *
      * @return an optional containing the executor device, or empty if none is available
      */
-    Optional<IWenyanDevice> getExecutor();
+    @WenyanThreading
+    Optional<IExecReceiver> getExecutor();
 
     /**
      * Calls the handler with the given parameters and blocks the thread.
@@ -38,18 +40,17 @@ public interface IExecCallHandler extends IJavacallHandler {
      * @param self     the self value
      * @param thread   the thread to execute on
      * @param argsList the arguments for the call
-     * @throws WenyanException.WenyanThrowException if an error occurs during the call
      */
     @Override
     default void call(IWenyanValue self, WenyanThread thread,
-                      List<IWenyanValue> argsList)
-            throws WenyanException.WenyanThrowException {
+                      List<IWenyanValue> argsList) {
         if (getExecutor().isEmpty())
             throw new WenyanException("killed by no executor");
 
         JavacallContext context = new JavacallContext(self, argsList,
-                thread, this, thread.program.holder);
-        thread.program.platform.accept(context);
+                thread, this);
+        getExecutor().ifPresent(executor -> executor.receive(context));
+        thread.program.platform.notice(context);
         thread.block();
     }
 }
