@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
@@ -36,7 +36,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("WorldModule.signalStrength"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) {
+                public IWenyanValue handleOnce(JavacallRequest request) {
                     int value = 0;
                     if (getLevel() != null) {
                         value = getLevel().getBestNeighborSignal(getBlockPos());
@@ -46,8 +46,8 @@ public class WorldModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("WorldModule.emitSignal"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    signal = context.args().getFirst().as(WenyanInteger.TYPE).value();
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
+                    signal = request.args().getFirst().as(WenyanInteger.TYPE).value();
                     assert getLevel() != null;
                     WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
                     return WenyanNull.NULL;
@@ -55,12 +55,12 @@ public class WorldModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("WorldModule.trigger"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    int dx = Math.clamp(context.args().get(0).as(WenyanInteger.TYPE).value(),
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
+                    int dx = Math.clamp(request.args().get(0).as(WenyanInteger.TYPE).value(),
                             -10, 10);
-                    int dy = Math.clamp(context.args().get(1).as(WenyanInteger.TYPE).value(),
+                    int dy = Math.clamp(request.args().get(1).as(WenyanInteger.TYPE).value(),
                             -10, 10);
-                    int dz = Math.clamp(context.args().get(2).as(WenyanInteger.TYPE).value(),
+                    int dz = Math.clamp(request.args().get(2).as(WenyanInteger.TYPE).value(),
                             -10, 10);
                     BlockPos blockPos = getBlockPos().offset(dx, dy, dz);
                     assert level != null;
@@ -76,14 +76,14 @@ public class WorldModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("WorldModule.changeWeather"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
                     if (getLevel() instanceof ServerLevel serverLevel) {
-                        String cmd = context.args().getFirst().as(WenyanString.TYPE).value();
+                        String cmd = request.args().getFirst().as(WenyanString.TYPE).value();
                         switch (cmd) {
                             case "晴" -> serverLevel.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(serverLevel.getRandom()), 0, false, false);
                             case "雨" -> serverLevel.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(serverLevel.getRandom()), true, false);
                             case "雷" -> serverLevel.setWeatherParameters(0, ServerLevel.THUNDER_DURATION.sample(serverLevel.getRandom()), true, true);
-                            default -> throw new WenyanException.WenyanTypeException("參數必須是「晴」「雨」「雷」");
+                            default -> throw new WenyanException.WenyanTypeException("參數必須是「「晴」」「「雨」」「「雷」」");
                         }
                         return WenyanNull.NULL;
                     } else {

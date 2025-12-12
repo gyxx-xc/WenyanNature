@@ -1,15 +1,14 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.utils.IHandleContext;
 import lombok.Getter;
-
-import java.util.Optional;
 
 @Deprecated // needed to be tested
 @SuppressWarnings("ALL")
-public abstract class AbstractFixedTickExecCallHandler implements IReturnExecCallHandler {
+public abstract class AbstractFixedTickExecCallHandler implements IExecCallHandler {
     private int tickCounter = 0;
     @Getter
     private final int tickInterval;
@@ -29,16 +28,16 @@ public abstract class AbstractFixedTickExecCallHandler implements IReturnExecCal
     }
 
     @Override
-    public Optional<IWenyanValue> handleAndReturn(JavacallContext context) throws WenyanException.WenyanThrowException {
+    public boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
         if (getRemainingTicks() <= 0) {
-            return Optional.of(handleFinalTick(context));
+            request.thread().currentRuntime().processStack.push(handleFinalTick(request));
+            return true;
         }
         if (tickCounter % tickInterval == 0)
-            handleTick(context, tickCounter / tickInterval);
+            handleTick(request, tickCounter / tickInterval);
         tickCounter ++;
-        return Optional.empty();
+        return false;
     }
-
-    abstract protected void handleTick(JavacallContext context, int round) throws WenyanException.WenyanThrowException;
-    abstract protected IWenyanValue handleFinalTick(JavacallContext context) throws WenyanException.WenyanThrowException;
+    abstract protected void handleTick(JavacallRequest request, int round) throws WenyanException.WenyanThrowException;
+    abstract protected IWenyanValue handleFinalTick(JavacallRequest reqest) throws WenyanException.WenyanThrowException;
 }

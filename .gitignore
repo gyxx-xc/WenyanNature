@@ -31,3 +31,4 @@ project
 /docs/mkdocs/site/
 
 __pycache__
+/.lingma/

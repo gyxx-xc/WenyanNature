@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
@@ -39,13 +39,13 @@ public class BlockModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("BlockModule.search"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
-                    Vec3 s = context.args().get(0).as(WenyanVec3.TYPE).value();
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    Vec3 s = request.args().get(0).as(WenyanVec3.TYPE).value();
                     BlockPos start = new BlockPos((int) s.x, (int) s.y, (int) s.z);
-                    Vec3 e = context.args().get(1).as(WenyanVec3.TYPE).value();
+                    Vec3 e = request.args().get(1).as(WenyanVec3.TYPE).value();
                     BlockPos end = new BlockPos((int) e.x, (int) e.y, (int) e.z);
                     boolean found = false;
-                    var compare = context.args().get(2);
+                    var compare = request.args().get(2);
                     if (compare.is(WenyanCapabilitySlot.TYPE)) {
                         Item item = compare.as(WenyanCapabilitySlot.TYPE).getStack().getItem();
                         if (item instanceof BlockItem blockItem) {
@@ -85,8 +85,8 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("BlockModule.get"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
-                    Vec3 p = context.args().getFirst().as(WenyanVec3.TYPE).value();
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
+                    Vec3 p = request.args().getFirst().as(WenyanVec3.TYPE).value();
                     BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
                     assert level != null;
                     BlockState state = level.getBlockState(pos);
@@ -96,7 +96,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             .function(WenyanSymbol.var("BlockModule.attach"), new ThisCallHandler() {
                 @SuppressWarnings("RedundantThrows")
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
                     Direction attachedDirection = BlockModuleBlock
                             .getConnectedDirection(getBlockState()).getOpposite();
                     BlockPos pos = getBlockPos().relative(attachedDirection);

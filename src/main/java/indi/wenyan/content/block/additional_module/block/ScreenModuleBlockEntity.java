@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
@@ -35,9 +35,9 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
     public final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function("書", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
                     StringBuilder result = new StringBuilder();
-                    for (IWenyanValue arg : context.args()) {
+                    for (IWenyanValue arg : request.args()) {
                         result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));
                     }
                     if (getLevel() instanceof ServerLevel sl) {

@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 
 import java.util.ArrayList;
@@ -9,26 +9,33 @@ import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * Queue for handling JavacallContext requests
- */
-public class ExecQueue implements IExecQueue {
+public class ExecQueue {
 
-    private final Queue<JavacallContext> queue = new ConcurrentLinkedQueue<>();
+    private final Queue<JavacallRequest> queue = new ConcurrentLinkedQueue<>();
 
-    @Override
+        /**
+     * Receives a JavacallContext request and adds it to the queue.
+     *
+     * @param request the JavacallContext request to be added to the queue
+     */
     @WenyanThreading
-    public void receive(JavacallContext request) {
+    public void receive(JavacallRequest request) {
         queue.add(request);
     }
 
-    @Override
+    /**
+     * Handles all queued requests in the current context.
+     *
+     * @param context the handling context, used to manage execution state
+     */
     public void handle(IHandleContext context) {
-        Collection<JavacallContext> undoneRequests = new ArrayList<>();
+        // Collects requests that could not be processed in this tick
+        Collection<JavacallRequest> undoneRequests = new ArrayList<>();
+
         while (!queue.isEmpty()) {
-            JavacallContext request = queue.remove();
+            JavacallRequest request = queue.remove();
             try {
-                boolean done = request.handler().handle(request);
+                boolean done = request.handle(context);
                 if (done) {
                     WenyanProgram.unblock(request.thread());
                 } else {
@@ -38,6 +45,7 @@ public class ExecQueue implements IExecQueue {
                 request.thread().dieWithException(e);
             }
         }
+
         queue.addAll(undoneRequests); // These are for next tick
     }
 }

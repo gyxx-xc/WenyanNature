@@ -1,10 +1,11 @@
 package indi.wenyan.content.handler;
 
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.utils.IHandleContext;
 
 /**
  * Abstract handler for importing packages in Wenyan programs.
@@ -15,15 +16,16 @@ public interface IImportHandler extends IExecCallHandler {
     /**
      * Retrieves a package by its name.
      *
+     * @param context the handling context, used to manage execution state
      * @param packageName the name of the package to retrieve
      * @return the requested package
      * @throws WenyanException.WenyanThrowException if the package cannot be found or accessed
      */
-    WenyanPackage getPackage(String packageName) throws WenyanException.WenyanThrowException;
+    WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException;
 
-    default boolean handle(JavacallContext request) throws WenyanException.WenyanThrowException {
+    default boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
         WenyanPackage execPackage =
-                getPackage(request.args().getFirst().as(WenyanString.TYPE).value());
+                getPackage(context, request.args().getFirst().as(WenyanString.TYPE).value());
         if (request.args().size() == 1) {
             // TODO: test needed
             request.thread().currentRuntime().resultStack.push(execPackage);

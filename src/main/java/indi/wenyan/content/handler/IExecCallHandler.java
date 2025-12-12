@@ -1,10 +1,11 @@
 package indi.wenyan.content.handler;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.IExecReceiver;
+import indi.wenyan.interpreter.utils.IHandleContext;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
 import java.util.List;
@@ -19,11 +20,12 @@ public interface IExecCallHandler extends IJavacallHandler {
      * Handles the execution call.
      * if not finish return empty
      *
-     * @param context the context of the call
+     * @param context the execution context
+     * @param request the request of the call
      * @return the result value
      * @throws WenyanException.WenyanThrowException if an error occurs during handling
      */
-    boolean handle(JavacallContext context) throws WenyanException.WenyanThrowException;
+    boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException;
 
     /**
      * Gets the device that executes this handler.
@@ -42,15 +44,16 @@ public interface IExecCallHandler extends IJavacallHandler {
      * @param argsList the arguments for the call
      */
     @Override
+    @WenyanThreading
     default void call(IWenyanValue self, WenyanThread thread,
                       List<IWenyanValue> argsList) {
         if (getExecutor().isEmpty())
             throw new WenyanException("killed by no executor");
 
-        JavacallContext context = new JavacallContext(self, argsList,
+        JavacallRequest request = new JavacallRequest(self, argsList,
                 thread, this);
-        getExecutor().ifPresent(executor -> executor.receive(context));
-        thread.program.platform.notice(context);
+        getExecutor().ifPresent(executor -> executor.receive(request));
+        thread.program.platform.notice(request);
         thread.block();
     }
 }

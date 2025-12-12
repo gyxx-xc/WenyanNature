@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.content.handler.ISingleTickExecCallHandler;
+import indi.wenyan.content.handler.ISimpleExecCallHandler;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.*;
 import lombok.Getter;
@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanBlockDevice {
+public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanPositionedDevice {
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
 
@@ -87,7 +87,7 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
      * An abstract call handler that uses this module entity as the executor.
      */
     @WenyanThreading
-    protected abstract class ThisCallHandler implements ISingleTickExecCallHandler {
+    protected abstract class ThisCallHandler implements ISimpleExecCallHandler {
         @Override
         public Optional<IExecReceiver> getExecutor() {
             if (isRemoved())

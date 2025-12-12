@@ -21,6 +21,7 @@ import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.content.item.FloatNoteItem;
 import indi.wenyan.content.item.RunnerItem;
+import indi.wenyan.content.item.additional_module.PrintInventoryModule;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
@@ -98,6 +99,7 @@ public final class Registration {
     public static final DeferredItem<Item> HAND_RUNNER_3;
 
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM;
+    public static final DeferredItem<Item> PRINT_INVENTORY_MODULE;
 
     public static final DeferredItem<Item> FLOAT_NOTE;
 
@@ -242,6 +244,7 @@ public final class Registration {
 
         EQUIPABLE_RUNNER_ITEM = ITEMS.registerItem(EquipableRunnerItem.ID_1,
                 (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
+        PRINT_INVENTORY_MODULE = ITEMS.registerItem(PrintInventoryModule.ID, PrintInventoryModule::new);
 
         RUNNER_BLOCK = BLOCKS.register(RunnerBlock.ID, RunnerBlock::new);
         RUNNER_BLOCK_ENTITY = BLOCK_ENTITY.register(RunnerBlock.ID,
@@ -463,6 +466,7 @@ public final class Registration {
                     output.accept(LUNAR_INK.get());
                     output.accept(CINNABAR_INK.get());
                     output.accept(STARLIGHT_INK.get());
+                    output.accept(PRINT_INVENTORY_MODULE.get());
 
                     output.accept(FLOAT_NOTE.get());
 //                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());

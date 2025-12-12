@@ -1,10 +1,10 @@
 package indi.wenyan.content.entity;
 
 import com.google.common.collect.Lists;
-import indi.wenyan.content.handler.ISingleTickExecCallHandler;
+import indi.wenyan.content.handler.ISimpleExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWenyanBlockDevice {
+public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWenyanPositionedDevice {
     public WenyanProgram program;
     public boolean hasRun = false;
     public int speed;
@@ -59,28 +59,28 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
         return WenyanPackageBuilder.create()
                 .function("a", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
                         Vec3 dir = new Vec3(
-                                Math.max(-10, Math.min(10, context.args().get(0).as(WenyanDouble.TYPE).value())),
-                                Math.max(-10, Math.min(10, context.args().get(1).as(WenyanDouble.TYPE).value())),
-                                Math.max(-10, Math.min(10, context.args().get(2).as(WenyanDouble.TYPE).value())));
+                                Math.max(-10, Math.min(10, request.args().get(0).as(WenyanDouble.TYPE).value())),
+                                Math.max(-10, Math.min(10, request.args().get(1).as(WenyanDouble.TYPE).value())),
+                                Math.max(-10, Math.min(10, request.args().get(2).as(WenyanDouble.TYPE).value())));
 
                         BulletEntity bullet = new BulletEntity(level(), getPosition(0),
                                 dir, Math.max(1,
-                                Math.min(20, context.args().get(3).as(WenyanDouble.TYPE).value())) / 10,
-                                Math.max(1, Math.min(200, context.args().get(4).as(WenyanInteger.TYPE).value())),
-                                context.thread().program.holder);
+                                Math.min(20, request.args().get(3).as(WenyanDouble.TYPE).value())) / 10,
+                                Math.max(1, Math.min(200, request.args().get(4).as(WenyanInteger.TYPE).value())),
+                                request.thread().program.holder);
                         level().addFreshEntity(bullet);
                         return WenyanNull.NULL;
                     }
                 })
                 .function("b", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
                         List<Double> newArgs = Lists.newArrayList();
-                        newArgs.add(Math.max(-20, Math.min(20, context.args().get(0).as(WenyanDouble.TYPE).value())));
-                        newArgs.add(Math.max(-20, Math.min(20, context.args().get(1).as(WenyanDouble.TYPE).value())));
-                        newArgs.add(Math.max(-20, Math.min(20, context.args().get(2).as(WenyanDouble.TYPE).value())));
+                        newArgs.add(Math.max(-20, Math.min(20, request.args().get(0).as(WenyanDouble.TYPE).value())));
+                        newArgs.add(Math.max(-20, Math.min(20, request.args().get(1).as(WenyanDouble.TYPE).value())));
+                        newArgs.add(Math.max(-20, Math.min(20, request.args().get(2).as(WenyanDouble.TYPE).value())));
                         setDeltaMovement(new Vec3(newArgs.get(0) / 10,
                                 newArgs.get(1) / 10, newArgs.get(2) / 10));
                         return WenyanNull.NULL;
@@ -89,10 +89,10 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 })
                 .function("「爆」", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
+                    public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
                         level().explode(HandRunnerEntity.this, getX(), getY(), getZ(),
                                 (float) Math.max(1, Math.min(20,
-                                        context.args().getFirst().as(WenyanDouble.TYPE).value())),
+                                        request.args().getFirst().as(WenyanDouble.TYPE).value())),
                                 Level.ExplosionInteraction.MOB);
                         return WenyanNull.NULL;
                     }
@@ -193,7 +193,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
     }
 
     @WenyanThreading
-    abstract class ThisCallHandler implements ISingleTickExecCallHandler {
+    abstract class ThisCallHandler implements ISimpleExecCallHandler {
         @Override
         public Optional<IExecReceiver> getExecutor() {
             if (isRemoved())

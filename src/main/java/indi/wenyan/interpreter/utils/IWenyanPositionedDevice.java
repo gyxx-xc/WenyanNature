@@ -5,7 +5,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Interface representing a device that can execute Wenyan command sent by Wenyan platforms
  */
-public interface IWenyanBlockDevice extends IWenyanDevice {
+public interface IWenyanPositionedDevice extends IWenyanDevice {
     /**
      * For connecting effect only
      *

@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
@@ -27,9 +27,9 @@ public class ItemModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("ItemModule.transfer"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
                     IItemHandler capability = getItemHandlerCapability();
-                    var from = context.args().getFirst().as(WenyanCapabilitySlot.TYPE);
+                    var from = request.args().getFirst().as(WenyanCapabilitySlot.TYPE);
                     ItemStack result = ItemHandlerHelper.insertItemStacked(capability,
                             from.capabilities().getStackInSlot(from.slot()), true);
                     int originAmount = from.capabilities().getStackInSlot(from.slot()).getCount();
@@ -41,12 +41,12 @@ public class ItemModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("ItemModule.read"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanTypeException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanTypeException {
                     var capability = getItemHandlerCapability();
                     if (capability == null) {
                         throw new WenyanException.WenyanTypeException("無法取得物品處理器");
                     }
-                    int slot = Math.clamp(context.args().getFirst().as(WenyanInteger.TYPE).value(),
+                    int slot = Math.clamp(request.args().getFirst().as(WenyanInteger.TYPE).value(),
                             0, capability.getSlots() - 1);
                     return new WenyanCapabilitySlot(getPosition(), capability, slot);
                 }

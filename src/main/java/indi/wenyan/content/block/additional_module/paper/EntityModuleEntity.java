@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
@@ -30,10 +30,10 @@ public class EntityModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("EntityModule.inspectRange"), new ThisCallHandler() { // "察域之实" means "Inspect entities within a range"
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
                     assert getLevel() != null;
-                    Vec3 start = context.args().getFirst().as(WenyanVec3.TYPE).value();
-                    Vec3 end = context.args().getLast().as(WenyanVec3.TYPE).value();
+                    Vec3 start = request.args().getFirst().as(WenyanVec3.TYPE).value();
+                    Vec3 end = request.args().getLast().as(WenyanVec3.TYPE).value();
                     List<Entity> entities = getLevel().getEntities((Entity) null,
                             new AABB(start, end), EntitySelector.NO_SPECTATORS);
                     // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
@@ -42,9 +42,9 @@ public class EntityModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("EntityModule.nearby"), new ThisCallHandler() { // "近域之实" means "Entities near a point"
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
                     assert getLevel() != null;
-                    double radius = context.args().getFirst().as(WenyanDouble.TYPE).value();
+                    double radius = request.args().getFirst().as(WenyanDouble.TYPE).value();
                     BlockPos pos = getBlockPos();
                     List<Entity> entities = getLevel().getEntities((Entity) null,
                             new AABB(pos).inflate(radius), EntitySelector.NO_SPECTATORS);
@@ -54,9 +54,9 @@ public class EntityModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("EntityModule.lineOfSight"), new ThisCallHandler() { // "视域之实" means "Entities in line of sight"
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
-                    var origin = context.args().getFirst().as(WenyanVec3.TYPE).value();
-                    var look = context.args().getLast().as(WenyanVec3.TYPE).value();
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    var origin = request.args().getFirst().as(WenyanVec3.TYPE).value();
+                    var look = request.args().getLast().as(WenyanVec3.TYPE).value();
                     assert getLevel() != null;
                     var result = getLevel().clip(new ClipContext(origin, look,
                             ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, (Entity) null));

@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.structure;
 import indi.wenyan.content.handler.IExecCallHandler;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.utils.IHandleContext;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.List;
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
-public class JavacallContext {
+public class JavacallRequest {
     /** The Wenyan value acting as 'this' */
     IWenyanValue self;
 
@@ -34,4 +35,8 @@ public class JavacallContext {
 
     /** Handler for execution */
     IExecCallHandler handler;
+
+    public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+        return handler().handle(context, this);
+    }
 }

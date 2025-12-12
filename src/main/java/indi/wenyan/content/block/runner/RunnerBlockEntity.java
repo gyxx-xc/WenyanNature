@@ -4,7 +4,7 @@ import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.content.handler.IImportHandler;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.*;
@@ -45,13 +45,13 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final IImportHandler importFunction = new IImportHandler() {
         @Override
-        public WenyanPackage getPackage(String packageName) throws WenyanException.WenyanThrowException {
-            IWenyanBlockDevice wenyanExecutor = null;
+        public WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
+            IWenyanPositionedDevice wenyanExecutor = null;
             assert level != null;
             for (BlockPos b : BlockPos.betweenClosed(
                     getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
                     getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
-                if (level.getBlockEntity(b) instanceof IWenyanBlockDevice executor) {
+                if (level.getBlockEntity(b) instanceof IWenyanPositionedDevice executor) {
                     if (executor.getPackageName().equals(packageName)) {
                         wenyanExecutor = executor;
                         break;
@@ -123,10 +123,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     @WenyanThreading
-    public void notice(JavacallContext context) {
-        // run by program thread
-        context.handler().getExecutor().ifPresent((executor) -> {
-            if (level instanceof ServerLevel sl && executor instanceof IWenyanBlockDevice blockDevice)
+    public void notice(JavacallRequest request) {
+        request.handler().getExecutor().ifPresent((executor) -> {
+            if (level instanceof ServerLevel sl && executor instanceof IWenyanPositionedDevice blockDevice)
                 PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
                         new CommunicationLocationPacket(getBlockPos(), blockDevice.getPosition()));
         });

@@ -1,12 +1,12 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 
 public interface IExecReceiver {
     /**
      * @return The execution queue for this device
      */
-    IExecQueue getExecQueue();
+    ExecQueue getExecQueue();
 
     /**
      * Receives a JavacallContext request and adds it to the execution queue
@@ -14,7 +14,7 @@ public interface IExecReceiver {
      * @param request The JavacallContext to process
      */
     @WenyanThreading
-    default void receive(JavacallContext request) {
+    default void receive(JavacallRequest request) {
         getExecQueue().receive(request);
     }
 

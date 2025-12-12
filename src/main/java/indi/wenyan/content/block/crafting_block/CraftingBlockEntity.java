@@ -7,7 +7,7 @@ import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
@@ -83,15 +83,15 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     public final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function("「参」", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
-                    if (!context.args().isEmpty()) throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    if (!request.args().isEmpty()) throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
                     return getChecker().getArgs();
                 }
             })
             .function("书", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException.WenyanThrowException {
-                    getChecker().accept(context.args());
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    getChecker().accept(request.args());
                     switch (checker.getResult()) {
                         case RUNNING -> {}
                         case WRONG_ANSWER -> {

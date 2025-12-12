@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.structure.JavacallContext;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
@@ -26,7 +26,7 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("SemaphoreModule.acquire"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) throws WenyanException {
+                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException {
                     try {
                         semaphore.acquire();
                         return WenyanValues.of(true);
@@ -37,7 +37,7 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("SemaphoreModule.release"), new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallContext context) {
+                public IWenyanValue handleOnce(JavacallRequest request) {
                     semaphore.release();
                     return WenyanNull.NULL;
                 }
