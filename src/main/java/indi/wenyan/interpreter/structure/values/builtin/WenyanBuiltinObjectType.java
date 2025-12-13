@@ -10,6 +10,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import lombok.Getter;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
             return attr;
     }
 
+    @Nullable
     public IWenyanValue getFunction(String id) {
         if (functions.containsKey(id)) {
             return functions.get(id);
@@ -63,7 +65,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
 
     @Override
     public IWenyanObject createObject(List<IWenyanValue> argsList) {
-        return null;
+        throw new WenyanException("unreached");
     }
 
     @Override

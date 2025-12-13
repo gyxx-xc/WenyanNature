@@ -133,18 +133,12 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             throw new WenyanException("No valid recipe found for the current pedestal items.");
         }
 
-        if (this.recipeHolder != null) {
-            if(this.recipeHolder.equals(recipeHolder.get()))
-                return checker;
-            else resetCrafting();
-        } // else resetCrafting(); (it should be already reset)
+        if (this.recipeHolder != null && this.recipeHolder.equals(recipeHolder.get())) {
+            return checker;
+        } else resetCrafting();
         this.recipeHolder = recipeHolder.get();
         var question = recipeHolder.get().value().question();
         var result = CheckerFactory.produce(question, level.getRandom());
-        if (result == null) {
-            resetCrafting();
-            throw new WenyanException("unreached: Failed to create checker for question: " + question);
-        }
         checker = result;
         checker.init(); // recreated, reset the checker state
         return result;

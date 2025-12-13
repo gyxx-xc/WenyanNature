@@ -7,7 +7,6 @@ import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.IHandleContext;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -30,7 +29,7 @@ public interface IImportHandler extends IExecCallHandler {
     WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException;
 
     @Override
-    default boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+    default boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
         String packageName = request.args().getFirst().as(WenyanString.TYPE).value();
         WenyanPackage execPackage = getPackage(context, packageName);
         if (request.args().size() == 1) {

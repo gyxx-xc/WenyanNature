@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final IImportHandler importFunction = new IImportHandler() {
         @Override
-        public WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
+        public @NotNull WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
             IWenyanPositionedDevice wenyanExecutor = null;
             assert level != null;
             for (BlockPos b : BlockPos.betweenClosed(
@@ -71,7 +72,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
 
         @Override
-        public Optional<IExecReceiver> getExecutor() {
+        public @NotNull Optional<IExecReceiver> getExecutor() {
             if (isRemoved()) return Optional.empty();
             else return Optional.of(RunnerBlockEntity.this);
         }

@@ -16,7 +16,7 @@ import java.util.List;
 public interface IWenyanFunction extends IWenyanValue {
     WenyanType<IWenyanFunction> TYPE = new WenyanType<>("function", IWenyanFunction.class);
 
-    void call(IWenyanValue self, WenyanThread thread,
+    void call(@Nullable IWenyanValue self, WenyanThread thread,
               List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException;
 

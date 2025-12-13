@@ -1,5 +1,6 @@
 package indi.wenyan.content.checker;
 
+import indi.wenyan.interpreter.structure.WenyanException;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -23,7 +24,7 @@ public enum CheckerFactory {;
             case PLUS_CHECKER -> new PlusChecker(random);
             case ECHO_CHECKER -> new EchoChecker(random);
             case LABYRINTH_CHECKER -> new LabyrinthChecker(random);
-            default -> null;
+            default -> throw new WenyanException("Unknown checker type: " + name);
         };
     }
 }

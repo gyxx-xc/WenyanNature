@@ -30,7 +30,7 @@ public record WenyanPlayer(WenyanEntity valueWarper)
 
     @Override
     public WenyanType<?> type() {
-        return null;
+        return TYPE;
     }
 
     @Override

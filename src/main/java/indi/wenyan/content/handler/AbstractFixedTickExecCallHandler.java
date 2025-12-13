@@ -5,6 +5,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.IHandleContext;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 @Deprecated // needed to be tested
 @SuppressWarnings("ALL")
@@ -28,7 +29,7 @@ public abstract class AbstractFixedTickExecCallHandler implements IExecCallHandl
     }
 
     @Override
-    public boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
+    public boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
         if (getRemainingTicks() <= 0) {
             request.thread().currentRuntime().processStack.push(handleFinalTick(request));
             return true;

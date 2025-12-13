@@ -8,8 +8,8 @@ import indi.wenyan.interpreter.utils.IExecReceiver;
 import indi.wenyan.interpreter.utils.IHandleContext;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +17,6 @@ import java.util.Optional;
  * Interface for handlers that execute calls in the Wenyan interpreter.
  * Manages the execution context and device.
  */
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public interface IExecCallHandler extends IJavacallHandler {
     /**
@@ -29,7 +28,7 @@ public interface IExecCallHandler extends IJavacallHandler {
      * @return the result value
      * @throws WenyanException.WenyanThrowException if an error occurs during handling
      */
-    boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException;
+    boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException;
 
     /**
      * Gets the device that executes this handler.

@@ -79,6 +79,6 @@ public class WenyanCandyVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
-        return null;
+        return true;
     }
 }

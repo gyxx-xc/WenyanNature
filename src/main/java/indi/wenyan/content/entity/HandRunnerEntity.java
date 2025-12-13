@@ -58,7 +58,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
         return WenyanPackageBuilder.create()
                 .function("b", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                         List<Double> newArgs = Lists.newArrayList();
                         newArgs.add(Math.max(-20, Math.min(20, request.args().get(0).as(WenyanDouble.TYPE).value())));
                         newArgs.add(Math.max(-20, Math.min(20, request.args().get(1).as(WenyanDouble.TYPE).value())));
@@ -71,7 +71,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 })
                 .function("「爆」", new ThisCallHandler() {
                     @Override
-                    public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                         level().explode(HandRunnerEntity.this, getX(), getY(), getZ(),
                                 (float) Math.max(1, Math.min(20,
                                         request.args().getFirst().as(WenyanDouble.TYPE).value())),
@@ -177,7 +177,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
     @WenyanThreading
     abstract class ThisCallHandler implements ISimpleExecCallHandler {
         @Override
-        public Optional<IExecReceiver> getExecutor() {
+        public @NotNull Optional<IExecReceiver> getExecutor() {
             if (isRemoved())
                 return Optional.empty();
             return Optional.of(HandRunnerEntity.this);

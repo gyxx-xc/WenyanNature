@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -32,7 +33,7 @@ public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slo
 
     @Override
     public IWenyanValue getAttribute(String name) {
-        return null;
+        throw new WenyanException("Item slot has no such attribute: " + name);
     }
 
 }

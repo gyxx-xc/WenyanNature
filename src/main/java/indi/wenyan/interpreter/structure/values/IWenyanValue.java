@@ -9,8 +9,8 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
