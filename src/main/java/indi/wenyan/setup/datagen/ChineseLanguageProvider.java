@@ -37,6 +37,29 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(Registration.LUNAR_INK.get(),"月华墨");
         add(Registration.STARLIGHT_INK.get(),"星光墨");
 
+        // TODO: rename needed
+        add(Registration.BIT_MODULE_BLOCK.get(), "位符");
+        add(Registration.COLLECTION_MODULE_BLOCK.get(), "集符");
+        add(Registration.MATH_MODULE_BLOCK.get(), "數符");
+        add(Registration.RANDOM_MODULE_BLOCK.get(), "隨符");
+        add(Registration.STRING_MODULE_BLOCK.get(), "字串符");
+        add(Registration.VEC3_MODULE_BLOCK.get(), "向量符");
+        add(Registration.BLOCK_MODULE_BLOCK.get(), "方塊符");
+        add(Registration.COMMUNICATE_MODULE_BLOCK.get(), "通訊符");
+        add(Registration.ENTITY_MODULE_BLOCK.get(), "實體符");
+        add(Registration.EXPLOSION_MODULE_BLOCK.get(), "爆裂符");
+        add(Registration.ITEM_MODULE_BLOCK.get(), "物品符");
+        add(Registration.INFORMATION_MODULE_BLOCK.get(), "天下情報符");
+
+        add(Registration.PRINT_INVENTORY_MODULE.get(), "印符");
+
+        add(Registration.SCREEN_MODULE_BLOCK.get(), "螢幕石");
+        add(Registration.SEMAPHORE_MODULE_BLOCK.get(), "信號量石");
+
+        add(Registration.EQUIPABLE_RUNNER_ITEM.get(), "可裝符");
+
+        add(Registration.CRAFTING_BLOCK.get(), "創石");
+        add(Registration.PEDESTAL_BLOCK.get(), "石石");
 
         add("error.wenyan_programming.variables_not_match","謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");

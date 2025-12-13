@@ -62,6 +62,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(Registration.RANDOM_MODULE_BLOCK_ITEM.get());
         basicItem(Registration.COLLECTION_MODULE_BLOCK_ITEM.get());
 
+        basicItem(Registration.EQUIPABLE_RUNNER_ITEM.get());
+
         blockItem(ScreenModuleBlock.ID);
         blockItem(SemaphoreModuleBlock.ID);
         blockItem(CraftingBlock.ID);
