@@ -4,10 +4,13 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
+
+import java.util.function.BiConsumer;
 
 /**
  * Provider for generating block states and models during data generation.
@@ -27,17 +30,24 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        horizontalFaceBlock(Registration.RUNNER_BLOCK.get(),
-                new ModelFile.UncheckedModelFile(
-                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/runner_block")));
-        simpleBlock(Registration.CRAFTING_BLOCK.get(),
-                new ModelFile.UncheckedModelFile(
-                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/crafting_block")));
         simpleBlock(Registration.SCREEN_MODULE_BLOCK.get());
+        simpleBlock(Registration.SEMAPHORE_MODULE_BLOCK.get());
+
+        modeledBlock(this::horizontalFaceBlock, Registration.RUNNER_BLOCK);
+        modeledBlock(this::simpleBlock, Registration.CRAFTING_BLOCK);
+        modeledBlock(this::simpleBlock, Registration.PEDESTAL_BLOCK);
+
         registerModuleBlock(Registration.INFORMATION_MODULE_BLOCK);
         registerModuleBlock(Registration.BIT_MODULE_BLOCK);
-//        registerModuleBlock(Registration.ITEM_MODULE_BLOCK);
         registerModuleBlock(Registration.BLOCK_MODULE_BLOCK);
+    }
+
+    private void modeledBlock(BiConsumer<Block, ModelFile> blockstateMethod, DeferredBlock<?> deferredBlock) {
+        blockstateMethod.accept(deferredBlock.get(),
+                new ModelFile.UncheckedModelFile(
+                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+                                "block/" + deferredBlock.getKey().location().getPath())
+                ));
     }
 
     /**
@@ -45,11 +55,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
      * @param deferredBlock The module block to register
      */
     private void registerModuleBlock(DeferredBlock<?> deferredBlock) {
+        modeledBlock(this::horizontalFaceBlock, deferredBlock);
         String id = deferredBlock.getKey().location().getPath();
-        var block = deferredBlock.get();
-        horizontalFaceBlock(block,
-                new ModelFile.UncheckedModelFile(
-                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id)));
         models().singleTexture(id,
                 ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block"),
                 ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id));

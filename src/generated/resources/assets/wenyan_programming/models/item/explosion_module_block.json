@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "wenyan_programming:item/explosion_module_block"
+  }
+}

@@ -42,7 +42,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     private final ExecQueue execQueue = new ExecQueue();
     private final IImportHandler importFunction = new IImportHandler() {
         @Override
-        public WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
+        public WenyanPackage getPackage(IHandleContext context, String packageName) {
             if (!(context instanceof ItemContext itemContext)) {
                 throw new WenyanException("Context is not an instance of ItemContext");
             }

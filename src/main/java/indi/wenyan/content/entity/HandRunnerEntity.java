@@ -10,7 +10,6 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.*;
 import indi.wenyan.setup.Registration;
@@ -57,23 +56,6 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
     @Override
     public WenyanPackage getExecPackage() {
         return WenyanPackageBuilder.create()
-                .function("a", new ThisCallHandler() {
-                    @Override
-                    public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
-                        Vec3 dir = new Vec3(
-                                Math.max(-10, Math.min(10, request.args().get(0).as(WenyanDouble.TYPE).value())),
-                                Math.max(-10, Math.min(10, request.args().get(1).as(WenyanDouble.TYPE).value())),
-                                Math.max(-10, Math.min(10, request.args().get(2).as(WenyanDouble.TYPE).value())));
-
-                        BulletEntity bullet = new BulletEntity(level(), getPosition(0),
-                                dir, Math.max(1,
-                                Math.min(20, request.args().get(3).as(WenyanDouble.TYPE).value())) / 10,
-                                Math.max(1, Math.min(200, request.args().get(4).as(WenyanInteger.TYPE).value())),
-                                request.thread().program.holder);
-                        level().addFreshEntity(bullet);
-                        return WenyanNull.NULL;
-                    }
-                })
                 .function("b", new ThisCallHandler() {
                     @Override
                     public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {

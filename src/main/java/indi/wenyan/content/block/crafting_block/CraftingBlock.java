@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class CraftingBlock extends Block implements IModulerBlock {
-    public static final Properties PROPERTIES = Properties.of();
+    public static final Properties PROPERTIES = Properties.of().noCollission();
     public static final String ID = "crafting_block";
 
     public CraftingBlock() {
