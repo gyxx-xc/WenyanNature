@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.utils;
+package indi.wenyan.interpreter.exec_interface.structure;
 
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 @Value
 @Accessors(fluent = true)
-public class ItemContext implements IHandleContext{
+public class ItemContext implements IHandleContext {
     ItemStack itemStack;
     Level level;
     Player player;

@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.utils;
 import java.util.HashMap;
 
 // TODO: solve the problem of custom ids
-public class WenyanSymbol {
+public enum WenyanSymbol {;
     public static final HashMap<String, String> SYMBOLS = new HashMap<>();
     public static final String SYMBOL_FORMAT = "「%s」";
 

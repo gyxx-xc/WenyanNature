@@ -1,6 +1,9 @@
-package indi.wenyan.interpreter.utils;
+package indi.wenyan.interpreter.exec_interface;
 
+import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
+import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.structure.JavacallRequest;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 
 public interface IExecReceiver {
     /**

@@ -1,4 +1,4 @@
-package indi.wenyan.content.handler;
+package indi.wenyan.interpreter.exec_interface.handler;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;

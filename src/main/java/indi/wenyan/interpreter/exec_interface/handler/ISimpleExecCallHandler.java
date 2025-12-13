@@ -1,9 +1,9 @@
-package indi.wenyan.content.handler;
+package indi.wenyan.interpreter.exec_interface.handler;
 
+import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.IHandleContext;
 import net.minecraft.MethodsReturnNonnullByDefault;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -13,9 +13,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface ISimpleExecCallHandler extends IExecCallHandler {
     @Override
     default boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
-        request.thread().currentRuntime().processStack.push(handleOnce(request));
+        request.thread().currentRuntime().processStack.push(handle(request));
         return true;
     }
 
-    IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException;
+    IWenyanValue handle(JavacallRequest request) throws WenyanException.WenyanThrowException;
 }

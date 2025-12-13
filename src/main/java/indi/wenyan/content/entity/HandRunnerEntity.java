@@ -1,7 +1,12 @@
 package indi.wenyan.content.entity;
 
 import com.google.common.collect.Lists;
-import indi.wenyan.content.handler.ISimpleExecCallHandler;
+import indi.wenyan.interpreter.exec_interface.IExecReceiver;
+import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
+import indi.wenyan.interpreter.exec_interface.IWenyanPositionedDevice;
+import indi.wenyan.interpreter.exec_interface.handler.ISimpleExecCallHandler;
+import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
+import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.structure.JavacallRequest;
@@ -11,7 +16,8 @@ import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
-import indi.wenyan.interpreter.utils.*;
+import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +64,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
         return WenyanPackageBuilder.create()
                 .function("b", new ThisCallHandler() {
                     @Override
-                    public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                         List<Double> newArgs = Lists.newArrayList();
                         newArgs.add(Math.max(-20, Math.min(20, request.args().get(0).as(WenyanDouble.TYPE).value())));
                         newArgs.add(Math.max(-20, Math.min(20, request.args().get(1).as(WenyanDouble.TYPE).value())));
@@ -71,7 +77,7 @@ public class HandRunnerEntity extends Projectile implements IWenyanPlatform, IWe
                 })
                 .function("「爆」", new ThisCallHandler() {
                     @Override
-                    public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+                    public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                         level().explode(HandRunnerEntity.this, getX(), getY(), getZ(),
                                 (float) Math.max(1, Math.min(20,
                                         request.args().getFirst().as(WenyanDouble.TYPE).value())),

@@ -40,7 +40,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("BlockModule.search"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                     Vec3 s = request.args().get(0).as(WenyanVec3.TYPE).value();
                     BlockPos start = new BlockPos((int) s.x, (int) s.y, (int) s.z);
                     Vec3 e = request.args().get(1).as(WenyanVec3.TYPE).value();
@@ -86,7 +86,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("BlockModule.get"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
                     Vec3 p = request.args().getFirst().as(WenyanVec3.TYPE).value();
                     BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
                     assert level != null;
@@ -97,7 +97,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             .function(WenyanSymbol.var("BlockModule.attach"), new ThisCallHandler() {
                 @SuppressWarnings("RedundantThrows")
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
                     Direction attachedDirection = BlockModuleBlock
                             .getConnectedDirection(getBlockState()).getOpposite();
                     BlockPos pos = getBlockPos().relative(attachedDirection);

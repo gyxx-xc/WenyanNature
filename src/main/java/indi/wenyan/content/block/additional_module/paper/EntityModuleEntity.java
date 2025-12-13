@@ -31,7 +31,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("EntityModule.inspectRange"), new ThisCallHandler() { // "察域之实" means "Inspect entities within a range"
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                     assert getLevel() != null;
                     Vec3 start = request.args().getFirst().as(WenyanVec3.TYPE).value();
                     Vec3 end = request.args().getLast().as(WenyanVec3.TYPE).value();
@@ -43,7 +43,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("EntityModule.nearby"), new ThisCallHandler() { // "近域之实" means "Entities near a point"
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                     assert getLevel() != null;
                     double radius = request.args().getFirst().as(WenyanDouble.TYPE).value();
                     BlockPos pos = getBlockPos();
@@ -55,7 +55,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("EntityModule.lineOfSight"), new ThisCallHandler() { // "视域之实" means "Entities in line of sight"
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
                     var origin = request.args().getFirst().as(WenyanVec3.TYPE).value();
                     var look = request.args().getLast().as(WenyanVec3.TYPE).value();
                     assert getLevel() != null;

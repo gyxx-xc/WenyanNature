@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.structure.values.annotation;
 
-import indi.wenyan.content.handler.WenyanInlineJavacall;
+import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 

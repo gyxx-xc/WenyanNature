@@ -1,9 +1,9 @@
 package indi.wenyan.interpreter.structure;
 
-import indi.wenyan.content.handler.IExecCallHandler;
+import indi.wenyan.interpreter.exec_interface.handler.IExecCallHandler;
+import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.IHandleContext;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

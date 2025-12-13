@@ -1,4 +1,4 @@
-package indi.wenyan.interpreter.utils;
+package indi.wenyan.interpreter.exec_interface.structure;
 
 /**
  * Marker interface for handling content

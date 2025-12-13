@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter.runtime.executor;
 
-import indi.wenyan.content.handler.IJavacallHandler;
+import indi.wenyan.interpreter.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;

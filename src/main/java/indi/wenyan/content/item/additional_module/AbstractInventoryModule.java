@@ -1,10 +1,10 @@
 package indi.wenyan.content.item.additional_module;
 
-import indi.wenyan.content.handler.IContextExecCallHandler;
-import indi.wenyan.interpreter.utils.ExecQueue;
-import indi.wenyan.interpreter.utils.IExecReceiver;
-import indi.wenyan.interpreter.utils.IWenyanDevice;
-import indi.wenyan.interpreter.utils.ItemContext;
+import indi.wenyan.interpreter.exec_interface.IExecReceiver;
+import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
+import indi.wenyan.interpreter.exec_interface.handler.IContextExecCallHandler;
+import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
+import indi.wenyan.interpreter.exec_interface.structure.ItemContext;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.entity.Entity;

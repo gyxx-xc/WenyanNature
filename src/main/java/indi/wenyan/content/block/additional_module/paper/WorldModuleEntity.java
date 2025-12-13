@@ -37,7 +37,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("WorldModule.signalStrength"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) {
                     int value = 0;
                     if (getLevel() != null) {
                         value = getLevel().getBestNeighborSignal(getBlockPos());
@@ -47,7 +47,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("WorldModule.emitSignal"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
                     signal = request.args().getFirst().as(WenyanInteger.TYPE).value();
                     assert getLevel() != null;
                     WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
@@ -56,7 +56,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("WorldModule.trigger"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
                     int dx = Math.clamp(request.args().get(0).as(WenyanInteger.TYPE).value(),
                             -10, 10);
                     int dy = Math.clamp(request.args().get(1).as(WenyanInteger.TYPE).value(),
@@ -77,7 +77,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("WorldModule.changeWeather"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
                     if (getLevel() instanceof ServerLevel serverLevel) {
                         String cmd = request.args().getFirst().as(WenyanString.TYPE).value();
                         switch (cmd) {

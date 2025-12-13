@@ -1,13 +1,13 @@
-package indi.wenyan.content.handler;
+package indi.wenyan.interpreter.exec_interface.handler;
 
+import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.IHandleContext;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-@Deprecated // needed to be tested
+@Deprecated // needed to be review and tested
 @SuppressWarnings("ALL")
 public abstract class AbstractFixedTickExecCallHandler implements IExecCallHandler {
     private int tickCounter = 0;

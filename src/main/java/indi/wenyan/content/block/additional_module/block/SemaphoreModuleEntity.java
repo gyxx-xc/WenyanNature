@@ -27,7 +27,7 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("SemaphoreModule.acquire"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException {
                     try {
                         semaphore.acquire();
                         return WenyanValues.of(true);
@@ -38,7 +38,7 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("SemaphoreModule.release"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) {
                     semaphore.release();
                     return WenyanNull.NULL;
                 }

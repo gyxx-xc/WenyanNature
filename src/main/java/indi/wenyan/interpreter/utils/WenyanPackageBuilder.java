@@ -1,8 +1,8 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.content.handler.IExecCallHandler;
-import indi.wenyan.content.handler.IJavacallHandler;
-import indi.wenyan.content.handler.WenyanInlineJavacall;
+import indi.wenyan.interpreter.exec_interface.handler.IExecCallHandler;
+import indi.wenyan.interpreter.exec_interface.handler.IJavacallHandler;
+import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;

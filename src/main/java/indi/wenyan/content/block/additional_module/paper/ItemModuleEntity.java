@@ -28,7 +28,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function(WenyanSymbol.var("ItemModule.transfer"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
                     IItemHandler capability = getItemHandlerCapability();
                     var from = request.args().getFirst().as(WenyanCapabilitySlot.TYPE);
                     ItemStack result = ItemHandlerHelper.insertItemStacked(capability,
@@ -42,7 +42,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
             })
             .function(WenyanSymbol.var("ItemModule.read"), new ThisCallHandler() {
                 @Override
-                public @NotNull IWenyanValue handleOnce(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handle(@NotNull JavacallRequest request) throws WenyanException.WenyanTypeException {
                     var capability = getItemHandlerCapability();
                     if (capability == null) {
                         throw new WenyanException.WenyanTypeException("無法取得物品處理器");

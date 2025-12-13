@@ -83,14 +83,14 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     public final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function("「参」", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                public IWenyanValue handle(JavacallRequest request) throws WenyanException.WenyanThrowException {
                     if (!request.args().isEmpty()) throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
                     return getChecker().getArgs();
                 }
             })
             .function("书", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleOnce(JavacallRequest request) throws WenyanException.WenyanThrowException {
+                public IWenyanValue handle(JavacallRequest request) throws WenyanException.WenyanThrowException {
                     getChecker().accept(request.args());
                     switch (checker.getResult()) {
                         case RUNNING -> {}
