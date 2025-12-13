@@ -7,7 +7,9 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.IExecReceiver;
 import indi.wenyan.interpreter.utils.IHandleContext;
 import indi.wenyan.interpreter.utils.WenyanThreading;
+import net.minecraft.MethodsReturnNonnullByDefault;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +17,8 @@ import java.util.Optional;
  * Interface for handlers that execute calls in the Wenyan interpreter.
  * Manages the execution context and device.
  */
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public interface IExecCallHandler extends IJavacallHandler {
     /**
      * Handles the execution call.

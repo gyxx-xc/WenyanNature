@@ -11,6 +11,7 @@ import indi.wenyan.interpreter.utils.ItemContext;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import lombok.Getter;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class PrintInventoryModule extends AbstractInventoryModule {
     public static final String ID = "print_inventory_module";
@@ -22,7 +23,8 @@ public class PrintInventoryModule extends AbstractInventoryModule {
     private final WenyanPackage execPackage = WenyanPackageBuilder.create()
             .function("「a」", new ThisCallHandler() {
                 @Override
-                public IWenyanValue handleContext(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanTypeException {
+                public @NotNull IWenyanValue handleContext(@NotNull IHandleContext context, @NotNull JavacallRequest request)
+                        throws WenyanException.WenyanTypeException {
                     if (!(context instanceof ItemContext itemContext)) {
                         throw new WenyanException("unreached");
                     }

@@ -12,6 +12,7 @@ import java.util.Stack;
  * constant tables, identifier tables, and control flow structures.
  */
 public class WenyanCompilerEnvironment {
+    public static final int FUNCTION_ARGS_MAX = 100;
     private final WenyanBytecode bytecode;
     private final HashMap<Constant, Integer> constTable = new HashMap<>();
     private final HashMap<String, Integer> identifierTable = new HashMap<>();

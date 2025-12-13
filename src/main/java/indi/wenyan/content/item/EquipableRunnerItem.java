@@ -29,7 +29,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
-// TODO: logic for the item behave like the blocks
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatform {
@@ -105,7 +104,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
                 }
                 program.step(runningLevel);
                 handle(new ItemContext(stack, level, player, slotId, isSelected));
-                // FIXME: isRunning might be laggy (lock required for atomic int)
+                // FIXME: isRunning might be laggy (lock required in atomic int)
             } else if (program != null && program.isRunning()) program.stop();
         }
         super.inventoryTick(stack, level, entity, slotId, isSelected);

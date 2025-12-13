@@ -59,7 +59,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         } catch (WenyanException.WenyanThrowException e) {
             throw new WenyanException(e.getMessage(), ctx);
         }
-        if (n > 100) { // STUB: change to variable
+        if (n > WenyanCompilerEnvironment.FUNCTION_ARGS_MAX) {
             throw new WenyanException(Component.translatable("error.wenyan_programming.too_many_variables").getString(), ctx);
         }
         for (int i = 0; i < n; i++) {

@@ -6,11 +6,17 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.IHandleContext;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Abstract handler for importing packages in Wenyan programs.
  * Manages import requests in a queue and processes them asynchronously.
  */
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public interface IImportHandler extends IExecCallHandler {
 
     /**
@@ -23,11 +29,12 @@ public interface IImportHandler extends IExecCallHandler {
      */
     WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException;
 
-    default boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
-        WenyanPackage execPackage =
-                getPackage(context, request.args().getFirst().as(WenyanString.TYPE).value());
+    @Override
+    default boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+        String packageName = request.args().getFirst().as(WenyanString.TYPE).value();
+        WenyanPackage execPackage = getPackage(context, packageName);
         if (request.args().size() == 1) {
-            // TODO: test needed
+            request.thread().currentRuntime().setVariable(packageName, execPackage);
             request.thread().currentRuntime().resultStack.push(execPackage);
         } else {
             for (IWenyanValue arg : request.args().subList(1, request.args().size())) {
