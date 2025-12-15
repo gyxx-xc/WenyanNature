@@ -1,10 +1,10 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.interpreter.exec_interface.IExecReceiver;
-import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
+import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
-import indi.wenyan.interpreter.exec_interface.IWenyanPositionedDevice;
+import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.handler.IHandlerWarper;
 import indi.wenyan.interpreter.exec_interface.handler.IImportHandler;
 import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
@@ -31,12 +31,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
@@ -51,38 +50,30 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Getter
     public final ExecQueue execQueue = new ExecQueue();
     public static final int DEVICE_SEARCH_RANGE = 3;
-    private final IImportHandler importFunction = new IImportHandler() {
-        @Override
-        public @NotNull WenyanPackage getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
-            IWenyanPositionedDevice wenyanExecutor = null;
-            assert level != null;
-            for (BlockPos b : BlockPos.betweenClosed(
-                    getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
-                    getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
-                if (level.getBlockEntity(b) instanceof IWenyanPositionedDevice executor) {
-                    if (executor.getPackageName().equals(packageName)) {
-                        wenyanExecutor = executor;
-                        break;
-                    }
+    private final IImportHandler importFunction = (context, packageName) -> {
+        IWenyanBlockDevice wenyanExecutor = null;
+        assert level != null;
+        for (BlockPos b : BlockPos.betweenClosed(
+                getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
+                getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+            if (level.getBlockEntity(b) instanceof IWenyanBlockDevice executor) {
+                if (executor.getPackageName().equals(packageName)) {
+                    wenyanExecutor = executor;
+                    break;
                 }
             }
-            if (wenyanExecutor == null) {
-                throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
-            }
-            if (getLevel() instanceof ServerLevel sl) {
-                PacketDistributor.sendToPlayersTrackingChunk(sl,
-                        new ChunkPos(getBlockPos()),
-                        new CommunicationLocationPacket(getBlockPos(), wenyanExecutor.getPosition())
-                );
-            }
-            return wenyanExecutor.getExecPackage();
         }
-
-        @Override
-        public @NotNull Optional<IExecReceiver> getExecutor() {
-            if (isRemoved()) return Optional.empty();
-            else return Optional.of(RunnerBlockEntity.this);
+        if (wenyanExecutor == null) {
+            throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
         }
+        if (getLevel() instanceof ServerLevel sl) {
+            PacketDistributor.sendToPlayersTrackingChunk(sl,
+                    new ChunkPos(getBlockPos()),
+                    new CommunicationLocationPacket(getBlockPos(), wenyanExecutor.blockPos().getCenter())
+            );
+        }
+        var rawPackage = wenyanExecutor.getExecPackage();
+        return processPackage(rawPackage, wenyanExecutor);
     };
 
     @Override
@@ -92,8 +83,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         assert getLevel() != null;
         BlockPos attached = getBlockPos().relative(
                 RunnerBlock.getConnectedDirection(getBlockState()).getOpposite());
-        if (getLevel().getBlockEntity(attached) instanceof IWenyanDevice device)
-            baseEnvironment.importPackage(device.getExecPackage());
+        if (getLevel().getBlockEntity(attached) instanceof IWenyanBlockDevice device)
+            baseEnvironment.importPackage(processPackage(device.getExecPackage(), device));
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
@@ -132,11 +123,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Override
     @WenyanThreading
     public void notice(JavacallRequest request) {
-        request.handler().getExecutor().ifPresent((executor) -> {
-            if (level instanceof ServerLevel sl && executor instanceof IWenyanPositionedDevice blockDevice)
-                PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
-                        new CommunicationLocationPacket(getBlockPos(), blockDevice.getPosition()));
-        });
+        if (level instanceof ServerLevel sl && request.handler() instanceof BlockHandler handler) {
+            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                    new CommunicationLocationPacket(getBlockPos(), handler.getBlockPos().getCenter()));
+        }
     }
 
     @SuppressWarnings("unused")
@@ -186,5 +176,42 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         pages = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
         int speedTier = componentInput.getOrDefault(Registration.RUNNING_TIER_DATA.get(), 0);
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
+    }
+
+    private WenyanPackage processPackage(HandlerPackageBuilder.RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
+        var map = new HashMap<>(rawPackage.variables());
+        rawPackage.functions().forEach((name, function) ->
+                map.put(name, new BlockHandler() {
+                    @Override
+                    public BlockState getBlockState() {
+                        return device.blockState();
+                    }
+
+                    @Override
+                    public BlockPos getBlockPos() {
+                        return device.blockPos();
+                    }
+
+                    @Override
+                    public boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
+                        return function.handle(context, request);
+                    }
+                }));
+        return new WenyanPackage(map);
+    }
+
+    private abstract class BlockHandler implements IHandlerWarper{
+        abstract public BlockState getBlockState();
+        abstract public BlockPos getBlockPos();
+
+        @Override
+        public boolean check(IHandleContext context, JavacallRequest request) {
+            if (level instanceof ServerLevel sl) {
+                // TODO: better equal
+                return sl.getBlockState(getBlockPos()).equals(getBlockState());
+            } else {
+                throw new WenyanException("unreached");
+            }
+        }
     }
 }

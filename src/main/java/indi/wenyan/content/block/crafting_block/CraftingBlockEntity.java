@@ -7,12 +7,9 @@ import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
-import indi.wenyan.interpreter.structure.JavacallRequest;
+import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -80,37 +77,31 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     public final String basePackageName = "builtin";
 
     @Getter
-    public final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .function("「参」", new ThisCallHandler() {
-                @Override
-                public IWenyanValue handle(JavacallRequest request) throws WenyanException.WenyanThrowException {
-                    if (!request.args().isEmpty()) throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
-                    return getChecker().getArgs();
-                }
+    public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .handler("「参」", request -> {
+                if (!request.args().isEmpty()) throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
+                return getChecker().getArgs();
             })
-            .function("书", new ThisCallHandler() {
-                @Override
-                public IWenyanValue handle(JavacallRequest request) throws WenyanException.WenyanThrowException {
-                    getChecker().accept(request.args());
-                    switch (checker.getResult()) {
-                        case RUNNING -> {}
-                        case WRONG_ANSWER -> {
+            .handler("书", request -> {
+                getChecker().accept(request.args());
+                switch (checker.getResult()) {
+                    case RUNNING -> {}
+                    case WRONG_ANSWER -> {
+                        craftingProgress = 0;
+                        checker.init();
+                    }
+                    case ANSWER_CORRECT -> {
+                        craftingProgress ++;
+                        checker.init();
+                        if (craftingProgress >= recipeHolder.value().round()) {
+                            // prevent sudden change of recipe, although not needed since one tick
+                            getChecker();
                             craftingProgress = 0;
-                            checker.init();
-                        }
-                        case ANSWER_CORRECT -> {
-                            craftingProgress ++;
-                            checker.init();
-                            if (craftingProgress >= recipeHolder.value().round()) {
-                                // prevent sudden change of recipe, although not needed since one tick
-                                getChecker();
-                                craftingProgress = 0;
-                                craftAndEjectItem();
-                            }
+                            craftAndEjectItem();
                         }
                     }
-                    return WenyanNull.NULL;
                 }
+                return WenyanNull.NULL;
             })
             // TODO: .const of a builtin function
             .build();
@@ -125,7 +116,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         Level level = getLevel();
         assert level != null;
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        forNearbyPedestal(level, getBlockPos(), pedestal -> pedestalItems.add(pedestal.getItem(0)));
+        forNearbyPedestal(level, blockPos(), pedestal -> pedestalItems.add(pedestal.getItem(0)));
         var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
                 new AnsweringRecipeInput(pedestalItems), level, this.recipeHolder); // set last recipe as hint
         if (recipeHolder.isEmpty()) {
@@ -147,7 +138,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     public void craftAndEjectItem() {
         assert level != null;
         // TODO: for recipe with remaining item
-        forNearbyPedestal(level, getBlockPos(), pedestal -> pedestal.setItem(0, ItemStack.EMPTY));
+        forNearbyPedestal(level, blockPos(), pedestal -> pedestal.setItem(0, ItemStack.EMPTY));
         BlockPos pos = worldPosition.relative(Direction.UP);
         Block.popResource(level, pos, recipeHolder.value().output().copy());
     }

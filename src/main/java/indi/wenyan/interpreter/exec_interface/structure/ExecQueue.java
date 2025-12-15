@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.exec_interface.structure;
 
+import indi.wenyan.interpreter.exec_interface.handler.IHandlerWarper;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -36,6 +37,9 @@ public class ExecQueue {
         while (!queue.isEmpty()) {
             JavacallRequest request = queue.remove();
             try {
+                if (request.handler() instanceof IHandlerWarper handler)
+                    if (!handler.check(context, request))
+                        throw new WenyanException("Handler check failed");
                 boolean done = request.handle(context);
                 if (done) {
                     WenyanProgram.unblock(request.thread());

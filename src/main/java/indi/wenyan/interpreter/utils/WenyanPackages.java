@@ -9,6 +9,8 @@ import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import net.minecraft.network.chat.Component;
 
+import java.util.List;
+
 public enum WenyanPackages {;
     // these string for candy visitor
     public static final String AND_ID = "且";
@@ -22,9 +24,10 @@ public enum WenyanPackages {;
             .function("乘", WenyanPackageBuilder.reduceWith(IWenyanValue::mul))
             .function("除", WenyanPackageBuilder.reduceWith(IWenyanValue::div))
 
-            .function(new String[]{"變","变"}, (self, args) -> args.getFirst().as(WenyanBoolean.TYPE).not())
+            .function(new String[]{"變","变"}, (IWenyanValue self, List<IWenyanValue> args) ->
+                    args.getFirst().as(WenyanBoolean.TYPE).not())
 
-            .function(new String[]{"銜","衔"}, (self, args) -> {
+            .function(new String[]{"銜","衔"}, (IWenyanValue self, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
@@ -33,7 +36,7 @@ public enum WenyanPackages {;
                 }
                 return value;
             })
-            .function("充", (self, args) -> {
+            .function("充", (IWenyanValue self, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
@@ -53,6 +56,6 @@ public enum WenyanPackages {;
             .function(new String [] {"大於","大于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) > 0))
             .function(new String[] {"小於","小于"}, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
-            .function(WenyanSymbol.var("Null"), (self, args) -> WenyanNull.NULL)
+            .function(WenyanSymbol.var("Null"), (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
             .build();
 }

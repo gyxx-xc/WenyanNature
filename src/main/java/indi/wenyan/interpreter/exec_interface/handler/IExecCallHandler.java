@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.exec_interface.handler;
 
-import indi.wenyan.interpreter.exec_interface.IExecReceiver;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.JavacallRequest;
@@ -11,7 +10,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interface for handlers that execute calls in the Wenyan interpreter.
@@ -31,15 +29,6 @@ public interface IExecCallHandler extends IJavacallHandler {
     boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException;
 
     /**
-     * Gets the device that executes this handler.
-     * optional happened when device is destroyed (chunk unload / dig) when running
-     *
-     * @return an optional containing the executor device, or empty if none is available
-     */
-    @WenyanThreading
-    Optional<IExecReceiver> getExecutor();
-
-    /**
      * Calls the handler with the given parameters and blocks the thread.
      *
      * @param self     the self value
@@ -50,12 +39,9 @@ public interface IExecCallHandler extends IJavacallHandler {
     @WenyanThreading
     default void call(IWenyanValue self, WenyanThread thread,
                       List<IWenyanValue> argsList) {
-        if (getExecutor().isEmpty())
-            throw new WenyanException("killed by no executor");
-
         JavacallRequest request = new JavacallRequest(self, argsList,
                 thread, this);
-        getExecutor().ifPresent(executor -> executor.receive(request));
+        thread.program.platform.receive(request);
         thread.program.platform.notice(request);
         thread.block();
     }

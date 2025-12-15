@@ -1,13 +1,8 @@
 package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.interpreter.exec_interface.IExecReceiver;
-import indi.wenyan.interpreter.exec_interface.IWenyanPositionedDevice;
-import indi.wenyan.interpreter.exec_interface.handler.ISimpleExecCallHandler;
+import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
 import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
-import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
-import indi.wenyan.interpreter.structure.values.WenyanPackage;
-import indi.wenyan.interpreter.utils.WenyanThreading;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -15,12 +10,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Base class for module entities that can execute Wenyan code.
@@ -28,7 +21,7 @@ import java.util.Optional;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanPositionedDevice {
+public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanBlockDevice {
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
 
@@ -48,16 +41,14 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
      */
     public abstract String getBasePackageName();
 
-    /**
-     * Gets the package that provides execution capabilities for this entity.
-     *
-     * @return the execution package
-     */
-    public abstract WenyanPackage getExecPackage();
+    @Override
+    public BlockState blockState() {
+        return getBlockState();
+    }
 
     @Override
-    public Vec3 getPosition() {
-        return getBlockPos().getCenter();
+    public BlockPos blockPos() {
+        return getBlockPos();
     }
 
     @Override
@@ -88,22 +79,7 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     }
 
     /**
-     * An abstract call handler that uses this module entity as the executor.
-     */
-    @WenyanThreading
-    protected abstract class ThisCallHandler implements ISimpleExecCallHandler {
-        @Override
-        public Optional<IExecReceiver> getExecutor() {
-            if (isRemoved())
-                return Optional.empty();
-            return Optional.of(AbstractModuleEntity.this);
-        }
-    }
-
-    /**
      * Called every tick to handle execution requests.
      */
-    public void tick() {
-        handle(IHandleContext.NONE);
-    }
+    public void tick() {}
 }

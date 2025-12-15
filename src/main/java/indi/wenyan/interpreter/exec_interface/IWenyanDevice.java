@@ -1,12 +1,12 @@
 package indi.wenyan.interpreter.exec_interface;
 
-import indi.wenyan.interpreter.structure.values.WenyanPackage;
+import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
 
-public interface IWenyanDevice extends IExecReceiver {
+public interface IWenyanDevice {
     /**
      * @return The package containing functions accessible to this device
      */
-    WenyanPackage getExecPackage();
+    HandlerPackageBuilder.RawHandlerPackage getExecPackage();
 
     /**
      * @return The name of this device's package

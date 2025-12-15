@@ -1,9 +1,8 @@
 package indi.wenyan.content.block.additional_module.builtin;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.structure.values.WenyanPackage;
+import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
-import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
 import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
@@ -15,8 +14,9 @@ public class Vec3ModuleEntity extends AbstractModuleEntity {
     private final String basePackageName = WenyanSymbol.var("Vec3Module");
 
     @Getter
-    private final WenyanPackage execPackage = WenyanPackageBuilder.create()
-            .object(WenyanSymbol.var("Vec3Module.object"), WenyanVec3.OBJECT_TYPE)
+    private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .nativeVariables(builder -> builder
+                    .object(WenyanSymbol.var("Vec3Module.object"), WenyanVec3.OBJECT_TYPE))
             .build();
 
     public Vec3ModuleEntity(BlockPos pos, BlockState blockState) {
