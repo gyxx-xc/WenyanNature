@@ -1,14 +1,16 @@
 package indi.wenyan.content.item;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
+import indi.wenyan.interpreter.exec_interface.handler.IHandlerWarper;
 import indi.wenyan.interpreter.exec_interface.handler.IImportHandler;
 import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
+import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.exec_interface.structure.ItemContext;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -17,7 +19,6 @@ import indi.wenyan.setup.network.RunnerCodePacket;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -30,18 +31,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
+import java.util.Map;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatform {
     public static final String ID_1 = "equipable_runner";
 
-    private static WenyanProgram program;
+    // STUB: may need to find a better way to do it;
+    //   maybe after the program storage is done?
+    private static final Map<Integer, WenyanProgram> PROGRAMS = new HashMap<>();
     public final int runningLevel;
 
     @Getter
@@ -62,31 +65,30 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             if (!stack.isEmpty() && stack.getItem() instanceof IWenyanDevice device) {
                 var rawPackage = device.getExecPackage();
                 var map = new HashMap<>(rawPackage.variables());
-                rawPackage.functions().forEach((name, function) -> {
-                    // TODO
-//                    map.put(name, (IHandlerWarper) function::handle);
-                });
+                int finalSlot = i;
+                rawPackage.functions().forEach((name, function) ->
+                        map.put(name, new EquipItemHandler() {
+                            @Override
+                            public boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
+                                return function.handle(context, request);
+                            }
+
+                            @Override
+                            public ItemStack getStack() {
+                                return stack;
+                            }
+
+                            @Override
+                            public int getSlotId() {
+                                return finalSlot;
+                            }
+                        }));
                 return new WenyanPackage(map);
             }
         }
 
         throw new WenyanException("No runner device found");
     };
-
-//    public static final BlockCapability<ResourceHandler<ItemResource>, @Nullable WenyanProgram> ITEM_HANDLER_BLOCK =
-//            BlockCapability.create(
-//                    // Provide a name to uniquely identify the capability.
-//                    ResourceLocation.fromNamespaceAndPath("mymod", "item_handler"),
-//                    // Provide the queried type. Here, we want to look up `ResourceHandler<ItemResource>` instances.
-//                    ResourceHandler.asClass(),
-//                    // Provide the context type. We will allow the query to receive an extra `WenyanProgram side` parameter.
-//                    WenyanProgram.class);
-
-    public static final String EQUIPABLE_PROGRAM_ID = "equipable_program";
-    public static final ItemCapability<WenyanProgram, Void> ITEM_HANDLER_ITEM =
-            ItemCapability.createVoid(
-                    ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, EQUIPABLE_PROGRAM_ID),
-                    WenyanProgram.class);
 
     public EquipableRunnerItem(Properties properties, int runningLevel) {
         super(properties);
@@ -116,27 +118,47 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        // FIXME
-//        if (!level.isClientSide() && entity instanceof Player player) {
-//            var program = stack.getCapability(ITEM_HANDLER_ITEM);
-//            if (slotId == 38) {
-//                if (program == null || !program.isRunning()) {
-//                    program = new WenyanProgram(stack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
-//                            player, this);
-//                    program.createMainThread();
-//                }
-//                program.step(runningLevel);
-//                handle(new ItemContext(stack, level, player, slotId, isSelected));
-//                // FIXME: isRunning might be laggy (lock required in atomic int)
-//            } else if (program != null && program.isRunning()) {
-//                program.stop();
-//            }
-//        }
+        if (!level.isClientSide() && entity instanceof Player player) {
+            var program = PROGRAMS.get(stack.hashCode());
+            if (slotId == 38) {
+                if (program == null) {
+                    // run program
+                    var newProgram = new WenyanProgram(stack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
+                            player, this);
+                    PROGRAMS.put(stack.hashCode(), newProgram);
+                } else {
+                    if (!program.isRunning()) {
+                        program.createMainThread();
+                    }
+                    program.step(runningLevel);
+                    handle(new ItemContext(stack, level, player, slotId, isSelected));
+                }
+            } else if (program != null && program.isRunning()) {
+                // FIXME: isRunning might be laggy (lock required in atomic int)
+                program.stop();
+                PROGRAMS.remove(stack.hashCode());
+            }
+        }
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     @Override
     public void initEnvironment(WenyanRuntime baseEnvironment) {
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
+    }
+
+    private interface EquipItemHandler extends IHandlerWarper {
+        ItemStack getStack();
+        int getSlotId();
+
+        @Override
+        default boolean check(IHandleContext context, JavacallRequest request) {
+            if (!(context instanceof ItemContext itemContext)) {
+                return false;
+            }
+            ItemStack current = itemContext.player().getInventory().getItem(getSlotId());
+            // STUB: better equal
+            return current.equals(getStack());
+        }
     }
 }

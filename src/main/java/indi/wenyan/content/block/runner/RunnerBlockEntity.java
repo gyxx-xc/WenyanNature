@@ -31,6 +31,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -95,7 +97,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide && program != null && program.isRunning()) {
             program.step(speed);
-            handle(IHandleContext.NONE);
+            handle(new BlockContext(level, pos, state));
         }
     }
 
@@ -178,7 +180,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
     }
 
-    private WenyanPackage processPackage(HandlerPackageBuilder.RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
+    @Contract("_, _ -> new")
+    private @NotNull WenyanPackage processPackage(HandlerPackageBuilder.RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
         var map = new HashMap<>(rawPackage.variables());
         rawPackage.functions().forEach((name, function) ->
                 map.put(name, new BlockHandler() {
@@ -200,12 +203,14 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return new WenyanPackage(map);
     }
 
-    private abstract class BlockHandler implements IHandlerWarper{
-        abstract public BlockState getBlockState();
-        abstract public BlockPos getBlockPos();
+    private interface BlockHandler extends IHandlerWarper{
+        BlockState getBlockState();
+        BlockPos getBlockPos();
 
         @Override
-        public boolean check(IHandleContext context, JavacallRequest request) {
+        default boolean check(IHandleContext context, JavacallRequest request) {
+            if (!(context instanceof BlockContext blockContext)) return false;
+            Level level = blockContext.level();
             if (level instanceof ServerLevel sl) {
                 // TODO: better equal
                 return sl.getBlockState(getBlockPos()).equals(getBlockState());
@@ -214,4 +219,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             }
         }
     }
+
+    private record BlockContext(Level level, BlockPos pos, BlockState state) implements IHandleContext { }
 }
