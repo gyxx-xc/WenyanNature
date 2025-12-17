@@ -13,12 +13,18 @@ import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public enum WenyanValues {;
-    public static IWenyanValue of(int i) {
-        return new WenyanInteger(i);
+    public static IWenyanValue of(long l) {
+        return WenyanInteger.valueOf(l);
+    }
+
+    public static IWenyanValue of(@NotNull BigInteger l) {
+        return WenyanInteger.valueOf(l);
     }
 
     public static IWenyanValue of(double l) {

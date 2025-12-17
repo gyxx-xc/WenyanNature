@@ -4,7 +4,6 @@ import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
 import indi.wenyan.interpreter.utils.WenyanValues;
@@ -85,7 +84,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         switch (ctx.p.getType()) {
             case WenyanRParser.INT_NUM -> {
                 try {
-                    bytecode.add(WenyanCodes.PUSH, new WenyanInteger(
+                    bytecode.add(WenyanCodes.PUSH, WenyanValues.of(
                             WenyanDataParser.parseInt(ctx.INT_NUM().getText())));
                 } catch (WenyanException.WenyanNumberException e) {
                     throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_number").getString(), ctx);

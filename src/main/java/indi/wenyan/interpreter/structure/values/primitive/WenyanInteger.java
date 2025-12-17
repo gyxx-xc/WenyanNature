@@ -13,36 +13,69 @@ import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigInteger;
+
 /**
  * Represents an integer value in Wenyan language.
  * Supports arithmetic operations and comparisons.
  */
-public record WenyanInteger(Integer value)
-        implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable {
+public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable {
+    private final BigInteger value;
+
+    private WenyanInteger(BigInteger value) {
+        this.value = value;
+    }
+
+    // in most cases, int is enough; and is much better for other to deal with
+    @Override
+    public Integer value() {
+        try {
+            return value.intValueExact();
+        } catch (ArithmeticException e) {
+            throw new WenyanException("Integer overflow");
+        }
+    }
+
+    public static WenyanInteger valueOf(long i) {
+        return i >= IntegerCache.low && i <= IntegerCache.high ? IntegerCache.cache[(int) (i + 128)] : new WenyanInteger(BigInteger.valueOf(i));
+    }
+
+    public static WenyanInteger valueOf(@NotNull BigInteger i) {
+        // not checking cache, since it already alloc the space for bigint
+        return new WenyanInteger(i);
+    }
+
     public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);
 
     @Override
     public IWenyanValue add(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return WenyanValues.of(value + other.as(TYPE).value);
+        return WenyanValues.of(value.add(other.as(TYPE).value));
     }
 
     @Override
     public IWenyanValue subtract(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return WenyanValues.of(value - other.as(TYPE).value);
+        return WenyanValues.of(value.subtract(other.as(TYPE).value));
     }
 
     @Override
     public IWenyanValue multiply(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return WenyanValues.of(value * other.as(TYPE).value);
+        return WenyanValues.of(value.multiply(other.as(TYPE).value));
     }
 
     @Override
     public IWenyanValue divide(IWenyanValue other) throws WenyanException.WenyanTypeException {
-        return WenyanValues.of((double)value / other.as(TYPE).value);
+        WenyanInteger divisor = other.as(TYPE);
+        if (divisor.value.equals(BigInteger.ZERO)) {
+            throw new WenyanException("Division by zero");
+        }
+        return WenyanValues.of(value.divide(divisor.value));
     }
 
     public WenyanInteger mod(WenyanInteger other) {
-        return new WenyanInteger(value % other.value);
+        if (other.value.equals(BigInteger.ZERO)) {
+            throw new WenyanException("Modulo by zero");
+        }
+        return new WenyanInteger(value.mod(other.value.abs()));
     }
 
     @Override
@@ -60,7 +93,7 @@ public record WenyanInteger(Integer value)
             return (T) WenyanValues.of(toString());
         }
         if (type == WenyanBoolean.TYPE) {
-            return (T) WenyanValues.of(value != 0);
+            return (T) WenyanValues.of(!value.equals(BigInteger.ZERO));
         }
         return null;
     }
@@ -75,5 +108,23 @@ public record WenyanInteger(Integer value)
         ULocale locale = ULocale.forLanguageTag("zh-Hant");
         NumberFormat formatter = new RuleBasedNumberFormat(locale, RuleBasedNumberFormat.SPELLOUT);
         return formatter.format(value);
+    }
+
+    // since bigint cache only has 37 values, not good for int
+    // cache copy from java.lang.Integer, and del some jdk magic
+    private static final class IntegerCache {
+        static final int low = -128;
+        static final int high = 256;
+        static final WenyanInteger[] cache;
+
+        static {
+            int size = high - low + 1;
+            cache = new WenyanInteger[size];
+            int j = -128;
+
+            for (int i = 0; i < size; ++i) {
+                cache[i] = new WenyanInteger(BigInteger.valueOf(j++));
+            }
+        }
     }
 }
