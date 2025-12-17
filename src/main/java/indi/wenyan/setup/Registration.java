@@ -13,6 +13,8 @@ import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
+import indi.wenyan.content.block.power.PowerBlock;
+import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.entity.BulletEntity;
@@ -178,6 +180,10 @@ public final class Registration {
     public static final DeferredBlock<EntityModuleBlock> ENTITY_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> ENTITY_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<EntityModuleEntity>> ENTITY_MODULE_ENTITY;
+
+    public static final DeferredBlock<PowerBlock> POWER_BLOCK;
+    public static final DeferredItem<BlockItem> POWER_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -411,6 +417,14 @@ public final class Registration {
                         .of(EntityModuleEntity::new, ENTITY_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
+        POWER_BLOCK = BLOCKS.register(PowerBlock.ID, PowerBlock::new);
+        POWER_BLOCK_ITEM = ITEMS.registerItem(PowerBlock.ID,
+                (properties) -> new BlockItem(POWER_BLOCK.get(), properties));
+        POWER_BLOCK_ENTITY = BLOCK_ENTITY.register(PowerBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(PowerBlockEntity::new, POWER_BLOCK.get())
+                        .build(DSL.remainderType()));
+
 //        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
 //        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
 //                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
@@ -466,10 +480,11 @@ public final class Registration {
                     output.accept(LUNAR_INK.get());
                     output.accept(CINNABAR_INK.get());
                     output.accept(STARLIGHT_INK.get());
+
+                    output.accept(EQUIPABLE_RUNNER_ITEM.get());
                     output.accept(PRINT_INVENTORY_MODULE.get());
 
                     output.accept(FLOAT_NOTE.get());
-//                    output.accept(ADDITIONAL_PAPER_BLOCK_ITEM.get());
                     output.accept(CRAFTING_BLOCK_ITEM.get());
                     output.accept(PEDESTAL_BLOCK_ITEM.get());
 
@@ -490,7 +505,8 @@ public final class Registration {
                     output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
                     output.accept(SEMAPHORE_MODULE_BLOCK_ITEM.get());
                     output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
-                    output.accept(EQUIPABLE_RUNNER_ITEM.get());
+
+                    output.accept(POWER_BLOCK_ITEM.get());
                 }).build());
     }
 }

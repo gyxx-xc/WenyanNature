@@ -1,38 +1,98 @@
 package indi.wenyan.content.block.power;
 
-import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
+import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
+import indi.wenyan.interpreter.utils.WenyanValues;
+import indi.wenyan.setup.Registration;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PowerBlockEntity extends BlockEntity implements IWenyanDevice {
-    public final AtomicInteger weakPower = new AtomicInteger(0);
-    public final AtomicInteger strongPower = new AtomicInteger(0);
+public class PowerBlockEntity extends AbstractModuleEntity {
+    public static final int LARGE_PRIME = 1000000009;
+    public static final int DISAPPEAR_TICK = 20;
+    public final AtomicInteger power = new AtomicInteger(0);
+    public final SecureRandom random;
 
-    public PowerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        super(type, pos, blockState);
-    }
-
-    @SuppressWarnings("unused")
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide()) {
-            weakPower.decrementAndGet();
-            strongPower.decrementAndGet();
+    {
+        try {
+            random = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Please report an issue to your Java platform as no strong SecureRandom implementation");
         }
     }
 
-    @Override
-    public HandlerPackageBuilder.RawHandlerPackage getExecPackage() {
-        return null;
+    public final Deque<Integer> generatedPower = new ArrayDeque<>(
+            Collections.nCopies(DISAPPEAR_TICK, 0)
+    );
+    public int lastPower = 0;
+
+    // in book: 意底*意底*...(天机) = 若干*数极 + 天意
+    // a ^ b = ans mod p
+    private int a = random.nextInt(LARGE_PRIME);
+    private int b = random.nextInt(LARGE_PRIME);
+    private int ans = fastPower(a, b);
+
+    @Getter
+    public String basePackageName = "";
+
+    @Getter
+    public HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .nativeVariables(builder -> builder
+                    .intFunction("「意底」", integers -> a)
+                    .intFunction("「天机」", integers -> b)
+                    .intFunction("「数极」", integers -> LARGE_PRIME)
+                    .intFunction("「cheat」", i -> ans)
+                    .function("书", (WenyanInlineJavacall.BuiltinFunction) (self, args) -> {
+                        int oldAns = ans;
+                        a = random.nextInt(LARGE_PRIME);
+                        b = random.nextInt(LARGE_PRIME);
+                        ans = fastPower(a, b);
+                        if (args.getFirst().as(WenyanInteger.TYPE).value() == oldAns) {
+                            power.incrementAndGet();
+                            return WenyanValues.of(true);
+                        } else {
+                            return WenyanValues.of(false);
+                        }
+                    })
+            )
+            .build();
+
+    public PowerBlockEntity(BlockPos pos, BlockState blockState) {
+        super(Registration.POWER_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     @Override
-    public String getPackageName() {
-        return "";
+    public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state) {
+        if (!level.isClientSide()) {
+            int firstPower = generatedPower.removeFirst();
+            int lPower = power.addAndGet(-firstPower);
+            generatedPower.addLast(lPower - lastPower + firstPower);
+            lastPower = lPower;
+        }
+    }
+
+    private int fastPower(int a, int b) {
+        long ans = 1;
+        long a1 = a;
+        while (b > 0) {
+            if ((b & 1) == 1) {
+                ans = (ans * a1) % LARGE_PRIME;
+            }
+            a1 = (a1 * a1) % LARGE_PRIME;
+            b >>= 1;
+        }
+        return Math.toIntExact(ans);
     }
 }

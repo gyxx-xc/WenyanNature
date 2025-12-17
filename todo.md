@@ -5,7 +5,7 @@
   - running as same, slot in the inventory for import
 - [ ] power generate and consume
   - two types of power, disappear every 2 tick, need to calculate power generate and consume every tick
-  - small power (天意) gen by a**b mod 1e9+9 O(log b) about 30 op (less than 1 tick for normal fastest)
+  - small power (天意) gen by a**b mod 1e9+9 O(log b) about 30 op (less than 1 tick for normal fastest), c = 25
   - large power (天机) gen by log_a(b) mod 1e9+9 O(sqrt(b)) about 3e4 op (1.5*c sec for fastest)
   - design power consume api
 - [ ] some more function

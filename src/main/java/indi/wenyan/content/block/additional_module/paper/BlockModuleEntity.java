@@ -17,9 +17,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockModuleEntity extends AbstractModuleEntity {
     @Getter
@@ -104,8 +106,8 @@ public class BlockModuleEntity extends AbstractModuleEntity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state) {
+        super.tick(level, pos, state);
         if (continueCount > 0) {
             continueCount--;
         }

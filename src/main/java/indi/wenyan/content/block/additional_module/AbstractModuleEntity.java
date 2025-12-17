@@ -8,6 +8,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -81,5 +82,5 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     /**
      * Called every tick to handle execution requests.
      */
-    public void tick() {}
+    public void tick(Level level, BlockPos pos, BlockState state) {}
 }

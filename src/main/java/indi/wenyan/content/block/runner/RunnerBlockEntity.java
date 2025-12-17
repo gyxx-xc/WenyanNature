@@ -177,7 +177,15 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         pages = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
         int speedTier = componentInput.getOrDefault(Registration.RUNNING_TIER_DATA.get(), 0);
-        speed = (int) StrictMath.pow(10, Math.min(speedTier, 3));
+        // TODO: number design
+        speed = (int) StrictMath.pow(10, Math.min(speedTier, 3))*8;
+    }
+
+    @Override
+    public void setRemoved() {
+        if (program != null)
+            program.stop();
+        super.setRemoved();
     }
 
     @Contract("_, _ -> new")

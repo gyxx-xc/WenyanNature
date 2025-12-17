@@ -22,25 +22,39 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Handles program compilation, thread management, and scheduling.
  */
 public class WenyanProgram {
-    /** The source code of the program */
+    /**
+     * The source code of the program
+     */
     public final String code;
 
-    /** The base bytecode compiled from the source code */
+    /**
+     * The base bytecode compiled from the source code
+     */
     public final WenyanBytecode baseBytecode = new WenyanBytecode();
 
-    /** The base runtime environment for the program */
+    /**
+     * The base runtime environment for the program
+     */
     public final WenyanRuntime baseEnvironment;
 
-    /** Counter for currently running threads */
+    /**
+     * Counter for currently running threads
+     */
     public final AtomicInteger runningThreadsNumber = new AtomicInteger(0);
 
-    /** Queue of threads ready to run */
+    /**
+     * Queue of threads ready to run
+     */
     public final Queue<WenyanThread> readyQueue = new ConcurrentLinkedQueue<>();
 
-    /** Semaphore controlling execution steps across threads */
+    /**
+     * Semaphore controlling execution steps across threads
+     */
     private final Semaphore accumulatedSteps = new Semaphore(0);
 
-    /** The Java thread that runs the programs (scheduler as master) */
+    /**
+     * The Java thread that runs the programs (scheduler as master)
+     */
     private final Thread programJavaThread = new Thread(this::scheduler);
 
     // STUB: used in error handler, might changed
@@ -48,20 +62,26 @@ public class WenyanProgram {
     @Deprecated
     public final Player holder;
 
-    /** Platform-specific integration */
+    /**
+     * Platform-specific integration
+     */
     public final IWenyanPlatform platform;
 
-    /** Cost in steps to switch between threads */
-    private static final int SWITCH_COST = 5;
+    /**
+     * Cost in steps to switch between threads
+     */
+    private static final int SWITCH_COST = 1;
 
-    /** Steps allocated to a thread when scheduled */
-    private static final int SWITCH_STEP = 10;
+    /**
+     * Steps allocated to a thread when scheduled
+     */
+    private static final int SWITCH_STEP = 100;
 
     /**
      * Creates a new Wenyan program from the given code.
      *
-     * @param code The Wenyan program source code
-     * @param holder The player who created this program
+     * @param code     The Wenyan program source code
+     * @param holder   The player who created this program
      * @param platform The platform integration
      */
     public WenyanProgram(String code, Player holder, IWenyanPlatform platform) {
@@ -88,7 +108,8 @@ public class WenyanProgram {
             // DCL? what is that
             try {
                 programJavaThread.start();
-            } catch (IllegalThreadStateException ignored) {}
+            } catch (IllegalThreadStateException ignored) {
+            }
         }
 
         WenyanThread thread = new WenyanThread(this);
@@ -159,8 +180,16 @@ public class WenyanProgram {
     public void scheduler() {
         try {
             // not stop until interrupted (object unloaded)
-            //noinspection InfiniteLoopStatement
+            // noinspection InfiniteLoopStatement
             while (true) {
+                if (accumulatedSteps.availablePermits() > 10000) {
+                    WenyanException.handleException(holder, "program running too slow");
+                    readyQueue.clear();
+                    runningThreadsNumber.set(0);
+                    accumulatedSteps.drainPermits();
+                    throw new InterruptedException("killed");
+                }
+
                 accumulatedSteps.acquire(SWITCH_COST);
                 if (readyQueue.isEmpty()) {
                     // TODO: make it not busy wait

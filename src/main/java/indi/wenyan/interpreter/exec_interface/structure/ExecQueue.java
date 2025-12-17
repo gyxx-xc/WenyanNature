@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ExecQueue {
 
+    public static final int REQUEST_TICK_LIMIT = 20;
     private final Queue<JavacallRequest> queue = new ConcurrentLinkedQueue<>();
 
         /**
@@ -31,9 +32,12 @@ public class ExecQueue {
      * @param context the handling context, used to manage execution state
      */
     public void handle(IHandleContext context) {
+        if (queue.size() > REQUEST_TICK_LIMIT) {
+            throw new WenyanException("Too many requests one tick");
+        }
+
         // Collects requests that could not be processed in this tick
         Collection<JavacallRequest> undoneRequests = new ArrayList<>();
-
         while (!queue.isEmpty()) {
             JavacallRequest request = queue.remove();
             try {
@@ -50,7 +54,6 @@ public class ExecQueue {
                 request.thread().dieWithException(e);
             }
         }
-
         queue.addAll(undoneRequests); // These are for next tick
     }
 }

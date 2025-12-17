@@ -34,7 +34,7 @@ public interface IModulerBlock extends EntityBlock {
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == getType())
-                ((AbstractModuleEntity) entity).tick();
+                ((AbstractModuleEntity) entity).tick(level1, pos, state1);
         };
     }
 }
