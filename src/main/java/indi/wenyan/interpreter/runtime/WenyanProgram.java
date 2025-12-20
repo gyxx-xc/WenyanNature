@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.interpreter.compiler.WenyanVerifier;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
@@ -90,6 +91,7 @@ public class WenyanProgram {
         WenyanVisitor visitor = new WenyanMainVisitor(new WenyanCompilerEnvironment(baseBytecode));
         try {
             visitor.visit(WenyanVisitor.program(code));
+            WenyanVerifier.verify(baseBytecode);
         } catch (WenyanException e) {
             WenyanException.handleException(holder, e.getMessage());
         }
