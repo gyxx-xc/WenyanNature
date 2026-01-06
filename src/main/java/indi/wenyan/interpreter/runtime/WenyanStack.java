@@ -27,11 +27,11 @@ public class WenyanStack {
      * @param item The value to push
      */
     public void push(IWenyanValue item) {
-        if (stack.size() >= MAX_SIZE) {
-            throw new WenyanException("error.wenyan_programming.stack_overflow");
-        }
         if (item.type() != WenyanNull.TYPE)
             stack.addLast(item);
+        while (stack.size() > MAX_SIZE) {
+            stack.removeFirst();
+        }
     }
 
     /**
