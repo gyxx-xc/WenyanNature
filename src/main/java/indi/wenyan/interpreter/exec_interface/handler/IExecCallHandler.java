@@ -42,7 +42,6 @@ public interface IExecCallHandler extends IJavacallHandler {
         JavacallRequest request = new JavacallRequest(self, argsList,
                 thread, this);
         thread.program.platform.receive(request);
-        thread.program.platform.notice(request);
         thread.block();
     }
 }

@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
@@ -95,6 +96,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         }
 
         @Override
+        @WenyanThreading
         public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
             if (argsList.size() == 1) {
                 return argsList.getFirst().as(WenyanVec3.TYPE);

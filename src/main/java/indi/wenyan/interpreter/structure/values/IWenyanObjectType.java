@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.structure.values;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public interface IWenyanObjectType extends IWenyanFunction {
      * @return the new object instance
      * @throws WenyanException.WenyanThrowException if object creation fails
      */
+    @WenyanThreading
     IWenyanObject createObject(List<IWenyanValue> argsList)
             throws WenyanException.WenyanThrowException;
 

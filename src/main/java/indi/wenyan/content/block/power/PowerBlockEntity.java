@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PowerBlockEntity extends AbstractModuleEntity {
@@ -33,16 +33,19 @@ public class PowerBlockEntity extends AbstractModuleEntity {
         }
     }
 
-    public final Deque<Integer> generatedPower = new ArrayDeque<>(
+    public final List<Integer> generatedPower = new ArrayList<>(
             Collections.nCopies(DISAPPEAR_TICK, 0)
     );
     public int lastPower = 0;
 
     // in book: 意底*意底*...(天机) = 若干*数极 + 天意
     // a ^ b = ans mod p
-    private int a = random.nextInt(LARGE_PRIME);
-    private int b = random.nextInt(LARGE_PRIME);
-    private int ans = fastPower(a, b);
+    private int a;
+    private int b;
+    private int ans;
+
+    @Getter
+    private final boolean strong = false;
 
     @Getter
     public String basePackageName = "";
@@ -50,16 +53,15 @@ public class PowerBlockEntity extends AbstractModuleEntity {
     @Getter
     public HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction("「意底」", integers -> a)
-                    .intFunction("「天机」", integers -> b)
+                    .intFunction("「天根」", integers -> a)
                     .intFunction("「数极」", integers -> LARGE_PRIME)
-                    .intFunction("「cheat」", i -> ans)
+
+                    .intFunction("「天机」", integers -> strong ? 0 : b)
+                    .intFunction("「天意」", integers -> strong ? ans : 0)
                     .function("书", (WenyanInlineJavacall.BuiltinFunction) (self, args) -> {
-                        int oldAns = ans;
-                        a = random.nextInt(LARGE_PRIME);
-                        b = random.nextInt(LARGE_PRIME);
-                        ans = fastPower(a, b);
-                        if (args.getFirst().as(WenyanInteger.TYPE).value() == oldAns) {
+                        int result = strong ? b : ans;
+                        resetState();
+                        if (args.getFirst().as(WenyanInteger.TYPE).value() == result) {
                             power.incrementAndGet();
                             return WenyanValues.of(true);
                         } else {
@@ -71,7 +73,10 @@ public class PowerBlockEntity extends AbstractModuleEntity {
 
     public PowerBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.POWER_BLOCK_ENTITY.get(), pos, blockState);
+        resetState();
     }
+
+    int n = 0;
 
     @Override
     public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state) {
@@ -80,7 +85,17 @@ public class PowerBlockEntity extends AbstractModuleEntity {
             int lPower = power.addAndGet(-firstPower);
             generatedPower.addLast(lPower - lastPower + firstPower);
             lastPower = lPower;
+            n = (n + 1) % 20;
+            if (n == 0) {
+                System.out.println(lPower);
+            }
         }
+    }
+
+    private void resetState() {
+        a = random.nextInt(2, LARGE_PRIME);
+        b = random.nextInt(LARGE_PRIME);
+        ans = fastPower(a, b);
     }
 
     private int fastPower(int a, int b) {
@@ -94,5 +109,22 @@ public class PowerBlockEntity extends AbstractModuleEntity {
             b >>= 1;
         }
         return Math.toIntExact(ans);
+    }
+
+    // get the required power, and return the actual acquired power, not thread safe
+    public int require(int acquire) {
+        if (acquire < 0)
+            throw new IllegalArgumentException("unreached");
+
+        int got = 0;
+        for (int i = 0; i < generatedPower.size(); i++) {
+            int power = generatedPower.get(i);
+            int acquirePower = Math.min(power, acquire);
+            got += acquirePower;
+            generatedPower.set(i, power - acquirePower);
+        }
+        power.addAndGet(-got);
+        lastPower -= got;
+        return got;
     }
 }

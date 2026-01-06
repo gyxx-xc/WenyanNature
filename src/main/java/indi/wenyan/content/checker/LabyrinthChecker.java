@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
+import indi.wenyan.interpreter.utils.WenyanThreading;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
@@ -66,6 +67,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
             }
 
             @Override
+            @WenyanThreading
             public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanTypeException {
                 return new Position(argsList.get(0).as(WenyanInteger.TYPE).value(),
                         argsList.get(1).as(WenyanInteger.TYPE).value());

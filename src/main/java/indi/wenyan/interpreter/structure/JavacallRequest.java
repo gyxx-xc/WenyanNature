@@ -37,6 +37,7 @@ public class JavacallRequest {
     IExecCallHandler handler;
 
     public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+        thread.program.platform.notice(this);
         return handler().handle(context, this);
     }
 }

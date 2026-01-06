@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.exec_interface.handler;
 
+import indi.wenyan.content.block.power.PowerBlockEntity;
+import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -7,12 +9,15 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanPackageBuilder;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
 /**
  * Builder for creating WenyanPackage values
@@ -25,6 +30,7 @@ public final class HandlerPackageBuilder {
 
     /**
      * Creates a new package builder
+     *
      * @return A new package builder instance
      */
     @Contract(" -> new")
@@ -39,6 +45,7 @@ public final class HandlerPackageBuilder {
 
     /**
      * Adds all variables from an existing environment
+     *
      * @param environment Environment to include
      * @return This builder
      */
@@ -50,6 +57,7 @@ public final class HandlerPackageBuilder {
 
     /**
      * Builds the package
+     *
      * @return The built package
      */
     public RawHandlerPackage build() {
@@ -75,6 +83,34 @@ public final class HandlerPackageBuilder {
             IWenyanValue value = function.handle(request);
             request.thread().currentRuntime().processStack.push(value);
             return true;
+        });
+        return this;
+    }
+
+    public HandlerPackageBuilder handler(String name, int power, HandlerReturnFunction function) {
+        functions.put(name, new HandlerFunction() {
+            int acquired = 0;
+
+            @Override
+            public boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+                if (request.thread().program.platform instanceof RunnerBlockEntity entity) {
+                    for (BlockPos b : BlockPos.betweenClosed(
+                            entity.getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
+                            entity.getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+                        assert entity.getLevel() != null;
+                        if (entity.getLevel().getBlockEntity(b) instanceof PowerBlockEntity executor) {
+                            acquired += executor.require(power);
+                        }
+                    }
+                }
+                if (acquired < power) {
+                    return false;
+                } else {
+                    IWenyanValue value = function.handle(context, request);
+                    request.thread().currentRuntime().processStack.push(value);
+                    return true;
+                }
+            }
         });
         return this;
     }
@@ -120,5 +156,6 @@ public final class HandlerPackageBuilder {
     }
 
     public record RawHandlerPackage
-            (Map<String, IWenyanValue> variables, Map<String, HandlerFunction> functions) { }
+            (Map<String, IWenyanValue> variables, Map<String, HandlerFunction> functions) {
+    }
 }

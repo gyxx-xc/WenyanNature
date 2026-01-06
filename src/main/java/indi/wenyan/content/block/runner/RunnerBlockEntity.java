@@ -211,7 +211,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return new WenyanPackage(map);
     }
 
-    private interface BlockHandler extends IHandlerWarper{
+    private interface BlockHandler extends IHandlerWarper {
         BlockState getBlockState();
         BlockPos getBlockPos();
 
