@@ -12,11 +12,14 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@OnlyIn(Dist.CLIENT)
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
     private final CodeEditorWidget editor;

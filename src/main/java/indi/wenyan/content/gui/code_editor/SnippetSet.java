@@ -4,12 +4,15 @@ import lombok.Setter;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import lombok.experimental.NonFinal;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@OnlyIn(Dist.CLIENT)
 @Accessors(fluent = true)
 @Value
 public class SnippetSet {

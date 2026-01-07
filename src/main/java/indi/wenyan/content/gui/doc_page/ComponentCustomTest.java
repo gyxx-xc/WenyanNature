@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.Mth;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.api.IVariable;
@@ -13,6 +15,7 @@ import vazkii.patchouli.api.IVariable;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+@OnlyIn(Dist.CLIENT)
 @SuppressWarnings("unused")
 public class ComponentCustomTest implements ICustomComponent {
     private transient StringBuilder code;
