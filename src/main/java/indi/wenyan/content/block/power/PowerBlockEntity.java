@@ -1,8 +1,7 @@
 package indi.wenyan.content.block.power;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
-import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
+import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
@@ -58,7 +57,7 @@ public class PowerBlockEntity extends AbstractModuleEntity {
 
                     .intFunction("「天机」", integers -> strong ? 0 : b)
                     .intFunction("「天意」", integers -> strong ? ans : 0)
-                    .function("书", (WenyanInlineJavacall.BuiltinFunction) (self, args) -> {
+                    .function("书", (self, args) -> {
                         int result = strong ? b : ans;
                         resetState();
                         if (args.getFirst().as(WenyanInteger.TYPE).value() == result) {

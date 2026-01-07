@@ -2,7 +2,7 @@ package indi.wenyan.interpreter.exec_interface;
 
 import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
-import indi.wenyan.interpreter.structure.JavacallRequest;
+import indi.wenyan.interpreter.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
 public interface IExecReceiver {
@@ -17,7 +17,7 @@ public interface IExecReceiver {
      * @param request The JavacallContext to process
      */
     @WenyanThreading
-    default void receive(JavacallRequest request) {
+    default void receive(IHandleableRequest request) {
         getExecQueue().receive(request);
     }
 

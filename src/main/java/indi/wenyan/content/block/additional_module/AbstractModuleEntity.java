@@ -53,6 +53,12 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     }
 
     @Override
+    // make the override explicitly to make it clear that this method is overridden
+    public boolean isRemoved() {
+        return super.isRemoved();
+    }
+
+    @Override
     public String getPackageName() {
         return Objects.requireNonNullElseGet(packageName, this::getBasePackageName);
     }

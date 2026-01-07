@@ -5,6 +5,5 @@ package indi.wenyan.interpreter.exec_interface.structure;
  * Including the information that might be helpful to Javacall
  */
 public interface IHandleContext {
-    @SuppressWarnings("unused")
     IHandleContext NONE = new IHandleContext() {};
 }

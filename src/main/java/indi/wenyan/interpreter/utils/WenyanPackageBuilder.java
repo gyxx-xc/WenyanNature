@@ -1,10 +1,8 @@
 package indi.wenyan.interpreter.utils;
 
-import indi.wenyan.interpreter.exec_interface.handler.IExecCallHandler;
 import indi.wenyan.interpreter.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
@@ -23,7 +21,6 @@ import java.util.function.Function;
 /**
  * Builder for creating WenyanPackage values
  */
-@SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class WenyanPackageBuilder {
     /** Map of variables to include in the package */
     private final Map<String, IWenyanValue> variables = new HashMap<>();
@@ -79,7 +76,7 @@ public final class WenyanPackageBuilder {
                 newArgs.add(arg.as(WenyanDouble.TYPE).value());
             }
             return WenyanValues.of(function.apply(newArgs));
-        }, new WenyanType[0]);
+        });
     }
 
     /**
@@ -96,7 +93,7 @@ public final class WenyanPackageBuilder {
                 newArgs.add(arg.as(WenyanInteger.TYPE).value());
             }
             return WenyanValues.of(function.apply(newArgs));
-        }, new WenyanType[0]);
+        });
     }
 
     /**
@@ -106,7 +103,7 @@ public final class WenyanPackageBuilder {
      * @return This builder
      */
     public WenyanPackageBuilder function(String name, WenyanInlineJavacall.BuiltinFunction function) {
-        return function(name, function, new WenyanType[0]);
+        return function(name, new WenyanInlineJavacall(function));
     }
 
     /**
@@ -123,47 +120,12 @@ public final class WenyanPackageBuilder {
     }
 
     /**
-     * Adds a builtin function with argument type constraints
-     * @param name Function name
-     * @param function The function implementation
-     * @param argTypes Array of required argument types
-     * @return This builder
-     */
-    public WenyanPackageBuilder function(String name, WenyanInlineJavacall.BuiltinFunction function, WenyanType<?>[] argTypes) {
-        return function(name, new WenyanInlineJavacall(function), argTypes);
-    }
-
-    /**
-     * Adds a Java-implemented function to the package
-     * @param name Function name
-     * @param javacall The handler implementation
-     * @return This builder
-     */
-    public WenyanPackageBuilder function(String name, IExecCallHandler javacall) {
-        return function(name, javacall, new WenyanType[0]);
-    }
-
-    /**
-     * Adds the same Java-implemented function under multiple names
-     * @param name Array of function names
-     * @param javacall The handler implementation
-     * @return This builder
-     */
-    public WenyanPackageBuilder function(String[] name, IExecCallHandler javacall) {
-        for (String n : name) {
-            function(n, javacall);
-        }
-        return this;
-    }
-
-    /**
      * Adds a Java-implemented function with argument type constraints
      * @param name Function name
      * @param javacall The handler implementation
-     * @param argTypes Array of required argument types
      * @return This builder
      */
-    public WenyanPackageBuilder function(String name, IJavacallHandler javacall, WenyanType<?>[] argTypes) {
+    public WenyanPackageBuilder function(String name, IJavacallHandler javacall) {
         variables.put(name, javacall);
         return this;
     }
