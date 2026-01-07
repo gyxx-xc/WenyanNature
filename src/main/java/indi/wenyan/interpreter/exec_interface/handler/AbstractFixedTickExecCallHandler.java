@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.exec_interface.handler;
 
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
-import indi.wenyan.interpreter.structure.JavacallRequest;
+import indi.wenyan.interpreter.exec_interface.structure.deprecated_JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public abstract class AbstractFixedTickExecCallHandler implements IExecCallHandl
     }
 
     @Override
-    public boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException {
+    public boolean handle(@NotNull IHandleContext context, @NotNull deprecated_JavacallRequest request) throws WenyanException.WenyanThrowException {
         if (getRemainingTicks() <= 0) {
             request.thread().currentRuntime().processStack.push(handleFinalTick(request));
             return true;
@@ -39,6 +39,6 @@ public abstract class AbstractFixedTickExecCallHandler implements IExecCallHandl
         tickCounter ++;
         return false;
     }
-    abstract protected void handleTick(JavacallRequest request, int round) throws WenyanException.WenyanThrowException;
-    abstract protected IWenyanValue handleFinalTick(JavacallRequest reqest) throws WenyanException.WenyanThrowException;
+    abstract protected void handleTick(deprecated_JavacallRequest request, int round) throws WenyanException.WenyanThrowException;
+    abstract protected IWenyanValue handleFinalTick(deprecated_JavacallRequest reqest) throws WenyanException.WenyanThrowException;
 }

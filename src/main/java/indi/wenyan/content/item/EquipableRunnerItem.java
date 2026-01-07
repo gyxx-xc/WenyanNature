@@ -8,9 +8,9 @@ import indi.wenyan.interpreter.exec_interface.handler.IImportHandler;
 import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.exec_interface.structure.ItemContext;
+import indi.wenyan.interpreter.exec_interface.structure.deprecated_JavacallRequest;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
-import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -69,7 +69,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
                 rawPackage.functions().forEach((name, function) ->
                         map.put(name, new EquipItemHandler() {
                             @Override
-                            public boolean handle(IHandleContext context, JavacallRequest request) throws WenyanException.WenyanThrowException {
+                            public boolean handle(IHandleContext context, deprecated_JavacallRequest request) throws WenyanException.WenyanThrowException {
                                 return function.handle(context, request);
                             }
 
@@ -152,7 +152,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
         int getSlotId();
 
         @Override
-        default boolean check(IHandleContext context, JavacallRequest request) {
+        default boolean check(IHandleContext context, deprecated_JavacallRequest request) {
             if (!(context instanceof ItemContext itemContext)) {
                 return false;
             }

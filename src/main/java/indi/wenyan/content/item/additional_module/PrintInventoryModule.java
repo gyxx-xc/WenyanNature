@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 
 public class PrintInventoryModule extends Item implements IWenyanDevice {
     public static final String ID = "print_inventory_module";
-
+    // TODO: check to fit itemstack
     @Getter
     public final String packageName = "「a」";
 
@@ -32,5 +32,10 @@ public class PrintInventoryModule extends Item implements IWenyanDevice {
 
     public PrintInventoryModule(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public boolean isRemoved() {
+        return false;
     }
 }

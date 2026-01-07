@@ -1,8 +1,6 @@
 package indi.wenyan.interpreter.exec_interface.structure;
 
-import indi.wenyan.interpreter.exec_interface.handler.IHandlerWarper;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
-import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
@@ -16,7 +14,7 @@ public class ExecQueue {
     public static final int REQUEST_TICK_LIMIT = 20;
     private final Queue<JavacallRequest> queue = new ConcurrentLinkedQueue<>();
 
-        /**
+    /**
      * Receives a JavacallContext request and adds it to the queue.
      *
      * @param request the JavacallContext request to be added to the queue
@@ -41,9 +39,7 @@ public class ExecQueue {
         while (!queue.isEmpty()) {
             JavacallRequest request = queue.remove();
             try {
-                if (request.handler() instanceof IHandlerWarper handler)
-                    if (!handler.check(context, request))
-                        throw new WenyanException("Handler check failed");
+                request.platform().notice(request, context);
                 boolean done = request.handle(context);
                 if (done) {
                     WenyanProgram.unblock(request.thread());

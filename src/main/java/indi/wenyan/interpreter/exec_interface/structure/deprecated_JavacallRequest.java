@@ -1,8 +1,8 @@
-package indi.wenyan.interpreter.structure;
+package indi.wenyan.interpreter.exec_interface.structure;
 
 import indi.wenyan.interpreter.exec_interface.handler.IExecCallHandler;
-import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.runtime.WenyanThread;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 import lombok.AccessLevel;
@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
+@Deprecated
 /**
  * Represents the context for calling Java code from Wenyan
  */
@@ -22,8 +23,7 @@ import java.util.List;
 @Getter
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 @AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
-public class JavacallRequest {
+public class deprecated_JavacallRequest {
     /** The Wenyan value acting as 'this' */
     IWenyanValue self;
 
@@ -37,7 +37,6 @@ public class JavacallRequest {
     IExecCallHandler handler;
 
     public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
-        thread.program.platform.notice(this);
         return handler().handle(context, this);
     }
 }

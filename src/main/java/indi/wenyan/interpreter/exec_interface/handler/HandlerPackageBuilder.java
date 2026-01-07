@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.exec_interface.handler;
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
-import indi.wenyan.interpreter.structure.JavacallRequest;
+import indi.wenyan.interpreter.exec_interface.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
@@ -26,7 +27,7 @@ import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_R
 public final class HandlerPackageBuilder {
     // with support of wenyan package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
-    private final Map<String, HandlerFunction> functions = new HashMap<>();
+    private final Map<String, Supplier<JavacallRequest.IRawRequest>> functions = new HashMap<>();
 
     /**
      * Creates a new package builder
@@ -64,31 +65,52 @@ public final class HandlerPackageBuilder {
         return new RawHandlerPackage(variables, functions);
     }
 
-    public HandlerPackageBuilder handler(String name, HandlerFunction function) {
+    public HandlerPackageBuilder handler(String name, Supplier<JavacallRequest.IRawRequest> function) {
         functions.put(name, function);
         return this;
     }
 
+    public HandlerPackageBuilder handler(String name, JavacallRequest.IRawRequest function) {
+        return handler(name, () -> function);
+    }
+
     public HandlerPackageBuilder handler(String name, HandlerReturnFunction function) {
-        functions.put(name, (context, request) -> {
+        return handler(name, (JavacallRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(context, request);
             request.thread().currentRuntime().processStack.push(value);
             return true;
         });
-        return this;
     }
 
     public HandlerPackageBuilder handler(String name, HandlerSimpleFunction function) {
-        functions.put(name, (context, request) -> {
+        return handler(name, (JavacallRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(request);
             request.thread().currentRuntime().processStack.push(value);
             return true;
         });
-        return this;
+    }
+
+    public HandlerPackageBuilder handler(String name, ImportFunction function) {
+        return handler(name, (JavacallRequest.IRawRequest) (context, request) -> {
+            String packageName = request.args().getFirst().as(WenyanString.TYPE).value();
+            WenyanPackage execPackage = function.getPackage(context, packageName);
+            if (request.args().size() == 1) {
+                request.thread().currentRuntime().setVariable(packageName, execPackage);
+                request.thread().currentRuntime().resultStack.push(execPackage);
+            } else {
+                for (IWenyanValue arg : request.args().subList(1, request.args().size())) {
+                    String id = arg.as(WenyanString.TYPE).value();
+                    // not found error will throw inside getAttribute
+                    request.thread().currentRuntime().setVariable(id,
+                            execPackage.getAttribute(id));
+                }
+            }
+            return true;
+        });
     }
 
     public HandlerPackageBuilder handler(String name, int power, HandlerReturnFunction function) {
-        functions.put(name, new HandlerFunction() {
+        return handler(name, () -> new JavacallRequest.IRawRequest() {
             int acquired = 0;
 
             @Override
@@ -112,27 +134,6 @@ public final class HandlerPackageBuilder {
                 }
             }
         });
-        return this;
-    }
-
-    public HandlerPackageBuilder handler(String name, ImportFunction function) {
-        functions.put(name, (context, request) -> {
-            String packageName = request.args().getFirst().as(WenyanString.TYPE).value();
-            WenyanPackage execPackage = function.getPackage(context, packageName);
-            if (request.args().size() == 1) {
-                request.thread().currentRuntime().setVariable(packageName, execPackage);
-                request.thread().currentRuntime().resultStack.push(execPackage);
-            } else {
-                for (IWenyanValue arg : request.args().subList(1, request.args().size())) {
-                    String id = arg.as(WenyanString.TYPE).value();
-                    // not found error will throw inside getAttribute
-                    request.thread().currentRuntime().setVariable(id,
-                            execPackage.getAttribute(id));
-                }
-            }
-            return true;
-        });
-        return this;
     }
 
     @FunctionalInterface
@@ -156,6 +157,6 @@ public final class HandlerPackageBuilder {
     }
 
     public record RawHandlerPackage
-            (Map<String, IWenyanValue> variables, Map<String, HandlerFunction> functions) {
+            (Map<String, IWenyanValue> variables, Map<String, Supplier<JavacallRequest.IRawRequest>> functions) {
     }
 }

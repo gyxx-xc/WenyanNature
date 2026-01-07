@@ -12,4 +12,6 @@ public interface IWenyanDevice {
      * @return The name of this device's package
      */
     String getPackageName();
+
+    boolean isRemoved();
 }

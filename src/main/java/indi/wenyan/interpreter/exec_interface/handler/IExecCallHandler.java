@@ -1,8 +1,8 @@
 package indi.wenyan.interpreter.exec_interface.handler;
 
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
+import indi.wenyan.interpreter.exec_interface.structure.deprecated_JavacallRequest;
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.JavacallRequest;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanThreading;
@@ -26,7 +26,7 @@ public interface IExecCallHandler extends IJavacallHandler {
      * @return the result value
      * @throws WenyanException.WenyanThrowException if an error occurs during handling
      */
-    boolean handle(@NotNull IHandleContext context, @NotNull JavacallRequest request) throws WenyanException.WenyanThrowException;
+    boolean handle(@NotNull IHandleContext context, @NotNull deprecated_JavacallRequest request) throws WenyanException.WenyanThrowException;
 
     /**
      * Calls the handler with the given parameters and blocks the thread.
@@ -39,9 +39,9 @@ public interface IExecCallHandler extends IJavacallHandler {
     @WenyanThreading
     default void call(IWenyanValue self, WenyanThread thread,
                       List<IWenyanValue> argsList) {
-        JavacallRequest request = new JavacallRequest(self, argsList,
+        deprecated_JavacallRequest request = new deprecated_JavacallRequest(self, argsList,
                 thread, this);
-        thread.program.platform.receive(request);
+//        thread.program.platform.receive(request);
         thread.block();
     }
 }
