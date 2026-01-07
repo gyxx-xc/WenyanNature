@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.values.WenyanLeftValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.warper.WenyanList;

@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.handler.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;

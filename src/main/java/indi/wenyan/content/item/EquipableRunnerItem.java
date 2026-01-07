@@ -3,15 +3,16 @@ package indi.wenyan.content.item;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
-import indi.wenyan.interpreter.exec_interface.handler.IHandlerWarper;
-import indi.wenyan.interpreter.exec_interface.handler.IImportHandler;
+import indi.wenyan.interpreter.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
-import indi.wenyan.interpreter.exec_interface.structure.ItemContext;
-import indi.wenyan.interpreter.exec_interface.structure.deprecated_JavacallRequest;
+import indi.wenyan.interpreter.exec_interface.structure.IHandleableRequest;
+import indi.wenyan.interpreter.exec_interface.structure.ImportRequest;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
@@ -35,6 +36,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ParametersAreNonnullByDefault
@@ -50,45 +52,8 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
 
-    private final IImportHandler importFunction = (context, packageName) -> {
-        if (!(context instanceof ItemContext itemContext)) {
-            throw new WenyanException("Context is not an instance of ItemContext");
-        }
-
-        if (!(itemContext.player() instanceof ServerPlayer player)) {
-            throw new WenyanException("Entity is not a ServerPlayer");
-        }
-
-        int inventorySize = player.getInventory().getContainerSize();
-        for (int i = 0; i < inventorySize; i++) {
-            ItemStack stack = player.getInventory().getItem(i);
-            if (!stack.isEmpty() && stack.getItem() instanceof IWenyanDevice device) {
-                var rawPackage = device.getExecPackage();
-                var map = new HashMap<>(rawPackage.variables());
-                int finalSlot = i;
-                rawPackage.functions().forEach((name, function) ->
-                        map.put(name, new EquipItemHandler() {
-                            @Override
-                            public boolean handle(IHandleContext context, deprecated_JavacallRequest request) throws WenyanException.WenyanThrowException {
-                                return function.handle(context, request);
-                            }
-
-                            @Override
-                            public ItemStack getStack() {
-                                return stack;
-                            }
-
-                            @Override
-                            public int getSlotId() {
-                                return finalSlot;
-                            }
-                        }));
-                return new WenyanPackage(map);
-            }
-        }
-
-        throw new WenyanException("No runner device found");
-    };
+    private final RequestCallHandler importFunction = (t, s, a) ->
+            new ImportRequest(t, this, this::getPackage, a);
 
     public EquipableRunnerItem(Properties properties, int runningLevel) {
         super(properties);
@@ -147,18 +112,69 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
     }
 
-    private interface EquipItemHandler extends IHandlerWarper {
-        ItemStack getStack();
-        int getSlotId();
-
-        @Override
-        default boolean check(IHandleContext context, deprecated_JavacallRequest request) {
-            if (!(context instanceof ItemContext itemContext)) {
-                return false;
-            }
-            ItemStack current = itemContext.player().getInventory().getItem(getSlotId());
-            // STUB: better equal
-            return current.equals(getStack());
+    @Override
+    public void notice(IHandleableRequest request, IHandleContext context) {
+        if (!(context instanceof ItemContext itemContext)) {
+            throw new WenyanException("unreached");
         }
+        if (!(request instanceof ItemRequest itemRequest))
+            throw new WenyanException("unreached");
+
+        ItemStack current = itemContext.player().getInventory().getItem(itemRequest.slotId());
+        // STUB: better equal
+        if (!current.equals(itemRequest.itemStack()))
+            throw new WenyanException("item changed");
+    }
+
+    private WenyanPackage getPackage(IHandleContext context, String packageName) {
+        if (!(context instanceof ItemContext itemContext)) {
+            throw new WenyanException("Context is not an instance of ItemContext");
+        }
+
+        if (!(itemContext.player() instanceof ServerPlayer player)) {
+            throw new WenyanException("Entity is not a ServerPlayer");
+        }
+
+        int inventorySize = player.getInventory().getContainerSize();
+        for (int i = 0; i < inventorySize; i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            if (!stack.isEmpty() && stack.getItem() instanceof IWenyanDevice device) {
+                var rawPackage = device.getExecPackage();
+                var map = new HashMap<>(rawPackage.variables());
+                int finalSlot = i;
+                rawPackage.functions().forEach(
+                        (name, function) ->
+                                map.put(name, (RequestCallHandler) (thread, self, args) ->
+                                        new ItemRequest(this, thread, function.get(),
+                                                self, args, stack, finalSlot))); // am i writing lisp?
+                return new WenyanPackage(map);
+            }
+        }
+
+        throw new WenyanException("No runner device found");
+    }
+
+    private record ItemRequest(
+            IWenyanPlatform platform,
+            WenyanThread thread,
+            IRawRequest request,
+            IWenyanValue self,
+            List<IWenyanValue> args,
+            ItemStack itemStack,
+            int slotId
+    ) implements IHandleableRequest {
+        @Override
+        public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+            return request.handle(context, this);
+        }
+    }
+
+    public record ItemContext(
+            ItemStack itemStack,
+            Level level,
+            Player player,
+            int slotId,
+            boolean isSelected
+    ) implements IHandleContext {
     }
 }

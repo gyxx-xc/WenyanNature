@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.exec_interface;
 
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
-import indi.wenyan.interpreter.exec_interface.structure.JavacallRequest;
+import indi.wenyan.interpreter.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 
 /**
@@ -14,7 +14,7 @@ public interface IWenyanPlatform extends IExecReceiver{
      *
      * @param request The request to process
      */
-    default void notice(JavacallRequest request, IHandleContext context) {}
+    default void notice(IHandleableRequest request, IHandleContext context) {}
 
     /**
      * Initializes the platform environment for the Wenyan runtime

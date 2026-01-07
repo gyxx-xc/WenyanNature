@@ -8,12 +8,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * has position to show connect effect
  */
 public interface IWenyanBlockDevice extends IWenyanDevice {
-    /**
-     * For connecting effect only
-     *
-     * @return The position of this device in the world
-     */
     BlockState blockState();
 
     BlockPos blockPos();
+
+    boolean isRemoved();
 }
