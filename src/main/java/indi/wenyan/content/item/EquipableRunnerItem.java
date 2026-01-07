@@ -95,18 +95,12 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
         this.runningLevel = runningLevel;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public InteractionResultHolder<ItemStack>
     use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new CodeEditorScreen(
-                    itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
-                    content -> {
-                        int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
-                        PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
-                    }));
+            opengui(itemstack, player, hand);
         }
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
@@ -160,5 +154,15 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             // STUB: better equal
             return current.equals(getStack());
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void opengui(ItemStack itemstack, Player player, InteractionHand hand) {
+        Minecraft.getInstance().setScreen(new CodeEditorScreen(
+                itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
+                content -> {
+                    int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
+                    PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
+                }));
     }
 }

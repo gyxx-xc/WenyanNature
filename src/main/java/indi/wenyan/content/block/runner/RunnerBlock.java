@@ -30,18 +30,13 @@ public class
 RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public static final String ID = "runner_block";
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         var runner = (RunnerBlockEntity) level.getBlockEntity(pos);
         assert runner != null;
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
-                Minecraft.getInstance().setScreen(new CodeEditorScreen(runner.pages, content -> {
-                    runner.pages = content;
-                    runner.setChanged();
-                    PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
-                }));
+                openGui(runner, pos);
         } else {
             if (!level.isClientSide()) {
                 runner.run(player);
@@ -64,5 +59,14 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             if (blockEntityType == Registration.RUNNER_BLOCK_ENTITY.get())
                 ((RunnerBlockEntity) entity).tick(level1, pos, state1);
         };
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openGui(RunnerBlockEntity runner, BlockPos pos) {
+        Minecraft.getInstance().setScreen(new CodeEditorScreen(runner.pages, content -> {
+            runner.pages = content;
+            runner.setChanged();
+            PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
+        }));
     }
 }

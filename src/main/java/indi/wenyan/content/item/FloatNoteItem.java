@@ -19,6 +19,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -38,7 +40,9 @@ public class FloatNoteItem extends Item {
         if (!(target instanceof Player)) {
             if (target.isAlive()) {
                 if (player.isShiftKeyDown()) {
-                    openGui(player.level(), target::setCustomName, stack);
+                    if (player.level().isClientSide()) {
+                        openGui(target::setCustomName, stack);
+                    }
                     return InteractionResult.sidedSuccess(player.level().isClientSide());
                 }
                 setName(player.level(), target::setCustomName, stack, player, hand);
@@ -49,9 +53,9 @@ public class FloatNoteItem extends Item {
             }
         }
         if (player.isShiftKeyDown()) {
-            openGui(player.level(), component -> {
-
-            }, stack);
+            if (player.level().isClientSide())
+                openGui(component -> {
+                }, stack);
             return InteractionResult.sidedSuccess(player.level().isClientSide());
         }
         return InteractionResult.PASS;
@@ -64,15 +68,17 @@ public class FloatNoteItem extends Item {
         assert context.getPlayer() != null;
         if (blockEntity instanceof AbstractModuleEntity entity) {
             if (context.getPlayer().isShiftKeyDown()) {
-                openGui(level, component -> entity.setPackageName(component.getString()),
-                        context.getItemInHand());
+                if (level.isClientSide())
+                    openGui(component -> entity.setPackageName(component.getString()),
+                            context.getItemInHand());
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
             setName(level, component -> entity.setPackageName(component.getString()), context);
             return InteractionResult.sidedSuccess(level.isClientSide());
         } else {
             if (context.getPlayer().isShiftKeyDown()) {
-                setName(level, component -> {}, context);
+                setName(level, component -> {
+                }, context);
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
         }
@@ -84,9 +90,9 @@ public class FloatNoteItem extends Item {
         ItemStack item = player.getItemInHand(usedHand);
         if (!super.use(level, player, usedHand).getResult().consumesAction()) {
             if (player.isShiftKeyDown()) {
-                openGui(level, component -> {
-
-                }, item);
+                if (level.isClientSide())
+                    openGui(component -> {
+                    }, item);
                 return InteractionResultHolder.sidedSuccess(item,
                         level.isClientSide());
             }
@@ -103,7 +109,8 @@ public class FloatNoteItem extends Item {
         if (stack.getOrDefault(Registration.NOTE_LOCK_DATA.get(), false)) {
             setNameFunc.accept(stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()));
         } else {
-            openGui(level, setNameFunc, stack);
+            if (level.isClientSide())
+                openGui(setNameFunc, stack);
         }
         if (player != null)
             stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
@@ -114,9 +121,8 @@ public class FloatNoteItem extends Item {
         return repairCandidate.is(Items.PAPER) || super.isValidRepairItem(stack, repairCandidate);
     }
 
-    private void openGui(Level level, Consumer<Component> setNameFunc, ItemStack stack) {
-        if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new FloatNoteNamingScreen(setNameFunc, stack));
-        }
+    @OnlyIn(Dist.CLIENT)
+    private void openGui(Consumer<Component> setNameFunc, ItemStack stack) {
+        Minecraft.getInstance().setScreen(new FloatNoteNamingScreen(setNameFunc, stack));
     }
 }
