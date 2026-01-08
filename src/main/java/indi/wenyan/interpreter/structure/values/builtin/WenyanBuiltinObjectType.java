@@ -65,7 +65,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
 
     @Override
     public IWenyanObject createObject(List<IWenyanValue> argsList) {
-        throw new WenyanException("unreached");
+        throw new WenyanException.WenyanUnreachedException();
     }
 
     @Override

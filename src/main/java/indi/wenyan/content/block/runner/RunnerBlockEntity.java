@@ -22,8 +22,6 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +34,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,9 +43,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public String pages;
     public int speed;
-
-    @Deprecated
-    public List<BlockPos> additionalPages = new ArrayList<>();
 
     @Getter
     public final ExecQueue execQueue = new ExecQueue();
@@ -103,11 +97,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Override
     public void notice(IHandleableRequest request, IHandleContext context) {
         if (!(context instanceof BlockContext blockContext)) {
-            throw new WenyanException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
         }
         Level level = blockContext.level();
         if (!(level instanceof ServerLevel sl)) {
-            throw new WenyanException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
         }
 
         if (request instanceof BlockRequest blockRequest) {
@@ -126,17 +120,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null)
             tag.putString("pages", pages);
-        if (additionalPages != null && !additionalPages.isEmpty()) {
-            ListTag additionalPagesTag = new ListTag();
-            for (BlockPos pos : additionalPages) {
-                var posTag = new CompoundTag();
-                posTag.putInt("x", pos.getX());
-                posTag.putInt("y", pos.getY());
-                posTag.putInt("z", pos.getZ());
-                additionalPagesTag.add(posTag);
-            }
-            tag.put("additional_pages", additionalPagesTag);
-        }
         tag.putInt("speed", speed);
     }
 
@@ -146,19 +129,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
         if (tag.contains("pages")) {
             pages = tag.getString("pages");
-        }
-
-        if (tag.contains("additional_pages")) {
-            additionalPages = new ArrayList<>();
-            ListTag additionalPagesTag = tag.getList("additional_pages", Tag.TAG_COMPOUND);
-            for (Tag posTag : additionalPagesTag) {
-                if (posTag instanceof CompoundTag compoundTag) {
-                    int x = compoundTag.getInt("x");
-                    int y = compoundTag.getInt("y");
-                    int z = compoundTag.getInt("z");
-                    additionalPages.add(new BlockPos(x, y, z));
-                }
-            }
         }
         speed = tag.getInt("speed");
     }

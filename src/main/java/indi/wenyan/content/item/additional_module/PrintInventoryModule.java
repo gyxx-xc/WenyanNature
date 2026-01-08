@@ -20,7 +20,7 @@ public class PrintInventoryModule extends Item implements IWenyanDevice {
     private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler("「a」", (HandlerPackageBuilder.HandlerReturnFunction) (context, request) -> {
                 if (!(context instanceof EquipableRunnerItem.ItemContext itemContext)) {
-                    throw new WenyanException("unreached");
+                    throw new WenyanException.WenyanUnreachedException();
                 }
                 itemContext.player().displayClientMessage(
                         Component.literal(request.args().getFirst().as(WenyanString.TYPE).value()),

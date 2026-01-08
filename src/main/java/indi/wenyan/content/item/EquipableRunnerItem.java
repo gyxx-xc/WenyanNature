@@ -109,10 +109,10 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     @Override
     public void notice(IHandleableRequest request, IHandleContext context) {
         if (!(context instanceof ItemContext itemContext)) {
-            throw new WenyanException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
         }
         if (!(request instanceof ItemRequest itemRequest))
-            throw new WenyanException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
 
         ItemStack current = itemContext.player().getInventory().getItem(itemRequest.slotId());
         // STUB: better equal

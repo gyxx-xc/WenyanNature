@@ -190,6 +190,6 @@ public interface IWenyanValue {
         if (type == WenyanBoolean.TYPE) return WenyanValues.of(false);
         if (type == WenyanString.TYPE) return WenyanValues.of("");
         if (type == WenyanList.TYPE) return new WenyanList();
-        throw new WenyanException("unreached");
+        throw new WenyanException.WenyanUnreachedException();
     }
 }

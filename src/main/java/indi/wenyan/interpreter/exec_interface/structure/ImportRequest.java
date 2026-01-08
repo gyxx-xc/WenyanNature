@@ -17,7 +17,7 @@ public record ImportRequest (
         List<IWenyanValue> args
 ) implements IHandleableRequest {
     public IWenyanValue self() {
-        throw new WenyanException("unreached");
+        throw new WenyanException.WenyanUnreachedException();
     }
 
     @Override

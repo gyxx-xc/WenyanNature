@@ -55,7 +55,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                 var offset = request.args().getFirst().as(WenyanVec3.TYPE).value(); 
                 BlockPos pos = blockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
                 if (!(getLevel() instanceof ServerLevel serverLevel)) {
-                    throw new WenyanException("unreached");
+                    throw new WenyanException.WenyanUnreachedException();
                 }
                 Items.FLINT_AND_STEEL.useOn(new UseOnContext(
                         serverLevel,

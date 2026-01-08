@@ -122,7 +122,7 @@ public class WenyanProgram {
         try {
             mainFunction.call(null, thread, List.of());
         } catch (WenyanException.WenyanThrowException e) { // it should not happen
-            throw new WenyanException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
         }
         readyQueue.add(thread);
         runningThreadsNumber.getAndIncrement();

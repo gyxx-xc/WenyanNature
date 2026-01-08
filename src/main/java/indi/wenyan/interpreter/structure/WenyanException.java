@@ -22,6 +22,12 @@ public class WenyanException extends RuntimeException {
         super(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine()+" "+ctx.getText()+"\n"+e.getMessage());
     }
 
+    public static class WenyanUnreachedException extends WenyanException {
+        public WenyanUnreachedException() {
+            super("unreached, please report an issue");
+        }
+    }
+
     /**
      * Exception for numerical errors
      */
