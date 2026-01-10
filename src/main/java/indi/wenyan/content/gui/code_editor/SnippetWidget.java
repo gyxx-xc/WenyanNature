@@ -34,9 +34,10 @@ public class SnippetWidget extends AbstractScrollWidget {
             ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_folded_highlighted"));
 
     private static final Utils.BoxInformation buttonPadding =
-        new Utils.BoxInformation(3, 3, 3, 3);
+            new Utils.BoxInformation(3, 3, 3, 3);
     public static final int ENTRY_HEIGHT = 9 + buttonPadding.vertical();
     public static final int DIR_HEIGHT = 9 + buttonPadding.vertical();
+    public static final int ARROW_WIDTH = 9;
 
     @Nullable
     private SnippetSet.Snippet renderingSnippetTooltip = null;
@@ -50,59 +51,52 @@ public class SnippetWidget extends AbstractScrollWidget {
         this.font = font;
         this.editor = editor;
     }
+
     @Override
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
         setScrollAmount(scrollAmount()); // clamp scroll amount
-        mouseY += (int) scrollAmount();
+        int offsetMouseY = mouseY + (int) scrollAmount();
         renderingSnippetTooltip = null;
         for (SnippetSet set : editor.getCurSnippets()) {
-            if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
-                boolean buttonHovered = mouseX >= getX() + innerPadding() &&
-                        mouseX < getX() + getWidth() - innerPadding() &&
-                        mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
-                guiGraphics.blitSprite(DIR_SPRITES.get
-                                ((set.snippets().size() != 1 && !set.fold()), buttonHovered),
-                        getX() + innerPadding(), currentY,
-                        this.getWidth() - totalInnerPadding(), DIR_HEIGHT);
-
-                var text = Language.getInstance().getVisualOrder(
-                        font.ellipsize(FormattedText.of(set.name()),
-                                width - totalInnerPadding() - buttonPadding.horizontal()));
-                guiGraphics.drawString(font, text,
-                        getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
-                        0xFFFFFF, false);
-
-                if (set.snippets().size() == 1 && buttonHovered) {
-                    renderingSnippetTooltip = set.snippets().getFirst();
-                }
-            }
+            boolean singleEntryDir = set.snippets().size() == 1;
+            renderItem(guiGraphics, mouseX, offsetMouseY, currentY, set.name(), set.snippets().getFirst(), set.fold(), singleEntryDir);
             currentY += DIR_HEIGHT;
-            if (set.snippets().size() == 1) { // if only one snippet, dir is the snippet
-                continue;
-            }
-            if (set.fold()) continue; // skip snippets in this set if folded
+            // if only one snippet, dir is the snippet
+            // and skip snippets in this set if folded
+            if (singleEntryDir || set.fold()) continue;
+
             for (SnippetSet.Snippet s : set.snippets()) {
-                if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
-                    boolean buttonHovered = mouseX >= getX() + innerPadding() &&
-                            mouseX < getX() + getWidth() - innerPadding() &&
-                            mouseY >= currentY && mouseY < currentY + ENTRY_HEIGHT;
-                    guiGraphics.blitSprite(ENTRY_SPRITES.get(this.active, buttonHovered),
-                            getX() + innerPadding(), currentY,
-                            this.getWidth() - totalInnerPadding(), ENTRY_HEIGHT);
-
-                    var text = Language.getInstance().getVisualOrder(
-                            font.ellipsize(FormattedText.of(s.title()),
-                                    width - totalInnerPadding() - buttonPadding.horizontal()));
-                    guiGraphics.drawString(font, text,
-                            getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
-                            0xFFFFFF, false);
-
-                    if (buttonHovered) {
-                        renderingSnippetTooltip = s;
-                    }
-                }
+                renderItem(guiGraphics, mouseX, offsetMouseY, currentY, s.title(), s, true, true);
                 currentY += ENTRY_HEIGHT;
+            }
+        }
+    }
+
+    private void renderItem(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
+                            String title, @Nullable SnippetSet.Snippet tooltip, boolean isUnfold,
+                            boolean isEntry) {
+        if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
+            boolean buttonHovered = mouseX >= getX() + innerPadding() &&
+                    mouseX < getX() + getWidth() - innerPadding() &&
+                    mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
+            guiGraphics.blitSprite(
+                isEntry ?
+                    ENTRY_SPRITES.get(isUnfold, buttonHovered) :
+                    DIR_SPRITES.get(isUnfold, buttonHovered),
+                getX() + innerPadding(), currentY,
+                this.getWidth() - totalInnerPadding(), DIR_HEIGHT
+            );
+
+            var text = Language.getInstance().getVisualOrder(
+                    font.ellipsize(FormattedText.of(title),
+                            width - totalInnerPadding() - buttonPadding.horizontal()));
+            guiGraphics.drawString(font, text,
+                    getX() + innerPadding() + buttonPadding.left() + (isEntry ? ARROW_WIDTH : 0), currentY + buttonPadding.top(),
+                    0xFFFFFF, false);
+
+            if (isEntry && buttonHovered) {
+                renderingSnippetTooltip = tooltip;
             }
         }
     }
