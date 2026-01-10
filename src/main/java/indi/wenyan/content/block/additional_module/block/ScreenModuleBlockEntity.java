@@ -30,7 +30,7 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
 
     @Getter
     public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler("書", 1, (ignore, request) -> {
+            .handler("書", (HandlerPackageBuilder.HandlerReturnFunction) (ignore, request) -> {
                 StringBuilder result = new StringBuilder();
                 for (IWenyanValue arg : request.args()) {
                     result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));

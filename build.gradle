@@ -147,11 +147,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
-    implementation 'com.ibm.icu:icu4j:73.2'
-    additionalRuntimeClasspath 'com.ibm.icu:icu4j:73.2'
-
-    //   from 2.0 (inclusive)
-    jarJar(implementation 'com.ibm.icu:icu4j:73.2' )
+    implementation 'cn.hutool:hutool-core:5.8.43'
+    additionalRuntimeClasspath 'cn.hutool:hutool-core:5.8.43'
+    jarJar(implementation 'cn.hutool:hutool-core:5.8.43')
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

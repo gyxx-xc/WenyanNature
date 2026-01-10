@@ -1,14 +1,12 @@
 package indi.wenyan.interpreter.structure.values.primitive;
 
-import com.ibm.icu.text.NumberFormat;
-import com.ibm.icu.text.RuleBasedNumberFormat;
-import com.ibm.icu.util.ULocale;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import indi.wenyan.interpreter.utils.ChineseUtils;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -105,9 +103,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
 
     @Override
     public @NotNull String toString() {
-        ULocale locale = ULocale.forLanguageTag("zh-Hant");
-        NumberFormat formatter = new RuleBasedNumberFormat(locale, RuleBasedNumberFormat.SPELLOUT);
-        return formatter.format(value);
+        return ChineseUtils.toChinese(value);
     }
 
     // since bigint cache only has 37 values, not good for int

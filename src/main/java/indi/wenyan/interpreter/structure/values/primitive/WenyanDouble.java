@@ -1,8 +1,6 @@
 package indi.wenyan.interpreter.structure.values.primitive;
 
-import com.ibm.icu.text.NumberFormat;
-import com.ibm.icu.text.RuleBasedNumberFormat;
-import com.ibm.icu.util.ULocale;
+import cn.hutool.core.convert.Convert;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
@@ -67,9 +65,8 @@ public record WenyanDouble(Double value)
 
     @Override
     public @NotNull String toString() {
-        ULocale locale = ULocale.forLanguageTag("zh-Hant");
-        NumberFormat formatter = new RuleBasedNumberFormat(locale, RuleBasedNumberFormat.SPELLOUT);
         // replace "點" with "又"
-        return formatter.format(value).replace("點", "又");
+        return Convert.numberToChinese(value, false)
+                .replace("點", "又");
     }
 }
