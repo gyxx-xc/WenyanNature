@@ -114,7 +114,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                     case RUNNING -> {}
                     case WRONG_ANSWER -> {
                         craftingProgress = 0;
-                        particles.clear();
+//                        particles.clear();
                         checker.init();
                     }
                     case ANSWER_CORRECT -> {

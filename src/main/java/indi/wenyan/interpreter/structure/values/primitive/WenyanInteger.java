@@ -39,8 +39,11 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     }
 
     public static WenyanInteger valueOf(@NotNull BigInteger i) {
-        // not checking cache, since it already alloc the space for bigint
-        return new WenyanInteger(i);
+        try {
+            return valueOf(i.intValueExact()); // apply cache
+        } catch (ArithmeticException e) {
+            return new WenyanInteger(i);
+        }
     }
 
     public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);

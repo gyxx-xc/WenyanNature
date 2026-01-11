@@ -160,6 +160,8 @@ public interface IWenyanValue {
      * @throws WenyanException.WenyanThrowException If comparison fails
      */
     static boolean equals(IWenyanValue self, IWenyanValue other) throws WenyanException.WenyanThrowException {
+        if (self instanceof WenyanLeftValue leftValue) self = leftValue.value;
+        if (other instanceof WenyanLeftValue leftValue) other = leftValue.value;
         if (self.type() == WenyanDouble.TYPE || other.type() == WenyanDouble.TYPE) {
             return self.as(WenyanDouble.TYPE).equals(other.as(WenyanDouble.TYPE));
         }
