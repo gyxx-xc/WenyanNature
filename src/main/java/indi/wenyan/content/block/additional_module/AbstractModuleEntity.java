@@ -7,7 +7,9 @@ import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -85,8 +87,17 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
             packageName = tag.getString("packageName");
     }
 
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        Component name = componentInput.get(DataComponents.CUSTOM_NAME);
+        if (name != null)
+            setPackageName(Component.translatable("code.wenyan_programming.bracket", name).getString());
+    }
+
+
     /**
      * Called every tick to handle execution requests.
      */
-    public void tick(Level level, BlockPos pos, BlockState state) {}
+    public void tick(Level level, BlockPos pos, BlockState state) {
+    }
 }
