@@ -10,12 +10,20 @@ import indi.wenyan.content.recipe.AnsweringRecipeInput;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.network.CraftingParticlePacket;
+import lombok.Data;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,13 +31,19 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 import java.util.function.Consumer;
 
 // two logic of running it
@@ -49,7 +63,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     private IAnsweringChecker checker = null;
     private RecipeHolder<AnsweringRecipe> recipeHolder = null;
 
-    // for gui
+    // for gui deprecated
     public IAnsweringChecker.ResultStatus result;
     protected final ContainerData data = new ContainerData() {
         @Override
@@ -74,20 +88,33 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     private static final int RANGE = 3; // the offset to search for pedestals
 
     @Getter
+    private final Deque<TextParticle> particles = new ArrayDeque<>();
+
+    @Getter
     public final String basePackageName = "builtin";
 
     @Getter
     public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler("「参」", request -> {
-                if (!request.args().isEmpty()) throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
+                if (!request.args().isEmpty())
+                    throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
                 return getChecker().getArgs();
             })
             .handler("书", request -> {
                 getChecker().accept(request.args());
-                switch (checker.getResult()) {
+                IAnsweringChecker.ResultStatus checkerResult = checker.getResult();
+                assert getLevel() != null;
+                if (level instanceof ServerLevel sl) {
+                    for (var arg : request.args()) {
+                        PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                                new CraftingParticlePacket(getBlockPos(), arg.as(WenyanString.TYPE).toString()));
+                    }
+                }
+                switch (checkerResult) {
                     case RUNNING -> {}
                     case WRONG_ANSWER -> {
                         craftingProgress = 0;
+                        particles.clear();
                         checker.init();
                     }
                     case ANSWER_CORRECT -> {
@@ -108,6 +135,19 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     public CraftingBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.CRAFTING_BLOCK_ENTITY.get(), pos, blockState);
+    }
+
+    @Override
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        super.tick(level, pos, state);
+        for (var particle : particles) {
+            if (particle.remainTick() > 0) {
+                particle.remainTick --;
+            } else {
+                // should be faster, since the particle remove from head
+                particles.removeFirstOccurrence(particle);
+            }
+        }
     }
 
     // logic: if cached, if check recipe consistence -> return cached
@@ -165,6 +205,51 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && !pedestal.getItem(0).isEmpty()) {
                 consumer.accept(pedestal);
             }
+        }
+    }
+
+    @Override
+    protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveData(tag, registries);
+        var effect = particles.stream().map(TextParticle::data).reduce((r, p) -> r + p);
+        effect.ifPresent(s -> tag.putString("particle", s));
+    }
+
+    @Override
+    protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadData(tag, registries);
+        if (tag.contains("particle")) {
+            assert level != null;
+            particles.addAll(TextParticle.randomSplash(tag.getString("particle"), level.random));
+        }
+    }
+
+    public void addResultParticle(String data) {
+        assert level != null;
+        particles.addAll(TextParticle.randomSplash(data, level.random));
+    }
+
+    @Data
+    @Accessors(fluent = true)
+    public static class TextParticle {
+        final Vec3 oPos;
+        final Vec3 pos;
+        final float rot;
+        final String data;
+        int remainTick = 20;
+
+        public Vec3 getPosition(float partialTicks) {
+            return oPos.lerp(pos, partialTicks);
+        }
+
+        public static List<TextParticle> randomSplash(String data, RandomSource random) {
+            final int range = 1;
+            List<TextParticle> particles = new ArrayList<>();
+            for (var c : data.toCharArray()) {
+                Vec3 pos = new Vec3(random.triangle(0, range), random.triangle(0, range), random.triangle(0, range));
+                particles.add(new TextParticle(pos, pos, random.nextFloat() * 360, String.valueOf(c)));
+            }
+            return particles;
         }
     }
 }

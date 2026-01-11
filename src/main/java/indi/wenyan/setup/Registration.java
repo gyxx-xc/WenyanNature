@@ -224,6 +224,9 @@ public final class Registration {
         registrar.commonToClient(BlockPosRangePacket.TYPE,
                 BlockPosRangePacket.STREAM_CODEC,
                 BlockPosRangePacket.HANDLER);
+        registrar.commonToClient(CraftingParticlePacket.TYPE,
+                CraftingParticlePacket.STREAM_CODEC,
+                CraftingParticlePacket.HANDLER);
     }
 
     // Static initialization block

@@ -13,11 +13,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class ScreenModuleBlockEntity extends AbstractModuleEntity implements BlockOutputPacket.IDisplayable {
+    public static final int OUTPUT_MAX_LENGTH = 30;
+
     public ScreenModuleBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.SCREEN_MODULE_BLOCK_ENTITY.get(), pos, blockState);
     }
@@ -34,11 +37,12 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
                 StringBuilder result = new StringBuilder();
                 for (IWenyanValue arg : request.args()) {
                     result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));
+                    if (result.length() >= OUTPUT_MAX_LENGTH) break;
                 }
                 if (getLevel() instanceof ServerLevel sl) {
                     PacketDistributor.sendToPlayersTrackingChunk(sl,
                             new ChunkPos(blockPos()), new BlockOutputPacket(blockPos(),
-                                    result.toString()));
+                                    StringUtils.left(result.toString(), OUTPUT_MAX_LENGTH)));
                 }
                 return WenyanNull.NULL;
             })

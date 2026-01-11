@@ -106,6 +106,16 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
         return ChineseUtils.toChinese(value);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof IWenyanValue wenyanValue) {
+            try {
+                return value.equals(wenyanValue.as(TYPE).value);
+            } catch (WenyanException.WenyanTypeException ignored) {} // go outside
+        }
+        return false;
+    }
+
     // since bigint cache only has 37 values, not good for int
     // cache copy from java.lang.Integer, and del some jdk magic
     private static final class IntegerCache {

@@ -115,16 +115,20 @@ public final class HandlerPackageBuilder {
 
             @Override
             public boolean handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanException.WenyanThrowException {
+                boolean hasDevice = false;
                 if (request.thread().program.platform instanceof RunnerBlockEntity entity) {
                     for (BlockPos b : BlockPos.betweenClosed(
                             entity.getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
                             entity.getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
                         assert entity.getLevel() != null;
                         if (entity.getLevel().getBlockEntity(b) instanceof PowerBlockEntity executor) {
+                            hasDevice = true;
                             acquired += executor.require(power);
                         }
                     }
                 }
+                if (!hasDevice)
+                    WenyanException.handleException(request.thread().program.holder, "need power");
                 if (acquired < power) {
                     return false;
                 } else {

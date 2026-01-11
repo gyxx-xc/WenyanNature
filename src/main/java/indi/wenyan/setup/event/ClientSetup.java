@@ -2,6 +2,7 @@ package indi.wenyan.setup.event;
 
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockRenderer;
 import indi.wenyan.content.block.additional_module.paper.BlockModuleRender;
+import indi.wenyan.content.block.crafting_block.CraftingBlockRender;
 import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
 import indi.wenyan.content.entity.BulletRender;
@@ -34,6 +35,7 @@ public enum ClientSetup {;
         event.registerBlockEntityRenderer(Registration.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
         event.registerBlockEntityRenderer(Registration.PEDESTAL_ENTITY.get(), context -> new PedestalBlockRender());
         event.registerBlockEntityRenderer(Registration.SCREEN_MODULE_BLOCK_ENTITY.get(), ScreenModuleBlockRenderer::new);
+        event.registerBlockEntityRenderer(Registration.CRAFTING_BLOCK_ENTITY.get(), CraftingBlockRender::new);
     }
 
     /**

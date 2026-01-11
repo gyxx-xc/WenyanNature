@@ -13,8 +13,6 @@ public class ScreenModuleBlockRenderer implements BlockEntityRenderer<ScreenModu
     private final BlockEntityRenderDispatcher dispatcher;
     private final Font font;
 
-    private int lastOutput;
-
     public ScreenModuleBlockRenderer(BlockEntityRendererProvider.Context context) {
         font = context.getFont();
         dispatcher = context.getBlockEntityRenderDispatcher();
@@ -32,30 +30,16 @@ public class ScreenModuleBlockRenderer implements BlockEntityRenderer<ScreenModu
         // older part
         poseStack.pushPose();
         var out = be.getOutput().reversed();
-        boolean animating = out.hashCode() != lastOutput;
-        String insert = null;
-        if (animating) {
-            if (!out.isEmpty()) insert = out.getFirst();
-            poseStack.translate(0.0, -10 * partialTicks, 0.0);
-            poseStack.scale(1 - 0.1F * partialTicks, 1 - 0.1F * partialTicks, 1 - 0.1F * partialTicks);
-        }
-        for (int i = animating ? 1 : 0; i < out.size(); i++) {
+        for (int i = 0; i < out.size(); i++) {
             String s = out.get(i);
             font.drawInBatch(s, -font.width(s) >> 1, 0, 0xFFFFFF, true,
-                    poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLight);
+                    poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, 0xFFFFFF);
             poseStack.translate(0.0, -10, 0.0);
-            poseStack.scale(0.9F, 0.9F, 0.9F);
+            if (i >= 4) // make latest 5 lines same size for better reading
+                poseStack.scale(0.9F, 0.9F, 0.9F);
         }
         poseStack.popPose();
 
-        if (insert != null && partialTicks > 0.5F) {
-            poseStack.scale(1 * partialTicks, 1 * partialTicks, 1 * partialTicks);
-            font.drawInBatch(insert, -font.width(insert) >> 1, 0, 0xFFFFFF, true,
-                    poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLight);
-        }
-
-        if (!out.isEmpty())
-            lastOutput = out.hashCode();
         poseStack.popPose();
     }
 }
