@@ -12,6 +12,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.network.CraftClearParticlePacket;
 import indi.wenyan.setup.network.CraftingParticlePacket;
 import lombok.Data;
 import lombok.Getter;
@@ -114,7 +115,9 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                     case RUNNING -> {}
                     case WRONG_ANSWER -> {
                         craftingProgress = 0;
-//                        particles.clear();
+                        if (level instanceof ServerLevel sl)
+                            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                                    new CraftClearParticlePacket(getBlockPos()));
                         checker.init();
                     }
                     case ANSWER_CORRECT -> {
@@ -143,6 +146,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         for (var particle : particles) {
             if (particle.remainTick() > 0) {
                 particle.remainTick --;
+                particle.setPos(particle.pos.multiply(0.95, 0.95, 0.95));
             } else {
                 // should be faster, since the particle remove from head
                 particles.removeFirstOccurrence(particle);
@@ -229,17 +233,33 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         particles.addAll(TextParticle.randomSplash(data, level.random));
     }
 
+    public void clearParticles() {
+        particles.clear();
+    }
+
     @Data
     @Accessors(fluent = true)
     public static class TextParticle {
-        final Vec3 oPos;
-        final Vec3 pos;
         final float rot;
         final String data;
+        Vec3 oPos;
+        Vec3 pos;
         int remainTick = 20;
+
+        public TextParticle(Vec3 pos, float rot, String data) {
+            this.oPos = pos;
+            this.pos = pos;
+            this.rot = rot;
+            this.data = data;
+        }
 
         public Vec3 getPosition(float partialTicks) {
             return oPos.lerp(pos, partialTicks);
+        }
+
+        public void setPos(Vec3 pos) {
+            this.oPos = this.pos;
+            this.pos = pos;
         }
 
         public static List<TextParticle> randomSplash(String data, RandomSource random) {
@@ -247,7 +267,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             List<TextParticle> particles = new ArrayList<>();
             for (var c : data.toCharArray()) {
                 Vec3 pos = new Vec3(random.triangle(0, range), random.triangle(0, range), random.triangle(0, range));
-                particles.add(new TextParticle(pos, pos, random.nextFloat() * 360, String.valueOf(c)));
+                particles.add(new TextParticle(pos, random.nextFloat() * 360, String.valueOf(c)));
             }
             return particles;
         }

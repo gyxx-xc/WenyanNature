@@ -221,6 +221,9 @@ public final class Registration {
         registrar.commonToClient(CommunicationLocationPacket.TYPE,
                 CommunicationLocationPacket.STREAM_CODEC,
                 CommunicationLocationPacket.HANDLER);
+        registrar.commonToClient(CraftClearParticlePacket.TYPE,
+                CraftClearParticlePacket.STREAM_CODEC,
+                CraftClearParticlePacket.HANDLER);
         registrar.commonToClient(BlockPosRangePacket.TYPE,
                 BlockPosRangePacket.STREAM_CODEC,
                 BlockPosRangePacket.HANDLER);
@@ -262,7 +265,7 @@ public final class Registration {
                         .build(DSL.remainderType()));
         HAND_RUNNER_ENTITY = ENTITY.register(RunnerItem.ID_1,
                 () -> EntityType.Builder
-                        .of((EntityType.EntityFactory<HandRunnerEntity>) HandRunnerEntity::new, MobCategory.MISC)
+                        .of(HandRunnerEntity::new, MobCategory.MISC)
                         .sized(0.45f, 1.0f)
                         .build(RunnerItem.ID_1));
 
@@ -427,10 +430,6 @@ public final class Registration {
                 () -> BlockEntityType.Builder
                         .of(PowerBlockEntity::new, POWER_BLOCK.get())
                         .build(DSL.remainderType()));
-
-//        ADDITIONAL_PAPER_BLOCK = BLOCKS.register(AdditionalPaper.ID, AdditionalPaper::new);
-//        ADDITIONAL_PAPER_BLOCK_ITEM = ITEMS.registerItem(AdditionalPaper.ID,
-//                (properties) -> new BlockItem(ADDITIONAL_PAPER_BLOCK.get(), properties));
 
         RUNNING_TIER_DATA = DATA.register("runner_tier_data",
                 () -> DataComponentType.<Integer>builder()

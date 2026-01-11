@@ -6,6 +6,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.NotNull;
 
 public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEntity> {
@@ -28,10 +30,11 @@ public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEnt
             poseStack.translate(pos.x(), pos.y(), pos.z());
             poseStack.mulPose(Axis.YP.rotationDegrees(particle.rot()));
             poseStack.scale(-0.03f, -0.03f, -0.03f);
-            font.drawInBatch(particle.data(), -font.width(particle.data()) >> 1, 0, 0xFFFFFF, true,
+            Component data = Component.literal(particle.data()).withStyle(Style.EMPTY.withBold(true));
+            font.drawInBatch(data, -font.width(data) >> 1, 0, 0xFFFFFF, true,
                     poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, 0xFFFFFF);
             poseStack.scale(-1, 1, 1);
-            font.drawInBatch(particle.data(), -font.width(particle.data()) >> 1, 0, 0xFFFFFF, true,
+            font.drawInBatch(data, -font.width(data) >> 1, 0, 0xFFFFFF, true,
                     poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, 0xFFFFFF);
             poseStack.popPose();
         }
