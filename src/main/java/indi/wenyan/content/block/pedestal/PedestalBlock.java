@@ -7,12 +7,16 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,8 +25,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class PedestalBlock extends Block implements EntityBlock {
 
-    public static final Properties PROPERTIES = Properties.of().noCollission();
+    public static final Properties PROPERTIES = Properties.of();
     public static final String ID = "pedestal_block";
+
+    public static final VoxelShape SHAPE = Shapes.or(Block.box(2, 11, 2, 14, 13, 14), Block.box(7, 0, 7, 9, 11, 9));
 
     public PedestalBlock() {
         super(PROPERTIES);
@@ -31,6 +37,11 @@ public class PedestalBlock extends Block implements EntityBlock {
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new PedestalBlockEntity(blockPos, blockState);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     // copy from arsnouveau

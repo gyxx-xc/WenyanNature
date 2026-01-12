@@ -20,8 +20,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     /**
      * Constructs a new block state provider.
-     * @param output The pack output for blockstate generation
-     * @param modid The mod ID
+     *
+     * @param output       The pack output for blockstate generation
+     * @param modid        The mod ID
      * @param exFileHelper Helper for accessing existing files
      */
     public ModBlockStateProvider(PackOutput output, String modid, ExistingFileHelper exFileHelper) {
@@ -36,10 +37,20 @@ public class ModBlockStateProvider extends BlockStateProvider {
         modeledBlock(this::horizontalFaceBlock, Registration.RUNNER_BLOCK);
         modeledBlock(this::simpleBlock, Registration.CRAFTING_BLOCK);
         modeledBlock(this::simpleBlock, Registration.PEDESTAL_BLOCK);
+        modeledBlock(this::simpleBlock, Registration.POWER_BLOCK);
 
+        registerModuleBlock(Registration.EXPLOSION_MODULE_BLOCK);
         registerModuleBlock(Registration.INFORMATION_MODULE_BLOCK);
+        registerModuleBlock(Registration.MATH_MODULE_BLOCK);
         registerModuleBlock(Registration.BIT_MODULE_BLOCK);
         registerModuleBlock(Registration.BLOCK_MODULE_BLOCK);
+        registerModuleBlock(Registration.RANDOM_MODULE_BLOCK);
+        registerModuleBlock(Registration.ITEM_MODULE_BLOCK);
+        registerModuleBlock(Registration.VEC3_MODULE_BLOCK);
+        registerModuleBlock(Registration.ENTITY_MODULE_BLOCK);
+        registerModuleBlock(Registration.COMMUNICATE_MODULE_BLOCK);
+        registerModuleBlock(Registration.COLLECTION_MODULE_BLOCK);
+        registerModuleBlock(Registration.STRING_MODULE_BLOCK);
     }
 
     private void modeledBlock(BiConsumer<Block, ModelFile> blockstateMethod, DeferredBlock<?> deferredBlock) {
@@ -52,6 +63,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     /**
      * Registers a module block with standardized models.
+     *
      * @param deferredBlock The module block to register
      */
     private void registerModuleBlock(DeferredBlock<?> deferredBlock) {

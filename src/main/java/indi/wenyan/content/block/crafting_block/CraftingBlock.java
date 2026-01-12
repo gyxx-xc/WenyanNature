@@ -9,19 +9,23 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class CraftingBlock extends Block implements IModulerBlock {
-    public static final Properties PROPERTIES = Properties.of().noCollission();
+    public static final Properties PROPERTIES = Properties.of();
     public static final String ID = "crafting_block";
+    public static final VoxelShape SHAPE = Block.box(1, 0, 3, 15, 13.5, 15);
 
     public CraftingBlock() {
         super(PROPERTIES);
@@ -41,5 +45,10 @@ public class CraftingBlock extends Block implements IModulerBlock {
             player.openMenu(new SimpleMenuProvider(entity, Component.empty()), pos);
         }
         return ItemInteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 }

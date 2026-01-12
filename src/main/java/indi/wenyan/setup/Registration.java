@@ -123,8 +123,6 @@ public final class Registration {
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
     public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY;
-//    public static final DeferredBlock<AdditionalPaper> ADDITIONAL_PAPER_BLOCK;
-//    public static final DeferredItem<BlockItem> ADDITIONAL_PAPER_BLOCK_ITEM;
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK;
     public static final DeferredItem<BlockItem> CRAFTING_BLOCK_ITEM;
@@ -132,6 +130,10 @@ public final class Registration {
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK;
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY;
+    public static final DeferredBlock<PowerBlock> POWER_BLOCK;
+    public static final DeferredItem<BlockItem> POWER_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY;
+
     public static final DeferredBlock<ExplosionModuleBlock> EXPLOSION_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> EXPLOSION_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<ExplosionModuleEntity>> EXPLOSION_MODULE_ENTITY;
@@ -156,34 +158,25 @@ public final class Registration {
     public static final DeferredBlock<Vec3ModuleBlock> VEC3_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> VEC3_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<Vec3ModuleEntity>> VEC3_MODULE_ENTITY;
-
-    public static final DeferredBlock<ScreenModuleBlock> SCREEN_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<ScreenModuleBlockEntity>> SCREEN_MODULE_BLOCK_ENTITY;
-
     public static final DeferredBlock<CommunicateModuleBlock> COMMUNICATE_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<CommunicateModuleEntity>> COMMUNICATE_MODULE_ENTITY;
-
-    public static final DeferredBlock<SemaphoreModuleBlock> SEMAPHORE_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> SEMAPHORE_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<SemaphoreModuleEntity>> SEMAPHORE_MODULE_ENTITY;
-
     public static final DeferredBlock<CollectionModuleBlock> COLLECTION_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> COLLECTION_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<CollectionModuleEntity>> COLLECTION_MODULE_ENTITY;
-
     public static final DeferredBlock<StringModuleBlock> STRING_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> STRING_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<StringModuleEntity>> STRING_MODULE_ENTITY;
-
     public static final DeferredBlock<EntityModuleBlock> ENTITY_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> ENTITY_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<EntityModuleEntity>> ENTITY_MODULE_ENTITY;
 
-    public static final DeferredBlock<PowerBlock> POWER_BLOCK;
-    public static final DeferredItem<BlockItem> POWER_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY;
+    public static final DeferredBlock<ScreenModuleBlock> SCREEN_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<ScreenModuleBlockEntity>> SCREEN_MODULE_BLOCK_ENTITY;
+    public static final DeferredBlock<SemaphoreModuleBlock> SEMAPHORE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> SEMAPHORE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<SemaphoreModuleEntity>> SEMAPHORE_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;

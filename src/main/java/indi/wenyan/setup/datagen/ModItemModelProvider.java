@@ -4,6 +4,7 @@ import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.block.SemaphoreModuleBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
+import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -68,6 +69,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         blockItem(SemaphoreModuleBlock.ID);
         blockItem(CraftingBlock.ID);
         blockItem(PedestalBlock.ID);
+        blockItem(PowerBlock.ID);
     }
 
     private void blockItem(String item) {
