@@ -73,10 +73,6 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 + innerPadding();
     }
 
-    public void insertSnippet(SnippetSet.Snippet snippet) {
-        textField.insertSnippet(snippet);
-    }
-
     private void scrollToCursor() {
         double scrollAmount = scrollAmount();
         var displayLines = textField.getDisplayLines();
