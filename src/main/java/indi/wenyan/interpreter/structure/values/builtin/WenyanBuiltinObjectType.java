@@ -33,7 +33,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     @Override
     public IWenyanValue getAttribute(String name) {
         var attr = getStaticVariable(name);
-        if (attr == null) attr = getFunction(name);
+        if (attr == null) attr = getFunctionHelper(name);
         if (attr == null)
             throw new WenyanException(Component.translatable("error.wenyan_programming.function_not_found_").getString() + name);
         else
@@ -41,14 +41,22 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Nullable
-    public IWenyanValue getFunction(String id) {
+    protected IWenyanValue getFunctionHelper(String id) {
         if (functions.containsKey(id)) {
             return functions.get(id);
         } else if (parent != null) {
-            return parent.getFunction(id);
+            return parent.getFunctionHelper(id);
         } else {
             return null;
         }
+    }
+
+    public IWenyanValue getFunction(String id) {
+        var attr = getFunctionHelper(id);
+        if (attr == null) {
+            throw new WenyanException(Component.translatable("error.wenyan_programming.function_not_found_").getString() + id);
+        }
+        return attr;
     }
 
     public void addFunction(String id, IWenyanValue function) {
