@@ -16,16 +16,24 @@ import java.util.concurrent.Semaphore;
  */
 @WenyanThreading
 public class WenyanThread {
-    /** Stack of runtime environments */
+    /**
+     * Stack of runtime environments
+     */
     public final Stack<WenyanRuntime> runtimes = new Stack<>();
 
-    /** Number of steps allocated to this thread */
+    /**
+     * Number of steps allocated to this thread
+     */
     public int assignedSteps = 0;
 
-    /** The program this thread belongs to */
+    /**
+     * The program this thread belongs to
+     */
     public final WenyanProgram program;
 
-    /** Current execution state */
+    /**
+     * Current execution state
+     */
     public State state = State.READY;
 
     /**
@@ -109,14 +117,18 @@ public class WenyanThread {
                     program.code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
         } else if (e instanceof WenyanException.WenyanThrowException) {
             WenyanBytecode.Context context =
-                    currentRuntime().bytecode.getContext(currentRuntime().programCounter-1);
+                    currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
             WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " +
                     program.code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
         } else {
             // for debug only
+            WenyanBytecode.Context context =
+                    currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
+            WenyanProgramming.LOGGER.debug("{}", program.code);
+            WenyanProgramming.LOGGER.error("{}:{} {}", context.line(), context.column(), program.code.substring(context.contentStart(), context.contentEnd()));
             WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", e);
             WenyanProgramming.LOGGER.error(e.getMessage());
-            WenyanException.handleException(program.holder, "killed");
+            WenyanException.handleException(program.holder, "WenyanThread died with an unexpected exception, killed");
         }
         die();
     }
@@ -190,14 +202,14 @@ public class WenyanThread {
      */
     public IWenyanValue getGlobalVariable(String id) {
         IWenyanValue value = null;
-        for (int i = runtimes.size()-1; i >= 0; i --) {
+        for (int i = runtimes.size() - 1; i >= 0; i--) {
             if (runtimes.get(i).variables.containsKey(id)) {
                 value = runtimes.get(i).variables.get(id);
                 break;
             }
         }
         if (value == null)
-            throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString()+id);
+            throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + id);
         return value;
     }
 }
