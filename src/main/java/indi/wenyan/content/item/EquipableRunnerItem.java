@@ -179,6 +179,6 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
                 content -> {
                     int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
                     PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
-                }));
+                }, List.of()));
     }
 }

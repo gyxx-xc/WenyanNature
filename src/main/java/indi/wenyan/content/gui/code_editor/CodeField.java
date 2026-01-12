@@ -34,17 +34,7 @@ public class CodeField {
     @Getter
     private final List<StyledView> styleMarks = Lists.newArrayList();
 
-    public interface SavedVariable {
-        List<Placeholder> getPlaceholders();
-        StringBuilder getContent();
-        int getCursor();
-        void setCursor(int cursor);
-        int getSelectCursor();
-        void setSelectCursor(int selectCursor);
-        boolean isSelecting();
-        void setSelecting(boolean selecting);
-    }
-    private final SavedVariable screen;
+    private final CodeEditorBackend backend;
 
     private final int width;
 
@@ -52,9 +42,9 @@ public class CodeField {
     @Setter private Runnable cursorListener = () -> {};
     @Setter private Supplier<Integer> widthUpdater = () -> 0;
 
-    public CodeField(Font font, SavedVariable screen, int width) {
+    public CodeField(Font font, CodeEditorBackend backend, int width) {
         this.font = font;
-        this.screen = screen;
+        this.backend = backend;
         this.width = width;
         onValueChange();
     }
@@ -63,23 +53,23 @@ public class CodeField {
         if (!text.isEmpty() || hasSelection()) {
             String filteredText = StringUtil.filterText(text.replace("\t", "    "), true);
             String string = StringUtil.truncateStringIfNecessary(filteredText,
-                    CodeEditorScreen.CHARACTER_LIMIT - screen.getContent().length(), false);
+                    CodeEditorScreen.CHARACTER_LIMIT - backend.getContent().length(), false);
             StringView stringView = getSelected();
-            screen.getContent().replace(stringView.beginIndex(), stringView.endIndex(), string);
+            backend.getContent().replace(stringView.beginIndex(), stringView.endIndex(), string);
             int lengthChanged = string.length() - (stringView.endIndex() - stringView.beginIndex());
-            for (int i = 0; i < screen.getPlaceholders().size(); i++) {
-                var placeholder = screen.getPlaceholders().get(i);
+            for (int i = 0; i < backend.getPlaceholders().size(); i++) {
+                var placeholder = backend.getPlaceholders().get(i);
                 // NOTE: a equal here means if any text of cursor is changed, the placeholder will be removed
                 if (placeholder.index() >= stringView.beginIndex()) {
                     if (placeholder.index() <= stringView.endIndex()) {
-                        screen.getPlaceholders().remove(placeholder);
+                        backend.getPlaceholders().remove(placeholder);
                         i --;
-                    } else screen.getPlaceholders().set(i, new Placeholder(
+                    } else backend.getPlaceholders().set(i, new Placeholder(
                             placeholder.context(), placeholder.index() + lengthChanged));
                 }
             }
-            screen.setCursor(stringView.beginIndex() + string.length());
-            screen.setSelectCursor(screen.getCursor());
+            backend.setCursor(stringView.beginIndex() + string.length());
+            backend.setSelectCursor(backend.getCursor());
             onValueChange();
         }
     }
@@ -87,15 +77,15 @@ public class CodeField {
     public void insertSnippet(SnippetSet.Snippet snippet) {
         // get indent
         StringBuilder indent = new StringBuilder();
-        if (screen.getCursor() > 0) {
-            int lastNewline = screen.getContent().lastIndexOf("\n", screen.getCursor() - 1);
+        if (backend.getCursor() > 0) {
+            int lastNewline = backend.getContent().lastIndexOf("\n", backend.getCursor() - 1);
             int firstChar;
             if (lastNewline >= 0)
                 firstChar = lastNewline + 1;
             else // first line
                 firstChar = 0;
-            while (firstChar < screen.getCursor() && Character.isWhitespace(screen.getContent().charAt(firstChar))) {
-                indent.append(screen.getContent().charAt(firstChar));
+            while (firstChar < backend.getCursor() && Character.isWhitespace(backend.getContent().charAt(firstChar))) {
+                indent.append(backend.getContent().charAt(firstChar));
                 firstChar++;
             }
         }
@@ -116,24 +106,25 @@ public class CodeField {
         }
         insertText(sb.toString());
         if (!addPlaceholders.isEmpty()) {
-            screen.getPlaceholders().addAll(addPlaceholders);
-            screen.getPlaceholders().sort(Comparator.comparing(Placeholder::index));
-            screen.setSelectCursor(addPlaceholders.getFirst().index());
-            screen.setCursor(addPlaceholders.getFirst().index());
-            cursorListener.run(); // update cursor for placeholders
+            backend.getPlaceholders().addAll(addPlaceholders);
+            backend.getPlaceholders().sort(Comparator.comparing(Placeholder::index));
+            backend.setSelectCursor(addPlaceholders.getFirst().index());
+            backend.setCursor(addPlaceholders.getFirst().index());
+            cursorListener.run();
+            updateCurrentSnippetContext();
         } else {
             seekCursorNextPlaceholder();
         }
     }
 
     public StringView getSelected() {
-        return new StringView(Math.min(screen.getSelectCursor(), screen.getCursor()), Math.max(screen.getSelectCursor(), screen.getCursor()));
+        return new StringView(Math.min(backend.getSelectCursor(), backend.getCursor()), Math.max(backend.getSelectCursor(), backend.getCursor()));
     }
 
     public int getLineAtCursor() {
         for (int i = 0; i < displayLines.size(); ++i) {
             StringView stringView = displayLines.get(i);
-            if (screen.getCursor() >= stringView.beginIndex() && screen.getCursor() <= stringView.endIndex()) {
+            if (backend.getCursor() >= stringView.beginIndex() && backend.getCursor() <= stringView.endIndex()) {
                 return i;
             }
         }
@@ -144,7 +135,7 @@ public class CodeField {
     public void seekCursorToPoint(double x, double y) {
         int cursorY = Mth.floor(y / font.lineHeight);
         StringView stringView = displayLines.get(Mth.clamp(cursorY, 0, displayLines.size() - 1));
-        String line = screen.getContent().substring(stringView.beginIndex(), stringView.endIndex());
+        String line = backend.getContent().substring(stringView.beginIndex(), stringView.endIndex());
         int cursorX = font.plainSubstrByWidth(line, Mth.floor(x)).length();
         if (cursorX < line.length()) {
             double inChar = x - font.width(line.substring(0, cursorX));
@@ -155,18 +146,18 @@ public class CodeField {
 
 
     public boolean hasSelection() {
-        return screen.getSelectCursor() != screen.getCursor();
+        return backend.getSelectCursor() != backend.getCursor();
     }
 
     private StringView getPreviousWord() {
-        if (screen.getContent().isEmpty()) {
+        if (backend.getContent().isEmpty()) {
             return StringView.EMPTY;
         } else {
-            int wordStart = Mth.clamp(screen.getCursor(), 0, screen.getContent().length() - 1);
-            while (wordStart > 0 && Character.isWhitespace(screen.getContent().charAt(wordStart - 1))) {
+            int wordStart = Mth.clamp(backend.getCursor(), 0, backend.getContent().length() - 1);
+            while (wordStart > 0 && Character.isWhitespace(backend.getContent().charAt(wordStart - 1))) {
                 wordStart--;
             }
-            while (wordStart > 0 && !Character.isWhitespace(screen.getContent().charAt(wordStart - 1))) {
+            while (wordStart > 0 && !Character.isWhitespace(backend.getContent().charAt(wordStart - 1))) {
                 wordStart--;
             }
             return new StringView(wordStart, getWordEndPosition(wordStart));
@@ -174,13 +165,13 @@ public class CodeField {
     }
 
     private StringView getNextWord() {
-        if (screen.getContent().isEmpty()) {
+        if (backend.getContent().isEmpty()) {
             return StringView.EMPTY;
         } else {
             int wordStart = getWordEndPosition(
-                    Mth.clamp(screen.getCursor(), 0, screen.getContent().length() - 1));
-            while (wordStart < screen.getContent().length() &&
-                    Character.isWhitespace(screen.getContent().charAt(wordStart))) {
+                    Mth.clamp(backend.getCursor(), 0, backend.getContent().length() - 1));
+            while (wordStart < backend.getContent().length() &&
+                    Character.isWhitespace(backend.getContent().charAt(wordStart))) {
                 wordStart++;
             }
             return new StringView(wordStart, getWordEndPosition(wordStart));
@@ -189,8 +180,8 @@ public class CodeField {
 
     private int getWordEndPosition(int cursor) {
         int endCursor = cursor;
-        while (endCursor < screen.getContent().length() &&
-                !Character.isWhitespace(screen.getContent().charAt(endCursor))) {
+        while (endCursor < backend.getContent().length() &&
+                !Character.isWhitespace(backend.getContent().charAt(endCursor))) {
             endCursor++;
         }
         return endCursor;
@@ -199,8 +190,8 @@ public class CodeField {
     private StringView getCursorLineView(int offset) {
         int i = getLineAtCursor();
         if (i < 0) {
-            int var10002 = screen.getCursor();
-            throw new IllegalStateException("Cursor is not within text (cursor = " + var10002 + ", length = " + screen.getContent().length() + ")");
+            int var10002 = backend.getCursor();
+            throw new IllegalStateException("Cursor is not within text (cursor = " + var10002 + ", length = " + backend.getContent().length() + ")");
         } else {
             return displayLines.get(Mth.clamp(i + offset, 0, displayLines.size() - 1));
         }
@@ -208,35 +199,36 @@ public class CodeField {
 
     private void seekCursor(Whence whence, int position) {
         switch (whence) {
-            case ABSOLUTE -> screen.setCursor(position);
-            case RELATIVE -> screen.setCursor(screen.getCursor() + position);
-            case END -> screen.setCursor(screen.getContent().length() + position);
+            case ABSOLUTE -> backend.setCursor(position);
+            case RELATIVE -> backend.setCursor(backend.getCursor() + position);
+            case END -> backend.setCursor(backend.getContent().length() + position);
         }
 
-        screen.setCursor(Mth.clamp(screen.getCursor(), 0, screen.getContent().length()));
+        backend.setCursor(Mth.clamp(backend.getCursor(), 0, backend.getContent().length()));
         cursorListener.run();
-        if (!screen.isSelecting()) {
-            screen.setSelectCursor(screen.getCursor());
+        updateCurrentSnippetContext();
+        if (!backend.isSelecting()) {
+            backend.setSelectCursor(backend.getCursor());
         }
 
     }
 
     private void seekCursorLine(int offset) {
         if (offset != 0) {
-            int i = font.width(screen.getContent().substring(getCursorLineView(0).beginIndex(), screen.getCursor())) + LINE_SEEK_PIXEL_BIAS;
+            int i = font.width(backend.getContent().substring(getCursorLineView(0).beginIndex(), backend.getCursor())) + LINE_SEEK_PIXEL_BIAS;
             StringView cursorLineView = getCursorLineView(offset);
-            int j = font.plainSubstrByWidth(screen.getContent().substring(cursorLineView.beginIndex(), cursorLineView.endIndex()), i).length();
+            int j = font.plainSubstrByWidth(backend.getContent().substring(cursorLineView.beginIndex(), cursorLineView.endIndex()), i).length();
             seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex() + j);
         }
     }
 
     private boolean seekCursorNextPlaceholder() {
-        Placeholder next = screen.getPlaceholders().stream()
-                .filter(p -> p.index() > screen.getCursor())
+        Placeholder next = backend.getPlaceholders().stream()
+                .filter(p -> p.index() > backend.getCursor())
                 .min(Comparator.comparingInt(Placeholder::index))
                 .orElse(null);
         if (next != null) {
-            screen.setSelecting(false);
+            backend.setSelecting(false);
             seekCursor(Whence.ABSOLUTE, next.index());
             return true;
         } else {
@@ -246,21 +238,21 @@ public class CodeField {
 
     private void deleteText(int length) {
         if (!hasSelection())
-            screen.setSelectCursor(Mth.clamp(screen.getCursor() + length, 0, screen.getContent().length()));
+            backend.setSelectCursor(Mth.clamp(backend.getCursor() + length, 0, backend.getContent().length()));
         insertText("");
     }
 
     public boolean keyPressed(int keyCode) {
-        screen.setSelecting(Screen.hasShiftDown());
+        backend.setSelecting(Screen.hasShiftDown());
         if (Screen.isSelectAll(keyCode)) {
-            screen.setCursor(screen.getContent().length());
-            screen.setSelectCursor(0);
+            backend.setCursor(backend.getContent().length());
+            backend.setSelectCursor(0);
         } else if (Screen.isCopy(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(screen.getContent().substring(getSelected().beginIndex(), getSelected().endIndex()));
+            Minecraft.getInstance().keyboardHandler.setClipboard(backend.getContent().substring(getSelected().beginIndex(), getSelected().endIndex()));
         } else if (Screen.isPaste(keyCode)) {
             insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
         } else if (Screen.isCut(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(screen.getContent().substring(getSelected().beginIndex(), getSelected().endIndex()));
+            Minecraft.getInstance().keyboardHandler.setClipboard(backend.getContent().substring(getSelected().beginIndex(), getSelected().endIndex()));
             insertText("");
         } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
             insertText("\n");
@@ -270,8 +262,8 @@ public class CodeField {
             seekCursor(Whence.END, 0);
         } else if (Screen.hasControlDown()) {
             switch (keyCode) {
-                case GLFW.GLFW_KEY_BACKSPACE -> deleteText(getPreviousWord().beginIndex() - screen.getCursor());
-                case GLFW.GLFW_KEY_DELETE -> deleteText(getNextWord().beginIndex() - screen.getCursor());
+                case GLFW.GLFW_KEY_BACKSPACE -> deleteText(getPreviousWord().beginIndex() - backend.getCursor());
+                case GLFW.GLFW_KEY_DELETE -> deleteText(getNextWord().beginIndex() - backend.getCursor());
                 case GLFW.GLFW_KEY_RIGHT -> seekCursor(Whence.ABSOLUTE, getNextWord().beginIndex());
                 case GLFW.GLFW_KEY_LEFT -> seekCursor(Whence.ABSOLUTE, getPreviousWord().beginIndex());
                 case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, 0);
@@ -307,14 +299,14 @@ public class CodeField {
         // reflowDisplayLines
         displayLines.clear();
         int codeWidth = width - widthUpdater.get();
-        if (screen.getContent().isEmpty()) {
+        if (backend.getContent().isEmpty()) {
             displayLines.add(StringView.EMPTY);
         } else {
             // split
             int lineStart = 0;
             int lineWidth = 0;
-            for (int i = 0; i < screen.getContent().length(); i++) {
-                char c = screen.getContent().charAt(i);
+            for (int i = 0; i < backend.getContent().length(); i++) {
+                char c = backend.getContent().charAt(i);
                 if (c == '\n') {
                     displayLines.add(new StringView(lineStart, i));
                     lineStart = i + 1;
@@ -330,20 +322,20 @@ public class CodeField {
                     lineWidth += charWidth;
                 }
             }
-            if (lineStart < screen.getContent().length()) {
-                displayLines.add(new StringView(lineStart, screen.getContent().length()));
+            if (lineStart < backend.getContent().length()) {
+                displayLines.add(new StringView(lineStart, backend.getContent().length()));
             }
 
-            if (screen.getContent().charAt(screen.getContent().length() - 1) == '\n') {
-                displayLines.add(new StringView(screen.getContent().length(), screen.getContent().length()));
+            if (backend.getContent().charAt(backend.getContent().length() - 1) == '\n') {
+                displayLines.add(new StringView(backend.getContent().length(), backend.getContent().length()));
             }
         }
 
-        if (screen.getContent().isEmpty()) {
+        if (backend.getContent().isEmpty()) {
             styleMarks.clear();
             styleMarks.add(new StyledView(0, -1));
         } else {
-            var lexer = new WenyanRLexer(CharStreams.fromString(screen.getContent().toString()));
+            var lexer = new WenyanRLexer(CharStreams.fromString(backend.getContent().toString()));
             lexer.removeErrorListeners();
             var token = new CommonTokenStream(lexer);
             token.fill();
@@ -357,12 +349,26 @@ public class CodeField {
                 styleMarks.add(new StyledView(t.getStopIndex()+1, t.getType()));
                 lastIndex = t.getStopIndex() + 1;
             }
-            styleMarks.add(new StyledView(screen.getContent().length(), -1));
+            styleMarks.add(new StyledView(backend.getContent().length(), -1));
         }
 
-        valueListener.accept(screen.getContent().toString());
+        valueListener.accept(backend.getContent().toString());
         cursorListener.run();
+        updateCurrentSnippetContext();
     }
+
+    private void updateCurrentSnippetContext() {
+        int cursor = backend.getCursor();
+        for (var placeholder : backend.getPlaceholders()) {
+            if (cursor == placeholder.index()) {
+                backend.getPlaceholders().remove(placeholder);
+                backend.setCurSnippets(Snippets.getSnippets(placeholder.context()));
+                return;
+            }
+        }
+        backend.setCurSnippets(Snippets.DEFAULT_CONTEXT);
+    }
+
 
     @OnlyIn(Dist.CLIENT)
     public record StringView(int beginIndex, int endIndex) {

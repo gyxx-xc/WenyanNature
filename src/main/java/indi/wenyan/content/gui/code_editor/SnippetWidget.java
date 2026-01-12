@@ -12,6 +12,7 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public class SnippetWidget extends AbstractScrollWidget {
     private final Font font;
-    private final CodeEditorWidget editor;
+    private final CodeEditorBackend backend;
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
             ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
@@ -35,9 +36,10 @@ public class SnippetWidget extends AbstractScrollWidget {
 
     private static final Utils.BoxInformation buttonPadding =
             new Utils.BoxInformation(3, 3, 3, 3);
+    private static final Utils.BoxInformation entryPadding =
+            new Utils.BoxInformation(3, 3 + 9, 3, 3);
     public static final int ENTRY_HEIGHT = 9 + buttonPadding.vertical();
     public static final int DIR_HEIGHT = 9 + buttonPadding.vertical();
-    public static final int ARROW_WIDTH = 9;
 
     @Nullable
     private SnippetSet.Snippet renderingSnippetTooltip = null;
@@ -46,10 +48,10 @@ public class SnippetWidget extends AbstractScrollWidget {
         return Optional.ofNullable(renderingSnippetTooltip);
     }
 
-    public SnippetWidget(Font font, int x, int y, int width, int height, CodeEditorWidget editor) {
+    public SnippetWidget(Font font, int x, int y, int width, int height, CodeEditorBackend backend) {
         super(x, y, width, height, Component.empty());
         this.font = font;
-        this.editor = editor;
+        this.backend = backend;
     }
 
     @Override
@@ -58,46 +60,68 @@ public class SnippetWidget extends AbstractScrollWidget {
         setScrollAmount(scrollAmount()); // clamp scroll amount
         int offsetMouseY = mouseY + (int) scrollAmount();
         renderingSnippetTooltip = null;
-        for (SnippetSet set : editor.getCurSnippets()) {
+        for (SnippetSet set : backend.getCurSnippets()) {
             boolean singleEntryDir = set.snippets().size() == 1;
-            renderItem(guiGraphics, mouseX, offsetMouseY, currentY, set.name(), set.snippets().getFirst(), set.fold(), singleEntryDir);
+            if (singleEntryDir) {
+                renderEntry(guiGraphics, mouseX, offsetMouseY, currentY, set.name(), set.snippets().getFirst(), set.fold());
+            } else {
+                renderDir(guiGraphics, mouseX, offsetMouseY, currentY, set.name(), set.fold());
+            }
             currentY += DIR_HEIGHT;
             // if only one snippet, dir is the snippet
             // and skip snippets in this set if folded
             if (singleEntryDir || set.fold()) continue;
 
             for (SnippetSet.Snippet s : set.snippets()) {
-                renderItem(guiGraphics, mouseX, offsetMouseY, currentY, s.title(), s, true, true);
+                renderEntry(guiGraphics, mouseX, offsetMouseY, currentY, s.title(), s, true);
                 currentY += ENTRY_HEIGHT;
             }
         }
     }
 
-    private void renderItem(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
-                            String title, @Nullable SnippetSet.Snippet tooltip, boolean isUnfold,
-                            boolean isEntry) {
+    private void renderEntry(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
+                           String title, @Nullable SnippetSet.Snippet tooltip, boolean isUnfold) {
         if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
                     mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
             guiGraphics.blitSprite(
-                isEntry ?
-                    ENTRY_SPRITES.get(isUnfold, buttonHovered) :
+                    ENTRY_SPRITES.get(isUnfold, buttonHovered),
+                    getX() + innerPadding(), currentY,
+                    this.getWidth() - totalInnerPadding(), DIR_HEIGHT
+            );
+
+            var text = Language.getInstance().getVisualOrder(
+                    font.ellipsize(FormattedText.of(title),
+                            width - totalInnerPadding() - entryPadding.horizontal()));
+            guiGraphics.drawString(font, text,
+                    getX() + innerPadding() + entryPadding.left(), currentY + entryPadding.top(),
+                    0xFFFFFF, false);
+
+            if (buttonHovered) {
+                renderingSnippetTooltip = tooltip;
+            }
+        }
+    }
+
+    private void renderDir(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
+                         String title, boolean isUnfold) {
+        if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
+            boolean buttonHovered = mouseX >= getX() + innerPadding() &&
+                    mouseX < getX() + getWidth() - innerPadding() &&
+                    mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
+            guiGraphics.blitSprite(
                     DIR_SPRITES.get(isUnfold, buttonHovered),
-                getX() + innerPadding(), currentY,
-                this.getWidth() - totalInnerPadding(), DIR_HEIGHT
+                    getX() + innerPadding(), currentY,
+                    this.getWidth() - totalInnerPadding(), DIR_HEIGHT
             );
 
             var text = Language.getInstance().getVisualOrder(
                     font.ellipsize(FormattedText.of(title),
                             width - totalInnerPadding() - buttonPadding.horizontal()));
             guiGraphics.drawString(font, text,
-                    getX() + innerPadding() + buttonPadding.left() + (isEntry ? ARROW_WIDTH : 0), currentY + buttonPadding.top(),
+                    getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
                     0xFFFFFF, false);
-
-            if (isEntry && buttonHovered) {
-                renderingSnippetTooltip = tooltip;
-            }
         }
     }
 
@@ -106,11 +130,11 @@ public class SnippetWidget extends AbstractScrollWidget {
         if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
             double y = mouseY - getY() - innerPadding() + scrollAmount();
             double currentY = 0;
-            for (SnippetSet set : editor.getCurSnippets()) {
+            for (SnippetSet set : backend.getCurSnippets()) {
                 if (y >= currentY && y < currentY + DIR_HEIGHT) {
                     // clicked on directory
                     if (set.snippets().size() == 1) { // if only one snippet, dir is the snippet
-                        editor.insertSnippet(set.snippets().getFirst());
+                        backend.insertSnippet(set.snippets().getFirst());
                     } else {
                         set.fold(!set.fold());
                     }
@@ -121,7 +145,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                 for (SnippetSet.Snippet s : set.snippets()) {
                     if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
                         // clicked on snippet
-                        editor.insertSnippet(s);
+                        backend.insertSnippet(s);
                         return true;
                     }
                     currentY += ENTRY_HEIGHT;
@@ -132,15 +156,26 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     @Override
+    protected void renderDecorations(@NotNull GuiGraphics guiGraphics) {
+        if (scrollbarVisible()) {
+            int scrollBarHeight = Mth.clamp(this.height * this.height / (this.getInnerHeight() + 4), 32, this.height);
+            int x = this.getX() + this.width;
+            int y = Math.max(this.getY(), (int) this.scrollAmount() * (this.height - scrollBarHeight) / this.getMaxScrollAmount() + this.getY());
+            // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...
+            guiGraphics.blitSprite(ENTRY_SPRITES.get(false, false), x-4, y, 4, scrollBarHeight);
+        }
+    }
+
+    @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE,
                 Component.translatable("gui.narrate.editBox", getMessage(), "snippet"));
     }
 
     public int getInnerHeight() {
-        return editor.getCurSnippets().stream()
-                .mapToInt(set -> set.snippets().size()).sum() * ENTRY_HEIGHT +
-                editor.getCurSnippets().size() * DIR_HEIGHT;
+        return backend.getCurSnippets().stream()
+                .mapToInt(set -> set.fold() ? 0 : set.snippets().size()).sum() * ENTRY_HEIGHT +
+                backend.getCurSnippets().size() * DIR_HEIGHT;
     }
 
     protected boolean scrollbarVisible() {

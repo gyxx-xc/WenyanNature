@@ -1,7 +1,6 @@
 package indi.wenyan.content.gui.code_editor;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -9,58 +8,52 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
-import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
-public class CodeEditorScreen extends Screen implements CodeField.SavedVariable {
-    private final Consumer<String> saving;
+public class CodeEditorScreen extends Screen {
 
-    // saved for code field
-    @Getter
-    private final StringBuilder content;
-    @Getter
-    private final List<CodeField.Placeholder> placeholders = new ArrayList<>();
-    @Getter @Setter
-    private int cursor = 0;
-    @Getter @Setter
-    private int selectCursor = 0;
-    @Getter @Setter
-    private boolean selecting = false;
+    private final CodeEditorBackend backend;
 
     public static final int CHARACTER_LIMIT = 16384;
 
+    @Getter
     private CodeEditorWidget textFieldWidget;
     private SnippetWidget snippetWidget;
+    private PackageSnippetWidget packageWidget;
 
-    public CodeEditorScreen(String content, Consumer<String> save) {
+    public CodeEditorScreen(String content, Consumer<String> save, List<PackageSnippetWidget.PackageSnippet> packages) {
         super(Component.empty());
-        this.content = new StringBuilder(
-                StringUtil.truncateStringIfNecessary(content, CHARACTER_LIMIT, false));
-        this.saving = save;
+        backend = new CodeEditorBackend(content, save, packages, this);
     }
 
     @Override
     protected void init() {
         int textFieldWidth = Mth.clamp(width/2, 50, CodeEditorWidget.WIDTH);
-        textFieldWidget = new CodeEditorWidget(font, this,
+        textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, 15,
                 textFieldWidth, Math.min(height-30, CodeEditorWidget.HEIGH));
         addRenderableWidget(textFieldWidget);
 
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
         snippetWidget = new SnippetWidget(font,
-                width - snippetWidth, 15,
+                0, 15,
                 snippetWidth, Math.min(height-30, CodeEditorWidget.HEIGH),
-                textFieldWidget);
+                backend);
         addRenderableWidget(snippetWidget);
+
+        int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2, 0, 280);
+        packageWidget = new PackageSnippetWidget(font,
+                width - packageSnippetWidth, 15,
+                packageSnippetWidth, Math.min(height-30, CodeEditorWidget.HEIGH),
+                backend);
+        addRenderableWidget(packageWidget);
     }
 
     @Override
@@ -69,6 +62,8 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
 
         // tooltips
         snippetWidget.getRenderingSnippetTooltip().ifPresent(s ->
+                renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
+        packageWidget.getRenderingSnippetTooltip().ifPresent(s ->
                 renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
     }
 
@@ -93,7 +88,6 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
 
                     Component placeholderComp = Component.literal(placeholder.context().value())
                             .withStyle(Style.EMPTY.withColor(Snippets.contextColor(placeholder.context())));
-                    System.out.println(placeholderComp);
                     lineComp.append(textComp).append(placeholderComp);
                     curColum = placeholder.colum();
                 }
@@ -132,7 +126,12 @@ public class CodeEditorScreen extends Screen implements CodeField.SavedVariable 
 
     @Override
     public void onClose() {
-        saving.accept(content.toString());
+        backend.save();
         super.onClose();
     }
+
+//    @Override
+//    public boolean isPauseScreen() {
+//        return false;
+//    }
 }

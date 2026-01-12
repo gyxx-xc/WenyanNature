@@ -2,10 +2,16 @@ package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
+import indi.wenyan.content.gui.code_editor.PackageSnippetWidget;
+import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
+import indi.wenyan.interpreter.structure.values.IWenyanFunction;
+import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +30,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
 @ParametersAreNonnullByDefault
 public class
@@ -36,7 +47,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         assert runner != null;
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
-                openGui(runner, pos);
+                openGui(runner, pos, level, player, state);
         } else {
             if (!level.isClientSide()) {
                 runner.run(player);
@@ -62,11 +73,48 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private void openGui(RunnerBlockEntity runner, BlockPos pos) {
+    private void openGui(RunnerBlockEntity runner, BlockPos pos, Level level, Player player, BlockState state) {
+        List<PackageSnippetWidget.PackageSnippet> packageSnippets = new ArrayList<>();
+        BlockPos attached = pos.relative(
+                getConnectedDirection(state).getOpposite());
+        if (level.getBlockEntity(attached) instanceof IWenyanBlockDevice device)
+            packageSnippets.add(packageSnippet(device.getExecPackage(),
+                    device.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
+                    device.getPackageName()));
+
+        for (BlockPos b : BlockPos.betweenClosed(
+                pos.offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
+                pos.offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+            if (level.getBlockEntity(b) instanceof IWenyanBlockDevice executor) {
+                if (Objects.equals(executor.getPackageName(), "")) continue;
+                HandlerPackageBuilder.RawHandlerPackage execPackage = executor.getExecPackage();
+                packageSnippets.add(packageSnippet(execPackage,
+                        executor.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
+                        executor.getPackageName()));
+            }
+        }
         Minecraft.getInstance().setScreen(new CodeEditorScreen(runner.pages, content -> {
             runner.pages = content;
             runner.setChanged();
             PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
-        }));
+        }, packageSnippets));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private PackageSnippetWidget.PackageSnippet packageSnippet(HandlerPackageBuilder.RawHandlerPackage execPackage, ItemStack itemStack, String name) {
+        List<PackageSnippetWidget.Member> members = new ArrayList<>();
+        execPackage.variables().forEach((k, v) -> {
+                    if (v.is(IWenyanObjectType.TYPE))
+                        members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.CLASS));
+                    else if (v.is(IWenyanFunction.TYPE))
+                        members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD));
+                    else
+                        members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.FIELD));
+                }
+        );
+        execPackage.functions().forEach((k, v) ->
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD))
+        );
+        return new PackageSnippetWidget.PackageSnippet(itemStack, name, members);
     }
 }

@@ -18,6 +18,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
@@ -79,6 +80,6 @@ public class RunnerItem extends BlockItem {
                 content -> {
                     int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
                     PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
-                }));
+                }, List.of()));
     }
 }

@@ -43,25 +43,20 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
 
-    private final CodeField.SavedVariable screen;
+    private final CodeEditorBackend backend;
 
     @Getter
     private final CodeField textField;
 
-    @Getter
-    private List<SnippetSet> curSnippets = Snippets.STMT_CONTEXT;
-
-
-    public CodeEditorWidget(Font font, CodeField.SavedVariable screen,
+    public CodeEditorWidget(Font font, CodeEditorBackend backend,
                             int x, int y, int width, int height) {
         super(x+outerPadding.left(), y+outerPadding.top(),
                 width-outerPadding.horizontal(), height-outerPadding.vertical(),
                 Component.empty());
         this.font = font;
-        this.screen = screen;
-        textField = new CodeField(font, screen, this.width - totalInnerPadding());
+        this.backend = backend;
+        textField = new CodeField(font, backend, this.width - totalInnerPadding());
         textField.setCursorListener(()->{
-            updateCurrentSnippetContext();
             scrollToCursor();
             // reset blink
             blinkStart = Util.getMillis();
@@ -74,7 +69,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         // because the width of number is not same, return width of 0, 00, 000, ...
         // logic here: count of lines, get digit of this number, times width of "0"
         return font.width("0") * ((int) Math.log10(
-                screen.getContent().chars().filter(c -> c == '\n').count() + 1) + 1)
+                backend.getContent().chars().filter(c -> c == '\n').count() + 1) + 1)
                 + innerPadding();
     }
 
@@ -89,28 +84,16 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
                 displayLines.size()-1);
         int beginIndex = displayLines.get(lineNo).beginIndex();
-        if (screen.getCursor() <= beginIndex) {
+        if (backend.getCursor() <= beginIndex) {
             scrollAmount = textField.getLineAtCursor() * font.lineHeight;
         } else if ((int) ((scrollAmount + height) / font.lineHeight) - 1 < displayLines.size()) {
             int endIndex = displayLines.get((int) ((scrollAmount + height) / font.lineHeight) - 1).endIndex();
-            if (screen.getCursor() > endIndex) {
+            if (backend.getCursor() > endIndex) {
                 scrollAmount = textField.getLineAtCursor() * font.lineHeight - height + font.lineHeight + totalInnerPadding();
             }
         }
 
         setScrollAmount(scrollAmount);
-    }
-
-    private void updateCurrentSnippetContext() {
-        int cursor = screen.getCursor();
-        for (var placeholder : screen.getPlaceholders()) {
-            if (cursor == placeholder.index()) {
-                screen.getPlaceholders().remove(placeholder);
-                curSnippets = Snippets.getSnippets(placeholder.context());
-                return;
-            }
-        }
-        curSnippets = Snippets.DEFAULT_CONTEXT;
     }
 
     private static Style styleFromTokenType(int tokenType) {
@@ -167,13 +150,13 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE,
-                Component.translatable("gui.narrate.editBox", getMessage(), screen.getContent().toString()));
+                Component.translatable("gui.narrate.editBox", getMessage(), backend.getContent().toString()));
     }
 
     // input
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
-            screen.setSelecting(Screen.hasShiftDown());
+            backend.setSelecting(Screen.hasShiftDown());
             textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
             return true;
@@ -186,10 +169,10 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
             return true;
         } else if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
-            screen.setSelecting(true);
+            backend.setSelecting(true);
             textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
-            screen.setSelecting(Screen.hasShiftDown());
+            backend.setSelecting(Screen.hasShiftDown());
             return true;
         } else {
             return false;
@@ -218,8 +201,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     // rendering
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        StringBuilder content = screen.getContent();
-        int cursor = screen.getCursor();
+        StringBuilder content = backend.getContent();
+        int cursor = backend.getCursor();
         boolean isCursorRender = !isFocused() ||
                 (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
         boolean cursorInContent = cursor < content.length();
@@ -255,8 +238,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     } while (lastEnd < stringView.endIndex());
                 }
                 // -------------------- render placeholders --------------------
-                while (placeholderCounter < screen.getPlaceholders().size()) {
-                    var placeholder = screen.getPlaceholders().get(placeholderCounter);
+                while (placeholderCounter < backend.getPlaceholders().size()) {
+                    var placeholder = backend.getPlaceholders().get(placeholderCounter);
                     int place = placeholder.index();
                     if (place > stringView.endIndex())
                         break;
