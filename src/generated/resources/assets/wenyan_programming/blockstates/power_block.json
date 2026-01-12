@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "wenyan_programming:block/power_block"
+    }
+  }
+}
