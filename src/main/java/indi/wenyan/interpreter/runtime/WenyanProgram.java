@@ -94,8 +94,10 @@ public class WenyanProgram {
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
         try {
             visitor.visit(WenyanVisitor.program(code));
+            environment.enterContext(0, 0, 0, 0);
             environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
             environment.add(WenyanCodes.RET);
+            environment.exitContext();
             WenyanVerifier.verify(baseBytecode);
         } catch (WenyanException e) {
             WenyanException.handleException(holder, e.getMessage());

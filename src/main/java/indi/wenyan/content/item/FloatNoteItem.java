@@ -117,7 +117,7 @@ public class FloatNoteItem extends Item {
 
     private void setName(Level level, Consumer<Component> setNameFunc, ItemStack stack, @Nullable Player player, InteractionHand hand) {
         if (stack.getOrDefault(Registration.NOTE_LOCK_DATA.get(), false)) {
-            setNameFunc.accept(stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()));
+            setNameFunc.accept(Component.translatable("code.wenyan_programming.bracket", stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty())));
         } else {
             if (level.isClientSide())
                 openGui(setNameFunc, stack);

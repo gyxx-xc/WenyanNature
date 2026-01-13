@@ -153,9 +153,12 @@ public class WenyanExprVisitor extends WenyanVisitor {
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
         new WenyanMainVisitor(environment).visit(ctx.statements());
 
+        bytecode.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
+                ctx.getStop().getStartIndex(), ctx.getStop().getStopIndex() + 1);
         // STUB: add a return null at end in case no return
         environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
         environment.add(WenyanCodes.RET);
+        bytecode.exitContext();
 
         bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(argsType, functionBytecode));
         return true;
