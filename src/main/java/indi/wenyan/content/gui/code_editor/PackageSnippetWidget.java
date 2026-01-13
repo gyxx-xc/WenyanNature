@@ -138,7 +138,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
             var text = Language.getInstance().getVisualOrder(
                     font.ellipsize(FormattedText.of(pack.name()),
                             width - totalInnerPadding() - buttonPadding.horizontal()));
-            guiGraphics.drawString(font, text, x + ICON_WIDTH + buttonPadding.right(), y,
+            guiGraphics.drawString(font, text, x + ICON_WIDTH + buttonPadding.horizontal() + buttonPadding.right(), y,
                     0xFFFFFF, false);
         }
     }
