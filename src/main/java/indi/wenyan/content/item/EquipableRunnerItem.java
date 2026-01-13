@@ -18,8 +18,10 @@ import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -51,9 +53,11 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
 
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
-
     private final RequestCallHandler importFunction = (t, s, a) ->
             new ImportRequest(t, this, this::getPackage, a);
+
+    @Getter @Setter
+    private String platformName = Component.translatable("code.wenyan_programming.bracket", Component.translatable("item.wenyan_programming.equipable_runner")).getString();
 
     public EquipableRunnerItem(Properties properties, int runningLevel) {
         super(properties);
@@ -87,7 +91,11 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
                     PROGRAMS.put(stack.hashCode(), newProgram);
                 } else {
                     if (!program.isRunning()) {
-                        program.createMainThread();
+                        try {
+                            program.createMainThread();
+                        } catch (WenyanException.WenyanVarException e) {
+                            WenyanException.handleException(player, e.getMessage());
+                        }
                     }
                     program.step(runningLevel);
                     handle(new ItemContext(stack, level, player, slotId, isSelected));
@@ -102,7 +110,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     }
 
     @Override
-    public void initEnvironment(WenyanRuntime baseEnvironment) {
+    public void changeInitEnvironment(WenyanRuntime baseEnvironment) {
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
     }
 
@@ -120,7 +128,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             throw new WenyanException("item changed");
     }
 
-    private WenyanPackage getPackage(IHandleContext context, String packageName) {
+    private ImportRequest.PackageUnion getPackage(IHandleContext context, String packageName) {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException("Context is not an instance of ItemContext");
         }
@@ -141,7 +149,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
                                 map.put(name, (RequestCallHandler) (thread, self, args) ->
                                         new ItemRequest(this, thread, function.get(),
                                                 self, args, stack, finalSlot))); // am i writing lisp?
-                return new WenyanPackage(map);
+                return ImportRequest.PackageUnion.of(new WenyanPackage(map));
             }
         }
 

@@ -37,6 +37,8 @@ public class WenyanRuntime {
     /** Flag indicating no return value expected */
     public boolean noReturnFlag = false;
 
+    public boolean finishFlag = false;
+
     /**
      * Creates a new runtime environment with the specified bytecode.
      *

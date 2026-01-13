@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.exec_interface.handler;
 
 import indi.wenyan.interpreter.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.interpreter.runtime.WenyanThread;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
@@ -10,12 +11,12 @@ import java.util.List;
 public interface RequestCallHandler
         extends IJavacallHandler {
     IHandleableRequest newRequest(WenyanThread thread, IWenyanValue self,
-                                  List<IWenyanValue> argsList);
+                                  List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException;
 
     @Override
     @WenyanThreading
     default void call(IWenyanValue self, WenyanThread thread,
-                     List<IWenyanValue> argsList) {
+                     List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
         thread.program.platform.receive(newRequest(thread, self, argsList));
         thread.block();
     }

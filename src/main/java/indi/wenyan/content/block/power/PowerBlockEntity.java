@@ -76,8 +76,6 @@ public class PowerBlockEntity extends AbstractModuleEntity {
         resetState();
     }
 
-    int n = 0;
-
     @Override
     public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (!level.isClientSide()) {
@@ -85,10 +83,6 @@ public class PowerBlockEntity extends AbstractModuleEntity {
             int lPower = power.addAndGet(-firstPower);
             generatedPower.addLast(lPower - lastPower + firstPower);
             lastPower = lPower;
-            n = (n + 1) % 20;
-            if (n == 0) {
-                System.out.println(lPower);
-            }
         }
     }
 

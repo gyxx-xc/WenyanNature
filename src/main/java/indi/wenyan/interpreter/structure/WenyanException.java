@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.structure;
 
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -89,7 +90,7 @@ public class WenyanException extends RuntimeException {
      */
     @WenyanThreading
     public static void handleException(Player player, String message) {
-        System.out.println(message);
+        WenyanProgramming.LOGGER.error(message);
         // TODO: thread safety check
         player.displayClientMessage(Component.literal(message).withStyle(ChatFormatting.RED), true);
     }

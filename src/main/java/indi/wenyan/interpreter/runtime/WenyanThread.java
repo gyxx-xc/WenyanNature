@@ -5,6 +5,8 @@ import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.utils.WenyanThreading;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.network.chat.Component;
 
 import java.util.Stack;
@@ -20,6 +22,9 @@ public class WenyanThread {
      * Stack of runtime environments
      */
     public final Stack<WenyanRuntime> runtimes = new Stack<>();
+
+    @Getter @Setter
+    private WenyanRuntime mainRuntime = null;
 
     /**
      * Number of steps allocated to this thread
@@ -65,10 +70,15 @@ public class WenyanThread {
     //  since it needs scheduling after return
     public void programLoop(Semaphore accumulatedSteps) throws InterruptedException {
         while (true) {
+            if (mainRuntime.finishFlag) {
+                die();
+                return;
+            }
+
             WenyanRuntime runtime = currentRuntime();
 
-            if (runtime.programCounter >= runtime.bytecode.size()) {
-                die();
+            if (runtime.programCounter < 0 || runtime.programCounter >= runtime.bytecode.size()) {
+                dieWithException(new WenyanException.WenyanUnreachedException());
                 return;
             }
 
@@ -190,7 +200,8 @@ public class WenyanThread {
      * Removes the top runtime environment from the stack.
      */
     public void ret() {
-        runtimes.pop();
+        var runtime = runtimes.pop();
+        runtime.finishFlag = true;
     }
 
     /**

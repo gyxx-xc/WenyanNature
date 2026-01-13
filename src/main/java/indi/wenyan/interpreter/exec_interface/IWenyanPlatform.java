@@ -20,5 +20,7 @@ public interface IWenyanPlatform extends IExecReceiver{
      * Initializes the platform environment for the Wenyan runtime
      * @param baseEnvironment The base runtime environment
      */
-    void initEnvironment(WenyanRuntime baseEnvironment);
+    void changeInitEnvironment(WenyanRuntime baseEnvironment);
+
+    String getPlatformName();
 }
