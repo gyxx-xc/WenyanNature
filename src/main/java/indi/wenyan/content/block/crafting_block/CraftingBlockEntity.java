@@ -92,7 +92,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     private final Deque<TextParticle> particles = new ArrayDeque<>();
 
     @Getter
-    public final String basePackageName = "builtin";
+    public final String basePackageName = "";
 
     @Getter
     public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()

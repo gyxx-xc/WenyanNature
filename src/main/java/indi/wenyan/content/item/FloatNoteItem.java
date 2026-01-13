@@ -1,6 +1,7 @@
 package indi.wenyan.content.item;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
+import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.gui.float_note.FloatNoteNamingScreen;
 import indi.wenyan.setup.Registration;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -74,6 +75,15 @@ public class FloatNoteItem extends Item {
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
             setName(level, component -> entity.setPackageName(component.getString()), context);
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        } else if (blockEntity instanceof RunnerBlockEntity entity) {
+            if (context.getPlayer().isShiftKeyDown()) {
+                if (level.isClientSide())
+                    openGui(component -> entity.setPlatformName(component.getString()),
+                            context.getItemInHand());
+                return InteractionResult.sidedSuccess(level.isClientSide());
+            }
+            setName(level, component -> entity.setPlatformName(component.getString()), context);
             return InteractionResult.sidedSuccess(level.isClientSide());
         } else {
             if (context.getPlayer().isShiftKeyDown()) {

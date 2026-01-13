@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.compiler;
 
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
+import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,14 +113,14 @@ public class WenyanBytecode {
      * @param index The code index
      * @return The context information, or null if not found
      */
-    public Context getContext(int index) {
+    public Context getContext(int index) throws WenyanException.WenyanVarException {
         // change to binary search
         for (Context context : debugTable) {
             if (context.bytecodeStart <= index && index < context.bytecodeEnd) {
                 return context;
             }
         }
-        return null;
+        throw new WenyanException.WenyanVarException("No debug info for index " + index);
     }
 
     /**

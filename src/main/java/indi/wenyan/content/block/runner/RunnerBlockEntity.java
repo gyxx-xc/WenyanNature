@@ -23,6 +23,7 @@ import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -146,6 +147,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (pages != null)
             tag.putString("pages", pages);
         tag.putInt("speed", speed);
+        tag.putString("platformName", platformName);
     }
 
     @SuppressWarnings("unused")
@@ -156,6 +158,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             pages = tag.getString("pages");
         }
         speed = tag.getInt("speed");
+        platformName = tag.getString("platformName");
     }
 
     @Override
@@ -164,6 +167,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         int speedTier = componentInput.getOrDefault(Registration.RUNNING_TIER_DATA.get(), 0);
         // TODO: number design
         speed = (int) StrictMath.pow(10, Math.min(speedTier, 3)) * 8;
+        platformName = componentInput.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
     }
 
     @Override

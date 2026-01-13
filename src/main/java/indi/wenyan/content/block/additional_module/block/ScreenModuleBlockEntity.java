@@ -29,7 +29,7 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
     private final List<String> output = new LinkedList<>();
 
     @Getter
-    public final String basePackageName = "builtin";
+    public final String basePackageName = "";
 
     @Getter
     public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
