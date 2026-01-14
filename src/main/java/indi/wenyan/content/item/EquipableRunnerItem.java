@@ -1,5 +1,6 @@
 package indi.wenyan.content.item;
 
+import com.mojang.datafixers.util.Either;
 import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.exec_interface.handler.RequestCallHandler;
@@ -124,7 +125,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             throw new WenyanException("item changed");
     }
 
-    private ImportRequest.PackageUnion getPackage(IHandleContext context, String packageName) {
+    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException("Context is not an instance of ItemContext");
         }
@@ -144,8 +145,8 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
                         (name, function) ->
                                 map.put(name, (RequestCallHandler) (thread, self, args) ->
                                         new ItemRequest(this, thread, function.get(),
-                                                self, args, stack, finalSlot))); // am i writing lisp?
-                return ImportRequest.PackageUnion.of(new WenyanPackage(map));
+                                                self, args, stack, finalSlot))); // am I writing lisp?
+                return Either.left(new WenyanPackage(map));
             }
         }
 

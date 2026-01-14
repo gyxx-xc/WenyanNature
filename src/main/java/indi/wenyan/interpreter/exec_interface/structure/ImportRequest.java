@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.exec_interface.structure;
 
+import com.mojang.datafixers.util.Either;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -22,7 +23,7 @@ public final class ImportRequest implements IHandleableRequest {
     final List<IWenyanValue> args;
     private final String packageName;
     private Status status = Status.FIRST_RUN;
-    private PackageUnion packageUnion;
+    private Either<WenyanPackage, WenyanThread> packageUnion;
 
     public ImportRequest(WenyanThread thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException.WenyanThrowException {
         this.thread = thread;
@@ -39,25 +40,21 @@ public final class ImportRequest implements IHandleableRequest {
     // logic too complex, impl in Automata
     @Override
     public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+        //noinspection LoopStatementThatDoesntLoop
         while (true)
             switch (status) {
                 case FIRST_RUN:
                     packageUnion = getPackage.getPackage(context, packageName);
                     status = Status.PROCESS_PACKAGE;
                 case PROCESS_PACKAGE:
-                    PackageUnion.Type type = packageUnion.type();
-                    if (type == PackageUnion.Type.RUNTIME) {
+                    if (packageUnion.right().isPresent()) {
                         status = Status.WAITING;
-                    } else if (type == PackageUnion.Type.WENYAN_PACKAGE) {
-                        WenyanPackage execPackage = packageUnion.wenyanPackage();
-                        if (execPackage == null)
-                            throw new WenyanException.WenyanUnreachedException();
-                        returnPackage(execPackage);
+                    } else if (packageUnion.left().isPresent()) {
+                        returnPackage(packageUnion.left().get());
                         return true; // end
                     }
                 case WAITING:
-                    WenyanThread wenyanThread = packageUnion.wenyanThread();
-                    if (wenyanThread == null) throw new WenyanException.WenyanUnreachedException();
+                    WenyanThread wenyanThread = packageUnion.right().get();
                     if (wenyanThread.state == WenyanThread.State.DYING) {
                         if (wenyanThread.getMainRuntime().finishFlag) {
                             status = Status.PROCESS_RUNTIME;
@@ -69,9 +66,7 @@ public final class ImportRequest implements IHandleableRequest {
                         return false; // goto first line
                     }
                 case PROCESS_RUNTIME:
-                    WenyanThread wenyanThread1 = packageUnion.wenyanThread();
-                    if (wenyanThread1 == null) throw new WenyanException.WenyanUnreachedException();
-                    returnPackage(new WenyanPackage(wenyanThread1.getMainRuntime().variables));
+                    returnPackage(new WenyanPackage(packageUnion.right().get().getMainRuntime().variables));
                     return true; // end
             }
     }
@@ -111,7 +106,7 @@ public final class ImportRequest implements IHandleableRequest {
          * @return the requested package
          * @throws WenyanException.WenyanThrowException if the package cannot be found or accessed
          */
-        PackageUnion getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException;
+        Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException;
     }
 
     public record PackageUnion(@Nullable WenyanPackage wenyanPackage,

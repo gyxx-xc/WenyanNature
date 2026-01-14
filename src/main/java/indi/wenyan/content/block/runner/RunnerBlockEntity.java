@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.runner;
 
+import com.mojang.datafixers.util.Either;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
@@ -176,7 +177,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         super.setRemoved();
     }
 
-    private ImportRequest.PackageUnion getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
+    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
         assert level != null;
         for (BlockPos b : BlockPos.betweenClosed(
                 getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
@@ -191,7 +192,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                         );
                     }
                     var rawPackage = executor.getExecPackage();
-                    return ImportRequest.PackageUnion.of(processPackage(rawPackage, executor));
+                    return Either.left(processPackage(rawPackage, executor));
                 }
             } else if (blockEntity instanceof RunnerBlockEntity platform) {
                 if (platform == this) continue;
@@ -205,7 +206,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                     // STUB
                     if (ifProgram().isPresent()) {
                         WenyanThread thread = platform.getProgram(program.holder).createMainThread();
-                        return ImportRequest.PackageUnion.of(thread);
+                        return Either.right(thread);
                     } else {
                         throw new WenyanException.WenyanUnreachedException();
                     }
