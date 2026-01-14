@@ -33,7 +33,7 @@ public class CodeEditorScreen extends Screen {
 
     public CodeEditorScreen(CodeEditorBackend.PersistentData data, Consumer<String> save) {
         super(Component.empty());
-        backend = new CodeEditorBackend(data, save, this);
+        backend = new CodeEditorBackend(data, save);
     }
 
     @Override

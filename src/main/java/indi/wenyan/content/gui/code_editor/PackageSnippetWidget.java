@@ -152,7 +152,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
                 if (y >= currentY && y < currentY + DIR_HEIGHT) {
                     double x = mouseX - getX() - innerPadding();
                     if (0 <= x && x < ICON_WIDTH + buttonPadding.horizontal())
-                        backend.insertSnippet(new SnippetSet.Snippet(pack.name(), List.of(pack.name()), List.of()));
+                        backend.insertText(pack.name());
                     else
                         pack.fold(!pack.fold());
                     return true;
@@ -162,7 +162,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
                 for (Member member : pack.members()) {
                     if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
                         // clicked on snippet
-                        backend.insertSnippet(new SnippetSet.Snippet(member.name(), List.of(member.name()), List.of()));
+                        backend.insertText(member.name());
                         return true;
                     }
                     currentY += ENTRY_HEIGHT;

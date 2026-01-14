@@ -18,26 +18,27 @@ public class CodeEditorBackend {
     private final PersistentData persistentData;
     @Getter
     private final List<CodeField.Placeholder> placeholders = new ArrayList<>();
-    @Getter @Setter
+    @Getter
     private int cursor = 0;
-    @Getter @Setter
+    @Getter
     private int selectCursor = 0;
-    @Getter @Setter
-    private boolean selecting = false;
-    @Getter @Setter
+
+    @Getter
+    @Setter
     private List<SnippetSet> curSnippets = Snippets.STMT_CONTEXT;
-    private final CodeEditorScreen screen;
+
+    @Setter
+    private Runnable cursorListener = () -> {
+    };
+    @Setter
+    private Runnable valueListener = () -> {
+    };
 
     private final Consumer<String> saving;
 
-    public CodeEditorBackend(PersistentData data, Consumer<String> saving, CodeEditorScreen screen) {
+    public CodeEditorBackend(PersistentData data, Consumer<String> saving) {
         persistentData = data;
         this.saving = saving;
-        this.screen = screen;
-    }
-
-    public String getString() {
-        return persistentData.content.toString();
     }
 
     public void save() {
@@ -45,12 +46,8 @@ public class CodeEditorBackend {
     }
 
 
-    public void insertSnippet(SnippetSet.Snippet s) {
-        screen.getTextFieldWidget().getTextField().insertSnippet(s);
-    }
-
-    public StringBuilder getContent() {
-        return persistentData.content;
+    public String getContent() {
+        return persistentData.content.toString();
     }
 
     public StringBuilder getTitle() {
@@ -59,6 +56,50 @@ public class CodeEditorBackend {
 
     public List<PackageSnippetWidget.PackageSnippet> getPackages() {
         return persistentData.packages;
+    }
+
+    // following part need to communicated
+    public void insertText(String text) {
+        if (!text.isEmpty() || selectCursor != cursor) {
+            String filteredText = StringUtil.filterText(text.replace("\t", "    "), true);
+            String string = StringUtil.truncateStringIfNecessary(filteredText,
+                    CodeEditorScreen.CHARACTER_LIMIT - persistentData.content.length(), false);
+            int beginIndex = Math.min(selectCursor, cursor);
+            int endIndex = Math.max(selectCursor, cursor);
+            persistentData.content.replace(beginIndex, endIndex, string);
+
+            int lengthChanged = string.length() - (endIndex - beginIndex);
+            for (int i = 0; i < placeholders.size(); i++) {
+                var placeholder = placeholders.get(i);
+                // NOTE: a equal here means if any text of cursor is changed, the placeholder will be removed
+                if (placeholder.index() >= beginIndex) {
+                    if (placeholder.index() <= endIndex) {
+                        placeholders.remove(placeholder);
+                        i--;
+                    } else placeholders.set(i, new CodeField.Placeholder(
+                            placeholder.context(), placeholder.index() + lengthChanged));
+                }
+            }
+
+            cursor = beginIndex + string.length();
+            selectCursor = cursor;
+
+            valueListener.run();
+            cursorListener.run();
+        }
+    }
+
+    public void setCursor(int cursor) {
+        if (this.cursor != cursor) {
+            this.cursor = cursor;
+            cursorListener.run();
+        }
+    }
+
+    public void setSelectCursor(int selectCursor) {
+        if (this.selectCursor != selectCursor) {
+            this.selectCursor = selectCursor;
+        }
     }
 
     @Data

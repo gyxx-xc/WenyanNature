@@ -38,7 +38,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     // NOTE: a minecraft inner padding of 4 is also need to be considered
     private static final int scrollBarWidth = 8;
     private static final Utils.BoxInformation outerPadding =
-            new Utils.BoxInformation(4, 4, 4, 4+scrollBarWidth);
+            new Utils.BoxInformation(4, 4, 4, 4 + scrollBarWidth);
 
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
@@ -50,19 +50,18 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     public CodeEditorWidget(Font font, CodeEditorBackend backend,
                             int x, int y, int width, int height) {
-        super(x+outerPadding.left(), y+outerPadding.top(),
-                width-outerPadding.horizontal(), height-outerPadding.vertical(),
+        super(x + outerPadding.left(), y + outerPadding.top(),
+                width - outerPadding.horizontal(), height - outerPadding.vertical(),
                 Component.empty());
         this.font = font;
         this.backend = backend;
-        textField = new CodeField(font, backend, this.width - totalInnerPadding());
-        textField.setCursorListener(()->{
-            scrollToCursor();
-            // reset blink
-            blinkStart = Util.getMillis();
-        });
-        // notify change
-        textField.setWidthUpdater(this::lineNoWidth);
+        textField = new CodeField(font, backend,
+                () -> this.width - totalInnerPadding() - lineNoWidth(),
+                () -> {
+                    scrollToCursor();
+                    // reset blink
+                    blinkStart = Util.getMillis();
+                });
     }
 
     private int lineNoWidth() {
@@ -78,7 +77,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         var displayLines = textField.getDisplayLines();
 
         int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
-                displayLines.size()-1);
+                displayLines.size() - 1);
         int beginIndex = displayLines.get(lineNo).beginIndex();
         if (backend.getCursor() <= beginIndex) {
             scrollAmount = textField.getLineAtCursor() * font.lineHeight;
@@ -119,13 +118,15 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             // control
             case WenyanRLexer.RETURN_NULL, WenyanRLexer.RETURN, WenyanRLexer.RETURN_LAST,
                  WenyanRLexer.BREAK_, WenyanRLexer.CONTINUE_, WenyanRLexer.IF_, WenyanRLexer.ELSE_,
-                 WenyanRLexer.FOR_WHILE_SART, WenyanRLexer.FOR_ARR_BELONG, WenyanRLexer.FOR_ENUM_START,
-                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END, WenyanRLexer.ZHE ->
-                    CONTROL_STYLE;
+                 WenyanRLexer.FOR_WHILE_SART, WenyanRLexer.FOR_ARR_BELONG,
+                 WenyanRLexer.FOR_ENUM_START,
+                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END,
+                 WenyanRLexer.ZHE -> CONTROL_STYLE;
             // string
             case WenyanRLexer.STRING_LITERAL -> STRING_STYLE;
             // data
-            case WenyanRLexer.FLOAT_NUM, WenyanRLexer.INT_NUM, WenyanRLexer.BOOL_VALUE -> DATA_STYLE;
+            case WenyanRLexer.FLOAT_NUM, WenyanRLexer.INT_NUM, WenyanRLexer.BOOL_VALUE ->
+                    DATA_STYLE;
             // comment
             case WenyanRLexer.COMMENT -> COMMENT_STYLE;
             // identifier
@@ -134,11 +135,14 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             // operator
             case WenyanRLexer.ADD, WenyanRLexer.SUB, WenyanRLexer.MUL,
                  WenyanRLexer.DIV, WenyanRLexer.UNARY_OP, WenyanRLexer.ARRAY_COMBINE_OP,
-                 WenyanRLexer.ARRAY_ADD_OP, WenyanRLexer.WRITE_KEY_FUNCTION, WenyanRLexer.POST_MOD_MATH_OP,
+                 WenyanRLexer.ARRAY_ADD_OP, WenyanRLexer.WRITE_KEY_FUNCTION,
+                 WenyanRLexer.POST_MOD_MATH_OP,
                  WenyanRLexer.AND, WenyanRLexer.OR, WenyanRLexer.NEQ, WenyanRLexer.LTE,
-                 WenyanRLexer.GTE, WenyanRLexer.EQ, WenyanRLexer.GT, WenyanRLexer.LT -> OPERATOR_STYLE;
+                 WenyanRLexer.GTE, WenyanRLexer.EQ, WenyanRLexer.GT, WenyanRLexer.LT ->
+                    OPERATOR_STYLE;
             // type
-            case WenyanRLexer.BOOL_TYPE, WenyanRLexer.STRING_TYPE, WenyanRLexer.LIST_TYPE, WenyanRLexer.OBJECT_TYPE,
+            case WenyanRLexer.BOOL_TYPE, WenyanRLexer.STRING_TYPE, WenyanRLexer.LIST_TYPE,
+                 WenyanRLexer.OBJECT_TYPE,
                  WenyanRLexer.FUNCTION_TYPE, WenyanRLexer.NUM_TYPE -> TYPE_STYLE;
             default -> DEFAULT_STYLE;
         };
@@ -146,13 +150,13 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE,
-                Component.translatable("gui.narrate.editBox", getMessage(), backend.getContent().toString()));
+                Component.translatable("gui.narrate.editBox", getMessage(), backend.getContent()));
     }
 
     // input
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
-            backend.setSelecting(Screen.hasShiftDown());
+            textField.setSelecting(Screen.hasShiftDown());
             textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
             return true;
@@ -165,10 +169,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
             return true;
         } else if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
-            backend.setSelecting(true);
+            textField.setSelecting(true);
             textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
-            backend.setSelecting(Screen.hasShiftDown());
             return true;
         } else {
             return false;
@@ -197,11 +200,10 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     // rendering
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        StringBuilder content = backend.getContent();
         int cursor = backend.getCursor();
         boolean isCursorRender = !isFocused() ||
                 (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
-        boolean cursorInContent = cursor < content.length();
+        boolean cursorInContent = cursor < backend.getContent().length();
         int cursorX = 0;
         int currentY = getY() + innerPadding();
         int lineNo = 1;
@@ -221,7 +223,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                         do {
                             end = textField.getStyleMarks().get(styleCounter).endIndex();
                         } while (end <= stringView.beginIndex() && ++styleCounter < textField.getStyleMarks().size());
-                        String line = content.substring(lastEnd,
+                        String line = backend.getContent().substring(lastEnd,
                                 Math.clamp(end, stringView.beginIndex(), stringView.endIndex()));
                         var style = styleFromTokenType(textField.getStyleMarks().get(styleCounter).style());
                         cursorX = guiGraphics.drawString(font, Component.literal(line).withStyle(style),
@@ -243,7 +245,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     if (place < stringView.beginIndex())
                         continue;
                     int placeX = getX() + innerPadding() + lineNoWidth() +
-                            font.width(content.substring(stringView.beginIndex(), place)) - 1;
+                            font.width(backend.getContent().substring(stringView.beginIndex(), place)) - 1;
                     guiGraphics.fill(placeX, currentY,
                             placeX + 1, currentY + font.lineHeight,
                             Snippets.contextColor(placeholder.context()));
@@ -254,7 +256,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 if (isCurLine && isCursorRender) {
                     // cursor
                     cursorX = getX() + innerPadding() + lineNoWidth() +
-                            font.width(content.substring(stringView.beginIndex(), cursor)) - 1;
+                            font.width(backend.getContent().substring(stringView.beginIndex(), cursor)) - 1;
                     guiGraphics.fill(cursorX, currentY,
                             cursorX + 1, currentY + font.lineHeight,
                             CURSOR_INSERT_COLOR);
@@ -263,12 +265,12 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 Component component = Component.literal(isContinuedLine ? ">" : String.valueOf(lineNo))
                         .withStyle(Style.EMPTY.withBold(isCurLine));
                 guiGraphics.drawString(font, component,
-                        getX() + lineNoWidth() - font.width("0")*component.getString().length(), currentY,
+                        getX() + lineNoWidth() - font.width("0") * component.getString().length(), currentY,
                         0xFF303030, false);
             }
             currentY += font.lineHeight;
             // it will always be (n, n) for the last line
-            if (i != displayLines.size() - 1 && content.charAt(stringView.endIndex()) == '\n') {
+            if (i != displayLines.size() - 1 && backend.getContent().charAt(stringView.endIndex()) == '\n') {
                 lineNo++;
                 isContinuedLine = false;
             } else {
@@ -295,12 +297,12 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     }
 
                     if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                        int i1 = font.width(content.substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
+                        int i1 = font.width(backend.getContent().substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
                         int j1;
                         if (selected.endIndex() > stringView.endIndex()) {
                             j1 = width - innerPadding();
                         } else {
-                            j1 = font.width(content.substring(stringView.beginIndex(), selected.endIndex()));
+                            j1 = font.width(backend.getContent().substring(stringView.beginIndex(), selected.endIndex()));
                         }
                         guiGraphics.fill(RenderType.guiTextHighlight(),
                                 k1 + i1, currentY, k1 + j1, currentY + font.lineHeight,
@@ -325,7 +327,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
         guiGraphics.blit(BACKGROUND,
                 getX() - outerPadding.left(), getY() - outerPadding.top(),
-                0,  (int)scrollAmount(),
+                0, (int) scrollAmount(),
                 width + outerPadding.horizontal(),
                 height + outerPadding.vertical());
     }

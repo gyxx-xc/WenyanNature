@@ -9,17 +9,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Mth;
-import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 // from net.minecraft.client.gui.components.MultilineTextField;
@@ -34,87 +31,30 @@ public class CodeField {
     @Getter
     private final List<StyledView> styleMarks = Lists.newArrayList();
 
+    @Setter
+    boolean selecting = false;
+
     private final CodeEditorBackend backend;
 
-    private final int width;
+    private final Supplier<Integer> widthUpdater;
 
-    @Setter private Consumer<String> valueListener = (s) -> {};
-    @Setter private Runnable cursorListener = () -> {};
-    @Setter private Supplier<Integer> widthUpdater = () -> 0;
-
-    public CodeField(Font font, CodeEditorBackend backend, int width) {
+    public CodeField(Font font, CodeEditorBackend backend,
+                     Supplier<Integer> widthUpdater,
+                     Runnable cursorListener
+                     ) {
         this.font = font;
         this.backend = backend;
-        this.width = width;
+        backend.setValueListener(this::onValueChange);
+        backend.setCursorListener(() -> {
+            cursorListener.run();
+            updateCurrentSnippetContext();
+        });
+        this.widthUpdater = widthUpdater;
         onValueChange();
     }
 
     public void insertText(String text) {
-        if (!text.isEmpty() || hasSelection()) {
-            String filteredText = StringUtil.filterText(text.replace("\t", "    "), true);
-            String string = StringUtil.truncateStringIfNecessary(filteredText,
-                    CodeEditorScreen.CHARACTER_LIMIT - backend.getContent().length(), false);
-            StringView stringView = getSelected();
-            backend.getContent().replace(stringView.beginIndex(), stringView.endIndex(), string);
-            int lengthChanged = string.length() - (stringView.endIndex() - stringView.beginIndex());
-            for (int i = 0; i < backend.getPlaceholders().size(); i++) {
-                var placeholder = backend.getPlaceholders().get(i);
-                // NOTE: a equal here means if any text of cursor is changed, the placeholder will be removed
-                if (placeholder.index() >= stringView.beginIndex()) {
-                    if (placeholder.index() <= stringView.endIndex()) {
-                        backend.getPlaceholders().remove(placeholder);
-                        i --;
-                    } else backend.getPlaceholders().set(i, new Placeholder(
-                            placeholder.context(), placeholder.index() + lengthChanged));
-                }
-            }
-            backend.setCursor(stringView.beginIndex() + string.length());
-            backend.setSelectCursor(backend.getCursor());
-            onValueChange();
-        }
-    }
-
-    public void insertSnippet(SnippetSet.Snippet snippet) {
-        // get indent
-        StringBuilder indent = new StringBuilder();
-        if (backend.getCursor() > 0) {
-            int lastNewline = backend.getContent().lastIndexOf("\n", backend.getCursor() - 1);
-            int firstChar;
-            if (lastNewline >= 0)
-                firstChar = lastNewline + 1;
-            else // first line
-                firstChar = 0;
-            while (firstChar < backend.getCursor() && Character.isWhitespace(backend.getContent().charAt(firstChar))) {
-                indent.append(backend.getContent().charAt(firstChar));
-                firstChar++;
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        int start = getSelected().beginIndex();
-        List<String> lines = snippet.lines();
-        // j for placeholders
-        List<Placeholder> addPlaceholders = new ArrayList<>();
-        for (int i = 0, j = 0; i < lines.size(); i++) {
-            if (i > 0) sb.append(indent);
-            while (j < snippet.insert().size() &&
-                    snippet.insert().get(j).row() == i) {
-                var p = snippet.insert().get(j++);
-                addPlaceholders.add(new Placeholder(p.context(), start + sb.length() + p.colum()));
-            }
-            sb.append(lines.get(i));
-            if (i != lines.size() - 1) sb.append('\n');
-        }
-        insertText(sb.toString());
-        if (!addPlaceholders.isEmpty()) {
-            backend.getPlaceholders().addAll(addPlaceholders);
-            backend.getPlaceholders().sort(Comparator.comparing(Placeholder::index));
-            backend.setSelectCursor(addPlaceholders.getFirst().index());
-            backend.setCursor(addPlaceholders.getFirst().index());
-            cursorListener.run();
-            updateCurrentSnippetContext();
-        } else {
-            seekCursorNextPlaceholder();
-        }
+        backend.insertText(text);
     }
 
     public StringView getSelected() {
@@ -198,19 +138,16 @@ public class CodeField {
     }
 
     private void seekCursor(Whence whence, int position) {
-        switch (whence) {
-            case ABSOLUTE -> backend.setCursor(position);
-            case RELATIVE -> backend.setCursor(backend.getCursor() + position);
-            case END -> backend.setCursor(backend.getContent().length() + position);
-        }
+        int tempCursor = switch (whence) {
+            case ABSOLUTE -> position;
+            case RELATIVE -> backend.getCursor() + position;
+            case END -> backend.getContent().length() + position;
+        };
 
-        backend.setCursor(Mth.clamp(backend.getCursor(), 0, backend.getContent().length()));
-        cursorListener.run();
-        updateCurrentSnippetContext();
-        if (!backend.isSelecting()) {
+        backend.setCursor(Mth.clamp(tempCursor, 0, backend.getContent().length()));
+        if (!selecting) {
             backend.setSelectCursor(backend.getCursor());
         }
-
     }
 
     private void seekCursorLine(int offset) {
@@ -228,7 +165,7 @@ public class CodeField {
                 .min(Comparator.comparingInt(Placeholder::index))
                 .orElse(null);
         if (next != null) {
-            backend.setSelecting(false);
+            selecting = false;
             seekCursor(Whence.ABSOLUTE, next.index());
             return true;
         } else {
@@ -243,7 +180,7 @@ public class CodeField {
     }
 
     public boolean keyPressed(int keyCode) {
-        backend.setSelecting(Screen.hasShiftDown());
+        selecting = Screen.hasShiftDown();
         if (Screen.isSelectAll(keyCode)) {
             backend.setCursor(backend.getContent().length());
             backend.setSelectCursor(0);
@@ -298,7 +235,7 @@ public class CodeField {
     private void onValueChange() {
         // reflowDisplayLines
         displayLines.clear();
-        int codeWidth = width - widthUpdater.get();
+        int codeWidth = widthUpdater.get();
         if (backend.getContent().isEmpty()) {
             displayLines.add(StringView.EMPTY);
         } else {
@@ -335,7 +272,7 @@ public class CodeField {
             styleMarks.clear();
             styleMarks.add(new StyledView(0, -1));
         } else {
-            var lexer = new WenyanRLexer(CharStreams.fromString(backend.getContent().toString()));
+            var lexer = new WenyanRLexer(CharStreams.fromString(backend.getContent()));
             lexer.removeErrorListeners();
             var token = new CommonTokenStream(lexer);
             token.fill();
@@ -351,10 +288,6 @@ public class CodeField {
             }
             styleMarks.add(new StyledView(backend.getContent().length(), -1));
         }
-
-        valueListener.accept(backend.getContent().toString());
-        cursorListener.run();
-        updateCurrentSnippetContext();
     }
 
     private void updateCurrentSnippetContext() {

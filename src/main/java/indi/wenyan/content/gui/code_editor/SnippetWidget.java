@@ -18,6 +18,9 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
@@ -134,7 +137,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                 if (y >= currentY && y < currentY + DIR_HEIGHT) {
                     // clicked on directory
                     if (set.snippets().size() == 1) { // if only one snippet, dir is the snippet
-                        backend.insertSnippet(set.snippets().getFirst());
+                        insertSnippet(set.snippets().getFirst());
                     } else {
                         set.fold(!set.fold());
                     }
@@ -145,7 +148,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                 for (SnippetSet.Snippet s : set.snippets()) {
                     if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
                         // clicked on snippet
-                        backend.insertSnippet(s);
+                        insertSnippet(s);
                         return true;
                     }
                     currentY += ENTRY_HEIGHT;
@@ -153,6 +156,54 @@ public class SnippetWidget extends AbstractScrollWidget {
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    public void insertSnippet(SnippetSet.Snippet snippet) {
+        // get indent
+        StringBuilder indent = new StringBuilder();
+        if (backend.getCursor() > 0) {
+            int lastNewline = backend.getContent().lastIndexOf("\n", backend.getCursor() - 1);
+            int firstChar;
+            if (lastNewline >= 0)
+                firstChar = lastNewline + 1;
+            else // first line
+                firstChar = 0;
+            while (firstChar < backend.getCursor() && Character.isWhitespace(backend.getContent().charAt(firstChar))) {
+                indent.append(backend.getContent().charAt(firstChar));
+                firstChar++;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        int start = Math.min(backend.getSelectCursor(), backend.getCursor());
+        List<String> lines = snippet.lines();
+        // j for placeholders
+        List<CodeField.Placeholder> addedPlaceholders = new ArrayList<>();
+        for (int i = 0, j = 0; i < lines.size(); i++) {
+            if (i > 0) sb.append(indent);
+            while (j < snippet.insert().size() &&
+                    snippet.insert().get(j).row() == i) {
+                var p = snippet.insert().get(j++);
+                addedPlaceholders.add(new CodeField.Placeholder(p.context(), start + sb.length() + p.colum()));
+            }
+            sb.append(lines.get(i));
+            if (i != lines.size() - 1) sb.append('\n');
+        }
+        backend.insertText(sb.toString());
+        if (!addedPlaceholders.isEmpty()) {
+            backend.getPlaceholders().addAll(addedPlaceholders);
+            backend.getPlaceholders().sort(Comparator.comparing(CodeField.Placeholder::index));
+            backend.setCursor(addedPlaceholders.getFirst().index());
+            backend.setSelectCursor(backend.getCursor());
+        } else {
+            CodeField.Placeholder next = backend.getPlaceholders().stream()
+                    .filter(p -> p.index() > backend.getCursor())
+                    .min(Comparator.comparingInt(CodeField.Placeholder::index))
+                    .orElse(null);
+            if (next != null) {
+                backend.setCursor(next.index());
+                backend.setSelectCursor(backend.getCursor());
+            }
+        }
     }
 
     @Override
