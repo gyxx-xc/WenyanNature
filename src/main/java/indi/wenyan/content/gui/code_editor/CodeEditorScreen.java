@@ -3,6 +3,7 @@ package indi.wenyan.content.gui.code_editor;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -22,38 +23,50 @@ public class CodeEditorScreen extends Screen {
     private final CodeEditorBackend backend;
 
     public static final int CHARACTER_LIMIT = 16384;
+    public static final int TITLE_LENGTH_LIMIT = 18;
 
     @Getter
     private CodeEditorWidget textFieldWidget;
     private SnippetWidget snippetWidget;
     private PackageSnippetWidget packageWidget;
+    private EditBox titleBar;
 
-    public CodeEditorScreen(String content, Consumer<String> save, List<PackageSnippetWidget.PackageSnippet> packages) {
+    public CodeEditorScreen(CodeEditorBackend.PersistentData data, Consumer<String> save) {
         super(Component.empty());
-        backend = new CodeEditorBackend(content, save, packages, this);
+        backend = new CodeEditorBackend(data, save, this);
     }
 
     @Override
     protected void init() {
-        int textFieldWidth = Mth.clamp(width/2, 50, CodeEditorWidget.WIDTH);
+        int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
         textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, 15,
-                textFieldWidth, Math.min(height-30, CodeEditorWidget.HEIGH));
+                textFieldWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(textFieldWidget);
 
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
-        snippetWidget = new SnippetWidget(font,
+        snippetWidget = new SnippetWidget(font, backend,
                 0, 15,
-                snippetWidth, Math.min(height-30, CodeEditorWidget.HEIGH),
-                backend);
+                snippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(snippetWidget);
 
         int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2, 0, 280);
-        packageWidget = new PackageSnippetWidget(font,
+        packageWidget = new PackageSnippetWidget(font, backend,
                 width - packageSnippetWidth, 15,
-                packageSnippetWidth, Math.min(height-30, CodeEditorWidget.HEIGH),
-                backend);
+                packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(packageWidget);
+
+        titleBar = new EditBox(font, 0, 0, width, 15, Component.empty());
+//        titleBar = new EditBox(font, 62, 24, 103, 12,
+//                Component.translatable("container.repair"));
+//        titleBar.setCanLoseFocus(false);
+        titleBar.setTextColor(-1);
+        titleBar.setBordered(false);
+        titleBar.setMaxLength(18);
+//        titleBar.setValue(item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString());
+        titleBar.setResponder(text -> {
+        });
+        addRenderableWidget(titleBar);
     }
 
     @Override

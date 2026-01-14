@@ -63,7 +63,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
         return Optional.empty();
     }
 
-    public PackageSnippetWidget(Font font, int x, int y, int width, int height, CodeEditorBackend backend) {
+    public PackageSnippetWidget(Font font, CodeEditorBackend backend, int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
         this.font = font;
         this.backend = backend;

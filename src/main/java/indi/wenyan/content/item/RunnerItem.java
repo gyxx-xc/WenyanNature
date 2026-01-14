@@ -1,5 +1,6 @@
 package indi.wenyan.content.item;
 
+import indi.wenyan.content.gui.code_editor.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
@@ -75,11 +76,11 @@ public class RunnerItem extends BlockItem {
 
     @OnlyIn(Dist.CLIENT)
     private void opengui(ItemStack itemstack, Player player, InteractionHand hand) {
-        Minecraft.getInstance().setScreen(new CodeEditorScreen(
-                itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
+        var persistentData = new CodeEditorBackend.PersistentData(itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""), "", List.of());
+        Minecraft.getInstance().setScreen(new CodeEditorScreen(persistentData,
                 content -> {
                     int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
                     PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
-                }, List.of()));
+                }));
     }
 }

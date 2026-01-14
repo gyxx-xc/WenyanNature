@@ -1,6 +1,7 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
+import indi.wenyan.content.gui.code_editor.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.content.gui.code_editor.PackageSnippetWidget;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
@@ -97,11 +98,12 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                     packageSnippets.add(new PackageSnippetWidget.PackageSnippet(Registration.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
             }
         }
-        Minecraft.getInstance().setScreen(new CodeEditorScreen(runner.pages, content -> {
+        var persistentData = new CodeEditorBackend.PersistentData(runner.pages, "", packageSnippets);
+        Minecraft.getInstance().setScreen(new CodeEditorScreen(persistentData, content -> {
             runner.pages = content;
             runner.setChanged();
             PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
-        }, packageSnippets));
+        }));
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -1,5 +1,6 @@
 package indi.wenyan.content.gui.code_editor;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.util.StringUtil;
@@ -14,8 +15,7 @@ import java.util.function.Consumer;
 // but will be removed when screen is closed
 @OnlyIn(Dist.CLIENT)
 public class CodeEditorBackend {
-    @Getter
-    private final StringBuilder content;
+    private final PersistentData persistentData;
     @Getter
     private final List<CodeField.Placeholder> placeholders = new ArrayList<>();
     @Getter @Setter
@@ -24,31 +24,54 @@ public class CodeEditorBackend {
     private int selectCursor = 0;
     @Getter @Setter
     private boolean selecting = false;
-    @Getter
-    private final List<PackageSnippetWidget.PackageSnippet> packages;
     @Getter @Setter
     private List<SnippetSet> curSnippets = Snippets.STMT_CONTEXT;
     private final CodeEditorScreen screen;
 
     private final Consumer<String> saving;
 
-    public CodeEditorBackend(String content, Consumer<String> saving, List<PackageSnippetWidget.PackageSnippet> packages, CodeEditorScreen screen) {
-        this.content = new StringBuilder(StringUtil.truncateStringIfNecessary(content, CodeEditorScreen.CHARACTER_LIMIT, false));
-        this.packages = packages;
+    public CodeEditorBackend(PersistentData data, Consumer<String> saving, CodeEditorScreen screen) {
+        persistentData = data;
         this.saving = saving;
         this.screen = screen;
     }
 
     public String getString() {
-        return content.toString();
+        return persistentData.content.toString();
     }
 
     public void save() {
-        saving.accept(content.toString());
+        saving.accept(persistentData.content.toString());
     }
 
 
     public void insertSnippet(SnippetSet.Snippet s) {
         screen.getTextFieldWidget().getTextField().insertSnippet(s);
+    }
+
+    public StringBuilder getContent() {
+        return persistentData.content;
+    }
+
+    public StringBuilder getTitle() {
+        return persistentData.title;
+    }
+
+    public List<PackageSnippetWidget.PackageSnippet> getPackages() {
+        return persistentData.packages;
+    }
+
+    @Data
+    public static class PersistentData {
+        final StringBuilder content;
+        final StringBuilder title;
+        List<PackageSnippetWidget.PackageSnippet> packages;
+        String output;
+
+        public PersistentData(String content, String title, List<PackageSnippetWidget.PackageSnippet> packages) {
+            this.content = new StringBuilder(StringUtil.truncateStringIfNecessary(content, CodeEditorScreen.CHARACTER_LIMIT, false));
+            this.title = new StringBuilder(StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
+            this.packages = packages;
+        }
     }
 }

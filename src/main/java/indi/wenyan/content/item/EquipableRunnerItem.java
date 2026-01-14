@@ -1,6 +1,5 @@
 package indi.wenyan.content.item;
 
-import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.exec_interface.handler.RequestCallHandler;
@@ -16,11 +15,9 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
-import indi.wenyan.setup.network.RunnerCodePacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -34,7 +31,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -182,11 +178,12 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
 
     @OnlyIn(Dist.CLIENT)
     private void opengui(ItemStack itemstack, Player player, InteractionHand hand) {
-        Minecraft.getInstance().setScreen(new CodeEditorScreen(
-                itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
-                content -> {
-                    int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
-                    PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
-                }, List.of()));
+//        var presis
+//        Minecraft.getInstance().setScreen(new CodeEditorScreen(
+//                ,
+//                content -> {
+//                    int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
+//                    PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
+//                }));
     }
 }

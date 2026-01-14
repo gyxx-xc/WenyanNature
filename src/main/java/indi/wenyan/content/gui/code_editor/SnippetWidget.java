@@ -48,7 +48,7 @@ public class SnippetWidget extends AbstractScrollWidget {
         return Optional.ofNullable(renderingSnippetTooltip);
     }
 
-    public SnippetWidget(Font font, int x, int y, int width, int height, CodeEditorBackend backend) {
+    public SnippetWidget(Font font, CodeEditorBackend backend, int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
         this.font = font;
         this.backend = backend;
