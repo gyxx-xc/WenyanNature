@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 @Data
@@ -23,7 +22,7 @@ public final class ImportRequest implements IHandleableRequest {
     final List<IWenyanValue> args;
     private final String packageName;
     private Status status = Status.FIRST_RUN;
-    private Either<WenyanPackage, WenyanThread> packageUnion;
+    private Either<WenyanPackage, WenyanThread> packageOrThread;
 
     public ImportRequest(WenyanThread thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException.WenyanThrowException {
         this.thread = thread;
@@ -44,17 +43,17 @@ public final class ImportRequest implements IHandleableRequest {
         while (true)
             switch (status) {
                 case FIRST_RUN:
-                    packageUnion = getPackage.getPackage(context, packageName);
+                    packageOrThread = getPackage.getPackage(context, packageName);
                     status = Status.PROCESS_PACKAGE;
                 case PROCESS_PACKAGE:
-                    if (packageUnion.right().isPresent()) {
+                    if (packageOrThread.right().isPresent()) {
                         status = Status.WAITING;
-                    } else if (packageUnion.left().isPresent()) {
-                        returnPackage(packageUnion.left().get());
+                    } else if (packageOrThread.left().isPresent()) {
+                        returnPackage(packageOrThread.left().get());
                         return true; // end
                     }
                 case WAITING:
-                    WenyanThread wenyanThread = packageUnion.right().get();
+                    WenyanThread wenyanThread = packageOrThread.right().get();
                     if (wenyanThread.state == WenyanThread.State.DYING) {
                         if (wenyanThread.getMainRuntime().finishFlag) {
                             status = Status.PROCESS_RUNTIME;
@@ -66,7 +65,7 @@ public final class ImportRequest implements IHandleableRequest {
                         return false; // goto first line
                     }
                 case PROCESS_RUNTIME:
-                    returnPackage(new WenyanPackage(packageUnion.right().get().getMainRuntime().variables));
+                    returnPackage(new WenyanPackage(packageOrThread.right().get().getMainRuntime().variables));
                     return true; // end
             }
     }
@@ -107,28 +106,5 @@ public final class ImportRequest implements IHandleableRequest {
          * @throws WenyanException.WenyanThrowException if the package cannot be found or accessed
          */
         Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException;
-    }
-
-    public record PackageUnion(@Nullable WenyanPackage wenyanPackage,
-                               @Nullable WenyanThread wenyanThread) {
-        public static PackageUnion of(WenyanPackage wenyanPackage) {
-            return new PackageUnion(wenyanPackage, null);
-        }
-
-        public static PackageUnion of(WenyanThread thread) {
-            return new PackageUnion(null, thread);
-        }
-
-        @NotNull
-        public Type type() {
-            if (wenyanPackage != null) return Type.WENYAN_PACKAGE;
-            if (wenyanThread != null) return Type.RUNTIME;
-            throw new WenyanException.WenyanUnreachedException();
-        }
-
-        public enum Type {
-            WENYAN_PACKAGE,
-            RUNTIME
-        }
     }
 }
