@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -31,6 +32,7 @@ public class CodeEditorScreen extends Screen {
     private SnippetWidget snippetWidget;
     private PackageSnippetWidget packageWidget;
     private EditBox titleBar;
+    private FittingMultiLineTextWidget outputWindow;
 
     public CodeEditorScreen(CodeEditorBackend backend) {
         super(Component.empty());
@@ -65,10 +67,14 @@ public class CodeEditorScreen extends Screen {
         titleBar.setBordered(false);
         titleBar.setMaxLength(18);
         titleBar.setValue(backend.getTitle());
-        titleBar.setResponder(text -> {
-            backend.setTitle(text);
-        });
+        titleBar.setResponder(backend::setTitle);
         addRenderableWidget(titleBar);
+
+        outputWindow = new FittingMultiLineTextWidget(
+                0, 15 + Math.min(height - 30, CodeEditorWidget.HEIGH),
+                width, 30,
+                Component.literal(("abcd".repeat(80)+"\n").repeat(10)), font);
+        addRenderableWidget(outputWindow);
     }
 
     @Override
@@ -120,7 +126,7 @@ public class CodeEditorScreen extends Screen {
 
     @Override
     public void setFocused(@Nullable GuiEventListener listener) {
-        if (listener instanceof SnippetWidget || listener instanceof PackageSnippetWidget)
+        if (listener == snippetWidget || listener == packageWidget || listener == outputWindow)
             super.setFocused(textFieldWidget);
         else
             super.setFocused(listener);
