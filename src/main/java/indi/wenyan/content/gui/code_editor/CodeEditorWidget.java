@@ -248,7 +248,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                             font.width(backend.getContent().substring(stringView.beginIndex(), place)) - 1;
                     guiGraphics.fill(placeX, currentY,
                             placeX + 1, currentY + font.lineHeight,
-                            Snippets.contextColor(placeholder.context()));
+                            placeholder.context().getColor());
                 }
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = cursorInContent &&

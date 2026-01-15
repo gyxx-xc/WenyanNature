@@ -99,8 +99,8 @@ public class CodeEditorScreen extends Screen {
                     Component textComp = Component.literal(line.substring(curColum,
                             placeholder.colum())).withStyle(ChatFormatting.GRAY);
 
-                    Component placeholderComp = Component.literal(placeholder.context().value())
-                            .withStyle(Style.EMPTY.withColor(Snippets.contextColor(placeholder.context())));
+                    Component placeholderComp = Component.literal(placeholder.context().getValue())
+                            .withStyle(Style.EMPTY.withColor(placeholder.context().getColor()));
                     lineComp.append(textComp).append(placeholderComp);
                     curColum = placeholder.colum();
                 }
