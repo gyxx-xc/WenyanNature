@@ -33,7 +33,8 @@ public class CodeEditorBackend {
 
     private final CodeEditorBackendSynchronizer synchronizer;
 
-    public CodeEditorBackend(String content, String title, List<PackageSnippetWidget.PackageSnippet> packages, CodeEditorBackendSynchronizer synchronizer) {
+    public CodeEditorBackend(String content, String title, List<PackageSnippetWidget.PackageSnippet> packages,
+            CodeEditorBackendSynchronizer synchronizer) {
         this.synchronizer = synchronizer;
         sidedData = new DoubleSidedData(content, title);
         this.packages = packages;
@@ -43,7 +44,6 @@ public class CodeEditorBackend {
         synchronizer.sendContent(sidedData.content.toString());
         synchronizer.sendTitle(sidedData.title.toString());
     }
-
 
     public String getContent() {
         return sidedData.content.toString();
@@ -66,13 +66,15 @@ public class CodeEditorBackend {
             int lengthChanged = string.length() - (endIndex - beginIndex);
             for (int i = 0; i < getPlaceholders().size(); i++) {
                 var placeholder = getPlaceholders().get(i);
-                // NOTE: a equal here means if any text of cursor is changed, the placeholder will be removed
+                // NOTE: a equal here means if any text of cursor is changed, the placeholder
+                // will be removed
                 if (placeholder.index() >= beginIndex) {
                     if (placeholder.index() <= endIndex) {
                         getPlaceholders().remove(placeholder);
                         i--;
-                    } else getPlaceholders().set(i, new CodeField.Placeholder(
-                            placeholder.context(), placeholder.index() + lengthChanged));
+                    } else
+                        getPlaceholders().set(i, new CodeField.Placeholder(
+                                placeholder.context(), placeholder.index() + lengthChanged));
                 }
             }
 
@@ -102,9 +104,8 @@ public class CodeEditorBackend {
     }
 
     public void setTitle(String title) {
-        if (!sidedData.title.toString().equals(title)) {
-            sidedData.title.replace(0, sidedData.title.length(), title);
-        }
+        sidedData.title.setLength(0);
+        sidedData.title.append(StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
     }
 
     @Data
@@ -112,11 +113,13 @@ public class CodeEditorBackend {
         final StringBuilder content;
         final StringBuilder title;
         final List<CodeField.Placeholder> placeholders = new ArrayList<>();
-//        String output;
+        // String output;
 
         public DoubleSidedData(String content, String title) {
-            this.content = new StringBuilder(StringUtil.truncateStringIfNecessary(content, CodeEditorScreen.CHARACTER_LIMIT, false));
-            this.title = new StringBuilder(StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
+            this.content = new StringBuilder(
+                    StringUtil.truncateStringIfNecessary(content, CodeEditorScreen.CHARACTER_LIMIT, false));
+            this.title = new StringBuilder(
+                    StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
         }
     }
 }

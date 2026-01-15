@@ -45,27 +45,29 @@ public class CodeEditorScreen extends Screen {
                 textFieldWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(textFieldWidget);
 
+        // -4 is spacing
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
         snippetWidget = new SnippetWidget(font, backend,
                 0, 15,
                 snippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(snippetWidget);
 
-        int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2, 0, 280);
+        int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 280);
         packageWidget = new PackageSnippetWidget(font, backend,
                 width - packageSnippetWidth, 15,
                 packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(packageWidget);
 
-        titleBar = new EditBox(font, 0, 0, width, 15, Component.literal(backend.getTitle()));
-//        titleBar = new EditBox(font, 62, 24, 103, 12,
-//                Component.translatable("container.repair"));
-//        titleBar.setCanLoseFocus(false);
+        titleBar = new FuzhouNameWidget(font, snippetWidth + 4, 2,
+                width - (snippetWidth + 4) - (packageSnippetWidth + 4), 15,
+                Component.translatable("gui.wenyan.snippet_name"));
         titleBar.setTextColor(-1);
         titleBar.setBordered(false);
         titleBar.setMaxLength(18);
-//        titleBar.setValue(item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString());
-        titleBar.setResponder(backend::setTitle);
+        titleBar.setValue(backend.getTitle());
+        titleBar.setResponder(text -> {
+            backend.setTitle(text);
+        });
         addRenderableWidget(titleBar);
     }
 
@@ -74,14 +76,12 @@ public class CodeEditorScreen extends Screen {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
-        snippetWidget.getRenderingSnippetTooltip().ifPresent(s ->
-                renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
-        packageWidget.getRenderingSnippetTooltip().ifPresent(s ->
-                renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
+        snippetWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
+        packageWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
     }
 
     public void renderSnippetTooltip(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                                     SnippetSet.Snippet snippet) {
+            SnippetSet.Snippet snippet) {
         List<Component> tooltip = Lists.newArrayList();
         tooltip.add(Component.literal(snippet.title()));
         if (!hasShiftDown()) {

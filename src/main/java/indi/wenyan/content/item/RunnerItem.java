@@ -43,8 +43,7 @@ public class RunnerItem extends BlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack>
-    use(Level level, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
             opengui(itemstack, player, hand);
@@ -53,21 +52,21 @@ public class RunnerItem extends BlockItem {
     }
 
     // FIXME
-//    @Override
-//    public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
-//        if (!player.isShiftKeyDown()) {
-//            var codeData = item.get(Registration.PROGRAM_CODE_DATA.get());
-//            if (codeData != null) {
-//                HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player,
-//                        codeData, runningLevel);
-//                player.level().addFreshEntity(handRunnerEntity);
-//
-//                item.shrink(1);
-//                return false; // not gen an item entity
-//            } // else : go outside
-//        }
-//        return super.onDroppedByPlayer(item, player);
-//    }
+    // @Override
+    // public boolean onDroppedByPlayer(@NotNull ItemStack item, Player player) {
+    // if (!player.isShiftKeyDown()) {
+    // var codeData = item.get(Registration.PROGRAM_CODE_DATA.get());
+    // if (codeData != null) {
+    // HandRunnerEntity handRunnerEntity = new HandRunnerEntity(player,
+    // codeData, runningLevel);
+    // player.level().addFreshEntity(handRunnerEntity);
+    //
+    // item.shrink(1);
+    // return false; // not gen an item entity
+    // } // else : go outside
+    // }
+    // return super.onDroppedByPlayer(item, player);
+    // }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
@@ -103,7 +102,8 @@ public class RunnerItem extends BlockItem {
                 return itemstack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
             }
         };
-        var backend = new CodeEditorBackend(itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""), "", List.of(), synchronizer);
+        var backend = new CodeEditorBackend(itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
+                synchronizer.getTitle(), List.of(), synchronizer);
         Minecraft.getInstance().setScreen(new CodeEditorScreen(backend));
     }
 }
