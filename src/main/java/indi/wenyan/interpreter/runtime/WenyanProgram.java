@@ -1,14 +1,7 @@
 package indi.wenyan.interpreter.runtime;
 
-import indi.wenyan.interpreter.compiler.WenyanBytecode;
-import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.compiler.WenyanVerifier;
-import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
-import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 import net.minecraft.world.entity.player.Player;
@@ -23,16 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Handles program compilation, thread management, and scheduling.
  */
 public class WenyanProgram {
-    /**
-     * The source code of the program
-     */
-    public final String code;
-
-    /**
-     * The base bytecode compiled from the source code
-     */
-    public final WenyanBytecode baseBytecode = new WenyanBytecode();
-
     /**
      * The base runtime environment for the program
      */
@@ -83,25 +66,11 @@ public class WenyanProgram {
     /**
      * Creates a new Wenyan program from the given code.
      *
-     * @param code     The Wenyan program source code
      * @param holder   The player who created this program
      * @param platform The platform integration
      */
-    public WenyanProgram(String code, Player holder, IWenyanPlatform platform) {
-        this.code = code;
+    public WenyanProgram(Player holder, IWenyanPlatform platform) {
         this.platform = platform;
-        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(baseBytecode);
-        WenyanVisitor visitor = new WenyanMainVisitor(environment);
-        try {
-            visitor.visit(WenyanVisitor.program(code));
-            environment.enterContext(0, 0, 0, 0);
-            environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-            environment.add(WenyanCodes.RET);
-            environment.exitContext();
-            WenyanVerifier.verify(baseBytecode);
-        } catch (WenyanException e) {
-            WenyanException.handleException(holder, e.getMessage());
-        }
         this.baseEnvironment = new WenyanRuntime(null);
         baseEnvironment.importPackage(WenyanPackages.WENYAN_BASIC_PACKAGES);
         platform.changeInitEnvironment(baseEnvironment);
@@ -112,7 +81,7 @@ public class WenyanProgram {
      * Creates a new thread for this program with the base environment.
      */
     @WenyanThreading(planning = true)
-    public WenyanThread createMainThread() throws WenyanException.WenyanVarException {
+    public WenyanThread createThread(String code) throws WenyanException.WenyanVarException {
         if (!programJavaThread.isAlive()) {
             // DCL? what is that
             try {
@@ -121,12 +90,7 @@ public class WenyanProgram {
             }
         }
 
-        WenyanThread thread = new WenyanThread(this);
-        thread.call(baseEnvironment);
-        // call main
-        WenyanRuntime newRuntime = new WenyanRuntime(baseBytecode);
-        thread.call(newRuntime);
-        thread.setMainRuntime(newRuntime);
+        var thread = WenyanThread.ofCode(code, baseEnvironment, this);
 
         int threadsNumber = runningThreadsNumber.getAndIncrement();
         if (threadsNumber >= MAX_THREAD) {

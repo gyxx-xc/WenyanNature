@@ -83,13 +83,12 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             if (slotId == 38) {
                 if (program == null) {
                     // run program
-                    var newProgram = new WenyanProgram(stack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
-                            player, this);
+                    var newProgram = new WenyanProgram(player, this);
                     PROGRAMS.put(stack.hashCode(), newProgram);
                 } else {
                     if (!program.isRunning()) {
                         try {
-                            program.createMainThread();
+                            program.createThread(stack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""));
                         } catch (WenyanException.WenyanVarException e) {
                             WenyanException.handleException(player, e.getMessage());
                         }

@@ -49,7 +49,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     private WenyanProgram getProgram(Player player) {
         if (program == null)
-            program = new WenyanProgram(pages, player, this);
+            program = new WenyanProgram(player, this);
         return program;
     }
 
@@ -103,7 +103,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             return;
         }
         try {
-            p.createMainThread();
+            p.createThread(pages);
         } catch (WenyanException.WenyanVarException e) {
             WenyanException.handleException(player, e.getMessage());
         }
@@ -205,7 +205,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                     }
                     // STUB
                     if (ifProgram().isPresent()) {
-                        WenyanThread thread = platform.getProgram(program.holder).createMainThread();
+                        WenyanThread thread = platform.getProgram(program.holder).createThread(platform.pages);
                         return Either.right(thread);
                     } else {
                         throw new WenyanException.WenyanUnreachedException();
