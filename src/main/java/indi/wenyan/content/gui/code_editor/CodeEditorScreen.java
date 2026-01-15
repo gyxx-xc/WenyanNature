@@ -65,8 +65,7 @@ public class CodeEditorScreen extends Screen {
         titleBar.setBordered(false);
         titleBar.setMaxLength(18);
 //        titleBar.setValue(item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString());
-        titleBar.setResponder(text -> {
-        });
+        titleBar.setResponder(backend::setTitle);
         addRenderableWidget(titleBar);
     }
 

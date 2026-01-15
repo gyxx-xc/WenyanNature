@@ -101,6 +101,12 @@ public class CodeEditorBackend {
         return sidedData.getTitle().toString();
     }
 
+    public void setTitle(String title) {
+        if (!sidedData.title.toString().equals(title)) {
+            sidedData.title.replace(0, sidedData.title.length(), title);
+        }
+    }
+
     @Data
     public static class DoubleSidedData { // these data need to sync
         final StringBuilder content;
