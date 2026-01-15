@@ -75,14 +75,14 @@ for snippet_set_key in snippet_sets:
         placeholders_code = ""
         for i, line in enumerate(content):
             # find {CTX}
-            placeholders = re.findall(r"\{(.*?)\}", line)
+            placeholders_iter = re.finditer(r"\{(.*?)\}", line)
             deleted_str = 0
-            for p in placeholders:
+            for p in placeholders_iter:
                 placeholders_code += placeholder_template \
-                    .replace("/context/", p) \
+                    .replace("/context/", p.group(1)) \
                     .replace("/i/", str(i)) \
-                    .replace("/j/", str(line.index(p) - deleted_str - 1))
-                deleted_str += len(p) + 2
+                    .replace("/j/", str(p.start() - deleted_str))
+                deleted_str += len(p.group())
             contents_code += f'"{re.sub(r"\{(.*?)\}", "", line)}",'
         snippet_str += snippet_template.replace("/name/", name) \
             .replace("/contents/", contents_code[:-1]) \

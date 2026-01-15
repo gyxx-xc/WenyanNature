@@ -9,33 +9,124 @@ import java.util.List;
 public enum Snippets {;
     
     public static final SnippetSet VARIABLE_STMT = new SnippetSet("變數",
-        new SnippetSet.Snippet("夫", List.of("夫。"), List.of(
+        new SnippetSet.Snippet("夫...", List.of("夫。"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 1),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 2))),
-        new SnippetSet.Snippet("吾有", List.of("吾有一曰。"), List.of(
+        new SnippetSet.Snippet("吾有...曰", List.of("吾有 曰。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT_L, 0, 2),
                 new SnippetSet.SnippetPlaceholder(Context.TYPE, 0, 3),
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 4),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 5))),
-        new SnippetSet.Snippet("名之曰", List.of("名之曰。"), List.of(
+        new SnippetSet.Snippet("有...", List.of("有 。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.TYPE, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("名之曰...", List.of("名之曰。"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.ID, 0, 3),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4))),
-        new SnippetSet.Snippet("昔之...今", List.of("昔之者。今是矣。"), List.of(
+        new SnippetSet.Snippet("昔之...今", List.of("昔之者。"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.ID, 0, 2),
-                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 5),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 8)))
+                new SnippetSet.SnippetPlaceholder(Context.ASSIGN_RIGHT, 0, 4)))
+    );
+
+    public static final SnippetSet ASSIGN_RIGHT = new SnippetSet("賦值",
+        new SnippetSet.Snippet("今...是矣", List.of("今是矣。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4))),
+        new SnippetSet.Snippet("不復存矣", List.of("不復存矣。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 5)))
+    );
+
+    public static final SnippetSet CALC_STMT = new SnippetSet("算術",
+        new SnippetSet.Snippet("加...以...", List.of("加以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("減...以...", List.of("減以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("乘...以...", List.of("乘以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("除...以...", List.of("除以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("所餘幾何", List.of("除以。所餘幾何。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 8))),
+        new SnippetSet.Snippet("且...以...", List.of("且以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("或...以...", List.of("或以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("變...", List.of("變。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 2))),
+        new SnippetSet.Snippet("充...以...", List.of("充以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("銜...以...", List.of("銜以。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("中無陰乎", List.of("夫 中無陰乎。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 7))),
+        new SnippetSet.Snippet("中有陽乎", List.of("有 中有陽乎。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 7)))
+    );
+
+    public static final SnippetSet FUNCTION_STMT = new SnippetSet("術",
+        new SnippetSet.Snippet("書...", List.of("書。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 2))),
+        new SnippetSet.Snippet("取...以施", List.of("取以施。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT_L, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 3),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4))),
+        new SnippetSet.Snippet("施...", List.of("施。於。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 3),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4))),
+        new SnippetSet.Snippet("吾有一術", List.of("吾有一術。名之曰。是術曰","  ","是謂之術也。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 8),
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 2, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 6))),
+        new SnippetSet.Snippet("吾有一術。必先得", List.of("吾有一術。名之曰。","欲行是術必先得  。","乃行是術曰","  ","是謂之術也。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 8),
+                new SnippetSet.SnippetPlaceholder(Context.INT_L, 1, 7),
+                new SnippetSet.SnippetPlaceholder(Context.TYPE, 1, 8),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 1, 9),
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 3, 2),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 4, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 4, 6))),
+        new SnippetSet.Snippet("乃得", List.of("乃得。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("乃得矣", List.of("乃得矣。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4))),
+        new SnippetSet.Snippet("乃歸空無", List.of("乃歸空無。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 5)))
     );
 
     public static final SnippetSet CONTROL_STMT = new SnippetSet("決策",
-        new SnippetSet.Snippet("若", List.of("若者。","  ","也。"), List.of(
+        new SnippetSet.Snippet("若...者", List.of("若者。","  ",""), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
                 new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 2))),
-        new SnippetSet.Snippet("若...若非", List.of("若者。","  ","若非。","  ","也。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
-                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
-                new SnippetSet.SnippetPlaceholder(Context.STMT, 3, 2),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 4, 2))),
-        new SnippetSet.Snippet("凡中之", List.of("凡中之。","  ","云云。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ELSE_CONTROL, 2, 0))),
+        new SnippetSet.Snippet("凡...中之", List.of("凡中之。","  ","云云。"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 1),
                 new SnippetSet.SnippetPlaceholder(Context.ID, 0, 3),
                 new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
@@ -44,38 +135,75 @@ public enum Snippets {;
                 new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
                 new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 3))),
-        new SnippetSet.Snippet("乃得", List.of("乃得。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 2),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
+        new SnippetSet.Snippet("恆為是", List.of("  ","云云。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 1, 3))),
         new SnippetSet.Snippet("乃止", List.of("乃止。"), List.of()),
-        new SnippetSet.Snippet("乃止是遍", List.of("乃止是遍。"), List.of())
+        new SnippetSet.Snippet("乃止是遍", List.of("乃止是遍。"), List.of()),
+        new SnippetSet.Snippet("噫", List.of("噫。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 2)))
     );
 
-    public static final SnippetSet CALL_STATEMENT = new SnippetSet("算術",
-        new SnippetSet.Snippet("加", List.of("加以。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, -4),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
-        new SnippetSet.Snippet("減", List.of("減以。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, -4),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
-        new SnippetSet.Snippet("乘", List.of("乘以。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, -4),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
-        new SnippetSet.Snippet("除", List.of("除以。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, -4),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3))),
-        new SnippetSet.Snippet("取以施", List.of("取以施。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 1),
+    public static final SnippetSet ELSE_CONTROL = new SnippetSet("若非",
+        new SnippetSet.Snippet("若...若非", List.of("若非。","  ","也。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 2))),
+        new SnippetSet.Snippet("若...或若", List.of("或若者。","  ",""), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.ELSE_CONTROL, 2, 0))),
+        new SnippetSet.Snippet("是也", List.of("是也。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 3)))
+    );
+
+    public static final SnippetSet OBJECT_STMT = new SnippetSet("物",
+        new SnippetSet.Snippet("吾嘗觀", List.of("吾嘗觀之書。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 3),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 6))),
+        new SnippetSet.Snippet("吾嘗觀...方悟", List.of("吾嘗觀之書。方悟之義。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 3),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 8),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 11))),
+        new SnippetSet.Snippet("取...以造", List.of("取以造。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT_L, 0, 1),
                 new SnippetSet.SnippetPlaceholder(Context.ID, 0, 3),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4))),
-        new SnippetSet.Snippet("施", List.of("施。於。"), List.of(
+        new SnippetSet.Snippet("造...", List.of("造。於。"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.ID, 0, 1),
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 3),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4)))
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4))),
+        new SnippetSet.Snippet("吾有一物", List.of("吾有一物。名之曰。其物如是  ","是謂之物也"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 8),
+                new SnippetSet.SnippetPlaceholder(Context.OBJECT_DEFINE, 0, 15),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 1, 5))),
+        new SnippetSet.Snippet("名之曰己之", List.of("名之曰己之。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 5),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 6)))
+    );
+
+    public static final SnippetSet OBJECT_DEFINE = new SnippetSet("物",
+        new SnippetSet.Snippet("物之...曰", List.of("物之者曰。",""), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.TYPE, 0, 3),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 4),
+                new SnippetSet.SnippetPlaceholder(Context.OBJECT_DEFINE, 1, 0))),
+        new SnippetSet.Snippet("物之造者", List.of("物之造者術。是術曰","  ","是謂造之術也。",""), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.OBJECT_DEFINE, 3, 0))),
+        new SnippetSet.Snippet("物之...術", List.of("物之者術。是術曰","  ","是謂之術也。",""), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 2, 2),
+                new SnippetSet.SnippetPlaceholder(Context.OBJECT_DEFINE, 3, 0))),
+        new SnippetSet.Snippet("物之...術...必先得", List.of("物之者術。","欲行是術必先得  。","乃行是術曰","  ","是謂之術也。",""), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.INT_L, 1, 7),
+                new SnippetSet.SnippetPlaceholder(Context.TYPE, 1, 8),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 1, 9),
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 3, 2),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 4, 2),
+                new SnippetSet.SnippetPlaceholder(Context.OBJECT_DEFINE, 5, 0)))
     );
 
     public static final SnippetSet INT_LITERAL = new SnippetSet("整數",
@@ -95,15 +223,24 @@ public enum Snippets {;
     public static final SnippetSet BOOL_LITERAL = new SnippetSet("布爾",
         new SnippetSet.Snippet("陽", List.of("陽"), List.of()),
         new SnippetSet.Snippet("陰", List.of("陰"), List.of()),
-        new SnippetSet.Snippet("大於", List.of("大於"), List.of(
+        new SnippetSet.Snippet("...大於...", List.of("大於"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 0),
-                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, -6))),
-        new SnippetSet.Snippet("小於", List.of("小於"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 2))),
+        new SnippetSet.Snippet("...不大於...", List.of("不大於"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 0),
-                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, -6))),
-        new SnippetSet.Snippet("等於", List.of("等於"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 3))),
+        new SnippetSet.Snippet("...小於...", List.of("小於"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 0),
-                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, -6)))
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 2))),
+        new SnippetSet.Snippet("...不小於...", List.of("不小於"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 0),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 3))),
+        new SnippetSet.Snippet("...等於...", List.of("等於"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 0),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 2))),
+        new SnippetSet.Snippet("...不等於...", List.of("不等於"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 0),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 3)))
     );
 
     public static final SnippetSet STRING_LITERAL = new SnippetSet("言語",
@@ -123,7 +260,20 @@ public enum Snippets {;
         new SnippetSet.Snippet("乙", List.of("「乙」"), List.of()),
         new SnippetSet.Snippet("丙", List.of("「丙」"), List.of()),
         new SnippetSet.Snippet("丁", List.of("「丁」"), List.of()),
-        new SnippetSet.Snippet("戊", List.of("「戊」"), List.of())
+        new SnippetSet.Snippet("戊", List.of("「戊」"), List.of()),
+        new SnippetSet.Snippet("己", List.of("「己」"), List.of()),
+        new SnippetSet.Snippet("庚", List.of("「庚」"), List.of()),
+        new SnippetSet.Snippet("辛", List.of("「辛」"), List.of())
+    );
+
+    public static final SnippetSet VARIABLE = new SnippetSet("變數",
+        new SnippetSet.Snippet("其", List.of("其"), List.of()),
+        new SnippetSet.Snippet("之", List.of("之"), List.of()),
+        new SnippetSet.Snippet("己", List.of("己"), List.of()),
+        new SnippetSet.Snippet("父", List.of("父"), List.of()),
+        new SnippetSet.Snippet("...之...", List.of("之"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 0),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 1)))
     );
 
     public static final SnippetSet NEW_LINE = new SnippetSet("換行",
@@ -132,24 +282,32 @@ public enum Snippets {;
     );
 
     
-    public static final List<SnippetSet> DATA_CONTEXT = List.of(INT_LITERAL, BOOL_LITERAL, STRING_LITERAL, IDENTIFIER);
+    public static final List<SnippetSet> DATA_CONTEXT = List.of(INT_LITERAL, BOOL_LITERAL, STRING_LITERAL, IDENTIFIER, VARIABLE);
     public static final List<SnippetSet> TYPE_CONTEXT = List.of(TYPE_LITERAL);
+    public static final List<SnippetSet> OBJECT_DEFINE_CONTEXT = List.of(OBJECT_DEFINE);
     public static final List<SnippetSet> ID_CONTEXT = List.of(IDENTIFIER);
-    public static final List<SnippetSet> BOOL_CONTEXT = List.of(BOOL_LITERAL);
-    public static final List<SnippetSet> INT_CONTEXT = List.of(INT_LITERAL);
-    public static final List<SnippetSet> STMT_CONTEXT = List.of(VARIABLE_STMT, CONTROL_STMT, CALL_STATEMENT);
+    public static final List<SnippetSet> BOOL_CONTEXT = List.of(BOOL_LITERAL, IDENTIFIER, VARIABLE);
+    public static final List<SnippetSet> INT_CONTEXT = List.of(INT_LITERAL, IDENTIFIER, VARIABLE);
+    public static final List<SnippetSet> INT_L_CONTEXT = List.of(INT_LITERAL);
+    public static final List<SnippetSet> STMT_CONTEXT = List.of(VARIABLE_STMT, CALC_STMT, CONTROL_STMT, FUNCTION_STMT, OBJECT_STMT);
     public static final List<SnippetSet> NONE_CONTEXT = List.of(NEW_LINE);
+    public static final List<SnippetSet> ASSIGN_RIGHT_CONTEXT = List.of(ASSIGN_RIGHT);
+    public static final List<SnippetSet> ELSE_CONTROL_CONTEXT = List.of(ELSE_CONTROL);
 
     public static final List<SnippetSet> DEFAULT_CONTEXT = STMT_CONTEXT;
 
     public enum Context {
         DATA("DATA", 0xFFFFB6C1),
         TYPE("TYPE", 0xFFADD8E6),
+        OBJECT_DEFINE("OBJECT_DEFINE", 0xFFADD8E6),
         ID("ID", 0xFF90EE90),
         BOOL("BOOL", 0xFFFFFFE0),
         INT("INT", 0xFFD3D3D3),
+        INT_L("INT_L", 0xFFD3D3D3),
         STMT("STMT", 0xFFFFFFFF),
         NONE("NONE", 0xFFF0E68C),
+        ASSIGN_RIGHT("ASSIGN_RIGHT", 0xFFEEEEEE),
+        ELSE_CONTROL("ELSE_CONTROL", 0xFFEEEEEE),
         ;
 
         @Getter private final String value;
@@ -164,11 +322,15 @@ public enum Snippets {;
         return switch (context) {
             case DATA -> DATA_CONTEXT;
             case TYPE -> TYPE_CONTEXT;
+            case OBJECT_DEFINE -> OBJECT_DEFINE_CONTEXT;
             case ID -> ID_CONTEXT;
             case BOOL -> BOOL_CONTEXT;
             case INT -> INT_CONTEXT;
+            case INT_L -> INT_L_CONTEXT;
             case STMT -> STMT_CONTEXT;
             case NONE -> NONE_CONTEXT;
+            case ASSIGN_RIGHT -> ASSIGN_RIGHT_CONTEXT;
+            case ELSE_CONTROL -> ELSE_CONTROL_CONTEXT;
         };
     }
 }

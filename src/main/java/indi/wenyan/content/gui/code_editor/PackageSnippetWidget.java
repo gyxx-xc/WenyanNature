@@ -20,6 +20,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -152,7 +153,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
                 if (y >= currentY && y < currentY + DIR_HEIGHT) {
                     double x = mouseX - getX() - innerPadding();
                     if (0 <= x && x < ICON_WIDTH + buttonPadding.horizontal())
-                        backend.insertText(pack.name());
+                        insertId(pack.name());
                     else
                         pack.fold(!pack.fold());
                     return true;
@@ -162,7 +163,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
                 for (Member member : pack.members()) {
                     if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
                         // clicked on snippet
-                        backend.insertText(member.name());
+                        insertId(member.name());
                         return true;
                     }
                     currentY += ENTRY_HEIGHT;
@@ -201,6 +202,18 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
 
     protected double scrollRate() {
         return ENTRY_HEIGHT;
+    }
+
+    private void insertId(String id) {
+        backend.insertText(id);
+        CodeField.Placeholder next = backend.getPlaceholders().stream()
+                .filter(p -> p.index() > backend.getCursor())
+                .min(Comparator.comparingInt(CodeField.Placeholder::index))
+                .orElse(null);
+        if (next != null) {
+            backend.setCursor(next.index());
+            backend.setSelectCursor(backend.getCursor());
+        }
     }
 
     @Data

@@ -4,20 +4,127 @@
       "title": "變數",
       "snippets": [
         {
-          "name": "夫",
+          "name": "夫...",
           "content": "夫{DATA}。{NONE}"
         },
         {
-          "name": "吾有",
-          "content": "吾有一{TYPE}曰{DATA}。{NONE}"
+          "name": "吾有...曰",
+          "content": "吾有{INT_L} {TYPE}曰{DATA}。{NONE}"
         },
         {
-          "name": "名之曰",
+          "name": "有...",
+          "content": "有{TYPE} {DATA}。{NONE}"
+        },
+        {
+          "name": "名之曰...",
           "content": "名之曰{ID}。{NONE}"
         },
         {
           "name": "昔之...今",
-          "content": "昔之{ID}者。今{DATA}是矣。{NONE}"
+          "content": "昔之{ID}者。{ASSIGN_RIGHT}"
+        }
+      ]
+    },
+    "assign_right": {
+      "title": "賦值",
+      "snippets": [
+        {
+          "name": "今...是矣",
+          "content": "今{DATA}是矣。{NONE}"
+        },
+        {
+          "name": "不復存矣",
+          "content": "不復存矣。{NONE}"
+        }
+      ]
+    },
+    "calc_stmt": {
+      "title": "算術",
+      "snippets": [
+        {
+          "name": "加...以...",
+          "content": "加{INT}以{INT}。{NONE}"
+        },
+        {
+          "name": "減...以...",
+          "content": "減{INT}以{INT}。{NONE}"
+        },
+        {
+          "name": "乘...以...",
+          "content": "乘{INT}以{INT}。{NONE}"
+        },
+        {
+          "name": "除...以...",
+          "content": "除{INT}以{INT}。{NONE}"
+        },
+        {
+          "name": "所餘幾何",
+          "content": "除{INT}以{INT}。所餘幾何。{NONE}"
+        },
+        {
+          "name": "且...以...",
+          "content": "且{BOOL}以{BOOL}。{NONE}"
+        },
+        {
+          "name": "或...以...",
+          "content": "或{BOOL}以{BOOL}。{NONE}"
+        },
+        {
+          "name": "變...",
+          "content": "變{BOOL}。{NONE}"
+        },
+        {
+          "name": "充...以...",
+          "content": "充{ID}以{DATA}。{NONE}"
+        },
+        {
+          "name": "銜...以...",
+          "content": "銜{ID}以{ID}。{NONE}"
+        },
+        {
+          "name": "中無陰乎",
+          "content": "夫{BOOL} {BOOL}中無陰乎。{NONE}"
+        },
+        {
+          "name": "中有陽乎",
+          "content": "有{BOOL} {BOOL}中有陽乎。{NONE}"
+        }
+      ]
+    },
+    "function_stmt": {
+      "title": "術",
+      "snippets": [
+        {
+          "name": "書...",
+          "content": "書{DATA}。{NONE}"
+        },
+        {
+          "name": "取...以施",
+          "content": "取{INT_L}以施{ID}。{NONE}"
+        },
+        {
+          "name": "施...",
+          "content": "施{ID}。於{DATA}。{NONE}"
+        },
+        {
+          "name": "吾有一術",
+          "content": "吾有一術。名之曰{ID}。是術曰\n  {STMT}\n是謂{ID}之術也。{NONE}"
+        },
+        {
+          "name": "吾有一術。必先得",
+          "content": "吾有一術。名之曰{ID}。\n欲行是術必先得{INT_L} {TYPE} {DATA}。\n乃行是術曰\n  {STMT}\n是謂{ID}之術也。{NONE}"
+        },
+        {
+          "name": "乃得",
+          "content": "乃得{DATA}。"
+        },
+        {
+          "name": "乃得矣",
+          "content": "乃得矣。"
+        },
+        {
+          "name": "乃歸空無",
+          "content": "乃歸空無。"
         }
       ]
     },
@@ -25,15 +132,11 @@
       "title": "決策",
       "snippets": [
         {
-          "name": "若",
-          "content": "若{BOOL}者。\n  {STMT}\n也。{NONE}"
+          "name": "若...者",
+          "content": "若{BOOL}者。\n  {STMT}\n{ELSE_CONTROL}"
         },
         {
-          "name": "若...若非",
-          "content": "若{BOOL}者。\n  {STMT}\n若非。\n  {STMT}\n也。{NONE}"
-        },
-        {
-          "name": "凡中之",
+          "name": "凡...中之",
           "content": "凡{DATA}中之{ID}。\n  {STMT}\n云云。{NONE}"
         },
         {
@@ -41,8 +144,8 @@
           "content": "為是{INT}遍。\n  {STMT}\n云云。{NONE}"
         },
         {
-          "name": "乃得",
-          "content": "乃得{DATA}。{NONE}"
+          "name": "恆為是",
+          "content": "  {STMT}\n云云。{NONE}"
         },
         {
           "name": "乃止",
@@ -51,35 +154,77 @@
         {
           "name": "乃止是遍",
           "content": "乃止是遍。"
+        },
+        {
+          "name": "噫",
+          "content": "噫。{NONE}"
         }
       ]
     },
-    "call_statement": {
-      "title": "算術",
+    "else_control": {
+      "title": "若非",
       "snippets": [
         {
-          "name": "加",
-          "content": "加{INT}以{INT}。{NONE}"
+          "name": "若...若非",
+          "content": "若非。\n  {STMT}\n也。{NONE}"
         },
         {
-          "name": "減",
-          "content": "減{INT}以{INT}。{NONE}"
+          "name": "若...或若",
+          "content": "或若{BOOL}者。\n  {STMT}\n{ELSE_CONTROL}"
         },
         {
-          "name": "乘",
-          "content": "乘{INT}以{INT}。{NONE}"
+          "name": "是也",
+          "content": "是也。{NONE}"
+        }
+      ]
+    },
+    "object_stmt": {
+      "title": "物",
+      "snippets": [
+        {
+          "name": "吾嘗觀",
+          "content": "吾嘗觀{ID}之書。{NONE}"
         },
         {
-          "name": "除",
-          "content": "除{INT}以{INT}。{NONE}"
+          "name": "吾嘗觀...方悟",
+          "content": "吾嘗觀{ID}之書。方悟{ID}之義。{NONE}"
         },
         {
-          "name": "取以施",
-          "content": "取{INT}以施{ID}。{NONE}"
+          "name": "取...以造",
+          "content": "取{INT_L}以造{ID}。{NONE}"
         },
         {
-          "name": "施",
-          "content": "施{ID}。於{DATA}。{NONE}"
+          "name": "造...",
+          "content": "造{ID}。於{DATA}。{NONE}"
+        },
+        {
+          "name": "吾有一物",
+          "content": "吾有一物。名之曰{ID}。其物如是\n  {OBJECT_DEFINE}\n是謂{ID}之物也{NONE}"
+        },
+        {
+          "name": "名之曰己之",
+          "content": "名之曰己之{ID}。{NONE}"
+        }
+      ]
+    },
+    "object_define": {
+      "title": "物",
+      "snippets": [
+        {
+          "name": "物之...曰",
+          "content": "物之{ID}者{TYPE}曰{DATA}。\n{OBJECT_DEFINE}"
+        },
+        {
+          "name": "物之造者",
+          "content": "物之造者術。是術曰\n  {STMT}\n是謂造之術也。\n{OBJECT_DEFINE}"
+        },
+        {
+          "name": "物之...術",
+          "content": "物之{ID}者術。是術曰\n  {STMT}\n是謂{ID}之術也。\n{OBJECT_DEFINE}"
+        },
+        {
+          "name": "物之...術...必先得",
+          "content": "物之{ID}者術。\n欲行是術必先得{INT_L} {TYPE} {DATA}。\n乃行是術曰\n  {STMT}\n是謂{ID}之術也。\n{OBJECT_DEFINE}"
         }
       ]
     },
@@ -144,16 +289,28 @@
           "content": "陰"
         },
         {
-          "name": "大於",
+          "name": "...大於...",
           "content": "{DATA}大於{DATA}"
         },
         {
-          "name": "小於",
+          "name": "...不大於...",
+          "content": "{DATA}不大於{DATA}"
+        },
+        {
+          "name": "...小於...",
           "content": "{DATA}小於{DATA}"
         },
         {
-          "name": "等於",
+          "name": "...不小於...",
+          "content": "{DATA}不小於{DATA}"
+        },
+        {
+          "name": "...等於...",
           "content": "{DATA}等於{DATA}"
+        },
+        {
+          "name": "...不等於...",
+          "content": "{DATA}不等於{DATA}"
         }
       ]
     },
@@ -209,6 +366,43 @@
         {
           "name": "戊",
           "content": "「戊」"
+        },
+        {
+          "name": "己",
+          "content": "「己」"
+        },
+        {
+          "name": "庚",
+          "content": "「庚」"
+        },
+        {
+          "name": "辛",
+          "content": "「辛」"
+        }
+      ]
+    },
+    "variable": {
+      "title": "變數",
+      "snippets": [
+        {
+          "name": "其",
+          "content": "其"
+        },
+        {
+          "name": "之",
+          "content": "之"
+        },
+        {
+          "name": "己",
+          "content": "己"
+        },
+        {
+          "name": "父",
+          "content": "父"
+        },
+        {
+          "name": "...之...",
+          "content": "{DATA}之{ID}"
         }
       ]
     },
@@ -230,7 +424,8 @@
         "int_literal",
         "bool_literal",
         "string_literal",
-        "identifier"
+        "identifier",
+        "variable"
       ],
       "color": "0xFFFFB6C1"
     },
@@ -238,6 +433,13 @@
       "context": "TYPE",
       "contain": [
         "type_literal"
+      ],
+      "color": "0xFFADD8E6"
+    },
+    {
+      "context": "OBJECT_DEFINE",
+      "contain": [
+        "object_define"
       ],
       "color": "0xFFADD8E6"
     },
@@ -251,12 +453,23 @@
     {
       "context": "BOOL",
       "contain": [
-        "bool_literal"
+        "bool_literal",
+        "identifier",
+        "variable"
       ],
       "color": "0xFFFFFFE0"
     },
     {
       "context": "INT",
+      "contain": [
+        "int_literal",
+        "identifier",
+        "variable"
+      ],
+      "color": "0xFFD3D3D3"
+    },
+    {
+      "context": "INT_L",
       "contain": [
         "int_literal"
       ],
@@ -266,8 +479,10 @@
       "context": "STMT",
       "contain": [
         "variable_stmt",
+        "calc_stmt",
         "control_stmt",
-        "call_statement"
+        "function_stmt",
+        "object_stmt"
       ],
       "color": "0xFFFFFFFF"
     },
@@ -277,6 +492,20 @@
         "new_line"
       ],
       "color": "0xFFF0E68C"
+    },
+    {
+      "context": "ASSIGN_RIGHT",
+      "contain": [
+        "assign_right"
+      ],
+      "color": "0xFFEEEEEE"
+    },
+    {
+      "context": "ELSE_CONTROL",
+      "contain": [
+        "else_control"
+      ],
+      "color": "0xFFEEEEEE"
     }
   ]
 }
