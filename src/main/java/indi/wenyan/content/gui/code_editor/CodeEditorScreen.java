@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -13,9 +14,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
 public class CodeEditorScreen extends Screen {
@@ -31,9 +32,9 @@ public class CodeEditorScreen extends Screen {
     private PackageSnippetWidget packageWidget;
     private EditBox titleBar;
 
-    public CodeEditorScreen(CodeEditorBackend.PersistentData data, Consumer<String> save) {
+    public CodeEditorScreen(CodeEditorBackend backend) {
         super(Component.empty());
-        backend = new CodeEditorBackend(data, save);
+        this.backend = backend;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class CodeEditorScreen extends Screen {
                 packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(packageWidget);
 
-        titleBar = new EditBox(font, 0, 0, width, 15, Component.empty());
+        titleBar = new EditBox(font, 0, 0, width, 15, Component.literal(backend.getTitle()));
 //        titleBar = new EditBox(font, 62, 24, 103, 12,
 //                Component.translatable("container.repair"));
 //        titleBar.setCanLoseFocus(false);
@@ -118,23 +119,12 @@ public class CodeEditorScreen extends Screen {
         renderTransparentBackground(guiGraphics);
     }
 
-    // capture input to text field
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (textFieldWidget.keyPressed(keyCode, scanCode, modifiers)) {
-            setFocused(textFieldWidget);
-            return true;
-        } else if (snippetWidget.keyPressed(keyCode, scanCode, modifiers)) {
-            return true;
-        } else {
-            return super.keyPressed(keyCode, scanCode, modifiers);
-        }
-    }
-
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        setFocused(textFieldWidget);
-        return textFieldWidget.charTyped(codePoint, modifiers);
+    public void setFocused(@Nullable GuiEventListener listener) {
+        if (listener instanceof SnippetWidget || listener instanceof PackageSnippetWidget)
+            super.setFocused(textFieldWidget);
+        else
+            super.setFocused(listener);
     }
 
     @Override
@@ -143,8 +133,8 @@ public class CodeEditorScreen extends Screen {
         super.onClose();
     }
 
-//    @Override
-//    public boolean isPauseScreen() {
-//        return false;
-//    }
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
 }

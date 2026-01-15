@@ -208,6 +208,9 @@ public final class Registration {
         registrar.playToServer(BlockRunnerCodePacket.TYPE,
                 BlockRunnerCodePacket.STREAM_CODEC,
                 BlockRunnerCodePacket.HANDLER);
+        registrar.playToServer(RunnerTitlePacket.TYPE,
+                RunnerTitlePacket.STREAM_CODEC,
+                RunnerTitlePacket.HANDLER);
         registrar.commonToClient(BlockOutputPacket.TYPE,
                 BlockOutputPacket.STREAM_CODEC,
                 BlockOutputPacket.HANDLER);

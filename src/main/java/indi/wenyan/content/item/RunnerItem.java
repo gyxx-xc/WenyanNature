@@ -1,11 +1,15 @@
 package indi.wenyan.content.item;
 
 import indi.wenyan.content.gui.code_editor.CodeEditorBackend;
+import indi.wenyan.content.gui.code_editor.CodeEditorBackendSynchronizer;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
+import indi.wenyan.setup.network.RunnerTitlePacket;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -76,11 +80,30 @@ public class RunnerItem extends BlockItem {
 
     @OnlyIn(Dist.CLIENT)
     private void opengui(ItemStack itemstack, Player player, InteractionHand hand) {
-        var persistentData = new CodeEditorBackend.PersistentData(itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""), "", List.of());
-        Minecraft.getInstance().setScreen(new CodeEditorScreen(persistentData,
-                content -> {
-                    int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
-                    PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
-                }));
+        var synchronizer = new CodeEditorBackendSynchronizer() {
+            @Override
+            public void sendContent(String content) {
+                int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
+                PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
+            }
+
+            @Override
+            public String getContent() {
+                return itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
+            }
+
+            @Override
+            public void sendTitle(String title) {
+                int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
+                PacketDistributor.sendToServer(new RunnerTitlePacket(slot, title));
+            }
+
+            @Override
+            public String getTitle() {
+                return itemstack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
+            }
+        };
+        var backend = new CodeEditorBackend(itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""), "", List.of(), synchronizer);
+        Minecraft.getInstance().setScreen(new CodeEditorScreen(backend));
     }
 }

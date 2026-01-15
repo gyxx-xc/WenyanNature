@@ -2,6 +2,7 @@ package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.gui.code_editor.CodeEditorBackend;
+import indi.wenyan.content.gui.code_editor.CodeEditorBackendSynchronizer;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.content.gui.code_editor.PackageSnippetWidget;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
@@ -98,12 +99,35 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                     packageSnippets.add(new PackageSnippetWidget.PackageSnippet(Registration.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
             }
         }
-        var persistentData = new CodeEditorBackend.PersistentData(runner.pages, "", packageSnippets);
-        Minecraft.getInstance().setScreen(new CodeEditorScreen(persistentData, content -> {
-            runner.pages = content;
-            runner.setChanged();
-            PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
-        }));
+        Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
+    }
+
+    private static @NotNull CodeEditorBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos, List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
+        var synchronizer = new CodeEditorBackendSynchronizer() {
+            @Override
+            public void sendContent(String content) {
+                runner.pages = content;
+                runner.setChanged();
+                PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
+            }
+
+            @Override
+            public String getContent() {
+                return runner.pages;
+            }
+
+            @Override
+            public void sendTitle(String title) {
+
+            }
+
+            @Override
+            public String getTitle() {
+                return "";
+            }
+        };
+        var backend = new CodeEditorBackend(runner.pages, "", packageSnippets, synchronizer);
+        return backend;
     }
 
     @OnlyIn(Dist.CLIENT)
