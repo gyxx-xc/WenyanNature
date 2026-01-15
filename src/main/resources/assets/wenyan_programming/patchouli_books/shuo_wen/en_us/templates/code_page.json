@@ -7,14 +7,6 @@
       "y": -1
     },
     {
-      "type": "patchouli:custom",
-      "class": "indi.wenyan.content.gui.doc_page.ComponentCustomTest",
-      "width": 100,
-      "height": 30,
-      "x": 0,
-      "y": 0
-    },
-    {
       "type": "patchouli:text",
       "text": "#text",
       "x": 0,
