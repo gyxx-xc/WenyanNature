@@ -1,7 +1,6 @@
 plugins {
-    id 'java-library'
-    id 'maven-publish'
     id 'antlr'
+    id 'maven-publish'
     id 'net.neoforged.moddev' version '1.0.17'
 }
 
@@ -142,11 +141,13 @@ dependencies {
     compileOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE:api"
     runtimeOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE"
 
+    // non minecraft requirements
     antlr "org.antlr:antlr4:4.13.1"
 
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
+    // STUB: for chinese convertor only, might change in future
     implementation 'cn.hutool:hutool-core:5.8.43'
     additionalRuntimeClasspath 'cn.hutool:hutool-core:5.8.43'
     jarJar(implementation 'cn.hutool:hutool-core:5.8.43')
