@@ -21,7 +21,9 @@ import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
+import java.util.Collections;
 import java.util.List;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
@@ -35,6 +37,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     public static final int WIDTH = 256;
     public static final int HEIGH = 192;
 
+    public static final int MAX_COMPLETION_CHAR = 16;
+
     // NOTE: a minecraft inner padding of 4 is also need to be considered
     private static final int scrollBarWidth = 8;
     private static final Utils.BoxInformation outerPadding =
@@ -47,6 +51,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     @Getter
     private final CodeField textField;
+    private List<Completion> completions = Collections.emptyList();
+    private int selectedCompletion = 0;
 
     public CodeEditorWidget(Font font, CodeEditorBackend backend,
                             int x, int y, int width, int height) {
@@ -61,6 +67,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     scrollToCursor();
                     // reset blink
                     blinkStart = Util.getMillis();
+                    completions = Collections.emptyList();
+                    selectedCompletion = 0;
                 });
     }
 
@@ -179,16 +187,43 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return textField.keyPressed(keyCode);
+        if (completions.isEmpty()) return textField.keyPressed(keyCode);
+        switch (keyCode) {
+            case GLFW.GLFW_KEY_UP ->
+                    selectedCompletion = selectedCompletion == 0 ? completions.size() - 1 : selectedCompletion - 1;
+            case GLFW.GLFW_KEY_DOWN ->
+                    selectedCompletion = (selectedCompletion + 1) % completions.size();
+            case GLFW.GLFW_KEY_ENTER -> {
+                backend.setSelectCursor(findCompletionStart());
+                backend.insertText(completions.get(selectedCompletion).content());
+            }
+            default -> {
+                return textField.keyPressed(keyCode);
+            }
+        }
+        return true;
     }
 
     public boolean charTyped(char codePoint, int modifiers) {
         if (visible && isFocused() && StringUtil.isAllowedChatCharacter(codePoint)) {
             textField.insertText(Character.toString(codePoint));
+            completions = Completion.getCompletions(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
+            System.out.println(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
+            System.out.println(completions);
             return true;
         } else {
             return false;
         }
+    }
+
+    private int findCompletionStart() {
+        int completionStart = backend.getCursor();
+        String content = backend.getContent();
+        while (completionStart > Math.max(0, backend.getCursor() - MAX_COMPLETION_CHAR) &&
+                Completion.isCharHandleable(content.charAt(completionStart - 1))) {
+            completionStart--;
+        }
+        return completionStart;
     }
 
     public void setFocused(boolean focused) {
@@ -204,18 +239,20 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         boolean isCursorRender = !isFocused() ||
                 (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
         boolean cursorInContent = cursor < backend.getContent().length();
-        int cursorX = 0;
+        int currentX = 0;
         int currentY = getY() + innerPadding();
         int lineNo = 1;
         boolean isContinuedLine = false;
         int styleCounter = 0;
         int placeholderCounter = 0;
+        int cursorX = 0;
+        int cursorY = getY() + innerPadding();
 
         List<CodeField.StringView> displayLines = textField.getDisplayLines();
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                cursorX = getX() + innerPadding() + lineNoWidth();
+                currentX = getX() + innerPadding() + lineNoWidth();
                 if (stringView.beginIndex() != stringView.endIndex()) {
                     int lastEnd = stringView.beginIndex();
                     do {
@@ -226,8 +263,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                         String line = backend.getContent().substring(lastEnd,
                                 Math.clamp(end, stringView.beginIndex(), stringView.endIndex()));
                         var style = styleFromTokenType(textField.getStyleMarks().get(styleCounter).style());
-                        cursorX = guiGraphics.drawString(font, Component.literal(line).withStyle(style),
-                                cursorX, currentY,
+                        currentX = guiGraphics.drawString(font, Component.literal(line).withStyle(style),
+                                currentX, currentY,
                                 0xFFFFFFFF, false);
                         lastEnd = end;
                         if (end < stringView.endIndex()) {
@@ -253,13 +290,17 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = cursorInContent &&
                         cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
-                if (isCurLine && isCursorRender) {
+                if (isCurLine) {
                     // cursor
-                    cursorX = getX() + innerPadding() + lineNoWidth() +
+                    currentX = getX() + innerPadding() + lineNoWidth() +
                             font.width(backend.getContent().substring(stringView.beginIndex(), cursor)) - 1;
-                    guiGraphics.fill(cursorX, currentY,
-                            cursorX + 1, currentY + font.lineHeight,
-                            CURSOR_INSERT_COLOR);
+                    cursorY = currentY;
+                    cursorX = currentX;
+                    if (isCursorRender) {
+                        guiGraphics.fill(cursorX, cursorY,
+                                cursorX + 1, cursorY + font.lineHeight,
+                                CURSOR_INSERT_COLOR);
+                    }
                 }
                 // -------------------- render line numbers --------------------
                 Component component = Component.literal(isContinuedLine ? ">" : String.valueOf(lineNo))
@@ -278,11 +319,13 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             }
         }
 
-        int cursorY = currentY - font.lineHeight;
-        if (isCursorRender && !cursorInContent &&
-                withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
-            guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY,
-                    CURSOR_INSERT_COLOR, false);
+        if (!cursorInContent && withinContentAreaTopBottom(currentY - font.lineHeight, currentY)) {
+            cursorY = currentY - font.lineHeight;
+            cursorX = currentX;
+            if (isCursorRender) {
+                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY,
+                        CURSOR_INSERT_COLOR, false);
+            }
         }
 
         if (textField.hasSelection()) {
@@ -310,6 +353,25 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     }
                 }
                 currentY += font.lineHeight;
+            }
+        }
+        // render this as the last, overlap all above, as if it's floating no screen
+        if (!completions.isEmpty() && withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
+            int w = completions.stream()
+                    .map(completion -> font.width(completion.content()))
+                    .reduce(40, Math::max);
+            int h = font.lineHeight * completions.size();
+            // get x, y without exceed outline
+            int x = Math.min(cursorX, getX() + this.width - w);
+            int y = cursorY + font.lineHeight < getY() + this.height - h + scrollAmount() ? cursorY + font.lineHeight : cursorY - h;
+            guiGraphics.fill(x, y, x + w, y + h,
+                    0xffFFFFFF); // FIXME: change to a sprite
+            guiGraphics.fill(x, y + selectedCompletion * font.lineHeight, x + w, y + (selectedCompletion + 1) * font.lineHeight,
+                    0xff99CCFF);
+            int cnt = 0;
+            for (var completion : completions) {
+                guiGraphics.drawString(font, completion.content(),
+                        x, y + (cnt++) * font.lineHeight, 0xff000000, false);
             }
         }
     }

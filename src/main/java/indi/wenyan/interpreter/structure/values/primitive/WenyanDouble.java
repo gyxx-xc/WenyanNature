@@ -1,12 +1,12 @@
 package indi.wenyan.interpreter.structure.values.primitive;
 
-import cn.hutool.core.convert.Convert;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
+import indi.wenyan.interpreter.utils.ChineseUtils;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,7 +66,6 @@ public record WenyanDouble(Double value)
     @Override
     public @NotNull String toString() {
         // replace "點" with "又"
-        return Convert.numberToChinese(value, false)
-                .replace("點", "又");
+        return ChineseUtils.toChinese(value);
     }
 }

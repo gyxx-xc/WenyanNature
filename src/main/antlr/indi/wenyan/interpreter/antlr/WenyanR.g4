@@ -111,7 +111,7 @@ object_method_define        : OBJECT_STATIC_DECLARE (IDENTIFIER | CREATE_OBJECT)
                               function_define_body (IDENTIFIER | CREATE_OBJECT) FUNCTION_DEFINE_END ;
 object_property_define      : OBJECT_STATIC_DECLARE IDENTIFIER ZHE type (YUE data)? ;
 
-import_statement            : '吾嘗觀' IDENTIFIER '之書' ('方悟' IDENTIFIER+ '之義')? ;
+import_statement            : IMPORT_START IDENTIFIER IMPORT_PACKAGE (FROM_IMPORT IDENTIFIER+ FROM_IMPORT_END)? ;
 
 function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
                               (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
@@ -180,11 +180,16 @@ OBJECT_BODY_START           : '其物如是' ;
 OBJECT_DEFINE_END           : '之物也' ;
 OBJECT_STATIC_DECLARE       : '物之' ;
 
+IMPORT_START                : '吾嘗觀' ;
+IMPORT_PACKAGE              : '之書' ;
+FROM_IMPORT                 : '方悟' ;
+FROM_IMPORT_END             : '之義' ;
+
 LOCAL_DECLARE_OP            : '吾有' ;
 GLOBAL_DECLARE_OP           : '今有' ;
 DEFINE_CLOSURE              : '是谓' | '是謂';
 
-FOR_IF_END                  : '云云' | '是也' | '也' | '雲雲';
+FOR_IF_END                  : '云云' | '是也' | '也' ;
 
 NAMING                      : '名之' ;
 ASSIGN_LEFT                 : '昔之' ;
