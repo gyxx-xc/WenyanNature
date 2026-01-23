@@ -131,5 +131,6 @@ public enum Completions {;
         put("c", List.of(new Completion("「丙」")));
         put("d", List.of(new Completion("「丁」")));
         put("ctmd", List.of(new Completion("传统美德")));
+        put("test", List.of(new Completion("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")));
     }};
 }

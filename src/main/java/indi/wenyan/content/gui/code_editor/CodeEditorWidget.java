@@ -31,6 +31,7 @@ import java.util.List;
 public class CodeEditorWidget extends AbstractScrollWidget {
     private static final int CURSOR_INSERT_COLOR = 0xff000000;
     private static final String CURSOR_APPEND_CHARACTER = "_";
+    public static final float TOOLTIP_SCALE = 0.7f;
     private final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/edit.png");
     // todo: make it larger (sprite)
@@ -38,11 +39,16 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     public static final int HEIGH = 192;
 
     public static final int MAX_COMPLETION_CHAR = 16;
+    public static final int MAX_RENDERED_COMPLETION_SIZE = 5;
+    public static final int COMPLETION_SCROLL_WIDTH = 4;
+    public static final int MAX_COMPLETION_WIDTH = 80;
 
     // NOTE: a minecraft inner padding of 4 is also need to be considered
     private static final int scrollBarWidth = 8;
     private static final Utils.BoxInformation outerPadding =
             new Utils.BoxInformation(4, 4, 4, 4 + scrollBarWidth);
+    private static final Utils.BoxInformation completionPadding =
+            new Utils.BoxInformation(1, 1, 1, 1);
 
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
@@ -52,6 +58,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     @Getter
     private final CodeField textField;
     private List<Completion> completions = Collections.emptyList();
+    private int firstCompletionLine = 0;
     private int selectedCompletion = 0;
 
     public CodeEditorWidget(Font font, CodeEditorBackend backend,
@@ -69,6 +76,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     blinkStart = Util.getMillis();
                     completions = Collections.emptyList();
                     selectedCompletion = 0;
+                    firstCompletionLine = 0;
                 });
     }
 
@@ -189,10 +197,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (completions.isEmpty()) return textField.keyPressed(keyCode);
         switch (keyCode) {
-            case GLFW.GLFW_KEY_UP ->
-                    selectedCompletion = selectedCompletion == 0 ? completions.size() - 1 : selectedCompletion - 1;
-            case GLFW.GLFW_KEY_DOWN ->
-                    selectedCompletion = (selectedCompletion + 1) % completions.size();
+            case GLFW.GLFW_KEY_UP -> offsetSelectedCompletion(-1);
+            case GLFW.GLFW_KEY_DOWN -> offsetSelectedCompletion(1);
             case GLFW.GLFW_KEY_ENTER -> {
                 backend.setSelectCursor(findCompletionStart());
                 backend.insertText(completions.get(selectedCompletion).content());
@@ -213,6 +219,17 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private void offsetSelectedCompletion(int offset) {
+        // get back if negative
+        selectedCompletion = (selectedCompletion + offset) % completions.size();
+        selectedCompletion = (selectedCompletion + completions.size()) % completions.size();
+        if (firstCompletionLine > selectedCompletion) {
+            firstCompletionLine = selectedCompletion;
+        } else if (selectedCompletion >= firstCompletionLine + MAX_RENDERED_COMPLETION_SIZE) {
+            firstCompletionLine = selectedCompletion - MAX_RENDERED_COMPLETION_SIZE + 1;
         }
     }
 
@@ -357,22 +374,56 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         }
         // render this as the last, overlap all above, as if it's floating no screen
         if (!completions.isEmpty() && withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
+            final int entryHeight = font.lineHeight + completionPadding.vertical();
+            final int renderedSize = Math.min(completions.size(), MAX_RENDERED_COMPLETION_SIZE);
             int w = completions.stream()
-                    .map(completion -> font.width(completion.content()))
-                    .reduce(40, Math::max);
-            int h = font.lineHeight * completions.size();
+                    .map(completion -> font.width(completion.content()) + completionPadding.horizontal())
+                    .reduce(50, Math::max) + COMPLETION_SCROLL_WIDTH;
+            if (w > MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH)
+                w = MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH;
+            int tooltipHeight = (int) Math.ceil(font.lineHeight * TOOLTIP_SCALE);
+            int h = entryHeight * renderedSize + tooltipHeight;
             // get x, y without exceed outline
             int x = Math.min(cursorX, getX() + this.width - w);
-            int y = cursorY + font.lineHeight < getY() + this.height - h + scrollAmount() ? cursorY + font.lineHeight : cursorY - h;
+            int y = cursorY + font.lineHeight + h < getY() + this.height + scrollAmount() ?
+                    cursorY + font.lineHeight : cursorY - h;
+
+            // render content
             guiGraphics.fill(x, y, x + w, y + h,
                     0xffFFFFFF); // FIXME: change to a sprite
-            guiGraphics.fill(x, y + selectedCompletion * font.lineHeight, x + w, y + (selectedCompletion + 1) * font.lineHeight,
+            guiGraphics.fill(x, y + (selectedCompletion - firstCompletionLine) * entryHeight,
+                    x + w, y + (selectedCompletion - firstCompletionLine + 1) * entryHeight,
                     0xff99CCFF);
             int cnt = 0;
-            for (var completion : completions) {
-                guiGraphics.drawString(font, completion.content(),
-                        x, y + (cnt++) * font.lineHeight, 0xff000000, false);
+            for (int i = firstCompletionLine; i < firstCompletionLine + renderedSize; i++) {
+                var completion = completions.get(i);
+                String ellipsize = font.ellipsize(Component.literal(completion.content()), MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH).getString();
+                guiGraphics.drawString(font, ellipsize,
+                        x + completionPadding.left(),
+                        y + (cnt++) * entryHeight + completionPadding.top(),
+                        0xff000000, false);
             }
+
+            // render scroll bar
+            if (completions.size() > MAX_RENDERED_COMPLETION_SIZE) {
+                guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y,
+                        x + w, y + h - tooltipHeight,
+                        0xff000000);
+                int scrollY = (h - tooltipHeight - 10) *
+                        firstCompletionLine / (completions.size() - MAX_RENDERED_COMPLETION_SIZE);
+                guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y + scrollY,
+                        x + w, y + scrollY + 10,
+                        0xffCCCCCC);
+            }
+
+            // render tooltip
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(x + completionPadding.left(), y + entryHeight * renderedSize, 0);
+            guiGraphics.pose().scale(TOOLTIP_SCALE, TOOLTIP_SCALE, 1.0f);
+            guiGraphics.drawString(font, Component.literal("Enter to input"),
+                    0, 0, // position handled by pose
+                    0xff999999, false);
+            guiGraphics.pose().popPose();
         }
     }
 

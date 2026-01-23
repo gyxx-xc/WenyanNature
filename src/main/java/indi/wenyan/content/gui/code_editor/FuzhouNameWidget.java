@@ -3,8 +3,6 @@ package indi.wenyan.content.gui.code_editor;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.narration.NarratedElementType;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
@@ -15,7 +13,7 @@ public class FuzhouNameWidget extends EditBox {
     private final int fullX;
     private final int fullY;
     private final int fullWidth;
-    private static final String PREFIX = "符名「";
+    private static final String PREFIX = "符名: 「";
     private static final String SUFFIX = "」";
 
     public FuzhouNameWidget(Font font, int x, int y, int width, int height, Component message) {
