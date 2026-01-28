@@ -74,10 +74,11 @@ public class CodeEditorScreen extends Screen {
 
         int outputWindowHeight = height - titleBarHeight - textFileHeight - 4;
         int outputWindowWidth = textFieldWidth;
-        outputWindow = new FittingMultiLineTextWidget(
-                snippetWidth + 4,textFileHeight + titleBarHeight + 4,
+        outputWindow = new CodeOutputWidget(
+                snippetWidth + 4, textFileHeight + titleBarHeight + 4,
                 outputWindowWidth, outputWindowHeight,
-                Component.literal(("abcd".repeat(80)+"\n").repeat(10)), font);
+                Component.literal(("abcd".repeat(80) + "\n").repeat(10)), font);
+        outputWindow.setColor(0xFF000000);
         addRenderableWidget(outputWindow);
     }
 
