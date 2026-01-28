@@ -12,6 +12,7 @@ import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.WenyanPackages;
@@ -118,7 +119,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     }
 
     @Override
-    public void notice(IHandleableRequest request, IHandleContext context) {
+    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException.WenyanUnreachedException();
         }
@@ -131,7 +132,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             throw new WenyanException("item changed");
     }
 
-    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) {
+    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanThrowException {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException("Context is not an instance of ItemContext");
         }
@@ -169,7 +170,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             int slotId
     ) implements IHandleableRequest {
         @Override
-        public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+        public boolean handle(IHandleContext context) throws WenyanThrowException {
             return request.handle(context, this);
         }
     }

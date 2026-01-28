@@ -14,6 +14,7 @@ import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
@@ -149,7 +150,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     @Override
-    public void notice(IHandleableRequest request, IHandleContext context) {
+    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {
         if (!(context instanceof BlockContext blockContext)) {
             throw new WenyanException.WenyanUnreachedException();
         }
@@ -208,7 +209,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         super.setRemoved();
     }
 
-    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException {
+    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanThrowException {
         assert level != null;
         for (BlockPos b : BlockPos.betweenClosed(
                 getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
@@ -282,7 +283,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     ) implements IHandleableRequest {
 
         @Override
-        public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+        public boolean handle(IHandleContext context) throws WenyanThrowException {
             return request.handle(context, this);
         }
     }
@@ -295,7 +296,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             List<IWenyanValue> args
     ) implements IHandleableRequest {
         @Override
-        public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+        public boolean handle(IHandleContext context) throws WenyanThrowException {
             return request.handle(context, this);
         }
     }

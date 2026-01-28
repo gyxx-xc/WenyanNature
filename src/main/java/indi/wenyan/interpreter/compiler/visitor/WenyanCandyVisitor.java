@@ -2,7 +2,8 @@ package indi.wenyan.interpreter.compiler.visitor;
 
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanParseTreeException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanDataParser;
@@ -38,8 +39,8 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             bytecode.add(WenyanCodes.LOAD, ctx.WRITE_KEY_FUNCTION().getText());
             bytecode.add(WenyanCodes.CALL, n);
             bytecode.add(WenyanCodes.PUSH_ANS);
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage(), ctx);
+        } catch (WenyanThrowException e) {
+            throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
         return true;
     }
@@ -55,7 +56,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             case WenyanRParser.AND -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.AND_ID);
             case WenyanRParser.OR -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.OR_ID);
             default ->
-                    throw new WenyanException(Component.translatable("error.wenyan_programming.unknown_operator").getString(), ctx);
+                    throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.unknown_operator").getString(), ctx);
         }
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -74,7 +75,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
                 exprVisitor.visit(ctx.data(1));
                 break;
             default:
-                throw new WenyanException(Component.translatable("error.wenyan_programming.unknown_preposition").getString(), ctx);
+                throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.unknown_preposition").getString(), ctx);
         }
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);

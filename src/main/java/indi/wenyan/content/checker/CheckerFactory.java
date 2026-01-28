@@ -1,6 +1,7 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -19,7 +20,7 @@ public enum CheckerFactory {;
      * @param random a random source for the checker
      * @return the created checker, or null if the type is unknown
      */
-    public static CraftingAnswerChecker produce(String name, RandomSource random) {
+    public static CraftingAnswerChecker produce(String name, RandomSource random) throws WenyanThrowException {
         return switch (name) {
             case PLUS_CHECKER -> new PlusChecker(random);
             case ECHO_CHECKER -> new EchoChecker(random);

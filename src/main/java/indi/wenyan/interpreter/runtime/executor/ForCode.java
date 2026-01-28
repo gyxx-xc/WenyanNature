@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.structure.values.warper.WenyanIterator;
@@ -27,7 +28,7 @@ public class ForCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) {
+    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case FOR_ITER -> {
@@ -55,7 +56,7 @@ public class ForCode extends WenyanCode {
                         runtime.programCounter = runtime.bytecode.getLabel(args);
                         runtime.PCFlag = true;
                     }
-                } catch (WenyanException.WenyanThrowException e){
+                } catch (WenyanThrowException e){
                     throw new WenyanException(e.getMessage());
                 }
             }

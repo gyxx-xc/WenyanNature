@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.structure.values.warper;
 
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -58,9 +59,9 @@ public record WenyanList(List<IWenyanValue> value)
      *
      * @param index the 1-based index
      * @return the value at the specified index
-     * @throws WenyanException.WenyanThrowException if the index is out of bounds
+     * @throws WenyanThrowException if the index is out of bounds
      */
-    public IWenyanValue get(int index) throws WenyanException.WenyanThrowException {
+    public IWenyanValue get(int index) throws WenyanThrowException {
         try {
             return value.get(index - 1);
         } catch (IndexOutOfBoundsException e) {
@@ -69,7 +70,7 @@ public record WenyanList(List<IWenyanValue> value)
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         return switch (name) {
             case WenyanDataParser.ARRAY_GET_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 1)

@@ -7,6 +7,7 @@ import indi.wenyan.interpreter.compiler.WenyanVerifier;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.utils.WenyanCodes;
@@ -70,14 +71,14 @@ public class WenyanThread {
         var bytecode = new WenyanBytecode();
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode);
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
+        visitor.visit(WenyanVisitor.program(code));
+        environment.enterContext(0, 0, 0, 0);
+        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
+        environment.add(WenyanCodes.RET);
+        environment.exitContext();
         try {
-            visitor.visit(WenyanVisitor.program(code));
-            environment.enterContext(0, 0, 0, 0);
-            environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-            environment.add(WenyanCodes.RET);
-            environment.exitContext();
             WenyanVerifier.verify(bytecode);
-        } catch (WenyanException e) {
+        } catch (WenyanThrowException e) {
             program.platform.handleError(e.getMessage());
         }
 
@@ -167,7 +168,7 @@ public class WenyanThread {
 //                        code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
                 program.platform.handleError(context.line() + ":" + context.column() + " " +
                         code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
-            } else if (e instanceof WenyanException.WenyanThrowException) {
+            } else if (e instanceof WenyanThrowException) {
                 WenyanBytecode.Context context =
                         currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
 //                WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " +
@@ -262,7 +263,7 @@ public class WenyanThread {
      * @return The variable value
      * @throws WenyanException If the variable is not found
      */
-    public IWenyanValue getGlobalVariable(String id) {
+    public IWenyanValue getGlobalVariable(String id) throws WenyanThrowException {
         IWenyanValue value = null;
         for (int i = runtimes.size() - 1; i >= 0; i--) {
             if (runtimes.get(i).variables.containsKey(id)) {

@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.structure.values.warper;
 
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -23,7 +24,7 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         return switch (name) {
             case "「名」" -> WenyanValues.of(value.getBlock().getName().toString());
             case "「同物」" -> new WenyanInlineJavacall((self, args) -> {
@@ -48,7 +49,7 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
         return false;
     }
 
-    public static WenyanVec3 getConnectedDirection(BlockState state) {
+    public static WenyanVec3 getConnectedDirection(BlockState state) throws WenyanThrowException {
         try {
             return new WenyanVec3(switch (state.getValue(FaceAttachedHorizontalDirectionalBlock.FACE)) {
                 case CEILING -> Direction.DOWN.getNormal();

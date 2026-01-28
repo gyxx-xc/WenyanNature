@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
@@ -28,7 +29,7 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) {
+    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case LOAD -> {
@@ -73,7 +74,7 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, WenyanThread thread) {
+    public int getStep(int args, WenyanThread thread) throws WenyanThrowException {
         if (operation == Operation.LOAD) {
             return thread.runtimes.size();
         }

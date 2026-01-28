@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
@@ -41,7 +42,7 @@ public class FunctionCode extends WenyanCode {
     //   a.b() -> set self, call
 
     @Override
-    public void exec(int args, WenyanThread thread) {
+    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         try {
             WenyanRuntime runtime = thread.currentRuntime();
             IWenyanValue func = runtime.processStack.pop();
@@ -76,13 +77,13 @@ public class FunctionCode extends WenyanCode {
             //   which is a fake block, it will still run the rest command before blocked
             //   it will only block the next WenyanCode being executed
             callable.call(self, thread, argsList);
-        } catch (WenyanException.WenyanThrowException e) {
+        } catch (WenyanThrowException e) {
             throw new WenyanException(e.getMessage());
         }
     }
 
     @Override
-    public int getStep(int args, WenyanThread thread) {
+    public int getStep(int args, WenyanThread thread) throws WenyanThrowException {
         var function = thread.currentRuntime().processStack.peek();
         if (!function.is(IWenyanFunction.TYPE))
             throw new WenyanException("無法調用非函數類型的值");

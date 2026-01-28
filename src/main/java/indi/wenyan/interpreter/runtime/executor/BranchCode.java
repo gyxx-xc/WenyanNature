@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 
 /**
@@ -25,7 +26,7 @@ public class BranchCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) {
+    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         boolean val = false;
         try {

@@ -4,7 +4,7 @@ import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
@@ -114,7 +114,7 @@ public final class HandlerPackageBuilder {
             int acquired = 0;
 
             @Override
-            public boolean handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanException.WenyanThrowException {
+            public boolean handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanThrowException {
                 boolean hasDevice = false;
                 if (request.thread().program.platform instanceof RunnerBlockEntity entity) {
                     for (BlockPos b : BlockPos.betweenClosed(
@@ -143,22 +143,22 @@ public final class HandlerPackageBuilder {
 
     @FunctionalInterface
     public interface HandlerFunction {
-        boolean handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanException.WenyanThrowException;
+        boolean handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanThrowException;
     }
 
     @FunctionalInterface
     public interface HandlerReturnFunction {
-        IWenyanValue handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanException.WenyanTypeException;
+        IWenyanValue handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanThrowException;
     }
 
     @FunctionalInterface
     public interface HandlerSimpleFunction {
-        IWenyanValue handle(@NotNull IHandleableRequest request) throws WenyanException.WenyanThrowException;
+        IWenyanValue handle(@NotNull IHandleableRequest request) throws WenyanThrowException;
     }
 
     @FunctionalInterface
     public interface ImportFunction {
-        WenyanPackage getPackage(@NotNull IHandleContext context, @NotNull String name) throws WenyanException.WenyanThrowException;
+        WenyanPackage getPackage(@NotNull IHandleContext context, @NotNull String name) throws WenyanThrowException;
     }
 
     public record RawHandlerPackage

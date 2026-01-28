@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -16,7 +17,7 @@ public record WenyanPlayer(WenyanEntity valueWarper)
         this(new WenyanEntity(valueWarper));
     }
 
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         try {
             return valueWarper.getAttribute(name);
         } catch (WenyanException e) {

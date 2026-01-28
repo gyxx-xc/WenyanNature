@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.exec_interface.handler;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
 import java.util.List;
@@ -29,14 +29,14 @@ public class WenyanInlineJavacall implements IJavacallHandler {
      * @param self the self value
      * @param argsList the arguments for the call
      * @return the result of the function call
-     * @throws WenyanException.WenyanThrowException if an error occurs during handling
+     * @throws WenyanThrowException if an error occurs during handling
      */
-    public IWenyanValue handle(IWenyanValue self, List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
+    public IWenyanValue handle(IWenyanValue self, List<IWenyanValue> argsList) throws WenyanThrowException {
         return function.apply(self, argsList);
     }
 
     @Override
-    public void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
+    public void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList) throws WenyanThrowException {
         thread.currentRuntime().processStack.push(handle(self, argsList));
     }
 
@@ -51,9 +51,9 @@ public class WenyanInlineJavacall implements IJavacallHandler {
          * @param self the self value
          * @param args the function arguments
          * @return the result value
-         * @throws WenyanException.WenyanThrowException if an error occurs during function execution
+         * @throws WenyanThrowException if an error occurs during function execution
          */
         IWenyanValue apply(IWenyanValue self, List<IWenyanValue> args)
-                throws WenyanException.WenyanThrowException;
+                throws WenyanThrowException;
     }
 }

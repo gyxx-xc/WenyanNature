@@ -9,6 +9,7 @@ import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.Registration;
@@ -156,7 +157,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     // logic: if cached, if check recipe consistence -> return cached
     // else: recreate the checker
-    private IAnsweringChecker getChecker() {
+    private IAnsweringChecker getChecker() throws WenyanThrowException {
         Level level = getLevel();
         assert level != null;
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();

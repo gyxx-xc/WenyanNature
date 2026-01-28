@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObject;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObjectType;
@@ -24,7 +25,7 @@ public class ObjectCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) {
+    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         try {
             String id = runtime.bytecode.getIdentifier(args);

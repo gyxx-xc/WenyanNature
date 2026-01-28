@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter.structure.values;
 
+import indi.wenyan.interpreter.structure.WenyanThrowException;
+
 /**
  * Interface for Wenyan values that wrap a Java value.
  *
@@ -11,5 +13,5 @@ public interface IWenyanWarperValue<T> extends IWenyanValue {
      *
      * @return the wrapped value
      */
-    T value();
+    T value() throws WenyanThrowException;
 }
