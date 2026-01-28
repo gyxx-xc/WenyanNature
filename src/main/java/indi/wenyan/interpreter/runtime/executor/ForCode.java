@@ -48,16 +48,12 @@ public class ForCode extends WenyanCode {
             }
             case FOR_NUM -> {
                 IWenyanValue value = runtime.processStack.pop();
-                try {
-                    int num = value.as(WenyanInteger.TYPE).value();
-                    if (num > 0) {
-                        runtime.processStack.push(WenyanValues.of(num - 1));
-                    } else {
-                        runtime.programCounter = runtime.bytecode.getLabel(args);
-                        runtime.PCFlag = true;
-                    }
-                } catch (WenyanThrowException e){
-                    throw new WenyanException(e.getMessage());
+                int num = value.as(WenyanInteger.TYPE).value();
+                if (num > 0) {
+                    runtime.processStack.push(WenyanValues.of(num - 1));
+                } else {
+                    runtime.programCounter = runtime.bytecode.getLabel(args);
+                    runtime.PCFlag = true;
                 }
             }
         }

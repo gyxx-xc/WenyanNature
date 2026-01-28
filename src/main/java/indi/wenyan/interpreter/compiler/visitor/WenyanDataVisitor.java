@@ -33,7 +33,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
                 case WenyanRParser.INT_NUM -> WenyanValues.of(WenyanDataParser.parseInt(ctx.INT_NUM().getText()));
                 case WenyanRParser.FLOAT_NUM -> WenyanValues.of(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));
                 case WenyanRParser.STRING_LITERAL -> WenyanValues.of(WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()));
-                default -> throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString(), ctx);
+                default -> throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.invalid_data_type").getString(), ctx);
             };
             bytecode.add(WenyanCodes.PUSH, value);
             return true;

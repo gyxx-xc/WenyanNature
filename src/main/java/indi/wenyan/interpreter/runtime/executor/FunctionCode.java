@@ -43,43 +43,35 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public void exec(int args, WenyanThread thread) throws WenyanThrowException {
-        try {
-            WenyanRuntime runtime = thread.currentRuntime();
-            IWenyanValue func = runtime.processStack.pop();
-            IWenyanValue self = null;
-            IWenyanFunction callable;
-            if (operation == Operation.CALL_ATTR)
-                self = runtime.processStack.pop();
+        WenyanRuntime runtime = thread.currentRuntime();
+        IWenyanValue func = runtime.processStack.pop();
+        IWenyanValue self = null;
+        IWenyanFunction callable;
+        if (operation == Operation.CALL_ATTR)
+            self = runtime.processStack.pop();
 
-            // TODO: check the logic and use the tryAs
-            // object_type
-            if (func.is(IWenyanObjectType.TYPE)) {
-                callable = func.as(IWenyanObjectType.TYPE);
-            } else { // function
-                // handleWarper self first
-                if (operation == Operation.CALL_ATTR) {
-                    // try casting to object (might be list)
-                    try {
-                        self = self.as(IWenyanObject.TYPE);
-                    } catch (WenyanException.WenyanTypeException e) {
-                        // ignore self then
-                        self = null;
-                    }
-                }
-                callable = func.as(IWenyanFunction.TYPE);
+        // TODO: check the logic and use the tryAs
+        // object_type
+        if (func.is(IWenyanObjectType.TYPE)) {
+            callable = func.as(IWenyanObjectType.TYPE);
+        } else { // function
+            // handleWarper self first
+            if (operation == Operation.CALL_ATTR) {
+                // try casting to object (might be list)
+                // if not, ignore self
+                self = self.tryAs(IWenyanObject.TYPE).orElse(null);
             }
-
-            List<IWenyanValue> argsList = new ArrayList<>(args);
-            for (int i = 0; i < args; i++)
-                argsList.add(runtime.processStack.pop());
-
-            // NOTE: must make the callF at end, because it may block thread
-            //   which is a fake block, it will still run the rest command before blocked
-            //   it will only block the next WenyanCode being executed
-            callable.call(self, thread, argsList);
-        } catch (WenyanThrowException e) {
-            throw new WenyanException(e.getMessage());
+            callable = func.as(IWenyanFunction.TYPE);
         }
+
+        List<IWenyanValue> argsList = new ArrayList<>(args);
+        for (int i = 0; i < args; i++)
+            argsList.add(runtime.processStack.pop());
+
+        // NOTE: must make the callF at end, because it may block thread
+        //   which is a fake block, it will still run the rest command before blocked
+        //   it will only block the next WenyanCode being executed
+        callable.call(self, thread, argsList);
     }
 
     @Override

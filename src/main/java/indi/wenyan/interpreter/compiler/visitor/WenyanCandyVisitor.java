@@ -33,15 +33,16 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     @Override
     public Boolean visitDeclare_write_candy_statement(WenyanRParser.Declare_write_candy_statementContext ctx) {
         exprVisitor.visit(ctx.declare_statement());
+        int n;
         try {
-            int n = WenyanDataParser.parseInt(ctx.declare_statement().INT_NUM().getText());
-            bytecode.add(WenyanCodes.PEEK_ANS_N, n);
-            bytecode.add(WenyanCodes.LOAD, ctx.WRITE_KEY_FUNCTION().getText());
-            bytecode.add(WenyanCodes.CALL, n);
-            bytecode.add(WenyanCodes.PUSH_ANS);
+            n = WenyanDataParser.parseInt(ctx.declare_statement().INT_NUM().getText());
         } catch (WenyanThrowException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
+        bytecode.add(WenyanCodes.PEEK_ANS_N, n);
+        bytecode.add(WenyanCodes.LOAD, ctx.WRITE_KEY_FUNCTION().getText());
+        bytecode.add(WenyanCodes.CALL, n);
+        bytecode.add(WenyanCodes.PUSH_ANS);
         return true;
     }
 

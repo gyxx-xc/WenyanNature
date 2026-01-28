@@ -110,47 +110,40 @@ public class WenyanThread {
     //  since it needs scheduling after return
     public void programLoop(Semaphore accumulatedSteps) throws InterruptedException {
         while (true) {
-            if (mainRuntime.finishFlag) {
-                die();
-                return;
-            }
-
-            WenyanRuntime runtime = currentRuntime();
-
-            if (runtime.programCounter < 0 || runtime.programCounter >= runtime.bytecode.size()) {
-                dieWithException(new WenyanException.WenyanUnreachedException());
-                return;
-            }
-
-            WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
-
-            int needStep;
             try {
-                needStep = code.code().getStep(code.arg(), this);
-            } catch (Exception e) {
-                dieWithException(e);
-                return;
-            }
+                if (mainRuntime.finishFlag) {
+                    die();
+                    return;
+                }
 
-            if (assignedSteps < needStep) {
-                this.yield();
-                return; //switch
-            }
-            assignedSteps -= needStep;
-            accumulatedSteps.acquire(needStep);
+                WenyanRuntime runtime = currentRuntime();
 
-            try {
+                if (runtime.programCounter < 0 || runtime.programCounter >= runtime.bytecode.size()) {
+                    dieWithException(new WenyanException.WenyanUnreachedException());
+                    return;
+                }
+
+                WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
+                int needStep = code.code().getStep(code.arg(), this);
+
+                if (assignedSteps < needStep) {
+                    this.yield();
+                    return; //switch
+                }
+                assignedSteps -= needStep;
+                accumulatedSteps.acquire(needStep);
+
                 code.code().exec(code.arg(), this);
+                if (!runtime.PCFlag)
+                    runtime.programCounter++;
+                runtime.PCFlag = false;
+
+                if (state != State.READY) {
+                    return; // yield
+                }
             } catch (Exception e) {
                 dieWithException(e);
                 return;
-            }
-            if (!runtime.PCFlag)
-                runtime.programCounter++;
-            runtime.PCFlag = false;
-
-            if (state != State.READY) {
-                return; // yield
             }
         }
     }
@@ -192,7 +185,14 @@ public class WenyanThread {
 //            WenyanException.handleException(program.holder, "WenyanThread died with an unexpected exception, killed");
             program.platform.handleError("WenyanThread died with an unexpected exception, killed");
         }
-        die();
+        try {
+            die();
+        } catch (WenyanException.WenyanUnreachedException ex) {
+            WenyanProgramming.LOGGER.error("during handling an exception", e);
+            WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", ex);
+//            WenyanException.handleException(program.holder, "WenyanThread died with an unexpected exception, killed");
+            program.platform.handleError("WenyanThread died with an unexpected exception, killed");
+        }
     }
 
     /**
@@ -200,12 +200,12 @@ public class WenyanThread {
      *
      * @throws RuntimeException If the thread is not in the READY state
      */
-    public void block() {
+    public void block() throws WenyanException.WenyanUnreachedException {
         if (state == State.READY) {
             state = State.BLOCKED;
             assignedSteps = 0;
         } else {
-            throw new RuntimeException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
         }
     }
 
@@ -223,9 +223,9 @@ public class WenyanThread {
      *
      * @throws RuntimeException If the thread is already dying
      */
-    public void die() {
+    public void die() throws WenyanException.WenyanUnreachedException {
         if (state == State.DYING)
-            throw new RuntimeException("WenyanThread is already dying");
+            throw new WenyanException.WenyanUnreachedException();
         program.runningThreadsNumber.decrementAndGet();
         state = State.DYING;
     }

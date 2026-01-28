@@ -37,7 +37,7 @@ public class PlusChecker extends CraftingAnswerChecker {
             } else {
                 setResult(ResultStatus.WRONG_ANSWER);
             }
-        } catch (Exception e) {
+        } catch (WenyanThrowException e) {
             setResult(ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }

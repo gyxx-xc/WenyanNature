@@ -62,11 +62,9 @@ public record WenyanList(List<IWenyanValue> value)
      * @throws WenyanThrowException if the index is out of bounds
      */
     public IWenyanValue get(int index) throws WenyanThrowException {
-        try {
-            return value.get(index - 1);
-        } catch (IndexOutOfBoundsException e) {
-            throw new WenyanException.WenyanDataException(e.getMessage());
-        }
+        if (index < 1 || index > value.size())
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_programming.index_out_of_bounds").getString());
+        return value.get(index - 1);
     }
 
     @Override
@@ -116,7 +114,8 @@ public record WenyanList(List<IWenyanValue> value)
                 int toIndex = args.get(1).as(WenyanInteger.TYPE).value(); // 1-based
                 return WenyanValues.of(self.as(TYPE).value.subList(fromIndex, toIndex));
             });
-            default -> throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
+            default ->
+                    throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
         };
     }
 
