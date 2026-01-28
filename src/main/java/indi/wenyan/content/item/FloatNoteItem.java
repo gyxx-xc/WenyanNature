@@ -4,6 +4,8 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.gui.float_note.FloatNoteNamingScreen;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.network.DeviceRenamePacket;
+import indi.wenyan.setup.network.PlatformRenamePacket;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -36,7 +39,7 @@ public class FloatNoteItem extends Item {
         super(properties.durability(10));
     }
 
-    public InteractionResult interactLivingEntity(
+    public InteractionResult interactLivingEntity (
             ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (!(target instanceof Player)) {
             if (target.isAlive()) {
@@ -70,20 +73,22 @@ public class FloatNoteItem extends Item {
         if (blockEntity instanceof AbstractModuleEntity entity) {
             if (context.getPlayer().isShiftKeyDown()) {
                 if (level.isClientSide())
-                    openGui(component -> entity.setPackageName(component.getString()),
+                    openGui(component -> setDeviceName(entity, component),
                             context.getItemInHand());
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
-            setName(level, component -> entity.setPackageName(component.getString()), context);
+            setName(level, component -> setDeviceName(entity, component), context);
             return InteractionResult.sidedSuccess(level.isClientSide());
         } else if (blockEntity instanceof RunnerBlockEntity entity) {
-            if (context.getPlayer().isShiftKeyDown()) {
-                if (level.isClientSide())
-                    openGui(component -> entity.setPlatformName(component.getString()),
+            if (level.isClientSide()) {
+                if (context.getPlayer().isShiftKeyDown()) {
+                    openGui(component -> setRunnerBlockName(entity, component),
                             context.getItemInHand());
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                    return InteractionResult.sidedSuccess(level.isClientSide());
+                }
+                setName(level, component -> setRunnerBlockName(entity, component),
+                        context);
             }
-            setName(level, component -> entity.setPlatformName(component.getString()), context);
             return InteractionResult.sidedSuccess(level.isClientSide());
         } else {
             if (context.getPlayer().isShiftKeyDown()) {
@@ -93,6 +98,16 @@ public class FloatNoteItem extends Item {
             }
         }
         return InteractionResult.PASS;
+    }
+
+    private static void setRunnerBlockName(RunnerBlockEntity entity, Component component) {
+        entity.setPlatformName(component.getString());
+        PacketDistributor.sendToServer(new PlatformRenamePacket(entity.getBlockPos(), component.getString()));
+    }
+
+    private static void setDeviceName(AbstractModuleEntity entity, Component component) {
+        entity.setPackageName(component.getString());
+        PacketDistributor.sendToServer(new DeviceRenamePacket(entity.getBlockPos(), component.getString()));
     }
 
     @Override

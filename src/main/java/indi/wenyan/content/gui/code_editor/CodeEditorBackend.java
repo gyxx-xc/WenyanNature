@@ -7,6 +7,8 @@ import net.minecraft.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 // the following content will be saved within one gui open (across window resize and init() in screen)
 // but will be removed when screen is closed
@@ -30,14 +32,24 @@ public class CodeEditorBackend {
     @Setter
     private Runnable valueListener = () -> {
     };
+    @Setter
+    private Consumer<String> outputListener = (s) -> {
+    };
 
     private final CodeEditorBackendSynchronizer synchronizer;
 
-    public CodeEditorBackend(String content, String title, List<PackageSnippetWidget.PackageSnippet> packages,
-            CodeEditorBackendSynchronizer synchronizer) {
+    public CodeEditorBackend(List<PackageSnippetWidget.PackageSnippet> packages,
+                             CodeEditorBackendSynchronizer synchronizer) {
         this.synchronizer = synchronizer;
-        sidedData = new DoubleSidedData(content, title);
+        sidedData = new DoubleSidedData(synchronizer.getContent(), synchronizer.getTitle());
+        setOutput(synchronizer.getOutput());
         this.packages = packages;
+    }
+
+    public void tick() {
+        if (synchronizer.outputChanged()) {
+            setOutput(synchronizer.getOutput());
+        }
     }
 
     public void save() {
@@ -108,12 +120,21 @@ public class CodeEditorBackend {
         sidedData.title.append(StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
     }
 
+    public String getOutput() {
+        return Objects.requireNonNullElse(sidedData.output, "");
+    }
+
+    public void setOutput(String output) {
+        sidedData.output = output;
+        outputListener.accept(output);
+    }
+
     @Data
     public static class DoubleSidedData { // these data need to sync
         final StringBuilder content;
         final StringBuilder title;
         final List<CodeField.Placeholder> placeholders = new ArrayList<>();
-        // String output;
+        String output;
 
         public DoubleSidedData(String content, String title) {
             this.content = new StringBuilder(

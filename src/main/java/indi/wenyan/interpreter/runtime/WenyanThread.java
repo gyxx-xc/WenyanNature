@@ -14,6 +14,7 @@ import indi.wenyan.interpreter.utils.WenyanThreading;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
@@ -62,7 +63,7 @@ public class WenyanThread {
         DYING
     }
 
-    public static WenyanThread ofCode(String code, WenyanRuntime baseEnvironment, WenyanProgram program) {
+    public static @NotNull WenyanThread ofCode(String code, WenyanRuntime baseEnvironment, WenyanProgram program) {
         WenyanThread thread = new WenyanThread(code, program);
         thread.call(baseEnvironment);
 

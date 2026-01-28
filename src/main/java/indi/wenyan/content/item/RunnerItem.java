@@ -101,9 +101,18 @@ public class RunnerItem extends BlockItem {
             public String getTitle() {
                 return itemstack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
             }
+
+            @Override
+            public String getOutput() {
+                return "";
+            }
+
+            @Override
+            public boolean outputChanged() {
+                return false;
+            }
         };
-        var backend = new CodeEditorBackend(itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""),
-                synchronizer.getTitle(), List.of(), synchronizer);
+        var backend = new CodeEditorBackend(List.of(), synchronizer);
         Minecraft.getInstance().setScreen(new CodeEditorScreen(backend));
     }
 }

@@ -214,8 +214,6 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         if (visible && isFocused() && StringUtil.isAllowedChatCharacter(codePoint)) {
             textField.insertText(Character.toString(codePoint));
             completions = Completion.getCompletions(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
-            System.out.println(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
-            System.out.println(completions);
             return true;
         } else {
             return false;

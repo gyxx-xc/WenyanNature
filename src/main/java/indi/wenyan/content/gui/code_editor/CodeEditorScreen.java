@@ -73,12 +73,16 @@ public class CodeEditorScreen extends Screen {
         outputWindow = new FittingMultiLineTextWidget(
                 0, 15 + Math.min(height - 30, CodeEditorWidget.HEIGH),
                 width, 30,
-                Component.literal(("abcd".repeat(80)+"\n").repeat(10)), font);
+                Component.literal(backend.getOutput()), font);
+        backend.setOutputListener(output -> {
+            outputWindow.setMessage(Component.literal(output));
+        });
         addRenderableWidget(outputWindow);
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphics guiGraphics,
+                       int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
@@ -87,7 +91,7 @@ public class CodeEditorScreen extends Screen {
     }
 
     public void renderSnippetTooltip(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
-            SnippetSet.Snippet snippet) {
+                                     SnippetSet.Snippet snippet) {
         List<Component> tooltip = Lists.newArrayList();
         tooltip.add(Component.literal(snippet.title()));
         if (!hasShiftDown()) {
@@ -130,6 +134,12 @@ public class CodeEditorScreen extends Screen {
             super.setFocused(textFieldWidget);
         else
             super.setFocused(listener);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        backend.tick();
     }
 
     @Override

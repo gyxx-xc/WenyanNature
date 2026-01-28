@@ -15,12 +15,14 @@ import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
+import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
+import indi.wenyan.setup.network.PlatformOutputPacket;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -59,6 +62,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public String pages;
     public int speed;
+    @NotNull
+    public String output = "";
+    public boolean outputChanged = false;
 
     @Getter
     public final ExecQueue execQueue = new ExecQueue();
@@ -67,12 +73,24 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             new ImportRequest(t, this, this::getPackage, a);
 
     @Getter
-    @Setter
     private String platformName = Component.translatable("code.wenyan_programming.bracket", Component.translatable("block.wenyan_programming.runner_block")).getString();
 
     @Override
     public void changeInitEnvironment(WenyanRuntime baseEnvironment) {
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
+        baseEnvironment.setVariable("書", (RequestCallHandler) (thread, self, argsList) ->
+                new PlatformRequest(this, thread,
+                        (context, request) -> {
+                            String s = request.args().getFirst().as(WenyanString.TYPE).value();
+                            if (getLevel() instanceof ServerLevel sl) {
+                                PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                                        new PlatformOutputPacket(getBlockPos(), s));
+                            }
+                            addOutput(s);
+                            request.thread().currentRuntime().processStack.push(WenyanNull.NULL);
+                            return true;
+                        },
+                        self, argsList));
 
         assert getLevel() != null;
         BlockPos attached = getBlockPos().relative(
@@ -147,6 +165,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null)
             tag.putString("pages", pages);
+        if (!output.isEmpty())
+            tag.putString("output", output);
         tag.putInt("speed", speed);
         tag.putString("platformName", platformName);
     }
@@ -154,9 +174,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @SuppressWarnings("unused")
     @Override
     protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
-
         if (tag.contains("pages")) {
             pages = tag.getString("pages");
+        }
+        if (tag.contains("output")) {
+            output = tag.getString("output");
         }
         speed = tag.getInt("speed");
         platformName = tag.getString("platformName");
@@ -225,6 +247,17 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return new WenyanPackage(map);
     }
 
+    public void setPlatformName(String platformName) {
+        this.platformName = platformName;
+        setChanged();
+    }
+
+    public void addOutput(String output) {
+        this.output += output + "\n";
+        this.outputChanged = true;
+        setChanged();
+    }
+
     private record BlockContext(Level level, BlockPos pos,
                                 BlockState state) implements IHandleContext {
     }
@@ -239,6 +272,19 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             List<IWenyanValue> args
     ) implements IHandleableRequest {
 
+        @Override
+        public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+            return request.handle(context, this);
+        }
+    }
+
+    public record PlatformRequest(
+            IWenyanPlatform platform,
+            WenyanThread thread,
+            IRawRequest request,
+            IWenyanValue self,
+            List<IWenyanValue> args
+    ) implements IHandleableRequest {
         @Override
         public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
             return request.handle(context, this);

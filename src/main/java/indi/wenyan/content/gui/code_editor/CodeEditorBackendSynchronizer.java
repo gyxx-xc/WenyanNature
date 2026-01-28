@@ -9,4 +9,7 @@ public interface CodeEditorBackendSynchronizer {
 
     void sendTitle(String title);
     String getTitle();
+
+    String getOutput();
+    boolean outputChanged();
 }

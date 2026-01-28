@@ -11,6 +11,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
+import indi.wenyan.setup.network.PlatformRenamePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -118,16 +119,27 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
             @Override
             public void sendTitle(String title) {
-
+                runner.setPlatformName(title);
+                PacketDistributor.sendToServer(new PlatformRenamePacket(pos, title));
             }
 
             @Override
             public String getTitle() {
-                return "";
+                return runner.getPlatformName();
+            }
+
+            @Override
+            public String getOutput() {
+                return runner.output;
+            }
+
+            public boolean outputChanged() {
+                boolean oldValue = runner.outputChanged;
+                runner.outputChanged = false;
+                return oldValue;
             }
         };
-        var backend = new CodeEditorBackend(runner.pages, "", packageSnippets, synchronizer);
-        return backend;
+        return new CodeEditorBackend(packageSnippets, synchronizer);
     }
 
     @OnlyIn(Dist.CLIENT)

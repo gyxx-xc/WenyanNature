@@ -211,6 +211,9 @@ public final class Registration {
         registrar.playToServer(RunnerTitlePacket.TYPE,
                 RunnerTitlePacket.STREAM_CODEC,
                 RunnerTitlePacket.HANDLER);
+        registrar.playToServer(PlatformRenamePacket.TYPE,
+                PlatformRenamePacket.STREAM_CODEC,
+                PlatformRenamePacket.HANDLER);
         registrar.commonToClient(BlockOutputPacket.TYPE,
                 BlockOutputPacket.STREAM_CODEC,
                 BlockOutputPacket.HANDLER);
@@ -226,6 +229,9 @@ public final class Registration {
         registrar.commonToClient(CraftingParticlePacket.TYPE,
                 CraftingParticlePacket.STREAM_CODEC,
                 CraftingParticlePacket.HANDLER);
+        registrar.commonToClient(PlatformOutputPacket.TYPE,
+                PlatformOutputPacket.STREAM_CODEC,
+                PlatformOutputPacket.HANDLER);
     }
 
     // Static initialization block
