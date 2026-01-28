@@ -3,12 +3,13 @@ package indi.wenyan.interpreter.exec_interface;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
+import indi.wenyan.interpreter.utils.WenyanPackages;
 
 /**
  * Interface representing a platform that can execute Wenyan code and send
  * execute command to Wenyan devices
  */
-public interface IWenyanPlatform extends IExecReceiver{
+public interface IWenyanPlatform extends IExecReceiver {
     /**
      * Accepts and processes a JavacallContext, and showing effect if needed
      *
@@ -18,9 +19,14 @@ public interface IWenyanPlatform extends IExecReceiver{
 
     /**
      * Initializes the platform environment for the Wenyan runtime
-     * @param baseEnvironment The base runtime environment
      */
-    void changeInitEnvironment(WenyanRuntime baseEnvironment);
+    default WenyanRuntime initEnvironment() {
+        var environment = new WenyanRuntime(null);
+        environment.importPackage(WenyanPackages.WENYAN_BASIC_PACKAGES);
+        return environment;
+    }
 
     String getPlatformName();
+
+    void handleError(String error);
 }

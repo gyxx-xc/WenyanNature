@@ -83,14 +83,14 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             if (slotId == 38) {
                 if (program == null) {
                     // run program
-                    var newProgram = new WenyanProgram(player, this);
+                    var newProgram = new WenyanProgram(this);
                     PROGRAMS.put(stack.hashCode(), newProgram);
                 } else {
                     if (!program.isRunning()) {
                         try {
                             program.createThread(stack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""));
                         } catch (WenyanException.WenyanVarException e) {
-                            WenyanException.handleException(player, e.getMessage());
+                            handleError(e.getMessage());
                         }
                     }
                     program.step(runningLevel);
@@ -106,8 +106,15 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     }
 
     @Override
-    public void changeInitEnvironment(WenyanRuntime baseEnvironment) {
+    public WenyanRuntime initEnvironment() {
+        var baseEnvironment = IWenyanPlatform.super.initEnvironment();
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
+        return baseEnvironment;
+    }
+
+    @Override
+    public void handleError(String error) {
+//        WenyanException.handleException(player, error);
     }
 
     @Override

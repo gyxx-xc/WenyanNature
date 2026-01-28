@@ -64,7 +64,7 @@ public class HandRunnerEntity extends Projectile
 //    }
 //
 //    @Override
-//    public void changeInitEnvironment(WenyanRuntime baseEnvironment) {
+//    public void initEnvironment(WenyanRuntime baseEnvironment) {
 //        baseEnvironment.importPackage(getExecPackage());
 //    }
 //

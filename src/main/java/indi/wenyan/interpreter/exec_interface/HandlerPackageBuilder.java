@@ -128,7 +128,8 @@ public final class HandlerPackageBuilder {
                     }
                 }
                 if (!hasDevice)
-                    WenyanException.handleException(request.thread().program.holder, "need power");
+                    // STUB
+                    request.thread().program.platform.handleError("need power");
                 if (acquired < power) {
                     return false;
                 } else {

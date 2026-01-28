@@ -53,7 +53,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 openGui(runner, pos, level, player, state);
         } else {
             if (!level.isClientSide()) {
-                runner.playerRun(player);
+                runner.playerRun();
             }
         }
         return ItemInteractionResult.SUCCESS;

@@ -30,7 +30,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -50,9 +49,9 @@ import java.util.Optional;
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
     private WenyanProgram program = null;
 
-    private WenyanProgram getProgram(Player player) {
+    private WenyanProgram getProgram() {
         if (program == null)
-            program = new WenyanProgram(player, this);
+            program = new WenyanProgram(this);
         return program;
     }
 
@@ -76,7 +75,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private String platformName = Component.translatable("code.wenyan_programming.bracket", Component.translatable("block.wenyan_programming.runner_block")).getString();
 
     @Override
-    public void changeInitEnvironment(WenyanRuntime baseEnvironment) {
+    public WenyanRuntime initEnvironment() {
+        var baseEnvironment = IWenyanPlatform.super.initEnvironment();
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
         baseEnvironment.setVariable("書", (RequestCallHandler) (thread, self, argsList) ->
                 new PlatformRequest(this, thread,
@@ -97,6 +97,15 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 RunnerBlock.getConnectedDirection(getBlockState()).getOpposite());
         if (getLevel().getBlockEntity(attached) instanceof IWenyanBlockDevice device)
             baseEnvironment.importPackage(processPackage(device.getExecPackage(), device));
+        return baseEnvironment;
+    }
+
+    @Override
+    public void handleError(String error) {
+        if (getLevel() instanceof ServerLevel sl)
+            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                    new PlatformOutputPacket(getBlockPos(), error));
+        addOutput(error);
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
@@ -114,16 +123,16 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             });
     }
 
-    public void playerRun(Player player) {
-        var p = getProgram(player);
+    public void playerRun() {
+        var p = getProgram();
         if (p.isRunning()) {
-            WenyanException.handleException(player, Component.translatable("error.wenyan_programming.already_run").getString());
+            handleError(Component.translatable("error.wenyan_programming.already_run").getString());
             return;
         }
         try {
             p.createThread(pages);
         } catch (WenyanException.WenyanVarException e) {
-            WenyanException.handleException(player, e.getMessage());
+            handleError(e.getMessage());
         }
     }
 
@@ -227,7 +236,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                     }
                     // STUB
                     if (ifProgram().isPresent()) {
-                        WenyanThread thread = platform.getProgram(program.holder).createThread(platform.pages);
+                        WenyanThread thread = platform.getProgram().createThread(platform.pages);
                         return Either.right(thread);
                     } else {
                         throw new WenyanException.WenyanUnreachedException();

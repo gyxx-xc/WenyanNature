@@ -16,11 +16,11 @@ public class WenyanException extends RuntimeException {
     }
 
     public WenyanException(String message, ParserRuleContext ctx) {
-        super(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine()+" "+ctx.getText()+"\n"+message);
+        super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + message);
     }
 
     public WenyanException(WenyanThrowException e, ParserRuleContext ctx) {
-        super(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine()+" "+ctx.getText()+"\n"+e.getMessage());
+        super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + e.getMessage());
     }
 
     public static class WenyanUnreachedException extends WenyanException {
@@ -85,7 +85,8 @@ public class WenyanException extends RuntimeException {
 
     /**
      * Handles an exception by displaying it to the player
-     * @param player Player to notify
+     *
+     * @param player  Player to notify
      * @param message Error message
      */
     @WenyanThreading

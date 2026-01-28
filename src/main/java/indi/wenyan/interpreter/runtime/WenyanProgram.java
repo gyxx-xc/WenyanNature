@@ -2,9 +2,7 @@ package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.interpreter.utils.WenyanThreading;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -43,11 +41,6 @@ public class WenyanProgram {
 
     public static final int MAX_THREAD = 3;
 
-    // STUB: used in error handler, might changed
-    //   should not be used in new code
-    @Deprecated
-    public final Player holder;
-
     /**
      * Platform-specific integration
      */
@@ -66,15 +59,11 @@ public class WenyanProgram {
     /**
      * Creates a new Wenyan program from the given code.
      *
-     * @param holder   The player who created this program
      * @param platform The platform integration
      */
-    public WenyanProgram(Player holder, IWenyanPlatform platform) {
+    public WenyanProgram(IWenyanPlatform platform) {
         this.platform = platform;
-        this.baseEnvironment = new WenyanRuntime(null);
-        baseEnvironment.importPackage(WenyanPackages.WENYAN_BASIC_PACKAGES);
-        platform.changeInitEnvironment(baseEnvironment);
-        this.holder = holder;
+        this.baseEnvironment = platform.initEnvironment();
     }
 
     /**
@@ -94,7 +83,6 @@ public class WenyanProgram {
 
         int threadsNumber = runningThreadsNumber.getAndIncrement();
         if (threadsNumber >= MAX_THREAD) {
-            WenyanException.handleException(holder, "too many threads");
             runningThreadsNumber.getAndDecrement();
             throw new WenyanException.WenyanVarException("too many threads");
         }
@@ -159,7 +147,7 @@ public class WenyanProgram {
             // noinspection InfiniteLoopStatement
             while (true) {
                 if (accumulatedSteps.availablePermits() > 10000) {
-                    WenyanException.handleException(holder, "program running too slow");
+                    platform.handleError("program running too slow");
                     readyQueue.clear();
                     runningThreadsNumber.set(0);
                     accumulatedSteps.drainPermits();
