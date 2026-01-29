@@ -111,14 +111,14 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {
-                runner.pages = content;
+                runner.setPages(content);
                 runner.setChanged();
                 PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
             }
 
             @Override
             public String getContent() {
-                return runner.pages;
+                return runner.getPages();
             }
 
             @Override

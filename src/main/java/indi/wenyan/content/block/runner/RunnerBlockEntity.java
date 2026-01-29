@@ -1,6 +1,7 @@
 package indi.wenyan.content.block.runner;
 
 import com.mojang.datafixers.util.Either;
+import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
@@ -24,6 +25,7 @@ import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -48,20 +50,21 @@ import java.util.Optional;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
-    private WenyanProgram program = null;
+    private WenyanProgram optionalProgram = null;
 
     private WenyanProgram getProgram() {
-        if (program == null)
-            program = new WenyanProgram(this);
-        return program;
+        if (optionalProgram == null)
+            optionalProgram = new WenyanProgram(this);
+        return optionalProgram;
     }
 
     private Optional<WenyanProgram> ifProgram() {
-        return Optional.ofNullable(program);
+        return Optional.ofNullable(optionalProgram);
     }
 
-    public String pages;
-    public int speed;
+    @Getter @Setter
+    private String pages;
+    private int speed;
     private List<Component> newOutput = new ArrayList<>();
 
     @Getter
@@ -93,7 +96,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
         assert getLevel() != null;
         BlockPos attached = getBlockPos().relative(
-                RunnerBlock.getConnectedDirection(getBlockState()).getOpposite());
+                AbstractFuluBlock.getConnectedDirection(getBlockState()).getOpposite());
         if (getLevel().getBlockEntity(attached) instanceof IWenyanBlockDevice device)
             baseEnvironment.importPackage(processPackage(device.getExecPackage(), device));
         return baseEnvironment;
@@ -168,23 +171,26 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
     }
 
+    public static final String PAGES_ID = "pages";
+    public static final String SPEED_ID = "speed";
+    public static final String PLATFORM_NAME_ID = "platformName";
     @SuppressWarnings("unused")
     @Override
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null)
-            tag.putString("pages", pages);
-        tag.putInt("speed", speed);
-        tag.putString("platformName", platformName);
+            tag.putString(PAGES_ID, pages);
+        tag.putInt(SPEED_ID, speed);
+        tag.putString(PLATFORM_NAME_ID, platformName);
     }
 
     @SuppressWarnings("unused")
     @Override
     protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains("pages")) {
-            pages = tag.getString("pages");
+        if (tag.contains(PAGES_ID)) {
+            pages = tag.getString(PAGES_ID);
         }
-        speed = tag.getInt("speed");
-        platformName = tag.getString("platformName");
+        speed = tag.getInt(SPEED_ID);
+        platformName = tag.getString(PLATFORM_NAME_ID);
     }
 
     @Override
@@ -209,36 +215,41 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
             BlockEntity blockEntity = level.getBlockEntity(b);
             if (blockEntity instanceof IWenyanBlockDevice executor) {
-                if (executor.getPackageName().equals(packageName)) {
-                    if (getLevel() instanceof ServerLevel sl) {
-                        PacketDistributor.sendToPlayersTrackingChunk(sl,
-                                new ChunkPos(getBlockPos()),
-                                new CommunicationLocationPacket(getBlockPos(), executor.blockPos().getCenter())
-                        );
-                    }
-                    var rawPackage = executor.getExecPackage();
-                    return Either.left(processPackage(rawPackage, executor));
-                }
+                if (executor.getPackageName().equals(packageName))
+                    return Either.left(getExecutorPackage(executor));
             } else if (blockEntity instanceof RunnerBlockEntity platform) {
                 if (platform == this) continue;
-                if (platform.getPlatformName().equals(packageName)) {
-                    if (getLevel() instanceof ServerLevel sl) {
-                        PacketDistributor.sendToPlayersTrackingChunk(sl,
-                                new ChunkPos(getBlockPos()),
-                                new CommunicationLocationPacket(getBlockPos(), platform.getBlockPos().getCenter())
-                        );
-                    }
-                    // STUB
-                    if (ifProgram().isPresent()) {
-                        WenyanThread thread = platform.getProgram().createThread(platform.pages);
-                        return Either.right(thread);
-                    } else {
-                        throw new WenyanException.WenyanUnreachedException();
-                    }
-                }
+                if (platform.getPlatformName().equals(packageName))
+                    return Either.right(getPlatformThread(platform));
             }
         }
         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
+    }
+
+    private WenyanThread getPlatformThread(RunnerBlockEntity platform) throws WenyanThrowException {
+        if (getLevel() instanceof ServerLevel sl) {
+            PacketDistributor.sendToPlayersTrackingChunk(sl,
+                    new ChunkPos(getBlockPos()),
+                    new CommunicationLocationPacket(getBlockPos(), platform.getBlockPos().getCenter())
+            );
+        }
+        // STUB
+        if (ifProgram().isPresent()) {
+            return platform.getProgram().createThread(platform.pages);
+        } else {
+            throw new WenyanException.WenyanUnreachedException();
+        }
+    }
+
+    private WenyanPackage getExecutorPackage(IWenyanBlockDevice executor) {
+        if (getLevel() instanceof ServerLevel sl) {
+            PacketDistributor.sendToPlayersTrackingChunk(sl,
+                    new ChunkPos(getBlockPos()),
+                    new CommunicationLocationPacket(getBlockPos(), executor.blockPos().getCenter())
+            );
+        }
+        var rawPackage = executor.getExecPackage();
+        return processPackage(rawPackage, executor);
     }
 
     @Contract("_, _ -> new")

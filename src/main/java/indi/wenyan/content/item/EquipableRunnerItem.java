@@ -115,7 +115,6 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
 
     @Override
     public void handleError(String error) {
-//        WenyanException.handleException(player, error);
     }
 
     @Override
