@@ -7,6 +7,7 @@ import indi.wenyan.interpreter.compiler.WenyanVerifier;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.utils.WenyanCodes;
@@ -63,7 +64,7 @@ public class WenyanThread {
         DYING
     }
 
-    public static @NotNull WenyanThread ofCode(String code, WenyanRuntime baseEnvironment, WenyanProgram program) throws WenyanException {
+    public static @NotNull WenyanThread ofCode(String code, WenyanRuntime baseEnvironment, WenyanProgram program) throws WenyanThrowException {
         WenyanThread thread = new WenyanThread(code, program);
         thread.call(baseEnvironment);
 
@@ -105,47 +106,40 @@ public class WenyanThread {
     //  since it needs scheduling after return
     public void programLoop(Semaphore accumulatedSteps) throws InterruptedException {
         while (true) {
-            if (mainRuntime.finishFlag) {
-                die();
-                return;
-            }
-
-            WenyanRuntime runtime = currentRuntime();
-
-            if (runtime.programCounter < 0 || runtime.programCounter >= runtime.bytecode.size()) {
-                dieWithException(new WenyanException.WenyanUnreachedException());
-                return;
-            }
-
-            WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
-
-            int needStep;
             try {
-                needStep = code.code().getStep(code.arg(), this);
-            } catch (Exception e) {
-                dieWithException(e);
-                return;
-            }
+                if (mainRuntime.finishFlag) {
+                    die();
+                    return;
+                }
 
-            if (assignedSteps < needStep) {
-                this.yield();
-                return; //switch
-            }
-            assignedSteps -= needStep;
-            accumulatedSteps.acquire(needStep);
+                WenyanRuntime runtime = currentRuntime();
 
-            try {
+                if (runtime.programCounter < 0 || runtime.programCounter >= runtime.bytecode.size()) {
+                    dieWithException(new WenyanException.WenyanUnreachedException());
+                    return;
+                }
+
+                WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
+                int needStep = code.code().getStep(code.arg(), this);
+
+                if (assignedSteps < needStep) {
+                    this.yield();
+                    return; //switch
+                }
+                assignedSteps -= needStep;
+                accumulatedSteps.acquire(needStep);
+
                 code.code().exec(code.arg(), this);
+                if (!runtime.PCFlag)
+                    runtime.programCounter++;
+                runtime.PCFlag = false;
+
+                if (state != State.READY) {
+                    return; // yield
+                }
             } catch (Exception e) {
                 dieWithException(e);
                 return;
-            }
-            if (!runtime.PCFlag)
-                runtime.programCounter++;
-            runtime.PCFlag = false;
-
-            if (state != State.READY) {
-                return; // yield
             }
         }
     }
@@ -168,7 +162,7 @@ public class WenyanThread {
                 WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
                 program.platform.handleError(context.line() + ":" + context.column() + " " +
                         code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
-            } else if (e instanceof WenyanException.WenyanThrowException) {
+            } else if (e instanceof WenyanThrowException) {
                 WenyanBytecode.Context context =
                         currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
                 program.platform.handleError(context.line() + ":" + context.column() + " " +
@@ -179,7 +173,14 @@ public class WenyanThread {
             WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", unexpected);
             program.platform.handleError("WenyanThread died with an unexpected exception, killed");
         }
-        die();
+        try {
+            die();
+        } catch (WenyanException.WenyanUnreachedException ex) {
+            WenyanProgramming.LOGGER.error("during handling an exception", e);
+            WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", ex);
+//            WenyanException.handleException(program.holder, "WenyanThread died with an unexpected exception, killed");
+            program.platform.handleError("WenyanThread died with an unexpected exception, killed");
+        }
     }
 
     /**
@@ -187,12 +188,12 @@ public class WenyanThread {
      *
      * @throws RuntimeException If the thread is not in the READY state
      */
-    public void block() {
+    public void block() throws WenyanException.WenyanUnreachedException {
         if (state == State.READY) {
             state = State.BLOCKED;
             assignedSteps = 0;
         } else {
-            throw new RuntimeException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
         }
     }
 
@@ -210,9 +211,9 @@ public class WenyanThread {
      *
      * @throws RuntimeException If the thread is already dying
      */
-    public void die() {
+    public void die() throws WenyanException.WenyanUnreachedException {
         if (state == State.DYING)
-            throw new RuntimeException("WenyanThread is already dying");
+            throw new WenyanException.WenyanUnreachedException();
         program.runningThreadsNumber.decrementAndGet();
         state = State.DYING;
     }
@@ -250,7 +251,7 @@ public class WenyanThread {
      * @return The variable value
      * @throws WenyanException If the variable is not found
      */
-    public IWenyanValue getGlobalVariable(String id) {
+    public IWenyanValue getGlobalVariable(String id) throws WenyanThrowException {
         IWenyanValue value = null;
         for (int i = runtimes.size() - 1; i >= 0; i--) {
             if (runtimes.get(i).variables.containsKey(id)) {

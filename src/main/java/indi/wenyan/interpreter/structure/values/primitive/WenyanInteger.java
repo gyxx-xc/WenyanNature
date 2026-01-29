@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.structure.values.primitive;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
@@ -26,7 +27,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
 
     // in most cases, int is enough; and is much better for other to deal with
     @Override
-    public Integer value() {
+    public Integer value() throws WenyanThrowException {
         try {
             return value.intValueExact();
         } catch (ArithmeticException e) {
@@ -49,22 +50,22 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);
 
     @Override
-    public IWenyanValue add(IWenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue add(IWenyanValue other) throws WenyanThrowException {
         return WenyanValues.of(value.add(other.as(TYPE).value));
     }
 
     @Override
-    public IWenyanValue subtract(IWenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue subtract(IWenyanValue other) throws WenyanThrowException {
         return WenyanValues.of(value.subtract(other.as(TYPE).value));
     }
 
     @Override
-    public IWenyanValue multiply(IWenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue multiply(IWenyanValue other) throws WenyanThrowException {
         return WenyanValues.of(value.multiply(other.as(TYPE).value));
     }
 
     @Override
-    public IWenyanValue divide(IWenyanValue other) throws WenyanException.WenyanTypeException {
+    public IWenyanValue divide(IWenyanValue other) throws WenyanThrowException {
         WenyanInteger divisor = other.as(TYPE);
         if (divisor.value.equals(BigInteger.ZERO)) {
             throw new WenyanException("Division by zero");
@@ -72,7 +73,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
         return WenyanValues.of(value.divide(divisor.value));
     }
 
-    public WenyanInteger mod(WenyanInteger other) {
+    public WenyanInteger mod(WenyanInteger other) throws WenyanThrowException {
         if (other.value.equals(BigInteger.ZERO)) {
             throw new WenyanException("Modulo by zero");
         }

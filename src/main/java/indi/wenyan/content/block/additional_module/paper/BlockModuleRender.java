@@ -21,7 +21,7 @@ import java.util.OptionalDouble;
 import static net.minecraft.client.renderer.RenderStateShard.*;
 
 public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity> {
-    final ResourceLocation AABB_WALL = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
+    public static final ResourceLocation AABB_WALL = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
 
     public BlockModuleRender(BlockEntityRendererProvider.Context ignoredContext) {
     }

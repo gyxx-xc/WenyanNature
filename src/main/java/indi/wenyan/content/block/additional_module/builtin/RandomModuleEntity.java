@@ -8,12 +8,10 @@ import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
-import java.util.Objects;
 
 public class RandomModuleEntity extends AbstractModuleEntity {
     @Getter
@@ -22,8 +20,9 @@ public class RandomModuleEntity extends AbstractModuleEntity {
     @Getter
     private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction(WenyanSymbol.var("RandomModule.nextInt"), (args) -> {
-                        var random = Objects.requireNonNull(Minecraft.getInstance().level).getRandom();
+                    .intFunction(WenyanSymbol.var("RandomModule.nextInt"), args -> {
+                        assert getLevel() != null;
+                        var random = getLevel().getRandom();
                         return switch (args.size()) {
                             case 0 -> random.nextInt();
                             case 1 -> random.nextInt(args.getFirst());
@@ -31,10 +30,18 @@ public class RandomModuleEntity extends AbstractModuleEntity {
                             default -> throw new WenyanException(""); // TODO
                         };
                     })
-                    .doubleFunction(WenyanSymbol.var("RandomModule.nextDouble"), args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextDouble())
-                    .doubleFunction(WenyanSymbol.var("RandomModule.nextTriangle"), args -> Objects.requireNonNull(Minecraft.getInstance().level).getRandom().triangle(args.getFirst(), args.get(1)))
-                    .function(WenyanSymbol.var("RandomModule.nextBoolean"), (IWenyanValue self, List<IWenyanValue> args) ->
-                            WenyanValues.of(Objects.requireNonNull(Minecraft.getInstance().level).getRandom().nextBoolean())))
+                    .doubleFunction(WenyanSymbol.var("RandomModule.nextDouble"), args -> {
+                        assert getLevel() != null;
+                        return getLevel().getRandom().nextDouble();
+                    })
+                    .doubleFunction(WenyanSymbol.var("RandomModule.nextTriangle"), args -> {
+                        assert getLevel() != null;
+                        return getLevel().getRandom().triangle(args.getFirst(), args.get(1));
+                    })
+                    .function(WenyanSymbol.var("RandomModule.nextBoolean"), (IWenyanValue self, List<IWenyanValue> args) -> {
+                        assert getLevel() != null;
+                        return WenyanValues.of(getLevel().getRandom().nextBoolean());
+                    }))
             .build();
 
     public RandomModuleEntity(BlockPos pos, BlockState blockState) {

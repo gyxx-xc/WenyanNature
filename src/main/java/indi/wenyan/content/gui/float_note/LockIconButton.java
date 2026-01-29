@@ -23,17 +23,18 @@ public class LockIconButton extends Button {
         setTooltip(Tooltip.create(Component.translatable("gui.wenyan.lock")));
     }
 
+    @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        Icon lockiconbutton$icon;
+        Icon icon;
         if (!this.active) {
-            lockiconbutton$icon = this.locked ? LockIconButton.Icon.LOCKED_DISABLED : LockIconButton.Icon.UNLOCKED_DISABLED;
+            icon = this.locked ? LockIconButton.Icon.LOCKED_DISABLED : LockIconButton.Icon.UNLOCKED_DISABLED;
         } else if (this.isHoveredOrFocused()) {
-            lockiconbutton$icon = this.locked ? LockIconButton.Icon.LOCKED_HOVER : LockIconButton.Icon.UNLOCKED_HOVER;
+            icon = this.locked ? LockIconButton.Icon.LOCKED_HOVER : LockIconButton.Icon.UNLOCKED_HOVER;
         } else {
-            lockiconbutton$icon = this.locked ? LockIconButton.Icon.LOCKED : LockIconButton.Icon.UNLOCKED;
+            icon = this.locked ? LockIconButton.Icon.LOCKED : LockIconButton.Icon.UNLOCKED;
         }
 
-        guiGraphics.blitSprite(lockiconbutton$icon.sprite, this.getX(), this.getY(), this.width, this.height);
+        guiGraphics.blitSprite(icon.sprite, this.getX(), this.getY(), this.width, this.height);
     }
 
     @OnlyIn(Dist.CLIENT)

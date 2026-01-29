@@ -5,7 +5,7 @@ import indi.wenyan.interpreter.antlr.WenyanRBaseVisitor;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanParseTreeException;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -58,7 +58,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
             Boolean childResult;
             if (c instanceof ParserRuleContext ctx) {
                 // STUB: not sure why getStop will return null is empty (should be start)
-                if (ctx.getStop() == null) throw new WenyanException("content empty");
+                if (ctx.getStop() == null) throw new WenyanParseTreeException("content empty");
                 bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
                         ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                 childResult = c.accept(this);

@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.structure.values.warper;
 
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
@@ -41,7 +42,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         return switch (name) {
             case "「上下」" -> WenyanValues.of(value.y);
             case "「東西」" -> WenyanValues.of(value.x);
@@ -82,7 +83,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         }
 
         @Override
-        public IWenyanValue getAttribute(String name) {
+        public IWenyanValue getAttribute(String name) throws WenyanThrowException {
             return switch (name) {
                 case "「零」" -> ZERO;
                 case "「上」" -> UP;
@@ -97,7 +98,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
 
         @Override
         @WenyanThreading
-        public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
+        public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
             if (argsList.size() == 1) {
                 return argsList.getFirst().as(WenyanVec3.TYPE);
             } else {

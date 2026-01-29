@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.structure.values;
 
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 
 /**
@@ -18,5 +19,5 @@ public interface IWenyanObject extends IWenyanValue {
      * @param name the name of the attribute
      * @return the value of the attribute
      */
-    IWenyanValue getAttribute(String name);
+    IWenyanValue getAttribute(String name) throws WenyanThrowException;
 }

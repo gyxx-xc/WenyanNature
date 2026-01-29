@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.structure.values.warper;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -12,7 +13,7 @@ public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, 
     public static final WenyanType<WenyanEntity> TYPE = new WenyanType<>("entity", WenyanEntity.class);
 
     @Override
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         return switch (name) {
             case "「位」" -> WenyanValues.of(value().getPosition(0));
             case "「移」" -> WenyanValues.of(value().getDeltaMovement());

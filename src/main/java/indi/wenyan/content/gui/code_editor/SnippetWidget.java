@@ -229,6 +229,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                 backend.getCurSnippets().size() * DIR_HEIGHT;
     }
 
+    @Override
     protected boolean scrollbarVisible() {
         return getInnerHeight() > getHeight() - totalInnerPadding();
     }

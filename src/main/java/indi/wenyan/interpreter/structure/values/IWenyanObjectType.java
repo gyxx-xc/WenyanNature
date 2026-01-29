@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.structure.values;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
@@ -19,22 +19,22 @@ public interface IWenyanObjectType extends IWenyanFunction {
      * @param name the name of the attribute to get
      * @return the value of the attribute
      */
-    IWenyanValue getAttribute(String name);
+    IWenyanValue getAttribute(String name) throws WenyanThrowException;
 
     /**
      * Creates a new object instance of this type.
      *
      * @param argsList the arguments to pass to the constructor
      * @return the new object instance
-     * @throws WenyanException.WenyanThrowException if object creation fails
+     * @throws WenyanThrowException if object creation fails
      */
     @WenyanThreading
     IWenyanObject createObject(List<IWenyanValue> argsList)
-            throws WenyanException.WenyanThrowException;
+            throws WenyanThrowException;
 
     @Override
     default void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList)
-            throws WenyanException.WenyanThrowException {
+            throws WenyanThrowException {
         thread.currentRuntime().processStack.push(createObject(argsList));
     }
 }

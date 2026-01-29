@@ -1,12 +1,12 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.block.additional_module.IModulerBlock;
+import indi.wenyan.content.block.additional_module.IModuleBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockModuleBlock extends AbstractFuluBlock implements IModulerBlock {
+public class BlockModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "block_module_block";
 
     @Override

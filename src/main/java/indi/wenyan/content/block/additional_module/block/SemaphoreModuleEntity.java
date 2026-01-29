@@ -20,15 +20,16 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("SemaphoreModule.acquire"), (request) -> {
+            .handler(WenyanSymbol.var("SemaphoreModule.acquire"), request -> {
                 try {
                     semaphore.acquire();
                     return WenyanValues.of(true);
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     return WenyanValues.of(false);
                 }
             })
-            .handler(WenyanSymbol.var("SemaphoreModule.release"), (request) -> {
+            .handler(WenyanSymbol.var("SemaphoreModule.release"), request -> {
                 semaphore.release();
                 return WenyanNull.NULL;
             })

@@ -24,7 +24,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -46,7 +45,7 @@ public class RunnerItem extends BlockItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
-            opengui(itemstack, player, hand);
+            openGui(itemstack, player, hand);
         }
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
@@ -70,7 +69,8 @@ public class RunnerItem extends BlockItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown()) {
+        if (context.getPlayer() == null) return InteractionResult.FAIL;
+        if (context.getPlayer().isShiftKeyDown()) {
             context.getItemInHand().set(Registration.RUNNING_TIER_DATA.get(), runningLevel);
             return super.useOn(context);
         }
@@ -78,7 +78,7 @@ public class RunnerItem extends BlockItem {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private void opengui(ItemStack itemstack, Player player, InteractionHand hand) {
+    private void openGui(ItemStack itemstack, Player player, InteractionHand hand) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {

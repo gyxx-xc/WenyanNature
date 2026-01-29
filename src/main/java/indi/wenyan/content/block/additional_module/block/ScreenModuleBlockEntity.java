@@ -14,6 +14,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,8 +29,10 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
     @Getter
     private final List<String> output = new LinkedList<>();
 
-    @Getter
-    public final String basePackageName = "";
+    @Override
+    public @NotNull String getBasePackageName() {
+        return "";
+    }
 
     @Getter
     public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()

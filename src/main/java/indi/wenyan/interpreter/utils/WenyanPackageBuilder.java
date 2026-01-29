@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.utils;
 import indi.wenyan.interpreter.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
@@ -15,8 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * Builder for creating WenyanPackage values
@@ -69,7 +68,7 @@ public final class WenyanPackageBuilder {
      * @return This builder
      */
     public WenyanPackageBuilder
-    doubleFunction(String name, Function<List<Double>, Double> function) {
+    doubleFunction(String name, ThrowFunction<List<Double>, Double> function) {
         return function(name, (self, args) -> {
             List<Double> newArgs = new ArrayList<>();
             for (IWenyanValue arg : args) {
@@ -86,7 +85,7 @@ public final class WenyanPackageBuilder {
      * @return This builder
      */
     public WenyanPackageBuilder
-    intFunction(String name, Function<List<Integer>, Integer> function) {
+    intFunction(String name, ThrowFunction<List<Integer>, Integer> function) {
         return function(name, (self, args) -> {
             List<Integer> newArgs = new ArrayList<>();
             for (IWenyanValue arg : args) {
@@ -163,7 +162,7 @@ public final class WenyanPackageBuilder {
      * @param function The binary boolean operation
      * @return A builtin function that applies the operation
      */
-    public static WenyanInlineJavacall.BuiltinFunction boolBinaryOperation(BiFunction<Boolean, Boolean, Boolean> function) {
+    public static WenyanInlineJavacall.BuiltinFunction boolBinaryOperation(ThrowBiFunction<Boolean, Boolean, Boolean> function) {
         return (self, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
@@ -190,7 +189,7 @@ public final class WenyanPackageBuilder {
      */
     @FunctionalInterface
     public interface ReduceFunction {
-        IWenyanValue apply(IWenyanValue a, IWenyanValue b) throws WenyanException.WenyanThrowException;
+        IWenyanValue apply(IWenyanValue a, IWenyanValue b) throws WenyanThrowException;
     }
 
     /**
@@ -198,6 +197,17 @@ public final class WenyanPackageBuilder {
      */
     @FunctionalInterface
     public interface CompareFunction {
-        boolean apply(IWenyanValue a, IWenyanValue b) throws WenyanException.WenyanThrowException;
+        boolean apply(IWenyanValue a, IWenyanValue b) throws WenyanThrowException;
+    }
+
+    @FunctionalInterface
+    public interface ThrowFunction<A, B> {
+        B apply(A a) throws WenyanThrowException;
+    }
+
+    // STUB: change to a better interface
+    @FunctionalInterface
+    public interface ThrowBiFunction<A, B, C> {
+        C apply(A a, B b) throws WenyanThrowException;
     }
 }

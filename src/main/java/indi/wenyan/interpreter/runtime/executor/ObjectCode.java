@@ -3,6 +3,7 @@ package indi.wenyan.interpreter.runtime.executor;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.*;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObject;
 import indi.wenyan.interpreter.structure.values.builtin.WenyanBuiltinObjectType;
@@ -19,12 +20,12 @@ public class ObjectCode extends WenyanCode {
      * @param operation The operation to perform on objects
      */
     public ObjectCode(Operation operation) {
-        super(name(operation));
+        super(opName(operation));
         this.operation = operation;
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) {
+    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         try {
             String id = runtime.bytecode.getIdentifier(args);
@@ -80,7 +81,7 @@ public class ObjectCode extends WenyanCode {
      * @param op The operation
      * @return The name of the code
      */
-    private static String name(Operation op) {
+    private static String opName(Operation op) {
         return switch (op) {
             case ATTR -> "LOAD_ATTR";
             case ATTR_REMAIN -> "LOAD_ATTR_REMAIN";

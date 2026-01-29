@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.exec_interface.structure;
 
 import indi.wenyan.interpreter.runtime.WenyanProgram;
-import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
 import java.util.ArrayList;
@@ -28,8 +28,10 @@ public class ExecQueue {
      * @param context the handling context, used to manage execution state
      */
     public void handle(IHandleContext context) {
+        //noinspection StatementWithEmptyBody
         if (queue.size() > WenyanProgram.MAX_THREAD) {
-            throw new WenyanException.WenyanUnreachedException();
+            // FIXME: unreached
+//            request.thread().dieWithException(new WenyanException.WenyanUnreachedException());
         }
 
         // Collects requests that could not be processed in this tick
@@ -44,7 +46,7 @@ public class ExecQueue {
                 } else {
                     undoneRequests.add(request);
                 }
-            } catch (WenyanException.WenyanThrowException | WenyanException e) {
+            } catch (WenyanThrowException e) {
                 request.thread().dieWithException(e);
             }
         }

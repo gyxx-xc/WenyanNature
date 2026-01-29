@@ -2,6 +2,7 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
@@ -68,7 +69,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
 
             @Override
             @WenyanThreading
-            public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException.WenyanTypeException {
+            public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
                 return new Position(argsList.get(0).as(WenyanInteger.TYPE).value(),
                         argsList.get(1).as(WenyanInteger.TYPE).value());
             }
@@ -83,24 +84,24 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     class Map implements IWenyanObject {
         public static final WenyanType<Map> TYPE = new WenyanType<>("map", Map.class);
         @Override
-        public WenyanType<?> type() {
+        public WenyanType<Map> type() {
             return TYPE;
         }
 
-        private final int maxX = 10;
-        private final int maxY = 10;
-        private final Boolean[][] labyrinth = new Boolean[maxX][maxY];
+        private static final int MAX_X = 10;
+        private static final int MAX_Y = 10;
+        private final Boolean[][] labyrinth = new Boolean[MAX_X][MAX_Y];
         private int maxDepth = 0;
 
-        private int EndX;
-        private int EndY;
+        private int endX;
+        private int endY;
 
         @Override
         public IWenyanValue getAttribute(String name) {
             return switch (name) {
-                case "「终」" -> new Position(EndX + 1, EndY + 1);
-                case "「長」" -> WenyanValues.of(maxX);
-                case "「寬」" -> WenyanValues.of(maxY);
+                case "「终」" -> new Position(endX + 1, endY + 1);
+                case "「長」" -> WenyanValues.of(MAX_X);
+                case "「寬」" -> WenyanValues.of(MAX_Y);
                 case "「尋路」" -> new WenyanInlineJavacall(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return WenyanValues.of(!isWall(x - 1, y - 1));
@@ -145,14 +146,14 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
 
             if (depth > maxDepth) {
                 maxDepth = depth;
-                EndX = i;
-                EndY = j;
+                endX = i;
+                endY = j;
             }
             labyrinth[i][j] = true;
         }
 
         private boolean checkWall(int i, int j) {
-            if (i < 0 || i >= maxX || j < 0 || j >= maxY || labyrinth[i][j]) {
+            if (i < 0 || i >= MAX_X || j < 0 || j >= MAX_Y || labyrinth[i][j]) {
                 return false;
             }
             for (Position direction : Position.DIRECTIONS) {
@@ -166,7 +167,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
         }
 
         private boolean isWall(int i, int j) {
-            if (i < 0 || i >= maxX || j < 0 || j >= maxY) {
+            if (i < 0 || i >= MAX_X || j < 0 || j >= MAX_Y) {
                 return true; // out of bounds is considered a wall
             }
             return !labyrinth[i][j];
@@ -195,7 +196,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void accept(IWenyanValue value) throws WenyanException.WenyanCheckerError {
+    public void accept(IWenyanValue value) throws WenyanThrowException {
         try {
             if (value.as(Position.TYPE) instanceof Position(int dx, int dy)) {
                 if (Math.abs(dx) + Math.abs(dy) != 1) {
@@ -206,7 +207,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
                 curX = curX + dx;
                 curY = curY + dy;
 
-                if (curX == input.EndX && curY == input.EndY) {
+                if (curX == input.endX && curY == input.endY) {
                     setResult(ResultStatus.ANSWER_CORRECT);
                     return;
                 }

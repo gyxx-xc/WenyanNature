@@ -13,13 +13,14 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Recognizer;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
-// from net.minecraft.client.gui.components.MultilineTextField;
+// copy from net.minecraft.client.gui.components.MultilineTextField;
 @OnlyIn(Dist.CLIENT)
 public class CodeField {
     private static final int LINE_SEEK_PIXEL_BIAS = 2;
@@ -282,7 +283,7 @@ public class CodeField {
                 if (t.getStartIndex() > lastIndex) {
                     styleMarks.add(new StyledView(t.getStartIndex()+1, -1));
                 }
-                if (t.getType() == WenyanRLexer.EOF) { break; }
+                if (t.getType() == Recognizer.EOF) { break; }
                 styleMarks.add(new StyledView(t.getStopIndex()+1, t.getType()));
                 lastIndex = t.getStopIndex() + 1;
             }

@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
     private final EntityRenderDispatcher dispatcher;
 

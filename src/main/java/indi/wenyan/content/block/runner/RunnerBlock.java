@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.runner;
 
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.gui.code_editor.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.CodeEditorBackendSynchronizer;
@@ -47,8 +48,11 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        var runner = (RunnerBlockEntity) level.getBlockEntity(pos);
-        assert runner != null;
+        var entity = level.getBlockEntity(pos);
+        if (!(entity instanceof RunnerBlockEntity runner)) {
+            WenyanProgramming.LOGGER.error("RunnerBlock: entity is not a RunnerBlockEntity");
+            return ItemInteractionResult.FAIL;
+        }
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
                 openGui(runner, pos, level, player, state);

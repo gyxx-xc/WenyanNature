@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.additional_module.paper;
 
+import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.structure.WenyanException;
@@ -87,7 +88,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                 return WenyanValues.of(state);
             })
             .handler(WenyanSymbol.var("BlockModule.attach"), request -> {
-                Direction attachedDirection = BlockModuleBlock
+                Direction attachedDirection = AbstractFuluBlock
                         .getConnectedDirection(getBlockState()).getOpposite();
                 BlockPos pos = blockPos().relative(attachedDirection);
                 assert level != null;

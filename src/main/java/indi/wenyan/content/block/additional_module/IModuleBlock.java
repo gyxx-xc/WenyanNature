@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public interface IModulerBlock extends EntityBlock {
+public interface IModuleBlock extends EntityBlock {
     /**
      * Gets the block entity type for this module block.
      *

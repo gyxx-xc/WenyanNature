@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 /**
  * Base exception class for Wenyan interpreter errors
  */
-public class WenyanException extends RuntimeException {
+public class WenyanException extends WenyanThrowException {
     public WenyanException(String message) {
         super(message);
     }
@@ -70,15 +70,6 @@ public class WenyanException extends RuntimeException {
      */
     public static class WenyanCheckerError extends WenyanThrowException {
         public WenyanCheckerError(String message) {
-            super(message);
-        }
-    }
-
-    /**
-     * Base class for exceptions that can be thrown during Wenyan execution
-     */
-    public static abstract class WenyanThrowException extends Exception {
-        protected WenyanThrowException(String message) {
             super(message);
         }
     }

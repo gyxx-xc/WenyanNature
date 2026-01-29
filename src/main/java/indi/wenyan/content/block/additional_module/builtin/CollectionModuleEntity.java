@@ -2,6 +2,8 @@ package indi.wenyan.content.block.additional_module.builtin;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.warper.WenyanList;
@@ -57,13 +59,17 @@ public class CollectionModuleEntity extends AbstractModuleEntity {
                                 for (var item : array) {
                                     sorted.add(item.as(IWenyanComparable.TYPE));
                                 }
-                                sorted.sort((o1, o2) -> {
-                                    try {
-                                        return o1.compareTo(o2);
-                                    } catch (Exception e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                });
+                                try {
+                                    sorted.sort((o1, o2) -> {
+                                        try {
+                                            return o1.compareTo(o2);
+                                        } catch (WenyanThrowException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    });
+                                } catch (RuntimeException e) {
+                                    throw new WenyanException(e.getMessage());
+                                }
                                 return WenyanValues.of(new ArrayList<>(sorted));
                             })
                     .function(WenyanSymbol.var("CollectionModule.contains"),

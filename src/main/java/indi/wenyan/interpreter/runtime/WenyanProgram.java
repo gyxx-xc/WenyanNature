@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.runtime;
 
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
 import java.util.Queue;
@@ -70,12 +71,13 @@ public class WenyanProgram {
      * Creates a new thread for this program with the base environment.
      */
     @WenyanThreading(planning = true)
-    public WenyanThread createThread(String code) throws WenyanException.WenyanVarException {
+    public WenyanThread createThread(String code) throws WenyanThrowException {
         if (!programJavaThread.isAlive()) {
             // DCL? what is that
             try {
                 programJavaThread.start();
             } catch (IllegalThreadStateException ignored) {
+                // start already, ignored
             }
         }
 
@@ -118,12 +120,12 @@ public class WenyanProgram {
      * @param wenyanThread The thread to unblock
      * @throws RuntimeException If the thread is not in a blocked state
      */
-    public static void unblock(WenyanThread wenyanThread) {
+    public static void unblock(WenyanThread wenyanThread) throws WenyanException.WenyanUnreachedException {
         if (wenyanThread.state == WenyanThread.State.BLOCKED) {
             wenyanThread.state = WenyanThread.State.READY;
             wenyanThread.program.readyQueue.add(wenyanThread);
         } else {
-            throw new RuntimeException("unreached");
+            throw new WenyanException.WenyanUnreachedException();
         }
     }
 

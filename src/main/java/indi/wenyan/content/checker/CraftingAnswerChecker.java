@@ -1,6 +1,7 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -82,7 +83,7 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
         }
 
         @Override
-        public IWenyanValue getAttribute(String name) {
+        public IWenyanValue getAttribute(String name) throws WenyanThrowException {
              if (attributes.containsKey(name)) {
                  return attributes.get(name);
              }

@@ -63,6 +63,7 @@ import static indi.wenyan.WenyanProgramming.MODID;
  * Central registration class for all mod content
  */
 public final class Registration {
+    private Registration() {}
 
     /**
      * Registers all content with the mod event bus
@@ -297,7 +298,7 @@ public final class Registration {
 
         CRAFTING_BLOCK = BLOCKS.register(CraftingBlock.ID, CraftingBlock::new);
         CRAFTING_BLOCK_ITEM = ITEMS.registerItem(CraftingBlock.ID,
-                (properties) -> new BlockItem(CRAFTING_BLOCK.get(), properties));
+                properties -> new BlockItem(CRAFTING_BLOCK.get(), properties));
         CRAFTING_BLOCK_ENTITY = BLOCK_ENTITY.register(CraftingBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(CraftingBlockEntity::new, CRAFTING_BLOCK.get())
@@ -307,7 +308,7 @@ public final class Registration {
 
         PEDESTAL_BLOCK = BLOCKS.register(PedestalBlock.ID, PedestalBlock::new);
         PEDESTAL_BLOCK_ITEM = ITEMS.registerItem(PedestalBlock.ID,
-                (properties) -> new BlockItem(PEDESTAL_BLOCK.get(), properties));
+                properties -> new BlockItem(PEDESTAL_BLOCK.get(), properties));
         PEDESTAL_ENTITY = BLOCK_ENTITY.register(PedestalBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
@@ -315,7 +316,7 @@ public final class Registration {
 
         EXPLOSION_MODULE_BLOCK = BLOCKS.register(ExplosionModuleBlock.ID, ExplosionModuleBlock::new);
         EXPLOSION_MODULE_BLOCK_ITEM = ITEMS.registerItem(ExplosionModuleBlock.ID,
-                (properties) -> new BlockItem(EXPLOSION_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(EXPLOSION_MODULE_BLOCK.get(), properties));
         EXPLOSION_MODULE_ENTITY = BLOCK_ENTITY.register(ExplosionModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(ExplosionModuleEntity::new, EXPLOSION_MODULE_BLOCK.get())
@@ -324,7 +325,7 @@ public final class Registration {
         INFORMATION_MODULE_BLOCK = BLOCKS.register(WorldModuleBlock.ID,
                 WorldModuleBlock::new);
         INFORMATION_MODULE_BLOCK_ITEM = ITEMS.registerItem(WorldModuleBlock.ID,
-                (properties) -> new BlockItem(INFORMATION_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(INFORMATION_MODULE_BLOCK.get(), properties));
         INFORMATION_MODULE_ENTITY = BLOCK_ENTITY.register(WorldModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(WorldModuleEntity::new, INFORMATION_MODULE_BLOCK.get())
@@ -332,14 +333,14 @@ public final class Registration {
 
         MATH_MODULE_BLOCK = BLOCKS.register(MathModuleBlock.ID, MathModuleBlock::new);
         MATH_MODULE_BLOCK_ITEM = ITEMS.registerItem(MathModuleBlock.ID,
-                (properties) -> new BlockItem(MATH_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(MATH_MODULE_BLOCK.get(), properties));
         MATH_MODULE_ENTITY = BLOCK_ENTITY.register(MathModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(MathModuleEntity::new, MATH_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
         BIT_MODULE_BLOCK = BLOCKS.register(BitModuleBlock.ID, BitModuleBlock::new);
         BIT_MODULE_BLOCK_ITEM = ITEMS.registerItem(BitModuleBlock.ID,
-                (properties) -> new BlockItem(BIT_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(BIT_MODULE_BLOCK.get(), properties));
         BIT_MODULE_ENTITY = BLOCK_ENTITY.register(BitModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(BitModuleEntity::new, BIT_MODULE_BLOCK.get())
@@ -347,7 +348,7 @@ public final class Registration {
 
         BLOCK_MODULE_BLOCK = BLOCKS.register(BlockModuleBlock.ID, BlockModuleBlock::new);
         BLOCK_MODULE_BLOCK_ITEM = ITEMS.registerItem(BlockModuleBlock.ID,
-                (properties) -> new BlockItem(BLOCK_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(BLOCK_MODULE_BLOCK.get(), properties));
         BLOCK_MODULE_ENTITY = BLOCK_ENTITY.register(BlockModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(BlockModuleEntity::new, BLOCK_MODULE_BLOCK.get())
@@ -355,7 +356,7 @@ public final class Registration {
 
         RANDOM_MODULE_BLOCK = BLOCKS.register(RandomModuleBlock.ID, RandomModuleBlock::new);
         RANDOM_MODULE_BLOCK_ITEM = ITEMS.registerItem(RandomModuleBlock.ID,
-                (properties) -> new BlockItem(RANDOM_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(RANDOM_MODULE_BLOCK.get(), properties));
         RANDOM_MODULE_ENTITY = BLOCK_ENTITY.register(RandomModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(RandomModuleEntity::new, RANDOM_MODULE_BLOCK.get())
@@ -363,7 +364,7 @@ public final class Registration {
 
         ITEM_MODULE_BLOCK = BLOCKS.register(ItemModuleBlock.ID, ItemModuleBlock::new);
         ITEM_MODULE_BLOCK_ITEM = ITEMS.registerItem(ItemModuleBlock.ID,
-                (properties) -> new BlockItem(ITEM_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(ITEM_MODULE_BLOCK.get(), properties));
         ITEM_MODULE_ENTITY = BLOCK_ENTITY.register(ItemModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(ItemModuleEntity::new, ITEM_MODULE_BLOCK.get())
@@ -371,7 +372,7 @@ public final class Registration {
 
         VEC3_MODULE_BLOCK = BLOCKS.register(Vec3ModuleBlock.ID, Vec3ModuleBlock::new);
         VEC3_MODULE_BLOCK_ITEM = ITEMS.registerItem(Vec3ModuleBlock.ID,
-                (properties) -> new BlockItem(VEC3_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(VEC3_MODULE_BLOCK.get(), properties));
         VEC3_MODULE_ENTITY = BLOCK_ENTITY.register(Vec3ModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(Vec3ModuleEntity::new, VEC3_MODULE_BLOCK.get())
@@ -379,7 +380,7 @@ public final class Registration {
 
         SCREEN_MODULE_BLOCK = BLOCKS.register(ScreenModuleBlock.ID, ScreenModuleBlock::new);
         SCREEN_MODULE_BLOCK_ITEM = ITEMS.registerItem(ScreenModuleBlock.ID,
-                (properties) -> new BlockItem(SCREEN_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(SCREEN_MODULE_BLOCK.get(), properties));
         SCREEN_MODULE_BLOCK_ENTITY = BLOCK_ENTITY.register(ScreenModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(ScreenModuleBlockEntity::new, SCREEN_MODULE_BLOCK.get())
@@ -387,7 +388,7 @@ public final class Registration {
 
         COMMUNICATE_MODULE_BLOCK = BLOCKS.register(CommunicateModuleBlock.ID, CommunicateModuleBlock::new);
         COMMUNICATE_MODULE_BLOCK_ITEM = ITEMS.registerItem(CommunicateModuleBlock.ID,
-                (properties) -> new BlockItem(COMMUNICATE_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(COMMUNICATE_MODULE_BLOCK.get(), properties));
         COMMUNICATE_MODULE_ENTITY = BLOCK_ENTITY.register(CommunicateModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(CommunicateModuleEntity::new, COMMUNICATE_MODULE_BLOCK.get())
@@ -395,7 +396,7 @@ public final class Registration {
 
         SEMAPHORE_MODULE_BLOCK = BLOCKS.register(SemaphoreModuleBlock.ID, SemaphoreModuleBlock::new);
         SEMAPHORE_MODULE_BLOCK_ITEM = ITEMS.registerItem(SemaphoreModuleBlock.ID,
-                (properties) -> new BlockItem(SEMAPHORE_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(SEMAPHORE_MODULE_BLOCK.get(), properties));
         SEMAPHORE_MODULE_ENTITY = BLOCK_ENTITY.register(SemaphoreModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(SemaphoreModuleEntity::new, SEMAPHORE_MODULE_BLOCK.get())
@@ -403,7 +404,7 @@ public final class Registration {
 
         COLLECTION_MODULE_BLOCK = BLOCKS.register(CollectionModuleBlock.ID, CollectionModuleBlock::new);
         COLLECTION_MODULE_BLOCK_ITEM = ITEMS.registerItem(CollectionModuleBlock.ID,
-                (properties) -> new BlockItem(COLLECTION_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(COLLECTION_MODULE_BLOCK.get(), properties));
         COLLECTION_MODULE_ENTITY = BLOCK_ENTITY.register(CollectionModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(CollectionModuleEntity::new, COLLECTION_MODULE_BLOCK.get())
@@ -411,7 +412,7 @@ public final class Registration {
 
         STRING_MODULE_BLOCK = BLOCKS.register(StringModuleBlock.ID, StringModuleBlock::new);
         STRING_MODULE_BLOCK_ITEM = ITEMS.registerItem(StringModuleBlock.ID,
-                (properties) -> new BlockItem(STRING_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(STRING_MODULE_BLOCK.get(), properties));
         STRING_MODULE_ENTITY = BLOCK_ENTITY.register(StringModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(StringModuleEntity::new, STRING_MODULE_BLOCK.get())
@@ -419,7 +420,7 @@ public final class Registration {
 
         ENTITY_MODULE_BLOCK = BLOCKS.register(EntityModuleBlock.ID, EntityModuleBlock::new);
         ENTITY_MODULE_BLOCK_ITEM = ITEMS.registerItem(EntityModuleBlock.ID,
-                (properties) -> new BlockItem(ENTITY_MODULE_BLOCK.get(), properties));
+                properties -> new BlockItem(ENTITY_MODULE_BLOCK.get(), properties));
         ENTITY_MODULE_ENTITY = BLOCK_ENTITY.register(EntityModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(EntityModuleEntity::new, ENTITY_MODULE_BLOCK.get())
@@ -427,7 +428,7 @@ public final class Registration {
 
         POWER_BLOCK = BLOCKS.register(PowerBlock.ID, PowerBlock::new);
         POWER_BLOCK_ITEM = ITEMS.registerItem(PowerBlock.ID,
-                (properties) -> new BlockItem(POWER_BLOCK.get(), properties));
+                properties -> new BlockItem(POWER_BLOCK.get(), properties));
         POWER_BLOCK_ENTITY = BLOCK_ENTITY.register(PowerBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(PowerBlockEntity::new, POWER_BLOCK.get())

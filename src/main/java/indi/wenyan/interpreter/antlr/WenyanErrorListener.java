@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter.antlr;
 
-import indi.wenyan.interpreter.structure.WenyanException;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -14,6 +13,7 @@ public class WenyanErrorListener extends BaseErrorListener {
             int charPositionInLine,
             String msg,
             RecognitionException e) {
-        throw new WenyanException("line " + line + ":" + charPositionInLine + " " + msg + "\nwith " + e);
+        // FIXME: change to handle here with a differ Listener
+//        throw new WenyanException("line " + line + ":" + charPositionInLine + " " + msg + "\nwith " + e);
     }
 }

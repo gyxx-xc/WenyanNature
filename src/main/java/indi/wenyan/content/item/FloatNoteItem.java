@@ -39,10 +39,10 @@ public class FloatNoteItem extends Item {
         super(properties.durability(10));
     }
 
+    @Override
     public InteractionResult interactLivingEntity (
             ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        if (!(target instanceof Player)) {
-            if (target.isAlive()) {
+        if (!(target instanceof Player) && target.isAlive()) {
                 if (player.isShiftKeyDown()) {
                     if (player.level().isClientSide()) {
                         openGui(target::setCustomName, stack);
@@ -55,7 +55,7 @@ public class FloatNoteItem extends Item {
                 }
                 return InteractionResult.sidedSuccess(player.level().isClientSide());
             }
-        }
+
         if (player.isShiftKeyDown()) {
             if (player.level().isClientSide())
                 openGui(component -> {
@@ -69,32 +69,40 @@ public class FloatNoteItem extends Item {
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
         BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
-        assert context.getPlayer() != null;
-        if (blockEntity instanceof AbstractModuleEntity entity) {
-            if (context.getPlayer().isShiftKeyDown()) {
-                if (level.isClientSide())
-                    openGui(component -> setDeviceName(entity, component),
-                            context.getItemInHand());
-                return InteractionResult.sidedSuccess(level.isClientSide());
-            }
-            setName(level, component -> setDeviceName(entity, component), context);
-            return InteractionResult.sidedSuccess(level.isClientSide());
-        } else if (blockEntity instanceof RunnerBlockEntity entity) {
-            if (level.isClientSide()) {
+        if (context.getPlayer() == null)
+            return InteractionResult.FAIL;
+        switch (blockEntity) {
+            case AbstractModuleEntity entity -> {
                 if (context.getPlayer().isShiftKeyDown()) {
-                    openGui(component -> setRunnerBlockName(entity, component),
-                            context.getItemInHand());
+                    if (level.isClientSide())
+                        openGui(component -> setDeviceName(entity, component),
+                                context.getItemInHand());
                     return InteractionResult.sidedSuccess(level.isClientSide());
                 }
-                setName(level, component -> setRunnerBlockName(entity, component),
-                        context);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide());
-        } else {
-            if (context.getPlayer().isShiftKeyDown()) {
-                setName(level, component -> {
-                }, context);
+                setName(level, component -> setDeviceName(entity, component), context);
                 return InteractionResult.sidedSuccess(level.isClientSide());
+            }
+            case RunnerBlockEntity entity -> {
+                if (level.isClientSide()) {
+                    if (context.getPlayer().isShiftKeyDown()) {
+                        openGui(component -> setRunnerBlockName(entity, component),
+                                context.getItemInHand());
+                        return InteractionResult.sidedSuccess(level.isClientSide());
+                    }
+                    setName(level, component -> setRunnerBlockName(entity, component),
+                            context);
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide());
+            }
+            case null -> {
+                return InteractionResult.FAIL;
+            }
+            default -> {
+                if (context.getPlayer().isShiftKeyDown()) {
+                    setName(level, component -> {
+                    }, context);
+                    return InteractionResult.sidedSuccess(level.isClientSide());
+                }
             }
         }
         return InteractionResult.PASS;
@@ -113,15 +121,14 @@ public class FloatNoteItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack item = player.getItemInHand(usedHand);
-        if (!super.use(level, player, usedHand).getResult().consumesAction()) {
-            if (player.isShiftKeyDown()) {
+        if (!super.use(level, player, usedHand).getResult().consumesAction() && player.isShiftKeyDown()) {
                 if (level.isClientSide())
                     openGui(component -> {
                     }, item);
                 return InteractionResultHolder.sidedSuccess(item,
                         level.isClientSide());
             }
-        }
+
         return InteractionResultHolder.pass(item);
     }
 

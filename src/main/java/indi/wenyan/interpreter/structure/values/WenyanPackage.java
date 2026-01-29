@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.structure.values;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
     public static final WenyanType<WenyanPackage> TYPE = new WenyanType<>("package", WenyanPackage.class);
 
     @Override
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         if (!variables.containsKey(name))
             throw new WenyanException("Unknown package attribute: " + name);
         return variables.get(name);

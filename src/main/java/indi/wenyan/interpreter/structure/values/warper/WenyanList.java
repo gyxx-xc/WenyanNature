@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.structure.values.warper;
 
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -58,18 +59,16 @@ public record WenyanList(List<IWenyanValue> value)
      *
      * @param index the 1-based index
      * @return the value at the specified index
-     * @throws WenyanException.WenyanThrowException if the index is out of bounds
+     * @throws WenyanThrowException if the index is out of bounds
      */
-    public IWenyanValue get(int index) throws WenyanException.WenyanThrowException {
-        try {
-            return value.get(index - 1);
-        } catch (IndexOutOfBoundsException e) {
-            throw new WenyanException.WenyanDataException(e.getMessage());
-        }
+    public IWenyanValue get(int index) throws WenyanThrowException {
+        if (index < 1 || index > value.size())
+            throw new WenyanException.WenyanDataException(Component.translatable("error.wenyan_programming.index_out_of_bounds").getString());
+        return value.get(index - 1);
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         return switch (name) {
             case WenyanDataParser.ARRAY_GET_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 1)
@@ -115,7 +114,8 @@ public record WenyanList(List<IWenyanValue> value)
                 int toIndex = args.get(1).as(WenyanInteger.TYPE).value(); // 1-based
                 return WenyanValues.of(self.as(TYPE).value.subList(fromIndex, toIndex));
             });
-            default -> throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
+            default ->
+                    throw new WenyanException(Component.translatable("error.wenyan_programming.variable_not_found_").getString() + name);
         };
     }
 

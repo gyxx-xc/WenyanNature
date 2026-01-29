@@ -4,7 +4,9 @@ import com.mojang.datafixers.util.Either;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import lombok.Data;
@@ -24,7 +26,7 @@ public final class ImportRequest implements IHandleableRequest {
     private Status status = Status.FIRST_RUN;
     private Either<WenyanPackage, WenyanThread> packageOrThread;
 
-    public ImportRequest(WenyanThread thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException.WenyanThrowException {
+    public ImportRequest(WenyanThread thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanThrowException {
         this.thread = thread;
         this.platform = platform;
         this.getPackage = getPackage;
@@ -33,12 +35,12 @@ public final class ImportRequest implements IHandleableRequest {
     }
 
     public IWenyanValue self() {
-        throw new WenyanException.WenyanUnreachedException();
+        return WenyanNull.NULL;
     }
 
     // logic too complex, impl in Automata
     @Override
-    public boolean handle(IHandleContext context) throws WenyanException.WenyanThrowException {
+    public boolean handle(IHandleContext context) throws WenyanThrowException {
         //noinspection LoopStatementThatDoesntLoop
         while (true)
             switch (status) {
@@ -70,7 +72,7 @@ public final class ImportRequest implements IHandleableRequest {
             }
     }
 
-    private void returnPackage(@NotNull WenyanPackage wenyanPackage) throws WenyanException.WenyanTypeException {
+    private void returnPackage(@NotNull WenyanPackage wenyanPackage) throws WenyanThrowException {
         if (args.isEmpty()) {
             throw new WenyanException("参数错误");
         }
@@ -103,8 +105,8 @@ public final class ImportRequest implements IHandleableRequest {
          * @param context     the handling context, used to manage execution state
          * @param packageName the name of the package to retrieve
          * @return the requested package
-         * @throws WenyanException.WenyanThrowException if the package cannot be found or accessed
+         * @throws WenyanThrowException if the package cannot be found or accessed
          */
-        Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException.WenyanThrowException;
+        Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanThrowException;
     }
 }

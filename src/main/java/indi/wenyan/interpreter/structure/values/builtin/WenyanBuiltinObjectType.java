@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.structure.values.builtin;
 
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
@@ -31,7 +32,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) {
+    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunctionHelper(name);
         if (attr == null)
@@ -51,7 +52,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
         }
     }
 
-    public IWenyanValue getFunction(String id) {
+    public IWenyanValue getFunction(String id) throws WenyanThrowException {
         var attr = getFunctionHelper(id);
         if (attr == null) {
             throw new WenyanException(Component.translatable("error.wenyan_programming.function_not_found_").getString() + id);
@@ -72,13 +73,13 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Override
-    public IWenyanObject createObject(List<IWenyanValue> argsList) {
+    public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
         throw new WenyanException.WenyanUnreachedException();
     }
 
     @Override
     public void call(IWenyanValue self, WenyanThread thread,
-                     List<IWenyanValue> argsList) throws WenyanException.WenyanThrowException {
+                     List<IWenyanValue> argsList) throws WenyanThrowException {
         // create empty, run constructor, return self
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
         thread.currentRuntime().processStack.push(selfObj);

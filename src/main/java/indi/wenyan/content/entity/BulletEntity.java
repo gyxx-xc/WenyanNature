@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class BulletEntity extends AbstractArrow {
     public static final String ID = "bullet_entity";
     private int aliveTime;
-    private int tickCount;
+    private int liveTickCount;
     public Player holder;
 
     public BulletEntity(EntityType<BulletEntity> entityType, Level level) {
@@ -28,7 +28,7 @@ public class BulletEntity extends AbstractArrow {
     public BulletEntity(Level level, Vec3 pos, Vec3 direction, double speed, int aliveTime, Player holder) {
         super(Registration.BULLET_ENTITY.get(), level);
         this.holder = holder;
-        tickCount = 0;
+        liveTickCount = 0;
         this.aliveTime = aliveTime;
         moveTo(pos);
         shoot(direction.x, direction.y, direction.z, (float) speed, 0);
@@ -37,9 +37,9 @@ public class BulletEntity extends AbstractArrow {
     @Override
     public void tick() {
         if (!level().isClientSide()) {
-            if (this.tickCount > aliveTime)
+            if (this.liveTickCount > aliveTime)
                 this.discard();
-            this.tickCount++;
+            this.liveTickCount++;
         }
         checkInsideBlocks();
         updateRotation();

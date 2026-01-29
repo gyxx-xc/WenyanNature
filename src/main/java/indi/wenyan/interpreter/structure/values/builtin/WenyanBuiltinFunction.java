@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -24,7 +25,7 @@ public record WenyanBuiltinFunction(List<Arg> args, WenyanBytecode bytecode) imp
     @Override
     public void call(IWenyanValue self, WenyanThread thread,
                      List<IWenyanValue> argsList)
-            throws WenyanException.WenyanThrowException {
+            throws WenyanThrowException {
         if (args().size() != argsList.size())
             throw new WenyanException(Component.translatable("error.wenyan_programming.number_of_arguments_does_not_match").getString());
 

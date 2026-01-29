@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter.structure.values.primitive;
 
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanComputable;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
@@ -27,22 +28,22 @@ public record WenyanString(String value)
     }
 
     @Override
-    public IWenyanValue add(IWenyanValue other) throws WenyanException.WenyanThrowException {
+    public IWenyanValue add(IWenyanValue other) throws WenyanThrowException {
         return WenyanValues.of(value+ other.as(TYPE).value);
     }
 
     @Override
-    public IWenyanValue subtract(IWenyanValue other) {
+    public IWenyanValue subtract(IWenyanValue other) throws WenyanThrowException {
         throw new WenyanException("");
     }
 
     @Override
-    public IWenyanValue multiply(IWenyanValue other) {
+    public IWenyanValue multiply(IWenyanValue other) throws WenyanThrowException {
         throw new WenyanException("");
     }
 
     @Override
-    public IWenyanValue divide(IWenyanValue other) {
+    public IWenyanValue divide(IWenyanValue other) throws WenyanThrowException {
         throw new WenyanException("");
     }
 }

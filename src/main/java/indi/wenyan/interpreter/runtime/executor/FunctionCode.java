@@ -4,6 +4,7 @@ import indi.wenyan.interpreter.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.interpreter.runtime.WenyanRuntime;
 import indi.wenyan.interpreter.runtime.WenyanThread;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
@@ -24,7 +25,7 @@ public class FunctionCode extends WenyanCode {
      * @param o The operation to perform
      */
     public FunctionCode(Operation o) {
-        super(name(o));
+        super(opName(o));
         operation = o;
     }
 
@@ -41,48 +42,39 @@ public class FunctionCode extends WenyanCode {
     //   a.b() -> set self, call
 
     @Override
-    public void exec(int args, WenyanThread thread) {
-        try {
-            WenyanRuntime runtime = thread.currentRuntime();
-            IWenyanValue func = runtime.processStack.pop();
-            IWenyanValue self = null;
-            IWenyanFunction callable;
-            if (operation == Operation.CALL_ATTR)
-                self = runtime.processStack.pop();
+    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
+        WenyanRuntime runtime = thread.currentRuntime();
+        IWenyanValue func = runtime.processStack.pop();
+        IWenyanValue self = null;
+        IWenyanFunction callable;
+        if (operation == Operation.CALL_ATTR)
+            self = runtime.processStack.pop();
 
-            // TODO: check the logic and use the tryAs
-            // object_type
-            if (func.is(IWenyanObjectType.TYPE)) {
-                callable = func.as(IWenyanObjectType.TYPE);
-            } else { // function
-                // handleWarper self first
-                if (operation == Operation.CALL_ATTR) {
-                    // try casting to object (might be list)
-                    try {
-                        self = self.as(IWenyanObject.TYPE);
-                    } catch (WenyanException.WenyanTypeException e) {
-                        // ignore self then
-                        self = null;
-                    }
-                }
-                callable = func.as(IWenyanFunction.TYPE);
+        // object_type
+        if (func.is(IWenyanObjectType.TYPE)) {
+            callable = func.as(IWenyanObjectType.TYPE);
+        } else { // function
+            // handleWarper self first
+            if (operation == Operation.CALL_ATTR) {
+                // try casting to object (might be list)
+                // if not, ignore self
+                self = self.tryAs(IWenyanObject.TYPE).orElse(null);
             }
-
-            List<IWenyanValue> argsList = new ArrayList<>(args);
-            for (int i = 0; i < args; i++)
-                argsList.add(runtime.processStack.pop());
-
-            // NOTE: must make the callF at end, because it may block thread
-            //   which is a fake block, it will still run the rest command before blocked
-            //   it will only block the next WenyanCode being executed
-            callable.call(self, thread, argsList);
-        } catch (WenyanException.WenyanThrowException e) {
-            throw new WenyanException(e.getMessage());
+            callable = func.as(IWenyanFunction.TYPE);
         }
+
+        List<IWenyanValue> argsList = new ArrayList<>(args);
+        for (int i = 0; i < args; i++)
+            argsList.add(runtime.processStack.pop());
+
+        // NOTE: must make the callF at end, because it may block thread
+        //   which is a fake block, it will still run the rest command before blocked
+        //   it will only block the next WenyanCode being executed
+        callable.call(self, thread, argsList);
     }
 
     @Override
-    public int getStep(int args, WenyanThread thread) {
+    public int getStep(int args, WenyanThread thread) throws WenyanThrowException {
         var function = thread.currentRuntime().processStack.peek();
         if (!function.is(IWenyanFunction.TYPE))
             throw new WenyanException("無法調用非函數類型的值");
@@ -105,7 +97,7 @@ public class FunctionCode extends WenyanCode {
      * @param op The operation
      * @return The name of the code
      */
-    private static String name(Operation op) {
+    private static String opName(Operation op) {
         return switch (op) {
             case CALL -> "CALL";
             case CALL_ATTR -> "CALL_ATTR";

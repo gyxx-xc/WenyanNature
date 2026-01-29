@@ -38,13 +38,14 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public enum Completions {;
-    static final SortedMap<String, Collection<Completion>> map = new TreeMap<>() {{
+    static final SortedMap<String, Collection<Completion>> map = new TreeMap<>();
+    static {
         /entry/
-    }};
+    }
 }
 """
 
-entry_template = '        put("/k/", List.of(/warp_v/));\n'
+entry_template = '        map.put("/k/", List.of(/warp_v/));\n'
 warp_v_template = 'new Completion("/v/"),'
 
 entry = ""
