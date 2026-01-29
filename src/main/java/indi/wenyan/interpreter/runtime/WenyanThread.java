@@ -63,23 +63,19 @@ public class WenyanThread {
         DYING
     }
 
-    public static @NotNull WenyanThread ofCode(String code, WenyanRuntime baseEnvironment, WenyanProgram program) {
+    public static @NotNull WenyanThread ofCode(String code, WenyanRuntime baseEnvironment, WenyanProgram program) throws WenyanException {
         WenyanThread thread = new WenyanThread(code, program);
         thread.call(baseEnvironment);
 
         var bytecode = new WenyanBytecode();
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode);
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
-        try {
-            visitor.visit(WenyanVisitor.program(code));
-            environment.enterContext(0, 0, 0, 0);
-            environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-            environment.add(WenyanCodes.RET);
-            environment.exitContext();
-            WenyanVerifier.verify(bytecode);
-        } catch (WenyanException e) {
-            program.platform.handleError(e.getMessage());
-        }
+        visitor.visit(WenyanVisitor.program(code));
+        environment.enterContext(0, 0, 0, 0);
+        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
+        environment.add(WenyanCodes.RET);
+        environment.exitContext();
+        WenyanVerifier.verify(bytecode);
 
         // call main
         WenyanRuntime mainRuntime = new WenyanRuntime(bytecode);
@@ -161,34 +157,26 @@ public class WenyanThread {
      */
     public void dieWithException(Exception e) {
         try {
-            if (e instanceof WenyanException) {
+            if (e instanceof WenyanException.WenyanUnreachedException) {
+                WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", e);
+                WenyanProgramming.LOGGER.debug("{}", code);
+                WenyanBytecode.Context context =
+                        currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
+                WenyanProgramming.LOGGER.error("{}:{} {}", context.line(), context.column(), code.substring(context.contentStart(), context.contentEnd()));
+                program.platform.handleError("WenyanThread died with an unexpected exception, killed");
+            } else if (e instanceof WenyanException) {
                 WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
-//                WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " +
-//                        code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
                 program.platform.handleError(context.line() + ":" + context.column() + " " +
                         code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
             } else if (e instanceof WenyanException.WenyanThrowException) {
                 WenyanBytecode.Context context =
                         currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
-//                WenyanException.handleException(program.holder, context.line() + ":" + context.column() + " " +
-//                        code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
                 program.platform.handleError(context.line() + ":" + context.column() + " " +
                         code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
-            } else {
-                // for debug only
-                WenyanBytecode.Context context =
-                        currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
-                WenyanProgramming.LOGGER.debug("{}", code);
-                WenyanProgramming.LOGGER.error("{}:{} {}", context.line(), context.column(), code.substring(context.contentStart(), context.contentEnd()));
-                WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", e);
-                WenyanProgramming.LOGGER.error(e.getMessage());
-//                WenyanException.handleException(program.holder, "WenyanThread died with an unexpected exception, killed");
-                program.platform.handleError("WenyanThread died with an unexpected exception, killed");
             }
         } catch (Exception unexpected) {
             WenyanProgramming.LOGGER.error("during handling an exception", e);
             WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", unexpected);
-//            WenyanException.handleException(program.holder, "WenyanThread died with an unexpected exception, killed");
             program.platform.handleError("WenyanThread died with an unexpected exception, killed");
         }
         die();

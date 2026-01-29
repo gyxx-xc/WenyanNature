@@ -37,9 +37,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -61,9 +61,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public String pages;
     public int speed;
-    @NotNull
-    public String output = "";
-    public boolean outputChanged = false;
+    private List<Component> newOutput = new ArrayList<>();
 
     @Getter
     public final ExecQueue execQueue = new ExecQueue();
@@ -174,8 +172,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (pages != null)
             tag.putString("pages", pages);
-        if (!output.isEmpty())
-            tag.putString("output", output);
         tag.putInt("speed", speed);
         tag.putString("platformName", platformName);
     }
@@ -185,9 +181,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains("pages")) {
             pages = tag.getString("pages");
-        }
-        if (tag.contains("output")) {
-            output = tag.getString("output");
         }
         speed = tag.getInt("speed");
         platformName = tag.getString("platformName");
@@ -262,9 +255,14 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public void addOutput(String output) {
-        this.output += output + "\n";
-        this.outputChanged = true;
+        this.newOutput.add(Component.literal(output));
         setChanged();
+    }
+
+    public List<Component> flushNewOutput () {
+        var output = newOutput;
+        newOutput = new ArrayList<>();
+        return output;
     }
 
     private record BlockContext(Level level, BlockPos pos,

@@ -1,5 +1,9 @@
 package indi.wenyan.content.gui.code_editor;
 
+import net.minecraft.network.chat.Component;
+
+import java.util.List;
+
 // Since we don't have generic player base container synchronization, like menu
 // so need the context to provide the synchronization
 public interface CodeEditorBackendSynchronizer {
@@ -10,6 +14,5 @@ public interface CodeEditorBackendSynchronizer {
     void sendTitle(String title);
     String getTitle();
 
-    String getOutput();
-    boolean outputChanged();
+    List<Component> newOutput();
 }

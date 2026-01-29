@@ -3,18 +3,20 @@ package indi.wenyan.content.gui.code_editor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 // the following content will be saved within one gui open (across window resize and init() in screen)
 // but will be removed when screen is closed
 public class CodeEditorBackend {
     private final DoubleSidedData sidedData;
-    // TODO: change to map[player, cursor] and save (longtime later)
+    // PLAN: change to map[player, cursor] and save
     @Getter
     private int cursor = 0;
     @Getter
@@ -33,7 +35,7 @@ public class CodeEditorBackend {
     private Runnable valueListener = () -> {
     };
     @Setter
-    private Consumer<String> outputListener = (s) -> {
+    private Consumer<List<Component>> outputListener = s -> {
     };
 
     private final CodeEditorBackendSynchronizer synchronizer;
@@ -42,13 +44,13 @@ public class CodeEditorBackend {
                              CodeEditorBackendSynchronizer synchronizer) {
         this.synchronizer = synchronizer;
         sidedData = new DoubleSidedData(synchronizer.getContent(), synchronizer.getTitle());
-        setOutput(synchronizer.getOutput());
         this.packages = packages;
     }
 
     public void tick() {
-        if (synchronizer.outputChanged()) {
-            setOutput(synchronizer.getOutput());
+        var newOutput = synchronizer.newOutput();
+        if (!newOutput.isEmpty()) {
+            addOutput(newOutput);
         }
     }
 
@@ -76,17 +78,17 @@ public class CodeEditorBackend {
             sidedData.content.replace(beginIndex, endIndex, string);
 
             int lengthChanged = string.length() - (endIndex - beginIndex);
-            for (int i = 0; i < getPlaceholders().size(); i++) {
-                var placeholder = getPlaceholders().get(i);
+            for (var iter = getPlaceholders().listIterator(); iter.hasNext();) {
+                var placeholder = iter.next();
                 // NOTE: a equal here means if any text of cursor is changed, the placeholder
-                // will be removed
+                //   will be removed
                 if (placeholder.index() >= beginIndex) {
                     if (placeholder.index() <= endIndex) {
-                        getPlaceholders().remove(placeholder);
-                        i--;
-                    } else
-                        getPlaceholders().set(i, new CodeField.Placeholder(
-                                placeholder.context(), placeholder.index() + lengthChanged));
+                        iter.remove();
+                    } else {
+                        iter.set(new CodeField.Placeholder(placeholder.context(),
+                                placeholder.index() + lengthChanged));
+                    }
                 }
             }
 
@@ -120,13 +122,13 @@ public class CodeEditorBackend {
         sidedData.title.append(StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
     }
 
-    public String getOutput() {
-        return Objects.requireNonNullElse(sidedData.output, "");
+    public Deque<Component> getOutput() {
+        return sidedData.output;
     }
 
-    public void setOutput(String output) {
-        sidedData.output = output;
-        outputListener.accept(output);
+    public void addOutput(List<Component> newOutput) {
+        outputListener.accept(newOutput);
+        sidedData.output.addAll(newOutput);
     }
 
     @Data
@@ -134,7 +136,7 @@ public class CodeEditorBackend {
         final StringBuilder content;
         final StringBuilder title;
         final List<CodeField.Placeholder> placeholders = new ArrayList<>();
-        String output;
+        final Deque<Component> output = new ArrayDeque<>();
 
         public DoubleSidedData(String content, String title) {
             this.content = new StringBuilder(

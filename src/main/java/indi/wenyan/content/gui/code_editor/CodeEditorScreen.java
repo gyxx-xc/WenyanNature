@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -32,7 +31,7 @@ public class CodeEditorScreen extends Screen {
     private SnippetWidget snippetWidget;
     private PackageSnippetWidget packageWidget;
     private EditBox titleBar;
-    private FittingMultiLineTextWidget outputWindow;
+    private CodeOutputWidget outputWindow;
 
     public CodeEditorScreen(CodeEditorBackend backend) {
         super(Component.empty());
@@ -73,15 +72,11 @@ public class CodeEditorScreen extends Screen {
         addRenderableWidget(titleBar);
 
         int outputWindowHeight = height - titleBarHeight - textFileHeight - 4;
-        int outputWindowWidth = textFieldWidth;
         outputWindow = new CodeOutputWidget(
                 snippetWidth + 4, textFileHeight + titleBarHeight + 4,
-                outputWindowWidth, outputWindowHeight,
-                Component.literal(backend.getOutput()), font);
-        outputWindow.setColor(0xFF000000);
-        backend.setOutputListener(output -> {
-            outputWindow.setMessage(Component.literal(output));
-        });
+                textFieldWidth, outputWindowHeight,
+                Component.literal(""), font);
+        backend.setOutputListener(outputWindow::addOutput);
         addRenderableWidget(outputWindow);
     }
 

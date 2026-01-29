@@ -15,6 +15,7 @@ import indi.wenyan.setup.network.PlatformRenamePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -95,9 +96,8 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 packageSnippets.add(packageSnippet(execPackage,
                         executor.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
                         executor.getPackageName()));
-            } else if (blockEntity instanceof RunnerBlockEntity entity) {
-                if (!b.equals(pos))
-                    packageSnippets.add(new PackageSnippetWidget.PackageSnippet(Registration.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
+            } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos)) {
+                packageSnippets.add(new PackageSnippetWidget.PackageSnippet(Registration.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
             }
         }
         Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
@@ -129,14 +129,8 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             }
 
             @Override
-            public String getOutput() {
-                return runner.output;
-            }
-
-            public boolean outputChanged() {
-                boolean oldValue = runner.outputChanged;
-                runner.outputChanged = false;
-                return oldValue;
+            public List<Component> newOutput() {
+                return runner.flushNewOutput();
             }
         };
         return new CodeEditorBackend(packageSnippets, synchronizer);

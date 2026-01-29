@@ -103,13 +103,8 @@ public class RunnerItem extends BlockItem {
             }
 
             @Override
-            public String getOutput() {
-                return "";
-            }
-
-            @Override
-            public boolean outputChanged() {
-                return false;
+            public List<Component> newOutput() {
+                return List.of();
             }
         };
         var backend = new CodeEditorBackend(List.of(), synchronizer);
