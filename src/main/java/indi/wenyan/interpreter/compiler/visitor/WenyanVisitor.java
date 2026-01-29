@@ -5,7 +5,6 @@ import indi.wenyan.interpreter.antlr.WenyanRBaseVisitor;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.structure.WenyanParseTreeException;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -24,6 +23,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
 
     /**
      * Constructs a visitor with the given bytecode environment
+     *
      * @param bytecode The compiler environment to emit bytecode to
      */
     protected WenyanVisitor(WenyanCompilerEnvironment bytecode) {
@@ -49,7 +49,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
     public Boolean visitChildren(RuleNode node) {
         Boolean result = defaultResult();
         int n = node.getChildCount();
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             if (!shouldVisitNextChild(node, result)) {
                 break;
             }
@@ -57,12 +57,15 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
             ParseTree c = node.getChild(i);
             Boolean childResult;
             if (c instanceof ParserRuleContext ctx) {
-                // STUB: not sure why getStop will return null is empty (should be start)
-                if (ctx.getStop() == null) throw new WenyanParseTreeException("content empty");
-                bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
-                        ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-                childResult = c.accept(this);
-                bytecode.exitContext();
+                // STUB: not sure why getStop will return null if empty (should be start)
+                if (ctx.getStop() != null) {
+                    bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
+                            ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    childResult = c.accept(this);
+                    bytecode.exitContext();
+                } else {
+                    childResult = c.accept(this);
+                }
             } else {
                 childResult = c.accept(this);
             }
@@ -74,6 +77,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
 
     /**
      * Parses a Wenyan program string into an AST
+     *
      * @param program The Wenyan program as a string
      * @return The parsed program context
      */

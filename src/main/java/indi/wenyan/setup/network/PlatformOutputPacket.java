@@ -13,7 +13,12 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Packet for sending output from a platform to the client
  */
-public record PlatformOutputPacket(BlockPos pos, String output) implements CustomPacketPayload {
+public record PlatformOutputPacket(BlockPos pos, String output, OutputStyle style) implements CustomPacketPayload {
+    public enum OutputStyle {
+        NORMAL,
+        ERROR
+    }
+
     /**
      * Packet type identifier
      */
@@ -28,12 +33,14 @@ public record PlatformOutputPacket(BlockPos pos, String output) implements Custo
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
                         buffer.writeUtf(packet.output);
+                        buffer.writeEnum(packet.style);
                     },
-                    buffer -> {
-                        BlockPos pos1 = buffer.readBlockPos();
-                        String output1 = buffer.readUtf();
-                        return new PlatformOutputPacket(pos1, output1);
-                    });
+                    buffer ->
+                        new PlatformOutputPacket(
+                                buffer.readBlockPos(),
+                                buffer.readUtf(),
+                                buffer.readEnum(OutputStyle.class))
+            );
 
     /**
      * Handler for processing the packet
@@ -44,7 +51,7 @@ public record PlatformOutputPacket(BlockPos pos, String output) implements Custo
             var entity = level.getBlockEntity(packet.pos());
             if (entity instanceof RunnerBlockEntity runner) {
                 // Process the output on the client side
-                runner.addOutput(packet.output());
+                runner.addOutput(packet.output(), packet.style());
             }
         }
     };

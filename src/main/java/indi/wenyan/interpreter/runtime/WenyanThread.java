@@ -7,6 +7,7 @@ import indi.wenyan.interpreter.compiler.WenyanVerifier;
 import indi.wenyan.interpreter.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.interpreter.compiler.visitor.WenyanVisitor;
 import indi.wenyan.interpreter.structure.WenyanException;
+import indi.wenyan.interpreter.structure.WenyanParseTreeException;
 import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
@@ -71,7 +72,11 @@ public class WenyanThread {
         var bytecode = new WenyanBytecode();
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode);
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
-        visitor.visit(WenyanVisitor.program(code));
+        try {
+            visitor.visit(WenyanVisitor.program(code));
+        } catch (WenyanParseTreeException e) {
+            throw new WenyanException(e.getMessage());
+        }
         environment.enterContext(0, 0, 0, 0);
         environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
         environment.add(WenyanCodes.RET);

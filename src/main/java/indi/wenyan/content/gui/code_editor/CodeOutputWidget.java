@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -70,11 +71,13 @@ public class CodeOutputWidget extends AbstractScrollWidget {
     }
 
     public void setOutput(Deque<Component> output) {
-        // STUB: going to change
-        String newOutput = output.stream()
-                .map(Component::getString)
-                .reduce("", (a, b) -> a + b + "\n");
-        multilineWidget.setMessage(Component.literal(newOutput));
+        // STUB: going to change, for better performance in multiline widget,
+        //  which split the line every time called
+        MutableComponent newOutput = Component.empty();
+        for (var component : output) {
+            newOutput.append(component).append("\n");
+        }
+        multilineWidget.setMessage(newOutput);
         setScrollAmount(getMaxScrollAmount());
     }
 }

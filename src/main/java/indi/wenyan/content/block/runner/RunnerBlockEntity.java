@@ -26,6 +26,7 @@ import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -60,11 +61,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return Optional.ofNullable(optionalProgram);
     }
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String pages;
     private int speed;
     @Getter
-    private Deque<Component> outputQueue = new ArrayDeque<>();
+    private final Deque<Component> outputQueue = new ArrayDeque<>();
     private boolean outputChanged = false;
 
     @Getter
@@ -86,9 +88,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                             String s = request.args().getFirst().as(WenyanString.TYPE).value();
                             if (getLevel() instanceof ServerLevel sl) {
                                 PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
-                                        new PlatformOutputPacket(getBlockPos(), s));
+                                        new PlatformOutputPacket(getBlockPos(), s, PlatformOutputPacket.OutputStyle.NORMAL));
                             }
-                            addOutput(s);
+                            addOutput(s, PlatformOutputPacket.OutputStyle.NORMAL);
                             request.thread().currentRuntime().processStack.push(WenyanNull.NULL);
                             return true;
                         },
@@ -106,8 +108,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public void handleError(String error) {
         if (getLevel() instanceof ServerLevel sl)
             PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
-                    new PlatformOutputPacket(getBlockPos(), error));
-        addOutput(error);
+                    new PlatformOutputPacket(getBlockPos(), error, PlatformOutputPacket.OutputStyle.ERROR));
+        addOutput(error, PlatformOutputPacket.OutputStyle.ERROR);
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
@@ -174,6 +176,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public static final String PAGES_ID = "pages";
     public static final String SPEED_ID = "speed";
     public static final String PLATFORM_NAME_ID = "platformName";
+
     @SuppressWarnings("unused")
     @Override
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
@@ -272,8 +275,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return temp;
     }
 
-    public void addOutput(String output) {
-        outputQueue.addLast(Component.literal(output));
+    public void addOutput(String output, PlatformOutputPacket.OutputStyle style) {
+        if (style == PlatformOutputPacket.OutputStyle.ERROR)
+            outputQueue.addLast(Component.literal(output).withStyle(ChatFormatting.RED));
+        else if (style == PlatformOutputPacket.OutputStyle.NORMAL)
+            outputQueue.addLast(Component.literal(output));
         while (outputQueue.size() > MAX_OUTPUT_SHOWING_SIZE) {
             outputQueue.removeFirst();
         }

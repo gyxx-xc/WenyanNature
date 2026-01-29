@@ -73,7 +73,6 @@ public class WenyanProgram {
     @WenyanThreading(planning = true)
     public WenyanThread createThread(String code) throws WenyanThrowException {
         if (!programJavaThread.isAlive()) {
-            // DCL? what is that
             try {
                 programJavaThread.start();
             } catch (IllegalThreadStateException ignored) {
