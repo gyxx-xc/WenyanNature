@@ -42,9 +42,10 @@ public class CodeEditorScreen extends Screen {
     @Override
     protected void init() {
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
+        int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
         textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, 15,
-                textFieldWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+                textFieldWidth, textFileHeight);
         addRenderableWidget(textFieldWidget);
 
         // -4 is spacing
@@ -60,8 +61,9 @@ public class CodeEditorScreen extends Screen {
                 packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         addRenderableWidget(packageWidget);
 
+        int titleBarHeight = 15;
         titleBar = new FuzhouNameWidget(font, snippetWidth + 4, 2,
-                width - (snippetWidth + 4) - (packageSnippetWidth + 4), 15,
+                width - (snippetWidth + 4) - (packageSnippetWidth + 4), titleBarHeight,
                 Component.translatable("gui.wenyan.snippet_name"));
         titleBar.setTextColor(-1);
         titleBar.setBordered(false);
@@ -70,10 +72,13 @@ public class CodeEditorScreen extends Screen {
         titleBar.setResponder(backend::setTitle);
         addRenderableWidget(titleBar);
 
-        outputWindow = new FittingMultiLineTextWidget(
-                0, 15 + Math.min(height - 30, CodeEditorWidget.HEIGH),
-                width, 30,
+        int outputWindowHeight = height - titleBarHeight - textFileHeight - 4;
+        int outputWindowWidth = textFieldWidth;
+        outputWindow = new CodeOutputWidget(
+                snippetWidth + 4, textFileHeight + titleBarHeight + 4,
+                outputWindowWidth, outputWindowHeight,
                 Component.literal(backend.getOutput()), font);
+        outputWindow.setColor(0xFF000000);
         backend.setOutputListener(output -> {
             outputWindow.setMessage(Component.literal(output));
         });
