@@ -29,17 +29,18 @@ public class BulletRender extends EntityRenderer<BulletEntity> {
         return TEXTURE_LOCATION;
     }
 
+    @Override
     public void render(BulletEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
         poseStack.translate(0, 0.1, 0);
         poseStack.mulPose(entityRenderDispatcher.cameraOrientation());
         poseStack.scale(0.3F, 0.3F, 0.3F);
         VertexConsumer vertexconsumer = buffer.getBuffer(RENDER_TYPE);
-        PoseStack.Pose posestack$pose = poseStack.last();
-        vertex(vertexconsumer, posestack$pose, -0.5F, -0.25F, 0, 0, packedLight);
-        vertex(vertexconsumer, posestack$pose, 0.5F, -0.25F, 0, 1, packedLight);
-        vertex(vertexconsumer, posestack$pose, 0.5F, 0.75F, 1, 1, packedLight);
-        vertex(vertexconsumer, posestack$pose, -0.5F, 0.75F, 1, 0, packedLight);
+        PoseStack.Pose posestackPose = poseStack.last();
+        vertex(vertexconsumer, posestackPose, -0.5F, -0.25F, 0, 0, packedLight);
+        vertex(vertexconsumer, posestackPose, 0.5F, -0.25F, 0, 1, packedLight);
+        vertex(vertexconsumer, posestackPose, 0.5F, 0.75F, 1, 1, packedLight);
+        vertex(vertexconsumer, posestackPose, -0.5F, 0.75F, 1, 0, packedLight);
         poseStack.popPose();
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
     }

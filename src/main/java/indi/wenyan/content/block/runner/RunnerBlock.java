@@ -99,10 +99,9 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 packageSnippets.add(packageSnippet(execPackage,
                         executor.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
                         executor.getPackageName()));
-            } else if (blockEntity instanceof RunnerBlockEntity entity) {
-                if (!b.equals(pos))
+            } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos))
                     packageSnippets.add(new PackageSnippetWidget.PackageSnippet(Registration.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
-            }
+
         }
         Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
     }

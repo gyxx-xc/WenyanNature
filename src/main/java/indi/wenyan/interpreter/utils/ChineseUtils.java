@@ -10,15 +10,15 @@ public enum ChineseUtils {
     ;
     public static final boolean DIRECT_NUMBER_CONVERT = false;
 
-    public static final char[] WENYAN_NUMBERS = new char[]{'零', '一', '二', '三', '四', '五', '六', '七', '八', '九'};
+    private static final char[] WENYAN_NUMBERS = new char[]{'零', '一', '二', '三', '四', '五', '六', '七', '八', '九'};
 
     public static @NotNull String toChinese(BigInteger i) {
         if (!DIRECT_NUMBER_CONVERT) {
             try {
                 return Convert.numberToChinese(i.intValueExact(), false)
-                        .replaceAll("万", "萬").replaceAll("亿", "億");
-            } catch (ArithmeticException ignored) {
-            } // go outward
+                        .replace("万", "萬").replace("亿", "億");
+            } catch (ArithmeticException ignored) { // go outward
+            }
         }
         StringBuilder chinese = new StringBuilder();
         var number = i;

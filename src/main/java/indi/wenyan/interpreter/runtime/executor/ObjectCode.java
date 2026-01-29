@@ -20,7 +20,7 @@ public class ObjectCode extends WenyanCode {
      * @param operation The operation to perform on objects
      */
     public ObjectCode(Operation operation) {
-        super(name(operation));
+        super(opName(operation));
         this.operation = operation;
     }
 
@@ -81,7 +81,7 @@ public class ObjectCode extends WenyanCode {
      * @param op The operation
      * @return The name of the code
      */
-    private static String name(Operation op) {
+    private static String opName(Operation op) {
         return switch (op) {
             case ATTR -> "LOAD_ATTR";
             case ATTR_REMAIN -> "LOAD_ATTR_REMAIN";

@@ -1,6 +1,6 @@
 package indi.wenyan.content.block.crafting_block;
 
-import indi.wenyan.content.block.additional_module.IModulerBlock;
+import indi.wenyan.content.block.additional_module.IModuleBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class CraftingBlock extends Block implements IModulerBlock {
+public class CraftingBlock extends Block implements IModuleBlock {
     public static final Properties PROPERTIES = Properties.of();
     public static final String ID = "crafting_block";
     public static final VoxelShape SHAPE = Block.box(1, 0, 3, 15, 13.5, 15);
@@ -27,17 +27,6 @@ public class CraftingBlock extends Block implements IModulerBlock {
     public @NotNull BlockEntityType<?> getType() {
         return Registration.CRAFTING_BLOCK_ENTITY.get();
     }
-
-//    @Deprecated // not going to use it after module impl is finish
-//    @Override
-//    protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-//        CraftingBlockEntity entity = (CraftingBlockEntity) level.getBlockEntity(pos);
-//        if (!level.isClientSide()) {
-//            assert entity != null;
-//            player.openMenu(new SimpleMenuProvider(entity, Component.empty()), pos);
-//        }
-//        return ItemInteractionResult.SUCCESS;
-//    }
 
     @Override
     protected @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {

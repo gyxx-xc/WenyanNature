@@ -20,7 +20,7 @@ public class BranchCode extends WenyanCode {
      * @param o The operation to perform
      */
     public BranchCode(Condition c, Operation o) {
-        super(name(c, o));
+        super(opName(c, o));
         condition = c;
         operation = o;
     }
@@ -61,16 +61,14 @@ public class BranchCode extends WenyanCode {
      * @param o The operation
      * @return The name of the code
      */
-    private static String name(Condition c, Operation o) {
+    private static String opName(Condition c, Operation o) {
         StringBuilder sb = new StringBuilder();
         sb.append("BRANCH");
         if (o == Operation.POP) {
             sb.append("_POP");
         }
-        switch (c) {
-            case FALSE -> sb.append("_FALSE");
-            case TRUE -> sb.append("_TRUE");
-        }
+        if (c == Condition.FALSE) sb.append("_FALSE");
+        if (c == Condition.TRUE) sb.append("_TRUE");
         return sb.toString();
     }
 

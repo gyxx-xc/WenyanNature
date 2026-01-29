@@ -23,7 +23,6 @@ public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEnt
 
         poseStack.pushPose();
         for (var particle : craftingBlock.getParticles()) {
-//        var particle = new CraftingBlockEntity.TextParticle(new Vec3(0, 2, 0), new Vec3(0, 2, 0), 0, "qqqq");
             poseStack.pushPose();
             poseStack.translate(0.5, 1, 0.5);
             var pos = particle.getPosition(partialTick);

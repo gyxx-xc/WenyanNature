@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
@@ -26,6 +27,8 @@ import java.util.List;
 public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round) implements Recipe<AnsweringRecipeInput> {
 
     public static final String ID = "answering_recipe";
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<Ingredient>> INGREDIENT_LIST_STREAM =
+            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new));
 
     @Override
     public boolean matches(AnsweringRecipeInput answeringRecipeInput, Level level) {
@@ -41,8 +44,6 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
         for (ItemStack stack : item)
             stackedContents.accountStack(stack, 1);
 
-        // not sure why IntelliJ not see the @Nullable annotation
-        //noinspection ConstantValue
         return RecipeMatcher.findMatches(item, input) != null;
     }
 
@@ -81,7 +82,7 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AnsweringRecipe> STREAM_CODEC =
                 StreamCodec.composite(
-                        Serializers.INGREDIENT_LIST_STREAM, AnsweringRecipe::input,
+                        INGREDIENT_LIST_STREAM, AnsweringRecipe::input,
                         ByteBufCodecs.STRING_UTF8, AnsweringRecipe::question,
                         ItemStack.STREAM_CODEC, AnsweringRecipe::output,
                         ByteBufCodecs.INT, AnsweringRecipe::round,

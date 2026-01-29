@@ -33,7 +33,7 @@ public class CodeEditorBackend {
     private Runnable valueListener = () -> {
     };
     @Setter
-    private Consumer<String> outputListener = (s) -> {
+    private Consumer<String> outputListener = s -> {
     };
 
     private final CodeEditorBackendSynchronizer synchronizer;
@@ -76,17 +76,16 @@ public class CodeEditorBackend {
             sidedData.content.replace(beginIndex, endIndex, string);
 
             int lengthChanged = string.length() - (endIndex - beginIndex);
-            for (int i = 0; i < getPlaceholders().size(); i++) {
-                var placeholder = getPlaceholders().get(i);
+            for (var i = getPlaceholders().listIterator(); i.hasNext();) {
+                var placeholder = i.next();
                 // NOTE: a equal here means if any text of cursor is changed, the placeholder
                 // will be removed
                 if (placeholder.index() >= beginIndex) {
-                    if (placeholder.index() <= endIndex) {
-                        getPlaceholders().remove(placeholder);
-                        i--;
-                    } else
-                        getPlaceholders().set(i, new CodeField.Placeholder(
-                                placeholder.context(), placeholder.index() + lengthChanged));
+                    if (placeholder.index() <= endIndex)
+                        i.remove();
+                    else
+                        i.set(new CodeField.Placeholder(placeholder.context(),
+                                placeholder.index() + lengthChanged));
                 }
             }
 

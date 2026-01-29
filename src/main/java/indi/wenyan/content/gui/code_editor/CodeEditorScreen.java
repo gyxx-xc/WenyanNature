@@ -74,9 +74,8 @@ public class CodeEditorScreen extends Screen {
                 0, 15 + Math.min(height - 30, CodeEditorWidget.HEIGH),
                 width, 30,
                 Component.literal(backend.getOutput()), font);
-        backend.setOutputListener(output -> {
-            outputWindow.setMessage(Component.literal(output));
-        });
+        backend.setOutputListener(output ->
+            outputWindow.setMessage(Component.literal(output)));
         addRenderableWidget(outputWindow);
     }
 

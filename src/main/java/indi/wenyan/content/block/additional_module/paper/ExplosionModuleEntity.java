@@ -34,7 +34,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
     // lighting fire heat harm
     @Getter
     private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("ExplosionModule.lightning"), (request) -> {
+            .handler(WenyanSymbol.var("ExplosionModule.lightning"), request -> {
                 assert getLevel() != null;
                 Entity e = EntityType.LIGHTNING_BOLT.create(getLevel());
                 if (e == null) {
@@ -44,14 +44,14 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                 getLevel().addFreshEntity(e);
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("ExplosionModule.explode"), (request) -> {
+            .handler(WenyanSymbol.var("ExplosionModule.explode"), request -> {
                 assert level != null;
                 level.explode(null,
                         blockPos().getX() + 0.5, blockPos().getY() + 0.5, blockPos().getZ() + 0.5,
                         3.0f, true, Level.ExplosionInteraction.BLOCK);
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("ExplosionModule.ignite"), (request) -> {
+            .handler(WenyanSymbol.var("ExplosionModule.ignite"), request -> {
                 var offset = request.args().getFirst().as(WenyanVec3.TYPE).value(); 
                 BlockPos pos = blockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
                 if (!(getLevel() instanceof ServerLevel serverLevel)) {
@@ -65,7 +65,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                         new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("ExplosionModule.fireball"), (request) -> {
+            .handler(WenyanSymbol.var("ExplosionModule.fireball"), request -> {
                 var speed = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 assert getLevel() != null;
                 Entity e = EntityType.FIREBALL.create(getLevel());

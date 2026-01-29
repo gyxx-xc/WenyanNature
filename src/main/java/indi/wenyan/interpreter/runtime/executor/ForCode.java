@@ -23,7 +23,7 @@ public class ForCode extends WenyanCode {
      * @param operation The operation to perform in the loop
      */
     public ForCode(Operation operation) {
-        super(name(operation));
+        super(opName(operation));
         this.operation = operation;
     }
 
@@ -50,7 +50,7 @@ public class ForCode extends WenyanCode {
                 IWenyanValue value = runtime.processStack.pop();
                 int num = value.as(WenyanInteger.TYPE).value();
                 if (num > 0) {
-                    runtime.processStack.push(WenyanValues.of(num - 1));
+                    runtime.processStack.push(WenyanValues.of((long) num - 1));
                 } else {
                     runtime.programCounter = runtime.bytecode.getLabel(args);
                     runtime.PCFlag = true;
@@ -73,7 +73,7 @@ public class ForCode extends WenyanCode {
      * @param op The operation
      * @return The name of the code
      */
-    public static String name(Operation op) {
+    public static String opName(Operation op) {
         return switch (op) {
             case FOR_ITER -> "FOR_ITER";
             case FOR_NUM -> "FOR_NUM";

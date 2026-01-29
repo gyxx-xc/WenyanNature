@@ -273,14 +273,14 @@ public class WenyanExprVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.CREATE_TYPE, ctx.IDENTIFIER(0).getText());
 
         try {
-            for (WenyanRParser.Object_property_defineContext var : ctx.object_property_define()) {
-                if (var.data() != null) {
-                    visit(var.data());
-                    bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(var.type().getText()).ordinal());
+            for (WenyanRParser.Object_property_defineContext variable : ctx.object_property_define()) {
+                if (variable.data() != null) {
+                    visit(variable.data());
+                    bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(variable.type().getText()).ordinal());
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(WenyanDataParser.parseType(var.type().getText())));
+                    bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(WenyanDataParser.parseType(variable.type().getText())));
                 }
-                bytecode.add(WenyanCodes.STORE_STATIC_ATTR, var.IDENTIFIER().getText());
+                bytecode.add(WenyanCodes.STORE_STATIC_ATTR, variable.IDENTIFIER().getText());
             }
         } catch (WenyanThrowException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);

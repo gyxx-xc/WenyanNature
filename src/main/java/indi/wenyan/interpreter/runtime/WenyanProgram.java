@@ -76,6 +76,7 @@ public class WenyanProgram {
             try {
                 programJavaThread.start();
             } catch (IllegalThreadStateException ignored) {
+                // start already, ignored
             }
         }
 

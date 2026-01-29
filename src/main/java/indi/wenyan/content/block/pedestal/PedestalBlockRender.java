@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEntity> {
 
     public PedestalBlockRender() {
+        // change access modifier to public for render
     }
 
     // copy from arsnouveau

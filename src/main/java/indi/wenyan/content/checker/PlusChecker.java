@@ -26,7 +26,7 @@ public class PlusChecker extends CraftingAnswerChecker {
         int b = random.nextInt(100);
         setVariable(0, WenyanValues.of(a));
         setVariable(1, WenyanValues.of(b));
-        ans = WenyanValues.of(a + b);
+        ans = WenyanValues.of((long) a + b);
     }
 
     @Override

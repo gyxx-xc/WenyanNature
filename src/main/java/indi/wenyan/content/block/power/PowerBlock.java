@@ -1,6 +1,6 @@
 package indi.wenyan.content.block.power;
 
-import indi.wenyan.content.block.additional_module.IModulerBlock;
+import indi.wenyan.content.block.additional_module.IModuleBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class PowerBlock extends Block implements IModulerBlock {
+public class PowerBlock extends Block implements IModuleBlock {
     public static final String ID = "power_block";
     public static final VoxelShape SHAPE = box(1, 1, 1, 15, 15, 15);
     public static final Properties PROPERTIES = Properties.of();

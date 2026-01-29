@@ -20,7 +20,7 @@ public class RandomModuleEntity extends AbstractModuleEntity {
     @Getter
     private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction(WenyanSymbol.var("RandomModule.nextInt"), (args) -> {
+                    .intFunction(WenyanSymbol.var("RandomModule.nextInt"), args -> {
                         assert getLevel() != null;
                         var random = getLevel().getRandom();
                         return switch (args.size()) {

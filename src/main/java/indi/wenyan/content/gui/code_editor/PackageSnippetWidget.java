@@ -196,6 +196,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
                 backend.getPackages().size() * DIR_HEIGHT;
     }
 
+    @Override
     protected boolean scrollbarVisible() {
         return getInnerHeight() > getHeight() - totalInnerPadding();
     }

@@ -26,8 +26,9 @@ public interface IWenyanValue {
 
     /**
      * Attempts to cast this value to the specified type
+     *
      * @param type Target type
-     * @param <T> Type parameter
+     * @param <T>  Type parameter
      * @return Casted value or null if casting is not supported
      */
     @Nullable
@@ -37,8 +38,9 @@ public interface IWenyanValue {
 
     /**
      * Casts this value to the specified type or throws exception
+     *
      * @param type Target type
-     * @param <T> Type parameter
+     * @param <T>  Type parameter
      * @return Casted value
      * @throws WenyanException.WenyanTypeException If casting fails
      */
@@ -58,6 +60,7 @@ public interface IWenyanValue {
 
     /**
      * Checks if this value can be cast to the specified type
+     *
      * @param type Target type
      * @return True if this value can be cast to the target type
      */
@@ -72,8 +75,9 @@ public interface IWenyanValue {
 
     /**
      * Attempts to cast this value to the specified type and returns an Optional
+     *
      * @param type Target type
-     * @param <T> Type parameter
+     * @param <T>  Type parameter
      * @return Optional containing the casted value or empty if casting fails
      */
     default <T extends IWenyanValue> Optional<T> tryAs(WenyanType<T> type) {
@@ -86,7 +90,8 @@ public interface IWenyanValue {
 
     /**
      * Adds two Wenyan values
-     * @param self First value
+     *
+     * @param self  First value
      * @param other Second value
      * @return Result of addition
      * @throws WenyanThrowException If addition fails
@@ -100,7 +105,8 @@ public interface IWenyanValue {
 
     /**
      * Subtracts two Wenyan values
-     * @param self First value
+     *
+     * @param self  First value
      * @param other Second value
      * @return Result of subtraction
      * @throws WenyanThrowException If subtraction fails
@@ -114,7 +120,8 @@ public interface IWenyanValue {
 
     /**
      * Multiplies two Wenyan values
-     * @param self First value
+     *
+     * @param self  First value
      * @param other Second value
      * @return Result of multiplication
      * @throws WenyanThrowException If multiplication fails
@@ -128,7 +135,8 @@ public interface IWenyanValue {
 
     /**
      * Divides two Wenyan values
-     * @param self First value
+     *
+     * @param self  First value
      * @param other Second value
      * @return Result of division
      * @throws WenyanThrowException If division fails
@@ -142,7 +150,8 @@ public interface IWenyanValue {
 
     /**
      * Calculates modulus of two Wenyan integers
-     * @param self First value
+     *
+     * @param self  First value
      * @param other Second value
      * @return Result of modulus operation
      * @throws WenyanThrowException If operation fails
@@ -155,7 +164,8 @@ public interface IWenyanValue {
 
     /**
      * Checks equality between two Wenyan values
-     * @param self First value
+     *
+     * @param self  First value
      * @param other Second value
      * @return True if values are equal
      * @throws WenyanThrowException If comparison fails
@@ -171,7 +181,8 @@ public interface IWenyanValue {
 
     /**
      * Compares two Wenyan values
-     * @param self First value
+     *
+     * @param self  First value
      * @param other Second value
      * @return Comparison result (negative, zero, positive)
      * @throws WenyanThrowException If comparison fails
@@ -185,6 +196,7 @@ public interface IWenyanValue {
 
     /**
      * Creates an empty value of the specified type
+     *
      * @param type Target type
      * @return Empty value of the specified type
      */

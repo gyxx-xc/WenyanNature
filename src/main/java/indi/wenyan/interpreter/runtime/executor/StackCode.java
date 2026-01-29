@@ -15,7 +15,7 @@ public class StackCode extends WenyanCode {
      * @param o The operation to perform on the stack
      */
     public StackCode(Operation o) {
-        super(name(o));
+        super(opName(o));
         operation = o;
     }
 
@@ -42,7 +42,7 @@ public class StackCode extends WenyanCode {
      * @param op The operation
      * @return The name of the code
      */
-    private static String name(Operation op) {
+    private static String opName(Operation op) {
         return switch (op) {
             case PUSH -> "PUSH";
             case POP -> "POP";

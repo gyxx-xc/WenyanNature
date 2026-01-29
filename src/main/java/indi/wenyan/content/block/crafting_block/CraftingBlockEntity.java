@@ -92,8 +92,12 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     @Getter
     private final Deque<TextParticle> particles = new ArrayDeque<>();
 
-    @Getter
-    public final String basePackageName = "";
+    @Override
+    public String getBasePackageName() {
+        return "";
+    }
+
+    public static final String PARTICLE_ID = "particle";
 
     @Getter
     public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
@@ -113,7 +117,9 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                     }
                 }
                 switch (checkerResult) {
-                    case RUNNING -> {}
+                    case RUNNING -> {
+                        // do nothing, remain keep running
+                    }
                     case WRONG_ANSWER -> {
                         craftingProgress = 0;
                         if (level instanceof ServerLevel sl)
@@ -162,22 +168,22 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         assert level != null;
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         forNearbyPedestal(level, blockPos(), pedestal -> pedestalItems.add(pedestal.getItem(0)));
-        var recipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
+        var optionalRecipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
                 new AnsweringRecipeInput(pedestalItems), level, this.recipeHolder); // set last recipe as hint
-        if (recipeHolder.isEmpty()) {
+        if (optionalRecipeHolder.isEmpty()) {
             resetCrafting();
             throw new WenyanException("No valid recipe found for the current pedestal items.");
         }
 
-        if (this.recipeHolder != null && this.recipeHolder.equals(recipeHolder.get())) {
+        if (this.recipeHolder != null && this.recipeHolder.equals(optionalRecipeHolder.get())) {
             return checker;
         } else resetCrafting();
-        this.recipeHolder = recipeHolder.get();
-        var question = recipeHolder.get().value().question();
-        var result = CheckerFactory.produce(question, level.getRandom());
-        checker = result;
+        this.recipeHolder = optionalRecipeHolder.get();
+        var question = optionalRecipeHolder.get().value().question();
+        var recipeChecker = CheckerFactory.produce(question, level.getRandom());
+        checker = recipeChecker;
         checker.init(); // recreated, reset the checker state
-        return result;
+        return recipeChecker;
     }
 
     public void craftAndEjectItem() {
@@ -217,15 +223,15 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveData(tag, registries);
         var effect = particles.stream().map(TextParticle::data).reduce((r, p) -> r + p);
-        effect.ifPresent(s -> tag.putString("particle", s));
+        effect.ifPresent(s -> tag.putString(PARTICLE_ID, s));
     }
 
     @Override
     protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadData(tag, registries);
-        if (tag.contains("particle")) {
+        if (tag.contains(PARTICLE_ID)) {
             assert level != null;
-            particles.addAll(TextParticle.randomSplash(tag.getString("particle"), level.random));
+            particles.addAll(TextParticle.randomSplash(tag.getString(PARTICLE_ID), level.random));
         }
     }
 

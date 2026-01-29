@@ -14,11 +14,15 @@ public record Completion(String content) {
         try {
             double number = Double.parseDouble(string);
             return List.of(new Completion(ChineseUtils.toChinese(number)));
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+            // return normal completion
+        }
         try {
             BigInteger number = new BigInteger(string);
             return List.of(new Completion(ChineseUtils.toChinese(number)));
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+            // return normal completion
+        }
         return Completions.map.subMap(string, string + Character.MAX_VALUE).values()
                 .stream()
                 .flatMap(Collection::stream)

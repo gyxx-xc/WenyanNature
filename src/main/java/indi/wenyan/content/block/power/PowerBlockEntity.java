@@ -26,18 +26,10 @@ public class PowerBlockEntity extends AbstractModuleEntity {
     public final AtomicInteger power = new AtomicInteger(0);
     public final SecureRandom random;
 
-    {
-        try {
-            random = SecureRandom.getInstanceStrong();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Please report an issue to your Java platform as no strong SecureRandom implementation");
-        }
-    }
-
     public final List<Integer> generatedPower = new ArrayList<>(
             Collections.nCopies(DISAPPEAR_TICK, 0)
     );
-    public int lastPower = 0;
+    private int lastPower = 0;
 
     // in book: 意底*意底*...(天机) = 若干*数极 + 天意
     // a ^ b = ans mod p
@@ -75,6 +67,11 @@ public class PowerBlockEntity extends AbstractModuleEntity {
     public PowerBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.POWER_BLOCK_ENTITY.get(), pos, blockState);
         resetState();
+        try {
+            random = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Please report an issue to your Java platform as no strong SecureRandom implementation");
+        }
     }
 
     @Override
@@ -93,17 +90,18 @@ public class PowerBlockEntity extends AbstractModuleEntity {
         ans = fastPower(a, b);
     }
 
+    // 快速幂
     private int fastPower(int a, int b) {
-        long ans = 1;
+        long result = 1;
         long a1 = a;
         while (b > 0) {
             if ((b & 1) == 1) {
-                ans = (ans * a1) % LARGE_PRIME;
+                result = (result * a1) % LARGE_PRIME;
             }
             a1 = (a1 * a1) % LARGE_PRIME;
             b >>= 1;
         }
-        return Math.toIntExact(ans);
+        return Math.toIntExact(result);
     }
 
     // get the required power, and return the actual acquired power, not thread safe
@@ -113,10 +111,10 @@ public class PowerBlockEntity extends AbstractModuleEntity {
 
         int got = 0;
         for (int i = 0; i < generatedPower.size(); i++) {
-            int power = generatedPower.get(i);
-            int acquirePower = Math.min(power, acquire);
+            int currentPower = generatedPower.get(i);
+            int acquirePower = Math.min(currentPower, acquire);
             got += acquirePower;
-            generatedPower.set(i, power - acquirePower);
+            generatedPower.set(i, currentPower - acquirePower);
         }
         power.addAndGet(-got);
         lastPower -= got;

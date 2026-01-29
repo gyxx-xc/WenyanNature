@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
@@ -39,7 +39,7 @@ public final class HandlerPackageBuilder {
         return new HandlerPackageBuilder();
     }
 
-    public HandlerPackageBuilder nativeVariables(Function<WenyanPackageBuilder, WenyanPackageBuilder> builder) {
+    public HandlerPackageBuilder nativeVariables(UnaryOperator<WenyanPackageBuilder> builder) {
         variables.putAll(builder.apply(WenyanPackageBuilder.create()).build().variables());
         return this;
     }

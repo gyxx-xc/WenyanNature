@@ -25,7 +25,7 @@ public class FunctionCode extends WenyanCode {
      * @param o The operation to perform
      */
     public FunctionCode(Operation o) {
-        super(name(o));
+        super(opName(o));
         operation = o;
     }
 
@@ -50,7 +50,6 @@ public class FunctionCode extends WenyanCode {
         if (operation == Operation.CALL_ATTR)
             self = runtime.processStack.pop();
 
-        // TODO: check the logic and use the tryAs
         // object_type
         if (func.is(IWenyanObjectType.TYPE)) {
             callable = func.as(IWenyanObjectType.TYPE);
@@ -98,7 +97,7 @@ public class FunctionCode extends WenyanCode {
      * @param op The operation
      * @return The name of the code
      */
-    private static String name(Operation op) {
+    private static String opName(Operation op) {
         return switch (op) {
             case CALL -> "CALL";
             case CALL_ATTR -> "CALL_ATTR";

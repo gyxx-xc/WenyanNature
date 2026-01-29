@@ -25,6 +25,7 @@ import java.util.Objects;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanBlockDevice {
+    public static final String PACKAGE_NAME_ID = "packageName";
     @Getter
     private final ExecQueue execQueue = new ExecQueue();
 
@@ -78,13 +79,13 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     @Override
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
         if (packageName != null)
-            tag.putString("packageName", packageName);
+            tag.putString(PACKAGE_NAME_ID, packageName);
     }
 
     @Override
     protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains("packageName"))
-            packageName = tag.getString("packageName");
+        if (tag.contains(PACKAGE_NAME_ID))
+            packageName = tag.getString(PACKAGE_NAME_ID);
     }
 
     @Override

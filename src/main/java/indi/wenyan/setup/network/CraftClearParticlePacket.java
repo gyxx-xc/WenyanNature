@@ -20,9 +20,7 @@ public record CraftClearParticlePacket(@NonNull BlockPos pos) implements CustomP
 
     public static final StreamCodec<FriendlyByteBuf, CraftClearParticlePacket> STREAM_CODEC =
             StreamCodec.of(
-                    (buffer, packet) -> {
-                        buffer.writeBlockPos(packet.pos);
-                    },
+                    (buffer, packet) -> buffer.writeBlockPos(packet.pos),
                     buffer -> new CraftClearParticlePacket(buffer.readBlockPos())
             );
 

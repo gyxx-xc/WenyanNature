@@ -10,10 +10,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated(forRemoval = true)
 @OnlyIn(Dist.CLIENT)
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
 
-    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+    private static final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/crafting_gui.png");
 
     public CraftingBlockScreen(CraftingBlockContainer container, Inventory inventory, Component title) {

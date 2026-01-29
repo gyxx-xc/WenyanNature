@@ -21,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectionalBlock {
     public static final Properties PROPERTIES = Properties.of().noCollission();
 
-    public static final MapCodec<RunnerBlock> CODEC = simpleCodec((ignore)->new RunnerBlock());
+    public static final MapCodec<RunnerBlock> CODEC = simpleCodec(ignore -> new RunnerBlock());
     public static final VoxelShape FLOOR_NORTH_AABB;
     public static final VoxelShape FLOOR_SOUTH_AABB;
     public static final VoxelShape FLOOR_WEST_AABB;
@@ -35,7 +35,7 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
     public static final VoxelShape WEST_AABB;
     public static final VoxelShape EAST_AABB;
 
-    public AbstractFuluBlock() {
+    protected AbstractFuluBlock() {
         super(PROPERTIES);
     }
 
@@ -55,42 +55,28 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
     public VoxelShape
     getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         Direction direction = pState.getValue(FACING);
-        switch (pState.getValue(FACE)) {
-            case FLOOR:
-                switch (direction) {
-                    case NORTH:
-                        return FLOOR_NORTH_AABB;
-                    case SOUTH:
-                        return FLOOR_SOUTH_AABB;
-                    case WEST:
-                        return FLOOR_WEST_AABB;
-                    case EAST:
-                        return FLOOR_EAST_AABB;
-                }
-                break;
-            case WALL:
-                return switch (direction) {
-                    case EAST -> EAST_AABB;
-                    case WEST -> WEST_AABB;
-                    case SOUTH -> SOUTH_AABB;
-                    case NORTH, UP, DOWN -> NORTH_AABB;
-                };
-            case CEILING:
-                switch (direction) {
-                    case NORTH:
-                        return CEILING_NORTH_AABB;
-                    case SOUTH:
-                        return CEILING_SOUTH_AABB;
-                    case WEST:
-                        return CEILING_WEST_AABB;
-                    case EAST:
-                        return CEILING_EAST_AABB;
-                }
-                break;
-            default:
-                throw new MatchException(null, null);
-        }
-        throw new MatchException(null, null);
+        return switch (pState.getValue(FACE)) {
+            case FLOOR -> switch (direction) {
+                case NORTH -> FLOOR_NORTH_AABB;
+                case SOUTH -> FLOOR_SOUTH_AABB;
+                case WEST -> FLOOR_WEST_AABB;
+                case EAST -> FLOOR_EAST_AABB;
+                default -> throw new MatchException(null, null);
+            };
+            case WALL -> switch (direction) {
+                case EAST -> EAST_AABB;
+                case WEST -> WEST_AABB;
+                case SOUTH -> SOUTH_AABB;
+                case NORTH, UP, DOWN -> NORTH_AABB;
+            };
+            case CEILING -> switch (direction) {
+                case NORTH -> CEILING_NORTH_AABB;
+                case SOUTH -> CEILING_SOUTH_AABB;
+                case WEST -> CEILING_WEST_AABB;
+                case EAST -> CEILING_EAST_AABB;
+                default -> throw new MatchException(null, null);
+            };
+        };
     }
 
     @Override

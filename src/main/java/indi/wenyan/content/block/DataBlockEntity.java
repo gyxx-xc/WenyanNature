@@ -17,7 +17,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public abstract class DataBlockEntity extends BlockEntity {
-    public DataBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    protected DataBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 

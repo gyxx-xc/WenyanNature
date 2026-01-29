@@ -1,11 +1,11 @@
 package indi.wenyan.interpreter.compiler;
 
 import indi.wenyan.interpreter.runtime.executor.WenyanCode;
-import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
-import java.util.Stack;
 
 /**
  * Environment for the Wenyan compiler that manages bytecode generation,
@@ -14,23 +14,16 @@ import java.util.Stack;
 public class WenyanCompilerEnvironment {
     public static final int FUNCTION_ARGS_MAX = 100;
     private final WenyanBytecode bytecode;
-    private final HashMap<Constant, Integer> constTable = new HashMap<>();
+    private final HashMap<IWenyanValue, Integer> constTable = new HashMap<>();
     private final HashMap<String, Integer> identifierTable = new HashMap<>();
-    private final Stack<ForEnvironment> forStack = new Stack<>();
-    private final Stack<Context> debugContextStack = new Stack<>();
+    private final Deque<ForEnvironment> forStack = new ArrayDeque<>();
+    private final Deque<Context> debugContextStack = new ArrayDeque<>();
     private int lastContextStart = 0;
-
-    public boolean functionAttrFlag = false;
 
     /**
      * Represents a for-loop environment with its end labels.
      */
     private record ForEnvironment(int forEndLabel, int progEndLabel) {}
-
-    /**
-     * Represents a constant value with its type and object.
-     */
-    private record Constant(WenyanType<?> t, Object o) {}
 
     /**
      * Represents a debug context with source location information.
@@ -112,6 +105,7 @@ public class WenyanCompilerEnvironment {
      * @return The for-loop end label
      */
     public int getForEndLabel() {
+        assert forStack.peek() != null;
         return forStack.peek().forEndLabel;
     }
 
@@ -120,6 +114,7 @@ public class WenyanCompilerEnvironment {
      * @return The program end label
      */
     public int getProgEndLabel() {
+        assert forStack.peek() != null;
         return forStack.peek().progEndLabel;
     }
 
@@ -127,6 +122,7 @@ public class WenyanCompilerEnvironment {
      * Sets the current bytecode position as the target for the program end label.
      */
     public void setProgEndLabel() {
+        assert forStack.peek() != null;
         bytecode.setLabel(forStack.peek().progEndLabel, bytecode.size());
     }
 
@@ -134,6 +130,7 @@ public class WenyanCompilerEnvironment {
      * Sets the current bytecode position as the target for the for-loop end label.
      */
     public void setForEndLabel() {
+        assert forStack.peek() != null;
         bytecode.setLabel(forStack.peek().forEndLabel, bytecode.size());
     }
 
@@ -150,13 +147,7 @@ public class WenyanCompilerEnvironment {
      * @return The index of the constant
      */
     private int getConstIndex(IWenyanValue value) {
-        Constant constant = new Constant(value.type(), value);
-        Integer index = constTable.get(constant);
-        if (index == null) {
-            index = bytecode.addConst(value);
-            constTable.put(constant, index);
-        }
-        return index;
+        return constTable.computeIfAbsent(value, bytecode::addConst);
     }
 
     /**
@@ -165,12 +156,7 @@ public class WenyanCompilerEnvironment {
      * @return The index of the identifier
      */
     public int getIdentifierIndex(String identifier) {
-        Integer index = identifierTable.get(identifier);
-        if (index == null) {
-            index = bytecode.addIdentifier(identifier);
-            identifierTable.put(identifier, index);
-        }
-        return index;
+        return identifierTable.computeIfAbsent(identifier, bytecode::addIdentifier);
     }
 
     /**

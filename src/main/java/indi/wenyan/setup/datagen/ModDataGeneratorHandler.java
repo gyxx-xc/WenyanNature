@@ -4,9 +4,10 @@ import indi.wenyan.WenyanProgramming;
 import net.minecraft.data.DataProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
+
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  * Registers all data providers to be executed during data generation.
  */
 @EventBusSubscriber(modid = WenyanProgramming.MODID)
-public final class ModDataGeneratorHandler {
+enum ModDataGeneratorHandler {;
 
     /**
      * Event handler for gathering data providers.

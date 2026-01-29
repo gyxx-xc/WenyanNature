@@ -104,13 +104,10 @@ public class WenyanDataVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitData_child(WenyanRParser.Data_childContext ctx) {
-        boolean flag = bytecode.functionAttrFlag;
-        bytecode.functionAttrFlag = false;
         visit(ctx.data());
         switch (ctx.p.getType()) {
             case WenyanRParser.LONG -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.LONG().getText());
-            case WenyanRParser.IDENTIFIER -> bytecode.add(flag ? WenyanCodes.LOAD_ATTR_REMAIN :
-                WenyanCodes.LOAD_ATTR, ctx.IDENTIFIER().getText());
+            case WenyanRParser.IDENTIFIER -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.IDENTIFIER().getText());
             default -> throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.invalid_data_type").getString(), ctx);
         }
         return true;
