@@ -42,14 +42,12 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
+    public static final int MAX_OUTPUT_SHOWING_SIZE = 100;
     private WenyanProgram optionalProgram = null;
 
     private WenyanProgram getProgram() {
@@ -65,7 +63,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Getter @Setter
     private String pages;
     private int speed;
-    private List<Component> newOutput = new ArrayList<>();
+    @Getter
+    private Deque<Component> outputQueue = new ArrayDeque<>();
+    private boolean outputChanged = false;
 
     @Getter
     public final ExecQueue execQueue = new ExecQueue();
@@ -266,15 +266,19 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         setChanged();
     }
 
-    public void addOutput(String output) {
-        this.newOutput.add(Component.literal(output));
-        setChanged();
+    public boolean isOutputChanged() {
+        var temp = outputChanged;
+        outputChanged = false;
+        return temp;
     }
 
-    public List<Component> flushNewOutput () {
-        var output = newOutput;
-        newOutput = new ArrayList<>();
-        return output;
+    public void addOutput(String output) {
+        outputQueue.addLast(Component.literal(output));
+        while (outputQueue.size() > MAX_OUTPUT_SHOWING_SIZE) {
+            outputQueue.removeFirst();
+        }
+        outputChanged = true;
+        setChanged();
     }
 
     private record BlockContext(Level level, BlockPos pos,

@@ -6,7 +6,6 @@ import lombok.Setter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -35,7 +34,7 @@ public class CodeEditorBackend {
     private Runnable valueListener = () -> {
     };
     @Setter
-    private Consumer<List<Component>> outputListener = s -> {
+    private Consumer<Deque<Component>> outputListener = s -> {
     };
 
     private final CodeEditorBackendSynchronizer synchronizer;
@@ -43,14 +42,14 @@ public class CodeEditorBackend {
     public CodeEditorBackend(List<PackageSnippetWidget.PackageSnippet> packages,
                              CodeEditorBackendSynchronizer synchronizer) {
         this.synchronizer = synchronizer;
-        sidedData = new DoubleSidedData(synchronizer.getContent(), synchronizer.getTitle());
+        sidedData = new DoubleSidedData(synchronizer.getContent(), synchronizer.getTitle(), synchronizer.getOutput());
         this.packages = packages;
     }
 
     public void tick() {
-        var newOutput = synchronizer.newOutput();
-        if (!newOutput.isEmpty()) {
-            addOutput(newOutput);
+        if (synchronizer.isOutputChanged()) {
+            sidedData.output = synchronizer.getOutput();
+            outputListener.accept(sidedData.output);
         }
     }
 
@@ -126,23 +125,19 @@ public class CodeEditorBackend {
         return sidedData.output;
     }
 
-    public void addOutput(List<Component> newOutput) {
-        outputListener.accept(newOutput);
-        sidedData.output.addAll(newOutput);
-    }
-
     @Data
     public static class DoubleSidedData { // these data need to sync
         final StringBuilder content;
         final StringBuilder title;
         final List<CodeField.Placeholder> placeholders = new ArrayList<>();
-        final Deque<Component> output = new ArrayDeque<>();
+        Deque<Component> output;
 
-        public DoubleSidedData(String content, String title) {
+        public DoubleSidedData(String content, String title, Deque<Component> output) {
             this.content = new StringBuilder(
                     StringUtil.truncateStringIfNecessary(content, CodeEditorScreen.CHARACTER_LIMIT, false));
             this.title = new StringBuilder(
                     StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
+            this.output = output;
         }
     }
 }

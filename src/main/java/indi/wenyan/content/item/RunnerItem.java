@@ -23,6 +23,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
@@ -103,8 +105,13 @@ public class RunnerItem extends BlockItem {
             }
 
             @Override
-            public List<Component> newOutput() {
-                return List.of();
+            public Deque<Component> getOutput() {
+                return new ArrayDeque<>();
+            }
+
+            @Override
+            public boolean isOutputChanged() {
+                return false;
             }
         };
         var backend = new CodeEditorBackend(List.of(), synchronizer);

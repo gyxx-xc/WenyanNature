@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
@@ -133,8 +134,13 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             }
 
             @Override
-            public List<Component> newOutput() {
-                return runner.flushNewOutput();
+            public Deque<Component> getOutput() {
+                return runner.getOutputQueue();
+            }
+
+            @Override
+            public boolean isOutputChanged() {
+                return runner.isOutputChanged();
             }
         };
         return new CodeEditorBackend(packageSnippets, synchronizer);

@@ -11,7 +11,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Deque;
 
 
 // copy from FittingMultiLineTextWidget
@@ -44,16 +44,6 @@ public class CodeOutputWidget extends AbstractScrollWidget {
     }
 
     @Override
-    protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-        if (this.scrollbarVisible()) {
-            super.renderBackground(guiGraphics);
-        } else if (this.isFocused()) {
-            this.renderBorder(guiGraphics, this.getX() - this.innerPadding(), this.getY() - this.innerPadding(), this.getWidth() + this.totalInnerPadding(), this.getHeight() + this.totalInnerPadding());
-        }
-
-    }
-
-    @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
             if (!this.scrollbarVisible()) {
@@ -66,7 +56,6 @@ public class CodeOutputWidget extends AbstractScrollWidget {
                 super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
             }
         }
-
     }
 
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -80,12 +69,12 @@ public class CodeOutputWidget extends AbstractScrollWidget {
         narrationElementOutput.add(NarratedElementType.TITLE, this.getMessage());
     }
 
-    public void addOutput(List<Component> output) {
+    public void setOutput(Deque<Component> output) {
         // STUB: going to change
         String newOutput = output.stream()
                 .map(Component::getString)
                 .reduce("", (a, b) -> a + b + "\n");
-        multilineWidget.setMessage(Component.literal(multilineWidget.getMessage().getString() + newOutput));
+        multilineWidget.setMessage(Component.literal(newOutput));
         setScrollAmount(getMaxScrollAmount());
     }
 }
