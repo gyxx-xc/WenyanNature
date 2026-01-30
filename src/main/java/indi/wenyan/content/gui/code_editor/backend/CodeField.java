@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
-// copy from net.minecraft.client.gui.components.MultilineTextField;
+// copy from net.minecraft.client.gui.components.MultilineTextField
 @OnlyIn(Dist.CLIENT)
 public class CodeField {
     private static final int LINE_SEEK_PIXEL_BIAS = 2;
@@ -42,7 +42,7 @@ public class CodeField {
     public CodeField(Font font, CodeEditorBackend backend,
                      Supplier<Integer> widthUpdater,
                      Runnable cursorListener
-                     ) {
+    ) {
         this.font = font;
         this.backend = backend;
         backend.setValueListener(this::onValueChange);
@@ -182,28 +182,19 @@ public class CodeField {
 
     public boolean keyPressed(int keyCode) {
         selecting = Screen.hasShiftDown();
-        if (Screen.isSelectAll(keyCode)) {
-            backend.setCursor(backend.getContent().length());
-            backend.setSelectCursor(0);
-        } else if (Screen.isCopy(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(backend.getContent().substring(getSelected().beginIndex(), getSelected().endIndex()));
-        } else if (Screen.isPaste(keyCode)) {
-            insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
-        } else if (Screen.isCut(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(backend.getContent().substring(getSelected().beginIndex(), getSelected().endIndex()));
-            insertText("");
-        } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
-            insertText("\n");
-        } else if (keyCode == GLFW.GLFW_KEY_PAGE_UP) {
-            seekCursor(Whence.ABSOLUTE, 0);
-        } else if (keyCode == GLFW.GLFW_KEY_PAGE_DOWN) {
-            seekCursor(Whence.END, 0);
-        } else if (Screen.hasControlDown()) {
+        if (handleScreenDefined(keyCode))
+            return true;
+        else if (handleNoModifiers(keyCode))
+            return true;
+        else if (Screen.hasControlDown()) {
             switch (keyCode) {
-                case GLFW.GLFW_KEY_BACKSPACE -> deleteText(getPreviousWord().beginIndex() - backend.getCursor());
-                case GLFW.GLFW_KEY_DELETE -> deleteText(getNextWord().beginIndex() - backend.getCursor());
+                case GLFW.GLFW_KEY_BACKSPACE ->
+                        deleteText(getPreviousWord().beginIndex() - backend.getCursor());
+                case GLFW.GLFW_KEY_DELETE ->
+                        deleteText(getNextWord().beginIndex() - backend.getCursor());
                 case GLFW.GLFW_KEY_RIGHT -> seekCursor(Whence.ABSOLUTE, getNextWord().beginIndex());
-                case GLFW.GLFW_KEY_LEFT -> seekCursor(Whence.ABSOLUTE, getPreviousWord().beginIndex());
+                case GLFW.GLFW_KEY_LEFT ->
+                        seekCursor(Whence.ABSOLUTE, getPreviousWord().beginIndex());
                 case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, 0);
                 case GLFW.GLFW_KEY_END -> seekCursor(Whence.END, 0);
                 default -> {
@@ -218,12 +209,14 @@ public class CodeField {
                 case GLFW.GLFW_KEY_LEFT -> seekCursor(Whence.RELATIVE, -1);
                 case GLFW.GLFW_KEY_DOWN -> seekCursorLine(1);
                 case GLFW.GLFW_KEY_UP -> seekCursorLine(-1);
-                case GLFW.GLFW_KEY_HOME -> seekCursor(Whence.ABSOLUTE, getCursorLineView(0).beginIndex());
-                case GLFW.GLFW_KEY_END -> seekCursor(Whence.ABSOLUTE, getCursorLineView(0).endIndex());
+                case GLFW.GLFW_KEY_HOME ->
+                        seekCursor(Whence.ABSOLUTE, getCursorLineView(0).beginIndex());
+                case GLFW.GLFW_KEY_END ->
+                        seekCursor(Whence.ABSOLUTE, getCursorLineView(0).endIndex());
                 case GLFW.GLFW_KEY_TAB -> {
                     // tab to next placeholder
-                    if (!seekCursorNextPlaceholder())
-                        insertText("    ");
+                    boolean success = seekCursorNextPlaceholder();
+                    if (!success) insertText("    ");
                 }
                 default -> {
                     return false;
@@ -233,8 +226,81 @@ public class CodeField {
         return true;
     }
 
+    private boolean handleNoModifiers(int keyCode) {
+        switch (keyCode) {
+            case GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_KP_ENTER -> {
+                insertText("\n");
+                return true;
+            }
+            case GLFW.GLFW_KEY_PAGE_UP -> {
+                seekCursor(Whence.ABSOLUTE, 0);
+                return true;
+            }
+            case GLFW.GLFW_KEY_PAGE_DOWN -> {
+                seekCursor(Whence.END, 0);
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    private boolean handleScreenDefined(int keyCode) {
+        if (Screen.isSelectAll(keyCode)) {
+            backend.setCursor(backend.getContent().length());
+            backend.setSelectCursor(0);
+            return true;
+        } else if (Screen.isCopy(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(
+                    backend.getContent()
+                            .substring(getSelected().beginIndex(), getSelected().endIndex()));
+            return true;
+        } else if (Screen.isPaste(keyCode)) {
+            insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
+            return true;
+        } else if (Screen.isCut(keyCode)) {
+            Minecraft.getInstance().keyboardHandler.setClipboard(
+                    backend.getContent()
+                            .substring(getSelected().beginIndex(), getSelected().endIndex()));
+            insertText("");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void onValueChange() {
-        // reflowDisplayLines
+        reflowDisplayLines();
+        computeSyntaxHighlight();
+    }
+
+    private void computeSyntaxHighlight() {
+        if (backend.getContent().isEmpty()) {
+            styleMarks.clear();
+            styleMarks.add(new StyledView(0, -1));
+        } else {
+            var lexer = new WenyanRLexer(CharStreams.fromString(backend.getContent()));
+            lexer.removeErrorListeners();
+            var token = new CommonTokenStream(lexer);
+            token.fill();
+            styleMarks.clear();
+            int lastIndex = 0;
+            for (var t : token.getTokens()) {
+                if (t.getStartIndex() > lastIndex) {
+                    styleMarks.add(new StyledView(t.getStartIndex() + 1, -1));
+                }
+                if (t.getType() == Recognizer.EOF) {
+                    break;
+                }
+                styleMarks.add(new StyledView(t.getStopIndex() + 1, t.getType()));
+                lastIndex = t.getStopIndex() + 1;
+            }
+            styleMarks.add(new StyledView(backend.getContent().length(), -1));
+        }
+    }
+
+    private void reflowDisplayLines() {
         displayLines.clear();
         int codeWidth = widthUpdater.get();
         if (backend.getContent().isEmpty()) {
@@ -268,27 +334,6 @@ public class CodeField {
                 displayLines.add(new StringView(backend.getContent().length(), backend.getContent().length()));
             }
         }
-
-        if (backend.getContent().isEmpty()) {
-            styleMarks.clear();
-            styleMarks.add(new StyledView(0, -1));
-        } else {
-            var lexer = new WenyanRLexer(CharStreams.fromString(backend.getContent()));
-            lexer.removeErrorListeners();
-            var token = new CommonTokenStream(lexer);
-            token.fill();
-            styleMarks.clear();
-            int lastIndex = 0;
-            for (var t : token.getTokens()) {
-                if (t.getStartIndex() > lastIndex) {
-                    styleMarks.add(new StyledView(t.getStartIndex()+1, -1));
-                }
-                if (t.getType() == Recognizer.EOF) { break; }
-                styleMarks.add(new StyledView(t.getStopIndex()+1, t.getType()));
-                lastIndex = t.getStopIndex() + 1;
-            }
-            styleMarks.add(new StyledView(backend.getContent().length(), -1));
-        }
     }
 
     private void updateCurrentSnippetContext() {
@@ -310,8 +355,10 @@ public class CodeField {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public record StyledView(int endIndex, int style) {}
+    public record StyledView(int endIndex, int style) {
+    }
 
     @OnlyIn(Dist.CLIENT)
-    public record Placeholder(generated_Snippets.Context context, int index) {}
+    public record Placeholder(generated_Snippets.Context context, int index) {
+    }
 }
