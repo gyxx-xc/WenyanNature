@@ -1,7 +1,10 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.content.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.gui.Utils;
+import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.content.gui.code_editor.backend.CodeField;
+import indi.wenyan.content.gui.code_editor.backend.SnippetSet;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.minecraft.client.gui.Font;

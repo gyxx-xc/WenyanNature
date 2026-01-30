@@ -2,10 +2,10 @@ package indi.wenyan.content.block.runner;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.gui.code_editor.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.CodeEditorBackendSynchronizer;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
-import indi.wenyan.content.gui.code_editor.PackageSnippetWidget;
+import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
+import indi.wenyan.content.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
 import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;

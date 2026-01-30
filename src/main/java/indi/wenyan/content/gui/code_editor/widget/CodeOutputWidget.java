@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.content.gui.code_editor.widget;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.content.gui.code_editor.backend;
 
 import lombok.Setter;
 import lombok.Value;
@@ -21,5 +21,5 @@ public class SnippetSet {
 
     public record Snippet(String title, List<String> lines, List<SnippetPlaceholder> insert) { }
 
-    public record SnippetPlaceholder(Snippets.Context context, int row, int colum) { }
+    public record SnippetPlaceholder(generated_Snippets.Context context, int row, int colum) { }
 }

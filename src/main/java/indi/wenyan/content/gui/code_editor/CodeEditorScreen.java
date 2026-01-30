@@ -1,5 +1,8 @@
 package indi.wenyan.content.gui.code_editor;
 
+import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.content.gui.code_editor.backend.SnippetSet;
+import indi.wenyan.content.gui.code_editor.widget.*;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;

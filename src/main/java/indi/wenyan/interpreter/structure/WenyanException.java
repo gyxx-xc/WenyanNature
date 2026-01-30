@@ -32,7 +32,7 @@ public class WenyanException extends WenyanThrowException {
     /**
      * Exception for numerical errors
      */
-    public static class WenyanNumberException extends WenyanThrowException {
+    public static class WenyanNumberException extends WenyanException {
         public WenyanNumberException(String message) {
             super(message);
         }
@@ -41,7 +41,7 @@ public class WenyanException extends WenyanThrowException {
     /**
      * Exception for data handling errors
      */
-    public static class WenyanDataException extends WenyanThrowException {
+    public static class WenyanDataException extends WenyanException {
         public WenyanDataException(String message) {
             super(message);
         }
@@ -50,7 +50,7 @@ public class WenyanException extends WenyanThrowException {
     /**
      * Exception for variable errors
      */
-    public static class WenyanVarException extends WenyanThrowException {
+    public static class WenyanVarException extends WenyanException {
         public WenyanVarException(String message) {
             super(message);
         }
@@ -59,7 +59,7 @@ public class WenyanException extends WenyanThrowException {
     /**
      * Exception for type errors
      */
-    public static class WenyanTypeException extends WenyanThrowException {
+    public static class WenyanTypeException extends WenyanException {
         public WenyanTypeException(String message) {
             super(message);
         }
@@ -68,9 +68,20 @@ public class WenyanException extends WenyanThrowException {
     /**
      * Exception for code validation errors
      */
-    public static class WenyanCheckerError extends WenyanThrowException {
+    public static class WenyanCheckerError extends WenyanException {
         public WenyanCheckerError(String message) {
             super(message);
+        }
+    }
+
+    /**
+     * Exception for runtime errors
+     */
+    public static class WenyanWarperError extends WenyanException {
+        public final Throwable cause;
+        public WenyanWarperError(Throwable e) {
+            super(e.getMessage());
+            cause = e;
         }
     }
 

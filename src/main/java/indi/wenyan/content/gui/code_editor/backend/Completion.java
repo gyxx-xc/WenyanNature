@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.content.gui.code_editor.backend;
 
 import indi.wenyan.interpreter.utils.ChineseUtils;
 
@@ -23,7 +23,7 @@ public record Completion(String content) {
         } catch (NumberFormatException ignored) {
             // return normal completion
         }
-        return Completions.map.subMap(string, string + Character.MAX_VALUE).values()
+        return generated_Completions.map.subMap(string, string + Character.MAX_VALUE).values()
                 .stream()
                 .flatMap(Collection::stream)
                 .toList();

@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.content.gui.code_editor.backend;
 
 import net.minecraft.network.chat.Component;
 

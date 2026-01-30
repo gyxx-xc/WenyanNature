@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.content.gui.code_editor.backend;
 
 import com.google.common.collect.Lists;
 import indi.wenyan.interpreter.antlr.WenyanRLexer;
@@ -296,11 +296,11 @@ public class CodeField {
         for (var placeholder : backend.getPlaceholders()) {
             if (cursor == placeholder.index()) {
                 backend.getPlaceholders().remove(placeholder);
-                backend.setCurSnippets(Snippets.getSnippets(placeholder.context()));
+                backend.setCurSnippets(generated_Snippets.getSnippets(placeholder.context()));
                 return;
             }
         }
-        backend.setCurSnippets(Snippets.DEFAULT_CONTEXT);
+        backend.setCurSnippets(generated_Snippets.DEFAULT_CONTEXT);
     }
 
 
@@ -313,5 +313,5 @@ public class CodeField {
     public record StyledView(int endIndex, int style) {}
 
     @OnlyIn(Dist.CLIENT)
-    public record Placeholder(Snippets.Context context, int index) {}
+    public record Placeholder(generated_Snippets.Context context, int index) {}
 }

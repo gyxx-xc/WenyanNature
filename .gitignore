@@ -32,4 +32,4 @@ project
 
 __pycache__
 /.lingma/
-/src/main/java/indi/wenyan/content/gui/code_editor/generator/py_map.json
+/src/main/java/indi/wenyan/content/gui/code_editor/_generator_py/py_map.json

@@ -1,5 +1,7 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.content.gui.code_editor.backend;
 
+import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
+import indi.wenyan.content.gui.code_editor.widget.PackageSnippetWidget;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +25,7 @@ public class CodeEditorBackend {
 
     @Getter
     @Setter
-    private List<SnippetSet> curSnippets = Snippets.STMT_CONTEXT;
+    private List<SnippetSet> curSnippets = generated_Snippets.STMT_CONTEXT;
     @Getter
     private final List<PackageSnippetWidget.PackageSnippet> packages;
 

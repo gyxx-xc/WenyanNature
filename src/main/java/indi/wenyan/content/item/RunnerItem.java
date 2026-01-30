@@ -1,8 +1,8 @@
 package indi.wenyan.content.item;
 
-import indi.wenyan.content.gui.code_editor.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.CodeEditorBackendSynchronizer;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
+import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import indi.wenyan.setup.network.RunnerTitlePacket;
