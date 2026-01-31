@@ -23,16 +23,17 @@ import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
 public class CodeEditorWidget extends AbstractScrollWidget {
     private static final int CURSOR_INSERT_COLOR = 0xff000000;
-    private static final String CURSOR_APPEND_CHARACTER = "_";
     public static final float TOOLTIP_SCALE = 0.7f;
     private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/edit.png");
@@ -117,6 +118,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     private static final Style OPERATOR_STYLE = Style.EMPTY.withColor(0xD73A49);
     private static final Style TYPE_STYLE = Style.EMPTY.withColor(0x795E26);
     private static final Style DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);
+
     private static Style styleFromTokenType(int tokenType) {
 /*
         things in default
@@ -255,81 +257,35 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         }
     }
 
+    record CursorPosition(int x, int y) {
+    }
+
     // rendering
     protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        int cursor = backend.getCursor();
-        boolean isCursorRender = !isFocused() ||
-                (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
-        boolean cursorInContent = cursor < backend.getContent().length();
-        int currentX = 0;
+        int cursorIndex = backend.getCursor();
         int currentY = getY() + innerPadding();
         int lineNo = 1;
         boolean isContinuedLine = false;
-        int styleCounter = 0;
-        int placeholderCounter = 0;
-        int cursorX = 0;
-        int cursorY = getY() + innerPadding();
+        var placeholderIter = backend.getPlaceholders().listIterator();
+        @Nullable CursorPosition cursorPosition = null; // if null means cursor not within content area
 
-        List<CodeField.StringView> displayLines = textField.getDisplayLines();
+        List<CodeField.StyledLineView> displayLines = textField.getDisplayLines();
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                currentX = getX() + innerPadding() + lineNoWidth();
-                if (stringView.beginIndex() != stringView.endIndex()) {
-                    int lastEnd = stringView.beginIndex();
-                    do {
-                        int end;
-                        do {
-                            end = textField.getStyleMarks().get(styleCounter).endIndex();
-                        } while (end <= stringView.beginIndex() && ++styleCounter < textField.getStyleMarks().size());
-                        String line = backend.getContent().substring(lastEnd,
-                                Math.clamp(end, stringView.beginIndex(), stringView.endIndex()));
-                        var style = styleFromTokenType(textField.getStyleMarks().get(styleCounter).style());
-                        currentX = guiGraphics.drawString(font, Component.literal(line).withStyle(style),
-                                currentX, currentY,
-                                0xFFFFFFFF, false);
-                        lastEnd = end;
-                        if (end < stringView.endIndex()) {
-                            styleCounter++;
-                        }
-                    } while (lastEnd < stringView.endIndex());
-                }
-                // -------------------- render placeholders --------------------
-                while (placeholderCounter < backend.getPlaceholders().size()) {
-                    var placeholder = backend.getPlaceholders().get(placeholderCounter);
-                    int place = placeholder.index();
-                    if (place > stringView.endIndex())
-                        break;
-                    placeholderCounter++;
-                    if (place >= stringView.beginIndex()) {
-                        int placeX = getX() + innerPadding() + lineNoWidth() +
-                                font.width(backend.getContent().substring(stringView.beginIndex(), place)) - 1;
-                        guiGraphics.fill(placeX, currentY,
-                                placeX + 1, currentY + font.lineHeight,
-                                placeholder.context().getColor());
-                    }
-                }
+                renderStyledLine(guiGraphics, stringView, getX() + innerPadding() + lineNoWidth(), currentY);
+                renderPlaceholders(guiGraphics, placeholderIter, stringView, currentY);
                 // ----------------------- render cursor -----------------------
-                boolean isCurLine = cursorInContent &&
-                        cursor >= stringView.beginIndex() && cursor <= stringView.endIndex();
+                boolean isCurLine = cursorIndex >= stringView.beginIndex() && cursorIndex <= stringView.endIndex();
                 if (isCurLine) {
-                    // cursor
-                    currentX = getX() + innerPadding() + lineNoWidth() +
-                            font.width(backend.getContent().substring(stringView.beginIndex(), cursor)) - 1;
-                    cursorY = currentY;
-                    cursorX = currentX;
-                    if (isCursorRender) {
-                        guiGraphics.fill(cursorX, cursorY,
-                                cursorX + 1, cursorY + font.lineHeight,
-                                CURSOR_INSERT_COLOR);
-                    }
+                    int cursorX = getX() + innerPadding() + lineNoWidth() +
+                            font.width(backend.getContent().substring(stringView.beginIndex(), cursorIndex)) - 1;
+                    boolean isCursorRender = !isFocused() ||
+                            (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
+                    renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
+                    cursorPosition = new CursorPosition(cursorX, currentY);
                 }
-                // -------------------- render line numbers --------------------
-                Component component = Component.literal(isContinuedLine ? ">" : String.valueOf(lineNo))
-                        .withStyle(Style.EMPTY.withBold(isCurLine));
-                guiGraphics.drawString(font, component,
-                        getX() + lineNoWidth() - font.width("0") * component.getString().length(), currentY,
-                        0xFF303030, false);
+                renderLineNumbers(guiGraphics, isContinuedLine, lineNo, isCurLine, currentY);
             }
             currentY += font.lineHeight;
             // it will always be (n, n) for the last line
@@ -341,94 +297,139 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             }
         }
 
-        if (!cursorInContent && withinContentAreaTopBottom(currentY - font.lineHeight, currentY)) {
-            cursorY = currentY - font.lineHeight;
-            cursorX = currentX;
-            if (isCursorRender) {
-                guiGraphics.drawString(font, CURSOR_APPEND_CHARACTER, cursorX, cursorY,
-                        CURSOR_INSERT_COLOR, false);
-            }
-        }
-
-        if (textField.hasSelection()) {
-            var selected = textField.getSelected();
-            int k1 = getX() + innerPadding() + lineNoWidth();
-            currentY = getY() + innerPadding();
-
-            for (var stringView : textField.getDisplayLines()) {
-                if (selected.beginIndex() <= stringView.endIndex()) {
-                    if (stringView.beginIndex() > selected.endIndex()) {
-                        break;
-                    }
-
-                    if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                        int i1 = font.width(backend.getContent().substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
-                        int j1;
-                        if (selected.endIndex() > stringView.endIndex()) {
-                            j1 = width - innerPadding();
-                        } else {
-                            j1 = font.width(backend.getContent().substring(stringView.beginIndex(), selected.endIndex()));
-                        }
-                        guiGraphics.fill(RenderType.guiTextHighlight(),
-                                k1 + i1, currentY, k1 + j1, currentY + font.lineHeight,
-                                0xff0000ff);
-                    }
-                }
-                currentY += font.lineHeight;
-            }
-        }
+        if (textField.hasSelection())
+            renderSelection(guiGraphics);
         // render this as the last, overlap all above, as if it's floating no screen
-        if (!completions.isEmpty() && withinContentAreaTopBottom(cursorY, cursorY + font.lineHeight)) {
-            final int entryHeight = font.lineHeight + completionPadding.vertical();
-            final int renderedSize = Math.min(completions.size(), MAX_RENDERED_COMPLETION_SIZE);
-            int w = completions.stream()
-                    .map(completion -> font.width(completion.content()) + completionPadding.horizontal())
-                    .reduce(50, Math::max) + COMPLETION_SCROLL_WIDTH;
-            if (w > MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH)
-                w = MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH;
-            int tooltipHeight = (int) Math.ceil(font.lineHeight * TOOLTIP_SCALE);
-            int h = entryHeight * renderedSize + tooltipHeight;
-            // get x, y without exceed outline
-            int x = Math.min(cursorX, getX() + this.width - w);
-            int y = cursorY + font.lineHeight + h < getY() + this.height + scrollAmount() ?
-                    cursorY + font.lineHeight : cursorY - h;
+        if (!completions.isEmpty() && cursorPosition != null)
+            renderCompletion(guiGraphics, cursorPosition);
+    }
 
-            // render content
-            guiGraphics.fill(x, y, x + w, y + h,
-                    0xffFFFFFF); // FIXME: change to a sprite
-            guiGraphics.fill(x, y + (selectedCompletion - firstCompletionLine) * entryHeight,
-                    x + w, y + (selectedCompletion - firstCompletionLine + 1) * entryHeight,
-                    0xff99CCFF);
-            int cnt = 0;
-            for (int i = firstCompletionLine; i < firstCompletionLine + renderedSize; i++) {
-                var completion = completions.get(i);
-                String ellipsize = font.ellipsize(Component.literal(completion.content()), MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH).getString();
-                guiGraphics.drawString(font, ellipsize,
-                        x + completionPadding.left(),
-                        y + (cnt++) * entryHeight + completionPadding.top(),
-                        0xff000000, false);
+    private void renderCursor(@NotNull GuiGraphics guiGraphics, int cursorX, int currentY, boolean isCursorRender) {
+        // cursor
+        if (isCursorRender) {
+            guiGraphics.fill(cursorX, currentY,
+                    cursorX + 1, currentY + font.lineHeight,
+                    CURSOR_INSERT_COLOR);
+        }
+    }
+
+    private void renderLineNumbers(@NotNull GuiGraphics guiGraphics, boolean isContinuedLine, int lineNo, boolean isCurLine, int currentY) {
+        Component component = Component.literal(isContinuedLine ? ">" : String.valueOf(lineNo))
+                .withStyle(Style.EMPTY.withBold(isCurLine));
+        guiGraphics.drawString(font, component,
+                getX() + lineNoWidth() - font.width("0") * component.getString().length(), currentY,
+                0xFF303030, false);
+    }
+
+    private void renderStyledLine(@NotNull GuiGraphics guiGraphics, CodeField.StyledLineView stringView, int currentX, int currentY) {
+        if (stringView.beginIndex() != stringView.endIndex()) {
+            for (var styledView : stringView.styles()) {
+                var style = styleFromTokenType(styledView.token());
+                String tokenText = backend.getContent().substring(styledView.beginIndex(), styledView.endIndex());
+                currentX = guiGraphics.drawString(font,
+                        Component.literal(tokenText).withStyle(style),
+                        currentX, currentY,
+                        0xFFFFFFFF, false);
             }
+        }
+    }
 
-            // render scroll bar
-            if (completions.size() > MAX_RENDERED_COMPLETION_SIZE) {
-                guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y,
-                        x + w, y + h - tooltipHeight,
-                        0xff000000);
-                int scrollY = (h - tooltipHeight - 10) *
-                        firstCompletionLine / (completions.size() - MAX_RENDERED_COMPLETION_SIZE);
-                guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y + scrollY,
-                        x + w, y + scrollY + 10,
-                        0xffCCCCCC);
+    private void renderPlaceholders(@NotNull GuiGraphics guiGraphics, ListIterator<CodeField.Placeholder> placeholderIter, CodeField.StyledLineView stringView, int currentY) {
+        while (placeholderIter.hasNext()) {
+            var placeholder = placeholderIter.next();
+            int place = placeholder.index();
+            if (place > stringView.endIndex()) {
+                placeholderIter.previous();
+                break;
             }
+            if (place >= stringView.beginIndex()) {
+                int placeX = getX() + innerPadding() + lineNoWidth() +
+                        font.width(backend.getContent().substring(stringView.beginIndex(), place)) - 1;
+                guiGraphics.fill(placeX, currentY,
+                        placeX + 1, currentY + font.lineHeight,
+                        placeholder.context().getColor());
+            }
+        }
+    }
 
-            // render tooltip
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate((float) x + completionPadding.left(), (float) y + entryHeight * renderedSize, 0);
-            guiGraphics.pose().scale(TOOLTIP_SCALE, TOOLTIP_SCALE, 1.0f);
-            guiGraphics.drawString(font, Component.literal("Enter to input"),
-                    0, 0, // position handled by pose
-                    0xff999999, false);
-            guiGraphics.pose().popPose();
+    private void renderCompletion(@NotNull GuiGraphics guiGraphics, CursorPosition cursor) {
+        final int entryHeight = font.lineHeight + completionPadding.vertical();
+        final int renderedSize = Math.min(completions.size(), MAX_RENDERED_COMPLETION_SIZE);
+        int w = completions.stream()
+                .map(completion -> font.width(completion.content()) + completionPadding.horizontal())
+                .reduce(50, Math::max) + COMPLETION_SCROLL_WIDTH;
+        if (w > MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH)
+            w = MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH;
+        int tooltipHeight = (int) Math.ceil(font.lineHeight * TOOLTIP_SCALE);
+        int h = entryHeight * renderedSize + tooltipHeight;
+        // get x, y without exceed outline
+        int x = Math.min(cursor.x(), getX() + this.width - w);
+        int y = cursor.y() + font.lineHeight + h < getY() + this.height + scrollAmount() ?
+                cursor.y() + font.lineHeight : cursor.y() - h;
+
+        // render content
+        guiGraphics.fill(x, y, x + w, y + h,
+                0xffFFFFFF); // FIXME: change to a sprite
+        guiGraphics.fill(x, y + (selectedCompletion - firstCompletionLine) * entryHeight,
+                x + w, y + (selectedCompletion - firstCompletionLine + 1) * entryHeight,
+                0xff99CCFF);
+        int cnt = 0;
+        for (int i = firstCompletionLine; i < firstCompletionLine + renderedSize; i++) {
+            var completion = completions.get(i);
+            String ellipsize = font.ellipsize(Component.literal(completion.content()), MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH).getString();
+            guiGraphics.drawString(font, ellipsize,
+                    x + completionPadding.left(),
+                    y + (cnt++) * entryHeight + completionPadding.top(),
+                    0xff000000, false);
+        }
+
+        // render scroll bar
+        if (completions.size() > MAX_RENDERED_COMPLETION_SIZE) {
+            guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y,
+                    x + w, y + h - tooltipHeight,
+                    0xff000000);
+            int scrollY = (h - tooltipHeight - 10) *
+                    firstCompletionLine / (completions.size() - MAX_RENDERED_COMPLETION_SIZE);
+            guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y + scrollY,
+                    x + w, y + scrollY + 10,
+                    0xffCCCCCC);
+        }
+
+        // render tooltip
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate((float) x + completionPadding.left(), (float) y + entryHeight * renderedSize, 0);
+        guiGraphics.pose().scale(TOOLTIP_SCALE, TOOLTIP_SCALE, 1.0f);
+        guiGraphics.drawString(font, Component.literal("Enter to input"),
+                0, 0, // position handled by pose
+                0xff999999, false);
+        guiGraphics.pose().popPose();
+    }
+
+    private void renderSelection(@NotNull GuiGraphics guiGraphics) {
+        var selected = textField.getSelected();
+        int k1 = getX() + innerPadding() + lineNoWidth();
+        int currentY = getY() + innerPadding();
+
+        for (var stringView : textField.getDisplayLines()) {
+            if (selected.beginIndex() <= stringView.endIndex()) {
+                if (stringView.beginIndex() > selected.endIndex()) {
+                    break;
+                }
+
+                if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                    int i1 = font.width(backend.getContent().substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
+                    int j1;
+                    if (selected.endIndex() > stringView.endIndex()) {
+                        j1 = width - innerPadding();
+                    } else {
+                        j1 = font.width(backend.getContent().substring(stringView.beginIndex(), selected.endIndex()));
+                    }
+                    guiGraphics.fill(RenderType.guiTextHighlight(),
+                            k1 + i1, currentY, k1 + j1, currentY + font.lineHeight,
+                            0xff0000ff);
+                }
+            }
+            currentY += font.lineHeight;
         }
     }
 
