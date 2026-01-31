@@ -66,12 +66,12 @@ public class PowerBlockEntity extends AbstractModuleEntity {
 
     public PowerBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.POWER_BLOCK_ENTITY.get(), pos, blockState);
-        resetState();
         try {
             random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Please report an issue to your Java platform as no strong SecureRandom implementation");
         }
+        resetState();
     }
 
     @Override
