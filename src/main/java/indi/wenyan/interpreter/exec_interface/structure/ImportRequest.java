@@ -47,6 +47,7 @@ public final class ImportRequest implements IHandleableRequest {
                 case FIRST_RUN:
                     packageOrThread = getPackage.getPackage(context, packageName);
                     status = Status.PROCESS_PACKAGE;
+                    // fallthrough
                 case PROCESS_PACKAGE:
                     if (packageOrThread.right().isPresent()) {
                         status = Status.WAITING;
@@ -54,9 +55,10 @@ public final class ImportRequest implements IHandleableRequest {
                         returnPackage(packageOrThread.left().get());
                         return true; // end
                     }
+                    // fallthrough
                 case WAITING:
                     WenyanThread wenyanThread = packageOrThread.right().get();
-                    if (wenyanThread.state == WenyanThread.State.DYING) {
+                    if (wenyanThread.getState() == WenyanThread.State.DYING) {
                         if (wenyanThread.getMainRuntime().finishFlag) {
                             status = Status.PROCESS_RUNTIME;
                         } else {
@@ -66,6 +68,7 @@ public final class ImportRequest implements IHandleableRequest {
                         // status = Status.WAITING; // jump to itself
                         return false; // goto first line
                     }
+                    // fallthrough
                 case PROCESS_RUNTIME:
                     returnPackage(new WenyanPackage(packageOrThread.right().get().getMainRuntime().variables));
                     return true; // end

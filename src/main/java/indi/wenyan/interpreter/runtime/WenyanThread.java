@@ -18,7 +18,8 @@ import lombok.Setter;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -35,7 +36,7 @@ public class WenyanThread {
     /**
      * Stack of runtime environments
      */
-    public final Stack<WenyanRuntime> runtimes = new Stack<>();
+    public final Deque<WenyanRuntime> runtimes = new ArrayDeque<>();
 
     @Getter
     @Setter
@@ -44,7 +45,7 @@ public class WenyanThread {
     /**
      * Number of steps allocated to this thread
      */
-    public int assignedSteps = 0;
+    private int assignedSteps = 0;
 
     /**
      * The program this thread belongs to
@@ -54,7 +55,8 @@ public class WenyanThread {
     /**
      * Current execution state
      */
-    public State state = State.READY;
+    @Getter
+    private State state = State.READY;
 
     /**
      * Possible states of a Wenyan thread
@@ -124,17 +126,17 @@ public class WenyanThread {
                     return;
                 }
 
-                WenyanBytecode.Code code = runtime.bytecode.get(runtime.programCounter);
-                int needStep = code.code().getStep(code.arg(), this);
+                WenyanBytecode.Code bytecode = runtime.bytecode.get(runtime.programCounter);
+                int needStep = bytecode.code().getStep(bytecode.arg(), this);
 
                 if (assignedSteps < needStep) {
-                    this.yield();
+                    this.yieldThread();
                     return; //switch
                 }
                 assignedSteps -= needStep;
                 accumulatedSteps.acquire(needStep);
 
-                code.code().exec(code.arg(), this);
+                bytecode.code().exec(bytecode.arg(), this);
                 if (!runtime.PCFlag)
                     runtime.programCounter++;
                 runtime.PCFlag = false;
@@ -144,6 +146,9 @@ public class WenyanThread {
                 }
             } catch (Exception e) {
                 dieWithException(e);
+                // rethrow interrupt
+                if (e instanceof InterruptedException ie)
+                    throw ie;
                 return;
             }
         }
@@ -161,7 +166,8 @@ public class WenyanThread {
                 WenyanProgramming.LOGGER.debug("{}", code);
                 WenyanBytecode.Context context =
                         currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
-                WenyanProgramming.LOGGER.error("{}:{} {}", context.line(), context.column(), code.substring(context.contentStart(), context.contentEnd()));
+                String segment = code.substring(context.contentStart(), context.contentEnd());
+                WenyanProgramming.LOGGER.error("{}:{} {}", context.line(), context.column(), segment);
                 program.platform.handleError("WenyanThread died with an unexpected exception, killed");
             } else if (e instanceof WenyanException) {
                 WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
@@ -183,7 +189,6 @@ public class WenyanThread {
         } catch (WenyanException.WenyanUnreachedException ex) {
             WenyanProgramming.LOGGER.error("during handling an exception", e);
             WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", ex);
-//            WenyanException.handleException(program.holder, "WenyanThread died with an unexpected exception, killed");
             program.platform.handleError("WenyanThread died with an unexpected exception, killed");
         }
     }
@@ -203,9 +208,23 @@ public class WenyanThread {
     }
 
     /**
+     * Unblocks a Wenyan thread, moving it to the ready queue.
+     *
+     * @throws RuntimeException If the thread is not in a blocked state
+     */
+    public void unblock() throws WenyanException.WenyanUnreachedException {
+        if (state == State.BLOCKED) {
+            state = State.READY;
+            program.readyQueue.add(this);
+        } else {
+            throw new WenyanException.WenyanUnreachedException();
+        }
+    }
+
+    /**
      * Yields execution by adding this thread back to the ready queue.
      */
-    public void yield() {
+    public void yieldThread() {
         if (state == State.READY) {
             program.readyQueue.add(this);
         }
@@ -249,6 +268,10 @@ public class WenyanThread {
         runtime.finishFlag = true;
     }
 
+    void addAssignedSteps(int steps) {
+        assignedSteps += steps;
+    }
+
     /**
      * Searches for a variable in all runtime environments, from top to bottom.
      *
@@ -258,9 +281,10 @@ public class WenyanThread {
      */
     public IWenyanValue getGlobalVariable(String id) throws WenyanThrowException {
         IWenyanValue value = null;
-        for (int i = runtimes.size() - 1; i >= 0; i--) {
-            if (runtimes.get(i).variables.containsKey(id)) {
-                value = runtimes.get(i).variables.get(id);
+        // TODO: use closure or at least a cache
+        for (var runtime : runtimes) {
+            if (runtime.variables.containsKey(id)) {
+                value = runtime.variables.get(id);
                 break;
             }
         }

@@ -31,7 +31,7 @@ public class ExecQueue {
         //noinspection StatementWithEmptyBody
         if (queue.size() > WenyanProgram.MAX_THREAD) {
             // FIXME: unreached
-//            request.thread().dieWithException(new WenyanException.WenyanUnreachedException());
+//            request.thread().dieWithException(new WenyanException.WenyanUnreachedException())
         }
 
         // Collects requests that could not be processed in this tick
@@ -42,7 +42,7 @@ public class ExecQueue {
                 request.platform().notice(request, context);
                 boolean done = request.handle(context);
                 if (done) {
-                    WenyanProgram.unblock(request.thread());
+                    request.thread().unblock();
                 } else {
                     undoneRequests.add(request);
                 }

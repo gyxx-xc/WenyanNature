@@ -5,9 +5,10 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * Represents the runtime environment for executing Wenyan bytecode.
@@ -26,7 +27,7 @@ public class WenyanRuntime {
     public final WenyanStack resultStack = new WenyanStack();
 
     /** Stack for processing intermediate values */
-    public final Stack<IWenyanValue> processStack = new Stack<>();
+    public final Deque<IWenyanValue> processStack = new ArrayDeque<>();
 
     /** Current instruction pointer */
     public int programCounter = 0;

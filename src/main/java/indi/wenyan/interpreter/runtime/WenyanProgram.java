@@ -55,7 +55,7 @@ public class WenyanProgram {
     /**
      * Steps allocated to a thread when scheduled
      */
-    private static final int SWITCH_STEP = 100;
+    private static final int SLICE_STEP = 100;
 
     /**
      * Creates a new Wenyan program from the given code.
@@ -114,21 +114,6 @@ public class WenyanProgram {
     }
 
     /**
-     * Unblocks a Wenyan thread, moving it to the ready queue.
-     *
-     * @param wenyanThread The thread to unblock
-     * @throws RuntimeException If the thread is not in a blocked state
-     */
-    public static void unblock(WenyanThread wenyanThread) throws WenyanException.WenyanUnreachedException {
-        if (wenyanThread.state == WenyanThread.State.BLOCKED) {
-            wenyanThread.state = WenyanThread.State.READY;
-            wenyanThread.program.readyQueue.add(wenyanThread);
-        } else {
-            throw new WenyanException.WenyanUnreachedException();
-        }
-    }
-
-    /**
      * Checks if the program has any running threads.
      *
      * @return True if the program has running threads, false otherwise
@@ -163,7 +148,7 @@ public class WenyanProgram {
                 }
 
                 WenyanThread thread = readyQueue.poll();
-                thread.assignedSteps += SWITCH_STEP;
+                thread.addAssignedSteps(SLICE_STEP);
                 thread.programLoop(accumulatedSteps);
             }
         } catch (InterruptedException e) {
