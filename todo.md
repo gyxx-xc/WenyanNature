@@ -9,22 +9,24 @@
   - large power (天机) gen by log_a(b) mod 1e9+9 O(sqrt(b)) about 3e4 op (1.5*c sec for fastest)
   - design power consume api
   - render
-- [ ] some more function
+- [x] gui input code complete
 - [ ] running state save and load
-- [ ] docker block
-- [ ] gui input code complete
-- [ ] docs
+- [ ] some more function
+  - rearrange libs
 - [ ] CHS/CHT opencc version
   - opencc library
   - CHT to CHS will make different character to same. e.g. 隣邻
   - treatment to symbols
 - [ ] error handler
-  - may need to totally rewrite
-  - show error on gui
+  - [x] may need to totally rewrite
+  - [x] show error on gui
+  - [ ] complete JUnit test
+- [ ] docker block
+- [ ] docs
+  - ponder
 - [ ] asm jit compiler
 - [ ] annotation wenyan value processor
   - need source level annotation processing
 - [ ] variable symbol unify
   - variable symbol in runtime need to separate to wenyan grammar
   - at least able to change the whole pre-defined variable symbol set
-- [ ] ponder
