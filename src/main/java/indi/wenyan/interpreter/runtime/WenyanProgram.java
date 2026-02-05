@@ -98,7 +98,8 @@ public class WenyanProgram {
      */
     public void step(int steps) {
         if (!isRunning()) {
-            throw new IllegalStateException("unreached: Program is not running");
+            // ignore
+            return;
         }
         accumulatedSteps.release(steps);
     }
@@ -127,10 +128,9 @@ public class WenyanProgram {
      * Manages thread execution and switching.
      */
     @WenyanThreading
-    public void scheduler() {
+    private void scheduler() {
         try {
             // not stop until interrupted (object unloaded)
-            // noinspection InfiniteLoopStatement
             while (true) {
                 if (accumulatedSteps.availablePermits() > 10000) {
                     platform.handleError("program running too slow");

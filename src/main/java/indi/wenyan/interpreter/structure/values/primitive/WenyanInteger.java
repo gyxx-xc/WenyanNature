@@ -36,7 +36,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     }
 
     public static WenyanInteger valueOf(long i) {
-        return i >= IntegerCache.low && i <= IntegerCache.high ? IntegerCache.cache[(int) (i + 128)] : new WenyanInteger(BigInteger.valueOf(i));
+        return i >= IntegerCache.MIN_CACHE && i <= IntegerCache.MAX_CACHE ? IntegerCache.cache[(int) (i + 128)] : new WenyanInteger(BigInteger.valueOf(i));
     }
 
     public static WenyanInteger valueOf(@NotNull BigInteger i) {
@@ -115,20 +115,27 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
         if (obj instanceof IWenyanValue wenyanValue) {
             try {
                 return value.equals(wenyanValue.as(TYPE).value);
-            } catch (WenyanException.WenyanTypeException ignored) {} // go outside
+            } catch (WenyanException.WenyanTypeException ignored) {
+                // go outside
+            }
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
     }
 
     // since bigint cache only has 37 values, not good for int
     // cache copy from java.lang.Integer, and del some jdk magic
     private static final class IntegerCache {
-        static final int low = -128;
-        static final int high = 256;
+        static final int MIN_CACHE = -128;
+        static final int MAX_CACHE = 256;
         static final WenyanInteger[] cache;
 
         static {
-            int size = high - low + 1;
+            int size = MAX_CACHE - MIN_CACHE + 1;
             cache = new WenyanInteger[size];
             int j = -128;
 

@@ -3,7 +3,7 @@ package indi.wenyan.interpreter.compiler.visitor;
 import indi.wenyan.interpreter.antlr.WenyanRParser;
 import indi.wenyan.interpreter.compiler.WenyanBytecode;
 import indi.wenyan.interpreter.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.interpreter.runtime.WenyanStack;
+import indi.wenyan.interpreter.runtime.WenyanResultStack;
 import indi.wenyan.interpreter.structure.WenyanParseTreeException;
 import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.WenyanType;
@@ -52,6 +52,12 @@ public class WenyanExprVisitor extends WenyanVisitor {
         } catch (WenyanThrowException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
+        if (n <= 0) {
+            throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.variables_not_positive").getString(), ctx);
+        }
+        if (n > WenyanCompilerEnvironment.FUNCTION_ARGS_MAX) {
+            throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.too_many_variables").getString(), ctx);
+        }
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
             throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.variables_not_match").getString(), ctx);
         }
@@ -60,9 +66,6 @@ public class WenyanExprVisitor extends WenyanVisitor {
             type = WenyanDataParser.parseType(ctx.type().getText());
         } catch (WenyanThrowException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
-        }
-        if (n > WenyanCompilerEnvironment.FUNCTION_ARGS_MAX) {
-            throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.too_many_variables").getString(), ctx);
         }
         for (int i = 0; i < n; i++) {
             if (ctx.d.isEmpty()) {
@@ -235,7 +238,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
 
-        if (count > WenyanStack.MAX_SIZE) {
+        if (count > WenyanResultStack.MAX_SIZE) {
             throw new WenyanParseTreeException(Component.translatable("error.wenyan_programming.too_many_variables").getString(), ctx);
         }
         for (int i = 0; i < count; i++)

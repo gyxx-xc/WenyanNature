@@ -86,11 +86,13 @@ public class WenyanException extends WenyanThrowException {
     }
 
     /**
+     * @deprecated
      * Handles an exception by displaying it to the player
      *
      * @param player  Player to notify
      * @param message Error message
      */
+    @Deprecated(forRemoval = true)
     @WenyanThreading
     public static void handleException(Player player, String message) {
         WenyanProgramming.LOGGER.error(message);

@@ -33,6 +33,7 @@ public class VariableCode extends WenyanCode {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case LOAD -> {
+                if (runtime.bytecode == null) throw new WenyanException.WenyanUnreachedException();
                 String id = runtime.bytecode.getIdentifier(args);
                 IWenyanValue value = thread.getGlobalVariable(id);
                 if (value == null) {
@@ -40,21 +41,28 @@ public class VariableCode extends WenyanCode {
                 }
                 runtime.processStack.push(value);
             }
-            case STORE -> runtime.setVariable(runtime.bytecode.getIdentifier(args),
-                    WenyanLeftValue.varOf(runtime.processStack.pop()));
+            case STORE -> {
+                if (runtime.bytecode == null) throw new WenyanException.WenyanUnreachedException();
+                runtime.setVariable(runtime.bytecode.getIdentifier(args),
+                        WenyanLeftValue.varOf(runtime.processStack.pop()));
+            }
             case SET_VALUE -> {
                 IWenyanValue value = runtime.processStack.pop();
-                IWenyanValue variable =  runtime.processStack.pop();
-                if (variable instanceof WenyanLeftValue lv)
-                    lv.setValue(value);
-                else
+                IWenyanValue variable = runtime.processStack.pop();
+                if (variable instanceof WenyanLeftValue lv) {
+                    if (value.is(WenyanNull.TYPE))
+                        lv.setValue(WenyanNull.NULL);
+                    else
+                        lv.setValue(value.as(lv.type()));
+
+                } else
                     throw new WenyanException(Component.translatable("error.wenyan_programming.set_value_to_non_left_value").getString());
             }
             case CAST -> {
                 IWenyanValue value = runtime.processStack.pop();
                 try {
                     // TODO: use const with TYPE in bytecode?
-                    switch (args) {
+                    var castedValue = switch (args) {
                         case 1 -> value.as(WenyanInteger.TYPE);
                         case 2 -> value.as(WenyanDouble.TYPE);
                         case 3 -> value.as(WenyanBoolean.TYPE);
@@ -63,9 +71,10 @@ public class VariableCode extends WenyanCode {
                         case 6 -> value.as(IWenyanObject.TYPE);
                         case 7 -> value.as(IWenyanObjectType.TYPE);
                         case 8 -> value.as(IWenyanFunction.TYPE);
-                        default -> throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString());
-                    }
-                    runtime.processStack.push(value);
+                        default ->
+                                throw new WenyanException(Component.translatable("error.wenyan_programming.invalid_data_type").getString());
+                    };
+                    runtime.processStack.push(castedValue);
                 } catch (WenyanException.WenyanTypeException e) {
                     throw new WenyanException(e.getMessage());
                 }

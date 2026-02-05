@@ -137,4 +137,20 @@ public record WenyanList(List<IWenyanValue> value)
     public @NotNull String toString() {
         return value.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof IWenyanValue otherValue)) return false;
+        return otherValue.tryAs(TYPE).map(list -> {
+            if (value.size() != list.value.size()) return false;
+            for (int i = 0; i < value.size(); i++) {
+                try {
+                    if (IWenyanValue.equals(value.get(i), list.value.get(i))) return false;
+                } catch (WenyanThrowException ignore) {
+                    return false;
+                }
+            }
+            return true;
+        }).orElse(false);
+    }
 }

@@ -8,6 +8,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
 import indi.wenyan.interpreter.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a string value in Wenyan language.
@@ -16,6 +17,15 @@ import org.jetbrains.annotations.NotNull;
 public record WenyanString(String value)
         implements IWenyanWarperValue<String>, IWenyanComputable {
     public static final WenyanType<WenyanString> TYPE = new WenyanType<>("string", WenyanString.class);
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
+        if (type == WenyanBoolean.TYPE) {
+            return (T) WenyanValues.of(!value.isEmpty());
+        }
+        return null;
+    }
 
     @Override
     public WenyanType<?> type() {

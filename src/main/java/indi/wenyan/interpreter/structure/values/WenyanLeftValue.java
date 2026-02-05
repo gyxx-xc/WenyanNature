@@ -43,4 +43,19 @@ public class WenyanLeftValue implements IWenyanValue {
         // turn into right if casting
         return value.as(type);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return value.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

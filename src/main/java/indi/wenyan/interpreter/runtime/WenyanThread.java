@@ -120,6 +120,10 @@ public class WenyanThread {
                 }
 
                 WenyanRuntime runtime = currentRuntime();
+                if (runtime.bytecode == null) {
+                    dieWithException(new WenyanException.WenyanUnreachedException());
+                    return;
+                }
 
                 if (runtime.programCounter < 0 || runtime.programCounter >= runtime.bytecode.size()) {
                     dieWithException(new WenyanException.WenyanUnreachedException());
@@ -161,21 +165,27 @@ public class WenyanThread {
      */
     public void dieWithException(Exception e) {
         try {
+            var runtime = currentRuntime();
+            if (runtime.bytecode == null) {
+                WenyanProgramming.LOGGER.error("during handling an exception", e);
+                program.platform.handleError("WenyanThread died with an unexpected exception, killed");
+                return;
+            }
             if (e instanceof WenyanException.WenyanUnreachedException) {
                 WenyanProgramming.LOGGER.error("WenyanThread died with an unexpected exception", e);
                 WenyanProgramming.LOGGER.debug("{}", code);
                 WenyanBytecode.Context context =
-                        currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
+                        runtime.bytecode.getContext(runtime.programCounter - 1);
                 String segment = code.substring(context.contentStart(), context.contentEnd());
                 WenyanProgramming.LOGGER.error("{}:{} {}", context.line(), context.column(), segment);
                 program.platform.handleError("WenyanThread died with an unexpected exception, killed");
             } else if (e instanceof WenyanException) {
-                WenyanBytecode.Context context = currentRuntime().bytecode.getContext(currentRuntime().programCounter);
+                WenyanBytecode.Context context = runtime.bytecode.getContext(runtime.programCounter);
                 program.platform.handleError(context.line() + ":" + context.column() + " " +
                         code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
             } else if (e instanceof WenyanThrowException) {
                 WenyanBytecode.Context context =
-                        currentRuntime().bytecode.getContext(currentRuntime().programCounter - 1);
+                        runtime.bytecode.getContext(runtime.programCounter - 1);
                 program.platform.handleError(context.line() + ":" + context.column() + " " +
                         code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
             }
@@ -252,6 +262,14 @@ public class WenyanThread {
     }
 
     /**
+     * Removes the top runtime environment from the stack.
+     */
+    public void ret() {
+        var runtime = runtimes.pop();
+        runtime.finishFlag = true;
+    }
+
+    /**
      * Gets the current runtime environment from the top of the stack.
      *
      * @return The current runtime environment
@@ -260,15 +278,7 @@ public class WenyanThread {
         return runtimes.peek();
     }
 
-    /**
-     * Removes the top runtime environment from the stack.
-     */
-    public void ret() {
-        var runtime = runtimes.pop();
-        runtime.finishFlag = true;
-    }
-
-    void addAssignedSteps(int steps) {
+    public void addAssignedSteps(int steps) {
         assignedSteps += steps;
     }
 

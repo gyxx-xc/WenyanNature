@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * Null values are not pushed to the stack.
  */
 @WenyanThreading
-public class WenyanStack {
+public class WenyanResultStack {
     /** Underlying data structure for the stack */
     private final Deque<IWenyanValue> stack = new LinkedList<>();
 

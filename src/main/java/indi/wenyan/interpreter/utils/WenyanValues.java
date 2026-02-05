@@ -2,6 +2,7 @@ package indi.wenyan.interpreter.utils;
 
 import indi.wenyan.interpreter.structure.WenyanType;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
@@ -19,16 +20,20 @@ import java.math.BigInteger;
 import java.util.List;
 
 public enum WenyanValues {;
+    public static IWenyanValue of() {
+        return WenyanNull.NULL;
+    }
+
     public static IWenyanValue of(long l) {
         return WenyanInteger.valueOf(l);
     }
 
-    public static IWenyanValue of(@NotNull BigInteger l) {
-        return WenyanInteger.valueOf(l);
+    public static IWenyanValue of(@NotNull BigInteger bi) {
+        return WenyanInteger.valueOf(bi);
     }
 
-    public static IWenyanValue of(double l) {
-        return new WenyanDouble(l);
+    public static IWenyanValue of(double d) {
+        return new WenyanDouble(d);
     }
 
     public static IWenyanValue of(boolean b) {

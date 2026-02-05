@@ -2,7 +2,10 @@ package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
+import indi.wenyan.interpreter.structure.values.warper.WenyanBlock;
+import indi.wenyan.interpreter.structure.values.warper.WenyanEntity;
 import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
@@ -31,7 +34,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                     List<Entity> entities = getLevel().getEntities((Entity) null,
                             new AABB(start, end), EntitySelector.NO_SPECTATORS);
                     // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
-                    return WenyanValues.of(entities.stream().map(WenyanValues::of).toList());
+                    return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
                 })
             .handler(WenyanSymbol.var("EntityModule.nearby"), request -> {
                     assert getLevel() != null;
@@ -40,7 +43,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                     List<Entity> entities = getLevel().getEntities((Entity) null,
                             new AABB(pos).inflate(radius), EntitySelector.NO_SPECTATORS);
                     // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
-                    return WenyanValues.of(entities.stream().map(WenyanValues::of).toList());
+                    return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
                 })
             .handler(WenyanSymbol.var("EntityModule.lineOfSight"), request -> {
                     var origin = request.args().getFirst().as(WenyanVec3.TYPE).value();
@@ -48,7 +51,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                     assert getLevel() != null;
                     var result = getLevel().clip(new ClipContext(origin, look,
                             ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, (Entity) null));
-                    return WenyanValues.of(getLevel().getBlockState(result.getBlockPos()));
+                    return new WenyanBlock(getLevel().getBlockState(result.getBlockPos()));
                 })
             .build();
 
