@@ -1,13 +1,16 @@
 package indi.wenyan.content.gui.code_editor.widget;
 
+import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollWidget;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -19,11 +22,16 @@ import java.util.Deque;
 @OnlyIn(Dist.CLIENT)
 public class CodeOutputWidget extends AbstractScrollWidget {
     private final MultiLineTextWidget multilineWidget;
+//    public static ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai.png");
+    private int imageWidth = 256;
+    private int imageHeight = 142;
 
     public CodeOutputWidget(int x, int y, int width, int height, Component message, Font font) {
         super(x, y, width, height, message);
         this.multilineWidget = (new MultiLineTextWidget(message, font)).setMaxWidth(this.getWidth() - this.totalInnerPadding());
     }
+    public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
+            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai"),ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai"));
 
     public CodeOutputWidget setColor(int color) {
         this.multilineWidget.setColor(color);
@@ -79,5 +87,10 @@ public class CodeOutputWidget extends AbstractScrollWidget {
         }
         multilineWidget.setMessage(newOutput);
         setScrollAmount(getMaxScrollAmount());
+    }
+
+    @Override
+    protected void renderBackground(GuiGraphics guiGraphics) {
+        guiGraphics.blitSprite(ENTRY_SPRITES.get(true,true), this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 }
