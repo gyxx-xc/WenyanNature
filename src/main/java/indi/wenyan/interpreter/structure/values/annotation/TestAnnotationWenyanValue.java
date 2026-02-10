@@ -1,6 +1,11 @@
 package indi.wenyan.interpreter.structure.values.annotation;
 
+import indi.wenyan.annotation.WenyanField;
+import indi.wenyan.annotation.WenyanMethod;
+import indi.wenyan.annotation.WenyanObjectValue;
 import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
+import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 
@@ -11,12 +16,15 @@ import java.util.function.Function;
 
 // TODO: we may need a compile level solution of it,
 //   so, maybe delaying forever
-@SuppressWarnings("ALL")
-@Deprecated
-public class TestAnnotationWenyanValue {
+@WenyanObjectValue
+public class TestAnnotationWenyanValue implements IWenyanObject {
 
     @WenyanField("attribute")
     public IWenyanValue attribute;
+
+
+    @WenyanField("attribute")
+    public IWenyanValue attribute12;
 
     @WenyanField
     public IWenyanValue method() {
@@ -35,5 +43,10 @@ public class TestAnnotationWenyanValue {
     Function<TestAnnotationWenyanValue, IWenyanValue> sample3 = (instance) -> new WenyanInlineJavacall(instance::meth);
     public IWenyanValue getAttribute(String name) {
         return members.get(name).apply(this);
+    }
+
+    @Override
+    public WenyanType<?> type() {
+        return null;
     }
 }

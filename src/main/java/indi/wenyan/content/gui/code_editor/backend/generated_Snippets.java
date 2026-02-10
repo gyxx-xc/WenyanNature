@@ -132,9 +132,9 @@ public enum generated_Snippets {;
                 new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
                 new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 3))),
-        new SnippetSet.Snippet("恆為是", List.of("  ","云云。"), List.of(
-                new SnippetSet.SnippetPlaceholder(Context.STMT, 0, 2),
-                new SnippetSet.SnippetPlaceholder(Context.NONE, 1, 3))),
+        new SnippetSet.Snippet("恆為是", List.of("恆為是","  ","云云。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 3))),
         new SnippetSet.Snippet("乃止", List.of("乃止。"), List.of()),
         new SnippetSet.Snippet("乃止是遍", List.of("乃止是遍。"), List.of()),
         new SnippetSet.Snippet("噫", List.of("噫。"), List.of(
