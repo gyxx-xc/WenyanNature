@@ -30,6 +30,7 @@ project
 /.github/git-commit-instructions.md
 /docs/mkdocs/site/
 
+pyvenv
 __pycache__
 /.lingma/
 /src/main/java/indi/wenyan/content/gui/code_editor/_generator_py/py_map.json

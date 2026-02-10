@@ -1,52 +1,50 @@
 package indi.wenyan.interpreter.structure.values.annotation;
 
+import indi.wenyan.annotation.WenyanConstructor;
 import indi.wenyan.annotation.WenyanField;
 import indi.wenyan.annotation.WenyanMethod;
 import indi.wenyan.annotation.WenyanObjectValue;
-import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.interpreter.structure.WenyanType;
+import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanObject;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 // TODO: we may need a compile level solution of it,
 //   so, maybe delaying forever
 @WenyanObjectValue
-public class TestAnnotationWenyanValue implements IWenyanObject {
+public class TestAnnotationWenyanValue {
+
+    protected TestAnnotationWenyanValue() {}
 
     @WenyanField("attribute")
-    public IWenyanValue attribute;
+    public IWenyanValue attribute = WenyanNull.NULL;
 
-
-    @WenyanField("attribute")
-    public IWenyanValue attribute12;
-
-    @WenyanField
+    @WenyanField("method")
     public IWenyanValue method() {
         return WenyanNull.NULL;
     }
 
-    @WenyanMethod("meth")
+    @WenyanMethod(value = "meth", threadSafe = true)
     public IWenyanValue meth(IWenyanValue self, List<IWenyanValue> arg) {
         return WenyanNull.NULL;
     }
 
-    // make above phase as following
-    public static final Map<String, Function<TestAnnotationWenyanValue, IWenyanValue>> members = new HashMap<>();
-    Function<TestAnnotationWenyanValue, IWenyanValue> sample1 = (instance) -> instance.attribute;
-    Function<TestAnnotationWenyanValue, IWenyanValue> sample2 = TestAnnotationWenyanValue::method;
-    Function<TestAnnotationWenyanValue, IWenyanValue> sample3 = (instance) -> new WenyanInlineJavacall(instance::meth);
-    public IWenyanValue getAttribute(String name) {
-        return members.get(name).apply(this);
+    @WenyanMethod(value = "meth1")
+    public IWenyanValue meth1(IWenyanValue self, List<IWenyanValue> arg) {
+        return WenyanNull.NULL;
     }
 
-    @Override
-    public WenyanType<?> type() {
-        return null;
+    @WenyanField("statiAttr")
+    public static IWenyanValue statiAttr = WenyanNull.NULL;
+    @WenyanMethod("statiMeth")
+    public static IWenyanValue statiMeth(IWenyanValue self, List<IWenyanValue> arg) {
+        return WenyanNull.NULL;
+    }
+
+    @WenyanConstructor
+    public static IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
+        return new TestAnnotationWenyanValueObject();
     }
 }
