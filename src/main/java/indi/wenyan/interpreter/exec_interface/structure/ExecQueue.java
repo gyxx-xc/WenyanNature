@@ -1,5 +1,6 @@
 package indi.wenyan.interpreter.exec_interface.structure;
 
+import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.runtime.WenyanProgram;
 import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.utils.WenyanThreading;
@@ -10,7 +11,13 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ExecQueue {
+    private final IWenyanPlatform platform;
+
     private final Queue<IHandleableRequest> queue = new ConcurrentLinkedQueue<>();
+
+    public ExecQueue(IWenyanPlatform platform) {
+        this.platform = platform;
+    }
 
     /**
      * Receives a JavacallContext request and adds it to the queue.
@@ -39,7 +46,7 @@ public class ExecQueue {
         while (!queue.isEmpty()) {
             IHandleableRequest request = queue.remove();
             try {
-                request.platform().notice(request, context);
+                platform.notice(request, context);
                 boolean done = request.handle(context);
                 if (done) {
                     request.thread().unblock();

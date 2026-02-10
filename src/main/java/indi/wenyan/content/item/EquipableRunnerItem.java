@@ -44,13 +44,13 @@ import java.util.Map;
 public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatform {
     public static final String ID_1 = "equipable_runner";
 
-    // STUB: may need to find a better way to do it;
+    // STUB: may need to find a better way to do it,
     //   maybe after the program storage is done?
     private static final Map<Integer, WenyanProgram> PROGRAMS = new HashMap<>();
     public final int runningLevel;
 
     @Getter
-    private final ExecQueue execQueue = new ExecQueue();
+    private final ExecQueue execQueue = new ExecQueue(this);
     private final RequestCallHandler importFunction = (t, s, a) ->
             new ImportRequest(t, this, this::getPackage, a);
 

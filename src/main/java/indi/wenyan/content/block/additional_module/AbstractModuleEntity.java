@@ -2,8 +2,6 @@ package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
-import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
-import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -26,8 +24,6 @@ import java.util.Objects;
 @MethodsReturnNonnullByDefault
 public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanBlockDevice {
     public static final String PACKAGE_NAME_ID = "packageName";
-    @Getter
-    private final ExecQueue execQueue = new ExecQueue();
 
     @Nullable
     private String packageName;

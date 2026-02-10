@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class WenyanProgramTest {
 
     class TestPlatform implements IWenyanPlatform {
-        private final ExecQueue execQueue = new ExecQueue();
+        private final ExecQueue execQueue = new ExecQueue(this);
         public String error = null;
         public List<IWenyanValue> output = new ArrayList<>();
 

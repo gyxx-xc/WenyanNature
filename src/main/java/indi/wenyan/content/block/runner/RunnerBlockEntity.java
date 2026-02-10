@@ -70,7 +70,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private boolean outputChanged = false;
 
     @Getter
-    public final ExecQueue execQueue = new ExecQueue();
+    public final ExecQueue execQueue = new ExecQueue(this);
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final RequestCallHandler importFunction = (t, s, a) ->
             new ImportRequest(t, this, this::getPackage, a);
