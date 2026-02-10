@@ -82,7 +82,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
                      List<IWenyanValue> argsList) throws WenyanThrowException {
         // create empty, run constructor, return self
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
-        thread.currentRuntime().processStack.push(selfObj);
+        thread.currentRuntime().pushReturnValue(selfObj);
 
         IWenyanFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
                 .as(IWenyanFunction.TYPE);

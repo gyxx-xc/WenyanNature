@@ -32,10 +32,10 @@ public class BranchCode extends WenyanCode {
         try {
             if (condition != Condition.NONE) {
                 if (operation == Operation.POP) {
-                    val = runtime.processStack.pop()
+                    val = runtime.getProcessStack().pop()
                             .as(WenyanBoolean.TYPE).value();
                 } else {
-                    val = runtime.processStack.peek()
+                    val = runtime.getProcessStack().peek()
                             .as(WenyanBoolean.TYPE).value();
                 }
             }
@@ -49,7 +49,7 @@ public class BranchCode extends WenyanCode {
                 case NONE -> true;
             };
         if (jump) {
-            runtime.programCounter = runtime.bytecode.getLabel(args);
+            runtime.programCounter = runtime.getBytecode().getLabel(args);
             runtime.PCFlag = true;
         }
     }

@@ -28,20 +28,20 @@ public class AnsStackCode extends WenyanCode {
     public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
-            case PUSH -> runtime.resultStack.push(runtime.processStack.pop());
-            case POP -> runtime.processStack.push(runtime.resultStack.pop());
-            case PEEK -> runtime.processStack.push(runtime.resultStack.peek());
+            case PUSH -> runtime.getResultStack().push(runtime.getProcessStack().pop());
+            case POP -> runtime.pushReturnValue(runtime.getResultStack().pop());
+            case PEEK -> runtime.pushReturnValue(runtime.getResultStack().peek());
             case PEEK_N -> {
                 List<IWenyanValue> list = new ArrayList<>();
                 for (int i = 0; i < args; i++) {
-                    list.add(runtime.resultStack.pop());
-                    runtime.processStack.push(list.getLast());
+                    list.add(runtime.getResultStack().pop());
+                    runtime.pushReturnValue(list.getLast());
                 }
                 for (var i : list) {
-                    runtime.resultStack.push(i);
+                    runtime.getResultStack().push(i);
                 }
             }
-            case FLUSH -> runtime.resultStack.clear();
+            case FLUSH -> runtime.getResultStack().clear();
         }
     }
 

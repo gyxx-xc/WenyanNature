@@ -70,7 +70,7 @@ public final class ImportRequest implements IHandleableRequest {
                     }
                     // fallthrough
                 case PROCESS_RUNTIME:
-                    returnPackage(new WenyanPackage(packageOrThread.right().get().getMainRuntime().variables));
+                    returnPackage(new WenyanPackage(packageOrThread.right().get().getMainRuntime().getVariables()));
                     return true; // end
             }
     }
@@ -82,7 +82,7 @@ public final class ImportRequest implements IHandleableRequest {
 
         if (args.size() == 1) {
             thread.currentRuntime().setVariable(packageName, wenyanPackage);
-            thread.currentRuntime().resultStack.push(wenyanPackage);
+            thread.currentRuntime().getResultStack().push(wenyanPackage);
         } else {
             for (IWenyanValue arg : args.subList(1, args.size())) {
                 String id = arg.as(WenyanString.TYPE).value();

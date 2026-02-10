@@ -77,7 +77,7 @@ public final class HandlerPackageBuilder {
     public HandlerPackageBuilder handler(String name, HandlerReturnFunction function) {
         return handler(name, (IHandleableRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(context, request);
-            request.thread().currentRuntime().processStack.push(value);
+            request.thread().currentRuntime().pushReturnValue(value);
             return true;
         });
     }
@@ -85,7 +85,7 @@ public final class HandlerPackageBuilder {
     public HandlerPackageBuilder handler(String name, HandlerSimpleFunction function) {
         return handler(name, (IHandleableRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(request);
-            request.thread().currentRuntime().processStack.push(value);
+            request.thread().currentRuntime().pushReturnValue(value);
             return true;
         });
     }
@@ -96,7 +96,7 @@ public final class HandlerPackageBuilder {
             WenyanPackage execPackage = function.getPackage(context, packageName);
             if (request.args().size() == 1) {
                 request.thread().currentRuntime().setVariable(packageName, execPackage);
-                request.thread().currentRuntime().resultStack.push(execPackage);
+                request.thread().currentRuntime().getResultStack().push(execPackage);
             } else {
                 for (IWenyanValue arg : request.args().subList(1, request.args().size())) {
                     String id = arg.as(WenyanString.TYPE).value();
@@ -134,7 +134,7 @@ public final class HandlerPackageBuilder {
                     return false;
                 } else {
                     IWenyanValue value = function.handle(context, request);
-                    request.thread().currentRuntime().processStack.push(value);
+                    request.thread().currentRuntime().pushReturnValue(value);
                     return true;
                 }
             }

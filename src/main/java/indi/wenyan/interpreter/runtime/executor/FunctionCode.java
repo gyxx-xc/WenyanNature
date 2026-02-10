@@ -44,11 +44,11 @@ public class FunctionCode extends WenyanCode {
     @Override
     public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
-        IWenyanValue func = runtime.processStack.pop();
+        IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
         IWenyanFunction callable;
         if (operation == Operation.CALL_ATTR)
-            self = runtime.processStack.pop();
+            self = runtime.getProcessStack().pop();
 
         // object_type
         if (func.is(IWenyanObjectType.TYPE)) {
@@ -65,7 +65,7 @@ public class FunctionCode extends WenyanCode {
 
         List<IWenyanValue> argsList = new ArrayList<>(args);
         for (int i = 0; i < args; i++)
-            argsList.add(runtime.processStack.pop());
+            argsList.add(runtime.getProcessStack().pop());
 
         // NOTE: must make the callF at end, because it may block thread
         //   which is a fake block, it will still run the rest command before blocked
@@ -75,7 +75,7 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public int getStep(int args, WenyanThread thread) throws WenyanThrowException {
-        var function = thread.currentRuntime().processStack.peek();
+        var function = thread.currentRuntime().getProcessStack().peek();
         if (!function.is(IWenyanFunction.TYPE))
             throw new WenyanException("無法調用非函數類型的值");
         return function.tryAs(IJavacallHandler.TYPE)

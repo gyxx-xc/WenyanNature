@@ -20,6 +20,6 @@ public class ReturnCode extends WenyanCode {
         WenyanRuntime runtime = thread.currentRuntime();
         thread.ret();
         if (!runtime.noReturnFlag)
-            thread.currentRuntime().processStack.push(runtime.processStack.pop());
+            thread.currentRuntime().pushReturnValue(runtime.getProcessStack().pop());
     }
 }

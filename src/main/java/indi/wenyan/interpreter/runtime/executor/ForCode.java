@@ -34,25 +34,25 @@ public class ForCode extends WenyanCode {
             case FOR_ITER -> {
                 Iterator<?> iter;
                 try {
-                    iter = runtime.processStack.peek().as(WenyanIterator.TYPE).value();
+                    iter = runtime.getProcessStack().peek().as(WenyanIterator.TYPE).value();
                 } catch (WenyanException.WenyanTypeException e) {
                     throw new WenyanException(e.getMessage());
                 }
                 if (iter.hasNext()) {
-                    runtime.processStack.push((IWenyanValue) iter.next());
+                    runtime.pushReturnValue((IWenyanValue) iter.next());
                 } else {
-                    runtime.processStack.pop();
-                    runtime.programCounter = runtime.bytecode.getLabel(args);
+                    runtime.getProcessStack().pop();
+                    runtime.programCounter = runtime.getBytecode().getLabel(args);
                     runtime.PCFlag = true;
                 }
             }
             case FOR_NUM -> {
-                IWenyanValue value = runtime.processStack.pop();
+                IWenyanValue value = runtime.getProcessStack().pop();
                 int num = value.as(WenyanInteger.TYPE).value();
                 if (num > 0) {
-                    runtime.processStack.push(WenyanValues.of((long) num - 1));
+                    runtime.pushReturnValue(WenyanValues.of((long) num - 1));
                 } else {
-                    runtime.programCounter = runtime.bytecode.getLabel(args);
+                    runtime.programCounter = runtime.getBytecode().getLabel(args);
                     runtime.PCFlag = true;
                 }
             }

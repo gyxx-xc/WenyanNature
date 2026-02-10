@@ -23,8 +23,8 @@ public class StackCode extends WenyanCode {
     public void exec(int args, WenyanThread thread) {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
-            case PUSH -> runtime.processStack.push(runtime.bytecode.getConst(args));
-            case POP -> runtime.processStack.pop();
+            case PUSH -> runtime.pushReturnValue(runtime.getBytecode().getConst(args));
+            case POP -> runtime.getProcessStack().pop();
         }
     }
 

@@ -37,7 +37,7 @@ public class WenyanInlineJavacall implements IJavacallHandler {
 
     @Override
     public void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList) throws WenyanThrowException {
-        thread.currentRuntime().processStack.push(handle(self, argsList));
+        thread.currentRuntime().pushReturnValue(handle(self, argsList));
     }
 
     /**

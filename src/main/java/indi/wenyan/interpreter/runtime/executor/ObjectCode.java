@@ -28,12 +28,12 @@ public class ObjectCode extends WenyanCode {
     public void exec(int args, WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         try {
-            String id = runtime.bytecode.getIdentifier(args);
+            String id = runtime.getBytecode().getIdentifier(args);
             switch (operation) {
                 case ATTR, ATTR_REMAIN -> {
                     IWenyanValue attr;
                     IWenyanValue value = operation == Operation.ATTR ?
-                            runtime.processStack.pop() : runtime.processStack.peek();
+                            runtime.getProcessStack().pop() : runtime.getProcessStack().peek();
                     if (value.is(IWenyanObjectType.TYPE)) {
                         IWenyanObjectType object = value.as(IWenyanObjectType.TYPE);
                         attr = object.getAttribute(id);
@@ -41,33 +41,33 @@ public class ObjectCode extends WenyanCode {
                         IWenyanObject object = value.as(IWenyanObject.TYPE);
                         attr = object.getAttribute(id);
                     }
-                    runtime.processStack.push(attr);
+                    runtime.pushReturnValue(attr);
                 }
                 case STORE_STATIC_ATTR -> {
-                    IWenyanValue value = WenyanLeftValue.varOf(runtime.processStack.pop());
-                    WenyanBuiltinObjectType type = runtime.processStack.peek().as(WenyanBuiltinObjectType.TYPE);
+                    IWenyanValue value = WenyanLeftValue.varOf(runtime.getProcessStack().pop());
+                    WenyanBuiltinObjectType type = runtime.getProcessStack().peek().as(WenyanBuiltinObjectType.TYPE);
                     type.addStaticVariable(id, value);
                 }
                 case STORE_FUNCTION_ATTR -> {
-                    IWenyanValue value = runtime.processStack.pop();
-                    WenyanBuiltinObjectType type = runtime.processStack.peek().as(WenyanBuiltinObjectType.TYPE);
+                    IWenyanValue value = runtime.getProcessStack().pop();
+                    WenyanBuiltinObjectType type = runtime.getProcessStack().peek().as(WenyanBuiltinObjectType.TYPE);
                     type.addFunction(id, value);
                 }
                 case STORE_ATTR -> {
                     // currently only used at define (mzy SELF ZHI STRING)
-                    WenyanBuiltinObject self = runtime.processStack.pop().as(WenyanBuiltinObject.TYPE);
-                    IWenyanValue value = WenyanLeftValue.varOf(runtime.processStack.pop());
+                    WenyanBuiltinObject self = runtime.getProcessStack().pop().as(WenyanBuiltinObject.TYPE);
+                    IWenyanValue value = WenyanLeftValue.varOf(runtime.getProcessStack().pop());
                     self.createAttribute(id, value);
                 }
                 case CREATE_TYPE -> {
-                    var parent = runtime.processStack.pop();
+                    var parent = runtime.getProcessStack().pop();
                     IWenyanValue type;
                     if (parent.is(WenyanNull.TYPE))
                         type = new WenyanBuiltinObjectType(null);
                     else
                         type = new WenyanBuiltinObjectType(parent
                             .as(WenyanBuiltinObjectType.TYPE));
-                    runtime.processStack.push(type);
+                    runtime.pushReturnValue(type);
                 }
             }
         } catch (WenyanException.WenyanTypeException e) {

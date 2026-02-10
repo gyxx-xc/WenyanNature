@@ -91,7 +91,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                                         new PlatformOutputPacket(getBlockPos(), s, PlatformOutputPacket.OutputStyle.NORMAL));
                             }
                             addOutput(s, PlatformOutputPacket.OutputStyle.NORMAL);
-                            request.thread().currentRuntime().processStack.push(WenyanNull.NULL);
+                            request.thread().currentRuntime().pushReturnValue(WenyanNull.NULL);
                             return true;
                         },
                         self, argsList));
