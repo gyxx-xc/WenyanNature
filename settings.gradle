@@ -13,5 +13,5 @@ plugins {
 }
 
 rootProject.name = mod_id
+include 'language_annotation'
 include 'language_processor'
-include 'WenyanProgramming'

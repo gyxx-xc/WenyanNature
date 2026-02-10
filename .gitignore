@@ -24,7 +24,7 @@ runs
 run-data
 
 repo
-/WenyanProgramming/src/generated/resources/.cache/
+/src/generated/resources/.cache/
 
 project
 /.github/git-commit-instructions.md
@@ -32,5 +32,4 @@ project
 
 __pycache__
 /.lingma/
-/WenyanProgramming/src/main/java/indi/wenyan/content/gui/code_editor/_generator_py/py_map.json
-/pyvenv/
+/src/main/java/indi/wenyan/content/gui/code_editor/_generator_py/py_map.json
