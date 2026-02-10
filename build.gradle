@@ -157,6 +157,7 @@ dependencies {
     testImplementation("com.google.guava:guava-testlib:21.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
     testImplementation("net.neoforged:testframework:21.1.206")
+    testImplementation("org.mockito:mockito-core:5.+")
 
     // STUB: for chinese convertor only, might change in future
     implementation 'cn.hutool:hutool-core:5.8.43'
@@ -166,6 +167,9 @@ dependencies {
     // for annotation processor
     compileOnly project(":language_processor")
     annotationProcessor project(":language_processor")
+    // for ap's unit test
+    testCompileOnly project(":language_processor")
+    testAnnotationProcessor project(":language_processor")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

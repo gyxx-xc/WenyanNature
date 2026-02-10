@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface WenyanMethod {
-    String value() default "";
+    String value();
 
     boolean threadSafe() default false;
 }

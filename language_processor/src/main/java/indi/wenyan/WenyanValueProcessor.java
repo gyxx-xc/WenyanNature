@@ -19,7 +19,6 @@ import java.util.Set;
 @AutoService(javax.annotation.processing.Processor.class)
 @SupportedAnnotationTypes("indi.wenyan.annotation.WenyanObjectValue")
 public class WenyanValueProcessor extends AbstractProcessor {
-    public static final String WENYAN_VALUE_PACKET = "indi.wenyan.interpreter.structure.values";
     private Messager messager;
     private Filer filer;
     private Elements elementUtils;
@@ -33,7 +32,7 @@ public class WenyanValueProcessor extends AbstractProcessor {
         filer = processingEnv.getFiler();
         elementUtils = processingEnv.getElementUtils();
         typeUtils = processingEnv.getTypeUtils();
-        IWenyanValueType = elementUtils.getTypeElement(WENYAN_VALUE_PACKET + ".IWenyanValue").asType();
+        IWenyanValueType = elementUtils.getTypeElement(WenyanValueData.WENYAN_VALUE_PACKET + ".IWenyanValue").asType();
     }
 
     @Override
@@ -46,6 +45,8 @@ public class WenyanValueProcessor extends AbstractProcessor {
                 return true;
             }
             var data = new WenyanValueData((TypeElement) element);
+            if (!validateType(data.getElement()))
+                return true;
             try {
                 data.getElement().getEnclosedElements().forEach(e -> {
                     tryAddVariable(data, e);
@@ -56,12 +57,6 @@ public class WenyanValueProcessor extends AbstractProcessor {
                 error(element, e.getMessage());
                 return true;
             }
-            if (data.getConstructorName() == null) {
-                error(element, "@%s can only be applied to class with constructor",
-                        WenyanObjectValue.class.getSimpleName());
-                return true;
-            }
-
             try {
                 data.generateCode(filer);
             } catch (IOException e) {
@@ -70,6 +65,22 @@ public class WenyanValueProcessor extends AbstractProcessor {
             }
         }
         return false;
+    }
+
+    private boolean validateType(TypeElement element) {
+        if (!element.getModifiers().contains(Modifier.PUBLIC)) {
+            error(element, "WenyanObjectValue can only be applied to public class");
+            return false;
+        }
+        if (element.getModifiers().contains(Modifier.FINAL) || element.getModifiers().contains(Modifier.ABSTRACT)) {
+            error(element, "WenyanObjectValue can only be applied to non-final and non-abstract class");
+            return false;
+        }
+        if (element.getNestingKind().isNested()) {
+            error(element, "WenyanObjectValue can only be applied to top-level class");
+            return false;
+        }
+        return true;
     }
 
     private void tryAddVariable(WenyanValueData data, Element element) {
@@ -129,7 +140,7 @@ public class WenyanValueProcessor extends AbstractProcessor {
             throw new IllegalArgumentException("WenyanConstructor can only be applied to public static method");
         }
 
-        TypeMirror type = elementUtils.getTypeElement(WENYAN_VALUE_PACKET + ".IWenyanObject").asType();
+        TypeMirror type = elementUtils.getTypeElement(WenyanValueData.WENYAN_VALUE_PACKET + ".IWenyanObject").asType();
         if (!typeUtils.isSameType(executableElement.getReturnType(), type)) {
             throw new IllegalArgumentException("WenyanConstructor can only be applied to method that returns IWenyanValue");
         }
