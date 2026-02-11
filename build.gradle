@@ -1,5 +1,4 @@
 plugins {
-    id 'antlr'
     id 'idea' // for JUnit
     id 'maven-publish'
     id 'net.neoforged.moddev' version '1.0.17'
@@ -136,12 +135,21 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    implementation project(":judou")
+    additionalRuntimeClasspath project(":judou")
+    jarJar implementation(project(":judou"))
+
+    // for annotation processor
+    compileOnly project(":language_processor")
+    annotationProcessor project(":language_processor")
+    // for ap's unit test
+    testCompileOnly project(":language_processor")
+    testAnnotationProcessor project(":language_processor")
+
+    // mod requirements
     implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
     compileOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE:api"
     runtimeOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE"
-
-    // non minecraft requirements
-    antlr "org.antlr:antlr4:4.13.1"
 
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
@@ -158,15 +166,6 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
     testImplementation("net.neoforged:testframework:21.1.206")
     testImplementation("org.mockito:mockito-core:5.+")
-
-    implementation project(":judou")
-
-    // for annotation processor
-    compileOnly project(":language_processor")
-    annotationProcessor project(":language_processor")
-    // for ap's unit test
-    testCompileOnly project(":language_processor")
-    testAnnotationProcessor project(":language_processor")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -15,7 +15,6 @@ import indi.wenyan.interpreter.utils.LoggerManager;
 import indi.wenyan.interpreter.utils.WenyanCodes;
 import indi.wenyan.interpreter.utils.WenyanThreading;
 import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
@@ -31,15 +30,14 @@ public class WenyanThread {
     /**
      * The source code of the program
      */
-    public final String code;
+    private final String code;
 
     /**
      * Stack of runtime environments
      */
-    public final Deque<WenyanRuntime> runtimes = new ArrayDeque<>();
+    private final Deque<WenyanRuntime> runtimes = new ArrayDeque<>();
 
     @Getter
-    @Setter
     private WenyanRuntime mainRuntime = null;
 
     /**
@@ -88,7 +86,7 @@ public class WenyanThread {
         // call main
         WenyanRuntime mainRuntime = new WenyanRuntime(bytecode);
         thread.call(mainRuntime);
-        thread.setMainRuntime(mainRuntime);
+        thread.mainRuntime = mainRuntime;
         return thread;
     }
 
@@ -97,7 +95,7 @@ public class WenyanThread {
      *
      * @param program The program this thread belongs to
      */
-    public WenyanThread(String code, WenyanProgram program) {
+    private WenyanThread(String code, WenyanProgram program) {
         this.program = program;
         this.code = code;
     }
@@ -307,5 +305,9 @@ public class WenyanThread {
         if (value == null)
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.variable_not_found_") + id);
         return value;
+    }
+
+    public int runtimeSize() {
+        return runtimes.size();
     }
 }

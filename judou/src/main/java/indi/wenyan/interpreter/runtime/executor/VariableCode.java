@@ -85,7 +85,7 @@ public class VariableCode extends WenyanCode {
     @Override
     public int getStep(int args, WenyanThread thread) throws WenyanThrowException {
         if (operation == Operation.LOAD) {
-            return thread.runtimes.size();
+            return thread.runtimeSize();
         }
         return super.getStep(args, thread);
     }
