@@ -131,7 +131,7 @@ public class WenyanThread {
                 }
 
                 WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
-                int needStep = bytecode.code().getStep(bytecode.arg(), this);
+                int needStep = bytecode.code().getCode().getStep(bytecode.arg(), this);
 
                 if (assignedSteps < needStep) {
                     this.yieldThread();
@@ -140,7 +140,7 @@ public class WenyanThread {
                 assignedSteps -= needStep;
                 accumulatedSteps.acquire(needStep);
 
-                bytecode.code().exec(bytecode.arg(), this);
+                bytecode.code().getCode().exec(bytecode.arg(), this);
                 if (!runtime.PCFlag)
                     runtime.programCounter++;
                 runtime.PCFlag = false;

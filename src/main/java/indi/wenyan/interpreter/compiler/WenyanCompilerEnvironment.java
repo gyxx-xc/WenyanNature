@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter.compiler;
 
-import indi.wenyan.interpreter.runtime.executor.WenyanCode;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.utils.WenyanCodes;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -43,7 +43,7 @@ public class WenyanCompilerEnvironment {
      * @param code The operation code
      * @param value The value argument
      */
-    public void add(WenyanCode code, IWenyanValue value) {
+    public void add(WenyanCodes code, IWenyanValue value) {
         int index = getConstIndex(value);
         bytecode.add(code, index);
     }
@@ -53,7 +53,7 @@ public class WenyanCompilerEnvironment {
      * @param code The operation code
      * @param identifier The identifier argument
      */
-    public void add(WenyanCode code, String identifier) {
+    public void add(WenyanCodes code, String identifier) {
         int index = getIdentifierIndex(identifier);
         bytecode.add(code, index);
     }
@@ -63,7 +63,7 @@ public class WenyanCompilerEnvironment {
      * @param code The operation code
      * @param arg The integer argument
      */
-    public void add(WenyanCode code, int arg) {
+    public void add(WenyanCodes code, int arg) {
         bytecode.add(code, arg);
     }
 
@@ -71,7 +71,7 @@ public class WenyanCompilerEnvironment {
      * Adds a bytecode instruction with no argument.
      * @param code The operation code
      */
-    public void add(WenyanCode code) {
+    public void add(WenyanCodes code) {
         bytecode.add(code, 0);
     }
 

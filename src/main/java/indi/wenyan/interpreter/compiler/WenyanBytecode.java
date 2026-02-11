@@ -1,8 +1,8 @@
 package indi.wenyan.interpreter.compiler;
 
-import indi.wenyan.interpreter.runtime.executor.WenyanCode;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.interpreter.utils.WenyanCodes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -22,10 +22,10 @@ public class WenyanBytecode {
     /**
      * Represents a bytecode instruction with its operation code and argument.
      */
-    public record Code(WenyanCode code, int arg) {
+    public record Code(WenyanCodes code, int arg) {
         @Override
         public @NotNull String toString() {
-            return code+" "+arg;
+            return code.getCode()+" "+arg;
         }
     }
 
@@ -34,7 +34,7 @@ public class WenyanBytecode {
      * @param code The operation code
      * @param arg The argument value
      */
-    public void add(WenyanCode code, int arg) {
+    public void add(WenyanCodes code, int arg) {
         bytecode.add(new Code(code, arg));
     }
 

@@ -22,7 +22,7 @@ public class WenyanVerifier {
         
         for (int i = 0; i < codeSize; i++) {
             WenyanBytecode.Code code = bytecode.get(i);
-            WenyanCode op = code.code();
+            WenyanCode op = code.code().getCode();
             int arg = code.arg();
 
             if (op instanceof BranchCode || op instanceof ForCode) {
