@@ -159,10 +159,7 @@ dependencies {
     testImplementation("net.neoforged:testframework:21.1.206")
     testImplementation("org.mockito:mockito-core:5.+")
 
-    // STUB: for chinese convertor only, might change in future
-    implementation 'cn.hutool:hutool-core:5.8.43'
-    additionalRuntimeClasspath 'cn.hutool:hutool-core:5.8.43'
-    jarJar(implementation 'cn.hutool:hutool-core:5.8.43')
+    implementation project(":judou")
 
     // for annotation processor
     compileOnly project(":language_processor")
@@ -221,7 +218,6 @@ test {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-    options.compilerArgs += ['-Xplugin:PackageProviderPlugin']
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
@@ -230,8 +226,4 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
-}
-
-generateGrammarSource {
-    arguments += ["-no-listener", "-visitor", "-encoding", "UTF-8"]
 }

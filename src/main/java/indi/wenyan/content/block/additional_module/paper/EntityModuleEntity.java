@@ -1,14 +1,15 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanDouble;
-import indi.wenyan.interpreter.structure.values.warper.WenyanBlock;
-import indi.wenyan.interpreter.structure.values.warper.WenyanEntity;
-import indi.wenyan.interpreter.structure.values.warper.WenyanVec3;
 import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
+import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.value.WenyanBlock;
+import indi.wenyan.interpreter_impl.value.WenyanEntity;
+import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -26,7 +27,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
     private final String basePackageName = WenyanSymbol.var("EntityModule");
 
     @Getter
-    private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+    private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler(WenyanSymbol.var("EntityModule.inspectRange"), request -> {
                     assert getLevel() != null;
                     Vec3 start = request.args().getFirst().as(WenyanVec3.TYPE).value();

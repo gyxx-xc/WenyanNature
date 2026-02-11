@@ -1,11 +1,12 @@
 package indi.wenyan.content.block.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
+import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,7 @@ public class SemaphoreModuleEntity extends AbstractModuleEntity {
     private final Semaphore semaphore = new Semaphore(1);
 
     @Getter
-    private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+    private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(wenyanPackageBuilder -> wenyanPackageBuilder
                     .function(WenyanSymbol.var("SemaphoreModule.acquire"), this::acquireSemaphore)
                     .function(WenyanSymbol.var("SemaphoreModule.release"), this::releaseSemaphore)

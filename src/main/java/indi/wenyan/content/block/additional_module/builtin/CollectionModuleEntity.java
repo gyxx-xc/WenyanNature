@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.builtin;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanComparable;
@@ -9,6 +9,7 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.warper.WenyanList;
 import indi.wenyan.interpreter.utils.WenyanSymbol;
 import indi.wenyan.interpreter.utils.WenyanValues;
+import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,7 @@ public class CollectionModuleEntity extends AbstractModuleEntity {
     private final String basePackageName = WenyanSymbol.var("CollectionModule");
 
     @Getter
-    private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+    private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .function(WenyanSymbol.var("CollectionModule.disjoint"),
                             (IWenyanValue self, List<IWenyanValue> args) -> {

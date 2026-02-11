@@ -1,11 +1,9 @@
 package indi.wenyan.content.block.runner;
 
-import com.mojang.datafixers.util.Either;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
-import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.interpreter.exec_interface.structure.ExecQueue;
 import indi.wenyan.interpreter.exec_interface.structure.IHandleContext;
@@ -20,7 +18,9 @@ import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter.utils.Either;
 import indi.wenyan.interpreter.utils.WenyanPackages;
+import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
@@ -256,7 +256,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     @Contract("_, _ -> new")
-    private WenyanPackage processPackage(HandlerPackageBuilder.RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
+    private WenyanPackage processPackage(RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
         var map = new HashMap<>(rawPackage.variables());
         rawPackage.functions().forEach((name, function) ->
                 map.put(name, (RequestCallHandler) (thread, self, argsList) ->

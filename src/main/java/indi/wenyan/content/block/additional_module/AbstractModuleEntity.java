@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module;
 
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
+import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

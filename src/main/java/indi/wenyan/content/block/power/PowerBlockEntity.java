@@ -1,11 +1,12 @@
 package indi.wenyan.content.block.power;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
 import indi.wenyan.interpreter.utils.WenyanValues;
+import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,7 @@ public class PowerBlockEntity extends AbstractModuleEntity {
     public String basePackageName = "";
 
     @Getter
-    public HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+    public RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .intFunction("「天根」", integers -> a)
                     .intFunction("「数极」", integers -> LARGE_PRIME)

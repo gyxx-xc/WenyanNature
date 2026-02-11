@@ -6,10 +6,10 @@ import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
 import indi.wenyan.content.gui.code_editor.widget.PackageSnippetWidget;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
-import indi.wenyan.interpreter.exec_interface.IWenyanBlockDevice;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.structure.values.IWenyanFunction;
 import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
+import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
@@ -97,7 +97,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             BlockEntity blockEntity = level.getBlockEntity(b);
             if (blockEntity instanceof IWenyanBlockDevice executor) {
                 if (Objects.equals(executor.getPackageName(), "")) continue;
-                HandlerPackageBuilder.RawHandlerPackage execPackage = executor.getExecPackage();
+                RawHandlerPackage execPackage = executor.getExecPackage();
                 packageSnippets.add(packageSnippet(execPackage,
                         executor.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
                         executor.getPackageName()));
@@ -147,7 +147,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private PackageSnippetWidget.PackageSnippet packageSnippet(HandlerPackageBuilder.RawHandlerPackage execPackage, ItemStack itemStack, String name) {
+    private PackageSnippetWidget.PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack, String name) {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
         execPackage.variables().forEach((k, v) -> {
                     if (v.is(IWenyanObjectType.TYPE))

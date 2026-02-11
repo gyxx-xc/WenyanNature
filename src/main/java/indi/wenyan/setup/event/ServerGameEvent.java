@@ -1,6 +1,6 @@
 package indi.wenyan.setup.event;
 
-import indi.wenyan.interpreter.utils.FileLoader;
+import indi.wenyan.interpreter_impl.FileLoader;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;

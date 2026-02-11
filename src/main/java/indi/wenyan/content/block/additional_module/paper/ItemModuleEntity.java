@@ -2,12 +2,13 @@ package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.structure.values.warper.WenyanCapabilitySlot;
 import indi.wenyan.interpreter.utils.WenyanSymbol;
+import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.value.WenyanCapabilitySlot;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
     public final String basePackageName = WenyanSymbol.var("ItemModule");
 
     @Getter
-    private final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+    private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler(WenyanSymbol.var("ItemModule.transfer"), request -> {
                 IItemHandler capability = getItemHandlerCapability();
                 var from = request.args().getFirst().as(WenyanCapabilitySlot.TYPE);

@@ -7,11 +7,12 @@ import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
-import indi.wenyan.interpreter.exec_interface.HandlerPackageBuilder;
+import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
 import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.WenyanNull;
 import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
+import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CraftClearParticlePacket;
 import indi.wenyan.setup.network.CraftingParticlePacket;
@@ -100,7 +101,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     public static final String PARTICLE_ID = "particle";
 
     @Getter
-    public final HandlerPackageBuilder.RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+    public final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler("「参」", request -> {
                 if (!request.args().isEmpty())
                     throw new WenyanException.WenyanVarException("「参」function takes no arguments.");

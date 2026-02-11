@@ -1,6 +1,5 @@
 package indi.wenyan.content.item;
 
-import com.mojang.datafixers.util.Either;
 import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
 import indi.wenyan.interpreter.exec_interface.IWenyanPlatform;
 import indi.wenyan.interpreter.exec_interface.handler.RequestCallHandler;
@@ -15,6 +14,7 @@ import indi.wenyan.interpreter.structure.WenyanException;
 import indi.wenyan.interpreter.structure.WenyanThrowException;
 import indi.wenyan.interpreter.structure.values.IWenyanValue;
 import indi.wenyan.interpreter.structure.values.WenyanPackage;
+import indi.wenyan.interpreter.utils.Either;
 import indi.wenyan.interpreter.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;

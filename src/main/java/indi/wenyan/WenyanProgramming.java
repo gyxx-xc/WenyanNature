@@ -1,6 +1,9 @@
 package indi.wenyan;
 
 import com.mojang.logging.LogUtils;
+import indi.wenyan.interpreter.utils.LanguageManager;
+import indi.wenyan.interpreter.utils.LoggerManager;
+import indi.wenyan.interpreter_impl.MinecraftLanguageProvider;
 import indi.wenyan.setup.Registration;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -26,6 +29,8 @@ public class WenyanProgramming {
      * Constructor initializes the mod
      */
     public WenyanProgramming(IEventBus modEventBus, @SuppressWarnings("unused") ModContainer modContainer) {
+        LanguageManager.registerLanguageProvider(new MinecraftLanguageProvider());
+        LoggerManager.registerLogger(LOGGER);
         Registration.register(modEventBus);
     }
 }
