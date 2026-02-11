@@ -35,10 +35,11 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         basicItem(Registration.BAMBOO_PAPER.get());
         basicItem(Registration.CLOUD_PAPER.get());
-        basicItem(Registration.DRAGON_PAPER.get());
+        basicItem(Registration.STAR_PAPER.get());
         basicItem(Registration.FROST_PAPER.get());
         basicItem(Registration.PHOENIX_PAPER.get());
-        basicItem(Registration.STAR_PAPER.get());
+        basicItem(Registration.DRAGON_PAPER.get());
+
 
         basicItem(Registration.ARCANE_INK.get());
         basicItem(Registration.BAMBOO_INK.get());

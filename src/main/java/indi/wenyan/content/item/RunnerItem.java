@@ -7,8 +7,10 @@ import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import indi.wenyan.setup.network.RunnerTitlePacket;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,9 +32,9 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class RunnerItem extends BlockItem {
-    public static final String ID_1 = "hand_runner";
     // String constants for registry names and entity IDs
     public static final String ID_0 = "hand_runner_0";
+    public static final String ID_1 = "hand_runner_1";
     public static final String ID_2 = "hand_runner_2";
     public static final String ID_3 = "hand_runner_3";
 
@@ -41,6 +43,11 @@ public class RunnerItem extends BlockItem {
     public RunnerItem(Properties properties, int runningLevel) {
         super(Registration.RUNNER_BLOCK.get(), properties);
         this.runningLevel = runningLevel;
+    }
+
+    @Override
+    public String getDescriptionId() {
+        return Util.makeDescriptionId("item", BuiltInRegistries.ITEM.getKey(this));
     }
 
     @Override

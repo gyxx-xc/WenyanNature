@@ -109,17 +109,17 @@ public final class Registration {
     // Paper items
     public static final DeferredItem<Item> BAMBOO_PAPER;
     public static final DeferredItem<Item> CLOUD_PAPER;
-    public static final DeferredItem<Item> DRAGON_PAPER;
     public static final DeferredItem<Item> FROST_PAPER;
     public static final DeferredItem<Item> PHOENIX_PAPER;
     public static final DeferredItem<Item> STAR_PAPER;
+    public static final DeferredItem<Item> DRAGON_PAPER;
 
     // Ink items
     public static final DeferredItem<Item> ARCANE_INK;
     public static final DeferredItem<Item> BAMBOO_INK;
     public static final DeferredItem<Item> CELESTIAL_INK;
-    public static final DeferredItem<Item> LUNAR_INK;
     public static final DeferredItem<Item> CINNABAR_INK;
+    public static final DeferredItem<Item> LUNAR_INK;
     public static final DeferredItem<Item> STARLIGHT_INK;
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK;
@@ -277,17 +277,18 @@ public final class Registration {
         // Paper
         BAMBOO_PAPER = ITEMS.registerItem(BambooPaper.ID, BambooPaper::new);
         CLOUD_PAPER = ITEMS.registerItem(CloudPaper.ID, CloudPaper::new);
-        DRAGON_PAPER = ITEMS.registerItem(DragonPaper.ID, DragonPaper::new);
+        STAR_PAPER = ITEMS.registerItem(StarPaper.ID, StarPaper::new);
         FROST_PAPER = ITEMS.registerItem(FrostPaper.ID, FrostPaper::new);
         PHOENIX_PAPER = ITEMS.registerItem(PhoenixPaper.ID, PhoenixPaper::new);
-        STAR_PAPER = ITEMS.registerItem(StarPaper.ID, StarPaper::new);
+        DRAGON_PAPER = ITEMS.registerItem(DragonPaper.ID, DragonPaper::new);
+
 
         // Ink
         ARCANE_INK = ITEMS.registerItem(ArcaneInk.ID, ArcaneInk::new);
         BAMBOO_INK = ITEMS.registerItem(BambooInk.ID, BambooInk::new);
         CELESTIAL_INK = ITEMS.registerItem(CelestialInk.ID, CelestialInk::new);
-        LUNAR_INK = ITEMS.registerItem(LunarInk.ID, LunarInk::new);
         CINNABAR_INK = ITEMS.registerItem(CinnabarInk.ID, CinnabarInk::new);
+        LUNAR_INK = ITEMS.registerItem(LunarInk.ID, LunarInk::new);
         STARLIGHT_INK = ITEMS.registerItem(StarlightInk.ID, StarlightInk::new);
 
         BULLET_ENTITY = ENTITY.register(BulletEntity.ID,
@@ -474,17 +475,19 @@ public final class Registration {
 
                     output.accept(BAMBOO_PAPER.get());
                     output.accept(CLOUD_PAPER.get());
-                    output.accept(DRAGON_PAPER.get());
+                    output.accept(STAR_PAPER.get());
                     output.accept(FROST_PAPER.get());
                     output.accept(PHOENIX_PAPER.get());
-                    output.accept(STAR_PAPER.get());
+                    output.accept(DRAGON_PAPER.get());
 
-                    output.accept(ARCANE_INK.get());
+
                     output.accept(BAMBOO_INK.get());
-                    output.accept(CELESTIAL_INK.get());
-                    output.accept(LUNAR_INK.get());
                     output.accept(CINNABAR_INK.get());
                     output.accept(STARLIGHT_INK.get());
+                    output.accept(LUNAR_INK.get());
+                    output.accept(CELESTIAL_INK.get());
+                    output.accept(ARCANE_INK.get());
+
 
                     output.accept(EQUIPABLE_RUNNER_ITEM.get());
                     output.accept(PRINT_INVENTORY_MODULE.get());
