@@ -1,9 +1,9 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanThrowException;
-import indi.wenyan.interpreter.structure.values.IWenyanObject;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.values.IWenyanObject;
+import indi.wenyan.judou.structure.values.IWenyanValue;
 
 /**
  * Interface for checkers that validate answers in Wenyan programs.

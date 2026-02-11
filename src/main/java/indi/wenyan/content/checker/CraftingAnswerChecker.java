@@ -1,10 +1,10 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanThrowException;
-import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.IWenyanObject;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.structure.values.IWenyanObject;
+import indi.wenyan.judou.structure.values.IWenyanValue;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

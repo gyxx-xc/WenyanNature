@@ -1,12 +1,12 @@
 package indi.wenyan.content.block.additional_module.builtin;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.utils.WenyanSymbol;
-import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.WenyanSymbol;
+import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;

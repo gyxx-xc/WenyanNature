@@ -1,0 +1,33 @@
+package indi.wenyan.judou.exec_interface;
+
+import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
+import indi.wenyan.judou.runtime.WenyanRuntime;
+import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.utils.WenyanPackages;
+
+/**
+ * Interface representing a platform that can execute Wenyan code and send
+ * execute command to Wenyan devices
+ */
+public interface IWenyanPlatform extends IExecReceiver {
+    /**
+     * Accepts and processes a JavacallContext, and showing effect if needed
+     *
+     * @param request The request to process
+     */
+    default void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {}
+
+    /**
+     * Initializes the platform environment for the Wenyan runtime
+     */
+    default WenyanRuntime initEnvironment() {
+        var environment = new WenyanRuntime(null);
+        environment.importPackage(WenyanPackages.WENYAN_BASIC_PACKAGES);
+        return environment;
+    }
+
+    String getPlatformName();
+
+    void handleError(String error);
+}

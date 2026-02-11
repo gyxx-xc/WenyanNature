@@ -1,17 +1,17 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.interpreter.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanThrowException;
-import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.IWenyanObject;
-import indi.wenyan.interpreter.structure.values.IWenyanObjectType;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanInteger;
-import indi.wenyan.interpreter.utils.WenyanDataParser;
-import indi.wenyan.interpreter.utils.WenyanThreading;
-import indi.wenyan.interpreter.utils.WenyanValues;
+import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
+import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.structure.values.IWenyanObject;
+import indi.wenyan.judou.structure.values.IWenyanObjectType;
+import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.values.WenyanNull;
+import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
+import indi.wenyan.judou.utils.WenyanDataParser;
+import indi.wenyan.judou.utils.WenyanThreading;
+import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;

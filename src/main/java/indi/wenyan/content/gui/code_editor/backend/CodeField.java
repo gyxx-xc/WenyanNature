@@ -1,7 +1,7 @@
 package indi.wenyan.content.gui.code_editor.backend;
 
 import com.google.common.collect.Lists;
-import indi.wenyan.interpreter.antlr.WenyanRLexer;
+import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;

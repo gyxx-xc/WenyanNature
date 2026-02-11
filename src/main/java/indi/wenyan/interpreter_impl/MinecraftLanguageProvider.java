@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter_impl;
 
-import indi.wenyan.interpreter.utils.ILanguageProvider;
+import indi.wenyan.judou.utils.ILanguageProvider;
 import net.minecraft.network.chat.Component;
 
 public class MinecraftLanguageProvider implements ILanguageProvider {

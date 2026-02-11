@@ -1,12 +1,12 @@
 package indi.wenyan.content.item.additional_module;
 
 import indi.wenyan.content.item.EquipableRunnerItem;
-import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
-import indi.wenyan.interpreter.exec_interface.RawHandlerPackage;
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.values.WenyanNull;
-import indi.wenyan.interpreter.structure.values.primitive.WenyanString;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.judou.exec_interface.IWenyanDevice;
+import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.values.WenyanNull;
+import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;

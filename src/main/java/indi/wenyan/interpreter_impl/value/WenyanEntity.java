@@ -1,13 +1,13 @@
 package indi.wenyan.interpreter_impl.value;
 
-import indi.wenyan.interpreter.structure.WenyanException;
-import indi.wenyan.interpreter.structure.WenyanThrowException;
-import indi.wenyan.interpreter.structure.WenyanType;
-import indi.wenyan.interpreter.structure.values.IWenyanObject;
-import indi.wenyan.interpreter.structure.values.IWenyanValue;
-import indi.wenyan.interpreter.structure.values.IWenyanWarperValue;
-import indi.wenyan.interpreter.utils.WenyanValues;
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
+import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.structure.values.IWenyanObject;
+import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.values.IWenyanWarperValue;
+import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.world.entity.Entity;
 
 public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, IWenyanObject {

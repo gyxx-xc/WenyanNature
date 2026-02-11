@@ -5,7 +5,7 @@ import indi.wenyan.content.gui.Utils;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.backend.CodeField;
 import indi.wenyan.content.gui.code_editor.backend.Completion;
-import indi.wenyan.interpreter.antlr.WenyanRLexer;
+import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;

@@ -1,6 +1,6 @@
 package indi.wenyan.interpreter_impl;
 
-import indi.wenyan.interpreter.exec_interface.IWenyanDevice;
+import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
