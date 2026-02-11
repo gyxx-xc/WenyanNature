@@ -12,8 +12,9 @@ public class ChineseLanguageProvider extends LanguageProvider {
 
     /**
      * Constructs a new Chinese language provider.
+     *
      * @param output The pack output for language file generation
-     * @param modid The mod ID
+     * @param modid  The mod ID
      * @param locale The locale code (zh_cn)
      */
     public ChineseLanguageProvider(PackOutput output, String modid, String locale) {
@@ -22,26 +23,30 @@ public class ChineseLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add(Registration.HAND_RUNNER_0.get(),"符咒");
-        add(Registration.FLOAT_NOTE.get(), "浮签");
-        add(Registration.BAMBOO_PAPER.get(),"松竹纸");
-        add(Registration.CLOUD_PAPER.get(),"云篆纸");
-        add(Registration.STAR_PAPER.get(),"星辉纸");
-        add(Registration.FROST_PAPER.get(),"霜华纸");
-        add(Registration.PHOENIX_PAPER.get(),"凤羽纸");
-        add(Registration.DRAGON_PAPER.get(),"龙鳞纸");
-        add(Registration.ARCANE_INK.get(),"玄武墨");
-        add(Registration.BAMBOO_INK.get(),"松清墨");
-        add(Registration.CELESTIAL_INK.get(),"冥土墨");
-        add(Registration.CINNABAR_INK.get(),"朱砂墨");
-        add(Registration.LUNAR_INK.get(),"月华墨");
-        add(Registration.STARLIGHT_INK.get(),"星光墨");
+        add(Registration.HAND_RUNNER_0.get(), "一阶符");
+        add(Registration.HAND_RUNNER_1.get(), "二阶符");
+        add(Registration.HAND_RUNNER_2.get(), "三阶符");
+        add(Registration.HAND_RUNNER_3.get(), "四阶符");
 
-        // TODO: rename needed
-        add(Registration.BIT_MODULE_BLOCK.get(), "位符");
+        add(Registration.FLOAT_NOTE.get(), "浮签");
+        add(Registration.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
+        add(Registration.CLOUD_PAPER.get(), "云篆纸 (Lv.2)");
+        add(Registration.STAR_PAPER.get(), "星辉纸 (Lv.3)");
+        add(Registration.FROST_PAPER.get(), "霜华纸 (Lv.4)");
+        add(Registration.PHOENIX_PAPER.get(), "凤羽纸 (Lv.5)");
+        add(Registration.DRAGON_PAPER.get(), "龙鳞纸 (Lv.6)");
+
+        add(Registration.BAMBOO_INK.get(), "松清墨 (Lv.1)");
+        add(Registration.CINNABAR_INK.get(), "朱砂墨 (Lv.2)");
+        add(Registration.STARLIGHT_INK.get(), "星光墨 (Lv.3)");
+        add(Registration.LUNAR_INK.get(), "月华墨 (Lv.4)");
+        add(Registration.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
+        add(Registration.ARCANE_INK.get(), "玄武墨 (Lv.6)");
+
+        add(Registration.BIT_MODULE_BLOCK.get(), "位元符");
         add(Registration.COLLECTION_MODULE_BLOCK.get(), "集符");
         add(Registration.MATH_MODULE_BLOCK.get(), "數符");
-        add(Registration.RANDOM_MODULE_BLOCK.get(), "隨符");
+        add(Registration.RANDOM_MODULE_BLOCK.get(), "熵符");
         add(Registration.STRING_MODULE_BLOCK.get(), "字串符");
         add(Registration.VEC3_MODULE_BLOCK.get(), "向量符");
         add(Registration.BLOCK_MODULE_BLOCK.get(), "方塊符");
@@ -56,18 +61,19 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(Registration.SCREEN_MODULE_BLOCK.get(), "螢幕石");
         add(Registration.SEMAPHORE_MODULE_BLOCK.get(), "信號量石");
 
-        add(Registration.EQUIPABLE_RUNNER_ITEM.get(), "可裝符");
+        add(Registration.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
 
         add(Registration.CRAFTING_BLOCK.get(), "創石");
-        add(Registration.PEDESTAL_BLOCK.get(), "石石");
+        add(Registration.PEDESTAL_BLOCK.get(), "基石");
+        add(Registration.POWER_BLOCK.get(), "算核");
 
-        add("error.wenyan_programming.variables_not_match","謬：參數非同於冊");
+        add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
-        add("error.wenyan_programming.unknown_operator","謬：不識此算子");
-        add("error.wenyan_programming.unknown_preposition","謬：不識此介詞");
-        add("error.wenyan_programming.function_name_does_not_match","謬：函名非相符");
-        add("error.wenyan_programming.last_result_is_null","謬：末次為空");
-        add("error.wenyan_programming.not_implemented","謬：not implemented");
+        add("error.wenyan_programming.unknown_operator", "謬：不識此算子");
+        add("error.wenyan_programming.unknown_preposition", "謬：不識此介詞");
+        add("error.wenyan_programming.function_name_does_not_match", "謬：函名非相符");
+        add("error.wenyan_programming.last_result_is_null", "謬：末次為空");
+        add("error.wenyan_programming.not_implemented", "謬：not implemented");
 
         add("error.wenyan_programming.invalid_float_number", "謬：不識此分數");
         add("error.wenyan_programming.invalid_bool_value", "謬：不識此爻");
