@@ -1,7 +1,5 @@
 package indi.wenyan.content.block;
 
-import com.mojang.serialization.MapCodec;
-import indi.wenyan.content.block.runner.RunnerBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +19,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectionalBlock {
     public static final Properties PROPERTIES = Properties.of().noCollission();
 
-    public static final MapCodec<RunnerBlock> CODEC = simpleCodec(ignore -> new RunnerBlock());
     public static final VoxelShape FLOOR_NORTH_AABB;
     public static final VoxelShape FLOOR_SOUTH_AABB;
     public static final VoxelShape FLOOR_WEST_AABB;
@@ -39,9 +36,8 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
         super(PROPERTIES);
     }
 
-    @Override
-    protected MapCodec<RunnerBlock> codec() {
-        return CODEC;
+    protected AbstractFuluBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

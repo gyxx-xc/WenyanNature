@@ -36,6 +36,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -44,6 +45,8 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
+
+import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -76,7 +79,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             new ImportRequest(t, this, this::getPackage, a);
 
     @Getter
-    private String platformName = Component.translatable("code.wenyan_programming.bracket", Component.translatable("block.wenyan_programming.runner_block")).getString();
+    private String platformName = Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString();
 
     @Override
     public WenyanRuntime initEnvironment() {
@@ -106,6 +109,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     public void handleError(String error) {
+        assert getLevel() != null;
+        getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
         if (getLevel() instanceof ServerLevel sl)
             PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
                     new PlatformOutputPacket(getBlockPos(), error, PlatformOutputPacket.OutputStyle.ERROR));

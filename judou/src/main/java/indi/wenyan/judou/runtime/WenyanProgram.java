@@ -123,6 +123,10 @@ public class WenyanProgram {
         return runningThreadsNumber.get() > 0;
     }
 
+    public boolean isIdle() {
+        return readyQueue.isEmpty();
+    }
+
     /**
      * The scheduler loop that runs on a separate Java thread.
      * Manages thread execution and switching.

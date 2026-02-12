@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.runner;
 
+import com.mojang.serialization.MapCodec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
@@ -13,20 +14,27 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -39,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.ToIntFunction;
 
 import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
@@ -46,6 +55,24 @@ import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_R
 public class
 RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public static final String ID = "runner_block";
+    public static final EnumProperty<RunningState> RUNNING_STATE = EnumProperty.create("running_state", RunningState.class);
+
+    public RunnerBlock(Properties properties) {
+        super(properties.noCollission().lightLevel(getBlockStateToIntFunction()));
+        registerDefaultState(stateDefinition.any()
+                .setValue(RUNNING_STATE, RunningState.NOT_RUNNING)
+        );
+    }
+
+    public static final MapCodec<RunnerBlock> CODEC = simpleCodec(RunnerBlock::new);
+    @Override
+    protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+        return CODEC;
+    }
+
+    private static @NotNull ToIntFunction<BlockState> getBlockStateToIntFunction() {
+        return state -> state.getValue(RUNNING_STATE).getLightLevel();
+    }
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
@@ -79,6 +106,20 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             if (blockEntityType == Registration.RUNNER_BLOCK_ENTITY.get())
                 ((RunnerBlockEntity) entity).tick(level1, pos, state1);
         };
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(RUNNING_STATE);
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        var blockState = super.getStateForPlacement(context);
+        if (blockState == null) return null;
+        blockState.setValue(RUNNING_STATE, RunningState.NOT_RUNNING);
+        return blockState;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -162,5 +203,25 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD))
         );
         return new PackageSnippetWidget.PackageSnippet(itemStack, name, members);
+    }
+
+    public enum RunningState implements StringRepresentable {
+        RUNNING("running", 9),
+        ERROR("error", 10),
+        NOT_RUNNING("not_running", 0);
+
+        private final String name;
+        @Getter
+        private final int lightLevel;
+
+        RunningState(String name, int lightLevel) {
+            this.name = name;
+            this.lightLevel = lightLevel;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.additional_module.paper;
 
+import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.IModuleBlock;
 import indi.wenyan.setup.Registration;
@@ -8,6 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommunicateModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "communicate_module_block";
+    
+    public static final MapCodec<CommunicateModuleBlock> CODEC = simpleCodec(ignore -> new CommunicateModuleBlock());
+    
+    @Override
+    protected @NotNull MapCodec<CommunicateModuleBlock> codec() {
+        return CODEC;
+    }
 
     @Override
     @NotNull

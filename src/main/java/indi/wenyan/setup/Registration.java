@@ -261,7 +261,7 @@ public final class Registration {
                 (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
         PRINT_INVENTORY_MODULE = ITEMS.registerItem(PrintInventoryModule.ID, PrintInventoryModule::new);
 
-        RUNNER_BLOCK = BLOCKS.register(RunnerBlock.ID, RunnerBlock::new);
+        RUNNER_BLOCK = BLOCKS.registerBlock(RunnerBlock.ID, RunnerBlock::new);
         RUNNER_BLOCK_ENTITY = BLOCK_ENTITY.register(RunnerBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(RunnerBlockEntity::new, RUNNER_BLOCK.get())

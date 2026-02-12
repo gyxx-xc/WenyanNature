@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.additional_module.paper;
 
+import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.IModuleBlock;
 import indi.wenyan.setup.Registration;
@@ -8,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -45,5 +47,12 @@ public class WorldModuleBlock extends AbstractFuluBlock implements IModuleBlock 
     static void updateNeighbors(BlockState state, Level world, BlockPos pos) {
         world.updateNeighborsAt(pos, state.getBlock());
         world.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), state.getBlock());
+    }
+
+    public static final MapCodec<WorldModuleBlock> CODEC = simpleCodec(ignore -> new WorldModuleBlock());
+
+    @Override
+    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+        return CODEC;
     }
 }
