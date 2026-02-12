@@ -202,6 +202,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     public enum RunningState implements StringRepresentable {
         RUNNING("running", 4),
+        IDLE("idle", 4),
         ERROR("error", 10),
         NOT_RUNNING("not_running", 0);
 

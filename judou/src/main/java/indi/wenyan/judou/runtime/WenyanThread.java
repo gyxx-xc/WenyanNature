@@ -54,7 +54,7 @@ public class WenyanThread {
      * Current execution state
      */
     @Getter
-    private State state = State.READY;
+    private State state = State.BLOCKED;
 
     /**
      * Possible states of a Wenyan thread
@@ -241,6 +241,7 @@ public class WenyanThread {
     public void yieldThread() {
         if (state == State.READY) {
             program.readyQueue.add(this);
+            assignedSteps = 0;
         }
     }
 

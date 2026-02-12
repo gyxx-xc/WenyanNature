@@ -87,7 +87,7 @@ public class WenyanProgram {
             runningThreadsNumber.getAndDecrement();
             throw new WenyanException.WenyanVarException("too many threads");
         }
-        readyQueue.add(thread);
+        thread.unblock(); // add to ready queue
         return thread;
     }
 

@@ -122,12 +122,41 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @SuppressWarnings("unused")
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide)
-            ifProgram().ifPresent(program -> {
+            ifProgram().ifPresentOrElse(program -> {
                 if (program.isRunning()) {
                     program.step(speed);
                     handle(new BlockContext(level, pos, state));
                 }
+                // update showing state
+                // As you can see, it's a busy wait checking if the program status
+                // but why not listener?
+                // the program loop is running on a different thread, access to level
+                // when listener is toggle might produce strange result. Meanwhile, ways
+                // like sync result until next tick has almost same cost as this
+                // (both need const level op every tick)
+                RunnerBlock.RunningState runningState;
+                if (program.isRunning()) {
+                    if (program.isIdle())
+                        runningState = RunnerBlock.RunningState.IDLE;
+                    else
+                        runningState = RunnerBlock.RunningState.RUNNING;
+                } else {
+                    runningState = RunnerBlock.RunningState.NOT_RUNNING;
+                }
+                updateShowingState(runningState);
+            }, () -> {
+                updateShowingState(RunnerBlock.RunningState.NOT_RUNNING);
             });
+    }
+
+    private void updateShowingState(RunnerBlock.RunningState state) {
+        var oldState = getBlockState().getValue(RUNNING_STATE);
+        if (oldState != state) {
+            // error state will continue showed unless next step's change
+            if (oldState == RunnerBlock.RunningState.ERROR &&
+                    (state == RunnerBlock.RunningState.NOT_RUNNING || state == RunnerBlock.RunningState.IDLE)) return;
+            level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, state), Block.UPDATE_CLIENTS);
+        }
     }
 
     public void playerRun() {

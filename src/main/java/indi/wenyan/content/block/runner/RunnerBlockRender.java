@@ -48,7 +48,8 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
         float uvOffset = switch (state) {
             case RUNNING -> 0.0F;
             case ERROR -> 0.25F;
-            case NOT_RUNNING -> 0.5F;
+            case IDLE -> 0.5F;
+            case NOT_RUNNING -> 0.75F;
         };
         vertex(vertexconsumer, poseStack.last(), -1.0F, -1.0F, 0.0F, Color.WHITE, 125, 0.0F, uvOffset + 0.25F, emissiveLight);
         vertex(vertexconsumer, poseStack.last(), -1.0F,  1.0F, 0.0F, Color.WHITE, 125, 0.0F, uvOffset + 0.0F, emissiveLight);
