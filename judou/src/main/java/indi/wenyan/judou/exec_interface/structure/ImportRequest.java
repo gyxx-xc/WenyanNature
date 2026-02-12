@@ -17,7 +17,7 @@ import java.util.List;
 
 @Data
 @Accessors(fluent = true)
-public final class ImportRequest implements IHandleableRequest {
+public final class ImportRequest implements BaseHandleableRequest {
     final WenyanThread thread;
     final IWenyanPlatform platform;
     final ImportFunction getPackage;

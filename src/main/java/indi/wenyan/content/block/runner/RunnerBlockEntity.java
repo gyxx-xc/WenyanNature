@@ -21,8 +21,10 @@ import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -154,23 +156,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     public void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {
-        if (!(context instanceof BlockContext blockContext)) {
-            throw new WenyanException.WenyanUnreachedException();
-        }
-        Level level = blockContext.level();
-        if (!(level instanceof ServerLevel sl)) {
-            throw new WenyanException.WenyanUnreachedException();
-        }
-
-        if (request instanceof BlockRequest blockRequest) {
-            if (blockRequest.device().isRemoved()) {
-                throw new WenyanException("device removed");
-            }
-            if (blockRequest.device() instanceof IWenyanBlockDevice device) {
-                PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
-                        new CommunicationLocationPacket(getBlockPos(), device.blockPos().getCenter()));
-            }
-        }
     }
 
     public static final String PAGES_ID = "pages";
@@ -291,31 +276,32 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                                 BlockState state) implements IHandleContext {
     }
 
-    public record BlockRequest(
-            IWenyanPlatform platform,
-            IWenyanBlockDevice device,
-            WenyanThread thread,
+    @Accessors(fluent = true)
+    @Data
+    public class BlockRequest implements BaseHandleableRequest {
+        private final IWenyanPlatform platform;
+        private final IWenyanBlockDevice device;
+        private final WenyanThread thread;
 
-            IRawRequest request,
-            IWenyanValue self,
-            List<IWenyanValue> args
-    ) implements IHandleableRequest {
+        private final IRawRequest request;
+        private final IWenyanValue self;
+        private final List<IWenyanValue> args;
 
         @Override
         public boolean handle(IHandleContext context) throws WenyanThrowException {
             return request.handle(context, this);
         }
-    }
 
-    public record PlatformRequest(
-            WenyanThread thread,
-            IRawRequest request,
-            IWenyanValue self,
-            List<IWenyanValue> args
-    ) implements IHandleableRequest {
         @Override
-        public boolean handle(IHandleContext context) throws WenyanThrowException {
-            return request.handle(context, this);
+        public void noticePlatform(IWenyanPlatform platform, IHandleContext context) throws WenyanThrowException {
+            if (device().isRemoved()) {
+                throw new WenyanException("device removed");
+            }
+            if (!(getLevel() instanceof ServerLevel sl)) {
+                throw new WenyanException.WenyanUnreachedException();
+            }
+            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                    new CommunicationLocationPacket(getBlockPos(), device.blockPos().getCenter()));
         }
     }
 }

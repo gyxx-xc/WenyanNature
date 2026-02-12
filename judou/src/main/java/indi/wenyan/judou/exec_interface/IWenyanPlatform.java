@@ -13,9 +13,11 @@ import indi.wenyan.judou.utils.WenyanPackages;
 public interface IWenyanPlatform extends IExecReceiver {
     /**
      * Accepts and processes a JavacallContext, and showing effect if needed
+     * @deprecated changed to noticePlatform in BaseHandleableRequest
      *
      * @param request The request to process
      */
+    @Deprecated
     default void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {}
 
     /**

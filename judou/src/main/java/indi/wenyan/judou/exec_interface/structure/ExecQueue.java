@@ -2,8 +2,6 @@ package indi.wenyan.judou.exec_interface.structure;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.WenyanProgram;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.utils.WenyanThreading;
 
 import java.util.ArrayList;
@@ -46,18 +44,8 @@ public class ExecQueue {
         Collection<IHandleableRequest> undoneRequests = new ArrayList<>();
         while (!queue.isEmpty()) {
             IHandleableRequest request = queue.remove();
-            try {
-                platform.notice(request, context);
-                boolean done = request.handle(context);
-                if (done) {
-                    request.thread().unblock();
-                } else {
-                    undoneRequests.add(request);
-                }
-            } catch (WenyanThrowException e) {
-                request.thread().dieWithException(e);
-            } catch (Exception e) {
-                request.thread().dieWithException(new WenyanException.WenyanUnreachedException());
+            if (!request.run(platform, context)) {
+                undoneRequests.add(request);
             }
         }
         queue.addAll(undoneRequests); // These are for next tick

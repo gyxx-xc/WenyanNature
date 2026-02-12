@@ -3,6 +3,7 @@ package indi.wenyan.interpreter_impl;
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.judou.structure.WenyanThrowException;
@@ -28,7 +29,7 @@ import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_R
 public final class HandlerPackageBuilder {
     // with support of wenyan package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
-    private final Map<String, Supplier<IHandleableRequest.IRawRequest>> functions = new HashMap<>();
+    private final Map<String, Supplier<BaseHandleableRequest.IRawRequest>> functions = new HashMap<>();
 
     /**
      * Creates a new package builder
@@ -66,17 +67,17 @@ public final class HandlerPackageBuilder {
         return new RawHandlerPackage(variables, functions);
     }
 
-    public HandlerPackageBuilder handler(String name, Supplier<IHandleableRequest.IRawRequest> function) {
+    public HandlerPackageBuilder handler(String name, Supplier<BaseHandleableRequest.IRawRequest> function) {
         functions.put(name, function);
         return this;
     }
 
-    public HandlerPackageBuilder handler(String name, IHandleableRequest.IRawRequest function) {
+    public HandlerPackageBuilder handler(String name, BaseHandleableRequest.IRawRequest function) {
         return handler(name, () -> function);
     }
 
     public HandlerPackageBuilder handler(String name, HandlerReturnFunction function) {
-        return handler(name, (IHandleableRequest.IRawRequest) (context, request) -> {
+        return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(context, request);
             request.thread().currentRuntime().pushReturnValue(value);
             return true;
@@ -84,7 +85,7 @@ public final class HandlerPackageBuilder {
     }
 
     public HandlerPackageBuilder handler(String name, HandlerSimpleFunction function) {
-        return handler(name, (IHandleableRequest.IRawRequest) (context, request) -> {
+        return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(request);
             request.thread().currentRuntime().pushReturnValue(value);
             return true;
@@ -92,7 +93,7 @@ public final class HandlerPackageBuilder {
     }
 
     public HandlerPackageBuilder handler(String name, ImportFunction function) {
-        return handler(name, (IHandleableRequest.IRawRequest) (context, request) -> {
+        return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
             String packageName = request.args().getFirst().as(WenyanString.TYPE).value();
             WenyanPackage execPackage = function.getPackage(context, packageName);
             if (request.args().size() == 1) {
@@ -111,7 +112,7 @@ public final class HandlerPackageBuilder {
     }
 
     public HandlerPackageBuilder handler(String name, int power, HandlerReturnFunction function) {
-        return handler(name, () -> new IHandleableRequest.IRawRequest() {
+        return handler(name, () -> new BaseHandleableRequest.IRawRequest() {
             int acquired = 0;
 
             @Override

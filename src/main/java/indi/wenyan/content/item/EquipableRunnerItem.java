@@ -3,10 +3,7 @@ package indi.wenyan.content.item;
 import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.exec_interface.structure.ExecQueue;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.ImportRequest;
+import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.WenyanProgram;
 import indi.wenyan.judou.runtime.WenyanRuntime;
 import indi.wenyan.judou.runtime.WenyanThread;
@@ -167,7 +164,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             List<IWenyanValue> args,
             ItemStack itemStack,
             int slotId
-    ) implements IHandleableRequest {
+    ) implements BaseHandleableRequest {
         @Override
         public boolean handle(IHandleContext context) throws WenyanThrowException {
             return request.handle(context, this);
