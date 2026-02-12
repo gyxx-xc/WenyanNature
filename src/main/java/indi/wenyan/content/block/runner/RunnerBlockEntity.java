@@ -6,10 +6,7 @@ import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.exec_interface.structure.ExecQueue;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.ImportRequest;
+import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.WenyanProgram;
 import indi.wenyan.judou.runtime.WenyanRuntime;
 import indi.wenyan.judou.runtime.WenyanThread;
@@ -86,18 +83,16 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
         baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
         baseEnvironment.setVariable("書", (RequestCallHandler) (thread, self, argsList) ->
-                new PlatformRequest(this, thread,
-                        (context, request) -> {
-                            String s = request.args().getFirst().as(WenyanString.TYPE).value();
+                new SimpleRequest(thread, self, argsList,
+                        (ignore, args) -> {
+                            String s = args.getFirst().as(WenyanString.TYPE).value();
                             if (getLevel() instanceof ServerLevel sl) {
                                 PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
                                         new PlatformOutputPacket(getBlockPos(), s, PlatformOutputPacket.OutputStyle.NORMAL));
                             }
                             addOutput(s, PlatformOutputPacket.OutputStyle.NORMAL);
-                            request.thread().currentRuntime().pushReturnValue(WenyanNull.NULL);
-                            return true;
-                        },
-                        self, argsList));
+                            return WenyanNull.NULL;
+                        }));
 
         assert getLevel() != null;
         BlockPos attached = getBlockPos().relative(
@@ -228,13 +223,13 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             } else if (blockEntity instanceof RunnerBlockEntity platform) {
                 if (platform == this) continue;
                 if (platform.getPlatformName().equals(packageName))
-                    return Either.right(getPlatformThread(platform));
+                    return Either.right(createPlatformThread(platform));
             }
         }
         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
     }
 
-    private WenyanThread getPlatformThread(RunnerBlockEntity platform) throws WenyanThrowException {
+    private WenyanThread createPlatformThread(RunnerBlockEntity platform) throws WenyanThrowException {
         if (getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl,
                     new ChunkPos(getBlockPos()),
@@ -313,7 +308,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public record PlatformRequest(
-            IWenyanPlatform platform,
             WenyanThread thread,
             IRawRequest request,
             IWenyanValue self,
