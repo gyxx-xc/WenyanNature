@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.ToIntFunction;
 
 import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
@@ -58,7 +57,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public static final EnumProperty<RunningState> RUNNING_STATE = EnumProperty.create("running_state", RunningState.class);
 
     public RunnerBlock(Properties properties) {
-        super(properties.noCollission().lightLevel(getBlockStateToIntFunction()));
+        super(properties.noCollission().lightLevel(state -> state.getValue(RUNNING_STATE).getLightLevel()));
         registerDefaultState(stateDefinition.any()
                 .setValue(RUNNING_STATE, RunningState.NOT_RUNNING)
         );
@@ -68,10 +67,6 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     @Override
     protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
         return CODEC;
-    }
-
-    private static @NotNull ToIntFunction<BlockState> getBlockStateToIntFunction() {
-        return state -> state.getValue(RUNNING_STATE).getLightLevel();
     }
 
     @Override
@@ -206,7 +201,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     public enum RunningState implements StringRepresentable {
-        RUNNING("running", 9),
+        RUNNING("running", 4),
         ERROR("error", 10),
         NOT_RUNNING("not_running", 0);
 
