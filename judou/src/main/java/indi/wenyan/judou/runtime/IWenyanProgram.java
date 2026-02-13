@@ -1,0 +1,32 @@
+package indi.wenyan.judou.runtime;
+
+import indi.wenyan.judou.structure.WenyanException;
+
+public interface IWenyanProgram<T> {
+    /**
+     * Allocates execution steps to the program.
+     * Not Thread-safe, should be only called from minecraft thread.
+     *
+     * @param steps Number of execution steps to allocate
+     */
+    void step(int steps);
+
+    boolean isRunning();
+
+    void unblock(IThreadHolder<T> runner) throws WenyanException;
+
+    void stop() throws WenyanException;
+
+    <C extends IThreadHolder<T> & IBytecodeRunner> void create(C runner) throws WenyanException;
+
+    // NOTE: the runner are assume to not running after following call
+    void block(IThreadHolder<T> runner) throws WenyanException;
+
+    void yield(IThreadHolder<T> runner) throws WenyanException;
+
+    void die(IThreadHolder<T> runner) throws WenyanException;
+
+    void dieWithException(IThreadHolder<T> runner, Exception e) throws WenyanException;
+
+    void consumeStep(IThreadHolder<T> runner, int i) throws WenyanException;
+}

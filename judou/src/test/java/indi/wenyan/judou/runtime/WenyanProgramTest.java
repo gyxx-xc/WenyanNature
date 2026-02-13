@@ -1,9 +1,8 @@
 package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.judou.exec_interface.structure.ExecQueue;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.runtime.utils.TestPlatform;
 import indi.wenyan.judou.runtime.utils.generated_WenyanProgramTestData;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
@@ -20,7 +19,6 @@ import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.helpers.NOPLogger;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -31,38 +29,6 @@ import static org.junit.jupiter.api.Assertions.*;
 // one time run might cause coincident pass
 // TODO: load language part only
 class WenyanProgramTest {
-
-    class TestPlatform implements IWenyanPlatform {
-        private final ExecQueue execQueue = new ExecQueue(this);
-        public String error = null;
-        public List<IWenyanValue> output = new ArrayList<>();
-
-        @Override
-        public String getPlatformName() {
-            return "test";
-        }
-
-        @Override
-        public void handleError(String error) {
-            assert this.error == null;
-            this.error = error;
-        }
-
-        @Override
-        public ExecQueue getExecQueue() {
-            return execQueue;
-        }
-
-        @Override
-        public WenyanRuntime initEnvironment() {
-            var baseRuntime = IWenyanPlatform.super.initEnvironment();
-            baseRuntime.setVariable("書", new WenyanInlineJavacall((self, args) -> {
-                output.addAll(args);
-                return WenyanNull.NULL;
-            }));
-            return baseRuntime;
-        }
-    }
 
     static {
         LanguageManager.registerLanguageProvider(s -> s);
