@@ -1,8 +1,9 @@
 package indi.wenyan.judou.runtime;
 
+import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.structure.WenyanException;
 
-public interface IWenyanProgram<T> {
+public interface IWenyanProgram<T extends IWenyanThread> {
     /**
      * Allocates execution steps to the program.
      * Not Thread-safe, should be only called from minecraft thread.
@@ -10,6 +11,8 @@ public interface IWenyanProgram<T> {
      * @param steps Number of execution steps to allocate
      */
     void step(int steps);
+
+    IWenyanPlatform getPlatform();
 
     boolean isRunning();
 
@@ -25,8 +28,6 @@ public interface IWenyanProgram<T> {
     void yield(IThreadHolder<T> runner) throws WenyanException;
 
     void die(IThreadHolder<T> runner) throws WenyanException;
-
-    void dieWithException(IThreadHolder<T> runner, Exception e) throws WenyanException;
 
     void consumeStep(IThreadHolder<T> runner, int i) throws WenyanException;
 }

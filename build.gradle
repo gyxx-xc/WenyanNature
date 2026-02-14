@@ -163,9 +163,7 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-launcher")
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.google.guava:guava-testlib:21.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
     testImplementation("net.neoforged:testframework:21.1.206")
-    testImplementation("org.mockito:mockito-core:5.+")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
