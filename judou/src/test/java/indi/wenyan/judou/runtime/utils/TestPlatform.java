@@ -22,7 +22,9 @@ public class TestPlatform implements IWenyanPlatform {
 
     @Override
     public void handleError(String error) {
-        assert this.error == null;
+        if (this.error != null) {
+            throw new RuntimeException("trigger error after error");
+        }
         this.error = error;
     }
 

@@ -9,9 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.Cleaner;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,6 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> {
     public static final int SLICE_STEP = 1000;
     public static final int MAX_THREAD = 10;
+    public static final int WATCHDOG_TIMEOUT = 5;
 
     private final Lock stepLock = new ReentrantLock();
     private final Condition newStepsCondition = stepLock.newCondition();
@@ -48,7 +47,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     public final IWenyanPlatform platform;
 
     private static final ScheduledExecutorService WATCHDOG = Executors.newSingleThreadScheduledExecutor(r -> {
-        var thread = new Thread(r, "WenyanProgramImpl-watchdog");
+        var thread = new Thread(r, "WenyanProgram-watchdog");
         thread.setDaemon(true);
         return thread;
     });
@@ -98,7 +97,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void block(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.READY) {
+        if (thread.getState() == WenyanThread.State.READY && allThreads.contains(thread)) {
             thread.setState(WenyanThread.State.BLOCKED);
             updateIdle();
         } else {
@@ -109,7 +108,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void unblock(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.BLOCKED) {
+        if (thread.getState() == WenyanThread.State.BLOCKED && allThreads.contains(thread)) {
             thread.setState(WenyanThread.State.READY);
             submitThread(runner);
         } else {
@@ -120,7 +119,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void yield(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.READY) {
+        if (thread.getState() == WenyanThread.State.READY && allThreads.contains(thread)) {
             submitThread(runner);
         } else {
             throw new WenyanException.WenyanUnreachedException();
@@ -130,7 +129,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void die(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.DYING)
+        if (thread.getState() == WenyanThread.State.DYING || !allThreads.contains(thread))
             throw new WenyanException.WenyanUnreachedException();
         allThreads.remove(thread);
         thread.setState(WenyanThread.State.DYING);
@@ -142,6 +141,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         allThreads.forEach(thread -> {
             thread.getWatchdog().cancel(false);
         });
+        executor.shutdownNow();
         executorCleanable.clean();
         allThreads.clear();
     }
@@ -173,6 +173,8 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
                 runner.getThread().getWatchdog().cancel(false);
                 idleFlag = true;
                 newStepsCondition.await();
+                // restart watchdog
+                startWatchdog(runner.getThread());
             }
             accumulatedSteps -= i;
         } catch (InterruptedException e) {
@@ -192,40 +194,39 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     private void submitThread(@NotNull IThreadHolder<PCB> runner) {
         var thread = runner.getThread();
         executor.submit(() -> {
+//            try {
+            startWatchdog(thread);
             try {
-                AtomicBoolean done = new AtomicBoolean(false);
-                var f = WATCHDOG.schedule(() -> {
-                    try {
-                        if (!done.get()) {
-                            LoggerManager.getLogger().error("program running too slow for given step, program stop");
-                            LoggerManager.getLogger().debug("program: {}", thread.getRunner());
-                            platform.handleError("program running too slow");
-                            stop();
-                        }
-                    } catch (Exception e) {
-                        LoggerManager.getLogger().error("unexcepted: Watchdog failed", e);
-                    }
-                }, 5, TimeUnit.MILLISECONDS);
-                thread.setWatchdog(f);
-
-                try {
-                    thread.getRunner().run(SLICE_STEP);
-                } finally {
-                    f.cancel(true);
-                    done.set(true);
-                }
-            } catch (Exception e) {
-                LoggerManager.getLogger().error("unexcepted: thread failed", e);
-                stop();
+                thread.getRunner().run(SLICE_STEP);
+            } finally {
+                thread.getWatchdog().cancel(false);
             }
+//            } catch (Exception e) {
+//                LoggerManager.getLogger().error("unexcepted: thread failed", e);
+//                stop();
+//            }
         });
+    }
+
+    private void startWatchdog(PCB thread) {
+        var f = WATCHDOG.schedule(() -> {
+            try {
+                LoggerManager.getLogger().error("program running too slow for given step, program stop");
+                LoggerManager.getLogger().debug("program: {}", thread.getRunner());
+                platform.handleError("program running too slow");
+                stop();
+            } catch (Exception e) {
+                LoggerManager.getLogger().error("unexcepted: Watchdog failed", e);
+            }
+        }, WATCHDOG_TIMEOUT, TimeUnit.MILLISECONDS);
+        thread.setWatchdog(f);
     }
 
     @Data
     public static class PCB implements IWenyanThread { // i.e. PCB
         final IBytecodeRunner runner;
-        WenyanThread.State state = WenyanThread.State.BLOCKED;
         final IWenyanProgram program;
+        WenyanThread.State state = WenyanThread.State.BLOCKED;
         ScheduledFuture<?> watchdog;
 
         public PCB(IBytecodeRunner runner, IWenyanProgram program) {
@@ -235,15 +236,13 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
         @Override
         public final boolean equals(Object o) {
-            if (!(o instanceof PCB)) return false;
-
-            PCB pcb = (PCB) o;
-            return Objects.equals(getRunner(), pcb.getRunner());
+            // if same thread -> same instance
+            return this == o;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(getRunner());
+            return System.identityHashCode(this);
         }
     }
 }
