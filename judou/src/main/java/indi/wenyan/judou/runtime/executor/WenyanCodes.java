@@ -1,13 +1,12 @@
-package indi.wenyan.judou.utils;
+package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.executor.*;
 import lombok.Getter;
 
 public enum WenyanCodes {
-    BRANCH_POP_FALSE(new BranchCode(BranchCode.Condition.FALSE, BranchCode.Operation.POP)),
-    BRANCH_FALSE(new BranchCode(BranchCode.Condition.FALSE, BranchCode.Operation.NONE)),
-    BRANCH_TRUE(new BranchCode(BranchCode.Condition.TRUE, BranchCode.Operation.NONE)),
-    JMP(new BranchCode(BranchCode.Condition.NONE, BranchCode.Operation.NONE)),
+    BRANCH_POP_FALSE(new BranchCode(BranchCode.Condition.POP_FALSE)),
+    BRANCH_FALSE(new BranchCode(BranchCode.Condition.FALSE)),
+    BRANCH_TRUE(new BranchCode(BranchCode.Condition.TRUE)),
+    JMP(new BranchCode(BranchCode.Condition.NONE)),
 
     CALL(new FunctionCode(FunctionCode.Operation.CALL)),
     CALL_ATTR(new FunctionCode(FunctionCode.Operation.CALL_ATTR)),

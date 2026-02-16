@@ -2,7 +2,7 @@ package indi.wenyan.judou.exec_interface;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.judou.runtime.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.utils.WenyanPackages;
 

@@ -1,6 +1,6 @@
 package indi.wenyan.judou.exec_interface.handler;
 
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 

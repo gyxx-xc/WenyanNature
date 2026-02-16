@@ -1,8 +1,9 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.WenyanRuntime;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
+import org.jetbrains.annotations.UnknownNullability;
 
 /**
  * Handles stack operations in the Wenyan interpreter.
@@ -21,7 +22,7 @@ public class StackCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) throws WenyanException.WenyanUnreachedException {
+    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException.WenyanUnreachedException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case PUSH -> runtime.pushReturnValue(runtime.getBytecode().getConst(args));

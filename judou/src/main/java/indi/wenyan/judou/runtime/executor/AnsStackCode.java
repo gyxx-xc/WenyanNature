@@ -1,9 +1,10 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.WenyanRuntime;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class AnsStackCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
+    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case PUSH -> runtime.getResultStack().push(runtime.getProcessStack().pop());

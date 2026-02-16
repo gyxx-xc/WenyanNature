@@ -2,7 +2,7 @@ package indi.wenyan.judou.exec_interface.handler;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 
 import java.util.List;

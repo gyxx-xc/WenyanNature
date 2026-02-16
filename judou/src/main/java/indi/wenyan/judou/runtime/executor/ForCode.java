@@ -1,13 +1,14 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.WenyanRuntime;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.warper.WenyanIterator;
 import indi.wenyan.judou.utils.WenyanValues;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Iterator;
 
@@ -28,7 +29,7 @@ public class ForCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
+    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case FOR_ITER -> {

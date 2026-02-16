@@ -1,4 +1,4 @@
-package indi.wenyan.judou.runtime;
+package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.structure.values.IWenyanValue;

@@ -1,7 +1,6 @@
 package indi.wenyan.judou.exec_interface.structure;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.runtime.WenyanProgram;
 import indi.wenyan.judou.utils.WenyanThreading;
 
 import java.util.ArrayList;
@@ -34,12 +33,6 @@ public class ExecQueue {
      * @param context the handling context, used to manage execution state
      */
     public void handle(IHandleContext context) {
-        //noinspection StatementWithEmptyBody
-        if (queue.size() > WenyanProgram.MAX_THREAD) {
-            // FIXME: unreached
-//            request.thread().dieWithException(new WenyanException.WenyanUnreachedException())
-        }
-
         // Collects requests that could not be processed in this tick
         Collection<IHandleableRequest> undoneRequests = new ArrayList<>();
         while (!queue.isEmpty()) {

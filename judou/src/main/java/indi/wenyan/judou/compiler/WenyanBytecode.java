@@ -1,8 +1,8 @@
 package indi.wenyan.judou.compiler;
 
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.utils.WenyanCodes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

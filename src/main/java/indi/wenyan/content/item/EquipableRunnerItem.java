@@ -5,15 +5,14 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.WenyanProgram;
-import indi.wenyan.judou.runtime.WenyanRuntime;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
-import indi.wenyan.setup.Registration;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -21,7 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Equipable;
@@ -74,34 +72,34 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
         return EquipmentSlot.CHEST;
     }
 
-    @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        if (!level.isClientSide() && entity instanceof Player player) {
-            var program = PROGRAMS.get(stack.hashCode());
-            if (slotId == 38) {
-                if (program == null) {
-                    // run program
-                    var newProgram = new WenyanProgram(this);
-                    PROGRAMS.put(stack.hashCode(), newProgram);
-                } else {
-                    if (!program.isRunning()) {
-                        try {
-                            program.createThread(stack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""));
-                        } catch (WenyanThrowException e) {
-                            handleError(e.getMessage());
-                        }
-                    }
-                    program.step(runningLevel);
-                    handle(new ItemContext(stack, level, player, slotId, isSelected));
-                }
-            } else if (program != null && program.isRunning()) {
-                // FIXME: isRunning might be laggy (lock required in atomic int)
-                program.stop();
-                PROGRAMS.remove(stack.hashCode());
-            }
-        }
-        super.inventoryTick(stack, level, entity, slotId, isSelected);
-    }
+//    @Override
+//    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+//        if (!level.isClientSide() && entity instanceof Player player) {
+//            var program = PROGRAMS.get(stack.hashCode());
+//            if (slotId == 38) {
+//                if (program == null) {
+//                    // run program
+//                    var newProgram = new WenyanProgram1(this);
+//                    PROGRAMS.put(stack.hashCode(), newProgram);
+//                } else {
+//                    if (!program.isRunning()) {
+//                        try {
+//                            program.createThread(stack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), ""));
+//                        } catch (WenyanThrowException e) {
+//                            handleError(e.getMessage());
+//                        }
+//                    }
+//                    program.step(runningLevel);
+//                    handle(new ItemContext(stack, level, player, slotId, isSelected));
+//                }
+//            } else if (program != null && program.isRunning()) {
+//                // FIXME: isRunning might be laggy (lock required in atomic int)
+//                program.stop();
+//                PROGRAMS.remove(stack.hashCode());
+//            }
+//        }
+//        super.inventoryTick(stack, level, entity, slotId, isSelected);
+//    }
 
     @Override
     public WenyanRuntime initEnvironment() {

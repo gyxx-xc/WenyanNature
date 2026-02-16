@@ -2,8 +2,8 @@ package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.utils.WenyanCodes;
 import indi.wenyan.judou.utils.WenyanDataParser;
 
 // this class is for

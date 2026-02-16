@@ -3,7 +3,8 @@ package indi.wenyan.judou.compiler.visitor;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.judou.runtime.WenyanResultStack;
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
+import indi.wenyan.judou.runtime.function_impl.WenyanResultStack;
 import indi.wenyan.judou.structure.WenyanParseTreeException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -12,7 +13,6 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.utils.LanguageManager;
-import indi.wenyan.judou.utils.WenyanCodes;
 import indi.wenyan.judou.utils.WenyanDataParser;
 
 import java.util.ArrayList;

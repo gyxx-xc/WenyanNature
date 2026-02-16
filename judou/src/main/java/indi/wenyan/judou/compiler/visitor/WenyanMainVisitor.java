@@ -2,7 +2,7 @@ package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.judou.utils.WenyanCodes;
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.antlr.v4.runtime.tree.TerminalNode;

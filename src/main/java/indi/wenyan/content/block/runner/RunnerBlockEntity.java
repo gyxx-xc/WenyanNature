@@ -7,9 +7,10 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
-import indi.wenyan.judou.runtime.WenyanProgram;
-import indi.wenyan.judou.runtime.WenyanRuntime;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -23,6 +24,7 @@ import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import net.minecraft.ChatFormatting;
@@ -52,15 +54,15 @@ import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 @MethodsReturnNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
     public static final int MAX_OUTPUT_SHOWING_SIZE = 100;
-    private WenyanProgram optionalProgram = null;
+    private IWenyanProgram optionalProgram = null;
 
-    private WenyanProgram getProgram() {
+    private IWenyanProgram getProgram() {
         if (optionalProgram == null)
-            optionalProgram = new WenyanProgram(this);
+            optionalProgram = new WenyanProgramImpl(this);
         return optionalProgram;
     }
 
-    private Optional<WenyanProgram> ifProgram() {
+    private Optional<IWenyanProgram> ifProgram() {
         return Optional.ofNullable(optionalProgram);
     }
 
@@ -136,10 +138,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 // (both need const level op every tick)
                 RunnerBlock.RunningState runningState;
                 if (program.isRunning()) {
-                    if (program.isIdle())
-                        runningState = RunnerBlock.RunningState.IDLE;
-                    else
-                        runningState = RunnerBlock.RunningState.RUNNING;
+                    runningState = RunnerBlock.RunningState.RUNNING;
                 } else {
                     runningState = RunnerBlock.RunningState.NOT_RUNNING;
                 }
@@ -154,7 +153,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (oldState != state) {
             // error state will continue showed unless next step's change
             if (oldState == RunnerBlock.RunningState.ERROR &&
-                    (state == RunnerBlock.RunningState.NOT_RUNNING || state == RunnerBlock.RunningState.IDLE)) return;
+                    (state == RunnerBlock.RunningState.NOT_RUNNING || state == RunnerBlock.RunningState.IDLE))
+                return;
             level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, state), Block.UPDATE_CLIENTS);
         }
     }
@@ -215,9 +215,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         platformName = componentInput.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
     }
 
+    @SneakyThrows
     @Override
     public void setRemoved() {
-        ifProgram().ifPresent(WenyanProgram::stop);
+        ifProgram().ifPresent(IWenyanProgram::stop);
         super.setRemoved();
     }
 
@@ -255,7 +256,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
         try {
-            return getProgram().createThread(pages);
+            WenyanThread runner = WenyanThread.ofCode(pages, this);
+            getProgram().create(runner);
+            return runner;
         } catch (WenyanThrowException e) {
             handleError(e.getMessage());
             return null;

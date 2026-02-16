@@ -20,14 +20,14 @@ public interface IWenyanProgram<T extends IWenyanThread> {
 
     void stop() throws WenyanException;
 
-    <C extends IThreadHolder<T> & IBytecodeRunner> void create(C runner) throws WenyanException;
+    void create(IThreadHolder<T> runner) throws WenyanException;
 
-    // NOTE: the runner are assume to not running after following call
+    void consumeStep(IThreadHolder<T> runner, int i) throws WenyanException;
+
+    // NOTE: not intend to call anywhere outside run(steps)
     void block(IThreadHolder<T> runner) throws WenyanException;
 
     void yield(IThreadHolder<T> runner) throws WenyanException;
 
     void die(IThreadHolder<T> runner) throws WenyanException;
-
-    void consumeStep(IThreadHolder<T> runner, int i) throws WenyanException;
 }

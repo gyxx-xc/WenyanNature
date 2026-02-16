@@ -2,8 +2,10 @@ package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.utils.TestPlatform;
-import indi.wenyan.judou.runtime.utils.generated_WenyanProgramTestData;
+import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.test_utils.TestPlatform;
+import indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -36,7 +38,7 @@ class WenyanProgramTest {
     }
 
     @ParameterizedTest
-    @FieldSource("indi.wenyan.judou.runtime.utils.generated_WenyanProgramTestData#TEST_DATA")
+    @FieldSource("indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData#TEST_DATA")
     void testExamples(generated_WenyanProgramTestData.TestData testData) throws WenyanThrowException {
         TestPlatform testPlatform = new TestPlatform();
         assertDoesNotThrow(() -> createAndRun(testData.code(), testPlatform));
@@ -247,13 +249,13 @@ class WenyanProgramTest {
     }
 
     private void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanThrowException, InterruptedException {
-        WenyanProgram wenyanProgram = new WenyanProgram(testPlatform);
-        wenyanProgram.createThread(code);
+        IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
+        wenyanProgram.create(WenyanThread.ofCode(code, testPlatform));
         while (wenyanProgram.isRunning()) {
-            wenyanProgram.step(5000);
+            wenyanProgram.step(1000);
             testPlatform.handle(IHandleContext.NONE);
             //noinspection BusyWait
-            Thread.sleep(50);
+            Thread.sleep(20);
         }
     }
 }

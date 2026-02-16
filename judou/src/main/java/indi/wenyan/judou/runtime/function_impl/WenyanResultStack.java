@@ -1,4 +1,4 @@
-package indi.wenyan.judou.runtime;
+package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;

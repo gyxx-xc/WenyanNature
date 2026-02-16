@@ -1,6 +1,9 @@
-package indi.wenyan.judou.runtime;
+package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
+import indi.wenyan.judou.runtime.IThreadHolder;
+import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.LoggerManager;
 import lombok.Data;
@@ -31,7 +34,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
      * and remain the value until next step() is called
      **/
     @Getter
-    private boolean idleFlag = false;
+    private boolean isIdle = false;
 
     // NOTE: all thread = current running thread + ready queue threads + blocked threads (hold by ExecQueue)
     public final Collection<PCB> allThreads = ConcurrentHashMap.newKeySet(MAX_THREAD);
@@ -70,7 +73,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         try {
             if (accumulatedSteps > 0) {
                 // STUB: if no idle
-                if (!idleFlag)
+                if (!isIdle)
                     LoggerManager.getLogger().warn(
                             "program running too slow, step {} but {} accumulated",
                             steps, accumulatedSteps); // make > 0 for less confused message
@@ -86,7 +89,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
         // use getActiveCount thought there's rare case that active thread is ending
         // but that doesn't matter, since this only used for Visual effects
-        idleFlag = executor.getActiveCount() == 0; // && queue.isEmpty (always true is first true)
+        isIdle = executor.getActiveCount() == 0; // && queue.isEmpty (always true is first true)
     }
 
     @Override
@@ -97,8 +100,9 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void block(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.READY && allThreads.contains(thread)) {
-            thread.setState(WenyanThread.State.BLOCKED);
+        if (thread.getState() == State.READY && allThreads.contains(thread)) {
+            thread.setState(State.BLOCKED);
+            runner.pause();
             updateIdle();
         } else {
             throw new WenyanException.WenyanUnreachedException();
@@ -108,8 +112,8 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void unblock(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.BLOCKED && allThreads.contains(thread)) {
-            thread.setState(WenyanThread.State.READY);
+        if (thread.getState() == State.BLOCKED && allThreads.contains(thread)) {
+            thread.setState(State.READY);
             submitThread(runner);
         } else {
             throw new WenyanException.WenyanUnreachedException();
@@ -119,7 +123,8 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void yield(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.READY && allThreads.contains(thread)) {
+        if (thread.getState() == State.READY && allThreads.contains(thread)) {
+            runner.pause();
             submitThread(runner);
         } else {
             throw new WenyanException.WenyanUnreachedException();
@@ -128,18 +133,21 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Override
     public void die(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
+        runner.pause();
         var thread = runner.getThread();
-        if (thread.getState() == WenyanThread.State.DYING || !allThreads.contains(thread))
+        if (thread.getState() == State.DYING || !allThreads.contains(thread))
             throw new WenyanException.WenyanUnreachedException();
         allThreads.remove(thread);
-        thread.setState(WenyanThread.State.DYING);
+        thread.setState(State.DYING);
         updateIdle();
     }
 
     @Override
     public void stop() {
         allThreads.forEach(thread -> {
-            thread.getWatchdog().cancel(false);
+            thread.getRunner().pause();
+            if (thread.getWatchdog() != null)
+                thread.getWatchdog().cancel(false);
         });
         executor.shutdownNow();
         executorCleanable.clean();
@@ -147,7 +155,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     }
 
     @Override
-    public <C extends IThreadHolder<PCB> & IBytecodeRunner> void create(C runner) throws WenyanException {
+    public void create(IThreadHolder<PCB> runner) throws WenyanException {
         if (allThreads.size() + 1 > MAX_THREAD) {
             throw new WenyanException.WenyanVarException("too many threads");
         }
@@ -171,7 +179,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         try {
             if (accumulatedSteps < i) {
                 runner.getThread().getWatchdog().cancel(false);
-                idleFlag = true;
+                isIdle = true;
                 newStepsCondition.await();
                 // restart watchdog
                 startWatchdog(runner.getThread());
@@ -188,23 +196,18 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
      * only intend to be called when thread is ended (i.e. die, block)
      */
     private void updateIdle() {
-        if (executor.getQueue().isEmpty()) idleFlag = true;
+        if (executor.getQueue().isEmpty()) isIdle = true;
     }
 
     private void submitThread(@NotNull IThreadHolder<PCB> runner) {
         var thread = runner.getThread();
         executor.submit(() -> {
-//            try {
             startWatchdog(thread);
             try {
                 thread.getRunner().run(SLICE_STEP);
             } finally {
                 thread.getWatchdog().cancel(false);
             }
-//            } catch (Exception e) {
-//                LoggerManager.getLogger().error("unexcepted: thread failed", e);
-//                stop();
-//            }
         });
     }
 
@@ -224,12 +227,12 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Data
     public static class PCB implements IWenyanThread { // i.e. PCB
-        final IBytecodeRunner runner;
+        final IThreadHolder<PCB> runner;
         final IWenyanProgram program;
-        WenyanThread.State state = WenyanThread.State.BLOCKED;
+        State state = State.BLOCKED;
         ScheduledFuture<?> watchdog;
 
-        public PCB(IBytecodeRunner runner, IWenyanProgram program) {
+        public PCB(IThreadHolder<PCB> runner, IWenyanProgram program) {
             this.runner = runner;
             this.program = program;
         }
@@ -244,5 +247,9 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         public int hashCode() {
             return System.identityHashCode(this);
         }
+    }
+
+    enum State {
+        READY, BLOCKED, DYING
     }
 }

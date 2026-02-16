@@ -1,16 +1,15 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.WenyanRuntime;
-import indi.wenyan.judou.runtime.WenyanThread;
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
+import org.jetbrains.annotations.UnknownNullability;
 
 /**
  * Handles conditional branching operations in the Wenyan interpreter.
  */
 public class BranchCode extends WenyanCode {
-    private final Operation operation;
     private final Condition condition;
 
     /**
@@ -19,38 +18,43 @@ public class BranchCode extends WenyanCode {
      * @param c The condition for branching
      * @param o The operation to perform
      */
-    public BranchCode(Condition c, Operation o) {
-        super(opName(c, o));
+    public BranchCode(Condition c) {
+        super(opName(c));
         condition = c;
-        operation = o;
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
+    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
-        boolean val = false;
-        try {
-            if (condition != Condition.NONE) {
-                if (operation == Operation.POP) {
-                    val = runtime.getProcessStack().pop()
-                            .as(WenyanBoolean.TYPE).value();
-                } else {
-                    val = runtime.getProcessStack().peek()
-                            .as(WenyanBoolean.TYPE).value();
+        switch (condition) {
+            case NONE -> {
+                runtime.programCounter = runtime.getBytecode().getLabel(args);
+                runtime.PCFlag = true;
+            }
+            case POP_FALSE -> {
+                boolean value = runtime.getProcessStack().pop()
+                        .as(WenyanBoolean.TYPE).value();
+                if (!value) {
+                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.PCFlag = true;
                 }
             }
-        } catch (WenyanException.WenyanTypeException e) {
-            throw new WenyanException(e.getMessage());
-        }
-
-        boolean jump = switch (condition) {
-                case FALSE -> !(val);
-                case TRUE -> val;
-                case NONE -> true;
-            };
-        if (jump) {
-            runtime.programCounter = runtime.getBytecode().getLabel(args);
-            runtime.PCFlag = true;
+            case FALSE -> {
+                boolean value = runtime.getProcessStack().peek()
+                        .as(WenyanBoolean.TYPE).value();
+                if (!value) {
+                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.PCFlag = true;
+                }
+            }
+            case TRUE -> {
+                boolean value = runtime.getProcessStack().peek()
+                        .as(WenyanBoolean.TYPE).value();
+                if (value) {
+                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.PCFlag = true;
+                }
+            }
         }
     }
 
@@ -61,14 +65,16 @@ public class BranchCode extends WenyanCode {
      * @param o The operation
      * @return The name of the code
      */
-    private static String opName(Condition c, Operation o) {
+    private static String opName(Condition c) {
         StringBuilder sb = new StringBuilder();
         sb.append("BRANCH");
-        if (o == Operation.POP) {
-            sb.append("_POP");
+        switch (c) {
+            case POP_FALSE -> sb.append("_POP_FALSE");
+            case FALSE -> sb.append("_FALSE");
+            case TRUE -> sb.append("_TRUE");
+            case NONE -> {
+            }
         }
-        if (c == Condition.FALSE) sb.append("_FALSE");
-        if (c == Condition.TRUE) sb.append("_TRUE");
         return sb.toString();
     }
 
@@ -76,16 +82,9 @@ public class BranchCode extends WenyanCode {
      * Conditions for branch execution.
      */
     public enum Condition {
+        POP_FALSE,
         FALSE,
         TRUE,
-        NONE
-    }
-
-    /**
-     * Operations that can be performed during branching.
-     */
-    public enum Operation {
-        POP,
         NONE
     }
 }

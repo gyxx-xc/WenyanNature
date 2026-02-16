@@ -1,9 +1,9 @@
-package indi.wenyan.judou.runtime.utils;
+package indi.wenyan.judou.runtime.test_utils;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
-import indi.wenyan.judou.runtime.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 

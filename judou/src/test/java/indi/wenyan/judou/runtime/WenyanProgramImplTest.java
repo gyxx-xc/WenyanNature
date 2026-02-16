@@ -1,7 +1,8 @@
 package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.utils.TestPlatform;
+import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.utils.LanguageManager;
@@ -31,7 +32,7 @@ class WenyanProgramImplTest {
         LanguageManager.registerLanguageProvider(s -> s);
     }
 
-    private static abstract class TestRunner implements IBytecodeRunner, IThreadHolder<WenyanProgramImpl.PCB> {
+    private static abstract class TestRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         @Getter
         @Setter
         WenyanProgramImpl.PCB thread;
@@ -64,6 +65,10 @@ class WenyanProgramImplTest {
             } catch (ReturnException ignore) {
                 return;
             }
+        }
+
+        @Override
+        public void pause() {
         }
 
         protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -234,7 +239,7 @@ class WenyanProgramImplTest {
             program.step(10);
             Thread.sleep(20);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdleFlag());
+            assertTrue(program.isIdle());
             program.unblock(runner);
             program.step(10); // assert no logger output
             Thread.sleep(20);
@@ -264,7 +269,7 @@ class WenyanProgramImplTest {
             assertEquals(1, runner1.pc);
             assertEquals(1, runner2.pc);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdleFlag());
+            assertTrue(program.isIdle());
             program.unblock(runner1);
             program.step(10);
             Thread.sleep(20);
@@ -312,13 +317,13 @@ class WenyanProgramImplTest {
             program.step(10);
             Thread.sleep(20);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdleFlag());
+            assertTrue(program.isIdle());
             assertEquals(1, runner.pc);
             program.unblock(runner);
             program.step(10);
             Thread.sleep(20);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdleFlag());
+            assertTrue(program.isIdle());
             assertEquals(2, runner.pc);
             program.unblock(runner);
             program.step(10);

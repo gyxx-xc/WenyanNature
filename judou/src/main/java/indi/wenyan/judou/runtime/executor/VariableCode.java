@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.WenyanRuntime;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.*;
@@ -11,6 +11,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
 import indi.wenyan.judou.utils.LanguageManager;
+import org.jetbrains.annotations.UnknownNullability;
 
 /**
  * Handles variable operations in the Wenyan interpreter.
@@ -29,11 +30,12 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) throws WenyanThrowException {
+    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanThrowException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case LOAD -> {
-                if (runtime.getBytecode() == null) throw new WenyanException.WenyanUnreachedException();
+                if (runtime.getBytecode() == null)
+                    throw new WenyanException.WenyanUnreachedException();
                 String id = runtime.getBytecode().getIdentifier(args);
                 IWenyanValue value = thread.getGlobalVariable(id);
                 if (value == null) {
@@ -42,7 +44,8 @@ public class VariableCode extends WenyanCode {
                 runtime.pushReturnValue(value);
             }
             case STORE -> {
-                if (runtime.getBytecode() == null) throw new WenyanException.WenyanUnreachedException();
+                if (runtime.getBytecode() == null)
+                    throw new WenyanException.WenyanUnreachedException();
                 runtime.setVariable(runtime.getBytecode().getIdentifier(args),
                         WenyanLeftValue.varOf(runtime.getProcessStack().pop()));
             }
@@ -60,24 +63,20 @@ public class VariableCode extends WenyanCode {
             }
             case CAST -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
-                try {
-                    // TODO: use const with TYPE in bytecode?
-                    var castedValue = switch (args) {
-                        case 1 -> value.as(WenyanInteger.TYPE);
-                        case 2 -> value.as(WenyanDouble.TYPE);
-                        case 3 -> value.as(WenyanBoolean.TYPE);
-                        case 4 -> value.as(WenyanString.TYPE);
-                        case 5 -> value.as(WenyanList.TYPE);
-                        case 6 -> value.as(IWenyanObject.TYPE);
-                        case 7 -> value.as(IWenyanObjectType.TYPE);
-                        case 8 -> value.as(IWenyanFunction.TYPE);
-                        default ->
-                                throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"));
-                    };
-                    runtime.pushReturnValue(castedValue);
-                } catch (WenyanException.WenyanTypeException e) {
-                    throw new WenyanException(e.getMessage());
-                }
+                // TODO: use const with TYPE in bytecode?
+                var castedValue = switch (args) {
+                    case 1 -> value.as(WenyanInteger.TYPE);
+                    case 2 -> value.as(WenyanDouble.TYPE);
+                    case 3 -> value.as(WenyanBoolean.TYPE);
+                    case 4 -> value.as(WenyanString.TYPE);
+                    case 5 -> value.as(WenyanList.TYPE);
+                    case 6 -> value.as(IWenyanObject.TYPE);
+                    case 7 -> value.as(IWenyanObjectType.TYPE);
+                    case 8 -> value.as(IWenyanFunction.TYPE);
+                    default ->
+                            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"));
+                };
+                runtime.pushReturnValue(castedValue);
             }
         }
     }

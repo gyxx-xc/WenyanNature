@@ -1,7 +1,7 @@
 package indi.wenyan.judou.exec_interface.structure;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.runtime.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -58,7 +58,7 @@ public final class ImportRequest implements BaseHandleableRequest {
                     // fallthrough
                 case WAITING:
                     WenyanThread wenyanThread = packageOrThread.right().get();
-                    if (wenyanThread.getState() == WenyanThread.State.DYING) {
+                    if (wenyanThread.isDying()) {
                         if (wenyanThread.getMainRuntime().finishFlag) {
                             status = Status.PROCESS_RUNTIME;
                         } else {
