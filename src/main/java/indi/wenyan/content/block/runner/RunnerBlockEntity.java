@@ -138,7 +138,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 // (both need const level op every tick)
                 RunnerBlock.RunningState runningState;
                 if (program.isRunning()) {
-                    runningState = RunnerBlock.RunningState.RUNNING;
+                    if (program instanceof WenyanProgramImpl impl && impl.isIdle()) {
+                        runningState = RunnerBlock.RunningState.IDLE;
+                    } else {
+                        runningState = RunnerBlock.RunningState.RUNNING;
+                    }
                 } else {
                     runningState = RunnerBlock.RunningState.NOT_RUNNING;
                 }
