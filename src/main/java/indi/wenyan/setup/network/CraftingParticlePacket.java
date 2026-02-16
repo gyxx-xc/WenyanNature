@@ -23,9 +23,9 @@ public record CraftingParticlePacket(@NonNull BlockPos from,
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.from);
-                        buffer.writeUtf(packet.data, 100);
+                        buffer.writeUtf(packet.data, 128);
                     },
-                    buffer -> new CraftingParticlePacket(buffer.readBlockPos(), buffer.readUtf())
+                    buffer -> new CraftingParticlePacket(buffer.readBlockPos(), buffer.readUtf(128))
             );
 
     public static final IPayloadHandler<CraftingParticlePacket> HANDLER = (packet, context) -> {

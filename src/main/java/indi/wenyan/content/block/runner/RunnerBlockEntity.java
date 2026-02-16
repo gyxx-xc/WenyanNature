@@ -42,6 +42,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +54,7 @@ import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
-    public static final int MAX_OUTPUT_SHOWING_SIZE = 100;
+    public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
     private IWenyanProgram optionalProgram = null;
 
     private IWenyanProgram getProgram() {
@@ -91,6 +92,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             String s = args.getFirst().as(WenyanString.TYPE).value();
+                            s = StringUtils.left(s, 512);
                             if (getLevel() instanceof ServerLevel sl) {
                                 PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
                                         new PlatformOutputPacket(getBlockPos(), s, PlatformOutputPacket.OutputStyle.NORMAL));
@@ -109,6 +111,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     public void handleError(String error) {
+        error = StringUtils.left(error, 512);
         assert getLevel() != null;
         getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
         if (getLevel() instanceof ServerLevel sl)

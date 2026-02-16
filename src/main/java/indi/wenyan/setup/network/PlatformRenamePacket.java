@@ -27,11 +27,11 @@ public record PlatformRenamePacket(BlockPos pos, String name) implements CustomP
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
-                        buffer.writeUtf(packet.name);
+                        buffer.writeUtf(packet.name, 64);
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
-                        String name1 = buffer.readUtf();
+                        String name1 = buffer.readUtf(64);
                         return new PlatformRenamePacket(pos1, name1);
                     });
 
@@ -39,7 +39,7 @@ public record PlatformRenamePacket(BlockPos pos, String name) implements CustomP
      * Handler for processing the packet
      */
     public static final IPayloadHandler<PlatformRenamePacket> HANDLER = (packet, context) -> {
-        if (context.flow().isClientbound()) {
+        if (context.flow().isServerbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
             if (entity instanceof RunnerBlockEntity runner) {
                 runner.setPlatformName(packet.name());

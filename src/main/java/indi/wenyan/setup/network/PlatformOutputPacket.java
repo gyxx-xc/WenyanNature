@@ -32,13 +32,13 @@ public record PlatformOutputPacket(BlockPos pos, String output, OutputStyle styl
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
-                        buffer.writeUtf(packet.output);
+                        buffer.writeUtf(packet.output, 512);
                         buffer.writeEnum(packet.style);
                     },
                     buffer ->
                         new PlatformOutputPacket(
                                 buffer.readBlockPos(),
-                                buffer.readUtf(),
+                                buffer.readUtf(512),
                                 buffer.readEnum(OutputStyle.class))
             );
 

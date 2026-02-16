@@ -26,11 +26,11 @@ public record BlockOutputPacket(BlockPos pos, String output) implements CustomPa
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
-                        buffer.writeUtf(packet.output);
+                        buffer.writeUtf(packet.output, 16384);
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
-                        String output1 = buffer.readUtf();
+                        String output1 = buffer.readUtf(16384);
                         return new BlockOutputPacket(pos1, output1);
                     });
 

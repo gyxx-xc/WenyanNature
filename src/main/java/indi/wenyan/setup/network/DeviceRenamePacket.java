@@ -27,11 +27,11 @@ public record DeviceRenamePacket(BlockPos pos, String name) implements CustomPac
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
-                        buffer.writeUtf(packet.name);
+                        buffer.writeUtf(packet.name, 64);
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
-                        String name1 = buffer.readUtf();
+                        String name1 = buffer.readUtf(64);
                         return new DeviceRenamePacket(pos1, name1);
                     });
 

@@ -106,7 +106,6 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
                 runtime.PCFlag = false;
 
                 if (willPause) {
-                    this.yield();
                     return;
                 }
             } catch (Exception e) {

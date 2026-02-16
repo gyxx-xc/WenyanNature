@@ -10,7 +10,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@Deprecated(forRemoval = true)
+@Deprecated
 @OnlyIn(Dist.CLIENT)
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
 
