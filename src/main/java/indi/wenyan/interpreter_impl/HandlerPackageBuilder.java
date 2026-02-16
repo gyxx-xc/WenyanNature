@@ -118,7 +118,7 @@ public final class HandlerPackageBuilder {
             @Override
             public boolean handle(@NotNull IHandleContext context, @NotNull IHandleableRequest request) throws WenyanThrowException {
                 boolean hasDevice = false;
-                if (request.thread().program.platform instanceof RunnerBlockEntity entity) {
+                if (request.thread().platform() instanceof RunnerBlockEntity entity) {
                     for (BlockPos b : BlockPos.betweenClosed(
                             entity.getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
                             entity.getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
@@ -131,7 +131,7 @@ public final class HandlerPackageBuilder {
                 }
                 if (!hasDevice)
                     // STUB
-                    request.thread().program.platform.handleError("need power");
+                    request.thread().platform().handleError("need power");
                 if (acquired < power) {
                     return false;
                 } else {

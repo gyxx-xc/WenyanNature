@@ -18,7 +18,7 @@ public interface IWenyanProgram<T extends IWenyanThread> {
 
     void unblock(IThreadHolder<T> runner) throws WenyanException;
 
-    void stop() throws WenyanException;
+    void stop();
 
     void create(IThreadHolder<T> runner) throws WenyanException;
 
