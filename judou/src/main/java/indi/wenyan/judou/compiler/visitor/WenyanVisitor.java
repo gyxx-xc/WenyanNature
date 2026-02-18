@@ -5,6 +5,7 @@ import indi.wenyan.judou.antlr.WenyanRBaseVisitor;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.judou.utils.ChineseUtils;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -82,7 +83,8 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
      * @return The parsed program context
      */
     public static WenyanRParser.ProgramContext program(String program) {
-        WenyanRLexer lexer = new WenyanRLexer(CharStreams.fromString(program));
+        WenyanRLexer lexer = new WenyanRLexer(
+                CharStreams.fromString(ChineseUtils.toTranditionalCode(program)));
         lexer.removeErrorListeners();
         lexer.addErrorListener(new WenyanErrorListener());
         WenyanRParser parser = new WenyanRParser(new CommonTokenStream(lexer));

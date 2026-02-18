@@ -1,10 +1,13 @@
 package indi.wenyan.judou.utils;
 
 import cn.hutool.core.convert.Convert;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public enum ChineseUtils {
     ;
@@ -15,8 +18,8 @@ public enum ChineseUtils {
     public static @NotNull String toChinese(BigInteger i) {
         if (!DIRECT_NUMBER_CONVERT) {
             try {
-                return Convert.numberToChinese(i.intValueExact(), false)
-                        .replace("万", "萬").replace("亿", "億");
+                return ZhConverterUtil.toTraditional(
+                        Convert.numberToChinese(i.intValueExact(), false));
             } catch (ArithmeticException ignored) { // go outward
             }
         }
@@ -49,5 +52,27 @@ public enum ChineseUtils {
         }
 
         return number.toString();
+    }
+
+    private final static Pattern PATTERN = Pattern.compile("「「.*?」」|「.*?」");
+    public static @NotNull String toTranditionalCode(String s) {
+        Matcher matcher = PATTERN.matcher(s);
+        StringBuilder result = new StringBuilder();
+        int lastEnd = 0;
+
+        while (matcher.find()) {
+            // Convert text before the current bracket
+            String beforeBracket = s.substring(lastEnd, matcher.start());
+            result.append(ZhConverterUtil.toTraditional(beforeBracket));
+            // Preserve text inside the bracket
+            result.append(matcher.group());
+            lastEnd = matcher.end();
+        }
+
+        // Convert remaining text after the last bracket
+        String remaining = s.substring(lastEnd);
+        result.append(ZhConverterUtil.toTraditional(remaining));
+
+        return result.toString();
     }
 }
