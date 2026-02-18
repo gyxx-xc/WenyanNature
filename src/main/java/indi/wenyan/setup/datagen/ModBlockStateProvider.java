@@ -1,11 +1,13 @@
 package indi.wenyan.setup.datagen;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -32,12 +34,26 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         simpleBlock(Registration.SCREEN_MODULE_BLOCK.get());
-        simpleBlock(Registration.SEMAPHORE_MODULE_BLOCK.get());
 
         modeledBlock(this::horizontalFaceBlock, Registration.RUNNER_BLOCK);
         modeledBlock(this::simpleBlock, Registration.CRAFTING_BLOCK);
         modeledBlock(this::simpleBlock, Registration.PEDESTAL_BLOCK);
         modeledBlock(this::simpleBlock, Registration.POWER_BLOCK);
+//        modeledBlock(this::simpleBlock, Registration.LOCK_MODULE_BLOCK);
+
+        getVariantBuilder(Registration.LOCK_MODULE_BLOCK.get()).forAllStates(state -> {
+            boolean locked = state.getValue(LockModuleBlock.LOCK_STATE);
+
+            return ConfiguredModel.builder()
+                    .modelFile(locked ? new ModelFile.UncheckedModelFile(
+                            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+                                    "block/" + Registration.LOCK_MODULE_BLOCK.getKey().location().getPath())
+                    ) : new ModelFile.UncheckedModelFile(
+                            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+                                    "block/" + Registration.LOCK_MODULE_BLOCK.getKey().location().getPath() + "_1")
+                    ))
+                    .build();
+        });
 
         registerModuleBlock(Registration.EXPLOSION_MODULE_BLOCK);
         registerModuleBlock(Registration.INFORMATION_MODULE_BLOCK);

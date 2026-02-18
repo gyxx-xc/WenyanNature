@@ -59,7 +59,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(Registration.PRINT_INVENTORY_MODULE.get(), "印符");
 
         add(Registration.SCREEN_MODULE_BLOCK.get(), "螢幕石");
-        add(Registration.SEMAPHORE_MODULE_BLOCK.get(), "信號量石");
+        add(Registration.LOCK_MODULE_BLOCK.get(), "信號量石");
 
         add(Registration.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
 

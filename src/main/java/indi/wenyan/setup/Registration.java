@@ -3,10 +3,10 @@ package indi.wenyan.setup;
 import com.mojang.datafixers.DSL;
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
+import indi.wenyan.content.block.additional_module.block.LockModuleEntity;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
-import indi.wenyan.content.block.additional_module.block.SemaphoreModuleBlock;
-import indi.wenyan.content.block.additional_module.block.SemaphoreModuleEntity;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
@@ -175,9 +175,9 @@ public final class Registration {
     public static final DeferredBlock<ScreenModuleBlock> SCREEN_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<ScreenModuleBlockEntity>> SCREEN_MODULE_BLOCK_ENTITY;
-    public static final DeferredBlock<SemaphoreModuleBlock> SEMAPHORE_MODULE_BLOCK;
-    public static final DeferredItem<BlockItem> SEMAPHORE_MODULE_BLOCK_ITEM;
-    public static final Supplier<BlockEntityType<SemaphoreModuleEntity>> SEMAPHORE_MODULE_ENTITY;
+    public static final DeferredBlock<LockModuleBlock> LOCK_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> LOCK_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<LockModuleEntity>> LOCK_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -395,12 +395,12 @@ public final class Registration {
                         .of(CommunicateModuleEntity::new, COMMUNICATE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
-        SEMAPHORE_MODULE_BLOCK = BLOCKS.register(SemaphoreModuleBlock.ID, SemaphoreModuleBlock::new);
-        SEMAPHORE_MODULE_BLOCK_ITEM = ITEMS.registerItem(SemaphoreModuleBlock.ID,
-                properties -> new BlockItem(SEMAPHORE_MODULE_BLOCK.get(), properties));
-        SEMAPHORE_MODULE_ENTITY = BLOCK_ENTITY.register(SemaphoreModuleBlock.ID,
+        LOCK_MODULE_BLOCK = BLOCKS.register(LockModuleBlock.ID, LockModuleBlock::new);
+        LOCK_MODULE_BLOCK_ITEM = ITEMS.registerItem(LockModuleBlock.ID,
+                properties -> new BlockItem(LOCK_MODULE_BLOCK.get(), properties));
+        LOCK_MODULE_ENTITY = BLOCK_ENTITY.register(LockModuleBlock.ID,
                 () -> BlockEntityType.Builder
-                        .of(SemaphoreModuleEntity::new, SEMAPHORE_MODULE_BLOCK.get())
+                        .of(LockModuleEntity::new, LOCK_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
         COLLECTION_MODULE_BLOCK = BLOCKS.register(CollectionModuleBlock.ID, CollectionModuleBlock::new);
@@ -511,7 +511,7 @@ public final class Registration {
                     output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
 
                     output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
-                    output.accept(SEMAPHORE_MODULE_BLOCK_ITEM.get());
+                    output.accept(LOCK_MODULE_BLOCK_ITEM.get());
                     output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
 
                     output.accept(POWER_BLOCK_ITEM.get());

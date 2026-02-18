@@ -1,7 +1,7 @@
 package indi.wenyan.setup.datagen;
 
+import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
-import indi.wenyan.content.block.additional_module.block.SemaphoreModuleBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.power.PowerBlock;
@@ -67,7 +67,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(Registration.EQUIPABLE_RUNNER_ITEM.get());
 
         blockItem(ScreenModuleBlock.ID);
-        blockItem(SemaphoreModuleBlock.ID);
+        blockItem(LockModuleBlock.ID);
         blockItem(CraftingBlock.ID);
         blockItem(PedestalBlock.ID);
         blockItem(PowerBlock.ID);

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "locked=false": {
+      "model": "wenyan_programming:block/lock_module_block_1"
+    },
+    "locked=true": {
+      "model": "wenyan_programming:block/lock_module_block"
+    }
+  }
+}
