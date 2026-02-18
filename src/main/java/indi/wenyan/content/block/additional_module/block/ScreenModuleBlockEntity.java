@@ -17,7 +17,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScreenModuleBlockEntity extends AbstractModuleEntity implements BlockOutputPacket.IDisplayable {
@@ -28,7 +28,7 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
     }
 
     @Getter
-    private final List<String> output = new LinkedList<>();
+    private final List<String> output = new ArrayList<>();
 
     @Override
     public @NotNull String getBasePackageName() {

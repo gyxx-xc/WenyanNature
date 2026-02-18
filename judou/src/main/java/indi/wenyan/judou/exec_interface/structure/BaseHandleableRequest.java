@@ -11,11 +11,7 @@ public interface BaseHandleableRequest extends IHandleableRequest {
     default boolean run(IWenyanPlatform platform, IHandleContext context) {
         try {
             noticePlatform(platform, context);
-            boolean done = handle(context);
-            if (done) {
-                thread().unblock();
-            }
-            return done;
+            return handle(context);
         } catch (WenyanThrowException e) {
             thread().dieWithException(e);
             return true;

@@ -3,9 +3,10 @@ package indi.wenyan.content.block.additional_module.block;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
+import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.setup.Registration;
@@ -15,31 +16,50 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
+// TODO: UnitTest
 public class LockModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.var("SemaphoreModule");
-    private WenyanThread lockHolder;
+
+    private IThreadHolder lockHolder;
+    private Queue<IThreadHolder> waitingThreads = new ArrayDeque<>();
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .nativeVariables(wenyanPackageBuilder -> wenyanPackageBuilder
-                    .function(WenyanSymbol.var("SemaphoreModule.acquire"), this::acquireSemaphore)
-                    .function(WenyanSymbol.var("SemaphoreModule.release"), this::releaseSemaphore)
-            )
+            .handler(WenyanSymbol.var("SemaphoreModule.acquire"), this::acquireSemaphoreHandler)
+            .handler(WenyanSymbol.var("SemaphoreModule.release"), this::releaseSemaphore)
             .build();
 
-    private @NotNull IWenyanValue acquireSemaphore(IWenyanValue self, List<IWenyanValue> args) throws WenyanException {
-        level.setBlock(getBlockPos(), getBlockState().setValue(LockModuleBlock.LOCK_STATE, true), Block.UPDATE_CLIENTS);
-        return WenyanNull.NULL;
+    private @NotNull boolean acquireSemaphoreHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
+        boolean locked = blockState().getValue(LockModuleBlock.LOCK_STATE);
+        if (locked) {
+            if (lockHolder == request.thread() || waitingThreads.contains(request.thread()))
+                throw new WenyanException("thread already hold lock");
+            waitingThreads.add(request.thread());
+        } else {
+            level.setBlock(getBlockPos(), getBlockState().setValue(LockModuleBlock.LOCK_STATE, true), Block.UPDATE_CLIENTS);
+            lockHolder = request.thread();
+            request.thread().unblock();
+        }
+        request.thread().currentRuntime().pushReturnValue(WenyanNull.NULL);
+        return true;
     }
 
-    private @NotNull WenyanNull releaseSemaphore(IWenyanValue self, List<IWenyanValue> args) throws WenyanException {
-        if (!blockState().getValue(LockModuleBlock.LOCK_STATE)) {
-            throw new WenyanException("not hold");
+    private @NotNull WenyanNull releaseSemaphore(IHandleableRequest request) throws WenyanException {
+        boolean locked = blockState().getValue(LockModuleBlock.LOCK_STATE);
+        if (!locked || lockHolder != request.thread()) {
+            throw new WenyanException("lock not holded by thread");
         }
-        level.setBlock(getBlockPos(), getBlockState().setValue(LockModuleBlock.LOCK_STATE, false), Block.UPDATE_CLIENTS);
+        if (waitingThreads.isEmpty()) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(LockModuleBlock.LOCK_STATE, false), Block.UPDATE_CLIENTS);
+            lockHolder = null;
+        } else {
+            lockHolder = waitingThreads.poll();
+            lockHolder.unblock();
+        }
         return WenyanNull.NULL;
     }
 

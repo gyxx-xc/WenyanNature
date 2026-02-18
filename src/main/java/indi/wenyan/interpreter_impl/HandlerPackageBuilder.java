@@ -80,6 +80,7 @@ public final class HandlerPackageBuilder {
         return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(context, request);
             request.thread().currentRuntime().pushReturnValue(value);
+            request.thread().unblock();
             return true;
         });
     }
@@ -88,6 +89,7 @@ public final class HandlerPackageBuilder {
         return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(request);
             request.thread().currentRuntime().pushReturnValue(value);
+            request.thread().unblock();
             return true;
         });
     }
@@ -137,6 +139,7 @@ public final class HandlerPackageBuilder {
                 } else {
                     IWenyanValue value = function.handle(context, request);
                     request.thread().currentRuntime().pushReturnValue(value);
+                    request.thread().unblock();
                     return true;
                 }
             }

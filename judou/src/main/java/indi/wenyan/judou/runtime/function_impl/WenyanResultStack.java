@@ -6,6 +6,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.WenyanThreading;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -16,7 +17,7 @@ import java.util.LinkedList;
 @WenyanThreading
 public class WenyanResultStack {
     /** Underlying data structure for the stack */
-    private final Deque<IWenyanValue> stack = new LinkedList<>();
+    private final Deque<IWenyanValue> stack = new ArrayDeque<>();
 
     /** Maximum allowed size for the stack */
     public static final int MAX_SIZE = 64;

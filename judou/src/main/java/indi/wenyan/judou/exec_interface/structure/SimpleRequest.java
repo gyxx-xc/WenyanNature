@@ -10,6 +10,7 @@ public record SimpleRequest(WenyanThread thread, IWenyanValue self, List<IWenyan
     @Override
     public boolean handle(IHandleContext context) throws WenyanThrowException {
         thread.currentRuntime().pushReturnValue(handler.handle(self, args));
+        thread.unblock();
         return true;
     }
 

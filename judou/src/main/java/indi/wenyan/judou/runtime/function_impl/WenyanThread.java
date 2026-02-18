@@ -76,7 +76,6 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
     int temp = 0;
     @Override
     public void run(int step) {
-        willPause = false;
         for (int i = 0; i < step; i++) {
             try {
                 if (getMainRuntime().finishFlag) {
@@ -106,6 +105,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
                 runtime.PCFlag = false;
 
                 if (willPause) {
+                    willPause = false;
                     return;
                 }
             } catch (Exception e) {

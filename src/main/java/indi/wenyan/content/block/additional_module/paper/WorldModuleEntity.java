@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorldModuleEntity extends AbstractModuleEntity {
@@ -24,7 +24,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     private final String basePackageName = WenyanSymbol.var("WorldModule");
 
     @Getter
-    private final List<String> output = new LinkedList<>();
+    private final List<String> output = new ArrayList<>();
 
     @Getter
     private int signal = 0;
