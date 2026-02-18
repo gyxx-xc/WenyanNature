@@ -4,6 +4,8 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.structure.WenyanException;
 
 public interface IWenyanProgram<T extends IWenyanThread> {
+    boolean isAvailable();
+
     /**
      * Allocates execution steps to the program.
      * Not Thread-safe, should be only called from minecraft thread.

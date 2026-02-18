@@ -58,7 +58,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private IWenyanProgram optionalProgram = null;
 
     private IWenyanProgram getProgram() {
-        if (optionalProgram == null)
+        if (optionalProgram == null || !optionalProgram.isAvailable())
             optionalProgram = new WenyanProgramImpl(this);
         return optionalProgram;
     }

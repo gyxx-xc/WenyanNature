@@ -160,13 +160,19 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
             @Override
             public void sendTitle(String title) {
+                title = Component.translatable("code.wenyan_programming.bracket", title).getString();
                 runner.setPlatformName(title);
                 PacketDistributor.sendToServer(new PlatformRenamePacket(pos, title));
             }
 
             @Override
             public String getTitle() {
-                return runner.getPlatformName();
+                var title = runner.getPlatformName();
+
+                if (title.length() < 2) {
+                    return "";
+                }
+                return title.substring(1, title.length() - 1);
             }
 
             @Override

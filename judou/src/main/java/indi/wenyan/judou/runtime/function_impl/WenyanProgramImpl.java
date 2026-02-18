@@ -142,6 +142,8 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         updateIdle();
     }
 
+    @Getter
+    private boolean available = true;
     @Override
     public void stop() {
         allThreads.forEach(thread -> {
@@ -152,6 +154,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         executor.shutdownNow();
         executorCleanable.clean();
         allThreads.clear();
+        available = false;
     }
 
     @Override
