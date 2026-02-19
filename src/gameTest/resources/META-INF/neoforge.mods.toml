@@ -1,0 +1,9 @@
+# copy from https://github.com/mekanism/Mekanism/blob/1.21.x/src/gameTest/resources/META-INF/neoforge.mods.toml
+modLoader="javafml"
+loaderVersion="[1,)"
+license="GNU LGPLv3"
+
+[[mods]]
+modId="wenyan_test"
+displayName="Wenyan: Tests"
+description='''Tests'''
