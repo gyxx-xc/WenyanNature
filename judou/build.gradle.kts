@@ -1,45 +1,44 @@
 plugins {
-    id 'antlr'
-    id 'java'
-    id 'idea' // for JUnit
-    id 'maven-publish'
+    antlr
+    java
+    idea // for JUnit
+    id("maven-publish")
 }
 
-group = 'indi.wenyan'
-version = '1.0.0'
+group = "indi.wenyan"
+version = "1.0.0"
 
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://maven.shedaniel.me/" }
-    maven { url 'https://maven.blamejared.com' }
+    maven { url = uri("https://maven.shedaniel.me/") }
+    maven { url = uri("https://maven.blamejared.com") }
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:26.0.2'
-    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation("org.jetbrains:annotations:26.0.2")
+    implementation("org.slf4j:slf4j-api:2.0.7")
 
-    implementation 'com.github.houbb:opencc4j:1.14.0'
+    implementation("com.github.houbb:opencc4j:1.14.0")
 
     // STUB: for chinese convertor only, might change in future
-    implementation 'cn.hutool:hutool-core:5.8.43'
+    implementation("cn.hutool:hutool-core:5.8.43")
 
     // for annotation processor
-    compileOnly project(":language_processor")
-    annotationProcessor project(":language_processor")
+    compileOnly(project(":language_processor"))
+    annotationProcessor(project(":language_processor"))
 
-    antlr "org.antlr:antlr4:4.13.1"
+    antlr("org.antlr:antlr4:4.13.1")
 
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
     /********** for test **********/
-
-    testCompileOnly project(":language_processor")
-    testAnnotationProcessor project(":language_processor")
+    testCompileOnly(project(":language_processor"))
+    testAnnotationProcessor(project(":language_processor"))
 
     // we only need slf4j api in jar, but we need slf4j for test
-    testImplementation 'org.slf4j:slf4j-simple:2.0.7'
+    testImplementation("org.slf4j:slf4j-simple:2.0.7")
 
     testCompileOnly("org.projectlombok:lombok:1.18.38")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
@@ -54,15 +53,19 @@ dependencies {
     testImplementation("com.google.guava:guava-testlib:21.0")
 }
 
-test {
+tasks.test {
     useJUnitPlatform()
 }
 
-generateGrammarSource {
-    arguments += ["-no-listener", "-visitor", "-encoding", "UTF-8",
-                  "-package", "indi.wenyan.judou.antlr"]
+tasks.generateGrammarSource {
+    arguments.addAll(
+            listOf(
+                    "-no-listener", "-visitor", "-encoding", "UTF-8",
+                    "-package", "indi.wenyan.judou.antlr"
+            )
+    )
     outputDirectory = layout.buildDirectory
-            .dir("generated-src/antlr/main/" +
-            "indi/wenyan/judou/antlr")
-            .get().asFile
+            .dir("generated-src/antlr/main/indi/wenyan/judou/antlr")
+            .get()
+            .asFile
 }
