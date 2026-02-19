@@ -3,10 +3,7 @@ package indi.wenyan.setup;
 import com.mojang.datafixers.DSL;
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
-import indi.wenyan.content.block.additional_module.block.LockModuleEntity;
-import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
-import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
+import indi.wenyan.content.block.additional_module.block.*;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
@@ -178,6 +175,9 @@ public final class Registration {
     public static final DeferredBlock<LockModuleBlock> LOCK_MODULE_BLOCK;
     public static final DeferredItem<BlockItem> LOCK_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<LockModuleEntity>> LOCK_MODULE_ENTITY;
+    public static final DeferredBlock<FormationCoreModuleBlock> FORMATION_CORE_MODULE_BLOCK;
+    public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM;
+    public static final Supplier<BlockEntityType<FormationCoreModuleEntity>> FORMATION_CORE_MODULE_ENTITY;
 
     public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
     public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
@@ -401,6 +401,14 @@ public final class Registration {
         LOCK_MODULE_ENTITY = BLOCK_ENTITY.register(LockModuleBlock.ID,
                 () -> BlockEntityType.Builder
                         .of(LockModuleEntity::new, LOCK_MODULE_BLOCK.get())
+                        .build(DSL.remainderType()));
+
+        FORMATION_CORE_MODULE_BLOCK = BLOCKS.register(FormationCoreModuleBlock.ID, FormationCoreModuleBlock::new);
+        FORMATION_CORE_MODULE_BLOCK_ITEM = ITEMS.registerItem(FormationCoreModuleBlock.ID,
+                properties -> new BlockItem(FORMATION_CORE_MODULE_BLOCK.get(), properties));
+        FORMATION_CORE_MODULE_ENTITY = BLOCK_ENTITY.register(FormationCoreModuleBlock.ID,
+                () -> BlockEntityType.Builder
+                        .of(FormationCoreModuleEntity::new, FORMATION_CORE_MODULE_BLOCK.get())
                         .build(DSL.remainderType()));
 
         COLLECTION_MODULE_BLOCK = BLOCKS.register(CollectionModuleBlock.ID, CollectionModuleBlock::new);
