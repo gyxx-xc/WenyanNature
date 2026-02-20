@@ -84,6 +84,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Getter
     private String platformName = Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString();
 
+    @Getter
+    private final Map<Vec3, Integer> communications = new HashMap<>();
+
     @Override
     public WenyanRuntime initEnvironment() {
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
@@ -126,7 +129,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @SuppressWarnings("unused")
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide)
+        if (!level.isClientSide) {
             ifProgram().ifPresentOrElse(program -> {
                 if (program.isRunning()) {
                     program.step(speedFromTier(getBlockState().getValue(RUNNING_TIER)));
@@ -151,6 +154,16 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 }
                 updateShowingState(runningState);
             }, () -> updateShowingState(RunnerBlock.RunningState.NOT_RUNNING));
+        } else {
+            var iterator = communications.entrySet().iterator();
+            while (iterator.hasNext()) {
+                var entry = iterator.next();
+                if (entry.getValue() <= 0)
+                    iterator.remove();
+                else
+                    entry.setValue(entry.getValue() - 1);
+            }
+        }
     }
 
     private void updateShowingState(RunnerBlock.RunningState state) {
@@ -179,10 +192,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
         var from = getBlockPos().getCenter();
         // distance limit
-        if (from.distanceToSqr(to) >= 2)
+        if (from.distanceToSqr(to) >= 2) {
             level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
                     from.x(), from.y(), from.z(),
                     to.x(), to.y(), to.z());
+            communications.put(to.subtract(from), 20);
+        }
     }
 
     public static final String PAGES_ID = "pages";
