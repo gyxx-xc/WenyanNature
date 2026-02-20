@@ -44,7 +44,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
@@ -252,32 +251,30 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     private WenyanThread createPlatformThread(RunnerBlockEntity platform) throws WenyanThrowException {
-        showConmmunication(platform.getBlockPos());
+        showCommunication(platform.getBlockPos());
         // STUB
-        WenyanThread thread = platform.newThread(platform.code);
-        if (thread == null)
-            // this exception is for import-er thread
-            // in the same time, there's an error in import-ee's platform
-            throw new WenyanException("cannot import");
-        return thread;
+        var threadOptional = platform.newThread(platform.code);
+        // this exception is for import-er thread
+        // in the same time, there's an error in import-ee's platform
+        return threadOptional.orElseThrow(() -> new WenyanException("cannot import"));
     }
 
-    public @Nullable WenyanThread newThread(String pages) {
+    public Optional<WenyanThread> newThread(String pages) {
         assert getLevel() != null;
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
         try {
             WenyanThread runner = WenyanThread.ofCode(pages, this);
             getProgram().create(runner);
-            return runner;
+            return Optional.of(runner);
         } catch (WenyanThrowException e) {
             handleError(e.getMessage());
-            return null;
+            return Optional.empty();
         }
     }
 
     private WenyanPackage getExecutorPackage(IWenyanBlockDevice executor) {
-        showConmmunication(executor.blockPos());
+        showCommunication(executor.blockPos());
         return processPackage(executor.getExecPackage(), executor);
     }
 
@@ -290,7 +287,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return new WenyanPackage(map);
     }
 
-    private void showConmmunication(BlockPos blockPos) {
+    private void showCommunication(BlockPos blockPos) {
         if (getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl,
                     new ChunkPos(getBlockPos()),
@@ -356,7 +353,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             if (device().isRemoved()) {
                 throw new WenyanException("device removed");
             }
-            showConmmunication(device.blockPos());
+            showCommunication(device.blockPos());
         }
     }
 }

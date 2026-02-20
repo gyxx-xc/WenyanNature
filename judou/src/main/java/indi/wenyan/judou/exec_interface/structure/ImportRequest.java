@@ -53,6 +53,7 @@ public final class ImportRequest implements BaseHandleableRequest {
                         status = Status.WAITING;
                     } else if (packageOrThread.left().isPresent()) {
                         returnPackage(packageOrThread.left().get());
+                        thread().unblock();
                         return true; // end
                     }
                     // fallthrough
@@ -71,6 +72,7 @@ public final class ImportRequest implements BaseHandleableRequest {
                     // fallthrough
                 case PROCESS_RUNTIME:
                     returnPackage(new WenyanPackage(packageOrThread.right().get().getMainRuntime().getVariables()));
+                    thread().unblock();
                     return true; // end
             }
     }
