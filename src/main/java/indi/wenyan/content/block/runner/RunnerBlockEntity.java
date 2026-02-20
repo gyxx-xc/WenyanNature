@@ -55,6 +55,7 @@ import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_TIER;
 @MethodsReturnNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
     public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
+    public static final int COMMUNICATE_EFFECT_LIFETIME = 12;
     private IWenyanProgram optionalProgram = null;
 
     private IWenyanProgram getProgram() {
@@ -157,10 +158,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             var iterator = communications.entrySet().iterator();
             while (iterator.hasNext()) {
                 var entry = iterator.next();
-                if (entry.getValue() <= 0)
+                if (entry.getValue() > COMMUNICATE_EFFECT_LIFETIME)
                     iterator.remove();
                 else
-                    entry.setValue(entry.getValue() - 1);
+                    entry.setValue(entry.getValue() + 1);
             }
         }
     }
@@ -192,10 +193,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         var from = getBlockPos().getCenter();
         // distance limit
         if (from.distanceToSqr(to) >= 2) {
-            level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
-                    from.x(), from.y(), from.z(),
-                    to.x(), to.y(), to.z());
-            communications.put(to.subtract(from), 20);
+//            level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
+//                    from.x(), from.y(), from.z(),
+//                    to.x(), to.y(), to.z());
+            communications.put(to.subtract(from), 0);
         }
     }
 
@@ -322,7 +323,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private int speedFromTier(int tier) {
         return switch (tier) {
             case 0 -> 1;
-            case 1 -> 10;
+            case 1 -> COMMUNICATE_EFFECT_LIFETIME;
             case 2 -> 100;
             case 3 -> 1000;
             default -> throw new IllegalArgumentException("invalid tier");
