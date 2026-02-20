@@ -33,7 +33,6 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         return TYPE;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE) {

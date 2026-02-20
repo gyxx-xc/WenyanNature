@@ -15,13 +15,13 @@ class ChineseUtilsTest {
     }
 
     @Test
-    void toTranditionalCode() {
-        assertEquals("", ChineseUtils.toTranditionalCode(""));
-        assertEquals("創作具有藝術性與互動性的手機應用，例如動態畫板或音樂可視化工具", ChineseUtils.toTranditionalCode("创作具有艺术性与互动性的手机应用，例如动态画板或音乐可视化工具"));
-        assertEquals("創作具有藝術性與互動性的手機應用，「例如动态画板或音乐可视化工具」", ChineseUtils.toTranditionalCode("创作具有艺术性与互动性的手机应用，「例如动态画板或音乐可视化工具」"));
-        assertEquals("創作具有藝術性與互動性的手機應用，「「例如动态画板或音乐可视化工具」」", ChineseUtils.toTranditionalCode("创作具有艺术性与互动性的手机应用，「「例如动态画板或音乐可视化工具」」"));
-        assertEquals("創作", ChineseUtils.toTranditionalCode("創作"));
-        assertEquals("創作a", ChineseUtils.toTranditionalCode("创作a"));
-        assertEquals("創作\u0001", ChineseUtils.toTranditionalCode("创作\u0001"));
+    void toTraditionalCode() {
+        assertEquals("", ChineseUtils.toTraditionalCode(""));
+        assertEquals("創作具有藝術性與互動性的手機應用，例如動態畫板或音樂可視化工具", ChineseUtils.toTraditionalCode("创作具有艺术性与互动性的手机应用，例如动态画板或音乐可视化工具"));
+        assertEquals("創作具有藝術性與互動性的手機應用，「例如动态画板或音乐可视化工具」", ChineseUtils.toTraditionalCode("创作具有艺术性与互动性的手机应用，「例如动态画板或音乐可视化工具」"));
+        assertEquals("創作具有藝術性與互動性的手機應用，「「例如动态画板或音乐可视化工具」」", ChineseUtils.toTraditionalCode("创作具有艺术性与互动性的手机应用，「「例如动态画板或音乐可视化工具」」"));
+        assertEquals("創作", ChineseUtils.toTraditionalCode("創作"));
+        assertEquals("創作a", ChineseUtils.toTraditionalCode("创作a"));
+        assertEquals("創作\u0001", ChineseUtils.toTraditionalCode("创作\u0001"));
     }
 }

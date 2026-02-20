@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.ref.Cleaner;
 import java.util.Collection;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
@@ -39,7 +38,6 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     // NOTE: all thread = current running thread + ready queue threads + blocked threads (hold by ExecQueue)
     public final Collection<PCB> allThreads = ConcurrentHashMap.newKeySet(MAX_THREAD);
 
-    private final Cleaner.Cleanable executorCleanable;
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
@@ -57,10 +55,6 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     public WenyanProgramImpl(IWenyanPlatform platform) {
         this.platform = platform;
-        executorCleanable = Cleaner.create().register(this, () -> {
-            if (!executor.isShutdown())
-                executor.shutdownNow();
-        });
     }
 
     @Override
@@ -152,7 +146,6 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
                 thread.getWatchdog().cancel(false);
         });
         executor.shutdownNow();
-        executorCleanable.clean();
         allThreads.clear();
         available = false;
     }

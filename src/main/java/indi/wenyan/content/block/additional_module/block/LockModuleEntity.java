@@ -25,7 +25,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
     private final String basePackageName = WenyanSymbol.var("SemaphoreModule");
 
     private IThreadHolder lockHolder;
-    private Queue<IThreadHolder> waitingThreads = new ArrayDeque<>();
+    private final Queue<IThreadHolder> waitingThreads = new ArrayDeque<>();
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
@@ -33,13 +33,14 @@ public class LockModuleEntity extends AbstractModuleEntity {
             .handler(WenyanSymbol.var("SemaphoreModule.release"), this::releaseSemaphore)
             .build();
 
-    private @NotNull boolean acquireSemaphoreHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
+    private boolean acquireSemaphoreHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
         boolean locked = blockState().getValue(LockModuleBlock.LOCK_STATE);
         if (locked) {
             if (lockHolder == request.thread() || waitingThreads.contains(request.thread()))
                 throw new WenyanException("thread already hold lock");
             waitingThreads.add(request.thread());
         } else {
+            assert level != null;
             level.setBlock(getBlockPos(), getBlockState().setValue(LockModuleBlock.LOCK_STATE, true), Block.UPDATE_CLIENTS);
             lockHolder = request.thread();
             request.thread().unblock();
@@ -54,6 +55,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
             throw new WenyanException("lock not holded by thread");
         }
         if (waitingThreads.isEmpty()) {
+            assert level != null;
             level.setBlock(getBlockPos(), getBlockState().setValue(LockModuleBlock.LOCK_STATE, false), Block.UPDATE_CLIENTS);
             lockHolder = null;
         } else {

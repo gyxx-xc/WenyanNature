@@ -4,7 +4,7 @@ import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
-import indi.wenyan.judou.runtime.WenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
@@ -36,12 +36,13 @@ import java.util.Map;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
+@SuppressWarnings("ALL")
 public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatform {
     public static final String ID_1 = "equipable_runner";
 
     // STUB: may need to find a better way to do it,
     //   maybe after the program storage is done?
-    private static final Map<Integer, WenyanProgram> PROGRAMS = new HashMap<>();
+    private static final Map<Integer, IWenyanProgram> PROGRAMS = new HashMap<>();
     public final int runningLevel;
 
     @Getter

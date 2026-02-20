@@ -33,12 +33,6 @@ public class FuzhouNameWidget extends EditBox {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        // Render background using SnippetWidget's sprite style
-        // Using get(true, isHovered) to match SnippetWidget's usage of ENTRY_SPRITES
-        // Note: SnippetWidget uses 'isUnfold' as first arg, which is true for entries.
-        boolean hovered = mouseX >= this.fullX && mouseY >= this.fullY &&
-                mouseX < this.fullX + this.fullWidth && mouseY < this.fullY + this.height;
-
         // Render pure black background
         guiGraphics.fill(this.fullX, this.fullY,
                 this.fullX + this.fullWidth, this.fullY + this.height,

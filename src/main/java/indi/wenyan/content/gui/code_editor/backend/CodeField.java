@@ -344,7 +344,7 @@ public class CodeField {
     private static void cutToken(int breakPoint, StyledStringView token, List<StyledStringView> currentStyle, int lineStart) {
         // if break inside token -> cut
         // assert i <= stopIndex
-        if (breakPoint > token.beginIndex() || currentStyle.isEmpty()) { // add a empty style to ensure at least one style
+        if (breakPoint > token.beginIndex() || currentStyle.isEmpty()) { // add an empty style to ensure at least one style
             currentStyle.add(new StyledStringView(
                     Math.max(token.beginIndex(), lineStart), breakPoint,
                     token.token()));

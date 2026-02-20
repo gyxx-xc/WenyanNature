@@ -55,7 +55,7 @@ public enum ChineseUtils {
     }
 
     private final static Pattern PATTERN = Pattern.compile("「「.*?」」|「.*?」");
-    public static @NotNull String toTranditionalCode(String s) {
+    public static @NotNull String toTraditionalCode(String s) {
         Matcher matcher = PATTERN.matcher(s);
         StringBuilder result = new StringBuilder();
         int lastEnd = 0;

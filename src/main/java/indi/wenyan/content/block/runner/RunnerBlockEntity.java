@@ -150,9 +150,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                     runningState = RunnerBlock.RunningState.NOT_RUNNING;
                 }
                 updateShowingState(runningState);
-            }, () -> {
-                updateShowingState(RunnerBlock.RunningState.NOT_RUNNING);
-            });
+            }, () -> updateShowingState(RunnerBlock.RunningState.NOT_RUNNING));
     }
 
     private void updateShowingState(RunnerBlock.RunningState state) {
@@ -162,6 +160,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             if (oldState == RunnerBlock.RunningState.ERROR &&
                     (state == RunnerBlock.RunningState.NOT_RUNNING || state == RunnerBlock.RunningState.IDLE))
                 return;
+            assert level != null;
             level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, state), Block.UPDATE_CLIENTS);
         }
     }
@@ -186,12 +185,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                     to.x(), to.y(), to.z());
     }
 
-    @Override
-    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {
-    }
-
     public static final String PAGES_ID = "pages";
-    public static final String SPEED_ID = "speed";
     public static final String PLATFORM_NAME_ID = "platformName";
 
     @SuppressWarnings("unused")

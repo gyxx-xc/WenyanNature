@@ -66,7 +66,7 @@ public class CodeEditorScreen extends Screen {
         int titleBarHeight = 15;
         titleBar = new FuzhouNameWidget(font, snippetWidth + 4, 2,
                 width - (snippetWidth + 4) - (packageSnippetWidth + 4), titleBarHeight,
-                Component.translatable("gui.wenyan.snippet_name"));
+                Component.literal(""));
         titleBar.setTextColor(-1);
         titleBar.setBordered(false);
         titleBar.setMaxLength(18);

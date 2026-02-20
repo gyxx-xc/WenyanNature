@@ -84,7 +84,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
      */
     public static WenyanRParser.ProgramContext program(String program) {
         WenyanRLexer lexer = new WenyanRLexer(
-                CharStreams.fromString(ChineseUtils.toTranditionalCode(program)));
+                CharStreams.fromString(ChineseUtils.toTraditionalCode(program)));
         lexer.removeErrorListeners();
         lexer.addErrorListener(new WenyanErrorListener());
         WenyanRParser parser = new WenyanRParser(new CommonTokenStream(lexer));
