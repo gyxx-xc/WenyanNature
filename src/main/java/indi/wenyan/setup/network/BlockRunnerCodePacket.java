@@ -42,7 +42,7 @@ public record BlockRunnerCodePacket(BlockPos pos, String code) implements Custom
         if (context.flow().isServerbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
             if (entity instanceof RunnerBlockEntity runner) {
-                runner.setPages(packet.code());
+                runner.setCode(packet.code());
             }
         }
     };

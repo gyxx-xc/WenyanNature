@@ -50,6 +50,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
+import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_TIER;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -69,8 +70,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Getter
     @Setter
-    private String pages;
-    private int speed;
+    private String code;
     @Getter
     private final Deque<Component> outputQueue = new ArrayDeque<>();
     private boolean outputChanged = false;
@@ -129,7 +129,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (!level.isClientSide)
             ifProgram().ifPresentOrElse(program -> {
                 if (program.isRunning()) {
-                    program.step(speed);
+                    program.step(speedFromTier(getBlockState().getValue(RUNNING_TIER)));
                     handle(new BlockContext(level, pos, state));
                 }
                 // update showing state
@@ -171,7 +171,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             handleError(Component.translatable("error.wenyan_programming.already_run").getString());
             return;
         }
-        newThread(pages);
+        newThread(code);
     }
 
     public void setCommunicate(Vec3 to) {
@@ -197,9 +197,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @SuppressWarnings("unused")
     @Override
     protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (pages != null)
-            tag.putString(PAGES_ID, pages);
-        tag.putInt(SPEED_ID, speed);
+        if (code != null)
+            tag.putString(PAGES_ID, code);
         tag.putString(PLATFORM_NAME_ID, platformName);
     }
 
@@ -207,18 +206,14 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Override
     protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains(PAGES_ID)) {
-            pages = tag.getString(PAGES_ID);
+            code = tag.getString(PAGES_ID);
         }
-        speed = tag.getInt(SPEED_ID);
         platformName = tag.getString(PLATFORM_NAME_ID);
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
-        pages = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
-        int speedTier = componentInput.getOrDefault(Registration.RUNNING_TIER_DATA.get(), 0);
-        // TODO: number design
-        speed = (int) StrictMath.pow(10, Math.min(speedTier, 3)) * 8;
+        code = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
         platformName = componentInput.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
     }
 
@@ -250,7 +245,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private WenyanThread createPlatformThread(RunnerBlockEntity platform) throws WenyanThrowException {
         showConmmunication(platform.getBlockPos());
         // STUB
-        WenyanThread thread = platform.newThread(platform.pages);
+        WenyanThread thread = platform.newThread(platform.code);
         if (thread == null)
             // this exception is for import-er thread
             // in the same time, there's an error in import-ee's platform
@@ -316,6 +311,16 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
         outputChanged = true;
         setChanged();
+    }
+
+    private int speedFromTier(int tier) {
+        return switch (tier) {
+            case 0 -> 1;
+            case 1 -> 10;
+            case 2 -> 100;
+            case 3 -> 1000;
+            default -> throw new IllegalArgumentException("invalid tier");
+        };
     }
 
     private record BlockContext(Level level, BlockPos pos,

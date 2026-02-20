@@ -42,6 +42,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
      */
     private final Deque<WenyanRuntime> runtimes = new ArrayDeque<>();
 
+    @Getter
     private WenyanRuntime mainRuntime;
 
     private WenyanThread(String code) {
@@ -73,7 +74,6 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
         return thread;
     }
 
-    int temp = 0;
     @Override
     public void run(int step) {
         for (int i = 0; i < step; i++) {
@@ -111,7 +111,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
             } catch (Exception e) {
                 dieWithException(e);
                 // rethrow interrupt
-                if (e instanceof InterruptedException ie)
+                if (e instanceof InterruptedException)
                     Thread.interrupted();
                 return;
             }
@@ -223,10 +223,6 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     public int runtimeSize() {
         return runtimes.size();
-    }
-
-    public WenyanRuntime getMainRuntime() {
-        return mainRuntime;
     }
 
     private boolean willDie = false;

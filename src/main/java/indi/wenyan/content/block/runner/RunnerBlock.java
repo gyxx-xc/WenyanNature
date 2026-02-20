@@ -35,6 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -55,11 +56,13 @@ public class
 RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public static final String ID = "runner_block";
     public static final EnumProperty<RunningState> RUNNING_STATE = EnumProperty.create("running_state", RunningState.class);
+    public static final IntegerProperty RUNNING_TIER = IntegerProperty.create("running_tier", 0, 3);
 
     public RunnerBlock(Properties properties) {
         super(properties.noCollission().lightLevel(state -> state.getValue(RUNNING_STATE).getLightLevel()));
-        registerDefaultState(stateDefinition.any()
+        registerDefaultState(defaultBlockState()
                 .setValue(RUNNING_STATE, RunningState.NOT_RUNNING)
+                .setValue(RUNNING_TIER, 1)
         );
     }
 
@@ -107,6 +110,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(RUNNING_STATE);
+        builder.add(RUNNING_TIER);
     }
 
     @Override
@@ -114,6 +118,8 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         var blockState = super.getStateForPlacement(context);
         if (blockState == null) return null;
         blockState.setValue(RUNNING_STATE, RunningState.NOT_RUNNING);
+        int speedTier = context.getItemInHand().getOrDefault(Registration.RUNNING_TIER_DATA.get(), 0);
+        blockState.setValue(RUNNING_TIER, speedTier);
         return blockState;
     }
 
@@ -148,14 +154,14 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {
-                runner.setPages(content);
+                runner.setCode(content);
                 runner.setChanged();
                 PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
             }
 
             @Override
             public String getContent() {
-                return runner.getPages();
+                return runner.getCode();
             }
 
             @Override

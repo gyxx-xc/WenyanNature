@@ -168,7 +168,9 @@ dependencies {
     testImplementation("com.google.guava:guava-testlib:21.0")
     testImplementation("net.neoforged:testframework:21.1.206")
 
+    // for game test
     gameTestImplementation("net.neoforged:testframework:21.1.206")
+    gameTestImplementation(project(":judou"))
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
