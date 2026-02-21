@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -39,7 +39,7 @@ public record RunnerCodePacket(int slot, String code) implements CustomPacketPay
     public static final IPayloadHandler<RunnerCodePacket> HANDLER = (packet, context) -> {
         if (context.flow().isServerbound()) {
             Player player = context.player();
-            ItemStack runner = player.getInventory().items.get(packet.slot());
+            ItemStack runner = player.getInventory().getItem(packet.slot());
             runner.set(Registration.PROGRAM_CODE_DATA.get(), packet.code());
         }
     };

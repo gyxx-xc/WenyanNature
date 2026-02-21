@@ -13,7 +13,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.CraftClearParticlePacket;
 import indi.wenyan.setup.network.CraftingParticlePacket;
 import lombok.Data;
@@ -145,7 +145,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             .build();
 
     public CraftingBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.CRAFTING_BLOCK_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.CRAFTING_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     @Override

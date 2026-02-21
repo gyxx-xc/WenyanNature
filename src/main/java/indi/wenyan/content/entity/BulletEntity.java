@@ -1,6 +1,6 @@
 package indi.wenyan.content.entity;
 
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

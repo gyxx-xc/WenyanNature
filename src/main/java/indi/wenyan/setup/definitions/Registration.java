@@ -1,11 +1,10 @@
-package indi.wenyan.setup;
+package indi.wenyan.setup.definitions;
 
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
-import indi.wenyan.setup.event.ClientSetup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -15,6 +14,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
@@ -40,17 +40,19 @@ public final class Registration {
         MENU_TYPE.register(modEventBus);
         DATA.register(modEventBus);
         RECIPE_TYPE.register(modEventBus);
-        SERIALIZER.register(modEventBus);
+        RECIPE_SERIALIZER.register(modEventBus);
         PARTICLE_TYPES.register(modEventBus);
+        RECIPE_BOOK_CATEGORIES.register(modEventBus);
     }
 
     // Registry objects
     public static final DeferredRegister<EntityType<?>> ENTITY;
     public static final DeferredRegister<MenuType<?>> MENU_TYPE;
     public static final DeferredRegister<DataComponentType<?>> DATA;
-    public static final DeferredRegister<RecipeSerializer<?>> SERIALIZER;
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER;
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE;
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES;
+    public static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES;
 
     public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER;
 
@@ -60,6 +62,7 @@ public final class Registration {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> NOTE_LOCK_DATA;
 
+    public static final Supplier<RecipeBookCategory> CALCULATION_BLOCK_CATEGORY;
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
 
@@ -68,9 +71,10 @@ public final class Registration {
         ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
         MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
         DATA = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, MODID);
-        SERIALIZER = DeferredRegister.create(Registries.RECIPE_SERIALIZER, MODID);
+        RECIPE_SERIALIZER = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
         RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
         PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
+        RECIPE_BOOK_CATEGORIES = DeferredRegister.create(BuiltInRegistries.RECIPE_BOOK_CATEGORY, MODID);
 
         CRAFTING_CONTAINER = MENU_TYPE.register(CraftingBlock.ID,
                 () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
@@ -90,8 +94,11 @@ public final class Registration {
                         .networkSynchronized(ByteBufCodecs.BOOL)
                         .build());
 
-        ANSWERING_RECIPE_SERIALIZER = SERIALIZER.register(AnsweringRecipe.ID,
-                AnsweringRecipe.Serializer::new);
+        CALCULATION_BLOCK_CATEGORY = RECIPE_BOOK_CATEGORIES.register(
+                "calculation_block", RecipeBookCategory::new);
+
+        ANSWERING_RECIPE_SERIALIZER = RECIPE_SERIALIZER.register(AnsweringRecipe.ID,
+                AnsweringRecipe.SerializerProvider::create);
         ANSWERING_RECIPE_TYPE = RECIPE_TYPE.register(AnsweringRecipe.ID,
                 () -> new RecipeType<>() {
                     @Override

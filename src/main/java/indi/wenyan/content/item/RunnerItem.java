@@ -3,7 +3,7 @@ package indi.wenyan.content.item;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import indi.wenyan.setup.network.RunnerTitlePacket;
 import net.minecraft.MethodsReturnNonnullByDefault;

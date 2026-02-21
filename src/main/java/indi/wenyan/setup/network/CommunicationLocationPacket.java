@@ -8,13 +8,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import org.joml.Vector3f;
 
 /**
  * Packet for communication location data between blocks
  */
-public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vec3 to) implements CustomPacketPayload {
+public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vector3f to) implements CustomPacketPayload {
     /**
      * Packet type identifier
      */
@@ -28,11 +28,11 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vec3 
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.from);
-                        buffer.writeVec3(packet.to);
+                        buffer.writeVector3f(packet.to());
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
-                        Vec3 output1 = buffer.readVec3();
+                        Vector3f output1 = buffer.readVector3f();
                         return new CommunicationLocationPacket(pos1, output1);
                     });
 

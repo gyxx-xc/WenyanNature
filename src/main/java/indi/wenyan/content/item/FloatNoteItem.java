@@ -3,7 +3,7 @@ package indi.wenyan.content.item;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.content.gui.float_note.FloatNoteNamingScreen;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import indi.wenyan.setup.network.DeviceRenamePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
 import net.minecraft.MethodsReturnNonnullByDefault;

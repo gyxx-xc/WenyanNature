@@ -2,7 +2,7 @@ package indi.wenyan.test.content.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import indi.wenyan.test.utils.RunnerTestHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

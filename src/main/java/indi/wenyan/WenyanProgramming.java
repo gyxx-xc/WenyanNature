@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import indi.wenyan.interpreter_impl.MinecraftLanguageProvider;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.LoggerManager;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.neoforged.bus.api.IEventBus;

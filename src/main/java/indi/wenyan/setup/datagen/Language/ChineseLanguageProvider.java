@@ -1,4 +1,4 @@
-package indi.wenyan.setup.datagen;
+package indi.wenyan.setup.datagen.Language;
 
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;

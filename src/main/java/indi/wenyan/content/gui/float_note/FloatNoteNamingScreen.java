@@ -1,6 +1,6 @@
 package indi.wenyan.content.gui.float_note;
 
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import indi.wenyan.setup.network.FloatNotePacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

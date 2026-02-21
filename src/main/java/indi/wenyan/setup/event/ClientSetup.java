@@ -7,7 +7,7 @@ import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
 import indi.wenyan.content.gui.CraftingBlockScreen;
 import indi.wenyan.content.particle.CommunicationParticle;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;

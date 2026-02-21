@@ -40,10 +40,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
+import org.joml.Vector3f;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
@@ -85,7 +85,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private String platformName = Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString();
 
     @Getter
-    private final Map<Vec3, Integer> communications = new HashMap<>();
+    private final Map<Vector3f, Integer> communications = new HashMap<>();
 
     @Override
     public WenyanRuntime initEnvironment() {
@@ -186,17 +186,17 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         newThread(code);
     }
 
-    public void setCommunicate(Vec3 to) {
+    public void setCommunicate(Vector3f to) {
         if (level == null || !level.isClientSide()) {
             return;
         }
-        var from = getBlockPos().getCenter();
+        var from = getBlockPos().getCenter().toVector3f();
         // distance limit
-        if (from.distanceToSqr(to) >= 2) {
+        if (from.distance(to) >= 2) {
 //            level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
 //                    from.x(), from.y(), from.z(),
 //                    to.x(), to.y(), to.z());
-            communications.put(to.subtract(from), 0);
+            communications.put(to.sub(from), 0);
         }
     }
 

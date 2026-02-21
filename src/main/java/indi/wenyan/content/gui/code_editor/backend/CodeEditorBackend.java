@@ -36,7 +36,7 @@ public class CodeEditorBackend {
     private Runnable valueListener = () -> {
     };
     @Setter
-    private Consumer<Deque<Component>> outputListener = s -> {
+    private Consumer<Deque<Component>> outputListener = _ -> {
     };
 
     private final CodeEditorBackendSynchronizer synchronizer;

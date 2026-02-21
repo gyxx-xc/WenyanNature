@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.IModuleBlock;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;

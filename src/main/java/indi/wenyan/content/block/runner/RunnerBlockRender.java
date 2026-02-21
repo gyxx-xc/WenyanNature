@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -76,15 +75,15 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity>
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void transferPoint(PoseStack poseStack, Map.Entry<Vec3, Integer> entry, double attack, double release, double time) {
+    private void transferPoint(PoseStack poseStack, Map.Entry<Vector3f, Integer> entry, double attack, double release, double time) {
         double fadeLength = time > COMMUNICATE_EFFECT_LIFETIME - release ?
                 (time - COMMUNICATE_EFFECT_LIFETIME) / release + 1.0 : 0.0;
         double length = time < attack ? time / attack : 1.0;
-        var newY = entry.getKey().toVector3f().mul((float) (length - fadeLength));
+        var newY = entry.getKey().mul((float) (length - fadeLength), new Vector3f());
         var newX = newY.cross(dispatcher.camera.getLookVector(), new Vector3f())
                 .normalize().mul(0.1F); // radious
         var newZ = newY.cross(newX, new Vector3f()).normalize();
-        var offset = entry.getKey().toVector3f().mul((float) fadeLength);
+        var offset = entry.getKey().mul((float) fadeLength, new Vector3f());
         poseStack.translate(offset.x, offset.y, offset.z);
         poseStack.mulPose(new Matrix4f(
                 newX.x, newX.y, newX.z, 0,

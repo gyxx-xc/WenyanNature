@@ -11,7 +11,7 @@ import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;

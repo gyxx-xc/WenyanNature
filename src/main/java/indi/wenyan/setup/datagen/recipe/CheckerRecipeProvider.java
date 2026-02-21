@@ -1,4 +1,4 @@
-package indi.wenyan.setup.datagen;
+package indi.wenyan.setup.datagen.recipe;
 
 import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.setup.definitions.WenyanItems;

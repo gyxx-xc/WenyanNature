@@ -1,20 +1,21 @@
 package indi.wenyan.content.recipe;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import indi.wenyan.setup.Registration;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.HolderLookup;
+import indi.wenyan.setup.definitions.Registration;
+import lombok.AccessLevel;
+import lombok.Value;
+import lombok.With;
+import lombok.experimental.Accessors;
+import lombok.experimental.NonFinal;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 
@@ -24,7 +25,24 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round) implements Recipe<AnsweringRecipeInput> {
+@Accessors(fluent = true)
+@Value
+public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
+    List<Ingredient> input;
+    String question;
+    ItemStack output;
+    int round;
+
+    @With(AccessLevel.PRIVATE)
+    @NonFinal
+    PlacementInfo info;
+
+    public AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round) {
+        this.input = input;
+        this.question = question;
+        this.output = output;
+        this.round = round;
+    }
 
     public static final String ID = "answering_recipe";
     public static final StreamCodec<RegistryFriendlyByteBuf, List<Ingredient>> INGREDIENT_LIST_STREAM =
@@ -32,7 +50,7 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
 
     @Override
     public boolean matches(AnsweringRecipeInput answeringRecipeInput, Level level) {
-        if (level.isClientSide() || input.size() != answeringRecipeInput.size()){
+        if (level.isClientSide() || input.size() != answeringRecipeInput.size()) {
             return false;
         }
 
@@ -42,37 +60,51 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
 
         StackedContents stackedContents = new StackedContents();
         for (ItemStack stack : item)
-            stackedContents.accountStack(stack, 1);
+            stackedContents.account(stack, 1);
 
         return RecipeMatcher.findMatches(item, input) != null;
     }
 
     @Override
-    public ItemStack assemble(AnsweringRecipeInput answeringRecipeInput, HolderLookup.Provider provider) {
+    public ItemStack assemble(AnsweringRecipeInput answeringRecipeInput) {
         return output.copy();
     }
 
     @Override
-    public boolean canCraftInDimensions(int i, int i1) {
+    public boolean showNotification() {
         return false;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
-        return output.copy();
+    public String group() {
+        return "";
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeBookCategory recipeBookCategory() {
+        return Registration.CALCULATION_BLOCK_CATEGORY.get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        // recomand from https://docs.neoforged.net/docs/resources/server/recipes/custom
+        if (info == null) {
+            this.info = PlacementInfo.create(input);
+        }
+        return info;
+    }
+
+    @Override
+    public RecipeSerializer<? extends Recipe<AnsweringRecipeInput>> getSerializer() {
         return Registration.ANSWERING_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<AnsweringRecipeInput>> getType() {
         return Registration.ANSWERING_RECIPE_TYPE.get();
     }
 
-    public static class Serializer implements RecipeSerializer<AnsweringRecipe> {
+    public static class SerializerProvider {
         public static final MapCodec<AnsweringRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC.listOf().fieldOf("input").forGetter(AnsweringRecipe::input),
                 Codec.STRING.fieldOf("question").forGetter(AnsweringRecipe::question),
@@ -88,14 +120,8 @@ public record AnsweringRecipe(List<Ingredient> input, String question, ItemStack
                         ByteBufCodecs.INT, AnsweringRecipe::round,
                         AnsweringRecipe::new);
 
-        @Override
-        public MapCodec<AnsweringRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, AnsweringRecipe> streamCodec() {
-            return STREAM_CODEC;
+        public static RecipeSerializer<AnsweringRecipe> create() {
+            return new RecipeSerializer<>(CODEC, STREAM_CODEC);
         }
     }
 }

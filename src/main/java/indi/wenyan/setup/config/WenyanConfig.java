@@ -1,12 +1,8 @@
 package indi.wenyan.setup.config;
 
-import indi.wenyan.WenyanProgramming;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-
 @SuppressWarnings("ALL")
-@Config(name = WenyanProgramming.MODID)
-public final class WenyanConfig implements ConfigData {
+//@Config(name = WenyanProgramming.MODID)
+public final class WenyanConfig {
     // RTFM Use https://shedaniel.gitbook.io/cloth-config/auto-config/introduction-to-auto-config-1u
 
 /*    public static Screen createConfigScreen(Screen parent) {

@@ -1,4 +1,4 @@
-package indi.wenyan.setup.datagen;
+package indi.wenyan.setup.datagen.recipe;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.recipe.AnsweringRecipe;
@@ -80,15 +80,6 @@ public final class AnsweringRecipeBuilder {
      */
     public AnsweringRecipeBuilder addInput(Item item) {
         return addInput(Ingredient.of(item));
-    }
-
-    /**
-     * Adds an itemstack to the recipe inputs.
-     * @param itemStack The itemstack to add
-     * @return This builder for chaining
-     */
-    public AnsweringRecipeBuilder addInput(ItemStack itemStack) {
-        return addInput(Ingredient.of(itemStack));
     }
 
     /**

@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.crafting_block;
 
 import indi.wenyan.content.block.additional_module.IModuleBlock;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +24,7 @@ public class CraftingBlock extends Block implements IModuleBlock {
 
     @Override
     public @NotNull BlockEntityType<?> getType() {
-        return Registration.CRAFTING_BLOCK_ENTITY.get();
+        return WenyanBlocks.CRAFTING_BLOCK_ENTITY.get();
     }
 
     @Override

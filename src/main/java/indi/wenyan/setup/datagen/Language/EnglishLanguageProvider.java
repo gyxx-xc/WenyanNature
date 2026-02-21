@@ -1,6 +1,5 @@
-package indi.wenyan.setup.datagen;
+package indi.wenyan.setup.datagen.Language;
 
-import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.data.PackOutput;

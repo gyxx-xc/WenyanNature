@@ -1,8 +1,8 @@
-package indi.wenyan.setup.datagen;
+package indi.wenyan.setup.datagen.model;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.Registration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;

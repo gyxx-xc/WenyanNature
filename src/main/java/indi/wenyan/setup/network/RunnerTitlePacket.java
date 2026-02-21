@@ -28,7 +28,7 @@ public record RunnerTitlePacket(int slot, String title) implements CustomPacketP
     public static final IPayloadHandler<RunnerTitlePacket> HANDLER = (packet, context) -> {
         if (context.flow().isServerbound()) {
             Player player = context.player();
-            ItemStack runner = player.getInventory().items.get(packet.slot());
+            ItemStack runner = player.getInventory().getItem(packet.slot());
             runner.set(DataComponents.CUSTOM_NAME, Component.literal(packet.title()));
         }
     };

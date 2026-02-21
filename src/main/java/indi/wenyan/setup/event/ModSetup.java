@@ -1,6 +1,5 @@
 package indi.wenyan.setup.event;
 
-import indi.wenyan.setup.Registration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.*;
 import net.neoforged.bus.api.SubscribeEvent;

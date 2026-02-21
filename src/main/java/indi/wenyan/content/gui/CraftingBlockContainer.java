@@ -1,7 +1,8 @@
 package indi.wenyan.content.gui;
 
-import indi.wenyan.setup.Registration;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -51,6 +52,6 @@ public class CraftingBlockContainer extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(ContainerLevelAccess.create(player.level(), blockEntity.getBlockPos()), player, Registration.CRAFTING_BLOCK.get());
+        return stillValid(ContainerLevelAccess.create(player.level(), blockEntity.getBlockPos()), player, WenyanBlocks.CRAFTING_BLOCK.get());
     }
 }

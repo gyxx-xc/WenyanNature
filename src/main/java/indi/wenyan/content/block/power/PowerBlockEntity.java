@@ -7,7 +7,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -47,12 +47,12 @@ public class PowerBlockEntity extends AbstractModuleEntity {
     @Getter
     public RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction("「天根」", integers -> a)
-                    .intFunction("「数极」", integers -> LARGE_PRIME)
+                    .intFunction("「天根」", _ -> a)
+                    .intFunction("「数极」", _ -> LARGE_PRIME)
 
-                    .intFunction("「天机」", integers -> strong ? 0 : b)
-                    .intFunction("「天意」", integers -> strong ? ans : 0)
-                    .function("书", (self, args) -> {
+                    .intFunction("「天机」", _ -> strong ? 0 : b)
+                    .intFunction("「天意」", _ -> strong ? ans : 0)
+                    .function("書", (_, args) -> {
                         int result = strong ? b : ans;
                         resetState();
                         if (args.getFirst().as(WenyanInteger.TYPE).value() == result) {
@@ -66,7 +66,7 @@ public class PowerBlockEntity extends AbstractModuleEntity {
             .build();
 
     public PowerBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.POWER_BLOCK_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.POWER_BLOCK_ENTITY.get(), pos, blockState);
         try {
             random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {

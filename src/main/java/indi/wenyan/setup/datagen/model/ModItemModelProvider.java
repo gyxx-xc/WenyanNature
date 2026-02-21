@@ -1,29 +1,23 @@
-package indi.wenyan.setup.datagen;
+package indi.wenyan.setup.datagen.model;
 
-import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
-import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
-import indi.wenyan.content.block.crafting_block.CraftingBlock;
-import indi.wenyan.content.block.pedestal.PedestalBlock;
-import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.setup.definitions.WenyanItems;
-import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.world.item.Item;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Provider for generating item models during data generation.
  * Defines the appearance of items in inventory and when held.
  */
-public class ModItemModelProvider extends ItemModelProvider {
-
-    /**
-     * Constructs a new item model provider.
-     * @param output The pack output for model generation
-     * @param modid The mod ID
-     * @param existingFileHelper Helper for accessing existing files
-     */
-    public ModItemModelProvider(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
-        super(output, modid, existingFileHelper);
+@ParametersAreNonnullByDefault
+public class ModItemModelProvider extends ModelSubProvider {
+    public ModItemModelProvider(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+        super(blockModels, itemModels);
     }
 
     @Override
@@ -39,7 +33,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(WenyanItems.FROST_PAPER.get());
         basicItem(WenyanItems.PHOENIX_PAPER.get());
         basicItem(WenyanItems.DRAGON_PAPER.get());
-
 
         basicItem(WenyanItems.ARCANE_INK.get());
         basicItem(WenyanItems.BAMBOO_INK.get());
@@ -63,17 +56,12 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(WenyanItems.VEC3_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.RANDOM_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get());
-
         basicItem(WenyanItems.EQUIPABLE_RUNNER_ITEM.get());
-
-        blockItem(ScreenModuleBlock.ID);
-        blockItem(LockModuleBlock.ID);
-        blockItem(CraftingBlock.ID);
-        blockItem(PedestalBlock.ID);
-        blockItem(PowerBlock.ID);
     }
 
-    private void blockItem(String item) {
-        withExistingParent(item, modLoc("block/" + item));
+    private void basicItem(Item item) {
+        var model = ModelTemplates.FLAT_ITEM.create(item, TextureMapping.layer0(item),
+                itemModels.modelOutput);
+        itemModels.itemModelOutput.accept(item.asItem(), ItemModelUtils.plainModel(model));
     }
 }
