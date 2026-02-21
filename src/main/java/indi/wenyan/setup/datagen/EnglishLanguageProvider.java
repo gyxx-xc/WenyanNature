@@ -1,6 +1,7 @@
 package indi.wenyan.setup.datagen;
 
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -23,25 +24,25 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add(Registration.HAND_RUNNER_0.get(), "一阶符");
-        add(Registration.HAND_RUNNER_1.get(), "二阶符");
-        add(Registration.HAND_RUNNER_2.get(), "三阶符");
-        add(Registration.HAND_RUNNER_3.get(), "四阶符");
+        add(WenyanItems.HAND_RUNNER_0.get(), "一阶符");
+        add(WenyanItems.HAND_RUNNER_1.get(), "二阶符");
+        add(WenyanItems.HAND_RUNNER_2.get(), "三阶符");
+        add(WenyanItems.HAND_RUNNER_3.get(), "四阶符");
 
-        add(Registration.FLOAT_NOTE.get(), "浮签");
-        add(Registration.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
-        add(Registration.CLOUD_PAPER.get(), "云篆纸 (Lv.2)");
-        add(Registration.STAR_PAPER.get(), "星辉纸 (Lv.3)");
-        add(Registration.FROST_PAPER.get(), "霜华纸 (Lv.4)");
-        add(Registration.PHOENIX_PAPER.get(), "凤羽纸 (Lv.5)");
-        add(Registration.DRAGON_PAPER.get(), "龙鳞纸 (Lv.6)");
+        add(WenyanItems.FLOAT_NOTE.get(), "浮签");
+        add(WenyanItems.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
+        add(WenyanItems.CLOUD_PAPER.get(), "云篆纸 (Lv.2)");
+        add(WenyanItems.STAR_PAPER.get(), "星辉纸 (Lv.3)");
+        add(WenyanItems.FROST_PAPER.get(), "霜华纸 (Lv.4)");
+        add(WenyanItems.PHOENIX_PAPER.get(), "凤羽纸 (Lv.5)");
+        add(WenyanItems.DRAGON_PAPER.get(), "龙鳞纸 (Lv.6)");
 
-        add(Registration.BAMBOO_INK.get(), "松清墨 (Lv.1)");
-        add(Registration.CINNABAR_INK.get(), "朱砂墨 (Lv.2)");
-        add(Registration.STARLIGHT_INK.get(), "星光墨 (Lv.3)");
-        add(Registration.LUNAR_INK.get(), "月华墨 (Lv.4)");
-        add(Registration.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
-        add(Registration.ARCANE_INK.get(), "玄武墨 (Lv.6)");
+        add(WenyanItems.BAMBOO_INK.get(), "松清墨 (Lv.1)");
+        add(WenyanItems.CINNABAR_INK.get(), "朱砂墨 (Lv.2)");
+        add(WenyanItems.STARLIGHT_INK.get(), "星光墨 (Lv.3)");
+        add(WenyanItems.LUNAR_INK.get(), "月华墨 (Lv.4)");
+        add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
+        add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
 
         add(Registration.BIT_MODULE_BLOCK.get(), "位元符");
         add(Registration.COLLECTION_MODULE_BLOCK.get(), "集符");
@@ -56,12 +57,12 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(Registration.ITEM_MODULE_BLOCK.get(), "物品符");
         add(Registration.INFORMATION_MODULE_BLOCK.get(), "天下情報符");
 
-        add(Registration.PRINT_INVENTORY_MODULE.get(), "印符");
+        add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
 
         add(Registration.SCREEN_MODULE_BLOCK.get(), "螢幕石");
         add(Registration.LOCK_MODULE_BLOCK.get(), "信號量石");
 
-        add(Registration.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
+        add(WenyanItems.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
 
         add(Registration.CRAFTING_BLOCK.get(), "創石");
         add(Registration.PEDESTAL_BLOCK.get(), "基石");

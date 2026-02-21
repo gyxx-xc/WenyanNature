@@ -1,7 +1,7 @@
 package indi.wenyan.setup.datagen;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -24,7 +24,7 @@ public final class AdvancementProvider {
         // Awarded when player get HAND_RUNNER
         Advancement.Builder builder = Advancement.Builder.advancement();
         builder.display(
-                new ItemStack(Registration.HAND_RUNNER_0.get()),
+                new ItemStack(WenyanItems.HAND_RUNNER_0.get()),
                 Component.literal("吾有一术"),
                 Component.literal("第一个符咒！"),
                 null,
@@ -34,7 +34,7 @@ public final class AdvancementProvider {
                 false
         );
         builder.addCriterion("has_hand_runner",
-                InventoryChangeTrigger.TriggerInstance.hasItems(Registration.HAND_RUNNER_0.get()));
+                InventoryChangeTrigger.TriggerInstance.hasItems(WenyanItems.HAND_RUNNER_0.get()));
         builder.save(saver, ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "woyouyishu"), existingFileHelper);
     }
 }

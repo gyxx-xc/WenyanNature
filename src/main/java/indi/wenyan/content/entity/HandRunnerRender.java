@@ -3,7 +3,7 @@ package indi.wenyan.content.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -38,7 +38,7 @@ public class HandRunnerRender extends EntityRenderer<HandRunnerEntity> {
         poseStack.mulPose(Axis.YP.rotationDegrees(-dispatcher.camera.getYRot()));
         poseStack.scale(0.8F, 0.8F, 0.8F);
         Minecraft.getInstance().getItemRenderer().renderStatic(
-                new ItemStack(Registration.HAND_RUNNER_1.get()),
+                new ItemStack(WenyanItems.HAND_RUNNER_1.get()),
                 ItemDisplayContext.FIXED,
                 packedLightIn,
                 OverlayTexture.NO_OVERLAY,

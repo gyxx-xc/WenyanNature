@@ -12,6 +12,7 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
 import lombok.Getter;
@@ -144,7 +145,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                         executor.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
                         executor.getPackageName()));
             } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos)) {
-                packageSnippets.add(new PackageSnippetWidget.PackageSnippet(Registration.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
+                packageSnippets.add(new PackageSnippetWidget.PackageSnippet(WenyanItems.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
             }
         }
         Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));

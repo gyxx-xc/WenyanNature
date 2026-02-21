@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import indi.wenyan.content.item.RunnerItem;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.component.DataComponents;
@@ -82,11 +82,11 @@ public enum FileLoader {
         //Create empty book item
 
         switch (level) {
-            case 1 -> runnerItem = Registration.HAND_RUNNER_1;
-            case 2 -> runnerItem = Registration.HAND_RUNNER_2;
-            case 3 -> runnerItem = Registration.HAND_RUNNER_3;
+            case 1 -> runnerItem = WenyanItems.HAND_RUNNER_1;
+            case 2 -> runnerItem = WenyanItems.HAND_RUNNER_2;
+            case 3 -> runnerItem = WenyanItems.HAND_RUNNER_3;
 
-            default -> runnerItem = Registration.HAND_RUNNER_0;
+            default -> runnerItem = WenyanItems.HAND_RUNNER_0;
         }
 
 
