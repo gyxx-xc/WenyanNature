@@ -16,6 +16,10 @@ public class ExplosionModuleBlock extends AbstractFuluBlock implements IModuleBl
     public static final String ID = "explosion_module_block";
     
     public static final MapCodec<ExplosionModuleBlock> CODEC = simpleCodec(ignore -> new ExplosionModuleBlock());
+
+    public ExplosionModuleBlock(Properties properties) {
+        super(properties);
+    }
     
     @Override
     protected @NotNull MapCodec<ExplosionModuleBlock> codec() {

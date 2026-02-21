@@ -12,6 +12,10 @@ public class RandomModuleBlock extends AbstractFuluBlock implements IModuleBlock
     public static final String ID = "random_module_block";
     
     public static final MapCodec<RandomModuleBlock> CODEC = simpleCodec(ignore -> new RandomModuleBlock());
+
+    public RandomModuleBlock(Properties properties) {
+        super(properties);
+    }
     
     @Override
     public @NotNull MapCodec<RandomModuleBlock> codec() {

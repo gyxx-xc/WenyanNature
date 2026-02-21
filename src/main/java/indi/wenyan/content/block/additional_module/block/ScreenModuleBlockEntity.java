@@ -6,7 +6,7 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.BlockOutputPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -24,7 +24,7 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
     public static final int OUTPUT_MAX_LENGTH = 30;
 
     public ScreenModuleBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.SCREEN_MODULE_BLOCK_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.SCREEN_MODULE_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     @Getter

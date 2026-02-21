@@ -11,6 +11,10 @@ public class EntityModuleBlock extends AbstractFuluBlock implements IModuleBlock
     public static final String ID = "entity_module_block";
     
     public static final MapCodec<EntityModuleBlock> CODEC = simpleCodec(ignore -> new EntityModuleBlock());
+
+    public EntityModuleBlock(Properties properties) {
+        super(properties);
+    }
     
     @Override
     protected @NotNull MapCodec<EntityModuleBlock> codec() {

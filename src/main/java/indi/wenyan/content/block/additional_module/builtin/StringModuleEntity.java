@@ -8,7 +8,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -84,6 +84,6 @@ public class StringModuleEntity extends AbstractModuleEntity {
             .build();
 
     public StringModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.STRING_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.STRING_MODULE_ENTITY.get(), pos, blockState);
     }
 }

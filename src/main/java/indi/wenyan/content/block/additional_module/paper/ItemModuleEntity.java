@@ -9,7 +9,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanSymbol;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +47,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
             .build();
 
     public ItemModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.ITEM_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.ITEM_MODULE_ENTITY.get(), pos, blockState);
     }
 
     private IItemHandler getItemHandlerCapability() {

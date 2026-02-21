@@ -7,7 +7,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,6 +46,6 @@ public class RandomModuleEntity extends AbstractModuleEntity {
             .build();
 
     public RandomModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.RANDOM_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.RANDOM_MODULE_ENTITY.get(), pos, blockState);
     }
 }

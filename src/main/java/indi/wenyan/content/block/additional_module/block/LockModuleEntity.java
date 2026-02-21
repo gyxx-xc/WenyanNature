@@ -9,7 +9,7 @@ import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.WenyanSymbol;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
@@ -66,6 +66,6 @@ public class LockModuleEntity extends AbstractModuleEntity {
     }
 
     public LockModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.LOCK_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.LOCK_MODULE_ENTITY.get(), pos, blockState);
     }
 }

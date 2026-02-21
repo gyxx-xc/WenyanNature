@@ -10,7 +10,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -113,6 +113,6 @@ public class CollectionModuleEntity extends AbstractModuleEntity {
 
 
     public CollectionModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.COLLECTION_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.COLLECTION_MODULE_ENTITY.get(), pos, blockState);
     }
 }

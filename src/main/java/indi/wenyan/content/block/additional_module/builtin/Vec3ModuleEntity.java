@@ -5,7 +5,7 @@ import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.utils.WenyanSymbol;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +21,6 @@ public class Vec3ModuleEntity extends AbstractModuleEntity {
             .build();
 
     public Vec3ModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.VEC3_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.VEC3_MODULE_ENTITY.get(), pos, blockState);
     }
 }

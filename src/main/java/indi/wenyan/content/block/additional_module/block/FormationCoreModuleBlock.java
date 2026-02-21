@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 public class FormationCoreModuleBlock extends Block implements IModuleBlock {
     public static final String ID = "formation_core_module_block";
 
-    public FormationCoreModuleBlock() {
-        super(Properties.of());
+    public FormationCoreModuleBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

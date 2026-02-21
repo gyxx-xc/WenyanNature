@@ -11,6 +11,10 @@ public class Vec3ModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "vec3_module_block";
     
     public static final MapCodec<Vec3ModuleBlock> CODEC = simpleCodec(ignore -> new Vec3ModuleBlock());
+
+    public Vec3ModuleBlock(Properties properties) {
+        super(properties);
+    }
     
     @Override
     protected @NotNull MapCodec<Vec3ModuleBlock> codec() {

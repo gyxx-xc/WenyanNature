@@ -20,6 +20,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class WorldModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "information_module_block";
 
+    public WorldModuleBlock(Properties properties) {
+        super(properties);
+    }
+
     @Override
     public BlockEntityType<?> getType() {
         return Registration.INFORMATION_MODULE_ENTITY.get();

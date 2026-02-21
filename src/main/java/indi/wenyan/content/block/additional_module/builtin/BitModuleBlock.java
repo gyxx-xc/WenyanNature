@@ -12,6 +12,10 @@ public class BitModuleBlock extends AbstractFuluBlock implements IModuleBlock {
 
 
     public static final MapCodec<BitModuleBlock> CODEC = simpleCodec(ignore -> new BitModuleBlock());
+
+    public BitModuleBlock(Properties properties) {
+        super(properties);
+    }
     @Override
     protected @NotNull MapCodec<BitModuleBlock> codec() {
         return CODEC;

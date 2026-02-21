@@ -11,6 +11,10 @@ public class CommunicateModuleBlock extends AbstractFuluBlock implements IModule
     public static final String ID = "communicate_module_block";
     
     public static final MapCodec<CommunicateModuleBlock> CODEC = simpleCodec(ignore -> new CommunicateModuleBlock());
+
+    public CommunicateModuleBlock(Properties properties) {
+        super(properties);
+    }
     
     @Override
     protected @NotNull MapCodec<CommunicateModuleBlock> codec() {

@@ -3,7 +3,7 @@ package indi.wenyan.content.block.additional_module.block;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,6 +17,6 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
             .build();
 
     public FormationCoreModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.FORMATION_CORE_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.FORMATION_CORE_MODULE_ENTITY.get(), pos, blockState);
     }
 }

@@ -11,6 +11,10 @@ public class MathModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "math_module_block";
 
     public static final MapCodec<MathModuleBlock> CODEC = simpleCodec(ignore -> new MathModuleBlock());
+
+    public MathModuleBlock(Properties properties) {
+        super(properties);
+    }
     
     @Override
     public @NotNull MapCodec<MathModuleBlock> codec() {

@@ -11,7 +11,7 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.BlockPosRangePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -100,7 +100,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             .build();
 
     public BlockModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.BLOCK_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.BLOCK_MODULE_ENTITY.get(), pos, blockState);
     }
 
     public void addRenderRange(Vec3 start, Vec3 end, boolean found) {

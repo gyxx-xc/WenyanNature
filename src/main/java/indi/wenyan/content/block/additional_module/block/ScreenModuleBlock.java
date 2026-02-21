@@ -12,8 +12,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class ScreenModuleBlock extends Block implements IModuleBlock {
     public static final String ID = "screen_block_module_block";
 
-    public ScreenModuleBlock() {
-        super(Properties.of());
+    public ScreenModuleBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

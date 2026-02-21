@@ -11,6 +11,10 @@ public class ItemModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "item_module_block";
     
     public static final MapCodec<ItemModuleBlock> CODEC = simpleCodec(ignore -> new ItemModuleBlock());
+
+    public ItemModuleBlock(Properties properties) {
+        super(properties);
+    }
     
     @Override
     protected @NotNull MapCodec<ItemModuleBlock> codec() {

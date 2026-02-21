@@ -7,7 +7,7 @@ import indi.wenyan.judou.structure.values.WenyanLeftValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
 import indi.wenyan.judou.utils.WenyanSymbol;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +26,6 @@ public class CommunicateModuleEntity extends AbstractModuleEntity {
             .build();
 
     public CommunicateModuleEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.COMMUNICATE_MODULE_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.COMMUNICATE_MODULE_ENTITY.get(), pos, blockState);
     }
 }
