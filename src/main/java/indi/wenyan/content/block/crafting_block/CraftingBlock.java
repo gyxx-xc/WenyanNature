@@ -15,12 +15,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class CraftingBlock extends Block implements IModuleBlock {
-    public static final Properties PROPERTIES = Properties.of();
     public static final String ID = "crafting_block";
     public static final VoxelShape SHAPE = Block.box(1, 0, 3, 15, 13.5, 15);
 
-    public CraftingBlock() {
-        super(PROPERTIES);
+    public CraftingBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

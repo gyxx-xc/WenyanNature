@@ -18,7 +18,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectionalBlock {
-    public static final Properties PROPERTIES = Properties.of().noCollission();
 
     public static final VoxelShape FLOOR_NORTH_AABB;
     public static final VoxelShape FLOOR_SOUTH_AABB;
@@ -33,12 +32,8 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
     public static final VoxelShape WEST_AABB;
     public static final VoxelShape EAST_AABB;
 
-    protected AbstractFuluBlock() {
-        super(PROPERTIES);
-    }
-
     protected AbstractFuluBlock(Properties properties) {
-        super(properties);
+        super(properties.noCollision());
         registerDefaultState(getStateDefinition().any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(FACE, AttachFace.FLOOR)

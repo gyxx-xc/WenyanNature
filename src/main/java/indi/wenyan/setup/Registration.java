@@ -14,8 +14,6 @@ import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.content.entity.BulletEntity;
-import indi.wenyan.content.entity.HandRunnerEntity;
 import indi.wenyan.content.gui.CraftingBlockContainer;
 import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.content.item.FloatNoteItem;
@@ -24,6 +22,7 @@ import indi.wenyan.content.item.additional_module.PrintInventoryModule;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.recipe.AnsweringRecipe;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
@@ -34,7 +33,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -179,8 +177,8 @@ public final class Registration {
     public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM;
     public static final Supplier<BlockEntityType<FormationCoreModuleEntity>> FORMATION_CORE_MODULE_ENTITY;
 
-    public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
-    public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
+//    public static final Supplier<EntityType<HandRunnerEntity>> HAND_RUNNER_ENTITY;
+//    public static final Supplier<EntityType<BulletEntity>> BULLET_ENTITY;
 
     public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER;
 
@@ -261,17 +259,6 @@ public final class Registration {
                 (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
         PRINT_INVENTORY_MODULE = ITEMS.registerItem(PrintInventoryModule.ID, PrintInventoryModule::new);
 
-        RUNNER_BLOCK = BLOCKS.registerBlock(RunnerBlock.ID, RunnerBlock::new);
-        RUNNER_BLOCK_ENTITY = BLOCK_ENTITY.register(RunnerBlock.ID,
-                () -> BlockEntityType.Builder
-                        .of(RunnerBlockEntity::new, RUNNER_BLOCK.get())
-                        .build(DSL.remainderType()));
-        HAND_RUNNER_ENTITY = ENTITY.register(RunnerItem.ID_1,
-                () -> EntityType.Builder
-                        .of(HandRunnerEntity::new, MobCategory.MISC)
-                        .sized(0.45f, 1.0f)
-                        .build(RunnerItem.ID_1));
-
         FLOAT_NOTE = ITEMS.registerItem(FloatNoteItem.ID, FloatNoteItem::new);
 
         // Paper
@@ -291,37 +278,22 @@ public final class Registration {
         LUNAR_INK = ITEMS.registerItem(LunarInk.ID, LunarInk::new);
         STARLIGHT_INK = ITEMS.registerItem(StarlightInk.ID, StarlightInk::new);
 
-        BULLET_ENTITY = ENTITY.register(BulletEntity.ID,
-                () -> EntityType.Builder
-                        .of((EntityType.EntityFactory<BulletEntity>) BulletEntity::new, MobCategory.MISC)
-                        .sized(0.25f, 0.25f)
-                        .build(BulletEntity.ID));
+//        BULLET_ENTITY = ENTITY.register(BulletEntity.ID,
+//                () -> EntityType.Builder
+//                        .of((EntityType.EntityFactory<BulletEntity>) BulletEntity::new, MobCategory.MISC)
+//                        .sized(0.25f, 0.25f)
+//                        .build(BulletEntity.ID));
 
-        CRAFTING_BLOCK = BLOCKS.register(CraftingBlock.ID, CraftingBlock::new);
         CRAFTING_BLOCK_ITEM = ITEMS.registerItem(CraftingBlock.ID,
-                properties -> new BlockItem(CRAFTING_BLOCK.get(), properties));
-        CRAFTING_BLOCK_ENTITY = BLOCK_ENTITY.register(CraftingBlock.ID,
-                () -> BlockEntityType.Builder
-                        .of(CraftingBlockEntity::new, CRAFTING_BLOCK.get())
-                        .build(DSL.remainderType()));
+                properties -> new BlockItem(WenyanBlocks.CRAFTING_BLOCK.get(), properties));
         CRAFTING_CONTAINER = MENU_TYPE.register(CraftingBlock.ID,
                 () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
 
-        PEDESTAL_BLOCK = BLOCKS.register(PedestalBlock.ID, PedestalBlock::new);
         PEDESTAL_BLOCK_ITEM = ITEMS.registerItem(PedestalBlock.ID,
-                properties -> new BlockItem(PEDESTAL_BLOCK.get(), properties));
-        PEDESTAL_ENTITY = BLOCK_ENTITY.register(PedestalBlock.ID,
-                () -> BlockEntityType.Builder
-                        .of(PedestalBlockEntity::new, PEDESTAL_BLOCK.get())
-                        .build(DSL.remainderType()));
+                properties -> new BlockItem(WenyanBlocks.PEDESTAL_BLOCK.get(), properties));
 
-        EXPLOSION_MODULE_BLOCK = BLOCKS.register(ExplosionModuleBlock.ID, ExplosionModuleBlock::new);
         EXPLOSION_MODULE_BLOCK_ITEM = ITEMS.registerItem(ExplosionModuleBlock.ID,
                 properties -> new BlockItem(EXPLOSION_MODULE_BLOCK.get(), properties));
-        EXPLOSION_MODULE_ENTITY = BLOCK_ENTITY.register(ExplosionModuleBlock.ID,
-                () -> BlockEntityType.Builder
-                        .of(ExplosionModuleEntity::new, EXPLOSION_MODULE_BLOCK.get())
-                        .build(DSL.remainderType()));
 
         INFORMATION_MODULE_BLOCK = BLOCKS.register(WorldModuleBlock.ID,
                 WorldModuleBlock::new);

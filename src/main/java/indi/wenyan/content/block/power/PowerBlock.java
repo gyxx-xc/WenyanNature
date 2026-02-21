@@ -17,10 +17,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class PowerBlock extends Block implements IModuleBlock {
     public static final String ID = "power_block";
     public static final VoxelShape SHAPE = box(1, 1, 1, 15, 15, 15);
-    public static final Properties PROPERTIES = Properties.of();
 
-    public PowerBlock() {
-        super(PROPERTIES);
+    public PowerBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

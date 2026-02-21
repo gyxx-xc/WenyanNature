@@ -25,13 +25,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class PedestalBlock extends Block implements EntityBlock {
 
-    public static final Properties PROPERTIES = Properties.of();
     public static final String ID = "pedestal_block";
 
     public static final VoxelShape SHAPE = Shapes.or(Block.box(2, 11, 2, 14, 13, 14), Block.box(7, 0, 7, 9, 11, 9));
 
-    public PedestalBlock() {
-        super(PROPERTIES);
+    public PedestalBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

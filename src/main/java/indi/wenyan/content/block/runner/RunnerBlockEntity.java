@@ -19,7 +19,7 @@ import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
-import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
 import lombok.Getter;
@@ -124,7 +124,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     @SuppressWarnings("unused")
