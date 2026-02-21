@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 public enum WenyanBlocks {
     ;
-    public static final DeferredRegister<BlockEntityType<?>> ENTITY_DR =
+    public static final DeferredRegister<BlockEntityType<?>> DR_ENTITY =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, WenyanProgramming.MODID);
     public static final DeferredRegister.Blocks DR =
             DeferredRegister.createBlocks(WenyanProgramming.MODID);
@@ -89,6 +89,6 @@ public enum WenyanBlocks {
     private static <BE extends BlockEntity> Supplier<BlockEntityType<BE>>
     registerEntity(final String name, final BlockEntityType.BlockEntitySupplier<BE> supplier,
                    final Supplier<? extends Block> block) {
-        return WenyanBlocks.ENTITY_DR.register(name, () -> new BlockEntityType<>(supplier, block.get()));
+        return WenyanBlocks.DR_ENTITY.register(name, () -> new BlockEntityType<>(supplier, block.get()));
     }
 }

@@ -4,7 +4,7 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -134,7 +134,7 @@ public final class AnsweringRecipeBuilder {
      * @param recipeName The name for the recipe
      */
     public void save(RecipeOutput recipeOutput, String recipeName) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, recipeName);
+        Identifier id = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, recipeName);
         recipeOutput.accept(
                 id,
                 new AnsweringRecipe(input, question, output, round),

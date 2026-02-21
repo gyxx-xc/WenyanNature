@@ -1,6 +1,7 @@
 package indi.wenyan.setup.datagen;
 
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -44,29 +45,29 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
         add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
 
-        add(Registration.BIT_MODULE_BLOCK.get(), "位元符");
-        add(Registration.COLLECTION_MODULE_BLOCK.get(), "集符");
-        add(Registration.MATH_MODULE_BLOCK.get(), "數符");
-        add(Registration.RANDOM_MODULE_BLOCK.get(), "熵符");
-        add(Registration.STRING_MODULE_BLOCK.get(), "字串符");
-        add(Registration.VEC3_MODULE_BLOCK.get(), "向量符");
-        add(Registration.BLOCK_MODULE_BLOCK.get(), "方塊符");
-        add(Registration.COMMUNICATE_MODULE_BLOCK.get(), "通訊符");
-        add(Registration.ENTITY_MODULE_BLOCK.get(), "實體符");
-        add(Registration.EXPLOSION_MODULE_BLOCK.get(), "爆裂符");
-        add(Registration.ITEM_MODULE_BLOCK.get(), "物品符");
-        add(Registration.INFORMATION_MODULE_BLOCK.get(), "天下情報符");
+        add(WenyanBlocks.BIT_MODULE_BLOCK.get(), "位元符");
+        add(WenyanBlocks.COLLECTION_MODULE_BLOCK.get(), "集符");
+        add(WenyanBlocks.MATH_MODULE_BLOCK.get(), "數符");
+        add(WenyanBlocks.RANDOM_MODULE_BLOCK.get(), "熵符");
+        add(WenyanBlocks.STRING_MODULE_BLOCK.get(), "字串符");
+        add(WenyanBlocks.VEC3_MODULE_BLOCK.get(), "向量符");
+        add(WenyanBlocks.BLOCK_MODULE_BLOCK.get(), "方塊符");
+        add(WenyanBlocks.COMMUNICATE_MODULE_BLOCK.get(), "通訊符");
+        add(WenyanBlocks.ENTITY_MODULE_BLOCK.get(), "實體符");
+        add(WenyanBlocks.EXPLOSION_MODULE_BLOCK.get(), "爆裂符");
+        add(WenyanBlocks.ITEM_MODULE_BLOCK.get(), "物品符");
+        add(WenyanBlocks.INFORMATION_MODULE_BLOCK.get(), "天下情報符");
 
         add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
 
-        add(Registration.SCREEN_MODULE_BLOCK.get(), "螢幕石");
-        add(Registration.LOCK_MODULE_BLOCK.get(), "信號量石");
+        add(WenyanBlocks.SCREEN_MODULE_BLOCK.get(), "螢幕石");
+        add(WenyanBlocks.LOCK_MODULE_BLOCK.get(), "信號量石");
 
         add(WenyanItems.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
 
-        add(Registration.CRAFTING_BLOCK.get(), "創石");
-        add(Registration.PEDESTAL_BLOCK.get(), "基石");
-        add(Registration.POWER_BLOCK.get(), "算核");
+        add(WenyanBlocks.CRAFTING_BLOCK.get(), "創石");
+        add(WenyanBlocks.PEDESTAL_BLOCK.get(), "基石");
+        add(WenyanBlocks.POWER_BLOCK.get(), "算核");
 
         add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");

@@ -5,11 +5,10 @@ import indi.wenyan.content.block.additional_module.paper.BlockModuleRender;
 import indi.wenyan.content.block.crafting_block.CraftingBlockRender;
 import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
-import indi.wenyan.content.entity.BulletRender;
-import indi.wenyan.content.entity.HandRunnerRender;
 import indi.wenyan.content.gui.CraftingBlockScreen;
 import indi.wenyan.content.particle.CommunicationParticle;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -29,13 +28,13 @@ public enum ClientSetup {;
      */
     @SubscribeEvent
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
-        event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
-        event.registerBlockEntityRenderer(Registration.RUNNER_BLOCK_ENTITY.get(), RunnerBlockRender::new);
-        event.registerBlockEntityRenderer(Registration.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
-        event.registerBlockEntityRenderer(Registration.PEDESTAL_ENTITY.get(), context -> new PedestalBlockRender());
-        event.registerBlockEntityRenderer(Registration.SCREEN_MODULE_BLOCK_ENTITY.get(), ScreenModuleBlockRenderer::new);
-        event.registerBlockEntityRenderer(Registration.CRAFTING_BLOCK_ENTITY.get(), CraftingBlockRender::new);
+//        event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
+//        event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
+        event.registerBlockEntityRenderer(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), RunnerBlockRender::new);
+        event.registerBlockEntityRenderer(WenyanBlocks.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
+        event.registerBlockEntityRenderer(WenyanBlocks.PEDESTAL_ENTITY.get(), context -> new PedestalBlockRender());
+        event.registerBlockEntityRenderer(WenyanBlocks.SCREEN_MODULE_BLOCK_ENTITY.get(), ScreenModuleBlockRenderer::new);
+        event.registerBlockEntityRenderer(WenyanBlocks.CRAFTING_BLOCK_ENTITY.get(), CraftingBlockRender::new);
     }
 
     /**

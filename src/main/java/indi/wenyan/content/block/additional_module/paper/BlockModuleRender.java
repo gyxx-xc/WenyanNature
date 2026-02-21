@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ import java.util.OptionalDouble;
 import static net.minecraft.client.renderer.RenderStateShard.*;
 
 public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity> {
-    public static final ResourceLocation AABB_WALL = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
+    public static final Identifier AABB_WALL = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
 
     public BlockModuleRender(BlockEntityRendererProvider.Context ignoredContext) {
     }

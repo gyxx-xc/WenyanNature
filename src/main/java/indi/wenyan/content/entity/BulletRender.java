@@ -8,15 +8,15 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class BulletRender extends EntityRenderer<BulletEntity> {
-    private static final ResourceLocation TEXTURE_LOCATION =
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/entity/bullet.png");
+    private static final Identifier TEXTURE_LOCATION =
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/entity/bullet.png");
     private static final RenderType RENDER_TYPE =
             RenderType.entityTranslucent(TEXTURE_LOCATION);
 
@@ -25,7 +25,7 @@ public class BulletRender extends EntityRenderer<BulletEntity> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(BulletEntity entity) {
+    public @NotNull Identifier getTextureLocation(BulletEntity entity) {
         return TEXTURE_LOCATION;
     }
 

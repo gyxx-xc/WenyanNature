@@ -16,7 +16,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -33,27 +33,27 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
     private final CodeEditorBackend backend;
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_highlighted")); // for scroll bar
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_highlighted")); // for scroll bar
 
     public static final WidgetSprites DIR_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry_folded"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry_highlighted"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry_folded_highlighted"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry_folded"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry_highlighted"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_entry_folded_highlighted"));
 
     public static final WidgetSprites PACKAGE_DIR_ICON_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_icon"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_icon_highlighted"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_icon"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "package_dir_icon_highlighted"));
     public static final WidgetSprites CLASS_ENTRY_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "class_entry"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "class_entry_highlighted"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "class_entry"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "class_entry_highlighted"));
     public static final WidgetSprites FIELD_ENTRY_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "field_entry"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "field_entry_highlighted"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "field_entry"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "field_entry_highlighted"));
     public static final WidgetSprites METHOD_ENTRY_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "method_entry"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "method_entry_highlighted"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "method_entry"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "method_entry_highlighted"));
 
     private static final Utils.BoxInformation buttonPadding =
             new Utils.BoxInformation(3, 3, 3, 3);

@@ -8,7 +8,7 @@ import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -35,6 +35,6 @@ public final class AdvancementProvider {
         );
         builder.addCriterion("has_hand_runner",
                 InventoryChangeTrigger.TriggerInstance.hasItems(WenyanItems.HAND_RUNNER_0.get()));
-        builder.save(saver, ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "woyouyishu"), existingFileHelper);
+        builder.save(saver, Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "woyouyishu"), existingFileHelper);
     }
 }

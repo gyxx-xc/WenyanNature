@@ -5,6 +5,8 @@ import indi.wenyan.interpreter_impl.MinecraftLanguageProvider;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.LoggerManager;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.definitions.WenyanItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -31,6 +33,13 @@ public class WenyanProgramming {
     public WenyanProgramming(IEventBus modEventBus, @SuppressWarnings("unused") ModContainer modContainer) {
         LanguageManager.registerLanguageProvider(new MinecraftLanguageProvider());
         LoggerManager.registerLogger(LOGGER);
+        register(modEventBus);
+    }
+
+    private static void register(IEventBus modEventBus) {
+        WenyanBlocks.DR.register(modEventBus);
+        WenyanBlocks.DR_ENTITY.register(modEventBus);
+        WenyanItems.DR.register(modEventBus);
         Registration.register(modEventBus);
     }
 }

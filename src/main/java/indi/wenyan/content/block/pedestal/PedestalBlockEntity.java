@@ -1,6 +1,8 @@
 package indi.wenyan.content.block.pedestal;
 
+import com.mojang.blaze3d.resource.ResourceHandle;
 import indi.wenyan.setup.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -11,11 +13,17 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.CarriedSlotWrapper;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStackResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,27 +32,38 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class PedestalBlockEntity extends BlockEntity implements Container {
     @Getter
-    private final ItemStackHandler itemHandler = createItemHandler();
+    private final ResourceHandler<ItemResource> itemHandler = createItemHandler();
 
     public PedestalBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.PEDESTAL_ENTITY.get(), pos, blockState);
+        super(WenyanBlocks.PEDESTAL_ENTITY.get(), pos, blockState);
     }
 
-    private ItemStackHandler createItemHandler() {
-        return new ItemStackHandler(1) {
+    private ResourceHandler<ItemResource> createItemHandler() {
+        return new ItemStackResourceHandler() {
             @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-                assert level != null;
-                if (!level.isClientSide)
-                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            protected ItemStack getStack() {
+                return null;
             }
 
             @Override
-            protected int getStackLimit(int slot, ItemStack stack) {
-                return 1;
+            protected void setStack(ItemStack stack) {
+
             }
         };
+//                new ItemStackHandler(1) {
+//            @Override
+//            protected void onContentsChanged(int slot) {
+//                setChanged();
+//                assert level != null;
+//                if (!level.isClientSide)
+//                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+//            }
+//
+//            @Override
+//            protected int getStackLimit(int slot, ItemStack stack) {
+//                return 1;
+//            }
+//        };
     }
 
     // from com.hollingsworth.arsnouveau.common.block.tile.SingleItemTile

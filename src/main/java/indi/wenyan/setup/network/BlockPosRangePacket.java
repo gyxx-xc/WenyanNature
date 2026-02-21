@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end, bo
      * Packet type identifier
      */
     public static final Type<BlockPosRangePacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "output_pos_text"));
+            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "output_pos_text"));
 
     /**
      * Codec for serializing and deserializing the packet

@@ -4,7 +4,7 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.setup.Registration;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
@@ -46,10 +46,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
             return ConfiguredModel.builder()
                     .modelFile(locked ? new ModelFile.UncheckedModelFile(
-                            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
                                     "block/" + Registration.LOCK_MODULE_BLOCK.getKey().location().getPath())
                     ) : new ModelFile.UncheckedModelFile(
-                            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
                                     "block/" + Registration.LOCK_MODULE_BLOCK.getKey().location().getPath() + "_1")
                     ))
                     .build();
@@ -72,7 +72,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     private void modeledBlock(BiConsumer<Block, ModelFile> blockstateMethod, DeferredBlock<?> deferredBlock) {
         blockstateMethod.accept(deferredBlock.get(),
                 new ModelFile.UncheckedModelFile(
-                        ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+                        Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
                                 "block/" + deferredBlock.getKey().location().getPath())
                 ));
     }
@@ -86,7 +86,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         modeledBlock(this::horizontalFaceBlock, deferredBlock);
         String id = deferredBlock.getKey().location().getPath();
         models().singleTexture(id,
-                ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block"),
-                ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id));
+                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block"),
+                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id));
     }
 }

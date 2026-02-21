@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
@@ -19,7 +19,7 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vec3 
      * Packet type identifier
      */
     public static final Type<CommunicationLocationPacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "communication_location"));
+            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "communication_location"));
 
     /**
      * Codec for serializing and deserializing the packet

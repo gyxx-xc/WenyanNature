@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record FloatNotePacket(String name, boolean locked) implements CustomPacketPayload {
     public static final Type<FloatNotePacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "float_note_rename"));
+            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "float_note_rename"));
 
     public static final StreamCodec<ByteBuf, FloatNotePacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,

@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.neoforged.api.distmarker.Dist;
@@ -35,7 +35,7 @@ import java.util.ListIterator;
 public class CodeEditorWidget extends AbstractScrollWidget {
     private static final int CURSOR_INSERT_COLOR = 0xff000000;
     public static final float TOOLTIP_SCALE = 0.7f;
-    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/edit.png");
     // todo: make it larger (sprite)
     public static final int WIDTH = 256;

@@ -14,7 +14,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -32,13 +32,13 @@ public class SnippetWidget extends AbstractScrollWidget {
     private final CodeEditorBackend backend;
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_highlighted"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_highlighted"));
     public static final WidgetSprites DIR_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_folded"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_highlighted"),
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_folded_highlighted"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_folded"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_highlighted"),
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry_dir_folded_highlighted"));
 
     private static final Utils.BoxInformation buttonPadding =
             new Utils.BoxInformation(3, 3, 3, 3);

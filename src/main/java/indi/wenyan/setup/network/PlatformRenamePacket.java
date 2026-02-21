@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public record PlatformRenamePacket(BlockPos pos, String name) implements CustomP
      * Packet type identifier
      */
     public static final Type<PlatformRenamePacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "set_name"));
+            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "set_name"));
 
     /**
      * Codec for serializing and deserializing the packet

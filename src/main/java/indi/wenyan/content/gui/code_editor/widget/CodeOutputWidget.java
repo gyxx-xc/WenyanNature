@@ -10,7 +10,7 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ import java.util.Deque;
 @OnlyIn(Dist.CLIENT)
 public class CodeOutputWidget extends AbstractScrollWidget {
     private final MultiLineTextWidget multilineWidget;
-//    public static ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai.png");
+//    public static Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai.png");
     private int imageWidth = 256;
     private int imageHeight = 142;
 
@@ -31,7 +31,7 @@ public class CodeOutputWidget extends AbstractScrollWidget {
         this.multilineWidget = (new MultiLineTextWidget(message, font)).setMaxWidth(this.getWidth() - this.totalInnerPadding());
     }
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai"),ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai"));
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai"),Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai"));
 
     public CodeOutputWidget setColor(int color) {
         this.multilineWidget.setColor(color);

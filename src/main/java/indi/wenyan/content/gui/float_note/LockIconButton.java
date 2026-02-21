@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -39,16 +39,16 @@ public class LockIconButton extends Button {
 
     @OnlyIn(Dist.CLIENT)
     enum Icon {
-        LOCKED(ResourceLocation.withDefaultNamespace("widget/locked_button")),
-        LOCKED_HOVER(ResourceLocation.withDefaultNamespace("widget/locked_button_highlighted")),
-        LOCKED_DISABLED(ResourceLocation.withDefaultNamespace("widget/locked_button_disabled")),
-        UNLOCKED(ResourceLocation.withDefaultNamespace("widget/unlocked_button")),
-        UNLOCKED_HOVER(ResourceLocation.withDefaultNamespace("widget/unlocked_button_highlighted")),
-        UNLOCKED_DISABLED(ResourceLocation.withDefaultNamespace("widget/unlocked_button_disabled"));
+        LOCKED(Identifier.withDefaultNamespace("widget/locked_button")),
+        LOCKED_HOVER(Identifier.withDefaultNamespace("widget/locked_button_highlighted")),
+        LOCKED_DISABLED(Identifier.withDefaultNamespace("widget/locked_button_disabled")),
+        UNLOCKED(Identifier.withDefaultNamespace("widget/unlocked_button")),
+        UNLOCKED_HOVER(Identifier.withDefaultNamespace("widget/unlocked_button_highlighted")),
+        UNLOCKED_DISABLED(Identifier.withDefaultNamespace("widget/unlocked_button_disabled"));
 
-        final ResourceLocation sprite;
+        final Identifier sprite;
 
-        Icon(ResourceLocation sprite) {
+        Icon(Identifier sprite) {
             this.sprite = sprite;
         }
     }

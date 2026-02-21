@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -27,10 +27,10 @@ import static indi.wenyan.content.block.runner.RunnerBlockEntity.COMMUNICATE_EFF
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity> {
-    public static final ResourceLocation STATUE_TEXTURE_LOCATION =
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/state_icon.png");
-    public static final ResourceLocation COMMUNICATION_TEXTURE_LOCATION =
-            ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/lazer.png");
+    public static final Identifier STATUE_TEXTURE_LOCATION =
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/state_icon.png");
+    public static final Identifier COMMUNICATION_TEXTURE_LOCATION =
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/lazer.png");
     private static final RenderType RENDER_TYPE =
             RenderType.entityTranslucent(STATUE_TEXTURE_LOCATION);
     private static final RenderType COMMUNICATION_RENDER_TYPE =

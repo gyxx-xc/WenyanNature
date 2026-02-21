@@ -4,7 +4,7 @@ import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @OnlyIn(Dist.CLIENT)
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
 
-    private static final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID,
+    private static final Identifier GUI = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
             "textures/gui/crafting_gui.png");
 
     public CraftingBlockScreen(CraftingBlockContainer container, Inventory inventory, Component title) {
