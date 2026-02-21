@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ public record BlockOutputPacket(BlockPos pos, String output) implements CustomPa
      * Packet type identifier
      */
     public static final Type<BlockOutputPacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(WenyanProgramming.MODID, "output_text"));
+            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "output_text"));
 
     /**
      * Codec for serializing and deserializing the packet

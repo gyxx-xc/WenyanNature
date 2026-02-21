@@ -12,6 +12,10 @@ Using Wenyan language, this mod can let player create wonderful magic by handlin
 
 The mod is still in development.
 
+## Porting update
+
+- need change java version to 25
+
 ## Features
 
 - **Code Your Charms**: Input and execute code directly within Fu (符咒).
