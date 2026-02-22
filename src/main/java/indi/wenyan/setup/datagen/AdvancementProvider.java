@@ -1,16 +1,7 @@
 package indi.wenyan.setup.datagen;
 
-import indi.wenyan.WenyanProgramming;
-import indi.wenyan.setup.definitions.WenyanItems;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.function.Consumer;
 
@@ -20,21 +11,21 @@ import java.util.function.Consumer;
  */
 public final class AdvancementProvider {
 
-    public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver, ExistingFileHelper existingFileHelper) {
+    public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver) {
         // Awarded when player get HAND_RUNNER
-        Advancement.Builder builder = Advancement.Builder.advancement();
-        builder.display(
-                new ItemStack(WenyanItems.HAND_RUNNER_0.get()),
-                Component.literal("吾有一术"),
-                Component.literal("第一个符咒！"),
-                null,
-                AdvancementType.TASK,
-                true,
-                true,
-                false
-        );
-        builder.addCriterion("has_hand_runner",
-                InventoryChangeTrigger.TriggerInstance.hasItems(WenyanItems.HAND_RUNNER_0.get()));
-        builder.save(saver, Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "woyouyishu"), existingFileHelper);
+//        Advancement.Builder builder = Advancement.Builder.advancement();
+//        builder.display(
+//                new ItemStack(WenyanItems.HAND_RUNNER_0.get()),
+//                Component.literal("吾有一术"),
+//                Component.literal("第一个符咒！"),
+//                null,
+//                AdvancementType.TASK,
+//                true,
+//                true,
+//                false
+//        );
+//        builder.addCriterion("has_hand_runner",
+//                InventoryChangeTrigger.TriggerInstance.hasItems(WenyanItems.HAND_RUNNER_0.get()));
+//        builder.save(saver, Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "woyouyishu"), existingFileHelper);
     }
 }
