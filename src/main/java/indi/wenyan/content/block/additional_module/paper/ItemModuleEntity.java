@@ -15,8 +15,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public class ItemModuleEntity extends AbstractModuleEntity {
     @Getter
@@ -25,14 +26,11 @@ public class ItemModuleEntity extends AbstractModuleEntity {
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler(WenyanSymbol.var("ItemModule.transfer"), request -> {
-                IItemHandler capability = getItemHandlerCapability();
+                var capability = getItemHandlerCapability();
                 var from = request.args().getFirst().as(WenyanCapabilitySlot.TYPE);
-                ItemStack result = ItemHandlerHelper.insertItemStacked(capability,
-                        from.capabilities().getStackInSlot(from.slot()), true);
-                int originAmount = from.capabilities().getStackInSlot(from.slot()).getCount();
-                ItemStack extracted = from.capabilities().extractItem(from.slot(),
-                        originAmount - result.getCount(), false);
-                ItemHandlerHelper.insertItemStacked(capability, extracted, false);
+                ItemStack remaining = ItemUtil.insertItemReturnRemaining(capability,
+                        from.getStack(), false, null);
+                from.getStack().setCount(remaining.getCount());
                 return WenyanNull.NULL;
             })
             .handler(WenyanSymbol.var("ItemModule.read"), request -> {
@@ -41,7 +39,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
                     throw new WenyanException.WenyanTypeException("無法取得物品處理器");
                 }
                 int slot = Math.clamp(request.args().getFirst().as(WenyanInteger.TYPE).value(),
-                        0, capability.getSlots() - 1);
+                        0, capability.size() - 1);
                 return new WenyanCapabilitySlot(blockPos().getCenter(), capability, slot);
             })
             .build();
@@ -50,10 +48,10 @@ public class ItemModuleEntity extends AbstractModuleEntity {
         super(WenyanBlocks.ITEM_MODULE_ENTITY.get(), pos, blockState);
     }
 
-    private IItemHandler getItemHandlerCapability() {
+    private ResourceHandler<ItemResource> getItemHandlerCapability() {
         var attached = AbstractFuluBlock.getConnectedDirection(getBlockState()).getOpposite();
         assert level != null;
-        return level.getCapability(Capabilities.ItemHandler.BLOCK,
+        return level.getCapability(Capabilities.Item.BLOCK,
                 blockPos().relative(attached), attached.getOpposite());
     }
 }

@@ -7,7 +7,9 @@ import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -16,7 +18,7 @@ import java.util.Objects;
  * Represents an item slot with position and capability information.
  * Used for interacting with inventory slots in the Minecraft environment.
  */
-public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slot) implements IWenyanObject {
+public record WenyanCapabilitySlot(Vec3 pose, ResourceHandler<ItemResource> capabilities, int slot) implements IWenyanObject {
     public static final WenyanType<WenyanCapabilitySlot> TYPE = new WenyanType<>("item_slot",
             WenyanCapabilitySlot.class);
 
@@ -26,7 +28,7 @@ public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slo
     }
 
     public ItemStack getStack() {
-        return capabilities.getStackInSlot(slot);
+        return ItemUtil.getStack(capabilities, slot);
     }
 
     @Override
