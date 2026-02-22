@@ -23,10 +23,8 @@ public class PrintInventoryModule extends Item implements IWenyanDevice {
                 if (!(context instanceof EquipableRunnerItem.ItemContext itemContext)) {
                     throw new WenyanException.WenyanUnreachedException();
                 }
-                itemContext.player().displayClientMessage(
-                        Component.literal(request.args().getFirst().as(WenyanString.TYPE).value()),
-                        true
-                );
+                itemContext.player().sendSystemMessage(Component.literal(
+                        request.args().getFirst().as(WenyanString.TYPE).value()));
                 return WenyanNull.NULL;
             })
             .build();

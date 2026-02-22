@@ -45,7 +45,7 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
                 }
                 if (getLevel() instanceof ServerLevel sl) {
                     PacketDistributor.sendToPlayersTrackingChunk(sl,
-                            new ChunkPos(blockPos()), new BlockOutputPacket(blockPos(),
+                            ChunkPos.containing(blockPos()), new BlockOutputPacket(blockPos(),
                                     StringUtils.left(result.toString(), OUTPUT_MAX_LENGTH)));
                 }
                 return WenyanNull.NULL;

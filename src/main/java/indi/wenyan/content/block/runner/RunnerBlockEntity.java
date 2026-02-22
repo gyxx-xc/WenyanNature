@@ -97,7 +97,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                             String s = args.getFirst().as(WenyanString.TYPE).value();
                             s = StringUtils.left(s, 512);
                             if (getLevel() instanceof ServerLevel sl) {
-                                PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                                PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
                                         new PlatformOutputPacket(getBlockPos(), s, PlatformOutputPacket.OutputStyle.NORMAL));
                             }
                             addOutput(s, PlatformOutputPacket.OutputStyle.NORMAL);
@@ -118,7 +118,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         assert getLevel() != null;
         getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
         if (getLevel() instanceof ServerLevel sl)
-            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+            PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
                     new PlatformOutputPacket(getBlockPos(), error, PlatformOutputPacket.OutputStyle.ERROR));
         addOutput(error, PlatformOutputPacket.OutputStyle.ERROR);
     }
@@ -291,7 +291,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private void showCommunication(BlockPos blockPos) {
         if (getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl,
-                    new ChunkPos(getBlockPos()),
+                    ChunkPos.containing(getBlockPos()),
                     new CommunicationLocationPacket(getBlockPos(), blockPos.getCenter())
             );
         }

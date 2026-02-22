@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.crafting_block;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.checker.CheckerFactory;
@@ -19,11 +20,8 @@ import indi.wenyan.setup.network.CraftingParticlePacket;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -38,6 +36,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -91,7 +91,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     private static final int RANGE = 3; // the offset to search for pedestals
 
     @Getter
-    private final Deque<TextParticle> particles = new ArrayDeque<>();
+    private final Deque<TextEffect> particles = new ArrayDeque<>();
 
     @Override
     public String getBasePackageName() {
@@ -113,7 +113,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                 assert getLevel() != null;
                 if (level instanceof ServerLevel sl) {
                     for (var arg : request.args()) {
-                        PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                        PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
                                 new CraftingParticlePacket(getBlockPos(), arg.as(WenyanString.TYPE).toString()));
                     }
                 }
@@ -124,7 +124,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                     case WRONG_ANSWER -> {
                         craftingProgress = 0;
                         if (level instanceof ServerLevel sl)
-                            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()),
+                            PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
                                     new CraftClearParticlePacket(getBlockPos()));
                         checker.init();
                     }
@@ -221,24 +221,21 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     }
 
     @Override
-    protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveData(tag, registries);
-        var effect = particles.stream().map(TextParticle::data).reduce((r, p) -> r + p);
-        effect.ifPresent(s -> tag.putString(PARTICLE_ID, s));
+    protected void saveData(ValueOutput output) {
+        super.saveData(output);
+        var effect = particles.stream().map(TextEffect::data).reduce((r, p) -> r + p);
+        effect.ifPresent(s -> output.putString(PARTICLE_ID, s));
     }
 
     @Override
-    protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadData(tag, registries);
-        if (tag.contains(PARTICLE_ID)) {
-            assert level != null;
-            particles.addAll(TextParticle.randomSplash(tag.getString(PARTICLE_ID), level.random));
-        }
+    protected void loadData(ValueInput input) {
+        super.loadData(input);
+        input.getString(PARTICLE_ID).ifPresent(this::addResultParticle);
     }
 
     public void addResultParticle(String data) {
-        assert level != null;
-        particles.addAll(TextParticle.randomSplash(data, level.random));
+        assert getLevel() != null;
+        particles.addAll(TextEffect.randomSplash(data, getLevel().getRandom()));
     }
 
     public void clearParticles() {
@@ -247,14 +244,14 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     @Data
     @Accessors(fluent = true)
-    public static class TextParticle {
+    public static class TextEffect {
         final float rot;
         final String data;
         Vec3 oPos;
         Vec3 pos;
         int remainTick = 20;
 
-        public TextParticle(Vec3 pos, float rot, String data) {
+        public TextEffect(Vec3 pos, float rot, String data) {
             this.oPos = pos;
             this.pos = pos;
             this.rot = rot;
@@ -270,12 +267,12 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             this.pos = pos;
         }
 
-        public static List<TextParticle> randomSplash(String data, RandomSource random) {
+        public static List<TextEffect> randomSplash(String data, RandomSource random) {
             final int range = 1;
-            List<TextParticle> particles = new ArrayList<>();
+            List<TextEffect> particles = new ArrayList<>();
             for (var c : data.toCharArray()) {
                 Vec3 pos = new Vec3(random.triangle(0, range), random.triangle(0, range), random.triangle(0, range));
-                particles.add(new TextParticle(pos, random.nextFloat() * 360, String.valueOf(c)));
+                particles.add(new TextEffect(pos, random.nextFloat() * 360, String.valueOf(c)));
             }
             return particles;
         }

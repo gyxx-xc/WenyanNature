@@ -78,7 +78,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
 
                 if (level instanceof ServerLevel serverLevel)
                     PacketDistributor.sendToPlayersTrackingChunk(serverLevel,
-                            new ChunkPos(blockPos()),
+                            ChunkPos.containing(blockPos()),
                             new BlockPosRangePacket(blockPos(), start, end, found));
                 return WenyanValues.of(found);
             })

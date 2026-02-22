@@ -4,13 +4,14 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -29,7 +30,7 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     private String packageName;
 
     protected AbstractModuleEntity(
-            BlockEntityType<? extends AbstractModuleEntity> type,
+            BlockEntityType<?> type,
             BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
@@ -73,24 +74,23 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
     }
 
     @Override
-    protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveData(ValueOutput output) {
         if (packageName != null)
-            tag.putString(PACKAGE_NAME_ID, packageName);
+            output.putString(PACKAGE_NAME_ID, packageName);
     }
 
     @Override
-    protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains(PACKAGE_NAME_ID))
-            packageName = tag.getString(PACKAGE_NAME_ID);
+    protected void loadData(ValueInput input) {
+        input.getString(PACKAGE_NAME_ID).ifPresent(this::setPackageName);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
-        Component name = componentInput.get(DataComponents.CUSTOM_NAME);
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
+        Component name = components.get(DataComponents.CUSTOM_NAME);
         if (name != null)
             setPackageName(Component.translatable("code.wenyan_programming.bracket", name).getString());
     }
-
 
     /**
      * Called every tick to handle execution requests.

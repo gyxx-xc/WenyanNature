@@ -52,9 +52,9 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
     public static WenyanVec3 getConnectedDirection(BlockState state) throws WenyanThrowException {
         try {
             return new WenyanVec3(switch (state.getValue(FaceAttachedHorizontalDirectionalBlock.FACE)) {
-                case CEILING -> Direction.DOWN.getNormal();
-                case FLOOR -> Direction.UP.getNormal();
-                default -> state.getValue(HorizontalDirectionalBlock.FACING).getNormal();
+                case CEILING -> Direction.DOWN.getUnitVec3();
+                case FLOOR -> Direction.UP.getUnitVec3();
+                default -> state.getValue(HorizontalDirectionalBlock.FACING).getUnitVec3();
             });
         } catch (IllegalArgumentException e) {
             throw new WenyanException("此方塊無法取得面向");

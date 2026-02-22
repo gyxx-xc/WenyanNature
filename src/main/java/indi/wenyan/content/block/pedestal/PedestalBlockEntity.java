@@ -1,8 +1,8 @@
 package indi.wenyan.content.block.pedestal;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

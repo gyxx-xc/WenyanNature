@@ -1,6 +1,5 @@
 package indi.wenyan.content.entity;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -135,14 +134,14 @@ public class HandRunnerEntity extends Projectile
 //        return false;
 //    }
 //
-    @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {}
-
-    @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
+//    @Override
+//    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {}
+//
+//    @Override
+//    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
 //        hasRun = true;
-        super.readAdditionalSaveData(compound);
-    }
+//        super.readAdditionalSaveData(compound);
+//    }
 //
 //    @WenyanThreading
 //    abstract class ThisCallHandler implements ISimpleExecCallHandler {

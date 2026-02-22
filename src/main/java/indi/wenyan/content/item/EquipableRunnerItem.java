@@ -1,5 +1,6 @@
 package indi.wenyan.content.item;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
@@ -15,14 +16,11 @@ import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -37,7 +35,7 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @SuppressWarnings("ALL")
-public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatform {
+public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     public static final String ID_1 = "equipable_runner";
 
     // STUB: may need to find a better way to do it,
@@ -59,18 +57,13 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     }
 
     @Override
-    public InteractionResultHolder<ItemStack>
+    public InteractionResult
     use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
             opengui(itemstack, player, hand);
         }
-        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
-    }
-
-    @Override
-    public EquipmentSlot getEquipmentSlot() {
-        return EquipmentSlot.CHEST;
+        return InteractionResult.SUCCESS;
     }
 
 //    @Override

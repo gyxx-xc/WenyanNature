@@ -1,20 +1,18 @@
 package indi.wenyan.content.item;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
 import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import indi.wenyan.setup.network.RunnerTitlePacket;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +20,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
@@ -41,22 +39,23 @@ public class RunnerItem extends BlockItem {
     public final int runningLevel;
 
     public RunnerItem(Properties properties, int runningLevel) {
-        super(Registration.RUNNER_BLOCK.get(), properties);
+        super(WenyanBlocks.RUNNER_BLOCK.get(), properties);
         this.runningLevel = runningLevel;
     }
 
-    @Override
-    public String getDescriptionId() {
-        return Util.makeDescriptionId("item", BuiltInRegistries.ITEM.getKey(this));
-    }
+    // FIXME: @Rokidna V
+//    @Override
+//    public String getDescriptionId() {
+//        return Util.makeDescriptionId("item", BuiltInRegistries.ITEM.getKey(this));
+//    }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) {
             openGui(itemstack, player, hand);
         }
-        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     // FIXME
@@ -91,8 +90,8 @@ public class RunnerItem extends BlockItem {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {
-                int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
-                PacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
+                int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().getSelectedSlot() : 40;
+                ClientPacketDistributor.sendToServer(new RunnerCodePacket(slot, content));
             }
 
             @Override
@@ -102,8 +101,8 @@ public class RunnerItem extends BlockItem {
 
             @Override
             public void sendTitle(String title) {
-                int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 40;
-                PacketDistributor.sendToServer(new RunnerTitlePacket(slot, title));
+                int slot = hand == InteractionHand.MAIN_HAND ? player.getInventory().getSelectedSlot() : 40;
+                ClientPacketDistributor.sendToServer(new RunnerTitlePacket(slot, title));
             }
 
             @Override
