@@ -1,15 +1,10 @@
 package indi.wenyan.setup.datagen.model;
 
-import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
-import indi.wenyan.setup.definitions.WYRegistration;
-import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
+import indi.wenyan.setup.definitions.WenyanBlocks;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.function.BiConsumer;
@@ -18,63 +13,56 @@ import java.util.function.BiConsumer;
  * Provider for generating block states and models during data generation.
  * Defines the appearance of blocks in the game world.
  */
-public class ModBlockStateProvider extends BlockStateProvider {
+public class ModBlockStateProvider extends ModelSubProvider {
 
-    /**
-     * Constructs a new block state provider.
-     *
-     * @param output       The pack output for blockstate generation
-     * @param modid        The mod ID
-     * @param exFileHelper Helper for accessing existing files
-     */
-    public ModBlockStateProvider(PackOutput output, String modid, ExistingFileHelper exFileHelper) {
-        super(output, modid, exFileHelper);
+    protected ModBlockStateProvider(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+        super(blockModels, itemModels);
     }
 
     @Override
-    protected void registerStatesAndModels() {
-        simpleBlock(WYRegistration.SCREEN_MODULE_BLOCK.get());
+    protected void registerModels() {
+        blockModels.createTrivialCube(WenyanBlocks.SCREEN_MODULE_BLOCK.get());
 
-        modeledBlock(this::horizontalFaceBlock, WYRegistration.RUNNER_BLOCK);
-        modeledBlock(this::simpleBlock, WYRegistration.CRAFTING_BLOCK);
-        modeledBlock(this::simpleBlock, WYRegistration.PEDESTAL_BLOCK);
-        modeledBlock(this::simpleBlock, WYRegistration.POWER_BLOCK);
+        modeledBlock(blockModels::createHorizontallyRotatedBlock, WenyanBlocks.RUNNER_BLOCK);
+        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.CRAFTING_BLOCK);
+        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.PEDESTAL_BLOCK);
+        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.POWER_BLOCK);
 //        modeledBlock(this::simpleBlock, Registration.LOCK_MODULE_BLOCK);
 
-        getVariantBuilder(WYRegistration.LOCK_MODULE_BLOCK.get()).forAllStates(state -> {
-            boolean locked = state.getValue(LockModuleBlock.LOCK_STATE);
+//        getVariantBuilder(WenyanBlocks.LOCK_MODULE_BLOCK.get()).forAllStates(state -> {
+//            boolean locked = state.getValue(LockModuleBlock.LOCK_STATE);
+//
+//            return ConfiguredModel.builder()
+//                    .modelFile(locked ? new ModelFile.UncheckedModelFile(
+//                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+//                                    "block/" + WenyanBlocks.LOCK_MODULE_BLOCK.getKey().location().getPath())
+//                    ) : new ModelFile.UncheckedModelFile(
+//                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+//                                    "block/" + WenyanBlocks.LOCK_MODULE_BLOCK.getKey().location().getPath() + "_1")
+//                    ))
+//                    .build();
+//        });
 
-            return ConfiguredModel.builder()
-                    .modelFile(locked ? new ModelFile.UncheckedModelFile(
-                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                                    "block/" + WYRegistration.LOCK_MODULE_BLOCK.getKey().location().getPath())
-                    ) : new ModelFile.UncheckedModelFile(
-                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                                    "block/" + WYRegistration.LOCK_MODULE_BLOCK.getKey().location().getPath() + "_1")
-                    ))
-                    .build();
-        });
-
-        registerModuleBlock(WYRegistration.EXPLOSION_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.INFORMATION_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.MATH_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.BIT_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.BLOCK_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.RANDOM_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.ITEM_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.VEC3_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.ENTITY_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.COMMUNICATE_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.COLLECTION_MODULE_BLOCK);
-        registerModuleBlock(WYRegistration.STRING_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.MATH_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.BIT_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.BLOCK_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.RANDOM_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.ITEM_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.VEC3_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.ENTITY_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.COLLECTION_MODULE_BLOCK);
+        registerModuleBlock(WenyanBlocks.STRING_MODULE_BLOCK);
     }
 
-    private void modeledBlock(BiConsumer<Block, ModelFile> blockstateMethod, DeferredBlock<?> deferredBlock) {
-        blockstateMethod.accept(deferredBlock.get(),
-                new ModelFile.UncheckedModelFile(
-                        Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                                "block/" + deferredBlock.getKey().location().getPath())
-                ));
+    private void modeledBlock(BiConsumer<Block, TexturedModel.Provider> blockstateMethod, DeferredBlock<?> deferredBlock) {
+//        blockstateMethod.accept(deferredBlock.get(),
+//                new ModelFile.UncheckedModelFile(
+//                        Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+//                                "block/" + deferredBlock.getKey().location().getPath())
+//                ));
     }
 
     /**
@@ -83,10 +71,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
      * @param deferredBlock The module block to register
      */
     private void registerModuleBlock(DeferredBlock<?> deferredBlock) {
-        modeledBlock(this::horizontalFaceBlock, deferredBlock);
-        String id = deferredBlock.getKey().location().getPath();
-        models().singleTexture(id,
-                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block"),
-                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id));
+//        modeledBlock(this::horizontalFaceBlock, deferredBlock);
+//        String id = deferredBlock.getKey().location().getPath();
+//        models().singleTexture(id,
+//                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block"),
+//                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id));
     }
 }

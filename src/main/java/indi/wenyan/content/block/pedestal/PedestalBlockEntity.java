@@ -57,4 +57,12 @@ public class PedestalBlockEntity extends BlockEntity {
         input.read("item", ItemStack.CODEC)
                 .ifPresent(itemStack -> this.itemStack = itemStack);
     }
+
+    public ItemStack getStack() {
+        return itemStack;
+    }
+
+    public void setStack(ItemStack stack) {
+        itemStack = stack;
+    }
 }

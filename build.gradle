@@ -134,8 +134,8 @@ dependencies {
 //    compileOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE:api"
 //    runtimeOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE"
 
-    compileOnly("org.projectlombok:lombok:1.18.38")
-    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     // copy from https://github.com/AppliedEnergistics/Applied-Energistics-2/blob/main/build.gradle
     testImplementation(platform("org.junit:junit-bom:6.0.2"))

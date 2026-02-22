@@ -37,12 +37,21 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
     @NonFinal
     PlacementInfo info;
 
+    public AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round, PlacementInfo info) {
+        this.input = input;
+        this.question = question;
+        this.output = output;
+        this.round = round;
+        this.info = info;
+    }
+
     public AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round) {
         this.input = input;
         this.question = question;
         this.output = output;
         this.round = round;
     }
+
 
     public static final String ID = "answering_recipe";
     public static final StreamCodec<RegistryFriendlyByteBuf, List<Ingredient>> INGREDIENT_LIST_STREAM =

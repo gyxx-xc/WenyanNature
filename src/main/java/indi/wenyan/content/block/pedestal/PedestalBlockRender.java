@@ -1,40 +1,63 @@
 package indi.wenyan.content.block.pedestal;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEntity> {
+public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEntity, PedestalBlockRender.PedestalBlockEntityRenderState> {
+    private final ItemModelResolver itemModelResolver;
 
-    public PedestalBlockRender() {
-        // change access modifier to public for render
+    public PedestalBlockRender(BlockEntityRendererProvider.Context context) {
+        itemModelResolver = context.itemModelResolver();
     }
 
-    // copy from arsnouveau
     @Override
-    public void render(PedestalBlockEntity tileEntityIn, float pPartialTick, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        if (tileEntityIn.getStack().isEmpty()) return;
-        if(!(tileEntityIn.getBlockState().getBlock() instanceof PedestalBlock)){
-            return;
-        }
+    public void extractRenderState(
+            PedestalBlockEntity blockEntity,
+            PedestalBlockEntityRenderState state,
+            float partialTicks, @NonNull Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        var itemStack = blockEntity.getStack();
+        if (!itemStack.isEmpty())
+            itemModelResolver.updateForTopItem(state.itemState,
+                    itemStack,
+                    ItemDisplayContext.FIXED,
+                    blockEntity.getLevel(), null, 0);
+        else
+            state.itemState.clear();
+    }
 
-        matrixStack.pushPose();
-        matrixStack.translate(0.5, 1.5, 0.5);
-        matrixStack.scale(0.5f, 0.5f, 0.5f);
-        assert tileEntityIn.getLevel() != null;
-        Minecraft.getInstance().getItemRenderer().renderStatic(tileEntityIn.getStack(),
-                ItemDisplayContext.FIXED,
-                pPackedLight,
-                OverlayTexture.NO_OVERLAY,
-                matrixStack,
-                pBufferSource,
-                tileEntityIn.getLevel(),
-                (int) tileEntityIn.getBlockPos().asLong());
+    @Override
+    public PedestalBlockEntityRenderState createRenderState() {
+        return new PedestalBlockEntityRenderState();
+    }
 
-        matrixStack.popPose();
+    @Override
+    public void submit(PedestalBlockEntityRenderState blockEntityRenderState,
+                       PoseStack poseStack,
+                       @NonNull SubmitNodeCollector submitNodeCollector,
+                       @NonNull CameraRenderState cameraRenderState) {
+        poseStack.pushPose();
+        poseStack.translate(0.5, 1.5, 0.5);
+        poseStack.scale(0.5f, 0.5f, 0.5f);
+        blockEntityRenderState.itemState.submit(poseStack, submitNodeCollector,
+                blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
+    }
+
+    public static class PedestalBlockEntityRenderState extends BlockEntityRenderState {
+        public ItemStackRenderState itemState = new ItemStackRenderState();
     }
 }

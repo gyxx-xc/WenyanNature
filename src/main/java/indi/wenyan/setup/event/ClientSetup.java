@@ -6,7 +6,6 @@ import indi.wenyan.content.block.crafting_block.CraftingBlockRender;
 import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
 import indi.wenyan.content.gui.CraftingBlockScreen;
-import indi.wenyan.content.particle.CommunicationParticle;
 import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.neoforged.api.distmarker.Dist;
@@ -32,7 +31,7 @@ public enum ClientSetup {;
 //        event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
         event.registerBlockEntityRenderer(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), RunnerBlockRender::new);
         event.registerBlockEntityRenderer(WenyanBlocks.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
-        event.registerBlockEntityRenderer(WenyanBlocks.PEDESTAL_ENTITY.get(), context -> new PedestalBlockRender());
+        event.registerBlockEntityRenderer(WenyanBlocks.PEDESTAL_ENTITY.get(), PedestalBlockRender::new);
         event.registerBlockEntityRenderer(WenyanBlocks.SCREEN_MODULE_BLOCK_ENTITY.get(), ScreenModuleBlockRenderer::new);
         event.registerBlockEntityRenderer(WenyanBlocks.CRAFTING_BLOCK_ENTITY.get(), CraftingBlockRender::new);
     }
@@ -50,6 +49,6 @@ public enum ClientSetup {;
      */
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(WYRegistration.COMMUNICATION_PARTICLES.get(), CommunicationParticle.Provider::new);
+//        event.registerSpriteSet(WYRegistration.COMMUNICATION_PARTICLES.get(), CommunicationParticle.Provider::new);
     }
 }

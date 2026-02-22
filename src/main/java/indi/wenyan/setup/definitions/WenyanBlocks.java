@@ -5,6 +5,7 @@ import indi.wenyan.content.block.additional_module.block.*;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
+import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.power.PowerBlock;
@@ -15,7 +16,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.CrafterBlockEntity;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -32,7 +32,7 @@ public enum WenyanBlocks {
     public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY = WenyanBlocks.registerEntity(RunnerBlock.ID, RunnerBlockEntity::new, WenyanBlocks.RUNNER_BLOCK);
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK = WenyanBlocks.DR.registerBlock(CraftingBlock.ID, CraftingBlock::new);
-    public static final Supplier<BlockEntityType<CrafterBlockEntity>> CRAFTING_BLOCK_ENTITY = WenyanBlocks.registerEntity(CraftingBlock.ID, CrafterBlockEntity::new, WenyanBlocks.CRAFTING_BLOCK);
+    public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_BLOCK_ENTITY = WenyanBlocks.registerEntity(CraftingBlock.ID, CraftingBlockEntity::new, WenyanBlocks.CRAFTING_BLOCK);
 
 
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK = WenyanBlocks.DR.registerBlock(PedestalBlock.ID, PedestalBlock::new);
