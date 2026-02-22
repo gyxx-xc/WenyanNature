@@ -41,6 +41,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -170,7 +172,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         if (!(getLevel() instanceof ServerLevel sl))
             throw new WenyanException.WenyanUnreachedException();
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        forNearbyPedestal(sl, blockPos(), pedestal -> pedestalItems.add(pedestal.getItem(0)));
+        forNearbyPedestal(sl, blockPos(), pedestal -> pedestalItems.add(ItemUtil.getStack(pedestal.getItemHandler(), 0)));
         var optionalRecipeHolder = sl.recipeAccess().getRecipeFor(WYRegistration.ANSWERING_RECIPE_TYPE.get(),
                 new AnsweringRecipeInput(pedestalItems), sl, this.recipeHolder); // set last recipe as hint
         if (optionalRecipeHolder.isEmpty()) {
@@ -192,7 +194,8 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     public void craftAndEjectItem() {
         assert level != null;
         // TODO: for recipe with remaining item
-        forNearbyPedestal(level, blockPos(), pedestal -> pedestal.setItem(0, ItemStack.EMPTY));
+        forNearbyPedestal(level, blockPos(), pedestal ->
+                ResourceHandlerUtil.extractFirst(pedestal.getItemHandler(), _ -> true, 1, null));
         BlockPos pos = worldPosition.relative(Direction.UP);
         Block.popResource(level, pos, recipeHolder.value().output().copy());
     }
@@ -216,7 +219,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     public static void forNearbyPedestal(Level level, BlockPos pos, Consumer<PedestalBlockEntity> consumer) {
         for (BlockPos b : BlockPos.betweenClosed(pos.offset(RANGE, -RANGE, RANGE), pos.offset(-RANGE, RANGE, -RANGE))) {
-            if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && !pedestal.getItem(0).isEmpty()) {
+            if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && !pedestal.getItemHandler().getResource(0).isEmpty()) {
                 consumer.accept(pedestal);
             }
         }

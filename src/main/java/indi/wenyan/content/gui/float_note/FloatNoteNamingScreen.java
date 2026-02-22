@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -14,7 +15,7 @@ import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.function.Consumer;
 
@@ -53,7 +54,7 @@ public class FloatNoteNamingScreen extends Screen {
             button.setLocked(!button.isLocked());
             name.setEditable(!button.isLocked());
             item.set(WYRegistration.NOTE_LOCK_DATA.get(), button.isLocked());
-            PacketDistributor.sendToServer(new FloatNotePacket(name.getValue(), button.isLocked()));
+            ClientPacketDistributor.sendToServer(new FloatNotePacket(name.getValue(), button.isLocked()));
         });
         lockButton.setLocked(item.getOrDefault(WYRegistration.NOTE_LOCK_DATA.get(), false));
         addRenderableWidget(lockButton);
@@ -61,14 +62,14 @@ public class FloatNoteNamingScreen extends Screen {
         name.setResponder(text -> {
             if (text.equals(StringUtil.filterText(text))) {
                 item.set(DataComponents.CUSTOM_NAME, Component.literal(text));
-                PacketDistributor.sendToServer(new FloatNotePacket(text, lockButton.isLocked()));
+                ClientPacketDistributor.sendToServer(new FloatNotePacket(text, lockButton.isLocked()));
             }
         });
     }
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.blitSprite(TEXT_FIELD_SPRITE, 59, 20, 110, 16);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, TEXT_FIELD_SPRITE, 59, 20, 110, 16);
         renderTransparentBackground(guiGraphics);
     }
 

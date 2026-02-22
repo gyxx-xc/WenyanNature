@@ -7,7 +7,7 @@ import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -181,14 +181,14 @@ public class CodeField {
         insertText("");
     }
 
-    public boolean keyPressed(int keyCode) {
-        selecting = Screen.hasShiftDown();
-        if (handleScreenDefined(keyCode))
+    public boolean keyPressed(KeyEvent event) {
+        selecting = event.hasShiftDown();
+        if (handlePreDefined(event))
             return true;
-        else if (handleNoModifiers(keyCode))
+        else if (handleIgnoreModifiers(event.key()))
             return true;
-        else if (Screen.hasControlDown()) {
-            switch (keyCode) {
+        else if (event.hasControlDown()) {
+            switch (event.key()) {
                 case GLFW.GLFW_KEY_BACKSPACE ->
                         deleteText(getPreviousWord().beginIndex() - backend.getCursor());
                 case GLFW.GLFW_KEY_DELETE ->
@@ -203,7 +203,7 @@ public class CodeField {
                 }
             }
         } else {
-            switch (keyCode) {
+            switch (event.key()) {
                 case GLFW.GLFW_KEY_BACKSPACE -> deleteText(-1);
                 case GLFW.GLFW_KEY_DELETE -> deleteText(1);
                 case GLFW.GLFW_KEY_RIGHT -> seekCursor(Whence.RELATIVE, 1);
@@ -227,7 +227,7 @@ public class CodeField {
         return true;
     }
 
-    private boolean handleNoModifiers(int keyCode) {
+    private boolean handleIgnoreModifiers(int keyCode) {
         switch (keyCode) {
             case GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_KP_ENTER -> {
                 insertText("\n");
@@ -247,20 +247,20 @@ public class CodeField {
         }
     }
 
-    private boolean handleScreenDefined(int keyCode) {
-        if (Screen.isSelectAll(keyCode)) {
+    private boolean handlePreDefined(KeyEvent event) {
+        if (event.isSelectAll()) {
             backend.setCursor(backend.getContent().length());
             backend.setSelectCursor(0);
             return true;
-        } else if (Screen.isCopy(keyCode)) {
+        } else if (event.isCopy()) {
             Minecraft.getInstance().keyboardHandler.setClipboard(
                     backend.getContent()
                             .substring(getSelected().beginIndex(), getSelected().endIndex()));
             return true;
-        } else if (Screen.isPaste(keyCode)) {
+        } else if (event.isPaste()) {
             insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
             return true;
-        } else if (Screen.isCut(keyCode)) {
+        } else if (event.isCut()) {
             Minecraft.getInstance().keyboardHandler.setClipboard(
                     backend.getContent()
                             .substring(getSelected().beginIndex(), getSelected().endIndex()));

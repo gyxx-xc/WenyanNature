@@ -4,8 +4,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FormattedCharSequence;
 
 public class FuzhouNameWidget extends EditBox {
 
@@ -28,7 +26,7 @@ public class FuzhouNameWidget extends EditBox {
         this.setTextColor(0xFFFFFF); // White text matches usual Minecraft/Snippet style
 
         // Formatter only handles text, suffix is rendered manually
-        this.setFormatter((text, firstCharIndex) -> FormattedCharSequence.forward(text, Style.EMPTY));
+//        this.setFormatter((text, firstCharIndex) -> FormattedCharSequence.forward(text, Style.EMPTY));
     }
 
     @Override

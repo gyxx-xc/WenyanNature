@@ -9,15 +9,16 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractScrollWidget;
+import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -28,7 +29,9 @@ import java.util.List;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
-public class PackageSnippetWidget extends AbstractScrollWidget {
+// although it is not a text area,
+// for some historical reasons, only text area work for this situation
+public class PackageSnippetWidget extends AbstractTextAreaWidget {
     private final Font font;
     private final CodeEditorBackend backend;
 
@@ -68,7 +71,12 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
     }
 
     public PackageSnippetWidget(Font font, CodeEditorBackend backend, int x, int y, int width, int height) {
-        super(x, y, width, height, Component.empty());
+        super(x, y, width, height, Component.empty(), new ScrollbarSettings(
+                // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...
+                ENTRY_SPRITES.get(false, false),
+                null,
+                ENTRY_SPRITES.get(false, false),
+                4, 32, ENTRY_HEIGHT, true));
         this.font = font;
         this.backend = backend;
     }
@@ -100,7 +108,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
                 case FIELD -> FIELD_ENTRY_SPRITES;
                 case METHOD -> METHOD_ENTRY_SPRITES;
             };
-            guiGraphics.blitSprite(
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                     widgetSprites.get(true, buttonHovered),
                     getX() + innerPadding(), currentY,
                     this.getWidth() - totalInnerPadding(), ENTRY_HEIGHT
@@ -125,7 +133,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
             boolean buttonHoveredLeft = mouseX >= getX() + innerPadding() &&
                     mouseX < getX() + innerPadding() + ICON_WIDTH + buttonPadding.horizontal() &&
                     buttonHoveredY;
-            guiGraphics.blitSprite(
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                     PACKAGE_DIR_ICON_SPRITES.get(true, buttonHoveredLeft),
                     getX() + innerPadding(), currentY,
                     ICON_WIDTH + buttonPadding.horizontal(), DIR_HEIGHT);
@@ -134,7 +142,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
             boolean buttonHoveredRight = mouseX >= getX() + innerPadding() + ICON_WIDTH + buttonPadding.horizontal() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
                     buttonHoveredY;
-            guiGraphics.blitSprite(
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                     DIR_SPRITES.get(!pack.fold(), buttonHoveredRight),
                     getX() + innerPadding() + ICON_WIDTH + buttonPadding.horizontal(), currentY,
                     this.getWidth() - totalInnerPadding() - ICON_WIDTH - buttonPadding.horizontal(), DIR_HEIGHT
@@ -148,8 +156,16 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+        var result = clickEntry(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick) || result;
+    }
+
+    private boolean clickEntry(double mouseX, double mouseY, int button) {
+        if (isMouseOver(mouseX, mouseY) && button == 0) {
             double y = mouseY - getY() - innerPadding() + scrollAmount();
             double currentY = 0;
             for (var pack : backend.getPackages()) {
@@ -173,18 +189,7 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
                 }
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    protected void renderDecorations(@NotNull GuiGraphics guiGraphics) {
-        if (scrollbarVisible()) {
-            int scrollBarHeight = Mth.clamp(this.height * this.height / (this.getInnerHeight() + 4), 32, this.height);
-            int x = this.getX() + this.width;
-            int y = Math.max(this.getY(), (int) this.scrollAmount() * (this.height - scrollBarHeight) / this.getMaxScrollAmount() + this.getY());
-            // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...
-            guiGraphics.blitSprite(ENTRY_SPRITES.get(false, false), x - 4, y, 4, scrollBarHeight);
-        }
+        return false;
     }
 
     @Override
@@ -197,15 +202,6 @@ public class PackageSnippetWidget extends AbstractScrollWidget {
         return backend.getPackages().stream()
                 .mapToInt(pack -> pack.fold() ? 0 : pack.members.size()).sum() * ENTRY_HEIGHT +
                 backend.getPackages().size() * DIR_HEIGHT;
-    }
-
-    @Override
-    protected boolean scrollbarVisible() {
-        return getInnerHeight() > getHeight() - totalInnerPadding();
-    }
-
-    protected double scrollRate() {
-        return ENTRY_HEIGHT;
     }
 
     private void insertId(String id) {

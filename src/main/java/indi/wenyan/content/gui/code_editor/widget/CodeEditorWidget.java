@@ -7,23 +7,25 @@ import indi.wenyan.content.gui.code_editor.backend.CodeField;
 import indi.wenyan.content.gui.code_editor.backend.Completion;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
-import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractScrollWidget;
+import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
+import net.minecraft.util.Util;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Collections;
@@ -32,7 +34,7 @@ import java.util.ListIterator;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 @OnlyIn(Dist.CLIENT)
-public class CodeEditorWidget extends AbstractScrollWidget {
+public class CodeEditorWidget extends AbstractTextAreaWidget {
     private static final int CURSOR_INSERT_COLOR = 0xff000000;
     public static final float TOOLTIP_SCALE = 0.7f;
     private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
@@ -68,7 +70,7 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                             int x, int y, int width, int height) {
         super(x + outerPadding.left(), y + outerPadding.top(),
                 width - outerPadding.horizontal(), height - outerPadding.vertical(),
-                Component.empty());
+                Component.empty(), AbstractTextAreaWidget.defaultSettings(3 * font.lineHeight));
         this.font = font;
         this.backend = backend;
         textField = new CodeField(font, backend,
@@ -175,22 +177,28 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     // input
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
-            textField.setSelecting(Screen.hasShiftDown());
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+        boolean result = false;
+        if (isMouseOver(mouseX, mouseY) && button == 0) {
+            textField.setSelecting(event.hasShiftDown());
             textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
-            return true;
-        } else {
-            return super.mouseClicked(mouseX, mouseY, button);
+            result = true;
         }
+        return super.mouseClicked(event, doubleClick) || result;
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+        if (super.mouseDragged(event, dragX, dragY)) {
             return true;
-        } else if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
+        } else if (isMouseOver(mouseX, mouseY) && button == 0) {
             textField.setSelecting(true);
             textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
@@ -201,9 +209,9 @@ public class CodeEditorWidget extends AbstractScrollWidget {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (completions.isEmpty()) return textField.keyPressed(keyCode);
-        switch (keyCode) {
+    public boolean keyPressed(@NonNull KeyEvent event) {
+        if (completions.isEmpty()) return textField.keyPressed(event);
+        switch (event.key()) {
             case GLFW.GLFW_KEY_UP -> offsetSelectedCompletion(-1);
             case GLFW.GLFW_KEY_DOWN -> offsetSelectedCompletion(1);
             case GLFW.GLFW_KEY_ENTER -> {
@@ -211,16 +219,16 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                 backend.insertText(completions.get(selectedCompletion).content());
             }
             default -> {
-                return textField.keyPressed(keyCode);
+                return textField.keyPressed(event);
             }
         }
         return true;
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        if (visible && isFocused() && StringUtil.isAllowedChatCharacter(codePoint)) {
-            textField.insertText(Character.toString(codePoint));
+    public boolean charTyped(@NonNull CharacterEvent event) {
+        if (visible && isFocused() && StringUtil.isAllowedChatCharacter(event.codepoint())) {
+            textField.insertText(Character.toString(event.codepoint()));
             completions = Completion.getCompletions(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
             return true;
         } else {
@@ -326,10 +334,11 @@ public class CodeEditorWidget extends AbstractScrollWidget {
             for (var styledView : stringView.styles()) {
                 var style = styleFromTokenType(styledView.token());
                 String tokenText = backend.getContent().substring(styledView.beginIndex(), styledView.endIndex());
-                currentX = guiGraphics.drawString(font,
+                guiGraphics.drawString(font,
                         Component.literal(tokenText).withStyle(style),
                         currentX, currentY,
                         0xFFFFFFFF, false);
+                currentX += font.width(Component.literal(tokenText).withStyle(style));
             }
         }
     }
@@ -396,13 +405,13 @@ public class CodeEditorWidget extends AbstractScrollWidget {
         }
 
         // render tooltip
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate((float) x + completionPadding.left(), (float) y + entryHeight * renderedSize, 0);
-        guiGraphics.pose().scale(TOOLTIP_SCALE, TOOLTIP_SCALE, 1.0f);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate((float) x + completionPadding.left(), (float) y + entryHeight * renderedSize);
+        guiGraphics.pose().scale(TOOLTIP_SCALE, TOOLTIP_SCALE);
         guiGraphics.drawString(font, Component.literal("Enter to input"),
                 0, 0, // position handled by pose
                 0xff999999, false);
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     private void renderSelection(@NotNull GuiGraphics guiGraphics) {
@@ -424,9 +433,8 @@ public class CodeEditorWidget extends AbstractScrollWidget {
                     } else {
                         j1 = font.width(backend.getContent().substring(stringView.beginIndex(), selected.endIndex()));
                     }
-                    guiGraphics.fill(RenderType.guiTextHighlight(),
-                            k1 + i1, currentY, k1 + j1, currentY + font.lineHeight,
-                            0xff0000ff);
+                    guiGraphics.textHighlight(
+                            k1 + i1, currentY, k1 + j1, currentY + font.lineHeight, true);
                 }
             }
             currentY += font.lineHeight;
@@ -435,24 +443,17 @@ public class CodeEditorWidget extends AbstractScrollWidget {
 
     @Override
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-        guiGraphics.blit(BACKGROUND,
+        guiGraphics.blit(
+                BACKGROUND,
                 getX() - outerPadding.left(), getY() - outerPadding.top(),
                 0, (int) scrollAmount(),
                 width + outerPadding.horizontal(),
-                height + outerPadding.vertical());
+                height + outerPadding.vertical(),
+                WIDTH, HEIGH);
     }
 
     // scrolling
     public int getInnerHeight() {
         return font.lineHeight * textField.getDisplayLines().size();
-    }
-
-    @Override
-    protected boolean scrollbarVisible() {
-        return getInnerHeight() > getHeight() - totalInnerPadding();
-    }
-
-    protected double scrollRate() {
-        return (double) 3 * font.lineHeight;
     }
 }

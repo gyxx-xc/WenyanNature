@@ -12,17 +12,17 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.setup.definitions.WYRegistration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -40,7 +40,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +60,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public static final IntegerProperty RUNNING_TIER = IntegerProperty.create("running_tier", 0, 3);
 
     public RunnerBlock(Properties properties) {
-        super(properties.noCollission().lightLevel(state -> state.getValue(RUNNING_STATE).getLightLevel()));
+        super(properties.noCollision().lightLevel(state -> state.getValue(RUNNING_STATE).getLightLevel()));
         registerDefaultState(defaultBlockState()
                 .setValue(RUNNING_STATE, RunningState.NOT_RUNNING)
                 .setValue(RUNNING_TIER, 1)
@@ -74,11 +74,11 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     @Override
-    protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected @NotNull InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         var entity = level.getBlockEntity(pos);
         if (!(entity instanceof RunnerBlockEntity runner)) {
             WenyanProgramming.LOGGER.error("RunnerBlock: entity is not a RunnerBlockEntity");
-            return ItemInteractionResult.FAIL;
+            return InteractionResult.FAIL;
         }
         if (player.isShiftKeyDown()) {
             if (level.isClientSide())
@@ -88,7 +88,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 runner.playerRun();
             }
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Nullable
@@ -102,7 +102,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public <T extends BlockEntity> BlockEntityTicker<T>
     getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
-            if (blockEntityType == WYRegistration.RUNNER_BLOCK_ENTITY.get())
+            if (blockEntityType == WenyanBlocks.RUNNER_BLOCK_ENTITY.get())
                 ((RunnerBlockEntity) entity).tick(level1, pos, state1);
         };
     }
@@ -131,7 +131,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 getConnectedDirection(state).getOpposite());
         if (level.getBlockEntity(attached) instanceof IWenyanBlockDevice device)
             packageSnippets.add(packageSnippet(device.getExecPackage(),
-                    device.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
+                    device.blockState().getCloneItemStack(pos, level, false, player),
                     device.getPackageName()));
 
         for (BlockPos b : BlockPos.betweenClosed(
@@ -142,7 +142,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 if (Objects.equals(executor.getPackageName(), "")) continue;
                 RawHandlerPackage execPackage = executor.getExecPackage();
                 packageSnippets.add(packageSnippet(execPackage,
-                        executor.blockState().getCloneItemStack(new BlockHitResult(pos.getCenter(), Direction.UP, pos, false), level, pos, player),
+                        executor.blockState().getCloneItemStack(pos, level, false, player),
                         executor.getPackageName()));
             } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos)) {
                 packageSnippets.add(new PackageSnippetWidget.PackageSnippet(WenyanItems.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
@@ -157,7 +157,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             public void sendContent(String content) {
                 runner.setCode(content);
                 runner.setChanged();
-                PacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
+                ClientPacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
             }
 
             @Override
@@ -169,7 +169,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             public void sendTitle(String title) {
                 title = Component.translatable("code.wenyan_programming.bracket", title).getString();
                 runner.setPlatformName(title);
-                PacketDistributor.sendToServer(new PlatformRenamePacket(pos, title));
+                ClientPacketDistributor.sendToServer(new PlatformRenamePacket(pos, title));
             }
 
             @Override
@@ -207,7 +207,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                         members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.FIELD));
                 }
         );
-        execPackage.functions().forEach((k, v) ->
+        execPackage.functions().forEach((k, _) ->
                 members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD))
         );
         return new PackageSnippetWidget.PackageSnippet(itemStack, name, members);

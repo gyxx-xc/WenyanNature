@@ -7,19 +7,21 @@ import indi.wenyan.content.gui.code_editor.backend.CodeField;
 import indi.wenyan.content.gui.code_editor.backend.SnippetSet;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractScrollWidget;
+import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
-public class SnippetWidget extends AbstractScrollWidget {
+public class SnippetWidget extends AbstractTextAreaWidget {
     private final Font font;
     private final CodeEditorBackend backend;
 
@@ -55,7 +57,12 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     public SnippetWidget(Font font, CodeEditorBackend backend, int x, int y, int width, int height) {
-        super(x, y, width, height, Component.empty());
+        super(x, y, width, height, Component.empty(), new ScrollbarSettings(
+                // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...
+                ENTRY_SPRITES.get(false, false),
+                null,
+                ENTRY_SPRITES.get(false, false),
+                4, 32, ENTRY_HEIGHT, true));
         this.font = font;
         this.backend = backend;
     }
@@ -91,7 +98,7 @@ public class SnippetWidget extends AbstractScrollWidget {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
                     mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
-            guiGraphics.blitSprite(
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                     ENTRY_SPRITES.get(isUnfold, buttonHovered),
                     getX() + innerPadding(), currentY,
                     this.getWidth() - totalInnerPadding(), DIR_HEIGHT
@@ -116,7 +123,7 @@ public class SnippetWidget extends AbstractScrollWidget {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
                     mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
-            guiGraphics.blitSprite(
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                     DIR_SPRITES.get(isUnfold, buttonHovered),
                     getX() + innerPadding(), currentY,
                     this.getWidth() - totalInnerPadding(), DIR_HEIGHT
@@ -132,8 +139,16 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (withinContentAreaPoint(mouseX, mouseY) && button == 0) {
+    public boolean mouseClicked(@NonNull MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+        var result = clickEntry(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick) || result;
+    }
+
+    private boolean clickEntry(double mouseX, double mouseY, int button) {
+        if (isMouseOver(mouseX, mouseY) && button == 0) {
             double y = mouseY - getY() - innerPadding() + scrollAmount();
             double currentY = 0;
             for (SnippetSet set : backend.getCurSnippets()) {
@@ -158,7 +173,7 @@ public class SnippetWidget extends AbstractScrollWidget {
                 }
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return false;
     }
 
     public void insertSnippet(SnippetSet.Snippet snippet) {
@@ -210,17 +225,6 @@ public class SnippetWidget extends AbstractScrollWidget {
     }
 
     @Override
-    protected void renderDecorations(@NotNull GuiGraphics guiGraphics) {
-        if (scrollbarVisible()) {
-            int scrollBarHeight = Mth.clamp(this.height * this.height / (this.getInnerHeight() + 4), 32, this.height);
-            int x = this.getX() + this.width;
-            int y = Math.max(this.getY(), (int) this.scrollAmount() * (this.height - scrollBarHeight) / this.getMaxScrollAmount() + this.getY());
-            // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...
-            guiGraphics.blitSprite(ENTRY_SPRITES.get(false, false), x-4, y, 4, scrollBarHeight);
-        }
-    }
-
-    @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE,
                 Component.translatable("gui.narrate.editBox", getMessage(), "snippet"));
@@ -230,14 +234,5 @@ public class SnippetWidget extends AbstractScrollWidget {
         return backend.getCurSnippets().stream()
                 .mapToInt(set -> set.fold() ? 0 : set.snippets().size()).sum() * ENTRY_HEIGHT +
                 backend.getCurSnippets().size() * DIR_HEIGHT;
-    }
-
-    @Override
-    protected boolean scrollbarVisible() {
-        return getInnerHeight() > getHeight() - totalInnerPadding();
-    }
-
-    protected double scrollRate() {
-        return ENTRY_HEIGHT;
     }
 }

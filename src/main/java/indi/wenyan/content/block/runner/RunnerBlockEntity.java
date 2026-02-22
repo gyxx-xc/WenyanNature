@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.runner;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
@@ -19,6 +20,7 @@ import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
@@ -28,11 +30,9 @@ import lombok.SneakyThrows;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -40,6 +40,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
@@ -78,7 +80,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Getter
     public final ExecQueue execQueue = new ExecQueue(this);
     public static final int DEVICE_SEARCH_RANGE = 3;
-    private final RequestCallHandler importFunction = (t, s, a) ->
+    private final RequestCallHandler importFunction = (t, _, a) ->
             new ImportRequest(t, this, this::getPackage, a);
 
     @Getter
@@ -129,7 +131,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @SuppressWarnings("unused")
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ifProgram().ifPresentOrElse(program -> {
                 if (program.isRunning()) {
                     program.step(speedFromTier(getBlockState().getValue(RUNNING_TIER)));
@@ -205,7 +207,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @SuppressWarnings("unused")
     @Override
-    protected void saveData(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveData(ValueOutput tag) {
         if (code != null)
             tag.putString(PAGES_ID, code);
         tag.putString(PLATFORM_NAME_ID, platformName);
@@ -213,17 +215,16 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @SuppressWarnings("unused")
     @Override
-    protected void loadData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains(PAGES_ID)) {
-            code = tag.getString(PAGES_ID);
-        }
-        platformName = tag.getString(PLATFORM_NAME_ID);
+    protected void loadData(ValueInput tag) {
+        tag.getString(PAGES_ID).ifPresent(this::setCode);
+        tag.getString(PLATFORM_NAME_ID).ifPresent(this::setPlatformName);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
-        code = componentInput.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
-        platformName = componentInput.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
+        code = components.getOrDefault(WYRegistration.PROGRAM_CODE_DATA.get(), "");
+        platformName = components.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
     }
 
     @SneakyThrows
@@ -292,7 +293,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl,
                     ChunkPos.containing(getBlockPos()),
-                    new CommunicationLocationPacket(getBlockPos(), blockPos.getCenter())
+                    new CommunicationLocationPacket(getBlockPos(), blockPos.getCenter().toVector3f())
             );
         }
     }

@@ -9,16 +9,22 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -94,37 +100,52 @@ public class CodeEditorScreen extends Screen {
         packageWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
     }
 
+    // STUB/HACK
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (event.hasShiftDown()) hasShiftDown = true;
+        return super.keyPressed(event);
+    }
+    @Override
+    public boolean keyReleased(KeyEvent event) {
+        if (event.hasShiftDown()) hasShiftDown = false;
+        return super.keyReleased(event);
+    }
+    private boolean hasShiftDown = false;
     public void renderSnippetTooltip(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
                                      SnippetSet.Snippet snippet) {
-        List<Component> tooltip = Lists.newArrayList();
-        tooltip.add(Component.literal(snippet.title()));
-        if (!hasShiftDown()) {
-            tooltip.add(Component.translatable("gui.wenyan.hold_shift").withStyle(ChatFormatting.GRAY));
+        List<ClientTooltipComponent> tooltip = Lists.newArrayList();
+        tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(snippet.title(), Style.EMPTY)));
+        if (!hasShiftDown) {
+            tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
+                    Component.translatable("gui.wenyan.hold_shift").getString(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
         } else {
             int curInsert = 0;
             for (int row = 0; row < snippet.lines().size(); row++) {
                 String line = snippet.lines().get(row);
                 int curColum = 0;
-                MutableComponent lineComp = Component.literal("");
+                List<FormattedCharSequence> lineComp = new ArrayList<>();
                 while (curInsert < snippet.insert().size() &&
                         snippet.insert().get(curInsert).row() == row) {
                     var placeholder = snippet.insert().get(curInsert++);
 
-                    Component textComp = Component.literal(line.substring(curColum,
-                            placeholder.colum())).withStyle(ChatFormatting.GRAY);
-
-                    Component placeholderComp = Component.literal(placeholder.context().getValue())
-                            .withStyle(Style.EMPTY.withColor(placeholder.context().getColor()));
-                    lineComp.append(textComp).append(placeholderComp);
+                    var textComp = FormattedCharSequence.forward(line.substring(curColum, placeholder.colum()),
+                            Style.EMPTY.withColor(ChatFormatting.GRAY));
+                    var placeholderComp = FormattedCharSequence.forward(placeholder.context().getValue(),
+                            Style.EMPTY.withColor(placeholder.context().getColor()));
+                    lineComp.add(textComp);
+                    lineComp.add(placeholderComp);
                     curColum = placeholder.colum();
                 }
-                Component textComp = Component.literal(line.substring(curColum))
-                        .withStyle(ChatFormatting.GRAY);
-                lineComp.append(textComp);
-                tooltip.add(lineComp);
+                var textComp = FormattedCharSequence.forward(line.substring(curColum),
+                        Style.EMPTY.withColor(ChatFormatting.GRAY));
+                lineComp.add(textComp);
+                tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.composite(lineComp)));
             }
         }
-        guiGraphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
+        guiGraphics.renderTooltip(font, tooltip, mouseX, mouseY,
+                DefaultTooltipPositioner.INSTANCE,
+                ItemStack.EMPTY.get(DataComponents.TOOLTIP_STYLE));
     }
 
     @Override
