@@ -14,6 +14,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.CraftClearParticlePacket;
 import indi.wenyan.setup.network.CraftingParticlePacket;
@@ -164,13 +165,14 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     // logic: if cached, if check recipe consistence -> return cached
     // else: recreate the checker
+    // called by handler, only runned in server side
     private IAnsweringChecker getChecker() throws WenyanThrowException {
-        Level level = getLevel();
-        assert level != null;
+        if (!(getLevel() instanceof ServerLevel sl))
+            throw new WenyanException.WenyanUnreachedException();
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        forNearbyPedestal(level, blockPos(), pedestal -> pedestalItems.add(pedestal.getItem(0)));
-        var optionalRecipeHolder = level.getRecipeManager().getRecipeFor(Registration.ANSWERING_RECIPE_TYPE.get(),
-                new AnsweringRecipeInput(pedestalItems), level, this.recipeHolder); // set last recipe as hint
+        forNearbyPedestal(sl, blockPos(), pedestal -> pedestalItems.add(pedestal.getItem(0)));
+        var optionalRecipeHolder = sl.recipeAccess().getRecipeFor(WYRegistration.ANSWERING_RECIPE_TYPE.get(),
+                new AnsweringRecipeInput(pedestalItems), sl, this.recipeHolder); // set last recipe as hint
         if (optionalRecipeHolder.isEmpty()) {
             resetCrafting();
             throw new WenyanException("No valid recipe found for the current pedestal items.");
@@ -181,7 +183,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         } else resetCrafting();
         this.recipeHolder = optionalRecipeHolder.get();
         var question = optionalRecipeHolder.get().value().question();
-        var recipeChecker = CheckerFactory.produce(question, level.getRandom());
+        var recipeChecker = CheckerFactory.produce(question, sl.getRandom());
         checker = recipeChecker;
         checker.init(); // recreated, reset the checker state
         return recipeChecker;

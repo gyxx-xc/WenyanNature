@@ -3,14 +3,14 @@ package indi.wenyan.content.block.additional_module.builtin;
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.IModuleBlock;
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
 public class CollectionModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "collection_module_block";
 
-    public static final MapCodec<CollectionModuleBlock> CODEC = simpleCodec(ignore -> new CollectionModuleBlock());
+    public static final MapCodec<CollectionModuleBlock> CODEC = simpleCodec(CollectionModuleBlock::new);
 
     public CollectionModuleBlock(Properties properties) {
         super(properties);
@@ -23,6 +23,6 @@ public class CollectionModuleBlock extends AbstractFuluBlock implements IModuleB
     @Override
     @NotNull
     public BlockEntityType<?> getType() {
-        return Registration.COLLECTION_MODULE_ENTITY.get();
+        return WenyanBlocks.COLLECTION_MODULE_ENTITY.get();
     }
 }

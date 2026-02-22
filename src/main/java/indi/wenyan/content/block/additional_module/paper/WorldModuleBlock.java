@@ -3,7 +3,7 @@ package indi.wenyan.content.block.additional_module.paper;
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.IModuleBlock;
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WYRegistration;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,7 +26,7 @@ public class WorldModuleBlock extends AbstractFuluBlock implements IModuleBlock 
 
     @Override
     public BlockEntityType<?> getType() {
-        return Registration.INFORMATION_MODULE_ENTITY.get();
+        return WYRegistration.INFORMATION_MODULE_ENTITY.get();
     }
 
     @Override

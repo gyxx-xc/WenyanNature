@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.additional_module.paper;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
@@ -9,13 +10,13 @@ import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
@@ -35,17 +36,13 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
     // lighting fire heat harm
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("ExplosionModule.lightning"), request -> {
-                assert getLevel() != null;
-                Entity e = EntityType.LIGHTNING_BOLT.create(getLevel());
-                if (e == null) {
-                    return WenyanNull.NULL;
-                }
-                e.moveTo(blockPos().getCenter());
-                getLevel().addFreshEntity(e);
+            .handler(WenyanSymbol.var("ExplosionModule.lightning"), _ -> {
+                if (!(getLevel() instanceof ServerLevel sl))
+                    throw new WenyanException.WenyanUnreachedException();
+                EntityType.LIGHTNING_BOLT.spawn(sl, blockPos(), EntitySpawnReason.COMMAND);
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("ExplosionModule.explode"), request -> {
+            .handler(WenyanSymbol.var("ExplosionModule.explode"), _ -> {
                 assert level != null;
                 level.explode(null,
                         blockPos().getX() + 0.5, blockPos().getY() + 0.5, blockPos().getZ() + 0.5,
@@ -68,14 +65,12 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
             })
             .handler(WenyanSymbol.var("ExplosionModule.fireball"), request -> {
                 var speed = request.args().getFirst().as(WenyanVec3.TYPE).value();
-                assert getLevel() != null;
-                Entity e = EntityType.FIREBALL.create(getLevel());
-                if (e == null) {
-                    return WenyanNull.NULL;
-                }
-                e.moveTo(blockPos().offset(0, 1, 0).getCenter());
+                if (!(getLevel() instanceof ServerLevel sl))
+                    throw new WenyanException.WenyanUnreachedException();
+                var e = new LargeFireball(EntityType.FIREBALL, sl);
+                LargeFireball.spawnProjectile(e, sl, ItemStack.EMPTY);
+                e.setPos(blockPos().offset(0, 1, 0).getCenter());
                 e.setDeltaMovement(speed);
-                getLevel().addFreshEntity(e);
                 return WenyanNull.NULL;
             })
             .build();

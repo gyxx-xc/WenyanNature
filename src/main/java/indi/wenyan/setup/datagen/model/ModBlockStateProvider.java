@@ -2,7 +2,7 @@ package indi.wenyan.setup.datagen.model;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WYRegistration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -33,40 +33,40 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlock(Registration.SCREEN_MODULE_BLOCK.get());
+        simpleBlock(WYRegistration.SCREEN_MODULE_BLOCK.get());
 
-        modeledBlock(this::horizontalFaceBlock, Registration.RUNNER_BLOCK);
-        modeledBlock(this::simpleBlock, Registration.CRAFTING_BLOCK);
-        modeledBlock(this::simpleBlock, Registration.PEDESTAL_BLOCK);
-        modeledBlock(this::simpleBlock, Registration.POWER_BLOCK);
+        modeledBlock(this::horizontalFaceBlock, WYRegistration.RUNNER_BLOCK);
+        modeledBlock(this::simpleBlock, WYRegistration.CRAFTING_BLOCK);
+        modeledBlock(this::simpleBlock, WYRegistration.PEDESTAL_BLOCK);
+        modeledBlock(this::simpleBlock, WYRegistration.POWER_BLOCK);
 //        modeledBlock(this::simpleBlock, Registration.LOCK_MODULE_BLOCK);
 
-        getVariantBuilder(Registration.LOCK_MODULE_BLOCK.get()).forAllStates(state -> {
+        getVariantBuilder(WYRegistration.LOCK_MODULE_BLOCK.get()).forAllStates(state -> {
             boolean locked = state.getValue(LockModuleBlock.LOCK_STATE);
 
             return ConfiguredModel.builder()
                     .modelFile(locked ? new ModelFile.UncheckedModelFile(
                             Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                                    "block/" + Registration.LOCK_MODULE_BLOCK.getKey().location().getPath())
+                                    "block/" + WYRegistration.LOCK_MODULE_BLOCK.getKey().location().getPath())
                     ) : new ModelFile.UncheckedModelFile(
                             Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                                    "block/" + Registration.LOCK_MODULE_BLOCK.getKey().location().getPath() + "_1")
+                                    "block/" + WYRegistration.LOCK_MODULE_BLOCK.getKey().location().getPath() + "_1")
                     ))
                     .build();
         });
 
-        registerModuleBlock(Registration.EXPLOSION_MODULE_BLOCK);
-        registerModuleBlock(Registration.INFORMATION_MODULE_BLOCK);
-        registerModuleBlock(Registration.MATH_MODULE_BLOCK);
-        registerModuleBlock(Registration.BIT_MODULE_BLOCK);
-        registerModuleBlock(Registration.BLOCK_MODULE_BLOCK);
-        registerModuleBlock(Registration.RANDOM_MODULE_BLOCK);
-        registerModuleBlock(Registration.ITEM_MODULE_BLOCK);
-        registerModuleBlock(Registration.VEC3_MODULE_BLOCK);
-        registerModuleBlock(Registration.ENTITY_MODULE_BLOCK);
-        registerModuleBlock(Registration.COMMUNICATE_MODULE_BLOCK);
-        registerModuleBlock(Registration.COLLECTION_MODULE_BLOCK);
-        registerModuleBlock(Registration.STRING_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.EXPLOSION_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.INFORMATION_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.MATH_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.BIT_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.BLOCK_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.RANDOM_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.ITEM_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.VEC3_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.ENTITY_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.COMMUNICATE_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.COLLECTION_MODULE_BLOCK);
+        registerModuleBlock(WYRegistration.STRING_MODULE_BLOCK);
     }
 
     private void modeledBlock(BiConsumer<Block, ModelFile> blockstateMethod, DeferredBlock<?> deferredBlock) {

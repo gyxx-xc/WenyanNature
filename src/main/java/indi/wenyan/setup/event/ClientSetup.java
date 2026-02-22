@@ -7,7 +7,7 @@ import indi.wenyan.content.block.pedestal.PedestalBlockRender;
 import indi.wenyan.content.block.runner.RunnerBlockRender;
 import indi.wenyan.content.gui.CraftingBlockScreen;
 import indi.wenyan.content.particle.CommunicationParticle;
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -42,7 +42,7 @@ public enum ClientSetup {;
      */
     @SubscribeEvent
     public static void registerScreen(RegisterMenuScreensEvent event) {
-        event.register(Registration.CRAFTING_CONTAINER.get(), CraftingBlockScreen::new);
+        event.register(WYRegistration.CRAFTING_CONTAINER.get(), CraftingBlockScreen::new);
     }
 
     /**
@@ -50,6 +50,6 @@ public enum ClientSetup {;
      */
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(Registration.COMMUNICATION_PARTICLES.get(), CommunicationParticle.Provider::new);
+        event.registerSpriteSet(WYRegistration.COMMUNICATION_PARTICLES.get(), CommunicationParticle.Provider::new);
     }
 }

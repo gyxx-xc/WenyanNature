@@ -4,7 +4,7 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
 import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.RunnerCodePacket;
 import indi.wenyan.setup.network.RunnerTitlePacket;
@@ -79,7 +79,7 @@ public class RunnerItem extends BlockItem {
     public InteractionResult useOn(UseOnContext context) {
         if (context.getPlayer() == null) return InteractionResult.FAIL;
         if (context.getPlayer().isShiftKeyDown()) {
-            context.getItemInHand().set(Registration.RUNNING_TIER_DATA.get(), runningLevel);
+            context.getItemInHand().set(WYRegistration.RUNNING_TIER_DATA.get(), runningLevel);
             return super.useOn(context);
         }
         return InteractionResult.PASS;
@@ -96,7 +96,7 @@ public class RunnerItem extends BlockItem {
 
             @Override
             public String getContent() {
-                return itemstack.getOrDefault(Registration.PROGRAM_CODE_DATA.get(), "");
+                return itemstack.getOrDefault(WYRegistration.PROGRAM_CODE_DATA.get(), "");
             }
 
             @Override

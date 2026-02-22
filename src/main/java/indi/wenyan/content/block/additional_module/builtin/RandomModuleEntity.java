@@ -31,7 +31,7 @@ public class RandomModuleEntity extends AbstractModuleEntity {
                             default -> throw new WenyanException(""); // TODO
                         };
                     })
-                    .doubleFunction(WenyanSymbol.var("RandomModule.nextDouble"), args -> {
+                    .doubleFunction(WenyanSymbol.var("RandomModule.nextDouble"), _ -> {
                         assert getLevel() != null;
                         return getLevel().getRandom().nextDouble();
                     })
@@ -39,7 +39,7 @@ public class RandomModuleEntity extends AbstractModuleEntity {
                         assert getLevel() != null;
                         return getLevel().getRandom().triangle(args.getFirst(), args.get(1));
                     })
-                    .function(WenyanSymbol.var("RandomModule.nextBoolean"), (IWenyanValue self, List<IWenyanValue> args) -> {
+                    .function(WenyanSymbol.var("RandomModule.nextBoolean"), (IWenyanValue _, List<IWenyanValue> _) -> {
                         assert getLevel() != null;
                         return WenyanValues.of(getLevel().getRandom().nextBoolean());
                     }))

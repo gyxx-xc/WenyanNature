@@ -89,7 +89,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                 BlockState state = level.getBlockState(pos);
                 return WenyanMinecraftValues.of(state);
             })
-            .handler(WenyanSymbol.var("BlockModule.attach"), request -> {
+            .handler(WenyanSymbol.var("BlockModule.attach"), _ -> {
                 Direction attachedDirection = AbstractFuluBlock
                         .getConnectedDirection(getBlockState()).getOpposite();
                 BlockPos pos = blockPos().relative(attachedDirection);

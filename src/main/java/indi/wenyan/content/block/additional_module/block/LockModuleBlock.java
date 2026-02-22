@@ -2,7 +2,7 @@ package indi.wenyan.content.block.additional_module.block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.IModuleBlock;
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -35,7 +35,7 @@ public class LockModuleBlock extends Block implements IModuleBlock {
 
     @Override
     public BlockEntityType<?> getType() {
-        return Registration.LOCK_MODULE_ENTITY.get();
+        return WenyanBlocks.LOCK_MODULE_ENTITY.get();
     }
 
     @Override

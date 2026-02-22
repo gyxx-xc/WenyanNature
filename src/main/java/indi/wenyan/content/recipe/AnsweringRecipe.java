@@ -4,7 +4,7 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WYRegistration;
 import lombok.AccessLevel;
 import lombok.Value;
 import lombok.With;
@@ -82,7 +82,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
 
     @Override
     public RecipeBookCategory recipeBookCategory() {
-        return Registration.CALCULATION_BLOCK_CATEGORY.get();
+        return WYRegistration.CALCULATION_BLOCK_CATEGORY.get();
     }
 
     @Override
@@ -96,12 +96,12 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
 
     @Override
     public RecipeSerializer<? extends Recipe<AnsweringRecipeInput>> getSerializer() {
-        return Registration.ANSWERING_RECIPE_SERIALIZER.get();
+        return WYRegistration.ANSWERING_RECIPE_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<? extends Recipe<AnsweringRecipeInput>> getType() {
-        return Registration.ANSWERING_RECIPE_TYPE.get();
+        return WYRegistration.ANSWERING_RECIPE_TYPE.get();
     }
 
     public static class SerializerProvider {

@@ -27,33 +27,33 @@ public class CollectionModuleEntity extends AbstractModuleEntity {
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .function(WenyanSymbol.var("CollectionModule.disjoint"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array1 = args.get(0).as(WenyanList.TYPE).value();
                                 var array2 = args.get(1).as(WenyanList.TYPE).value();
                                 return WenyanValues.of(Collections.disjoint(array1, array2));
                             })
                     .function(WenyanSymbol.var("CollectionModule.intersection"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array1 = args.get(0).as(WenyanList.TYPE).value();
                                 var array2 = args.get(1).as(WenyanList.TYPE).value();
                                 var intersection = array1.stream().filter(array2::contains).toList();
                                 return WenyanValues.of(intersection);
                             })
                     .function(WenyanSymbol.var("CollectionModule.difference"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array1 = args.get(0).as(WenyanList.TYPE).value();
                                 var array2 = args.get(1).as(WenyanList.TYPE).value();
                                 var difference = array1.stream().filter(e -> !array2.contains(e)).toList();
                                 return WenyanValues.of(difference);
                             })
                     .function(WenyanSymbol.var("CollectionModule.reverse"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array = args.getFirst().as(WenyanList.TYPE).value();
                                 Collections.reverse(array);
                                 return WenyanValues.of(array);
                             })
                     .function(WenyanSymbol.var("CollectionModule.sort"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array = args.getFirst().as(WenyanList.TYPE).value();
                                 // converting to IWenyanComparable
                                 List<IWenyanComparable> sorted = new ArrayList<>();
@@ -74,13 +74,13 @@ public class CollectionModuleEntity extends AbstractModuleEntity {
                                 return WenyanValues.of(new ArrayList<>(sorted));
                             })
                     .function(WenyanSymbol.var("CollectionModule.contains"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array = args.get(0).as(WenyanList.TYPE).value();
                                 var element = args.get(1);
                                 return WenyanValues.of(array.contains(element));
                             })
                     .function(WenyanSymbol.var("CollectionModule.max"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array = args.getFirst().as(WenyanList.TYPE).value();
                                 if (array.isEmpty()) {
                                     return WenyanValues.of(0);
@@ -95,7 +95,7 @@ public class CollectionModuleEntity extends AbstractModuleEntity {
                                 return max;
                             })
                     .function(WenyanSymbol.var("CollectionModule.min"),
-                            (IWenyanValue self, List<IWenyanValue> args) -> {
+                            (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var array = args.getFirst().as(WenyanList.TYPE).value();
                                 if (array.isEmpty()) {
                                     return WenyanValues.of(0);

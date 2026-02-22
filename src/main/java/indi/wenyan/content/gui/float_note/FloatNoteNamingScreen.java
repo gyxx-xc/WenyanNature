@@ -1,6 +1,6 @@
 package indi.wenyan.content.gui.float_note;
 
-import indi.wenyan.setup.definitions.Registration;
+import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.network.FloatNotePacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -52,10 +52,10 @@ public class FloatNoteNamingScreen extends Screen {
         LockIconButton lockButton = new LockIconButton(this.width / 2 - 54, 52, button -> {
             button.setLocked(!button.isLocked());
             name.setEditable(!button.isLocked());
-            item.set(Registration.NOTE_LOCK_DATA.get(), button.isLocked());
+            item.set(WYRegistration.NOTE_LOCK_DATA.get(), button.isLocked());
             PacketDistributor.sendToServer(new FloatNotePacket(name.getValue(), button.isLocked()));
         });
-        lockButton.setLocked(item.getOrDefault(Registration.NOTE_LOCK_DATA.get(), false));
+        lockButton.setLocked(item.getOrDefault(WYRegistration.NOTE_LOCK_DATA.get(), false));
         addRenderableWidget(lockButton);
 
         name.setResponder(text -> {
