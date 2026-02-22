@@ -9,12 +9,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStackResourceHandler;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PedestalBlockEntity extends BlockEntity implements Container {
+public class PedestalBlockEntity extends BlockEntity {
     @Getter
     private final ResourceHandler<ItemResource> itemHandler = createItemHandler();
 
@@ -33,30 +33,23 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
 
     private ResourceHandler<ItemResource> createItemHandler() {
         return new ItemStackResourceHandler() {
+            private ItemStack itemStack = ItemStack.EMPTY;
+
             @Override
             protected ItemStack getStack() {
-                return null;
+                return itemStack;
             }
 
             @Override
             protected void setStack(ItemStack stack) {
+                itemStack = stack;
+            }
 
+            @Override
+            protected int getCapacity(ItemResource resource) {
+                return 1;
             }
         };
-//                new ItemStackHandler(1) {
-//            @Override
-//            protected void onContentsChanged(int slot) {
-//                setChanged();
-//                assert level != null;
-//                if (!level.isClientSide)
-//                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-//            }
-//
-//            @Override
-//            protected int getStackLimit(int slot, ItemStack stack) {
-//                return 1;
-//            }
-//        };
     }
 
     // from com.hollingsworth.arsnouveau.common.block.tile.SingleItemTile
@@ -67,18 +60,19 @@ public class PedestalBlockEntity extends BlockEntity implements Container {
 
     @Override
     public boolean isEmpty() {
-        return itemHandler.getStackInSlot(0).isEmpty();
+        return itemHandler.getResource(0).isEmpty();
     }
 
     @Override
     public ItemStack getItem(int pSlot) {
-        return itemHandler.getStackInSlot(pSlot);
+        return itemHandler.getResource(pSlot).toStack();
     }
 
     @Override
     public ItemStack removeItem(int pSlot, int pAmount) {
         updateBlock();
-        return itemHandler.extractItem(pSlot, pAmount, false);
+        ResourceHandlerUtil.extractFirst(itemHandler, _ -> true, pAmount, null);
+        return itemHandler.extract(pSlot, , pAmount, null);
     }
 
     @Override
