@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "wenyan_programming:block/lock_module_block"
+    "model": "wenyan_programming:item/lock_module_block"
   }
 }
