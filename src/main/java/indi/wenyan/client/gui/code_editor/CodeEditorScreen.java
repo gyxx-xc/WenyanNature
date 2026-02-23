@@ -36,6 +36,7 @@ public class CodeEditorScreen extends Screen {
     private PackageSnippetWidget packageWidget;
     @SuppressWarnings("FieldCanBeLocal")
     private EditBox titleBar;
+    @SuppressWarnings("FieldCanBeLocal")
     private CodeOutputWidget outputWindow;
 
     public CodeEditorScreen(CodeEditorBackend backend) {
@@ -57,12 +58,14 @@ public class CodeEditorScreen extends Screen {
         snippetWidget = new SnippetWidget(font, backend,
                 0, 15,
                 snippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+        snippetWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(snippetWidget);
 
         int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 280);
         packageWidget = new PackageSnippetWidget(font, backend,
                 width - packageSnippetWidth, 15,
                 packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+        packageWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(packageWidget);
 
         int titleBarHeight = 15;

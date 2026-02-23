@@ -38,7 +38,7 @@ public class FuzhouNameWidget extends EditBox {
 
         // Render prefix "書「"
         guiGraphics.drawString(font, PREFIX, this.getX() - font.width(PREFIX), this.fullY + (this.height - 8) / 2 + 2,
-                0xFFFFFF, false);
+                0xFFFFFFFF, false);
 
         // Render the EditBox content
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
@@ -46,6 +46,6 @@ public class FuzhouNameWidget extends EditBox {
         // Render suffix "」" manually to ensure cursor is before it
         guiGraphics.drawString(font, SUFFIX, this.getX() + font.width(this.getValue()),
                 this.fullY + (this.height - 8) / 2 + 2,
-                0xFFFFFF, false);
+                0xFFFFFFFF, false);
     }
 }

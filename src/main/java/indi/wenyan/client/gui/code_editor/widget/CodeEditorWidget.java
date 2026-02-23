@@ -15,6 +15,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
@@ -193,16 +194,14 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         double mouseX = event.x();
         double mouseY = event.y();
         int button = event.button();
-        if (super.mouseDragged(event, dragX, dragY)) {
-            return true;
-        } else if (isMouseOver(mouseX, mouseY) && button == 0) {
+        boolean result = false;
+        if (isMouseOver(mouseX, mouseY) && button == 0) {
             textField.setSelecting(true);
             textField.seekCursorToPoint(mouseX - getX() - innerPadding() - lineNoWidth(),
                     mouseY - getY() - innerPadding() + scrollAmount());
-            return true;
-        } else {
-            return false;
+            result = true;
         }
+        return super.mouseDragged(event, dragX, dragY) || result;
     }
 
     @Override
@@ -285,7 +284,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                 if (isCurLine) {
                     int cursorX = getX() + innerPadding() + lineNoWidth() +
                             font.width(backend.getContent().substring(stringView.beginIndex(), cursorIndex)) - 1;
-                    boolean isCursorRender = !isFocused() ||
+                    boolean isCursorRender = isFocused() &&
                             (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
                     renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
                     cursorPosition = new CursorPosition(cursorX, currentY);
@@ -440,7 +439,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
     @Override
     protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
-        guiGraphics.blit(
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                 BACKGROUND,
                 getX() - outerPadding.left(), getY() - outerPadding.top(),
                 0, (int) scrollAmount(),

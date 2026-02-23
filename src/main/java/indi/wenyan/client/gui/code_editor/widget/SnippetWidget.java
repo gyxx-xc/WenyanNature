@@ -5,6 +5,7 @@ import indi.wenyan.client.gui.Utils;
 import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
 import indi.wenyan.client.gui.code_editor.backend.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
+import lombok.Setter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
@@ -45,6 +46,9 @@ public class SnippetWidget extends AbstractTextAreaWidget {
             new Utils.BoxInformation(3, 3 + 9, 3, 3);
     public static final int ENTRY_HEIGHT = 9 + buttonPadding.vertical();
     public static final int DIR_HEIGHT = 9 + buttonPadding.vertical();
+
+    @Setter
+    private Runnable resetFocus;
 
     @Nullable
     private SnippetSet.Snippet renderingSnippetTooltip = null;
@@ -107,7 +111,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
                             width - totalInnerPadding() - entryPadding.horizontal()));
             guiGraphics.drawString(font, text,
                     getX() + innerPadding() + entryPadding.left(), currentY + entryPadding.top(),
-                    0xFFFFFF, false);
+                    0xFFFFFFFF, false);
 
             if (buttonHovered) {
                 renderingSnippetTooltip = tooltip;
@@ -132,7 +136,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
                             width - totalInnerPadding() - buttonPadding.horizontal()));
             guiGraphics.drawString(font, text,
                     getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
-                    0xFFFFFF, false);
+                    0xFFFFFFFF, false);
         }
     }
 
@@ -209,6 +213,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
             if (i != lines.size() - 1) sb.append('\n');
         }
         backend.insertText(sb.toString());
+        if (resetFocus != null) resetFocus.run();
         if (!addedPlaceholders.isEmpty()) {
             backend.getPlaceholders().addAll(addedPlaceholders);
             backend.getPlaceholders().sort(Comparator.comparing(CodeField.Placeholder::index));

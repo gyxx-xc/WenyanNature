@@ -6,6 +6,7 @@ import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
 import indi.wenyan.client.gui.code_editor.backend.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
 import lombok.Data;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -63,6 +64,9 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
     public static final int DIR_HEIGHT = 16 + buttonPadding.vertical();
     public static final int ICON_WIDTH = 16;
 
+    @Setter
+    private Runnable resetFocus = null;
+
     public Optional<SnippetSet.Snippet> getRenderingSnippetTooltip() {
         return Optional.empty();
     }
@@ -74,7 +78,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
                 ENTRY_SPRITES.get(false, false),
                 null,
                 Identifier.withDefaultNamespace("widget/scroller_background"),
-        scrollbarWidth, 32, ENTRY_HEIGHT, true));
+                scrollbarWidth, 32, ENTRY_HEIGHT, true));
         this.font = font;
         this.backend = backend;
     }
@@ -117,7 +121,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
                             width - totalInnerPadding() - entryPadding.horizontal()));
             guiGraphics.drawString(font, text,
                     getX() + innerPadding() + entryPadding.left(), currentY + entryPadding.top(),
-                    0xFFFFFF, false);
+                    0xFFFFFFFF, false);
         }
     }
 
@@ -149,7 +153,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
                     font.ellipsize(FormattedText.of(pack.name()),
                             width - totalInnerPadding() - buttonPadding.horizontal()));
             guiGraphics.drawString(font, text, x + ICON_WIDTH + buttonPadding.horizontal() + buttonPadding.right(), y,
-                    0xFFFFFF, false);
+                    0xFFFFFFFF, false);
         }
     }
 
@@ -207,6 +211,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
     }
 
     private void insertId(String id) {
+        if (resetFocus != null) resetFocus.run();
         backend.insertText(id);
         CodeField.Placeholder next = backend.getPlaceholders().stream()
                 .filter(p -> p.index() > backend.getCursor())
