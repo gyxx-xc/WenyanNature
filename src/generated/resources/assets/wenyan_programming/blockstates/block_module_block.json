@@ -1,56 +1,18 @@
 {
   "variants": {
-    "face=ceiling,facing=east": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 180,
-      "y": 270
-    },
-    "face=ceiling,facing=north": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 180,
-      "y": 180
-    },
-    "face=ceiling,facing=south": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 180
-    },
-    "face=ceiling,facing=west": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 180,
-      "y": 90
-    },
-    "face=floor,facing=east": {
+    "facing=east": {
       "model": "wenyan_programming:block/block_module_block",
       "y": 90
     },
-    "face=floor,facing=north": {
+    "facing=north": {
       "model": "wenyan_programming:block/block_module_block"
     },
-    "face=floor,facing=south": {
+    "facing=south": {
       "model": "wenyan_programming:block/block_module_block",
       "y": 180
     },
-    "face=floor,facing=west": {
+    "facing=west": {
       "model": "wenyan_programming:block/block_module_block",
-      "y": 270
-    },
-    "face=wall,facing=east": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 90,
-      "y": 90
-    },
-    "face=wall,facing=north": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 90
-    },
-    "face=wall,facing=south": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 90,
-      "y": 180
-    },
-    "face=wall,facing=west": {
-      "model": "wenyan_programming:block/block_module_block",
-      "x": 90,
       "y": 270
     }
   }

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "wenyan_programming:block/formation_core_module_block"
+    }
+  }
+}

@@ -11,20 +11,21 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class SubedModelProvider extends ModelProvider {
-    private final ModelSubProviderSupplier supplier;
+    private final ModelSubProviderSupplier[] supplier;
 
-    public SubedModelProvider(PackOutput output, ModelSubProviderSupplier supplier) {
+    public SubedModelProvider(PackOutput output, ModelSubProviderSupplier[] supplier) {
         super(output, WenyanProgramming.MODID);
         this.supplier = supplier;
     }
 
-    public static DataProvider.Factory of(ModelSubProviderSupplier supplier) {
+    public static DataProvider.Factory of(ModelSubProviderSupplier... supplier) {
         return output -> new SubedModelProvider(output, supplier);
     }
 
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        supplier.create(blockModels, itemModels).registerModels();
+        for (ModelSubProviderSupplier s : supplier)
+            s.create(blockModels, itemModels).registerModels();
     }
 
     @FunctionalInterface

@@ -1,12 +1,17 @@
 package indi.wenyan.setup.datagen.model;
 
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
@@ -15,7 +20,7 @@ import java.util.function.BiConsumer;
  */
 public class ModBlockStateProvider extends ModelSubProvider {
 
-    protected ModBlockStateProvider(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+    public ModBlockStateProvider(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         super(blockModels, itemModels);
     }
 
@@ -27,22 +32,15 @@ public class ModBlockStateProvider extends ModelSubProvider {
         modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.CRAFTING_BLOCK);
         modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.PEDESTAL_BLOCK);
         modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.POWER_BLOCK);
-//        modeledBlock(this::simpleBlock, Registration.LOCK_MODULE_BLOCK);
 
-//        getVariantBuilder(WenyanBlocks.LOCK_MODULE_BLOCK.get()).forAllStates(state -> {
-//            boolean locked = state.getValue(LockModuleBlock.LOCK_STATE);
-//
-//            return ConfiguredModel.builder()
-//                    .modelFile(locked ? new ModelFile.UncheckedModelFile(
-//                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-//                                    "block/" + WenyanBlocks.LOCK_MODULE_BLOCK.getKey().location().getPath())
-//                    ) : new ModelFile.UncheckedModelFile(
-//                            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-//                                    "block/" + WenyanBlocks.LOCK_MODULE_BLOCK.getKey().location().getPath() + "_1")
-//                    ))
-//                    .build();
-//        });
+        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.LOCK_MODULE_BLOCK);
+        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
 
+//        blockModels.blockStateOutput.accept(
+//                MultiVariantGenerator.dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get(),
+//                        plainVariant()
+//                        )
+//        );
         registerModuleBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK);
         registerModuleBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK);
         registerModuleBlock(WenyanBlocks.MATH_MODULE_BLOCK);
@@ -58,11 +56,13 @@ public class ModBlockStateProvider extends ModelSubProvider {
     }
 
     private void modeledBlock(BiConsumer<Block, TexturedModel.Provider> blockstateMethod, DeferredBlock<?> deferredBlock) {
-//        blockstateMethod.accept(deferredBlock.get(),
-//                new ModelFile.UncheckedModelFile(
-//                        Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-//                                "block/" + deferredBlock.getKey().location().getPath())
-//                ));
+        var templete = new ModelTemplate(Optional.of(
+                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+                        "block/" + deferredBlock.getKey().identifier().getPath())),
+                Optional.empty());
+        blockstateMethod.accept(deferredBlock.get(),
+                block -> new TexturedModel(TextureMapping.defaultTexture(block), templete)
+        );
     }
 
     /**
@@ -71,10 +71,11 @@ public class ModBlockStateProvider extends ModelSubProvider {
      * @param deferredBlock The module block to register
      */
     private void registerModuleBlock(DeferredBlock<?> deferredBlock) {
-//        modeledBlock(this::horizontalFaceBlock, deferredBlock);
-//        String id = deferredBlock.getKey().location().getPath();
-//        models().singleTexture(id,
-//                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block"),
-//                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/" + id));
+        var templete = new ModelTemplate(Optional.of(
+                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block")),
+                Optional.empty());
+        blockModels.createHorizontallyRotatedBlock(deferredBlock.get(),
+                block -> new TexturedModel(TextureMapping.defaultTexture(block), templete)
+                );
     }
 }

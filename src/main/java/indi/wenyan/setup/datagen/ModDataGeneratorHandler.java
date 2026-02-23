@@ -2,6 +2,7 @@ package indi.wenyan.setup.datagen;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.setup.datagen.Language.WenyanLanguageProviderFactory;
+import indi.wenyan.setup.datagen.model.ModBlockStateProvider;
 import indi.wenyan.setup.datagen.model.ModItemModelProvider;
 import indi.wenyan.setup.datagen.model.SubedModelProvider;
 import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
@@ -30,10 +31,9 @@ enum ModDataGeneratorHandler {
         var generator = event.getGenerator().getVanillaPack(true);
         generator.addProvider(WenyanLanguageProviderFactory.create("zh_cn"));
         generator.addProvider(WenyanLanguageProviderFactory.create("en_us"));
-//        generator.addProvider(
-//                (DataProvider.Factory<ModBlockStateProvider>) pOutput ->
-//                        new ModBlockStateProvider(pOutput, WenyanProgramming.MODID));
-        generator.addProvider(SubedModelProvider.of(ModItemModelProvider::new));
+        generator.addProvider(SubedModelProvider.of(
+                ModBlockStateProvider::new,
+                ModItemModelProvider::new));
         generator.addProvider(ModParticleDescriptionProvider::new);
     }
 
