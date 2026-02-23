@@ -9,11 +9,9 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
 /**
  * Provider for generating block states and models during data generation.
@@ -29,19 +27,20 @@ public class ModBlockStateProvider extends ModelSubProvider {
     protected void registerModels() {
         blockModels.createTrivialCube(WenyanBlocks.SCREEN_MODULE_BLOCK.get());
 
-        modeledBlock(blockModels::createHorizontallyRotatedBlock, WenyanBlocks.RUNNER_BLOCK);
-        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.CRAFTING_BLOCK);
-        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.PEDESTAL_BLOCK);
-        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.POWER_BLOCK);
+        modeledBlock(WenyanBlocks.CRAFTING_BLOCK);
+        modeledBlock(WenyanBlocks.PEDESTAL_BLOCK);
+        modeledBlock(WenyanBlocks.POWER_BLOCK);
+        modeledBlock(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
 
-        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.LOCK_MODULE_BLOCK);
-        modeledBlock(blockModels::createTrivialBlock, WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
+        modeledBlock(WenyanBlocks.LOCK_MODULE_BLOCK);
 
 //        blockModels.blockStateOutput.accept(
 //                MultiVariantGenerator.dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get(),
 //                        plainVariant()
 //                        )
 //        );
+        registerModuleBlock(WenyanBlocks.RUNNER_BLOCK);
+
         registerModuleBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK);
         registerModuleBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK);
         registerModuleBlock(WenyanBlocks.MATH_MODULE_BLOCK);
@@ -56,7 +55,7 @@ public class ModBlockStateProvider extends ModelSubProvider {
         registerModuleBlock(WenyanBlocks.STRING_MODULE_BLOCK);
     }
 
-    private void modeledBlock(BiConsumer<Block, TexturedModel.Provider> blockstateMethod, DeferredBlock<?> deferredBlock) {
+    private void modeledBlock(DeferredBlock<?> deferredBlock) {
 //        var templete = new ModelTemplate(Optional.of(
 //                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
 //                        "block/" + deferredBlock.getKey().identifier().getPath())),
