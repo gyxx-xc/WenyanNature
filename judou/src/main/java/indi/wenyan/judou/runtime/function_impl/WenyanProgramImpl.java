@@ -96,8 +96,8 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         var thread = runner.getThread();
         if (thread.getState() == State.READY && allThreads.contains(thread)) {
             thread.setState(State.BLOCKED);
-            runner.pause();
             updateIdle();
+            runner.pause();
         } else {
             throw new WenyanException.WenyanUnreachedException();
         }
@@ -118,8 +118,8 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     public void yield(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
         var thread = runner.getThread();
         if (thread.getState() == State.READY && allThreads.contains(thread)) {
-            runner.pause();
             submitThread(runner);
+            runner.pause();
         } else {
             throw new WenyanException.WenyanUnreachedException();
         }
@@ -127,12 +127,12 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Override
     public void die(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
-        runner.pause();
         var thread = runner.getThread();
         if (thread.getState() == State.DYING || !allThreads.contains(thread))
             throw new WenyanException.WenyanUnreachedException();
         allThreads.remove(thread);
         thread.setState(State.DYING);
+        runner.pause();
         updateIdle();
     }
 

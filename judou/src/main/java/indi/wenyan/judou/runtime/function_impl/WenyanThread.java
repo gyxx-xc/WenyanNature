@@ -43,6 +43,8 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
     @Getter
     private WenyanRuntime mainRuntime;
 
+    private boolean willPause = false;
+
     private WenyanThread(String code) {
         this.code = code;
     }
@@ -74,6 +76,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     @Override
     public void run(int step) {
+        willPause = false;
         for (int i = 0; i < step; i++) {
             try {
                 if (getMainRuntime().finishFlag) {
@@ -101,6 +104,8 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
                 if (!runtime.PCFlag)
                     runtime.programCounter++;
                 runtime.PCFlag = false;
+
+                if (willPause) return;
             } catch (Exception e) {
                 dieWithException(e);
                 // rethrow interrupt
@@ -119,6 +124,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     @Override
     public void pause() {
+        willPause = true;
     }
 
     public void dieWithException(Exception e) {
