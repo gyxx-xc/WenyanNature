@@ -2,7 +2,7 @@ package indi.wenyan.test.content.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.setup.definitions.WYRegistration;
+import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.test.utils.RunnerTestHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -17,8 +17,8 @@ public class LockModuleBlockTest {
     @TestHolder(description = "Tests that the lock module works correctly.")
     public static void lockModuleTest(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 2, 1)
-                .set(0, 0, 0, WYRegistration.LOCK_MODULE_BLOCK.get().defaultBlockState())
-                .set(0, 1, 0, WYRegistration.RUNNER_BLOCK.get().defaultBlockState())
+                .set(0, 0, 0, WyRegistration.LOCK_MODULE_BLOCK.get().defaultBlockState())
+                .set(0, 1, 0, WyRegistration.RUNNER_BLOCK.get().defaultBlockState())
         );
 
         test.onGameTest(RunnerTestHelper.class, helper -> {

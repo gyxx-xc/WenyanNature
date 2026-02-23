@@ -29,8 +29,8 @@ import static indi.wenyan.WenyanProgramming.MODID;
 /**
  * Central registration class for all mod content
  */
-public final class WYRegistration {
-    private WYRegistration() {}
+public final class WyRegistration {
+    private WyRegistration() {}
 
     /**
      * Registers all content with the mod event bus

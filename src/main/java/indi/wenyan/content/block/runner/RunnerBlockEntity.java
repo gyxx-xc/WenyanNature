@@ -20,8 +20,8 @@ import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
-import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
 import lombok.Getter;
@@ -223,7 +223,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
-        code = components.getOrDefault(WYRegistration.PROGRAM_CODE_DATA.get(), "");
+        code = components.getOrDefault(WyRegistration.PROGRAM_CODE_DATA.get(), "");
         platformName = components.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
     }
 

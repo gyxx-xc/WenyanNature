@@ -2,8 +2,8 @@ package indi.wenyan.setup.event;
 
 import indi.wenyan.client.block.renderer.*;
 import indi.wenyan.client.gui.CraftingBlockScreen;
-import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.definitions.WyRegistration;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -37,7 +37,7 @@ public enum ClientSetup {;
      */
     @SubscribeEvent
     public static void registerScreen(RegisterMenuScreensEvent event) {
-        event.register(WYRegistration.CRAFTING_CONTAINER.get(), CraftingBlockScreen::new);
+        event.register(WyRegistration.CRAFTING_CONTAINER.get(), CraftingBlockScreen::new);
     }
 
     /**

@@ -1,8 +1,8 @@
 package indi.wenyan.content.gui_api;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +27,7 @@ public class CraftingBlockContainer extends AbstractContainerMenu {
     }
 
     public CraftingBlockContainer(int windowId, BlockEntity blockEntity, ContainerData data) {
-        super(WYRegistration.CRAFTING_CONTAINER.get(), windowId);
+        super(WyRegistration.CRAFTING_CONTAINER.get(), windowId);
         this.blockEntity = blockEntity;
         this.data = data;
         addDataSlots(data);

@@ -38,7 +38,6 @@ public class ModBlockStateProvider extends ModelSubProvider {
 //        modeledBlock(WenyanBlocks.LOCK_MODULE_BLOCK);
         MultiVariant off = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get()));
         MultiVariant on = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get(), "_1"));
-        blockModels.registerSimpleFlatItemModel(WenyanBlocks.LOCK_MODULE_BLOCK.get());
         blockModels.blockStateOutput.accept(MultiVariantGenerator
                         .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
                         .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));

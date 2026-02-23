@@ -43,12 +43,5 @@ enum ModDataGeneratorHandler {
                 .thenApply(RegistrySetBuilder.PatchedRegistries::full);
         var generator = event.getGenerator().getVanillaPack(true);
         generator.addProvider(output -> new CheckerRecipeProvider.Runner(output, registries));
-//        generator.addProvider(
-//                (DataProvider.Factory<AdvancementProvider>) pOutput ->
-//                        new AdvancementProvider(pOutput, event.getLookupProvider(), efh,
-//                                List.of((registries, saver, existingFileHelper) -> {
-//                                    var provider = new indi.wenyan.setup.datagen.AdvancementProvider();
-//                                    provider.generate(registries, saver, existingFileHelper);
-//                                })));
     }
 }

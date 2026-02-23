@@ -14,8 +14,8 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.CraftClearParticlePacket;
 import indi.wenyan.setup.network.CraftingParticlePacket;
 import lombok.Data;
@@ -173,7 +173,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             throw new WenyanException.WenyanUnreachedException();
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         forNearbyPedestal(sl, blockPos(), pedestal -> pedestalItems.add(ItemUtil.getStack(pedestal.getItemHandler(), 0)));
-        var optionalRecipeHolder = sl.recipeAccess().getRecipeFor(WYRegistration.ANSWERING_RECIPE_TYPE.get(),
+        var optionalRecipeHolder = sl.recipeAccess().getRecipeFor(WyRegistration.ANSWERING_RECIPE_TYPE.get(),
                 new AnsweringRecipeInput(pedestalItems), sl, this.recipeHolder); // set last recipe as hint
         if (optionalRecipeHolder.isEmpty()) {
             resetCrafting();

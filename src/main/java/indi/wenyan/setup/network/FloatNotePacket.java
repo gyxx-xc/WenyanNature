@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.setup.definitions.WYRegistration;
+import indi.wenyan.setup.definitions.WyRegistration;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public record FloatNotePacket(String name, boolean locked) implements CustomPack
         if (context.flow().isServerbound()) {
             ItemStack stack = context.player().getItemInHand(InteractionHand.MAIN_HAND);
             stack.set(DataComponents.CUSTOM_NAME, Component.literal(packet.name()));
-            stack.set(WYRegistration.NOTE_LOCK_DATA.get(), packet.locked());
+            stack.set(WyRegistration.NOTE_LOCK_DATA.get(), packet.locked());
         }
     };
 

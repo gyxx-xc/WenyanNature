@@ -11,9 +11,9 @@ import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
-import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
 import lombok.Getter;
@@ -117,7 +117,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         var blockState = super.getStateForPlacement(context);
         if (blockState == null) return null;
         blockState.setValue(RUNNING_STATE, RunningState.NOT_RUNNING);
-        int speedTier = context.getItemInHand().getOrDefault(WYRegistration.RUNNING_TIER_DATA.get(), 0);
+        int speedTier = context.getItemInHand().getOrDefault(WyRegistration.RUNNING_TIER_DATA.get(), 0);
         blockState.setValue(RUNNING_TIER, speedTier);
         return blockState;
     }

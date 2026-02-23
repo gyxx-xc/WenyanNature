@@ -4,7 +4,7 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.client.gui.float_note.FloatNoteNamingScreen;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.setup.definitions.WYRegistration;
+import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.DeviceRenamePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
 import net.minecraft.client.Minecraft;
@@ -130,7 +130,7 @@ public class FloatNoteItem extends Item {
     }
 
     private void setName(Level level, Consumer<Component> setNameFunc, ItemStack stack, @Nullable Player player, InteractionHand hand) {
-        if (stack.getOrDefault(WYRegistration.NOTE_LOCK_DATA.get(), false)) {
+        if (stack.getOrDefault(WyRegistration.NOTE_LOCK_DATA.get(), false)) {
             setNameFunc.accept(Component.translatable("code.wenyan_programming.bracket", stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty())));
         } else {
             if (level.isClientSide())
