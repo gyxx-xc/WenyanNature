@@ -24,7 +24,7 @@ public enum ModSetup {;
         event.registerBlockEntity(
                 Capabilities.Item.BLOCK,
                 WenyanBlocks.PEDESTAL_ENTITY.get(),
-                (be, side) -> be.getItemHandler());
+                (be, _) -> be.getItemHandler());
     }
 
     /**
@@ -50,6 +50,9 @@ public enum ModSetup {;
         registrar.playToServer(PlatformRenamePacket.TYPE,
                 PlatformRenamePacket.STREAM_CODEC,
                 PlatformRenamePacket.HANDLER);
+        registrar.playToServer(DeviceRenamePacket.TYPE,
+                DeviceRenamePacket.STREAM_CODEC,
+                DeviceRenamePacket.HANDLER);
         registrar.commonToClient(BlockOutputPacket.TYPE,
                 BlockOutputPacket.STREAM_CODEC,
                 BlockOutputPacket.HANDLER);

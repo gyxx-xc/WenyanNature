@@ -68,12 +68,13 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
     }
 
     public PackageSnippetWidget(Font font, CodeEditorBackend backend, int x, int y, int width, int height) {
-        super(x, y, width, height, Component.empty(), new ScrollbarSettings(
+        int scrollbarWidth = 4;
+        super(x, y, width - scrollbarWidth, height, Component.empty(), new ScrollbarSettings(
                 // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...
                 ENTRY_SPRITES.get(false, false),
                 null,
-                ENTRY_SPRITES.get(false, false),
-                4, 32, ENTRY_HEIGHT, true));
+                Identifier.withDefaultNamespace("widget/scroller_background"),
+        scrollbarWidth, 32, ENTRY_HEIGHT, true));
         this.font = font;
         this.backend = backend;
     }
@@ -162,7 +163,11 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
     }
 
     private boolean clickEntry(double mouseX, double mouseY, int button) {
-        if (isMouseOver(mouseX, mouseY) && button == 0) {
+        if (button == 0 && isMouseOver(mouseX, mouseY)) {
+            boolean buttonHoveredX = mouseX >= getX() + innerPadding() &&
+                    mouseX < getX() + getWidth() - innerPadding();
+            if (!buttonHoveredX)
+                return false;
             double y = mouseY - getY() - innerPadding() + scrollAmount();
             double currentY = 0;
             for (var pack : backend.getPackages()) {

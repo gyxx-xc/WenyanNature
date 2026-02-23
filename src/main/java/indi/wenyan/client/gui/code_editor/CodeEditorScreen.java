@@ -7,7 +7,6 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -20,7 +19,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,13 +149,13 @@ public class CodeEditorScreen extends Screen {
         renderTransparentBackground(guiGraphics);
     }
 
-    @Override
-    public void setFocused(@Nullable GuiEventListener listener) {
-        if (listener == snippetWidget || listener == packageWidget || listener == outputWindow)
-            super.setFocused(textFieldWidget);
-        else
-            super.setFocused(listener);
-    }
+//    @Override
+//    public void setFocused(@Nullable GuiEventListener listener) {
+//        if (listener == snippetWidget || listener == packageWidget || listener == outputWindow)
+//            super.setFocused(textFieldWidget);
+//        else
+//            super.setFocused(listener);
+//    }
 
     @Override
     public void tick() {

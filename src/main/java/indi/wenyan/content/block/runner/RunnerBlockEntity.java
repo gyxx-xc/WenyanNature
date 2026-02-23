@@ -72,7 +72,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Getter
     @Setter
-    private String code;
+    private String code = "";
     @Getter
     private final Deque<Component> outputQueue = new ArrayDeque<>();
     private boolean outputChanged = false;
