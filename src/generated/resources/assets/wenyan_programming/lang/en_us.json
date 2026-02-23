@@ -59,6 +59,7 @@
   "error.wenyan_programming.variable_not_found_": "謬：未尋之變數",
   "error.wenyan_programming.variables_not_match": "謬：參數非同於冊",
   "gui.wenyan.hold_shift": "(Hold Shift to display details)",
+  "gui.wenyan.lock": "锁定",
   "item.wenyan_programming.arcane_ink": "玄武墨 (Lv.6)",
   "item.wenyan_programming.bamboo_ink": "松清墨 (Lv.1)",
   "item.wenyan_programming.bamboo_paper": "松竹纸 (Lv.1)",
