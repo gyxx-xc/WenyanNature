@@ -1,0 +1,12 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "wenyan_programming:bamboo_ink",
+    "wenyan_programming:bamboo_paper"
+  ],
+  "output": {
+    "id": "wenyan_programming:hand_runner_1"
+  },
+  "question": "plus",
+  "round": 1
+}

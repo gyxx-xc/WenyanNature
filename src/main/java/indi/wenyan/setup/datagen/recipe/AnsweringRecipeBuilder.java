@@ -2,12 +2,13 @@ package indi.wenyan.setup.datagen.recipe;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.recipe.AnsweringRecipe;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class AnsweringRecipeBuilder {
     private final List<Ingredient> input = new ArrayList<>();
-    private final ItemStack output;
+    private final ItemStackTemplate output;
     private String question;
     private int round = 1;
 
@@ -29,8 +30,12 @@ public final class AnsweringRecipeBuilder {
      *
      * @param output The output ItemStack produced by the recipe
      */
-    private AnsweringRecipeBuilder(ItemStack output) {
+    private AnsweringRecipeBuilder(ItemStackTemplate output) {
         this.output = output;
+    }
+
+    public static AnsweringRecipeBuilder create(Holder<Item> output) {
+        return new AnsweringRecipeBuilder(new ItemStackTemplate(output));
     }
 
     /**
@@ -40,17 +45,7 @@ public final class AnsweringRecipeBuilder {
      * @return A new builder instance
      */
     public static AnsweringRecipeBuilder create(Item item) {
-        return new AnsweringRecipeBuilder(item.getDefaultInstance());
-    }
-
-    /**
-     * Creates a new builder for a recipe with the specified itemstack as output.
-     *
-     * @param output The output itemstack
-     * @return A new builder instance
-     */
-    public static AnsweringRecipeBuilder create(ItemStack output) {
-        return new AnsweringRecipeBuilder(output);
+        return new AnsweringRecipeBuilder(new ItemStackTemplate(item));
     }
 
     /**

@@ -1,0 +1,12 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:paper",
+    "minecraft:bamboo"
+  ],
+  "output": {
+    "id": "wenyan_programming:bamboo_paper"
+  },
+  "question": "plus",
+  "round": 1
+}

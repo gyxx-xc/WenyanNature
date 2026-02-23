@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:potion",
+    "minecraft:black_dye",
+    "minecraft:redstone"
+  ],
+  "output": {
+    "id": "wenyan_programming:cinnabar_ink"
+  },
+  "question": "plus",
+  "round": 1
+}

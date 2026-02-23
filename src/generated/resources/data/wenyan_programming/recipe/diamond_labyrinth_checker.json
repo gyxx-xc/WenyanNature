@@ -1,0 +1,12 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:coal",
+    "minecraft:coal"
+  ],
+  "output": {
+    "id": "minecraft:diamond"
+  },
+  "question": "labyrinth",
+  "round": 1
+}

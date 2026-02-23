@@ -1,0 +1,12 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "wenyan_programming:starlight_ink",
+    "minecraft:black_dye"
+  ],
+  "output": {
+    "id": "wenyan_programming:lunar_ink"
+  },
+  "question": "plus",
+  "round": 1
+}

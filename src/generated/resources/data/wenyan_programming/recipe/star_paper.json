@@ -1,0 +1,12 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:paper",
+    "minecraft:glowstone_dust"
+  ],
+  "output": {
+    "id": "wenyan_programming:star_paper"
+  },
+  "question": "plus",
+  "round": 1
+}

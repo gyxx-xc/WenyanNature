@@ -197,7 +197,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         forNearbyPedestal(level, blockPos(), pedestal ->
                 ResourceHandlerUtil.extractFirst(pedestal.getItemHandler(), _ -> true, 1, null));
         BlockPos pos = worldPosition.relative(Direction.UP);
-        Block.popResource(level, pos, recipeHolder.value().output().copy());
+        Block.popResource(level, pos, recipeHolder.value().assemble());
     }
 
     private void resetCrafting() {

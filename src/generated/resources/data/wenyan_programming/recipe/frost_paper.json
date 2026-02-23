@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:snowball",
+    "minecraft:gold_nugget",
+    "minecraft:paper"
+  ],
+  "output": {
+    "id": "wenyan_programming:frost_paper"
+  },
+  "question": "plus",
+  "round": 1
+}

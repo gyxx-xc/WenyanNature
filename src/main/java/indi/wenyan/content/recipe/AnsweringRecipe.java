@@ -15,6 +15,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
@@ -30,14 +31,14 @@ import java.util.List;
 public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
     List<Ingredient> input;
     String question;
-    ItemStack output;
+    ItemStackTemplate output;
     int round;
 
     @With(AccessLevel.PRIVATE)
     @NonFinal
     PlacementInfo info;
 
-    public AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round, PlacementInfo info) {
+    public AnsweringRecipe(List<Ingredient> input, String question, ItemStackTemplate output, int round, PlacementInfo info) {
         this.input = input;
         this.question = question;
         this.output = output;
@@ -45,7 +46,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
         this.info = info;
     }
 
-    public AnsweringRecipe(List<Ingredient> input, String question, ItemStack output, int round) {
+    public AnsweringRecipe(List<Ingredient> input, String question, ItemStackTemplate output, int round) {
         this.input = input;
         this.question = question;
         this.output = output;
@@ -74,9 +75,15 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
         return RecipeMatcher.findMatches(item, input) != null;
     }
 
+    public ItemStack assemble() {
+        // warper function for assemble()
+        // which is not use answeringRecipeInput anyway
+        //noinspection DataFlowIssue
+        return assemble(null);
+    }
     @Override
     public ItemStack assemble(AnsweringRecipeInput answeringRecipeInput) {
-        return output.copy();
+        return output.create();
     }
 
     @Override
@@ -117,7 +124,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
         public static final MapCodec<AnsweringRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC.listOf().fieldOf("input").forGetter(AnsweringRecipe::input),
                 Codec.STRING.fieldOf("question").forGetter(AnsweringRecipe::question),
-                ItemStack.CODEC.fieldOf("output").forGetter(AnsweringRecipe::output),
+                ItemStackTemplate.CODEC.fieldOf("output").forGetter(AnsweringRecipe::output),
                 Codec.INT.fieldOf("round").forGetter(AnsweringRecipe::round)
         ).apply(inst, AnsweringRecipe::new));
 
@@ -125,7 +132,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
                 StreamCodec.composite(
                         INGREDIENT_LIST_STREAM, AnsweringRecipe::input,
                         ByteBufCodecs.STRING_UTF8, AnsweringRecipe::question,
-                        ItemStack.STREAM_CODEC, AnsweringRecipe::output,
+                        ItemStackTemplate.STREAM_CODEC, AnsweringRecipe::output,
                         ByteBufCodecs.INT, AnsweringRecipe::round,
                         AnsweringRecipe::new);
 

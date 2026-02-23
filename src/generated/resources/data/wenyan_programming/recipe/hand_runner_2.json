@@ -1,0 +1,12 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "wenyan_programming:cinnabar_ink",
+    "wenyan_programming:cloud_paper"
+  ],
+  "output": {
+    "id": "wenyan_programming:hand_runner_2"
+  },
+  "question": "plus",
+  "round": 1
+}
