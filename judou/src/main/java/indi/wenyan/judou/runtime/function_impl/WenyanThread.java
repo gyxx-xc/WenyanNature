@@ -35,8 +35,6 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     private final String code;
 
-    private boolean willPause = false;
-
     /**
      * Stack of runtime environments
      */
@@ -103,15 +101,11 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
                 if (!runtime.PCFlag)
                     runtime.programCounter++;
                 runtime.PCFlag = false;
-
-                if (willPause) {
-                    willPause = false;
-                    return;
-                }
             } catch (Exception e) {
                 dieWithException(e);
                 // rethrow interrupt
                 if (e instanceof InterruptedException)
+                    //noinspection ResultOfMethodCallIgnored
                     Thread.interrupted();
                 return;
             }
@@ -125,7 +119,6 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     @Override
     public void pause() {
-        willPause = true;
     }
 
     public void dieWithException(Exception e) {

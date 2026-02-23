@@ -14,6 +14,7 @@ import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.LoggerManager;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -35,6 +36,12 @@ class WenyanProgramTest {
     static {
         LanguageManager.registerLanguageProvider(s -> s);
         LoggerManager.registerLogger(NOPLogger.NOP_LOGGER);
+    }
+
+    @Test
+    void testNormal() throws WenyanThrowException {
+        assertResult("""
+                書一。""", 1);
     }
 
     @ParameterizedTest

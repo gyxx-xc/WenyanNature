@@ -138,6 +138,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Getter
     private boolean available = true;
+
     @Override
     public void stop() {
         allThreads.forEach(thread -> {
