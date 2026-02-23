@@ -1,10 +1,10 @@
-package indi.wenyan.content.gui.code_editor.widget;
+package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.gui.Utils;
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.backend.CodeField;
-import indi.wenyan.content.gui.code_editor.backend.SnippetSet;
+import indi.wenyan.client.gui.Utils;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.client.gui.code_editor.backend.CodeField;
+import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
@@ -17,8 +17,6 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -28,7 +26,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-@OnlyIn(Dist.CLIENT)
 public class SnippetWidget extends AbstractTextAreaWidget {
     private final Font font;
     private final CodeEditorBackend backend;

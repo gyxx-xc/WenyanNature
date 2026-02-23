@@ -1,7 +1,7 @@
-package indi.wenyan.content.gui.code_editor.backend;
+package indi.wenyan.client.gui.code_editor.backend;
 
-import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
-import indi.wenyan.content.gui.code_editor.widget.PackageSnippetWidget;
+import indi.wenyan.client.gui.code_editor.CodeEditorScreen;
+import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,9 +1,9 @@
 package indi.wenyan.content.item;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
+import indi.wenyan.client.gui.code_editor.CodeEditorScreen;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackendSynchronizer;
 import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.RunnerCodePacket;
@@ -18,8 +18,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -85,7 +83,7 @@ public class RunnerItem extends BlockItem {
         return InteractionResult.PASS;
     }
 
-    @OnlyIn(Dist.CLIENT)
+//    @OnlyIn(Dist.CLIENT)
     private void openGui(ItemStack itemstack, Player player, InteractionHand hand) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override

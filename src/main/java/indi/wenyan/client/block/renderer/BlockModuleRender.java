@@ -1,7 +1,8 @@
-package indi.wenyan.content.block.additional_module.paper;
+package indi.wenyan.client.block.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.block.additional_module.paper.BlockModuleEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

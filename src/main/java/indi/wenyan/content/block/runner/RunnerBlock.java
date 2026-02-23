@@ -2,11 +2,11 @@ package indi.wenyan.content.block.runner;
 
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.client.gui.code_editor.CodeEditorScreen;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackendSynchronizer;
+import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.gui.code_editor.CodeEditorScreen;
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackendSynchronizer;
-import indi.wenyan.content.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
@@ -38,8 +38,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -124,7 +122,8 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         return blockState;
     }
 
-    @OnlyIn(Dist.CLIENT)
+    // FIXME
+//    @OnlyIn(Dist.CLIENT)
     private void openGui(RunnerBlockEntity runner, BlockPos pos, Level level, Player player, BlockState state) {
         List<PackageSnippetWidget.PackageSnippet> packageSnippets = new ArrayList<>();
         BlockPos attached = pos.relative(
@@ -151,6 +150,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
     }
 
+//    @OnlyIn(Dist.CLIENT)
     private static @NotNull CodeEditorBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos, List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
@@ -195,7 +195,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         return new CodeEditorBackend(packageSnippets, synchronizer);
     }
 
-    @OnlyIn(Dist.CLIENT)
+//    @OnlyIn(Dist.CLIENT)
     private PackageSnippetWidget.PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack, String name) {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
         execPackage.variables().forEach((k, v) -> {

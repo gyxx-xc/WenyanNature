@@ -1,9 +1,9 @@
 package indi.wenyan.content.item;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.client.gui.float_note.FloatNoteNamingScreen;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.content.gui.float_note.FloatNoteNamingScreen;
 import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.network.DeviceRenamePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
@@ -20,8 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nullable;
@@ -147,7 +145,8 @@ public class FloatNoteItem extends Item {
 //        return repairCandidate.is(Items.PAPER) || super.isValidRepairItem(stack, repairCandidate);
 //    }
 
-    @OnlyIn(Dist.CLIENT)
+    // FIXME
+//    @OnlyIn(Dist.CLIENT)
     private void openGui(Consumer<Component> setNameFunc, ItemStack stack) {
         Minecraft.getInstance().setScreen(new FloatNoteNamingScreen(setNameFunc, stack));
     }

@@ -1,6 +1,7 @@
-package indi.wenyan.content.block.pedestal;
+package indi.wenyan.client.block.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

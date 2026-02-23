@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.float_note;
+package indi.wenyan.client.gui.float_note;
 
 import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.network.FloatNotePacket;
@@ -13,13 +13,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.function.Consumer;
 
-@OnlyIn(Dist.CLIENT)
 public class FloatNoteNamingScreen extends Screen {
     private static final Identifier TEXT_FIELD_SPRITE = Identifier.withDefaultNamespace("container/anvil/text_field");
     private EditBox name;

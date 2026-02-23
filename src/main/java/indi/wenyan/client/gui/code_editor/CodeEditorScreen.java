@@ -1,8 +1,8 @@
-package indi.wenyan.content.gui.code_editor;
+package indi.wenyan.client.gui.code_editor;
 
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.backend.SnippetSet;
-import indi.wenyan.content.gui.code_editor.widget.*;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
+import indi.wenyan.client.gui.code_editor.widget.*;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,8 +18,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
 public class CodeEditorScreen extends Screen {
 
     private final CodeEditorBackend backend;
@@ -39,6 +36,7 @@ public class CodeEditorScreen extends Screen {
     private CodeEditorWidget textFieldWidget;
     private SnippetWidget snippetWidget;
     private PackageSnippetWidget packageWidget;
+    @SuppressWarnings("FieldCanBeLocal")
     private EditBox titleBar;
     private CodeOutputWidget outputWindow;
 

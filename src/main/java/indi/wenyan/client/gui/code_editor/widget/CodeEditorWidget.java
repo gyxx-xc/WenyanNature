@@ -1,10 +1,10 @@
-package indi.wenyan.content.gui.code_editor.widget;
+package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.gui.Utils;
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.backend.CodeField;
-import indi.wenyan.content.gui.code_editor.backend.Completion;
+import indi.wenyan.client.gui.Utils;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.client.gui.code_editor.backend.CodeField;
+import indi.wenyan.client.gui.code_editor.backend.Completion;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
@@ -21,8 +21,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.minecraft.util.Util;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -33,7 +31,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
-@OnlyIn(Dist.CLIENT)
 public class CodeEditorWidget extends AbstractTextAreaWidget {
     private static final int CURSOR_INSERT_COLOR = 0xff000000;
     public static final float TOOLTIP_SCALE = 0.7f;

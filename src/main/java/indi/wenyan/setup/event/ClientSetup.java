@@ -1,11 +1,7 @@
 package indi.wenyan.setup.event;
 
-import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockRenderer;
-import indi.wenyan.content.block.additional_module.paper.BlockModuleRender;
-import indi.wenyan.content.block.crafting_block.CraftingBlockRender;
-import indi.wenyan.content.block.pedestal.PedestalBlockRender;
-import indi.wenyan.content.block.runner.RunnerBlockRender;
-import indi.wenyan.content.gui.CraftingBlockScreen;
+import indi.wenyan.client.block.renderer.*;
+import indi.wenyan.client.gui.CraftingBlockScreen;
 import indi.wenyan.setup.definitions.WYRegistration;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.neoforged.api.distmarker.Dist;

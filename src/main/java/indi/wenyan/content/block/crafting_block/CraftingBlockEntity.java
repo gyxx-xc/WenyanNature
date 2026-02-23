@@ -5,7 +5,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.gui.CraftingBlockContainer;
+import indi.wenyan.content.gui_api.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.content.recipe.AnsweringRecipeInput;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;

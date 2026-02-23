@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.float_note;
+package indi.wenyan.client.gui.float_note;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,11 +8,8 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class LockIconButton extends Button {
     @Setter @Getter
     private boolean locked;
@@ -38,7 +35,6 @@ public class LockIconButton extends Button {
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, icon.sprite, this.getX(), this.getY(), this.width, this.height);
     }
 
-    @OnlyIn(Dist.CLIENT)
     enum Icon {
         LOCKED(Identifier.withDefaultNamespace("widget/locked_button")),
         LOCKED_HOVER(Identifier.withDefaultNamespace("widget/locked_button_highlighted")),
@@ -54,7 +50,6 @@ public class LockIconButton extends Button {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public interface OnPress {
         void onPress(LockIconButton var1);
     }

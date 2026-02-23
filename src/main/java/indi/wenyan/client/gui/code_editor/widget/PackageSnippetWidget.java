@@ -1,10 +1,10 @@
-package indi.wenyan.content.gui.code_editor.widget;
+package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.gui.Utils;
-import indi.wenyan.content.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.content.gui.code_editor.backend.CodeField;
-import indi.wenyan.content.gui.code_editor.backend.SnippetSet;
+import indi.wenyan.client.gui.Utils;
+import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
+import indi.wenyan.client.gui.code_editor.backend.CodeField;
+import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.minecraft.client.gui.Font;
@@ -20,15 +20,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-@OnlyIn(Dist.CLIENT)
 // although it is not a text area,
 // for some historical reasons, only text area work for this situation
 public class PackageSnippetWidget extends AbstractTextAreaWidget {

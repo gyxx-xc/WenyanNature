@@ -1,7 +1,8 @@
-package indi.wenyan.content.block.crafting_block;
+package indi.wenyan.client.block.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;

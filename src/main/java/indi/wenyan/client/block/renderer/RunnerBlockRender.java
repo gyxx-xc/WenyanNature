@@ -1,9 +1,10 @@
-package indi.wenyan.content.block.runner;
+package indi.wenyan.client.block.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;

@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.code_editor.widget;
+package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
 import net.minecraft.client.gui.Font;
@@ -13,14 +13,11 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Deque;
 
 
 // copy from FittingMultiLineTextWidget
-@OnlyIn(Dist.CLIENT)
 public class CodeOutputWidget extends AbstractTextAreaWidget {
     private final MultiLineTextWidget multilineWidget;
     //    public static Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai.png");

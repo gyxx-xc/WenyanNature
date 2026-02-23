@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui.code_editor.backend;
+package indi.wenyan.client.gui.code_editor.backend;
 
 import com.google.common.collect.Lists;
 import indi.wenyan.judou.antlr.WenyanRLexer;
@@ -9,8 +9,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.util.Mth;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +20,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 // copy from net.minecraft.client.gui.components.MultilineTextField
-@OnlyIn(Dist.CLIENT)
 public class CodeField {
     private static final int LINE_SEEK_PIXEL_BIAS = 2;
 
@@ -364,12 +361,10 @@ public class CodeField {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
     public record StringView(int beginIndex, int endIndex) {
         static final StringView EMPTY = new StringView(0, 0);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public record StyledLineView(List<StyledStringView> styles) {
         public StyledLineView(int beginIndex, int endIndex, List<StyledStringView> styles) {
             this(styles);
@@ -392,11 +387,9 @@ public class CodeField {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public record StyledStringView(int beginIndex, int endIndex, int token) {
     }
 
-    @OnlyIn(Dist.CLIENT)
     public record Placeholder(generated_Snippets.Context context, int index) {
     }
 }

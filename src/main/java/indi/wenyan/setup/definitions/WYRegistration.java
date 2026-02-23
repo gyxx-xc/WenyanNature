@@ -3,7 +3,7 @@ package indi.wenyan.setup.definitions;
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
-import indi.wenyan.content.gui.CraftingBlockContainer;
+import indi.wenyan.content.gui_api.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;

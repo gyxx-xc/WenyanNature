@@ -24,8 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -172,7 +170,8 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     ) implements IHandleContext {
     }
 
-    @OnlyIn(Dist.CLIENT)
+    // FIXME
+//    @OnlyIn(Dist.CLIENT)
     private void opengui(ItemStack itemstack, Player player, InteractionHand hand) {
 //        var presis
 //        Minecraft.getInstance().setScreen(new CodeEditorScreen(

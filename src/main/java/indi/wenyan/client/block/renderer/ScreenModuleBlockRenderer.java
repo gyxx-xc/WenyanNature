@@ -1,6 +1,7 @@
-package indi.wenyan.content.block.additional_module.block;
+package indi.wenyan.client.block.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
