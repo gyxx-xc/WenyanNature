@@ -1,19 +1,7 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "wenyan_programming:block/runner_block",
-      "y": 90
-    },
-    "facing=north": {
+    "": {
       "model": "wenyan_programming:block/runner_block"
-    },
-    "facing=south": {
-      "model": "wenyan_programming:block/runner_block",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "wenyan_programming:block/runner_block",
-      "y": 270
     }
   }
 }

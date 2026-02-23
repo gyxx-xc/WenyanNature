@@ -6,6 +6,7 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -56,12 +57,17 @@ public class ModBlockStateProvider extends ModelSubProvider {
     }
 
     private void modeledBlock(BiConsumer<Block, TexturedModel.Provider> blockstateMethod, DeferredBlock<?> deferredBlock) {
-        var templete = new ModelTemplate(Optional.of(
-                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                        "block/" + deferredBlock.getKey().identifier().getPath())),
-                Optional.empty());
-        blockstateMethod.accept(deferredBlock.get(),
-                block -> new TexturedModel(TextureMapping.defaultTexture(block), templete)
+//        var templete = new ModelTemplate(Optional.of(
+//                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+//                        "block/" + deferredBlock.getKey().identifier().getPath())),
+//                Optional.empty());
+//        blockstateMethod.accept(deferredBlock.get(),
+//                block -> new TexturedModel(TextureMapping.defaultTexture(block), templete)
+//        );
+        blockModels.blockStateOutput.accept(
+                BlockModelGenerators.createSimpleBlock(deferredBlock.get(),
+                        BlockModelGenerators.plainVariant(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+                                "block/" + deferredBlock.getKey().identifier().getPath())))
         );
     }
 
@@ -73,7 +79,8 @@ public class ModBlockStateProvider extends ModelSubProvider {
     private void registerModuleBlock(DeferredBlock<?> deferredBlock) {
         var templete = new ModelTemplate(Optional.of(
                 Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block")),
-                Optional.empty());
+                Optional.empty(),
+                TextureSlot.TEXTURE);
         blockModels.createHorizontallyRotatedBlock(deferredBlock.get(),
                 block -> new TexturedModel(TextureMapping.defaultTexture(block), templete)
                 );
