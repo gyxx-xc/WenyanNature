@@ -78,7 +78,7 @@ public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEnt
             collector.submitText(poseStack,
                     -font.width(data) >> 1, 0,
                     data.getVisualOrderText(), true,
-                    Font.DisplayMode.NORMAL, state.lightCoords, 0xFFFFFF, 0, 0);
+                    Font.DisplayMode.NORMAL, state.lightCoords, 0xFFFFFFFF, 0, 0);
 //            poseStack.scale(-1, 1, 1);
 //            font.drawInBatch(data, -font.width(data) >> 1, 0, 0xFFFFFF, true,
 //                    poseStack.last().pose(), bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, 0xFFFFFF);

@@ -110,7 +110,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                     throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
                 return getChecker().getArgs();
             })
-            .handler("书", request -> {
+            .handler("書", request -> {
                 getChecker().accept(request.args());
                 IAnsweringChecker.ResultStatus checkerResult = checker.getResult();
                 assert getLevel() != null;
