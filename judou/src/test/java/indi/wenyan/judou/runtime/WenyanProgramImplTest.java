@@ -16,12 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("BusyWait")
 class WenyanProgramImplTest {
 
     private TestPlatform platform;
@@ -63,7 +63,6 @@ class WenyanProgramImplTest {
                     program().getPlatform().handleError(ex.getMessage());
                 }
             } catch (ReturnException ignore) {
-                return;
             }
         }
 
@@ -96,7 +95,7 @@ class WenyanProgramImplTest {
     }
 
     @Test
-    void run() throws WenyanException, ExecutionException, InterruptedException {
+    void run() throws WenyanException, InterruptedException {
         program.create(new TestRunner(100) {
         });
         assertEquals(10, runUntilDone(10));
@@ -156,7 +155,7 @@ class WenyanProgramImplTest {
         void step_slowLongThread_warningAndStop() throws WenyanException, InterruptedException {
             program.create(new TestRunner(5000) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws WenyanException {
                     try {
                         Thread.sleep(1);
                     } catch (InterruptedException e) {
@@ -173,7 +172,7 @@ class WenyanProgramImplTest {
         void step_slowShortThread_warningAndStop() throws WenyanException, InterruptedException {
             program.create(new TestRunner(1) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws WenyanException {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
@@ -190,7 +189,7 @@ class WenyanProgramImplTest {
         void step_fastTick_warning() throws WenyanException, InterruptedException {
             program.create(new TestRunner(2) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws WenyanException {
                     try {
                         Thread.sleep(1);
                     } catch (InterruptedException e) {
@@ -335,7 +334,7 @@ class WenyanProgramImplTest {
         void unblock_runningThread_fail() throws WenyanException, InterruptedException {
             var runner = new TestRunner(1) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws WenyanException {
                     program().unblock(this);
                 }
             };
@@ -462,7 +461,6 @@ class WenyanProgramImplTest {
         };
         var pcb1 = new WenyanProgramImpl.PCB(runner, program);
         var pcb2 = new WenyanProgramImpl.PCB(runner, program);
-        assertEquals(pcb1, pcb1);
         assertEquals(pcb1.hashCode(), pcb1.hashCode());
         assertNotEquals(pcb1, pcb2);
         assertNotEquals(pcb1.hashCode(), pcb2.hashCode());
