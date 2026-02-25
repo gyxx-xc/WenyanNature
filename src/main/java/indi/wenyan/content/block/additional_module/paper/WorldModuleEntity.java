@@ -42,21 +42,6 @@ public class WorldModuleEntity extends AbstractModuleEntity {
                 WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), blockPos());
                 return WenyanNull.NULL;
             })
-//            .handler(WenyanSymbol.var("WorldModule.trigger"), 2, (handler, request) -> {
-//                int dx = Math.clamp(request.args().get(0).as(WenyanInteger.TYPE).value(), -10, 10);
-//                int dy = Math.clamp(request.args().get(1).as(WenyanInteger.TYPE).value(), -10, 10);
-//                int dz = Math.clamp(request.args().get(2).as(WenyanInteger.TYPE).value(), -10, 10);
-//                BlockPos blockPos = blockPos().offset(dx, dy, dz);
-//                assert level != null;
-//                level.getProfiler().push("explosion_blocks");
-//                level.getBlockState(blockPos).onExplosionHit(level, blockPos,
-//                        new Explosion(level, null, blockPos.getX(), blockPos.getY(),
-//                                blockPos.getZ(), 1.0f, false, Explosion.BlockInteraction.TRIGGER_BLOCK),
-//                        (a1, a2) -> {
-//                        });
-//                level.getProfiler().pop();
-//                return WenyanNull.NULL;
-//            })
             .handler(WenyanSymbol.var("WorldModule.changeWeather"), 5, (_, request) -> {
                 if (!(getLevel() instanceof ServerLevel serverLevel))
                     throw new WenyanUnreachedException();
