@@ -71,7 +71,7 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity,
         if (!blockModuleRenderState.shouldRender) return;
         poseStack.pushPose();
         submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(AABB_WALL),
-                ((pose, vertexConsumer) -> renderFaces(vertexConsumer, poseStack.last(),
+                ((pose, vertexConsumer) -> renderFaces(vertexConsumer, pose,
                         blockModuleRenderState.aabb, blockModuleRenderState.color)));
 
 //        vertexconsumer = bufferSource.getBuffer(FRONT_LINES);
