@@ -3,6 +3,7 @@ package indi.wenyan.judou.compiler;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,6 +19,12 @@ public class WenyanBytecode {
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
     private final List<Context> debugTable = new ArrayList<>();
+    @Getter
+    private final String sourceCode;
+
+    public WenyanBytecode(String sourceCode) {
+        this.sourceCode = sourceCode;
+    }
 
     /**
      * Represents a bytecode instruction with its operation code and argument.

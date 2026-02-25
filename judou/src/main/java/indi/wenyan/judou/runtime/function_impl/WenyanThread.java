@@ -34,8 +34,6 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
     @Setter
     private WenyanProgramImpl.PCB thread;
 
-    private final String code;
-
     /**
      * Stack of runtime environments
      */
@@ -46,15 +44,14 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     private boolean willPause = false;
 
-    private WenyanThread(String code) {
-        this.code = code;
+    private WenyanThread() {
     }
 
     public static @NotNull WenyanThread ofCode(String code, IWenyanPlatform platform) throws WenyanCompileException {
-        WenyanThread thread = new WenyanThread(code);
+        WenyanThread thread = new WenyanThread();
         thread.call(platform.initEnvironment());
 
-        var bytecode = new WenyanBytecode();
+        var bytecode = new WenyanBytecode(code);
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode);
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
         visitor.visit(WenyanVisitor.program(code));
@@ -133,7 +130,7 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
                 WenyanBytecode.Context context = runtime.getBytecode().getContext(runtime.programCounter - 1);
                 errorContext = new WenyanException.ErrorContext(
                         context.line(), context.column(),
-                        code.substring(context.contentStart(), context.contentEnd()));
+                        runtime.getBytecode().getSourceCode().substring(context.contentStart(), context.contentEnd()));
             }
         } catch (WenyanException.WenyanVarException |
                  IndexOutOfBoundsException ignore) {// cause error context be null, handled below

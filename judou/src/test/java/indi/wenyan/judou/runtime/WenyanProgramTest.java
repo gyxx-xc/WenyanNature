@@ -6,6 +6,7 @@ import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData;
+import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -230,7 +231,7 @@ class WenyanProgramTest {
 
     private void assertCompileError(String code) {
         TestPlatform testPlatform = new TestPlatform();
-        assertThrows(WenyanException.class, () -> createAndRun(code, testPlatform));
+        assertThrows(WenyanCompileException.class, () -> createAndRun(code, testPlatform));
     }
 
     private void assertRuntimeError(String code) {

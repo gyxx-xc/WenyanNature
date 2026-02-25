@@ -158,7 +158,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             }
         }
 
-        WenyanBytecode functionBytecode = new WenyanBytecode();
+        WenyanBytecode functionBytecode = new WenyanBytecode(bytecode.getSourceCode());
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode);
         new WenyanMainVisitor(environment).visit(ctx.statements());
 
