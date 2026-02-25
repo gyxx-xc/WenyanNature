@@ -4,7 +4,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.Registration;
@@ -106,9 +106,9 @@ public class PowerBlockEntity extends AbstractModuleEntity {
     }
 
     // get the required power, and return the actual acquired power, not thread safe
-    public int require(int acquire) throws WenyanThrowException {
+    public int require(int acquire) throws WenyanException {
         if (acquire < 0)
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
 
         int got = 0;
         for (int i = 0; i < generatedPower.size(); i++) {

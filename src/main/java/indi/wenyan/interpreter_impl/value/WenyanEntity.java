@@ -2,7 +2,6 @@ package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -14,7 +13,7 @@ public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, 
     public static final WenyanType<WenyanEntity> TYPE = new WenyanType<>("entity", WenyanEntity.class);
 
     @Override
-    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
+    public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
             case "「位」" -> WenyanMinecraftValues.of(value().getPosition(0));
             case "「移」" -> WenyanMinecraftValues.of(value().getDeltaMovement());

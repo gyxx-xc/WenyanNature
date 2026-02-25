@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 /**
  * Base exception class for Wenyan interpreter errors
  */
-public class WenyanException extends WenyanThrowException {
+public class WenyanException extends Exception {
     public WenyanException(String message) {
         super(message);
     }
@@ -14,14 +14,8 @@ public class WenyanException extends WenyanThrowException {
         super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + message);
     }
 
-    public WenyanException(WenyanThrowException e, ParserRuleContext ctx) {
+    public WenyanException(WenyanException e, ParserRuleContext ctx) {
         super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + e.getMessage());
-    }
-
-    public static class WenyanUnreachedException extends WenyanException {
-        public WenyanUnreachedException() {
-            super("unreached, please report an issue");
-        }
     }
 
     /**

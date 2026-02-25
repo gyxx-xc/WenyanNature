@@ -5,7 +5,6 @@ import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanParseTreeException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
@@ -37,7 +36,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
             };
             bytecode.add(WenyanCodes.PUSH, value);
             return true;
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             throw new WenyanParseTreeException(e, ctx);
         }
     }

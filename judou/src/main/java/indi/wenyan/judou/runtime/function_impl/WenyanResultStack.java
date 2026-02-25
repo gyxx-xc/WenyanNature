@@ -1,7 +1,6 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.WenyanThreading;
@@ -42,7 +41,7 @@ public class WenyanResultStack {
      * @return The top item
      * @throws WenyanException if the stack is empty
      */
-    public IWenyanValue peek() throws WenyanThrowException {
+    public IWenyanValue peek() throws WenyanException {
         int len = stack.size();
         if (len == 0) {
             throw new WenyanException("error.wenyan_programming.stack_empty");
@@ -56,7 +55,7 @@ public class WenyanResultStack {
      * @return The removed top item
      * @throws WenyanException if the stack is empty
      */
-    public IWenyanValue pop() throws WenyanThrowException {
+    public IWenyanValue pop() throws WenyanException {
         int len = stack.size();
         if (len == 0) {
             throw new WenyanException("error.wenyan_programming.stack_empty");
@@ -87,7 +86,7 @@ public class WenyanResultStack {
      * @return The item at the specified index
      * @throws WenyanException if index is out of bounds
      */
-    public IWenyanValue get(int index) throws WenyanThrowException {
+    public IWenyanValue get(int index) throws WenyanException {
         if (index < 0 || index >= stack.size()) {
             throw new WenyanException("error.wenyan_programming.stack_index_out_of_bounds");
         }

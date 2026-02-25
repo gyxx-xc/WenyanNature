@@ -8,7 +8,7 @@ import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.Either;
@@ -114,12 +114,12 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
     }
 
     @Override
-    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {
+    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanException {
         if (!(context instanceof ItemContext itemContext)) {
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
         }
         if (!(request instanceof ItemRequest itemRequest))
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
 
         ItemStack current = itemContext.player().getInventory().getItem(itemRequest.slotId());
         // STUB: better equal
@@ -127,7 +127,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             throw new WenyanException("item changed");
     }
 
-    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanThrowException {
+    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException("Context is not an instance of ItemContext");
         }
@@ -165,7 +165,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             int slotId
     ) implements BaseHandleableRequest {
         @Override
-        public boolean handle(IHandleContext context) throws WenyanThrowException {
+        public boolean handle(IHandleContext context) throws WenyanException {
             return request.handle(context, this);
         }
     }

@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values;
 
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanException;
 
 /**
  * Interface for Wenyan values that support basic arithmetic operations.
@@ -11,34 +11,34 @@ public interface IWenyanComputable extends IWenyanValue {
      *
      * @param other the value to add to this value
      * @return the result of the addition
-     * @throws WenyanThrowException if the operation is not supported for these types
+     * @throws WenyanException if the operation is not supported for these types
      */
-    IWenyanValue add(IWenyanValue other) throws WenyanThrowException;
+    IWenyanValue add(IWenyanValue other) throws WenyanException;
 
     /**
      * Subtracts another value from this value.
      *
      * @param other the value to subtract from this value
      * @return the result of the subtraction
-     * @throws WenyanThrowException if the operation is not supported for these types
+     * @throws WenyanException if the operation is not supported for these types
      */
-    IWenyanValue subtract(IWenyanValue other) throws WenyanThrowException;
+    IWenyanValue subtract(IWenyanValue other) throws WenyanException;
 
     /**
      * Multiplies this value by another value.
      *
      * @param other the value to multiply this value by
      * @return the result of the multiplication
-     * @throws WenyanThrowException if the operation is not supported for these types
+     * @throws WenyanException if the operation is not supported for these types
      */
-    IWenyanValue multiply(IWenyanValue other) throws WenyanThrowException;
+    IWenyanValue multiply(IWenyanValue other) throws WenyanException;
 
     /**
      * Divides this value by another value.
      *
      * @param other the value to divide this value by
      * @return the result of the division
-     * @throws WenyanThrowException if the operation is not supported for these types
+     * @throws WenyanException if the operation is not supported for these types
      */
-    IWenyanValue divide(IWenyanValue other) throws WenyanThrowException;
+    IWenyanValue divide(IWenyanValue other) throws WenyanException;
 }

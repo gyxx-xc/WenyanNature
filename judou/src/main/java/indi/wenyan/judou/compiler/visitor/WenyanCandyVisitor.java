@@ -3,8 +3,8 @@ package indi.wenyan.judou.compiler.visitor;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanParseTreeException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
@@ -36,7 +36,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
         int n;
         try {
             n = WenyanDataParser.parseInt(ctx.declare_statement().INT_NUM().getText());
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
         bytecode.add(WenyanCodes.PEEK_ANS_N, n);

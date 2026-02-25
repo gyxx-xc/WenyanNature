@@ -2,8 +2,8 @@ package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
@@ -32,7 +32,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
+    public IWenyanValue getAttribute(String name) throws WenyanException {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunctionHelper(name);
         if (attr == null)
@@ -52,7 +52,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
         }
     }
 
-    public IWenyanValue getFunction(String id) throws WenyanThrowException {
+    public IWenyanValue getFunction(String id) throws WenyanException {
         var attr = getFunctionHelper(id);
         if (attr == null) {
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.function_not_found_") + id);
@@ -73,13 +73,13 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Override
-    public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
-        throw new WenyanException.WenyanUnreachedException();
+    public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
+        throw new WenyanUnreachedException();
     }
 
     @Override
     public void call(IWenyanValue self, WenyanThread thread,
-                     List<IWenyanValue> argsList) throws WenyanThrowException {
+                     List<IWenyanValue> argsList) throws WenyanException {
         // create empty, run constructor, return self
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
         thread.currentRuntime().pushReturnValue(selfObj);

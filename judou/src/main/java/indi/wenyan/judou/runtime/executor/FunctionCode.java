@@ -4,7 +4,6 @@ import indi.wenyan.judou.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
@@ -43,7 +42,7 @@ public class FunctionCode extends WenyanCode {
     //   a.b() -> set self, call
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanThrowException {
+    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
@@ -75,7 +74,7 @@ public class FunctionCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, @UnknownNullability WenyanThread thread) throws WenyanThrowException {
+    public int getStep(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
         var function = thread.currentRuntime().getProcessStack().peek();
         if (!function.is(IWenyanFunction.TYPE))
             throw new WenyanException("無法調用非函數類型的值");

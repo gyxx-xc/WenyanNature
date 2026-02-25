@@ -18,7 +18,7 @@ public class WenyanValueData {
     public static final String INTERFACE_HANDLER_PACKET = "indi.wenyan.judou.exec_interface.handler";
     public static final String WENYAN_VALUE_PACKET = "indi.wenyan.judou.structure.values";
     public static final ClassName WENYAN_TYPE_CLASS = ClassName.get(INTERPRETER_STRUCTURE_PACKET, "WenyanType");
-    public static final ClassName WENYAN_THROW_EXCEPTION_CLASS = ClassName.get(INTERPRETER_STRUCTURE_PACKET, "WenyanThrowException");
+    public static final ClassName WENYAN_THROW_EXCEPTION_CLASS = ClassName.get(INTERPRETER_STRUCTURE_PACKET, "WenyanException");
     public static final ClassName WENYAN_EXCEPTION_CLASS = ClassName.get(INTERPRETER_STRUCTURE_PACKET, "WenyanException");
     public static final ClassName WENYAN_INLINE_JAVACALL_CLASS = ClassName.get(INTERFACE_HANDLER_PACKET, "WenyanInlineJavacall");
     public static final ClassName SIMPLE_REQUEST_HANDLER_CLASS = ClassName.get(INTERFACE_HANDLER_PACKET, "SimpleRequestHandler");

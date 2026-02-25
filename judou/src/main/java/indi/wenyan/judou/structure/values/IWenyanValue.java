@@ -1,8 +1,8 @@
 package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
@@ -94,9 +94,9 @@ public interface IWenyanValue {
      * @param self  First value
      * @param other Second value
      * @return Result of addition
-     * @throws WenyanThrowException If addition fails
+     * @throws WenyanException If addition fails
      */
-    static IWenyanValue add(IWenyanValue self, IWenyanValue other) throws WenyanThrowException {
+    static IWenyanValue add(IWenyanValue self, IWenyanValue other) throws WenyanException {
         WenyanType<? extends IWenyanComputable> addType = WenyanType.computeWiderType(self.type(), other.type());
         IWenyanComputable left = self.as(addType);
         IWenyanComputable right = other.as(addType);
@@ -109,9 +109,9 @@ public interface IWenyanValue {
      * @param self  First value
      * @param other Second value
      * @return Result of subtraction
-     * @throws WenyanThrowException If subtraction fails
+     * @throws WenyanException If subtraction fails
      */
-    static IWenyanValue sub(IWenyanValue self, IWenyanValue other) throws WenyanThrowException {
+    static IWenyanValue sub(IWenyanValue self, IWenyanValue other) throws WenyanException {
         WenyanType<? extends IWenyanComputable> subType = WenyanType.computeWiderType(self.type(), other.type());
         IWenyanComputable left = self.as(subType);
         IWenyanComputable right = other.as(subType);
@@ -124,9 +124,9 @@ public interface IWenyanValue {
      * @param self  First value
      * @param other Second value
      * @return Result of multiplication
-     * @throws WenyanThrowException If multiplication fails
+     * @throws WenyanException If multiplication fails
      */
-    static IWenyanValue mul(IWenyanValue self, IWenyanValue other) throws WenyanThrowException {
+    static IWenyanValue mul(IWenyanValue self, IWenyanValue other) throws WenyanException {
         WenyanType<? extends IWenyanComputable> mulType = WenyanType.computeWiderType(self.type(), other.type());
         IWenyanComputable left = self.as(mulType);
         IWenyanComputable right = other.as(mulType);
@@ -139,9 +139,9 @@ public interface IWenyanValue {
      * @param self  First value
      * @param other Second value
      * @return Result of division
-     * @throws WenyanThrowException If division fails
+     * @throws WenyanException If division fails
      */
-    static IWenyanValue div(IWenyanValue self, IWenyanValue other) throws WenyanThrowException {
+    static IWenyanValue div(IWenyanValue self, IWenyanValue other) throws WenyanException {
         WenyanType<? extends IWenyanComputable> divType = WenyanType.computeWiderType(self.type(), other.type());
         IWenyanComputable left = self.as(divType);
         IWenyanComputable right = other.as(divType);
@@ -154,9 +154,9 @@ public interface IWenyanValue {
      * @param self  First value
      * @param other Second value
      * @return Result of modulus operation
-     * @throws WenyanThrowException If operation fails
+     * @throws WenyanException If operation fails
      */
-    static WenyanInteger mod(IWenyanValue self, IWenyanValue other) throws WenyanThrowException {
+    static WenyanInteger mod(IWenyanValue self, IWenyanValue other) throws WenyanException {
         WenyanInteger left = self.as(WenyanInteger.TYPE);
         WenyanInteger right = other.as(WenyanInteger.TYPE);
         return left.mod(right);
@@ -168,9 +168,9 @@ public interface IWenyanValue {
      * @param self  First value
      * @param other Second value
      * @return True if values are equal
-     * @throws WenyanThrowException If comparison fails
+     * @throws WenyanException If comparison fails
      */
-    static boolean equals(IWenyanValue self, IWenyanValue other) throws WenyanThrowException {
+    static boolean equals(IWenyanValue self, IWenyanValue other) throws WenyanException {
         if (self instanceof WenyanLeftValue leftValue) self = leftValue.value;
         if (other instanceof WenyanLeftValue leftValue) other = leftValue.value;
         if (self.type() == WenyanDouble.TYPE || other.type() == WenyanDouble.TYPE) {
@@ -185,9 +185,9 @@ public interface IWenyanValue {
      * @param self  First value
      * @param other Second value
      * @return Comparison result (negative, zero, positive)
-     * @throws WenyanThrowException If comparison fails
+     * @throws WenyanException If comparison fails
      */
-    static int compareTo(IWenyanValue self, IWenyanValue other) throws WenyanThrowException {
+    static int compareTo(IWenyanValue self, IWenyanValue other) throws WenyanException {
         WenyanType<? extends IWenyanComparable> cmpType = WenyanType.compareWiderType(self.type(), other.type());
         IWenyanComparable left = self.as(cmpType);
         IWenyanComparable right = other.as(cmpType);
@@ -200,11 +200,11 @@ public interface IWenyanValue {
      * @param type Target type
      * @return Empty value of the specified type
      */
-    static IWenyanValue emptyOf(WenyanType<?> type) throws WenyanThrowException {
+    static IWenyanValue emptyOf(WenyanType<?> type) throws WenyanException {
         if (type == WenyanDouble.TYPE) return WenyanValues.of(0.0);
         if (type == WenyanBoolean.TYPE) return WenyanValues.of(false);
         if (type == WenyanString.TYPE) return WenyanValues.of("");
         if (type == WenyanList.TYPE) return new WenyanList();
-        throw new WenyanException.WenyanUnreachedException();
+        throw new WenyanUnreachedException();
     }
 }

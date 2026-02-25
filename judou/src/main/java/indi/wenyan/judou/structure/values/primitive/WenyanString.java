@@ -1,7 +1,6 @@
 package indi.wenyan.judou.structure.values.primitive;
 
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanComputable;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -38,22 +37,22 @@ public record WenyanString(String value)
     }
 
     @Override
-    public IWenyanValue add(IWenyanValue other) throws WenyanThrowException {
+    public IWenyanValue add(IWenyanValue other) throws WenyanException {
         return WenyanValues.of(value+ other.as(TYPE).value);
     }
 
     @Override
-    public IWenyanValue subtract(IWenyanValue other) throws WenyanThrowException {
+    public IWenyanValue subtract(IWenyanValue other) throws WenyanException {
         throw new WenyanException("");
     }
 
     @Override
-    public IWenyanValue multiply(IWenyanValue other) throws WenyanThrowException {
+    public IWenyanValue multiply(IWenyanValue other) throws WenyanException {
         throw new WenyanException("");
     }
 
     @Override
-    public IWenyanValue divide(IWenyanValue other) throws WenyanThrowException {
+    public IWenyanValue divide(IWenyanValue other) throws WenyanException {
         throw new WenyanException("");
     }
 }

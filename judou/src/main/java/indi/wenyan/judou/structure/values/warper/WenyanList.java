@@ -2,7 +2,6 @@ package indi.wenyan.judou.structure.values.warper;
 
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -59,16 +58,16 @@ public record WenyanList(List<IWenyanValue> value)
      *
      * @param index the 1-based index
      * @return the value at the specified index
-     * @throws WenyanThrowException if the index is out of bounds
+     * @throws WenyanException if the index is out of bounds
      */
-    public IWenyanValue get(int index) throws WenyanThrowException {
+    public IWenyanValue get(int index) throws WenyanException {
         if (index < 1 || index > value.size())
             throw new WenyanException.WenyanDataException(LanguageManager.getTranslation("error.wenyan_programming.index_out_of_bounds"));
         return value.get(index - 1);
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
+    public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
             case WenyanDataParser.ARRAY_GET_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 1)
@@ -146,7 +145,7 @@ public record WenyanList(List<IWenyanValue> value)
             for (int i = 0; i < value.size(); i++) {
                 try {
                     if (IWenyanValue.equals(value.get(i), list.value.get(i))) return false;
-                } catch (WenyanThrowException ignore) {
+                } catch (WenyanException ignore) {
                     return false;
                 }
             }

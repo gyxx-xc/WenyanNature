@@ -1,7 +1,6 @@
 package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -35,7 +34,7 @@ public record WenyanCapabilitySlot(Vec3 pose, IItemHandler capabilities, int slo
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
+    public IWenyanValue getAttribute(String name) throws WenyanException {
         throw new WenyanException("Item slot has no such attribute: " + name);
     }
 

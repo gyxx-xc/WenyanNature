@@ -2,7 +2,7 @@ package indi.wenyan.judou.structure.values.annotation;
 
 import indi.wenyan.judou.exec_interface.handler.SimpleRequestHandler;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.annotation.tested_classes.TestPassValueObject;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AnnotationWenyanValueTest {
     @Test
-    void baseClass() throws WenyanThrowException {
+    void baseClass() throws WenyanException {
         TestPassValueObject object = new TestPassValueObject();
         assertEquals(object.getAttribute("test-field"), WenyanValues.of("test-field"));
         assertEquals(object.getAttribute("test-method"), WenyanValues.of("test-method"));

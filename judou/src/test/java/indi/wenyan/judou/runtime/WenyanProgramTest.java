@@ -7,7 +7,6 @@ import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.LanguageManager;
@@ -39,14 +38,14 @@ class WenyanProgramTest {
     }
 
     @Test
-    void testNormal() throws WenyanThrowException {
+    void testNormal() throws WenyanException {
         assertResult("""
                 書一。""", 1);
     }
 
     @ParameterizedTest
     @FieldSource("indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData#TEST_DATA")
-    void testExamples(generated_WenyanProgramTestData.TestData testData) throws WenyanThrowException {
+    void testExamples(generated_WenyanProgramTestData.TestData testData) throws WenyanException {
         TestPlatform testPlatform = new TestPlatform();
         assertDoesNotThrow(() -> createAndRun(testData.code(), testPlatform));
         assertNull(testPlatform.error);
@@ -76,7 +75,7 @@ class WenyanProgramTest {
 
         @ParameterizedTest
         @MethodSource("testData")
-        void testNormal(String code, Object... output) throws WenyanThrowException {
+        void testNormal(String code, Object... output) throws WenyanException {
             assertResult(code, output);
         }
 
@@ -107,7 +106,7 @@ class WenyanProgramTest {
 
         @ParameterizedTest
         @MethodSource("testData")
-        void testNormal(String code, Object... output) throws WenyanThrowException {
+        void testNormal(String code, Object... output) throws WenyanException {
             assertResult(code, output);
         }
 
@@ -147,7 +146,7 @@ class WenyanProgramTest {
 
         @ParameterizedTest
         @MethodSource("testData")
-        void testNormal(String code, Object... output) throws WenyanThrowException {
+        void testNormal(String code, Object... output) throws WenyanException {
             assertResult(code, output);
         }
 
@@ -189,7 +188,7 @@ class WenyanProgramTest {
 
         @ParameterizedTest
         @MethodSource("testData")
-        void testNormal(String code, Object... output) throws WenyanThrowException {
+        void testNormal(String code, Object... output) throws WenyanException {
             assertResult(code, output);
         }
 
@@ -217,7 +216,7 @@ class WenyanProgramTest {
         return Arguments.of(code, output);
     }
 
-    private void assertResult(String code, Object... output) throws WenyanThrowException {
+    private void assertResult(String code, Object... output) throws WenyanException {
         TestPlatform testPlatform = new TestPlatform();
         assertDoesNotThrow(() -> createAndRun(code, testPlatform));
         assertNull(testPlatform.error);
@@ -255,7 +254,7 @@ class WenyanProgramTest {
         };
     }
 
-    private void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanThrowException, InterruptedException {
+    private void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
         IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
         wenyanProgram.create(WenyanThread.ofCode(code, testPlatform));
         while (wenyanProgram.isRunning()) {

@@ -4,7 +4,6 @@ import indi.wenyan.judou.runtime.executor.BranchCode;
 import indi.wenyan.judou.runtime.executor.ForCode;
 import indi.wenyan.judou.runtime.executor.WenyanCode;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 
 /**
  * Verifier for WenyanBytecode to ensure execution safety.
@@ -17,7 +16,7 @@ public class WenyanVerifier {
      * @param bytecode The bytecode to verify
      * @throws WenyanException if verification fails
      */
-    public static void verify(WenyanBytecode bytecode) throws WenyanThrowException {
+    public static void verify(WenyanBytecode bytecode) throws WenyanException {
         int codeSize = bytecode.size();
         
         for (int i = 0; i < codeSize; i++) {
@@ -31,7 +30,7 @@ public class WenyanVerifier {
         }
     }
 
-    private static void verifyLabel(WenyanBytecode bytecode, int labelIndex, int instructionIndex) throws WenyanThrowException {
+    private static void verifyLabel(WenyanBytecode bytecode, int labelIndex, int instructionIndex) throws WenyanException {
         try {
             // Check if label index is valid via getLabel and target PC is in valid bytecode range
             int targetPC = bytecode.getLabel(labelIndex);

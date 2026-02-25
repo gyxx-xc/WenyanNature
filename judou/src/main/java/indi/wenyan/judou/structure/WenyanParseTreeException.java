@@ -23,7 +23,7 @@ public class WenyanParseTreeException extends RuntimeException {
         this(message, null, ctx);
     }
 
-    public WenyanParseTreeException(WenyanThrowException e, ParserRuleContext ctx) {
+    public WenyanParseTreeException(WenyanException e, ParserRuleContext ctx) {
         this(e.getMessage(), e, ctx);
     }
 

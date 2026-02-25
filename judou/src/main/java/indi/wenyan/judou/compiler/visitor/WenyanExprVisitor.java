@@ -5,8 +5,8 @@ import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.runtime.function_impl.WenyanResultStack;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanParseTreeException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -49,7 +49,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         int n;
         try {
             n = WenyanDataParser.parseInt(ctx.INT_NUM().getText());
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
         if (n <= 0) {
@@ -64,14 +64,14 @@ public class WenyanExprVisitor extends WenyanVisitor {
         WenyanType<?> type;
         try {
             type = WenyanDataParser.parseType(ctx.type().getText());
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
         for (int i = 0; i < n; i++) {
             if (ctx.d.isEmpty()) {
                 try {
                     bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
-                } catch (WenyanThrowException e) {
+                } catch (WenyanException e) {
                     throw new WenyanParseTreeException(e.getMessage(), ctx);
                 }
             } else {
@@ -90,7 +90,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(ctx.type().getText()).ordinal());
             bytecode.add(WenyanCodes.PUSH_ANS);
             return true;
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
     }
@@ -153,7 +153,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                     argsType.add(new WenyanBuiltinFunction.Arg(type, ctx.id.get(count).getText()));
                     count++;
                 }
-            } catch (WenyanThrowException e) {
+            } catch (WenyanException e) {
                 throw new WenyanParseTreeException(e.getMessage(), ctx);
             }
         }
@@ -234,7 +234,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         int count;
         try {
             count = WenyanDataParser.parseInt(ctx.INT_NUM().getText());
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
 
@@ -285,7 +285,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 }
                 bytecode.add(WenyanCodes.STORE_STATIC_ATTR, variable.IDENTIFIER().getText());
             }
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             throw new WenyanParseTreeException(e.getMessage(), ctx);
         }
 

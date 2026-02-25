@@ -1,7 +1,6 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 
@@ -21,9 +20,9 @@ public interface IAnsweringChecker {
      * @param value the value to check
      * @throws WenyanException.WenyanCheckerError if a checking error occurs
      */
-    void accept(IWenyanValue value) throws WenyanThrowException;
+    void accept(IWenyanValue value) throws WenyanException;
 
-    default void accept(Iterable<IWenyanValue> value) throws WenyanThrowException {
+    default void accept(Iterable<IWenyanValue> value) throws WenyanException {
         for (var v : value)
             accept(v);
     }
