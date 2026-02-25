@@ -66,6 +66,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec(RunnerBlock::new);
+
     @Override
     protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
         return CODEC;
@@ -150,7 +151,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
     }
 
-//    @OnlyIn(Dist.CLIENT)
+    //    @OnlyIn(Dist.CLIENT)
     private static @NotNull CodeEditorBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos, List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
@@ -195,7 +196,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         return new CodeEditorBackend(packageSnippets, synchronizer);
     }
 
-//    @OnlyIn(Dist.CLIENT)
+    //    @OnlyIn(Dist.CLIENT)
     private PackageSnippetWidget.PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack, String name) {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
         execPackage.variables().forEach((k, v) -> {
@@ -214,18 +215,21 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     public enum RunningState implements StringRepresentable {
-        RUNNING("running", 4),
-        IDLE("idle", 4),
-        ERROR("error", 10),
-        NOT_RUNNING("not_running", 0);
+        RUNNING("running", 4, 0),
+        IDLE("idle", 4, 2),
+        ERROR("error", 10, 1),
+        NOT_RUNNING("not_running", 0, 3);
 
         private final String name;
         @Getter
         private final int lightLevel;
+        @Getter
+        private final int uvOrder;
 
-        RunningState(String name, int lightLevel) {
+        RunningState(String name, int lightLevel, int uvOrder) {
             this.name = name;
             this.lightLevel = lightLevel;
+            this.uvOrder = uvOrder;
         }
 
         @Override
