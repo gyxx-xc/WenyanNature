@@ -3,7 +3,6 @@ package indi.wenyan.interpreter_impl.value;
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
@@ -42,7 +41,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
+    public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
             case "「上下」" -> WenyanValues.of(value.y);
             case "「東西」" -> WenyanValues.of(value.x);
@@ -83,7 +82,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         }
 
         @Override
-        public IWenyanValue getAttribute(String name) throws WenyanThrowException {
+        public IWenyanValue getAttribute(String name) throws WenyanException {
             return switch (name) {
                 case "「零」" -> ZERO;
                 case "「上」" -> UP;
@@ -98,7 +97,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
 
         @Override
         @WenyanThreading
-        public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
+        public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
             if (argsList.size() == 1) {
                 return argsList.getFirst().as(WenyanVec3.TYPE);
             } else {

@@ -4,7 +4,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.LoggerManager;
 import lombok.Getter;
@@ -55,7 +55,7 @@ class WenyanProgramImplTest {
                     bytecodeRun();
                 }
                 program().yield(this);
-            } catch (WenyanThrowException e) {
+            } catch (WenyanException e) {
                 try {
                     program().getPlatform().handleError(e.getMessage());
                     program().die(this);
@@ -401,7 +401,7 @@ class WenyanProgramImplTest {
             program.create(runner);
             program.step(5);
             Thread.sleep(20);
-            assertThrows(WenyanException.WenyanUnreachedException.class, () -> program.yield(runner));
+            assertThrows(WenyanUnreachedException.class, () -> program.yield(runner));
             program.stop();
         }
     }
@@ -437,7 +437,7 @@ class WenyanProgramImplTest {
             };
             program.create(runner);
             assertEquals(4, runUntilDone(2));
-            assertThrows(WenyanException.WenyanUnreachedException.class, () -> program.die(runner));
+            assertThrows(WenyanUnreachedException.class, () -> program.die(runner));
         }
     }
 

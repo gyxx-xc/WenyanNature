@@ -4,7 +4,7 @@ import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class PrintInventoryModule extends Item implements IWenyanDevice {
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler("「a」", (HandlerPackageBuilder.HandlerReturnFunction) (context, request) -> {
                 if (!(context instanceof EquipableRunnerItem.ItemContext itemContext)) {
-                    throw new WenyanException.WenyanUnreachedException();
+                    throw new WenyanUnreachedException();
                 }
                 itemContext.player().sendSystemMessage(Component.literal(
                         request.args().getFirst().as(WenyanString.TYPE).value()));

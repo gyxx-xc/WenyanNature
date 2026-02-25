@@ -3,7 +3,6 @@ package indi.wenyan.judou.utils;
 import indi.wenyan.judou.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
@@ -188,7 +187,7 @@ public final class WenyanPackageBuilder {
      */
     @FunctionalInterface
     public interface ReduceFunction {
-        IWenyanValue apply(IWenyanValue a, IWenyanValue b) throws WenyanThrowException;
+        IWenyanValue apply(IWenyanValue a, IWenyanValue b) throws WenyanException;
     }
 
     /**
@@ -196,17 +195,17 @@ public final class WenyanPackageBuilder {
      */
     @FunctionalInterface
     public interface CompareFunction {
-        boolean apply(IWenyanValue a, IWenyanValue b) throws WenyanThrowException;
+        boolean apply(IWenyanValue a, IWenyanValue b) throws WenyanException;
     }
 
     @FunctionalInterface
     public interface ThrowFunction<A, B> {
-        B apply(A a) throws WenyanThrowException;
+        B apply(A a) throws WenyanException;
     }
 
     // STUB: change to a better interface
     @FunctionalInterface
     public interface ThrowBiFunction<A, B, C> {
-        C apply(A a, B b) throws WenyanThrowException;
+        C apply(A a, B b) throws WenyanException;
     }
 }

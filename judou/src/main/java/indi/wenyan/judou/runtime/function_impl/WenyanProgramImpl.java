@@ -5,6 +5,7 @@ import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.IWenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.LoggerManager;
 import lombok.Data;
 import lombok.Getter;
@@ -92,44 +93,44 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     }
 
     @Override
-    public void block(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
+    public void block(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
         var thread = runner.getThread();
         if (thread.getState() == State.READY && allThreads.contains(thread)) {
             thread.setState(State.BLOCKED);
             updateIdle();
             runner.pause();
         } else {
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
         }
     }
 
     @Override
-    public void unblock(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
+    public void unblock(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
         var thread = runner.getThread();
         if (thread.getState() == State.BLOCKED && allThreads.contains(thread)) {
             thread.setState(State.READY);
             submitThread(runner);
         } else {
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
         }
     }
 
     @Override
-    public void yield(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
+    public void yield(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
         var thread = runner.getThread();
         if (thread.getState() == State.READY && allThreads.contains(thread)) {
             submitThread(runner);
             runner.pause();
         } else {
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
         }
     }
 
     @Override
-    public void die(IThreadHolder<PCB> runner) throws WenyanException.WenyanUnreachedException {
+    public void die(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
         var thread = runner.getThread();
         if (thread.getState() == State.DYING || !allThreads.contains(thread))
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
         allThreads.remove(thread);
         thread.setState(State.DYING);
         runner.pause();

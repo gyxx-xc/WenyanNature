@@ -4,6 +4,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
@@ -58,7 +59,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
 //            })
             .handler(WenyanSymbol.var("WorldModule.changeWeather"), 5, (_, request) -> {
                 if (!(getLevel() instanceof ServerLevel serverLevel))
-                    throw new WenyanException.WenyanUnreachedException();
+                    throw new WenyanUnreachedException();
                 String cmd = request.args().getFirst().as(WenyanString.TYPE).value();
                 switch (cmd) {
                     case "晴" -> serverLevel.getWeatherData().setRaining(false);

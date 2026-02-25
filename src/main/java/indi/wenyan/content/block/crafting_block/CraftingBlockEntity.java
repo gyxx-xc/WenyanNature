@@ -11,7 +11,7 @@ import indi.wenyan.content.recipe.AnsweringRecipeInput;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.definitions.WenyanBlocks;
@@ -168,9 +168,9 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     // logic: if cached, if check recipe consistence -> return cached
     // else: recreate the checker
     // called by handler, only runned in server side
-    private IAnsweringChecker getChecker() throws WenyanThrowException {
+    private IAnsweringChecker getChecker() throws WenyanException {
         if (!(getLevel() instanceof ServerLevel sl))
-            throw new WenyanException.WenyanUnreachedException();
+            throw new WenyanUnreachedException();
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         forNearbyPedestal(sl, blockPos(), pedestal -> pedestalItems.add(ItemUtil.getStack(pedestal.getItemHandler(), 0)));
         var optionalRecipeHolder = sl.recipeAccess().getRecipeFor(WyRegistration.ANSWERING_RECIPE_TYPE.get(),

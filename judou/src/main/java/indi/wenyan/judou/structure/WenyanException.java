@@ -1,11 +1,15 @@
 package indi.wenyan.judou.structure;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+
+import java.util.function.Consumer;
 
 /**
  * Base exception class for Wenyan interpreter errors
  */
-public class WenyanException extends WenyanThrowException {
+public class WenyanException extends Exception {
     public WenyanException(String message) {
         super(message);
     }
@@ -14,14 +18,8 @@ public class WenyanException extends WenyanThrowException {
         super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + message);
     }
 
-    public WenyanException(WenyanThrowException e, ParserRuleContext ctx) {
+    public WenyanException(WenyanException e, ParserRuleContext ctx) {
         super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + e.getMessage());
-    }
-
-    public static class WenyanUnreachedException extends WenyanException {
-        public WenyanUnreachedException() {
-            super("unreached, please report an issue");
-        }
     }
 
     /**
@@ -68,4 +66,16 @@ public class WenyanException extends WenyanThrowException {
             super(message);
         }
     }
+
+    // STUB: should use a abstract class
+    public void handle(Consumer<String> output, Logger logger, @Nullable ErrorContext context) {
+        if (context == null) {
+            output.accept(getMessage());
+        } else {
+            output.accept(context.line() + ":" + context.column() + " " +
+                    context.segment() + ": " + getMessage());
+        }
+    }
+
+    public record ErrorContext(int line, int column, String segment) {}
 }

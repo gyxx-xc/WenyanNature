@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values.builtin;
 
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -27,7 +27,7 @@ public class WenyanBuiltinObject implements IWenyanObject {
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) throws WenyanThrowException {
+    public IWenyanValue getAttribute(String name) throws WenyanException {
         var value = variable.get(name);
         if (value == null) {
             value = type.getFunction(name);

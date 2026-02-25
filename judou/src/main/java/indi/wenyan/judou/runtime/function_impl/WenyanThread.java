@@ -8,9 +8,9 @@ import indi.wenyan.judou.compiler.visitor.WenyanVisitor;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
+import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanParseTreeException;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.LanguageManager;
@@ -19,6 +19,7 @@ import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -28,7 +29,7 @@ import java.util.Deque;
  * Manages its execution state and runtime stack.
  */
 @WenyanThreading
-public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
+public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
     @Getter
     @Setter
     private WenyanProgramImpl.PCB thread;
@@ -49,18 +50,14 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
         this.code = code;
     }
 
-    public static @NotNull WenyanThread ofCode(String code, IWenyanPlatform platform) throws WenyanThrowException {
+    public static @NotNull WenyanThread ofCode(String code, IWenyanPlatform platform) throws WenyanCompileException {
         WenyanThread thread = new WenyanThread(code);
         thread.call(platform.initEnvironment());
 
         var bytecode = new WenyanBytecode();
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode);
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
-        try {
-            visitor.visit(WenyanVisitor.program(code));
-        } catch (WenyanParseTreeException e) {
-            throw new WenyanException(e.getMessage());
-        }
+        visitor.visit(WenyanVisitor.program(code));
         environment.enterContext(0, 0, 0, 0);
         environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
         environment.add(WenyanCodes.RET);
@@ -86,12 +83,12 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
 
                 WenyanRuntime runtime = currentRuntime();
                 if (runtime.getBytecode() == null) {
-                    dieWithException(new WenyanException.WenyanUnreachedException());
+                    dieWithException(new WenyanUnreachedException());
                     return;
                 }
 
                 if (runtime.programCounter < 0 || runtime.programCounter >= runtime.getBytecode().size()) {
-                    dieWithException(new WenyanException.WenyanUnreachedException());
+                    dieWithException(new WenyanUnreachedException());
                     return;
                 }
 
@@ -107,7 +104,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
 
                 if (willPause) return;
             } catch (Exception e) {
-                dieWithException(e);
+                dieWithException(new WenyanUnreachedException.WenyanUnexceptedException(e));
                 // rethrow interrupt
                 if (e instanceof InterruptedException)
                     //noinspection ResultOfMethodCallIgnored
@@ -127,49 +124,27 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
         willPause = true;
     }
 
-    public void dieWithException(Exception e) {
+    public void dieWithException(WenyanException e) {
+        var runtime = currentRuntime();
+        Logger logger = LoggerManager.getLogger();
+        WenyanException.ErrorContext errorContext = null;
         try {
-            var runtime = currentRuntime();
-            if (runtime.getBytecode() == null) {
-                LoggerManager.getLogger().error("during handling an exception", e);
-                platform().handleError("WenyanThread died with an unexpected exception, killed");
-                return;
+            if (runtime != null && runtime.getBytecode() != null) {
+                WenyanBytecode.Context context = runtime.getBytecode().getContext(runtime.programCounter - 1);
+                errorContext = new WenyanException.ErrorContext(
+                        context.line(), context.column(),
+                        code.substring(context.contentStart(), context.contentEnd()));
             }
-            switch (e) {
-                case WenyanException.WenyanUnreachedException ignored -> {
-                    LoggerManager.getLogger().error("WenyanThread died with an unexpected exception", e);
-                    LoggerManager.getLogger().debug("{}", code);
-                    WenyanBytecode.Context context =
-                            runtime.getBytecode().getContext(runtime.programCounter - 1);
-                    String segment = code.substring(context.contentStart(), context.contentEnd());
-                    LoggerManager.getLogger().error("{}:{} {}", context.line(), context.column(), segment);
-                    platform().handleError("WenyanThread died with an unexpected exception, killed");
-                }
-                case WenyanException ignored -> {
-                    WenyanBytecode.Context context = runtime.getBytecode().getContext(runtime.programCounter);
-                    platform().handleError(context.line() + ":" + context.column() + " " +
-                            code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
-                }
-                case WenyanThrowException ignored -> {
-                    WenyanBytecode.Context context =
-                            runtime.getBytecode().getContext(runtime.programCounter - 1);
-                    platform().handleError(context.line() + ":" + context.column() + " " +
-                            code.substring(context.contentStart(), context.contentEnd()) + " " + e.getMessage());
-                }
-                case null, default ->
-                        throw new WenyanException.WenyanUnreachedException(); // catch by outside
-            }
-        } catch (Exception unexpected) {
-            LoggerManager.getLogger().error("during handling an exception", e);
-            LoggerManager.getLogger().error("WenyanThread died with an unexpected exception", unexpected);
-            platform().handleError("WenyanThread died with an unexpected exception, killed");
+        } catch (WenyanException.WenyanVarException |
+                 IndexOutOfBoundsException ignore) {// cause error context be null, handled below
         }
+        if (errorContext == null)
+            logger.error("Unexpected, failed to get code context during handling an exception", e);
+        e.handle(platform()::handleError, logger, errorContext);
         try {
             die();
-        } catch (WenyanException ex) {
-            LoggerManager.getLogger().error("during handling an exception", e);
-            LoggerManager.getLogger().error("WenyanThread died with an unexpected exception", ex);
-            platform().handleError("WenyanThread died with an unexpected exception, killed");
+        } catch (WenyanUnreachedException ignore) {
+            logger.error("Unexpected, failed to die after handling an exception", e);
         }
     }
 
@@ -206,7 +181,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
      * @return The variable value
      * @throws WenyanException If the variable is not found
      */
-    public IWenyanValue getGlobalVariable(String id) throws WenyanThrowException {
+    public IWenyanValue getGlobalVariable(String id) throws WenyanException {
         IWenyanValue value = null;
         // TODO: use closure or at least a cache
         for (var runtime : runtimes) {
@@ -227,7 +202,7 @@ public class WenyanThread  implements IThreadHolder<WenyanProgramImpl.PCB> {
     private boolean willDie = false;
 
     @Override
-    public void die() throws WenyanException {
+    public void die() throws WenyanUnreachedException {
         willDie = true;
         IThreadHolder.super.die();
     }

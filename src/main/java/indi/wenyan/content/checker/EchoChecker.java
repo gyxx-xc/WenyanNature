@@ -1,7 +1,6 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
@@ -27,13 +26,13 @@ public class EchoChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void accept(IWenyanValue value) throws WenyanThrowException {
+    public void accept(IWenyanValue value) throws WenyanException {
         try {
             if (IWenyanValue.equals(value, ans)){
                 setResult(ResultStatus.ANSWER_CORRECT);
                 return;
             }
-        } catch (WenyanThrowException e) {
+        } catch (WenyanException e) {
             setResult(ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }

@@ -5,7 +5,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
@@ -38,7 +38,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler(WenyanSymbol.var("ExplosionModule.lightning"), _ -> {
                 if (!(getLevel() instanceof ServerLevel sl))
-                    throw new WenyanException.WenyanUnreachedException();
+                    throw new WenyanUnreachedException();
                 EntityType.LIGHTNING_BOLT.spawn(sl, blockPos(), EntitySpawnReason.COMMAND);
                 return WenyanNull.NULL;
             })
@@ -53,7 +53,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                 var offset = request.args().getFirst().as(WenyanVec3.TYPE).value(); 
                 BlockPos pos = blockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
                 if (!(getLevel() instanceof ServerLevel serverLevel)) {
-                    throw new WenyanException.WenyanUnreachedException();
+                    throw new WenyanUnreachedException();
                 }
                 Items.FLINT_AND_STEEL.useOn(new UseOnContext(
                         serverLevel,
@@ -66,7 +66,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
             .handler(WenyanSymbol.var("ExplosionModule.fireball"), request -> {
                 var speed = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 if (!(getLevel() instanceof ServerLevel sl))
-                    throw new WenyanException.WenyanUnreachedException();
+                    throw new WenyanUnreachedException();
                 var e = new LargeFireball(EntityType.FIREBALL, sl);
                 LargeFireball.spawnProjectile(e, sl, ItemStack.EMPTY);
                 e.setPos(blockPos().offset(0, 1, 0).getCenter());

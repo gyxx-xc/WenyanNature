@@ -12,8 +12,8 @@ import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
@@ -229,7 +229,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         super.setRemoved();
     }
 
-    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanThrowException {
+    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException {
         assert level != null;
         for (BlockPos b : BlockPos.betweenClosed(
                 getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
@@ -247,9 +247,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
     }
 
-    private WenyanThread createPlatformThread(RunnerBlockEntity platform) throws WenyanThrowException {
+    private WenyanThread createPlatformThread(RunnerBlockEntity platform) throws WenyanException {
         showCommunication(platform.getBlockPos());
-        // STUB
+        // STUB: better error handling
         var threadOptional = platform.newThread(platform.code);
         // this exception is for import-er thread
         // in the same time, there's an error in import-ee's platform
@@ -260,14 +260,21 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         assert getLevel() != null;
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
+        WenyanThread runner;
+        // STUB: better error handling
         try {
-            WenyanThread runner = WenyanThread.ofCode(pages, this);
-            getProgram().create(runner);
-            return Optional.of(runner);
-        } catch (WenyanThrowException e) {
+            runner = WenyanThread.ofCode(pages, this);
+        } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return Optional.empty();
         }
+        try {
+            getProgram().create(runner);
+        } catch (WenyanException e) {
+            handleError(e.getMessage());
+            return Optional.empty();
+        }
+        return Optional.of(runner);
     }
 
     private WenyanPackage getExecutorPackage(IWenyanBlockDevice executor) {
@@ -346,12 +353,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         IRawRequest request;
 
         @Override
-        public boolean handle(IHandleContext context) throws WenyanThrowException {
+        public boolean handle(IHandleContext context) throws WenyanException {
             return request.handle(context, this);
         }
 
         @Override
-        public void noticePlatform(IWenyanPlatform platform, IHandleContext context) throws WenyanThrowException {
+        public void noticePlatform(IWenyanPlatform platform, IHandleContext context) throws WenyanException {
             if (device().isRemoved()) {
                 throw new WenyanException("device removed");
             }

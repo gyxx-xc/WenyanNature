@@ -3,7 +3,7 @@ package indi.wenyan.judou.exec_interface;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanPackages;
 
 /**
@@ -18,7 +18,7 @@ public interface IWenyanPlatform extends IExecReceiver {
      * @param request The request to process
      */
     @Deprecated
-    default void notice(IHandleableRequest request, IHandleContext context) throws WenyanThrowException {}
+    default void notice(IHandleableRequest request, IHandleContext context) throws WenyanException {}
 
     /**
      * Initializes the platform environment for the Wenyan runtime

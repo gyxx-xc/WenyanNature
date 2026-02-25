@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values;
 
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 
 /**
@@ -19,5 +19,5 @@ public interface IWenyanObject extends IWenyanValue {
      * @param name the name of the attribute
      * @return the value of the attribute
      */
-    IWenyanValue getAttribute(String name) throws WenyanThrowException;
+    IWenyanValue getAttribute(String name) throws WenyanException;
 }

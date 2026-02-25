@@ -3,7 +3,6 @@ package indi.wenyan.judou.exec_interface.structure;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
@@ -26,7 +25,7 @@ public final class ImportRequest implements BaseHandleableRequest {
     private Status status = Status.FIRST_RUN;
     private Either<WenyanPackage, WenyanThread> packageOrThread;
 
-    public ImportRequest(WenyanThread thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanThrowException {
+    public ImportRequest(WenyanThread thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException {
         this.thread = thread;
         this.platform = platform;
         this.getPackage = getPackage;
@@ -40,7 +39,7 @@ public final class ImportRequest implements BaseHandleableRequest {
 
     // logic too complex, impl in Automata
     @Override
-    public boolean handle(IHandleContext context) throws WenyanThrowException {
+    public boolean handle(IHandleContext context) throws WenyanException {
         //noinspection LoopStatementThatDoesntLoop
         while (true)
             switch (status) {
@@ -77,7 +76,7 @@ public final class ImportRequest implements BaseHandleableRequest {
             }
     }
 
-    private void returnPackage(@NotNull WenyanPackage wenyanPackage) throws WenyanThrowException {
+    private void returnPackage(@NotNull WenyanPackage wenyanPackage) throws WenyanException {
         if (args.isEmpty()) {
             throw new WenyanException("参数错误");
         }
@@ -110,8 +109,8 @@ public final class ImportRequest implements BaseHandleableRequest {
          * @param context     the handling context, used to manage execution state
          * @param packageName the name of the package to retrieve
          * @return the requested package
-         * @throws WenyanThrowException if the package cannot be found or accessed
+         * @throws WenyanException if the package cannot be found or accessed
          */
-        Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanThrowException;
+        Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException;
     }
 }

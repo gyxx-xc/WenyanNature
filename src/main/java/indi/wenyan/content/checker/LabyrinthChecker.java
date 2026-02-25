@@ -2,7 +2,6 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
@@ -69,7 +68,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
 
             @Override
             @WenyanThreading
-            public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
+            public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
                 return new Position(argsList.get(0).as(WenyanInteger.TYPE).value(),
                         argsList.get(1).as(WenyanInteger.TYPE).value());
             }
@@ -196,7 +195,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     }
 
     @Override
-    public void accept(IWenyanValue value) throws WenyanThrowException {
+    public void accept(IWenyanValue value) throws WenyanException {
         try {
             if (value.as(Position.TYPE) instanceof Position(int dx, int dy)) {
                 if (Math.abs(dx) + Math.abs(dy) != 1) {

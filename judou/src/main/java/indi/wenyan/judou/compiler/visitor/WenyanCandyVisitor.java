@@ -3,8 +3,8 @@ package indi.wenyan.judou.compiler.visitor;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.structure.WenyanParseTreeException;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanCompileException;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
@@ -36,8 +36,8 @@ public class WenyanCandyVisitor extends WenyanVisitor {
         int n;
         try {
             n = WenyanDataParser.parseInt(ctx.declare_statement().INT_NUM().getText());
-        } catch (WenyanThrowException e) {
-            throw new WenyanParseTreeException(e.getMessage(), ctx);
+        } catch (WenyanException e) {
+            throw new WenyanCompileException(e.getMessage(), ctx);
         }
         bytecode.add(WenyanCodes.PEEK_ANS_N, n);
         bytecode.add(WenyanCodes.LOAD, ctx.WRITE_KEY_FUNCTION().getText());
@@ -57,7 +57,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             case WenyanRParser.AND -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.AND_ID);
             case WenyanRParser.OR -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.OR_ID);
             default ->
-                    throw new WenyanParseTreeException(LanguageManager.getTranslation("error.wenyan_programming.unknown_operator"), ctx);
+                    throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.unknown_operator"), ctx);
         }
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -76,7 +76,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
                 exprVisitor.visit(ctx.data(1));
                 break;
             default:
-                throw new WenyanParseTreeException(LanguageManager.getTranslation("error.wenyan_programming.unknown_preposition"), ctx);
+                throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.unknown_preposition"), ctx);
         }
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);

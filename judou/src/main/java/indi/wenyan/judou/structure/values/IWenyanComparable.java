@@ -1,7 +1,6 @@
 package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
 import indi.wenyan.judou.structure.WenyanType;
 
 public interface IWenyanComparable extends IWenyanValue {
@@ -14,5 +13,5 @@ public interface IWenyanComparable extends IWenyanValue {
      * @return a negative integer, zero, or a positive integer as this value is less than, equal to, or greater than the specified value
      * @throws WenyanException.WenyanTypeException if the types are incompatible for comparison
      */
-    int compareTo(IWenyanValue other) throws WenyanThrowException;
+    int compareTo(IWenyanValue other) throws WenyanException;
 }

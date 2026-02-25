@@ -4,7 +4,7 @@ import indi.wenyan.annotation_processor.annotation.WenyanConstructor;
 import indi.wenyan.annotation_processor.annotation.WenyanField;
 import indi.wenyan.annotation_processor.annotation.WenyanMethod;
 import indi.wenyan.annotation_processor.annotation.WenyanObjectValue;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -44,7 +44,7 @@ public class TestAnnotationWenyanValue {
     }
 
     @WenyanConstructor
-    public static IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanThrowException {
+    public static IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
         return new TestAnnotationWenyanValueObject();
     }
 }

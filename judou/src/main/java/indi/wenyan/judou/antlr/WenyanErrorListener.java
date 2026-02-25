@@ -1,6 +1,6 @@
 package indi.wenyan.judou.antlr;
 
-import indi.wenyan.judou.structure.WenyanParseTreeException;
+import indi.wenyan.judou.structure.WenyanCompileException;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -14,6 +14,6 @@ public class WenyanErrorListener extends BaseErrorListener {
             int charPositionInLine,
             String msg,
             RecognitionException e) {
-        throw new WenyanParseTreeException("line " + line + ":" + charPositionInLine + " " + msg + "\nwith " + e);
+        throw new WenyanCompileException("line " + line + ":" + charPositionInLine + " " + msg + "\nwith " + e);
     }
 }

@@ -3,7 +3,7 @@ package indi.wenyan.judou.runtime.executor;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanThrowException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
@@ -30,12 +30,12 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanThrowException {
+    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case LOAD -> {
                 if (runtime.getBytecode() == null)
-                    throw new WenyanException.WenyanUnreachedException();
+                    throw new WenyanUnreachedException();
                 String id = runtime.getBytecode().getIdentifier(args);
                 IWenyanValue value = thread.getGlobalVariable(id);
                 if (value == null) {
@@ -45,7 +45,7 @@ public class VariableCode extends WenyanCode {
             }
             case STORE -> {
                 if (runtime.getBytecode() == null)
-                    throw new WenyanException.WenyanUnreachedException();
+                    throw new WenyanUnreachedException();
                 runtime.setVariable(runtime.getBytecode().getIdentifier(args),
                         WenyanLeftValue.varOf(runtime.getProcessStack().pop()));
             }
@@ -82,7 +82,7 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, WenyanThread thread) throws WenyanThrowException {
+    public int getStep(int args, WenyanThread thread) throws WenyanException {
         if (operation == Operation.LOAD) {
             return thread.runtimeSize();
         }
