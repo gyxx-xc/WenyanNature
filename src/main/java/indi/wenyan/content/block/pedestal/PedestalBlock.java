@@ -17,6 +17,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -49,16 +51,13 @@ public class PedestalBlock extends Block implements EntityBlock {
         if (handIn != InteractionHand.MAIN_HAND)
             return InteractionResult.TRY_WITH_EMPTY_HAND;
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof PedestalBlockEntity tile) {
-            if (player.getItemInHand(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
+                var itemResource = ResourceHandlerUtil.extractFirst(tile.getItemHandler(), _ -> true, 1, null);
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(),
+                        itemResource == null ? ItemStack.EMPTY : itemResource.resource().toStack());
                 world.addFreshEntity(item);
-                tile.setStack(ItemStack.EMPTY);
-            } else if (!player.getInventory().getSelectedItem().isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
-                world.addFreshEntity(item);
-                tile.setStack(player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1));
-            }
-            world.sendBlockUpdated(pos, state, state, 2);
+            if (!player.getItemInHand(handIn).isEmpty() && !player.getInventory().getSelectedItem().isEmpty())
+                ItemUtil.insertItemReturnRemaining(tile.getItemHandler(),
+                        player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1), false, null);
         }
         return InteractionResult.SUCCESS;
     }

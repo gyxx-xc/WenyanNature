@@ -25,7 +25,6 @@ import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.CommunicationLocationPacket;
 import indi.wenyan.setup.network.PlatformOutputPacket;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -71,7 +70,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     @Getter
-    @Setter
     private String code = "";
     @Getter
     private final Deque<Component> outputQueue = new ArrayDeque<>();
@@ -205,15 +203,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public static final String PAGES_ID = "pages";
     public static final String PLATFORM_NAME_ID = "platformName";
 
-    @SuppressWarnings("unused")
     @Override
     protected void saveData(ValueOutput tag) {
-        if (code != null)
-            tag.putString(PAGES_ID, code);
+        tag.putString(PAGES_ID, code);
         tag.putString(PLATFORM_NAME_ID, platformName);
     }
 
-    @SuppressWarnings("unused")
     @Override
     protected void loadData(ValueInput tag) {
         tag.getString(PAGES_ID).ifPresent(this::setCode);
@@ -296,6 +291,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                     new CommunicationLocationPacket(getBlockPos(), blockPos.getCenter().toVector3f())
             );
         }
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+        setChanged();
     }
 
     public void setPlatformName(String platformName) {

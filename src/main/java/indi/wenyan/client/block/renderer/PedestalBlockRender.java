@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -30,7 +31,7 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
             float partialTicks, @NonNull Vec3 cameraPosition,
             ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
-        var itemStack = blockEntity.getStack();
+        var itemStack = ItemUtil.getStack(blockEntity.getItemHandler(), 0);
         if (!itemStack.isEmpty())
             itemModelResolver.updateForTopItem(state.itemState,
                     itemStack,

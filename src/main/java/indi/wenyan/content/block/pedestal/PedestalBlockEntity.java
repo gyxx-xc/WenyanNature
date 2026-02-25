@@ -1,11 +1,11 @@
 package indi.wenyan.content.block.pedestal;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -17,7 +17,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PedestalBlockEntity extends BlockEntity {
+public class PedestalBlockEntity extends DataBlockEntity {
     @Getter
     private final ResourceHandler<ItemResource> itemHandler = createItemHandler();
     private ItemStack itemStack = ItemStack.EMPTY;
@@ -36,6 +36,7 @@ public class PedestalBlockEntity extends BlockEntity {
             @Override
             protected void setStack(ItemStack stack) {
                 itemStack = stack;
+                updateBlock();
             }
 
             @Override
@@ -46,23 +47,19 @@ public class PedestalBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.store("item", ItemStack.CODEC, itemStack);
+    protected void saveData(ValueOutput output) {
+        output.store("item", ItemStack.OPTIONAL_CODEC, itemStack);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        input.read("item", ItemStack.CODEC)
+    protected void loadData(ValueInput input) {
+        input.read("item", ItemStack.OPTIONAL_CODEC)
                 .ifPresent(itemStack -> this.itemStack = itemStack);
     }
 
-    public ItemStack getStack() {
-        return itemStack;
-    }
-
-    public void setStack(ItemStack stack) {
-        itemStack = stack;
+    public void updateBlock() {
+        assert getLevel() != null;
+        getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
+        setChanged();
     }
 }
