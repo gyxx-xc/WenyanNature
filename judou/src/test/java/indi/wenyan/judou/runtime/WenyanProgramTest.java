@@ -213,6 +213,51 @@ class WenyanProgramTest {
         }
     }
 
+    @Nested
+    class AwaitStatement {
+        private static Stream<Arguments> testData() {
+            return Stream.of(
+                    timedArgs("待一\n", 3),
+                    timedArgs("待十\n", 12),
+                    timedArgs("待二十\n", 32),
+                    timedArgs("待一待一待一\n", 7),
+                    timedArgs("待十待一\n", 14)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("testData")
+        void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
+            TestPlatform testPlatform = new TestPlatform();
+            IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
+            wenyanProgram.create(WenyanThread.ofCode(code, testPlatform));
+            int cnt = 0;
+            while (wenyanProgram.isRunning()) {
+                wenyanProgram.step(1000);
+                testPlatform.handle(IHandleContext.NONE);
+                cnt ++;
+                //noinspection BusyWait
+                Thread.sleep(5);
+            }
+            assertNull(testPlatform.error);
+            assertEquals(ticks, cnt);
+        }
+
+        private static Arguments timedArgs(String code, int ticks) {
+            return Arguments.of(code, ticks);
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "待一以一\n",
+                "待「「a」」\n",
+                "待千兆\n",
+        })
+        void testRuntimeError(String code) {
+            assertRuntimeError(code);
+        }
+    }
+
     private static Arguments resultArgs(String code, Object... output) {
         return Arguments.of(code, output);
     }

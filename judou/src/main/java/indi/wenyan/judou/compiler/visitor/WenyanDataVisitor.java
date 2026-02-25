@@ -29,7 +29,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         try {
             IWenyanValue value = switch (ctx.data_type.getType()) {
                 case WenyanRParser.BOOL_VALUE -> WenyanValues.of(WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()));
-                case WenyanRParser.INT_NUM -> WenyanValues.of(WenyanDataParser.parseInt(ctx.INT_NUM().getText()));
+                case WenyanRParser.INT_NUM -> WenyanDataParser.parseWyInt(ctx.INT_NUM().getText());
                 case WenyanRParser.FLOAT_NUM -> WenyanValues.of(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));
                 case WenyanRParser.STRING_LITERAL -> WenyanValues.of(WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()));
                 default -> throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"), ctx);

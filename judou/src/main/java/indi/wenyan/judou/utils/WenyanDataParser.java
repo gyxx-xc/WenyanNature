@@ -4,16 +4,19 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
+import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public enum WenyanDataParser {;
+public enum WenyanDataParser {
+    ;
     //Todo: translate to CHS
     public static final String PARENT_ID = "父";
     public static final String SELF_ID = "己";
@@ -114,12 +117,30 @@ public enum WenyanDataParser {;
         put("術", IWenyanFunction.TYPE);
     }};
 
+    public static IWenyanValue parseWyInt(String text) throws WenyanException.WenyanNumberException {
+        boolean hasSign = SIGN.contains(text.substring(0, 1));
+        Num num;
+        if (hasSign) num = parseIntHelper(text.substring(1));
+        else num = parseIntHelper(text);
+        String value = (hasSign ? "-" : "") + num.num + "0".repeat(num.exp);
+        try {
+            return WenyanValues.of(Integer.parseInt(value));
+        } catch (NumberFormatException ignore) {
+            // fall through
+        }
+        try {
+            return WenyanValues.of(new BigInteger(value));
+        } catch (NumberFormatException e1) {
+            throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"));
+        }
+    }
+
     public static int parseInt(String text) throws WenyanException.WenyanNumberException {
         if (SIGN.contains(text.substring(0, 1)))
             return -parseInt(text.substring(1));
         Num num = parseIntHelper(text);
         int n;
-        try{
+        try {
             n = Integer.parseInt(num.num + "0".repeat(num.exp));
         } catch (NumberFormatException e) {
             throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"));
@@ -137,10 +158,10 @@ public enum WenyanDataParser {;
                 double result = parseInt(parts[0]);
                 // parts 2 (Int FLOAT_EXP)+
                 int last = 0;
-                for (int i = 0; i < parts[1].length(); i ++) {
-                    if (FLOAT_EXP.containsKey(parts[1].substring(i, i+1))) {
+                for (int i = 0; i < parts[1].length(); i++) {
+                    if (FLOAT_EXP.containsKey(parts[1].substring(i, i + 1))) {
                         result += Double.parseDouble(parseInt(parts[1].substring(last, i))
-                                +"e"+FLOAT_EXP.get(parts[1].substring(i, i+1)));
+                                + "e" + FLOAT_EXP.get(parts[1].substring(i, i + 1)));
                         last = i + 1;
                     }
                 }
@@ -175,17 +196,17 @@ public enum WenyanDataParser {;
         if (EXP.containsKey(lastChar)) {
             // case of (num EXP num EXP) 一萬一百
             for (int i = num.length() - 2; i >= 0; i--) {
-                if (EXP.containsKey(num.substring(i, i+1))
-                        && EXP.get(num.substring(i, i+1)) > EXP.get(lastChar)) {
+                if (EXP.containsKey(num.substring(i, i + 1))
+                        && EXP.get(num.substring(i, i + 1)) > EXP.get(lastChar)) {
 
-                    Num l = parseIntHelper(num.substring(0, i+1));
+                    Num l = parseIntHelper(num.substring(0, i + 1));
                     Num r;
                     // if (num EXP 0 num EXP) 一萬零一百
-                    if (DIGIT.containsKey(num.substring(i+1, i+2))
-                            && DIGIT.get(num.substring(i+1, i+2)) == 0)
-                        r = parseIntHelper(num.substring(i+2));
+                    if (DIGIT.containsKey(num.substring(i + 1, i + 2))
+                            && DIGIT.get(num.substring(i + 1, i + 2)) == 0)
+                        r = parseIntHelper(num.substring(i + 2));
                     else
-                        r = parseIntHelper(num.substring(i+1));
+                        r = parseIntHelper(num.substring(i + 1));
                     return l.add(r);
                 }
             }
@@ -197,15 +218,15 @@ public enum WenyanDataParser {;
         } else if (DIGIT.containsKey(lastChar)) {
             // case of (num EXP num EXP) 一萬一
             for (int i = num.length() - 2; i >= 0; i--) {
-                if (EXP.containsKey(num.substring(i, i+1))) {
-                    Num l = parseIntHelper(num.substring(0, i+1));
+                if (EXP.containsKey(num.substring(i, i + 1))) {
+                    Num l = parseIntHelper(num.substring(0, i + 1));
                     Num r;
                     // if (num EXP 0 num EXP) 一萬零一
-                    if (DIGIT.containsKey(num.substring(i+1, i+2))
-                            && DIGIT.get(num.substring(i+1, i+2)) == 0)
-                        r = parseIntHelper(num.substring(i+2));
+                    if (DIGIT.containsKey(num.substring(i + 1, i + 2))
+                            && DIGIT.get(num.substring(i + 1, i + 2)) == 0)
+                        r = parseIntHelper(num.substring(i + 2));
                     else
-                        r = parseIntHelper(num.substring(i+1));
+                        r = parseIntHelper(num.substring(i + 1));
                     return l.add(r);
                 }
             }
@@ -213,12 +234,12 @@ public enum WenyanDataParser {;
             StringBuilder res = new StringBuilder();
             boolean zero = true;
             for (int i = 0; i < num.length(); i++) {
-                if (!DIGIT.containsKey(num.substring(i, i+1)))
+                if (!DIGIT.containsKey(num.substring(i, i + 1)))
                     throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.unexpected_character"));
-                if (zero && DIGIT.get(num.substring(i, i+1)) != 0)
+                if (zero && DIGIT.get(num.substring(i, i + 1)) != 0)
                     zero = false;
                 if (!zero)
-                    res.append(DIGIT.get(num.substring(i, i+1)));
+                    res.append(DIGIT.get(num.substring(i, i + 1)));
             }
             if (zero)
                 return new Num("0", 0);
@@ -232,18 +253,18 @@ public enum WenyanDataParser {;
     private record Num(String num, int exp) {
 
         Num add(Num other) throws WenyanException.WenyanNumberException {
-                if (exp - other.exp < other.num.length())
-                    throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"));
-                return new Num(
-                        num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
-                        other.exp);
-            }
-
-            Num shift(int exp) {
-                if ("0".equals(num))
-                    return this;
-                else
-                    return new Num(num, this.exp + exp);
-            }
+            if (exp - other.exp < other.num.length())
+                throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"));
+            return new Num(
+                    num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
+                    other.exp);
         }
+
+        Num shift(int exp) {
+            if ("0".equals(num))
+                return this;
+            else
+                return new Num(num, this.exp + exp);
+        }
+    }
 }

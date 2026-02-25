@@ -123,6 +123,7 @@ key_function                : op=(
                             | ARRAY_COMBINE_OP
                             | ARRAY_ADD_OP
                             | WRITE_KEY_FUNCTION
+                            | AWAIT_KEY_FUNCTION
                             ) ;
 
 type                        : NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE ;
@@ -221,6 +222,7 @@ UNARY_OP                    : '變';
 ARRAY_COMBINE_OP            : '銜';
 ARRAY_ADD_OP                : '充' ;
 WRITE_KEY_FUNCTION          : '書';
+AWAIT_KEY_FUNCTION          : '待' ;
 FLUSH                       : '噫' ;
 
 SELF                        : '己' ;
