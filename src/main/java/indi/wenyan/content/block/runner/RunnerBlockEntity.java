@@ -11,6 +11,7 @@ import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -252,7 +253,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     private WenyanThread createPlatformThread(RunnerBlockEntity platform) throws WenyanException {
         showCommunication(platform.getBlockPos());
-        // STUB
+        // STUB: better error handling
         var threadOptional = platform.newThread(platform.code);
         // this exception is for import-er thread
         // in the same time, there's an error in import-ee's platform
@@ -263,14 +264,21 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         assert getLevel() != null;
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
+        WenyanThread runner;
+        // STUB: better error handling
         try {
-            WenyanThread runner = WenyanThread.ofCode(pages, this);
+            runner = WenyanThread.ofCode(pages, this);
+        } catch (WenyanCompileException e) {
+            handleError(e.getMessage());
+            return Optional.empty();
+        }
+        try {
             getProgram().create(runner);
-            return Optional.of(runner);
         } catch (WenyanException e) {
             handleError(e.getMessage());
             return Optional.empty();
         }
+        return Optional.of(runner);
     }
 
     private WenyanPackage getExecutorPackage(IWenyanBlockDevice executor) {

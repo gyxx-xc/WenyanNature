@@ -3,8 +3,8 @@ package indi.wenyan.judou.compiler.visitor;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
+import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanParseTreeException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
@@ -32,12 +32,12 @@ public class WenyanDataVisitor extends WenyanVisitor {
                 case WenyanRParser.INT_NUM -> WenyanValues.of(WenyanDataParser.parseInt(ctx.INT_NUM().getText()));
                 case WenyanRParser.FLOAT_NUM -> WenyanValues.of(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));
                 case WenyanRParser.STRING_LITERAL -> WenyanValues.of(WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()));
-                default -> throw new WenyanParseTreeException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"), ctx);
+                default -> throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"), ctx);
             };
             bytecode.add(WenyanCodes.PUSH, value);
             return true;
         } catch (WenyanException e) {
-            throw new WenyanParseTreeException(e, ctx);
+            throw new WenyanCompileException(e, ctx);
         }
     }
 
@@ -88,12 +88,12 @@ public class WenyanDataVisitor extends WenyanVisitor {
                     bytecode.add(WenyanCodes.PUSH, WenyanValues.of(
                             WenyanDataParser.parseInt(ctx.INT_NUM().getText())));
                 } catch (WenyanException.WenyanNumberException e) {
-                    throw new WenyanParseTreeException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"), ctx);
+                    throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"), ctx);
                 }
             }
             case WenyanRParser.DATA_ID_LAST ->
                     bytecode.add(WenyanCodes.POP_ANS);
-            default -> throw new WenyanParseTreeException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"), ctx);
+            default -> throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"), ctx);
         }
         visit(ctx.data());
         bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanDataParser.ARRAY_GET_ID);
@@ -107,7 +107,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
         switch (ctx.p.getType()) {
             case WenyanRParser.LONG -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.LONG().getText());
             case WenyanRParser.IDENTIFIER -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.IDENTIFIER().getText());
-            default -> throw new WenyanParseTreeException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"), ctx);
+            default -> throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"), ctx);
         }
         return true;
     }

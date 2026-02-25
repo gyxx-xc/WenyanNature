@@ -3,27 +3,27 @@ package indi.wenyan.judou.structure;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.Nullable;
 
-public class WenyanParseTreeException extends RuntimeException {
+public class WenyanCompileException extends RuntimeException {
     @Nullable
     final Throwable cause;
     @Nullable
     final transient ParserRuleContext ctx;
 
-    public WenyanParseTreeException(String message) {
+    public WenyanCompileException(String message) {
         this(message, null, null);
     }
 
-    public WenyanParseTreeException(String message, @Nullable Throwable cause, @Nullable ParserRuleContext ctx) {
+    public WenyanCompileException(String message, @Nullable Throwable cause, @Nullable ParserRuleContext ctx) {
         super(message);
         this.cause = cause;
         this.ctx = ctx;
     }
 
-    public WenyanParseTreeException(String message, ParserRuleContext ctx) {
+    public WenyanCompileException(String message, ParserRuleContext ctx) {
         this(message, null, ctx);
     }
 
-    public WenyanParseTreeException(WenyanException e, ParserRuleContext ctx) {
+    public WenyanCompileException(WenyanException e, ParserRuleContext ctx) {
         this(e.getMessage(), e, ctx);
     }
 

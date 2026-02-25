@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 
 public interface IThreadHolder<T extends IWenyanThread> {
     void run(int step);
@@ -19,23 +19,23 @@ public interface IThreadHolder<T extends IWenyanThread> {
         return program().getPlatform();
     }
 
-    default void block() throws WenyanException {
+    default void block() throws WenyanUnreachedException {
         program().block(this);
     }
 
-    default void unblock() throws WenyanException {
+    default void unblock() throws WenyanUnreachedException {
         program().unblock(this);
     }
 
-    default void yield() throws WenyanException {
+    default void yield() throws WenyanUnreachedException {
         program().yield(this);
     }
 
-    default void die() throws WenyanException {
+    default void die() throws WenyanUnreachedException {
         program().die(this);
     }
 
-    default void consumeStep(int step) throws WenyanException {
+    default void consumeStep(int step) throws WenyanUnreachedException {
         program().consumeStep(this, step);
     }
 }
