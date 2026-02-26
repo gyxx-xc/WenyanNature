@@ -34,8 +34,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class WenyanProgramTest {
 
     static {
-        LanguageManager.registerLanguageProvider(s -> s);
-        LoggerManager.registerLogger(NOPLogger.NOP_LOGGER);
+        try {
+            LoggerManager.registerLogger(NOPLogger.NOP_LOGGER);
+            LanguageManager.registerLanguageProvider(s -> s);
+        } catch (IllegalStateException ignore) { // already registered by other class
+        }
     }
 
     @Test
