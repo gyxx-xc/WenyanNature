@@ -1,7 +1,6 @@
 package indi.wenyan.test.utils;
 
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.network.chat.Component;
 import net.neoforged.testframework.gametest.ExtendedGameTestHelper;
@@ -16,15 +15,15 @@ public class RunnerTestHelper extends ExtendedGameTestHelper {
 
     public void assertOutput(RunnerBlockEntity runner, String valueName, String... output) {
         if (runner.getOutputQueue().size() != output.length) {
-            throw new GameTestAssertException("Expected " + valueName + " to be " + Arrays.toString(output) +
-                    ", but was " + stringFromOutputQueue(runner.getOutputQueue()));
+            throw assertionException(Component.literal("Expected " + valueName + " to be " + Arrays.toString(output) +
+                    ", but was " + stringFromOutputQueue(runner.getOutputQueue())));
         }
         int i = 0;
         for (Component c : runner.getOutputQueue()) {
             assertFalse(c.getStyle().getColor() != null, "has error:" + c.getString());
             if (!c.getString().equals(output[i++]))
-                throw new GameTestAssertException("Expected " + valueName + " to be " + Arrays.toString(output) +
-                        ", but was " + stringFromOutputQueue(runner.getOutputQueue()));
+                throw assertionException(Component.literal("Expected " + valueName + " to be " + Arrays.toString(output) +
+                        ", but was " + stringFromOutputQueue(runner.getOutputQueue())));
         }
     }
 

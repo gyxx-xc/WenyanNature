@@ -2,13 +2,13 @@ package indi.wenyan.test.content.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.test.utils.RunnerTestHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
 import net.neoforged.testframework.DynamicTest;
 import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
+import net.neoforged.testframework.gametest.GameTest;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
 @ForEachTest(groups = "content.block.lock_module")
@@ -17,14 +17,14 @@ public class LockModuleBlockTest {
     @TestHolder(description = "Tests that the lock module works correctly.")
     public static void lockModuleTest(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 2, 1)
-                .set(0, 0, 0, WyRegistration.LOCK_MODULE_BLOCK.get().defaultBlockState())
-                .set(0, 1, 0, WyRegistration.RUNNER_BLOCK.get().defaultBlockState())
+                .set(0, 0, 0, WenyanBlocks.LOCK_MODULE_BLOCK.get().defaultBlockState())
+                .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK.get().defaultBlockState())
         );
 
         test.onGameTest(RunnerTestHelper.class, helper -> {
-            final BlockPos lockPos = BlockPos.ZERO.offset(0, 1, 0);
+            final BlockPos lockPos = BlockPos.ZERO.offset(0, 0, 0);
             final RunnerBlockEntity runner1 = helper.getBlockEntity(
-                    BlockPos.ZERO.offset(0, 2, 0));
+                    BlockPos.ZERO.offset(0, 1, 0), RunnerBlockEntity.class);
             helper.startSequence()
                     .thenExecute(() -> {
                         helper.assertBlockProperty(lockPos,
