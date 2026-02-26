@@ -5,8 +5,9 @@
     "minecraft:black_dye"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:bamboo_ink"
   },
-  "question": "plus",
+  "question": "print",
   "round": 1
 }

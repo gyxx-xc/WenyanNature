@@ -5,6 +5,7 @@
     "minecraft:bamboo"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:bamboo_paper"
   },
   "question": "plus",

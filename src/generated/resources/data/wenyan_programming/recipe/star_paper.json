@@ -5,6 +5,7 @@
     "minecraft:glowstone_dust"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:star_paper"
   },
   "question": "plus",

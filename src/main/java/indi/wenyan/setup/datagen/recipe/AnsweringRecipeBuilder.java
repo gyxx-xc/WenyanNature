@@ -38,6 +38,10 @@ public final class AnsweringRecipeBuilder {
         return new AnsweringRecipeBuilder(new ItemStackTemplate(output));
     }
 
+    public static AnsweringRecipeBuilder create(Holder<Item> output, int count) {
+        return new AnsweringRecipeBuilder(new ItemStackTemplate(output, count));
+    }
+
     /**
      * Creates a new builder for a recipe with the specified item as output.
      *

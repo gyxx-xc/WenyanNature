@@ -5,8 +5,9 @@
     "minecraft:paper"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:cloud_paper"
   },
-  "question": "plus",
+  "question": "cloud_paper",
   "round": 1
 }

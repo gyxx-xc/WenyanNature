@@ -6,8 +6,9 @@
     "minecraft:redstone"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:cinnabar_ink"
   },
-  "question": "plus",
+  "question": "cinnabar_ink",
   "round": 1
 }

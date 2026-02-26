@@ -6,8 +6,9 @@
     "minecraft:glowstone_dust"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:starlight_ink"
   },
-  "question": "plus",
+  "question": "starlight_ink",
   "round": 1
 }

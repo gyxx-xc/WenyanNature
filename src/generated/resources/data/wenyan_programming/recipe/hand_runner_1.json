@@ -5,8 +5,9 @@
     "wenyan_programming:bamboo_paper"
   ],
   "output": {
+    "count": 2,
     "id": "wenyan_programming:hand_runner_1"
   },
-  "question": "plus",
+  "question": "hand_runner_1",
   "round": 1
 }

@@ -5,6 +5,7 @@
     "minecraft:black_dye"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:lunar_ink"
   },
   "question": "plus",

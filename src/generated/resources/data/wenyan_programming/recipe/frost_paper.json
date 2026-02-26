@@ -6,6 +6,7 @@
     "minecraft:paper"
   ],
   "output": {
+    "count": 4,
     "id": "wenyan_programming:frost_paper"
   },
   "question": "plus",
