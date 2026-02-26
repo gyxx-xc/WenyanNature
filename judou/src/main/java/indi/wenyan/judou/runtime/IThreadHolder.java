@@ -35,7 +35,7 @@ public interface IThreadHolder<T extends IWenyanThread> {
         program().die(this);
     }
 
-    default void consumeStep(int step) throws WenyanUnreachedException {
+    default void consumeStep(int step) {
         program().consumeStep(this, step);
     }
 }

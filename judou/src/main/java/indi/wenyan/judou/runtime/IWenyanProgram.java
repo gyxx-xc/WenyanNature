@@ -25,7 +25,7 @@ public interface IWenyanProgram<T extends IWenyanThread> {
 
     void create(IThreadHolder<T> runner) throws WenyanException;
 
-    void consumeStep(IThreadHolder<T> runner, int i) throws WenyanUnreachedException;
+    void consumeStep(IThreadHolder<T> runner, int i);
 
     // NOTE: not intend to call anywhere outside run(steps)
     void block(IThreadHolder<T> runner) throws WenyanUnreachedException;

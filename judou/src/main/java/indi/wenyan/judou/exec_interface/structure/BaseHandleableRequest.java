@@ -15,7 +15,7 @@ public interface BaseHandleableRequest extends IHandleableRequest {
         } catch (WenyanException e) {
             thread().dieWithException(e);
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             thread().dieWithException(new WenyanUnreachedException.WenyanUnexceptedException(e));
             return true;
         }
