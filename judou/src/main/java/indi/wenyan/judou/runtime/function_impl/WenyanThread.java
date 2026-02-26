@@ -73,39 +73,39 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         willPause = false;
         for (int i = 0; i < step; i++) {
             try {
-                if (getMainRuntime().finishFlag) {
-                    die();
-                    return;
-                }
-
                 WenyanRuntime runtime = currentRuntime();
                 if (runtime.getBytecode() == null) {
                     dieWithException(new WenyanUnreachedException());
                     return;
                 }
-
                 if (runtime.programCounter < 0 || runtime.programCounter >= runtime.getBytecode().size()) {
                     dieWithException(new WenyanUnreachedException());
                     return;
                 }
 
-                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
-                int needStep = bytecode.code().getCode().getStep(bytecode.arg(), this);
+                // actual run
+                try {
+                    WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
+                    int needStep = bytecode.code().getCode().getStep(bytecode.arg(), this);
+                    consumeStep(needStep);
+                    bytecode.code().getCode().exec(bytecode.arg(), this);
+                } catch (WenyanException e) {
+                    dieWithException(e);
+                    return;
+                }
 
-                consumeStep(needStep);
+                if (getMainRuntime().finishFlag) {
+                    safeDie();
+                    return;
+                }
 
-                bytecode.code().getCode().exec(bytecode.arg(), this);
                 if (!runtime.PCFlag)
                     runtime.programCounter++;
                 runtime.PCFlag = false;
 
                 if (willPause) return;
-            } catch (Exception e) {
+            } catch (RuntimeException e) { // for any other missing exceptions
                 dieWithException(new WenyanUnreachedException.WenyanUnexceptedException(e));
-                // rethrow interrupt
-                if (e instanceof InterruptedException)
-                    //noinspection ResultOfMethodCallIgnored
-                    Thread.interrupted();
                 return;
             }
         }
@@ -113,6 +113,15 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
             this.yield();
         } catch (WenyanException e) {
             dieWithException(e);
+        }
+    }
+
+    private void safeDie() {
+        Logger logger = LoggerManager.getLogger();
+        try {
+            die();
+        } catch (WenyanUnreachedException e) {
+            logger.error("Unexpected, failed to die after handling an exception", e);
         }
     }
 
@@ -138,11 +147,7 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         if (errorContext == null)
             logger.error("Unexpected, failed to get code context during handling an exception", e);
         e.handle(platform()::handleError, logger, errorContext);
-        try {
-            die();
-        } catch (WenyanUnreachedException ignore) {
-            logger.error("Unexpected, failed to die after handling an exception", e);
-        }
+        safeDie();
     }
 
     /**

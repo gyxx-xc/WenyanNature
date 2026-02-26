@@ -4,6 +4,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanComparable;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
@@ -68,7 +69,9 @@ public class CollectionModuleEntity extends AbstractModuleEntity {
                                         }
                                     });
                                 } catch (RuntimeException e) {
-                                    throw new WenyanException(e.getMessage());
+                                    if (e.getCause() instanceof WenyanException we)
+                                        throw we;
+                                    throw new WenyanUnreachedException.WenyanUnexceptedException(e);
                                 }
                                 return WenyanValues.of(new ArrayList<>(sorted));
                             })

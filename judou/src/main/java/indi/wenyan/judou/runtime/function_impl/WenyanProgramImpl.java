@@ -10,6 +10,7 @@ import indi.wenyan.judou.utils.LoggerManager;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.Collection;
 import java.util.concurrent.*;
@@ -212,13 +213,14 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     private void startWatchdog(PCB thread) {
         var f = WATCHDOG.schedule(() -> {
             try {
-                LoggerManager.getLogger().error("program running too slow for given step, program stop");
-                LoggerManager.getLogger().debug("program: {}", thread.getRunner());
-                platform.handleError("program running too slow");
-                stop();
-            } catch (Exception e) {
-                LoggerManager.getLogger().error("unexcepted: Watchdog failed", e);
+                Logger logger = LoggerManager.getLogger();
+                logger.error("program running too slow for given step, program stop");
+                logger.debug("program: {}", thread.getRunner());
+            } catch (IllegalStateException ignore) {
+                // unreached. however, if so, program still need stop
             }
+            stop(); // stop first, in case handleError throw unexpected error
+            platform.handleError("program running too slow");
         }, WATCHDOG_TIMEOUT, TimeUnit.MILLISECONDS);
         thread.setWatchdog(f);
     }
