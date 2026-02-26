@@ -1,8 +1,8 @@
 package indi.wenyan.setup.datagen.Language;
 
-import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.BlockItem;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 /**
@@ -44,29 +44,29 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
         add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
 
-        add(WenyanBlocks.BIT_MODULE_BLOCK.get(), "位元符");
-        add(WenyanBlocks.COLLECTION_MODULE_BLOCK.get(), "集符");
-        add(WenyanBlocks.MATH_MODULE_BLOCK.get(), "數符");
-        add(WenyanBlocks.RANDOM_MODULE_BLOCK.get(), "熵符");
-        add(WenyanBlocks.STRING_MODULE_BLOCK.get(), "字串符");
-        add(WenyanBlocks.VEC3_MODULE_BLOCK.get(), "向量符");
-        add(WenyanBlocks.BLOCK_MODULE_BLOCK.get(), "方塊符");
-        add(WenyanBlocks.COMMUNICATE_MODULE_BLOCK.get(), "通訊符");
-        add(WenyanBlocks.ENTITY_MODULE_BLOCK.get(), "實體符");
-        add(WenyanBlocks.EXPLOSION_MODULE_BLOCK.get(), "爆裂符");
-        add(WenyanBlocks.ITEM_MODULE_BLOCK.get(), "物品符");
-        add(WenyanBlocks.INFORMATION_MODULE_BLOCK.get(), "天下情報符");
+        addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
+        addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");
+        addBlockAndItem(WenyanItems.MATH_MODULE_BLOCK_ITEM.get(), "數符");
+        addBlockAndItem(WenyanItems.RANDOM_MODULE_BLOCK_ITEM.get(), "熵符");
+        addBlockAndItem(WenyanItems.STRING_MODULE_BLOCK_ITEM.get(), "字串符");
+        addBlockAndItem(WenyanItems.VEC3_MODULE_BLOCK_ITEM.get(), "向量符");
+        addBlockAndItem(WenyanItems.BLOCK_MODULE_BLOCK_ITEM.get(), "方塊符");
+        addBlockAndItem(WenyanItems.COMMUNICATE_MODULE_BLOCK_ITEM.get(), "通訊符");
+        addBlockAndItem(WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get(), "實體符");
+        addBlockAndItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(), "爆裂符");
+        addBlockAndItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(), "物品符");
+        addBlockAndItem(WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(), "天下情報符");
+
+
+        addBlockAndItem(WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(), "螢幕石");
+        addBlockAndItem(WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(), "信號量石");
+
+        addBlockAndItem(WenyanItems.CRAFTING_BLOCK_ITEM.get(), "創石");
+        addBlockAndItem(WenyanItems.PEDESTAL_BLOCK_ITEM.get(), "基石");
+        addBlockAndItem(WenyanItems.POWER_BLOCK_ITEM.get(), "算核");
 
         add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
-
-        add(WenyanBlocks.SCREEN_MODULE_BLOCK.get(), "螢幕石");
-        add(WenyanBlocks.LOCK_MODULE_BLOCK.get(), "信號量石");
-
         add(WenyanItems.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
-
-        add(WenyanBlocks.CRAFTING_BLOCK.get(), "創石");
-        add(WenyanBlocks.PEDESTAL_BLOCK.get(), "基石");
-        add(WenyanBlocks.POWER_BLOCK.get(), "算核");
 
         add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
@@ -135,5 +135,10 @@ public class ChineseLanguageProvider extends LanguageProvider {
 
         add("book.wenyan_programming.shuo_wen.name", "說文");
         add("book.wenyan_programming.shuo_wen.landing_text", "编程者，制机之令也。机铁无知，唯识原语。乃作典言，上合人意，下译机识，若算经然。");
+    }
+
+    private void addBlockAndItem(BlockItem blockItem, String name) {
+        add(blockItem.getDescriptionId(), name);
+        add(blockItem.getBlock(), name);
     }
 }
