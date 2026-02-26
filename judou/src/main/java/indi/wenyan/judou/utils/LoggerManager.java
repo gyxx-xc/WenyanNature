@@ -7,7 +7,7 @@ public class LoggerManager {
 
     public static void registerLogger(Logger provider) {
         if (logger != null)
-            throw new IllegalStateException("Logger already registered");
+            return;
         logger = provider;
     }
 

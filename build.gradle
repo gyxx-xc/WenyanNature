@@ -151,6 +151,9 @@ dependencies {
     // for game test
     gameTestImplementation("net.neoforged:testframework:${neo_version}")
     gameTestImplementation(project(":judou"))
+    
+    // allow unit tests to load without testframework NoClassDefFoundError when NeoForge test runner bootstaps all mod source sets
+    testImplementation("net.neoforged:testframework:${neo_version}")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

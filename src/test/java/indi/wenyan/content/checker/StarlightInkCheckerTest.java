@@ -8,45 +8,44 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CinnabarInkCheckerTest {
+class StarlightInkCheckerTest {
 
     @Test
     void testCorrectAnswer() throws WenyanException {
         RandomSource random = RandomSource.create();
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        StarlightInkChecker checker = new StarlightInkChecker(random);
         checker.init();
 
-        var aValue = checker.getArgs().getAttribute("「甲」");
-        int a = aValue.as(WenyanInteger.TYPE).value();
+        int n = checker.getArgs().getAttribute("「甲」").as(WenyanInteger.TYPE).value();
 
-        int day = 1;
-        int length = a;
-        while (length > 1) {
-            length /= 2;
-            day++;
+        long sum = 0L;
+        long factorial = 1L;
+        for (int i = 1; i <= n; i++) {
+            factorial = factorial * i;
+            sum = sum + factorial;
         }
 
-        checker.accept(WenyanValues.of(day));
+        checker.accept(WenyanValues.of(sum));
         assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @Test
     void testWrongAnswer() throws WenyanException {
         RandomSource random = RandomSource.create();
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        StarlightInkChecker checker = new StarlightInkChecker(random);
         checker.init();
 
-        var aValue = checker.getArgs().getAttribute("「甲」");
-        int a = aValue.as(WenyanInteger.TYPE).value();
+        var nValue = checker.getArgs().getAttribute("「甲」");
+        int n = nValue.as(WenyanInteger.TYPE).value();
 
-        int day = 1;
-        int length = a;
-        while (length > 1) {
-            length /= 2;
-            day++;
+        Long sum = 0L;
+        Long factorial = 1L;
+        for (int i = 1; i <= n; i++) {
+            factorial = factorial * i;
+            sum = sum + factorial;
         }
 
-        int wrongAns = day + 1;
+        Long wrongAns = sum + 1L;
 
         checker.accept(WenyanValues.of(wrongAns));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());

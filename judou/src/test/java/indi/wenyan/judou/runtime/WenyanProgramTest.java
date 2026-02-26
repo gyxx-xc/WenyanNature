@@ -50,7 +50,8 @@ class WenyanProgramTest {
         TestPlatform testPlatform = new TestPlatform();
         assertDoesNotThrow(() -> createAndRun(testData.code(), testPlatform));
         assertNull(testPlatform.error);
-        assertEquals(testData.output().size(), testPlatform.output.size(), testData.output() + testPlatform.output.toString());
+        assertEquals(testData.output().size(), testPlatform.output.size(),
+                testData.output() + testPlatform.output.toString());
         for (int i = 0; i < testData.output().size(); i++) {
             assertTrue(IWenyanValue.equals(testData.output().get(i), testPlatform.output.get(i)),
                     testData.output() + " and " + testPlatform.output.toString() + " differ at " + i + "\n" +
@@ -70,8 +71,7 @@ class WenyanProgramTest {
                     resultArgs("夫一夫其書之\n", 1),
                     resultArgs("夫一大於二書之\n", false),
                     resultArgs("夫二等於二書之\n", true),
-                    resultArgs("夫陽等於一書之", false)
-            );
+                    resultArgs("夫陽等於一書之", false));
         }
 
         @ParameterizedTest
@@ -81,7 +81,7 @@ class WenyanProgramTest {
         }
 
         @ParameterizedTest
-        @CsvSource({"夫「「一」」大於一書之"})
+        @CsvSource({ "夫「「一」」大於一書之" })
         void testRuntimeError(String code) {
             assertRuntimeError(code);
         }
@@ -101,8 +101,7 @@ class WenyanProgramTest {
                     resultArgs("吾有一言曰陽書之", "陽"),
                     resultArgs("吾有一爻書之", false),
                     resultArgs("夫一吾有一爻曰其書之", true),
-                    resultArgs("吾有一列書之", List.of())
-            );
+                    resultArgs("吾有一列書之", List.of()));
         }
 
         @ParameterizedTest
@@ -141,8 +140,7 @@ class WenyanProgramTest {
                     resultArgs("有數五書之\n", 5),
                     resultArgs("有言一書之\n", "一"),
                     resultArgs("有言「「aaa」」書之\n", "aaa"),
-                    resultArgs("有爻一書之\n", true)
-            );
+                    resultArgs("有爻一書之\n", true));
         }
 
         @ParameterizedTest
@@ -167,7 +165,9 @@ class WenyanProgramTest {
             return Stream.of(
                     resultArgs("夫一名之曰「a」書之\n", 1),
                     resultArgs("夫一名之曰「a」書「a」\n", 1),
-                    resultArgs("夫一名之曰「aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa」書「aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa」", 1),
+                    resultArgs(
+                            "夫一名之曰「aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa」書「aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa」",
+                            1),
                     resultArgs("夫一名之曰「」書「」\n", 1),
                     resultArgs("夫一名之曰「 」書「 」\n", 1),
                     resultArgs("夫一名之曰「\u200b」書「\u200b」\n", 1),
@@ -183,8 +183,7 @@ class WenyanProgramTest {
                     resultArgs("夫一名之曰「a」夫二名之曰「a」書「a」\n", 2),
                     resultArgs("夫一名之曰「a」夫「a」名之曰「a」書「a」\n", 1),
                     resultArgs("夫一名之曰「b」名之曰「a」昔之「b」者今三是矣昔之「a」者今二是矣夫「b」名之曰「a」書「b」", 3),
-                    resultArgs("夫一名之曰「a」昔之「a」者今不復存矣書「a」", (Object) null)
-            );
+                    resultArgs("夫一名之曰「a」昔之「a」者今不復存矣書「a」", (Object) null));
         }
 
         @ParameterizedTest
@@ -219,10 +218,9 @@ class WenyanProgramTest {
             return Stream.of(
                     timedArgs("待一\n", 3),
                     timedArgs("待十\n", 12),
-                    timedArgs("待二十\n", 32),
+                    timedArgs("待二十\n", 22),
                     timedArgs("待一待一待一\n", 7),
-                    timedArgs("待十待一\n", 14)
-            );
+                    timedArgs("待十待一\n", 14));
         }
 
         @ParameterizedTest
@@ -235,8 +233,8 @@ class WenyanProgramTest {
             while (wenyanProgram.isRunning()) {
                 wenyanProgram.step(1000);
                 testPlatform.handle(IHandleContext.NONE);
-                cnt ++;
-                //noinspection BusyWait
+                cnt++;
+                // noinspection BusyWait
                 Thread.sleep(5);
             }
             assertNull(testPlatform.error);
@@ -295,7 +293,7 @@ class WenyanProgramTest {
             case Double d -> WenyanValues.of(d);
             case String s -> WenyanValues.of(s);
             case List<?> l ->
-                    WenyanValues.of(l.stream().map(WenyanProgramTest::wenyanValueFromObject).toList());
+                WenyanValues.of(l.stream().map(WenyanProgramTest::wenyanValueFromObject).toList());
             default -> throw new RuntimeException("unsupported type: " + o.getClass());
         };
     }
@@ -306,7 +304,7 @@ class WenyanProgramTest {
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(1000);
             testPlatform.handle(IHandleContext.NONE);
-            //noinspection BusyWait
+            // noinspection BusyWait
             Thread.sleep(20);
         }
     }
