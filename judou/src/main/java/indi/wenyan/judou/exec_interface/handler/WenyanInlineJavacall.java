@@ -23,21 +23,9 @@ public class WenyanInlineJavacall implements IJavacallHandler {
         this.function = function;
     }
 
-    /**
-     * Handles the function call with the given parameters.
-     *
-     * @param self the self value
-     * @param argsList the arguments for the call
-     * @return the result of the function call
-     * @throws WenyanException if an error occurs during handling
-     */
-    public IWenyanValue handle(IWenyanValue self, List<IWenyanValue> argsList) throws WenyanException {
-        return function.apply(self, argsList);
-    }
-
     @Override
     public void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList) throws WenyanException {
-        thread.currentRuntime().pushReturnValue(handle(self, argsList));
+        thread.currentRuntime().pushReturnValue(function.apply(self, argsList));
     }
 
     /**

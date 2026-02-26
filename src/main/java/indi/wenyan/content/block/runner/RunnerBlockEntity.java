@@ -263,7 +263,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         WenyanThread runner;
         // STUB: better error handling
         try {
-            runner = WenyanThread.ofCode(pages, this);
+            runner = WenyanThread.ofCode(pages, this.initEnvironment());
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return Optional.empty();

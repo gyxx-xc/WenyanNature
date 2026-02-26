@@ -159,6 +159,10 @@ public class WenyanCompilerEnvironment {
         return identifierTable.computeIfAbsent(identifier, bytecode::addIdentifier);
     }
 
+    public String getSourceCode() {
+        return bytecode.getSourceCode();
+    }
+
     /**
      * Enters a new debug context.
      * @param line Line number

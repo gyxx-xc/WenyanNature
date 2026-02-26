@@ -5,7 +5,6 @@ import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.compiler.WenyanVerifier;
 import indi.wenyan.judou.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.judou.compiler.visitor.WenyanVisitor;
-import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
@@ -34,8 +33,6 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
     @Setter
     private WenyanProgramImpl.PCB thread;
 
-    private final String code;
-
     /**
      * Stack of runtime environments
      */
@@ -46,15 +43,11 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     private boolean willPause = false;
 
-    private WenyanThread(String code) {
-        this.code = code;
+    private WenyanThread() {
     }
 
-    public static @NotNull WenyanThread ofCode(String code, IWenyanPlatform platform) throws WenyanCompileException {
-        WenyanThread thread = new WenyanThread(code);
-        thread.call(platform.initEnvironment());
-
-        var bytecode = new WenyanBytecode();
+    public static @NotNull WenyanThread ofCode(String code, WenyanRuntime basicRuntime) throws WenyanCompileException {
+        var bytecode = new WenyanBytecode(code);
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode);
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
         visitor.visit(WenyanVisitor.program(code));
@@ -64,8 +57,12 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
 
-        // call main
-        WenyanRuntime mainRuntime = new WenyanRuntime(bytecode);
+        return ofRuntime(new WenyanRuntime(bytecode), basicRuntime);
+    }
+
+    public static @NotNull WenyanThread ofRuntime(WenyanRuntime mainRuntime, WenyanRuntime basicRuntime) throws WenyanCompileException {
+        WenyanThread thread = new WenyanThread();
+        thread.call(basicRuntime);
         thread.call(mainRuntime);
         thread.mainRuntime = mainRuntime;
         return thread;
@@ -133,7 +130,7 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
                 WenyanBytecode.Context context = runtime.getBytecode().getContext(runtime.programCounter - 1);
                 errorContext = new WenyanException.ErrorContext(
                         context.line(), context.column(),
-                        code.substring(context.contentStart(), context.contentEnd()));
+                        runtime.getBytecode().getSourceCode().substring(context.contentStart(), context.contentEnd()));
             }
         } catch (WenyanException.WenyanVarException |
                  IndexOutOfBoundsException ignore) {// cause error context be null, handled below
