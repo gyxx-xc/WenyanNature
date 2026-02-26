@@ -39,11 +39,12 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
     private final Deque<WenyanRuntime> runtimes = new ArrayDeque<>();
 
     @Getter
-    private WenyanRuntime mainRuntime;
+    private final WenyanRuntime mainRuntime;
 
     private boolean willPause = false;
 
-    private WenyanThread() {
+    private WenyanThread(WenyanRuntime mainRuntime) {
+        this.mainRuntime = mainRuntime;
     }
 
     public static @NotNull WenyanThread ofCode(String code, WenyanRuntime basicRuntime) throws WenyanCompileException {
@@ -61,49 +62,30 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
     }
 
     public static @NotNull WenyanThread ofRuntime(WenyanRuntime mainRuntime, WenyanRuntime basicRuntime) throws WenyanCompileException {
-        WenyanThread thread = new WenyanThread();
+        WenyanThread thread = new WenyanThread(mainRuntime);
         thread.call(basicRuntime);
         thread.call(mainRuntime);
-        thread.mainRuntime = mainRuntime;
         return thread;
     }
 
     @Override
     public void run(int step) {
         willPause = false;
-        for (int i = 0; i < step; i++) {
+        for (int i = 0; i < step && !willPause; i++) {
             try {
                 WenyanRuntime runtime = currentRuntime();
-                if (runtime.getBytecode() == null) {
-                    dieWithException(new WenyanUnreachedException());
-                    return;
-                }
-                if (runtime.programCounter < 0 || runtime.programCounter >= runtime.getBytecode().size()) {
-                    dieWithException(new WenyanUnreachedException());
-                    return;
-                }
+                if (validateRuntimeState(runtime)) return;
 
-                // actual run
-                try {
-                    WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
-                    int needStep = bytecode.code().getCode().getStep(bytecode.arg(), this);
-                    consumeStep(needStep);
-                    bytecode.code().getCode().exec(bytecode.arg(), this);
-                } catch (WenyanException e) {
-                    dieWithException(e);
-                    return;
-                }
+                assert runtime.getBytecode() != null; //checked by validateRuntimeState
+                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
+                int needStep = bytecode.code().getCode().getStep(bytecode.arg(), this);
+                consumeStep(needStep);
+                bytecode.code().getCode().exec(bytecode.arg(), this);
 
-                if (getMainRuntime().finishFlag) {
-                    safeDie();
-                    return;
-                }
-
-                if (!runtime.PCFlag)
-                    runtime.programCounter++;
-                runtime.PCFlag = false;
-
-                if (willPause) return;
+                if (updateProgramCounter(runtime)) return;
+            } catch (WenyanException e) {
+                dieWithException(e);
+                return;
             } catch (RuntimeException e) { // for any other missing exceptions
                 dieWithException(new WenyanUnreachedException.WenyanUnexceptedException(e));
                 return;
@@ -114,6 +96,31 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         } catch (WenyanException e) {
             dieWithException(e);
         }
+    }
+
+    private boolean updateProgramCounter(WenyanRuntime runtime) {
+        if (getMainRuntime().finishFlag) {
+            safeDie();
+            return true;
+        }
+
+        if (!runtime.PCFlag)
+            runtime.programCounter++;
+        runtime.PCFlag = false;
+
+        return false;
+    }
+
+    private boolean validateRuntimeState(WenyanRuntime runtime) {
+        if (runtime.getBytecode() == null) {
+            dieWithException(new WenyanUnreachedException());
+            return true;
+        }
+        if (runtime.programCounter < 0 || runtime.programCounter >= runtime.getBytecode().size()) {
+            dieWithException(new WenyanUnreachedException());
+            return true;
+        }
+        return false;
     }
 
     private void safeDie() {
