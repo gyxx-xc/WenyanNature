@@ -230,7 +230,7 @@ class WenyanProgramTest {
         void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
             TestPlatform testPlatform = new TestPlatform();
             IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-            wenyanProgram.create(WenyanThread.ofCode(code, testPlatform));
+            wenyanProgram.create(WenyanThread.ofCode(code, testPlatform.initEnvironment()));
             int cnt = 0;
             while (wenyanProgram.isRunning()) {
                 wenyanProgram.step(1000);
@@ -302,7 +302,7 @@ class WenyanProgramTest {
 
     private void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
         IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanThread.ofCode(code, testPlatform));
+        wenyanProgram.create(WenyanThread.ofCode(code, testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(1000);
             testPlatform.handle(IHandleContext.NONE);
