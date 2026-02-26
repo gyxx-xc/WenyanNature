@@ -126,9 +126,6 @@ dependencies {
     // for annotation processor
     compileOnly project(":language_processor")
     annotationProcessor project(":language_processor")
-    // for ap's unit test
-    testCompileOnly project(":language_processor")
-    testAnnotationProcessor project(":language_processor")
 
     // mod requirements
 //    implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
@@ -147,13 +144,11 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-launcher")
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.google.guava:guava-testlib:21.0")
+    testImplementation("net.neoforged:testframework:${neo_version}")
 
     // for game test
-    gameTestImplementation("net.neoforged:testframework:${neo_version}")
     gameTestImplementation(project(":judou"))
-    
-    // allow unit tests to load without testframework NoClassDefFoundError when NeoForge test runner bootstaps all mod source sets
-    testImplementation("net.neoforged:testframework:${neo_version}")
+    gameTestImplementation("net.neoforged:testframework:${neo_version}")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

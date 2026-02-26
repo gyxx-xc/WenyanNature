@@ -7,6 +7,8 @@ public class LanguageManager {
     private static ILanguageProvider languageProvider = null;
     private LanguageManager() {}
     public static void registerLanguageProvider(ILanguageProvider provider) {
+        if (languageProvider != null)
+            throw new IllegalStateException("Language provider already registered");
         languageProvider = provider;
     }
 

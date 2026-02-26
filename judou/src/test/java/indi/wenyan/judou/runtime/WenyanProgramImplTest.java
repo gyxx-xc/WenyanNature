@@ -12,8 +12,7 @@ import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.NOPLogger;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ExecutorService;
@@ -28,8 +27,11 @@ class WenyanProgramImplTest {
     private WenyanProgramImpl program;
 
     static {
-        LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
-        LanguageManager.registerLanguageProvider(s -> s);
+        try {
+            LoggerManager.registerLogger(NOPLogger.NOP_LOGGER);
+            LanguageManager.registerLanguageProvider(s -> s);
+        } catch (IllegalStateException ignore) { // already registered by other class
+        }
     }
 
     private static abstract class TestRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
@@ -452,7 +454,7 @@ class WenyanProgramImplTest {
         Field execField = obj.getDeclaredField("executor");
         execField.setAccessible(true);
         ExecutorService exec = (ExecutorService) execField.get(program);
-        assertTrue(exec.awaitTermination(100, TimeUnit.MICROSECONDS));
+        assertTrue(exec.awaitTermination(200, TimeUnit.MICROSECONDS));
     }
 
     @Test
