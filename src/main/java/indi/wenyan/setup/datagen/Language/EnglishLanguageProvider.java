@@ -118,9 +118,9 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
         add("gui.wenyan.lock","锁定");
 
-        add("title.wenyan_programming.create_tab", "I Have a Technique");
+        add("title.wenyan_programming.create_tab", "吾有一術");
 
-        add("config.wenyan_programming.main.title", "I Have a Technique Configuration Panel");
+        add("config.wenyan_programming.main.title", "吾有一術 控制面板");
         add("config.wenyan_programming.general.title", "General");
         add("config.wenyan_programming.general.test", "Test");
 
