@@ -6,6 +6,7 @@ import indi.wenyan.judou.compiler.WenyanVerifier;
 import indi.wenyan.judou.compiler.visitor.WenyanMainVisitor;
 import indi.wenyan.judou.compiler.visitor.WenyanVisitor;
 import indi.wenyan.judou.runtime.IThreadHolder;
+import indi.wenyan.judou.runtime.executor.WenyanCode;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
@@ -78,9 +79,10 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
 
                 assert runtime.getBytecode() != null; //checked by validateRuntimeState
                 WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
-                int needStep = bytecode.code().getCode().getStep(bytecode.arg(), this);
+                WenyanCode code = bytecode.code().getCode();
+                int needStep = code.getStep(bytecode.arg(), this);
                 consumeStep(needStep);
-                bytecode.code().getCode().exec(bytecode.arg(), this);
+                code.exec(bytecode.arg(), this);
 
                 if (updateProgramCounter(runtime)) return;
             } catch (WenyanException e) {
