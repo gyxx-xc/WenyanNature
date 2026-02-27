@@ -51,18 +51,17 @@ import java.util.Objects;
 import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
 @ParametersAreNonnullByDefault
-public class
-RunnerBlock extends AbstractFuluBlock implements EntityBlock {
+public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public static final String ID = "runner_block";
-    public static final EnumProperty<RunningState> RUNNING_STATE = EnumProperty.create("running_state", RunningState.class);
-    public static final IntegerProperty RUNNING_TIER = IntegerProperty.create("running_tier", 0, 3);
+    public static final EnumProperty<RunningState> RUNNING_STATE = EnumProperty.create("running_state",
+            RunningState.class);
+    public static final IntegerProperty RUNNING_TIER = IntegerProperty.create("running_tier", 0, 5);
 
     public RunnerBlock(Properties properties) {
         super(properties.noCollision().lightLevel(state -> state.getValue(RUNNING_STATE).getLightLevel()));
         registerDefaultState(defaultBlockState()
                 .setValue(RUNNING_STATE, RunningState.NOT_RUNNING)
-                .setValue(RUNNING_TIER, 1)
-        );
+                .setValue(RUNNING_TIER, 1));
     }
 
     public static final MapCodec<RunnerBlock> CODEC = simpleCodec(RunnerBlock::new);
@@ -73,7 +72,8 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     @Override
-    protected @NotNull InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected @NotNull InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hitResult) {
         var entity = level.getBlockEntity(pos);
         if (!(entity instanceof RunnerBlockEntity runner)) {
             WenyanProgramming.LOGGER.error("RunnerBlock: entity is not a RunnerBlockEntity");
@@ -98,8 +98,8 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T>
-    getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+            BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == WenyanBlocks.RUNNER_BLOCK_ENTITY.get())
                 ((RunnerBlockEntity) entity).tick(level1, pos, state1);
@@ -124,7 +124,7 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     // FIXME
-//    @OnlyIn(Dist.CLIENT)
+    // @OnlyIn(Dist.CLIENT)
     private void openGui(RunnerBlockEntity runner, BlockPos pos, Level level, Player player, BlockState state) {
         List<PackageSnippetWidget.PackageSnippet> packageSnippets = new ArrayList<>();
         BlockPos attached = pos.relative(
@@ -145,14 +145,16 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                         executor.blockState().getCloneItemStack(pos, level, false, player),
                         executor.getPackageName()));
             } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos)) {
-                packageSnippets.add(new PackageSnippetWidget.PackageSnippet(WenyanItems.HAND_RUNNER_1.toStack(), entity.getPlatformName(), List.of()));
+                packageSnippets.add(new PackageSnippetWidget.PackageSnippet(WenyanItems.HAND_RUNNER_1.toStack(),
+                        entity.getPlatformName(), List.of()));
             }
         }
         Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
     }
 
-    //    @OnlyIn(Dist.CLIENT)
-    private static @NotNull CodeEditorBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos, List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
+    // @OnlyIn(Dist.CLIENT)
+    private static @NotNull CodeEditorBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos,
+            List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {
@@ -196,21 +198,20 @@ RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         return new CodeEditorBackend(packageSnippets, synchronizer);
     }
 
-    //    @OnlyIn(Dist.CLIENT)
-    private PackageSnippetWidget.PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack, String name) {
+    // @OnlyIn(Dist.CLIENT)
+    private PackageSnippetWidget.PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack,
+            String name) {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
         execPackage.variables().forEach((k, v) -> {
-                    if (v.is(IWenyanObjectType.TYPE))
-                        members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.CLASS));
-                    else if (v.is(IWenyanFunction.TYPE))
-                        members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD));
-                    else
-                        members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.FIELD));
-                }
-        );
+            if (v.is(IWenyanObjectType.TYPE))
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.CLASS));
+            else if (v.is(IWenyanFunction.TYPE))
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD));
+            else
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.FIELD));
+        });
         execPackage.functions().forEach((k, _) ->
-                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD))
-        );
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD)));
         return new PackageSnippetWidget.PackageSnippet(itemStack, name, members);
     }
 

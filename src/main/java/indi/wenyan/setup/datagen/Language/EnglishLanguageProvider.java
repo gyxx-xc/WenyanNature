@@ -7,7 +7,8 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 /**
  * Provider for generating English language translations during data generation.
- * Contains all English translations used in the mod, keeping transliteration for item names.
+ * Contains all English translations used in the mod, keeping transliteration
+ * for item names.
  */
 public class EnglishLanguageProvider extends LanguageProvider {
 
@@ -28,6 +29,8 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(WenyanItems.HAND_RUNNER_1.get(), "二阶符");
         add(WenyanItems.HAND_RUNNER_2.get(), "三阶符");
         add(WenyanItems.HAND_RUNNER_3.get(), "四阶符");
+        add(WenyanItems.HAND_RUNNER_4.get(), "五阶符");
+        add(WenyanItems.HAND_RUNNER_5.get(), "六阶符");
 
         add(WenyanItems.FLOAT_NOTE.get(), "浮签");
         add(WenyanItems.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
@@ -56,7 +59,6 @@ public class EnglishLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(), "爆裂符");
         addBlockAndItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(), "物品符");
         addBlockAndItem(WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(), "天下情報符");
-
 
         addBlockAndItem(WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(), "螢幕石");
         addBlockAndItem(WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(), "信號量石");
@@ -116,7 +118,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add("type.wenyan_programming.object", "物");
         add("type.wenyan_programming.object_type", "類");
 
-        add("gui.wenyan.lock","锁定");
+        add("gui.wenyan.lock", "锁定");
 
         add("title.wenyan_programming.create_tab", "吾有一術");
 
@@ -126,11 +128,13 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
         add("config.wenyan_programming.performance.title", "Performance Settings");
         add("config.wenyan_programming.performance.thread_limit", "Thread Limit");
-        add("config.wenyan_programming.performance.thread_limit.description", "Maximum number of threads that can execute charms simultaneously.");
+        add("config.wenyan_programming.performance.thread_limit.description",
+                "Maximum number of threads that can execute charms simultaneously.");
 
         add("config.wenyan_programming.advanced.title", "Advanced Settings");
         add("config.wenyan_programming.advanced.debug_mode", "Debug Mode");
-        add("config.wenyan_programming.advanced.debug_mode.description", "Enable this option to output debug information to the console.");
+        add("config.wenyan_programming.advanced.debug_mode.description",
+                "Enable this option to output debug information to the console.");
 
         add("code.wenyan_programming.bracket", "「%s」");
         add("gui.wenyan.hold_shift", "(Hold Shift to display details)");

@@ -81,7 +81,7 @@ public final class WyRegistration {
 
         RUNNING_TIER_DATA = DATA.register("runner_tier_data",
                 () -> DataComponentType.<Integer>builder()
-                        .persistent(ExtraCodecs.intRange(0, 3))
+                        .persistent(ExtraCodecs.intRange(0, 5))
                         .build());
         PROGRAM_CODE_DATA = DATA.register("program_code_data",
                 () -> DataComponentType.<String>builder()

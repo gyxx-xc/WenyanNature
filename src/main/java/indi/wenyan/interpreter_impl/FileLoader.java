@@ -41,7 +41,7 @@ public enum FileLoader {
                             .executes(ctx -> FileLoader.importFile(
                                     ctx.getSource(),
                                     StringArgumentType.getString(ctx, "filename"),
-                                    0  // 默认 level
+                                    0 // 默认 level
                             ))
                             // 第二个参数：level
                             .then(Commands.argument("level", IntegerArgumentType.integer())
@@ -49,9 +49,7 @@ public enum FileLoader {
                                     .executes(ctx -> FileLoader.importFile(
                                             ctx.getSource(),
                                             StringArgumentType.getString(ctx, "filename"),
-                                            IntegerArgumentType.getInteger(ctx, "level")
-                                    ))
-                            )));
+                                            IntegerArgumentType.getInteger(ctx, "level"))))));
 
     public static ItemStack createWritableBookFromTxt(Path txtPath, CommandSourceStack source, Integer level) {
         int maxCharsPerPage = 130;
@@ -62,7 +60,7 @@ public enum FileLoader {
         LOGGER.info("[WenyanNature] 尝试读取文件，路径 = {}", txtPath.toAbsolutePath());
         source.sendSystemMessage(Component.literal("§e[WenyanNature] 尝试读取文件: " + txtPath.getFileName()));
 
-        //Load TXT content
+        // Load TXT content
         String fullText;
         try {
             fullText = Files.readString(txtPath, StandardCharsets.UTF_8);
@@ -77,22 +75,23 @@ public enum FileLoader {
             source.sendSystemMessage(Component.literal("§c[WenyanNature] 请检查文件是否存在或位于/config/WenyanNature/scripts目录下"));
             fullText = "§c[WenyanNature] 错误:无法读取文件 " + txtPath.getFileName();
         }
-        //Separate String
+        // Separate String
         List<String> lines = Arrays.asList(fullText.split("\\r?\\n"));
-        //Create empty book item
+        // Create empty book item
 
         switch (level) {
             case 1 -> runnerItem = WenyanItems.HAND_RUNNER_1;
             case 2 -> runnerItem = WenyanItems.HAND_RUNNER_2;
             case 3 -> runnerItem = WenyanItems.HAND_RUNNER_3;
+            case 4 -> runnerItem = WenyanItems.HAND_RUNNER_4;
+            case 5 -> runnerItem = WenyanItems.HAND_RUNNER_5;
 
             default -> runnerItem = WenyanItems.HAND_RUNNER_0;
         }
 
-
         RunnerItem bookItem = (RunnerItem) runnerItem.get();
         ItemStack handRunnerStack = new ItemStack(bookItem, 1);
-        //Create pages
+        // Create pages
         List<Filterable<String>> pages = new ArrayList<>();
         StringBuilder pageBuilder = new StringBuilder();
 
@@ -104,7 +103,7 @@ public enum FileLoader {
                 return ItemStack.EMPTY;
             }
 
-            //Exceed maxCharsPerPage or maxLinePerPage
+            // Exceed maxCharsPerPage or maxLinePerPage
             if (pageBuilder.length() + line.length() + 1 > maxCharsPerPage || lineCounter > maxLinePerPage) {
                 // Remove change line character at the end of the page
                 if (!pageBuilder.isEmpty() && pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
@@ -118,13 +117,13 @@ public enum FileLoader {
             lineCounter++;
         }
 
-        //Last Page
-            if (!pageBuilder.isEmpty()) {
-                if (pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
-                    pageBuilder.setLength(pageBuilder.length() - 1);
-                }
-                pages.add(Filterable.passThrough(pageBuilder.toString()));
+        // Last Page
+        if (!pageBuilder.isEmpty()) {
+            if (pageBuilder.charAt(pageBuilder.length() - 1) == '\n') {
+                pageBuilder.setLength(pageBuilder.length() - 1);
             }
+            pages.add(Filterable.passThrough(pageBuilder.toString()));
+        }
 
         // Write into book
         WritableBookContent content = new WritableBookContent(pages);
@@ -140,7 +139,7 @@ public enum FileLoader {
             return Command.SINGLE_SUCCESS;
         }
 
-        Path configDir  = FMLPaths.CONFIGDIR.get();
+        Path configDir = FMLPaths.CONFIGDIR.get();
         Path scriptsDir = configDir.resolve("WenyanNature").resolve("scripts"); // config/WenyanNature/scripts
         // Create script directory
         try {
@@ -150,7 +149,6 @@ public enum FileLoader {
         }
 
         Path txtPath = scriptsDir.resolve(filename);
-
 
         // Spawn Writable book
         ItemStack book = createWritableBookFromTxt(txtPath, source, level);

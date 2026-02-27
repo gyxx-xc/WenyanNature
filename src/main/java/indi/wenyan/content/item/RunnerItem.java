@@ -33,6 +33,8 @@ public class RunnerItem extends BlockItem {
     public static final String ID_1 = "hand_runner_1";
     public static final String ID_2 = "hand_runner_2";
     public static final String ID_3 = "hand_runner_3";
+    public static final String ID_4 = "hand_runner_4";
+    public static final String ID_5 = "hand_runner_5";
 
     public final int runningLevel;
 

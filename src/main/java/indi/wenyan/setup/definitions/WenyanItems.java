@@ -39,6 +39,11 @@ public enum WenyanItems {
             (Item.Properties properties) -> new RunnerItem(properties, 2));
     public static final DeferredItem<Item> HAND_RUNNER_3 = DR.registerItem(RunnerItem.ID_3,
             (Item.Properties properties) -> new RunnerItem(properties, 3));
+    public static final DeferredItem<Item> HAND_RUNNER_4 = DR.registerItem(RunnerItem.ID_4,
+            (Item.Properties properties) -> new RunnerItem(properties, 4));
+    public static final DeferredItem<Item> HAND_RUNNER_5 = DR.registerItem(RunnerItem.ID_5,
+            (Item.Properties properties) -> new RunnerItem(properties, 5));
+
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
             (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
     public static final DeferredItem<Item> PRINT_INVENTORY_MODULE = DR.registerItem(PrintInventoryModule.ID, PrintInventoryModule::new);
@@ -104,6 +109,8 @@ public enum WenyanItems {
                 output.accept(HAND_RUNNER_1.get());
                 output.accept(HAND_RUNNER_2.get());
                 output.accept(HAND_RUNNER_3.get());
+                output.accept(HAND_RUNNER_4.get());
+                output.accept(HAND_RUNNER_5.get());
 
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());

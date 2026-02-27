@@ -28,6 +28,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(WenyanItems.HAND_RUNNER_1.get(), "二阶符");
         add(WenyanItems.HAND_RUNNER_2.get(), "三阶符");
         add(WenyanItems.HAND_RUNNER_3.get(), "四阶符");
+        add(WenyanItems.HAND_RUNNER_4.get(), "五阶符");
+        add(WenyanItems.HAND_RUNNER_5.get(), "六阶符");
 
         add(WenyanItems.FLOAT_NOTE.get(), "浮签");
         add(WenyanItems.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
@@ -56,7 +58,6 @@ public class ChineseLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(), "爆裂符");
         addBlockAndItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(), "物品符");
         addBlockAndItem(WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(), "天下情報符");
-
 
         addBlockAndItem(WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(), "螢幕石");
         addBlockAndItem(WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(), "信號量石");
