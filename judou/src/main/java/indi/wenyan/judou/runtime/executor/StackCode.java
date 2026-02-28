@@ -21,12 +21,12 @@ public class StackCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, WenyanThread thread) throws WenyanUnreachedException {
+    public void exec(int arg, WenyanThread thread) throws WenyanUnreachedException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case PUSH -> {
                 if (runtime.getBytecode() == null) throw new WenyanUnreachedException();
-                runtime.pushReturnValue(runtime.getBytecode().getConst(args));
+                runtime.pushReturnValue(runtime.getBytecode().getConst(arg));
             }
             case POP -> runtime.getProcessStack().pop();
         }

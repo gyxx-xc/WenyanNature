@@ -22,10 +22,10 @@ public abstract class WenyanCode {
     /**
      * Executes this code with the given arguments and thread context.
      *
-     * @param args The arguments for execution
+     * @param arg The arguments for execution
      * @param thread The thread context
      */
-    public abstract void exec(int args, WenyanThread thread) throws WenyanException;
+    public abstract void exec(int arg, WenyanThread thread) throws WenyanException;
 
     /**
      * Gets the number of steps this code execution requires.

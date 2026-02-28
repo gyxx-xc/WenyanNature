@@ -26,7 +26,7 @@ public class AnsStackCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case PUSH -> runtime.getResultStack().push(runtime.getProcessStack().pop());
@@ -34,7 +34,7 @@ public class AnsStackCode extends WenyanCode {
             case PEEK -> runtime.pushReturnValue(runtime.getResultStack().peek());
             case PEEK_N -> {
                 List<IWenyanValue> list = new ArrayList<>();
-                for (int i = 0; i < args; i++) {
+                for (int i = 0; i < arg; i++) {
                     list.add(runtime.getResultStack().pop());
                     runtime.pushReturnValue(list.getLast());
                 }

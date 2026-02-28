@@ -7,10 +7,7 @@ import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents the runtime environment for executing Wenyan bytecode.
@@ -33,6 +30,12 @@ public class WenyanRuntime {
     // TODO: thread safety check
     @Getter
     private final Map<String, IWenyanValue> variables = new HashMap<>();
+
+    @Getter
+    private final List<IWenyanValue> locals = new ArrayList<>();
+
+    @Getter
+    private final List<IWenyanValue> references = new ArrayList<>();
 
     /**
      * -- GETTER --

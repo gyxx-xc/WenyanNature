@@ -42,7 +42,7 @@ public class FunctionCode extends WenyanCode {
     //   a.b() -> set self, call
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
@@ -57,14 +57,14 @@ public class FunctionCode extends WenyanCode {
             // handleWarper self first
             if (operation == Operation.CALL_ATTR) {
                 // try casting to object (might be list)
-                // if not, ignore self
-                self = self.tryAs(IWenyanObject.TYPE).orElse(null);
+                // if not, throw error
+                self = self.as(IWenyanObject.TYPE);
             }
             callable = func.as(IWenyanFunction.TYPE);
         }
 
-        List<IWenyanValue> argsList = new ArrayList<>(args);
-        for (int i = 0; i < args; i++)
+        List<IWenyanValue> argsList = new ArrayList<>(arg);
+        for (int i = 0; i < arg; i++)
             argsList.add(runtime.getProcessStack().pop());
 
         // NOTE: must make the callF at end, because it may block thread

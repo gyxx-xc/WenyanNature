@@ -55,13 +55,13 @@ public class WenyanDataVisitor extends WenyanVisitor {
 
     @Override
     public Boolean visitId(WenyanRParser.IdContext ctx) {
-        bytecode.add(WenyanCodes.LOAD, ctx.IDENTIFIER().getText());
+        bytecode.addLoadCode(ctx.IDENTIFIER().getText());
         return true;
     }
 
     @Override
     public Boolean visitSelf(WenyanRParser.SelfContext ctx) {
-        bytecode.add(WenyanCodes.LOAD, ctx.SELF().getText());
+        bytecode.addLoadCode(ctx.SELF().getText());
         return true;
     }
 
@@ -69,14 +69,14 @@ public class WenyanDataVisitor extends WenyanVisitor {
     public Boolean visitLogic_data(WenyanRParser.Logic_dataContext ctx) {
         visit(ctx.data(1));
         visit(ctx.data(0));
-        bytecode.add(WenyanCodes.LOAD, ctx.if_logic_op().op.getText());
+        bytecode.addLoadCode(ctx.if_logic_op().op.getText());
         bytecode.add(WenyanCodes.CALL, 2);
         return true;
     }
 
     @Override
     public Boolean visitParent(WenyanRParser.ParentContext ctx) {
-        bytecode.add(WenyanCodes.LOAD, ctx.PARENT().getText());
+        bytecode.addLoadCode(ctx.PARENT().getText());
         return true;
     }
 

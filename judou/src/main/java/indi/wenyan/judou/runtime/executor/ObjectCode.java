@@ -25,9 +25,9 @@ public class ObjectCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
-        String id = runtime.getBytecode().getIdentifier(args);
+        String id = runtime.getBytecode().getIdentifier(arg);
         switch (operation) {
             case ATTR, ATTR_REMAIN -> {
                 IWenyanValue attr;

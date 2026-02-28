@@ -5,7 +5,7 @@ import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.judou.utils.WenyanValues;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.Token;
 
 /**
  * Main visitor for Wenyan language that orchestrates other specialized visitors.
@@ -39,12 +39,14 @@ public class WenyanMainVisitor extends WenyanVisitor {
     // STUB: might change
     @Override
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
-        // stack: id1, id2, ..., package, import
-        for (TerminalNode id : ctx.IDENTIFIER().subList(1, ctx.IDENTIFIER().size()))
-            bytecode.add(WenyanCodes.PUSH, WenyanValues.of(id.getText()));
-        bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.IDENTIFIER(0).getText()));
+        bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
         bytecode.add(WenyanCodes.LOAD, WenyanPackages.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size());
+        // stack: id1, id2, ..., package, import
+        for (Token id : ctx.prop) {
+            bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanValues.of(id.getText()));
+            bytecode.addStoreCode(id.getText());
+        }
         return true;
     }
 }

@@ -16,7 +16,6 @@ public class BranchCode extends WenyanCode {
      * Creates a new BranchCode with the specified condition and operation.
      *
      * @param c The condition for branching
-     * @param o The operation to perform
      */
     public BranchCode(Condition c) {
         super(opName(c));
@@ -24,18 +23,18 @@ public class BranchCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (condition) {
             case NONE -> {
-                runtime.programCounter = runtime.getBytecode().getLabel(args);
+                runtime.programCounter = runtime.getBytecode().getLabel(arg);
                 runtime.PCFlag = true;
             }
             case POP_FALSE -> {
                 boolean value = runtime.getProcessStack().pop()
                         .as(WenyanBoolean.TYPE).value();
                 if (!value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
                     runtime.PCFlag = true;
                 }
             }
@@ -43,7 +42,7 @@ public class BranchCode extends WenyanCode {
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (!value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
                     runtime.PCFlag = true;
                 }
             }
@@ -51,7 +50,7 @@ public class BranchCode extends WenyanCode {
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
                     runtime.PCFlag = true;
                 }
             }
@@ -62,7 +61,6 @@ public class BranchCode extends WenyanCode {
      * Generates the name of the code based on the condition and operation.
      *
      * @param c The condition
-     * @param o The operation
      * @return The name of the code
      */
     private static String opName(Condition c) {

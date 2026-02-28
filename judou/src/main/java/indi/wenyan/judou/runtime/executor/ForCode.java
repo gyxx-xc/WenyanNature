@@ -28,7 +28,7 @@ public class ForCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case FOR_ITER -> {
@@ -42,7 +42,7 @@ public class ForCode extends WenyanCode {
                     runtime.pushReturnValue((IWenyanValue) iter.next());
                 } else {
                     runtime.getProcessStack().pop();
-                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
                     runtime.PCFlag = true;
                 }
             }
@@ -52,7 +52,7 @@ public class ForCode extends WenyanCode {
                 if (num > 0) {
                     runtime.pushReturnValue(WenyanValues.of((long) num - 1));
                 } else {
-                    runtime.programCounter = runtime.getBytecode().getLabel(args);
+                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
                     runtime.PCFlag = true;
                 }
             }

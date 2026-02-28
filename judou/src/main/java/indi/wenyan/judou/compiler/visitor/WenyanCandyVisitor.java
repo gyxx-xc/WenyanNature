@@ -9,6 +9,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.WenyanValues;
 
 /**
  * Visitor for handling candy statements in the Wenyan language.
@@ -24,6 +25,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
 
     /**
      * Constructs a candy visitor with the given bytecode environment
+     *
      * @param bytecode The compiler environment to emit bytecode to
      */
     public WenyanCandyVisitor(WenyanCompilerEnvironment bytecode) {
@@ -40,7 +42,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             throw new WenyanCompileException(e.getMessage(), ctx);
         }
         bytecode.add(WenyanCodes.PEEK_ANS_N, n);
-        bytecode.add(WenyanCodes.LOAD, ctx.WRITE_KEY_FUNCTION().getText());
+        bytecode.addLoadCode(ctx.WRITE_KEY_FUNCTION().getText());
         bytecode.add(WenyanCodes.CALL, n);
         bytecode.add(WenyanCodes.PUSH_ANS);
         return true;
@@ -54,8 +56,8 @@ public class WenyanCandyVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.CAST, WenyanBoolean.TYPE.ordinal());
 
         switch (ctx.op.getType()) {
-            case WenyanRParser.AND -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.AND_ID);
-            case WenyanRParser.OR -> bytecode.add(WenyanCodes.LOAD, WenyanPackages.OR_ID);
+            case WenyanRParser.AND -> bytecode.addLoadCode(WenyanPackages.AND_ID);
+            case WenyanRParser.OR -> bytecode.addLoadCode(WenyanPackages.OR_ID);
             default ->
                     throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.unknown_operator"), ctx);
         }
@@ -78,9 +80,20 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             default:
                 throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.unknown_preposition"), ctx);
         }
-        bytecode.add(WenyanCodes.LOAD, WenyanPackages.MOD_ID);
+        bytecode.addLoadCode(WenyanPackages.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
+        return true;
+    }
+
+    @Override
+    public Boolean visitImport_as_statement(WenyanRParser.Import_as_statementContext ctx) {
+        // stack: id1, id2, ..., package, import
+        bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.IDENTIFIER().getText()));
+        bytecode.addLoadCode(WenyanPackages.IMPORT_ID);
+        bytecode.add(WenyanCodes.CALL, 1);
+        bytecode.add(WenyanCodes.PUSH_ANS);
+        exprVisitor.visit(ctx.define_statement());
         return true;
     }
 }

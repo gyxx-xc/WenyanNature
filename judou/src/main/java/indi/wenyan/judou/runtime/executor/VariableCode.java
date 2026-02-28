@@ -3,7 +3,6 @@ package indi.wenyan.judou.runtime.executor;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
@@ -30,13 +29,21 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case LOAD -> {
-                if (runtime.getBytecode() == null)
-                    throw new WenyanUnreachedException();
-                String id = runtime.getBytecode().getIdentifier(args);
+                IWenyanValue value = runtime.getLocals().get(arg);
+                runtime.pushReturnValue(value);
+            }
+            case LOAD_REF -> {
+                IWenyanValue value = runtime.getReferences().get(arg);
+                runtime.pushReturnValue(value);
+            }
+            case LOAD_GLOBAL -> {
+                // cause this is bytecode level, use if to check still too slow
+                assert runtime.getBytecode() != null;
+                String id = runtime.getBytecode().getIdentifier(arg);
                 IWenyanValue value = thread.getGlobalVariable(id);
                 if (value == null) {
                     throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.variable_not_found_") + id);
@@ -44,27 +51,28 @@ public class VariableCode extends WenyanCode {
                 runtime.pushReturnValue(value);
             }
             case STORE -> {
-                if (runtime.getBytecode() == null)
-                    throw new WenyanUnreachedException();
-                runtime.setVariable(runtime.getBytecode().getIdentifier(args),
-                        WenyanLeftValue.varOf(runtime.getProcessStack().pop()));
+                IWenyanValue value = runtime.getProcessStack().pop();
+                var locals = runtime.getLocals();
+                while (locals.size() <= arg) { // should only run one times
+                    locals.add(WenyanNull.NULL);
+                }
+                locals.set(arg, WenyanLeftValue.varOf(value));
             }
             case SET_VALUE -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
                 IWenyanValue variable = runtime.getProcessStack().pop();
                 if (variable instanceof WenyanLeftValue lv) {
-                    if (value.is(WenyanNull.TYPE))
+                    if (value == WenyanNull.NULL)
                         lv.setValue(WenyanNull.NULL);
                     else
                         lv.setValue(value.as(lv.type()));
-
                 } else
                     throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.set_value_to_non_left_value"));
             }
             case CAST -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
                 // TODO: use const with TYPE in bytecode?
-                var castedValue = switch (args) {
+                var castedValue = switch (arg) {
                     case 1 -> value.as(WenyanInteger.TYPE);
                     case 2 -> value.as(WenyanDouble.TYPE);
                     case 3 -> value.as(WenyanBoolean.TYPE);
@@ -94,6 +102,8 @@ public class VariableCode extends WenyanCode {
      */
     public enum Operation {
         LOAD,
+        LOAD_REF,
+        LOAD_GLOBAL,
         STORE,
         SET_VALUE,
         CAST
@@ -108,6 +118,8 @@ public class VariableCode extends WenyanCode {
     private static String opName(Operation op) {
         return switch (op) {
             case LOAD -> "LOAD";
+            case LOAD_REF -> "LOAD_REF";
+            case LOAD_GLOBAL -> "LOAD_GLOBAL";
             case STORE -> "STORE";
             case SET_VALUE -> "SET_VAR";
             case CAST -> "CAST";
