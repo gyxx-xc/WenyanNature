@@ -21,7 +21,9 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
 
 /**
  * Represents a thread of execution in a Wenyan program.
@@ -203,37 +205,6 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         if (value == null)
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.variable_not_found_") + id);
         return value;
-    }
-
-    // TODO: need to redisign
-    public List<IWenyanValue> fetchRef(List<WenyanBytecode.CapturedValue> values) throws WenyanUnreachedException {
-        // Early exit for empty input
-        if (values.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        // 1. Build bytecode->runtime map (O(R) time, keeps LAST matching runtime)
-        //    cannot create during call, would fail when ret
-        Map<WenyanBytecode, List<IWenyanValue>> bytecodeToRuntime = new HashMap<>();
-        for (var runtime : runtimes) {
-            var bc = runtime.getBytecode();
-            if (bc != null) {
-                bytecodeToRuntime.put(bc, runtime.getLocals()); // Overwrite to preserve original behavior
-            }
-        }
-
-        // 3. Single pass over values (O(V) time)
-        List<IWenyanValue> result = new ArrayList<>(values.size());
-        for (var captured : values) {
-            var locals = bytecodeToRuntime.get(captured.bytecode());
-            if (locals != null) {
-                result.add(locals.get(captured.index()));
-            } else {
-                throw new WenyanUnreachedException();
-            }
-        }
-
-        return result;
     }
 
     public int runtimeSize() {

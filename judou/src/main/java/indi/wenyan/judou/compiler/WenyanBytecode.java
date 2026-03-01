@@ -18,9 +18,9 @@ public class WenyanBytecode {
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
-    private final List<Context> debugTable = new ArrayList<>();
     @Getter
     private final List<CapturedValue> capturedValues = new ArrayList<>();
+    private final List<Context> debugTable = new ArrayList<>();
     @Getter
     private final String sourceCode;
 
@@ -187,5 +187,5 @@ public class WenyanBytecode {
                           int bytecodeStart, int bytecodeEnd,
                           int contentStart, int contentEnd){}
 
-    public record CapturedValue(WenyanBytecode bytecode, int index) {}
+    public record CapturedValue(int index, boolean fromLocal) {}
 }

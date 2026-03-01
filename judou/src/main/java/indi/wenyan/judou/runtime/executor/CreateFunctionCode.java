@@ -15,7 +15,8 @@ public class CreateFunctionCode extends WenyanCode {
     public void exec(int arg, WenyanThread thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         WenyanBuiltinFunctionTemplete func = runtime.getProcessStack().pop().as(WenyanBuiltinFunctionTemplete.TYPE);
-        var refs = thread.fetchRef(func.bytecode().getCapturedValues());
+        var refs = func.bytecode().getCapturedValues().stream().map(v -> v.fromLocal() ?
+                runtime.getLocals().get(v.index()) : runtime.getReferences().get(v.index())).toList();
         runtime.pushReturnValue(new WenyanBuiltinFunction(func, refs));
     }
 }

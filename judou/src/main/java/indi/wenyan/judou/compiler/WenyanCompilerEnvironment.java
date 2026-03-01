@@ -18,7 +18,7 @@ public class WenyanCompilerEnvironment {
     private final WenyanCompilerEnvironment parent;
     private final HashMap<IWenyanValue, Integer> constTable = new HashMap<>();
     private final HashMap<String, Integer> identifierTable = new HashMap<>();
-    private final HashMap<WenyanBytecode.CapturedValue, Integer> capturedValueTable = new HashMap<>();
+    private final HashMap<ScopedValue, Integer> capturedValueTable = new HashMap<>();
     private final Deque<ForEnvironment> forStack = new ArrayDeque<>();
     private final Deque<Context> debugContextStack = new ArrayDeque<>();
     private final Deque<Scope> scopeStack = new ArrayDeque<>();
@@ -93,11 +93,10 @@ public class WenyanCompilerEnvironment {
         if (scopedVariable == null) {
             add(WenyanCodes.LOAD_GLOBAL, identifier);
         } else {
-            if (scopedVariable.bytecode() == this.bytecode) {
-                add(WenyanCodes.LOAD, scopedVariable.index());
+            if (scopedVariable.capturedValue.fromLocal()) {
+                add(WenyanCodes.LOAD, scopedVariable.capturedValue.index());
             } else {
-                int index = capturedValueTable.computeIfAbsent(scopedVariable, bytecode::addCapturedValue);
-                add(WenyanCodes.LOAD_REF, index);
+                add(WenyanCodes.LOAD_REF, scopedVariable.capturedValue.index());
             }
         }
     }
@@ -211,17 +210,23 @@ public class WenyanCompilerEnvironment {
         return identifierTable.computeIfAbsent(identifier, bytecode::addIdentifier);
     }
 
-    private WenyanBytecode.@Nullable CapturedValue getScopedValue(String identifier) {
+    private @Nullable ScopedValueHelper getScopedValue(String identifier) {
         for (Scope locals : scopeStack) {
             if (locals.varibles.containsKey(identifier)) {
                 int index = locals.varibles.get(identifier);
-                return new WenyanBytecode.CapturedValue(this.bytecode, index);
+                return new ScopedValueHelper(new ScopedValue(index, this.bytecode),
+                        new WenyanBytecode.CapturedValue(index, true));
             }
         }
         // reach global, not found, stop
         if (parent == null) return null;
         // recursive
-        return parent.getScopedValue(identifier);
+        var scoped = parent.getScopedValue(identifier);
+        // not found, i.e. global
+        if (scoped == null) return null;
+        int index = capturedValueTable.computeIfAbsent(scoped.scopedValue(), ignore -> bytecode.addCapturedValue(scoped.capturedValue));
+        return new ScopedValueHelper(scoped.scopedValue,
+                new WenyanBytecode.CapturedValue(index, false));
     }
 
     public String getSourceCode() {
@@ -276,4 +281,8 @@ public class WenyanCompilerEnvironment {
             this.varibleBase = varibleBase;
         }
     }
+
+    // if from local null, means it's local
+    private record ScopedValue(int index, WenyanBytecode from) {}
+    private record ScopedValueHelper(ScopedValue scopedValue, WenyanBytecode.CapturedValue capturedValue) {}
 }
