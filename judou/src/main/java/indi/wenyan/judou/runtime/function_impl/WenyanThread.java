@@ -60,7 +60,7 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
 
-        return ofRuntime(new WenyanRuntime(bytecode), basicRuntime);
+        return ofRuntime(new WenyanRuntime(bytecode, Collections.emptyList()), basicRuntime);
     }
 
     public static @NotNull WenyanThread ofRuntime(WenyanRuntime mainRuntime, WenyanRuntime basicRuntime) throws WenyanCompileException {

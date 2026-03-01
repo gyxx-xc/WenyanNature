@@ -6,6 +6,8 @@ import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanPackages;
 
+import java.util.List;
+
 /**
  * Interface representing a platform that can execute Wenyan code and send
  * execute command to Wenyan devices
@@ -24,7 +26,7 @@ public interface IWenyanPlatform extends IExecReceiver {
      * Initializes the platform environment for the Wenyan runtime
      */
     default WenyanRuntime initEnvironment() {
-        var environment = new WenyanRuntime(null);
+        var environment = new WenyanRuntime(null, List.of());
         environment.importPackage(WenyanPackages.WENYAN_BASIC_PACKAGES);
         return environment;
     }

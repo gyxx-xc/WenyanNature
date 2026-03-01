@@ -12,6 +12,7 @@ import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 @Deprecated // not going to do until runtime refactored
@@ -25,7 +26,7 @@ public record WenyanBuiltinAsyncFunction(List<Arg> args, WenyanBytecode bytecode
         if (args().size() != argsList.size())
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
 
-        WenyanRuntime newRuntime = new WenyanRuntime(bytecode);
+        WenyanRuntime newRuntime = new WenyanRuntime(bytecode, Collections.emptyList());
         if (self != null) {
             newRuntime.setVariable(WenyanDataParser.SELF_ID, self);
             newRuntime.setVariable(WenyanDataParser.PARENT_ID,

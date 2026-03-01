@@ -26,7 +26,7 @@ public record WenyanBuiltinFunction(WenyanBuiltinFunctionTemplete functionTemple
         if (functionTemplete.args().size() != argsList.size())
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
 
-        WenyanRuntime newRuntime = new WenyanRuntime(functionTemplete.bytecode());
+        WenyanRuntime newRuntime = new WenyanRuntime(functionTemplete.bytecode(), refs());
         int i = 0;
         if (self != null) {
             newRuntime.getLocals().set(i ++, self);

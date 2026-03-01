@@ -35,7 +35,7 @@ public class WenyanRuntime {
     private final List<IWenyanValue> locals = new ArrayList<>();
 
     @Getter
-    private final List<IWenyanValue> references = new ArrayList<>();
+    private final List<IWenyanValue> references;
 
     /**
      * -- GETTER --
@@ -67,8 +67,9 @@ public class WenyanRuntime {
      *
      * @param bytecode The bytecode to execute (can be null)
      */
-    public WenyanRuntime(@Nullable WenyanBytecode bytecode) {
+    public WenyanRuntime(@Nullable WenyanBytecode bytecode, List<IWenyanValue> refs) {
         this.bytecode = bytecode;
+        this.references = refs;
     }
 
     /**
