@@ -75,7 +75,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
     @Override
     public void run(int step) {
         willPause = false;
-        for (int i = 0; i < step && !willPause; i++) {
+        for (int i = 0; i < step; i++) {
             try {
                 WenyanRuntime runtime = getCurrentRuntime();
                 if (validateRuntimeState(runtime)) return;
@@ -111,7 +111,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
             runtime.programCounter++;
         runtime.PCFlag = false;
 
-        return false;
+        return willPause;
     }
 
     private boolean validateRuntimeState(WenyanRuntime runtime) {
