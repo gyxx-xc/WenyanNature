@@ -20,7 +20,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.slf4j.helpers.NOPLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,13 +36,16 @@ class WenyanProgramTest {
 
     static {
         LanguageManager.registerLanguageProvider(s -> s);
-        LoggerManager.registerLogger(NOPLogger.NOP_LOGGER);
+        LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
     }
 
     @Test
     void testNormal() throws WenyanException {
         assertResult("""
-                書一。""", 1);
+                吾有一術名之曰「乘算口訣」。是術曰。
+                是謂「乘算口訣」之術也。
+                施「乘算口訣」。
+                """, 0);
     }
 
     @ParameterizedTest

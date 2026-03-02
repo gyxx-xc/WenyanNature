@@ -1,5 +1,6 @@
 package indi.wenyan.judou.structure.values.builtin;
 
+import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
@@ -16,25 +17,26 @@ import java.util.List;
  * A built-in function implementation for Wenyan.
  * Represents a function created in Wenyan code.
  */
-public record WenyanBuiltinFunction(WenyanBuiltinFunctionTemplete functionTemplete, List<IWenyanValue> refs) implements IWenyanFunction {
+public record WenyanBuiltinFunction(
+        WenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args, List<IWenyanValue> refs) implements IWenyanFunction {
     public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
 
     @Override
     public void call(IWenyanValue self, WenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
-        if (functionTemplete.args().size() != argsList.size())
+        if (args().size() != argsList.size())
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
 
-        WenyanRuntime newRuntime = new WenyanRuntime(functionTemplete.bytecode(), refs());
+        WenyanRuntime newRuntime = new WenyanRuntime(bytecode(), refs(), thread.getCurrentRuntime());
         int i = 0;
         if (self != null) {
-            newRuntime.getLocals().set(i ++, self);
-            newRuntime.getLocals().set(i ++, self.as(WenyanBuiltinObject.TYPE).getObjectType().getParent());
+            newRuntime.setLocal(i ++, self);
+            newRuntime.setLocal(i ++, self.as(WenyanBuiltinObject.TYPE).getObjectType().getParent());
         }
         for (; i < argsList.size(); i++)
-            newRuntime.getLocals().set(i,
-                    WenyanLeftValue.varOf(argsList.get(i).as(functionTemplete.args().get(i).type())));
+            newRuntime.setLocal(i, WenyanLeftValue.varOf(
+                    argsList.get(i).as(args().get(i).type())));
         thread.call(newRuntime);
     }
 
@@ -43,9 +45,9 @@ public record WenyanBuiltinFunction(WenyanBuiltinFunctionTemplete functionTemple
         StringBuilder sb = new StringBuilder();
         sb.append(LanguageManager.getTranslation("type.wenyan_programming.function"));
         sb.append("(");
-        for (int i = 0; i < functionTemplete.args().size(); i++) {
-            sb.append(functionTemplete.args().get(i).toString());
-            if (i < functionTemplete.args().size() - 1) {
+        for (int i = 0; i < args().size(); i++) {
+            sb.append(args().get(i).toString());
+            if (i < args().size() - 1) {
                 sb.append(", ");
             }
         }

@@ -25,7 +25,7 @@ public class WenyanInlineJavacall implements IJavacallHandler {
 
     @Override
     public void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
-        thread.currentRuntime().pushReturnValue(function.apply(self, argsList));
+        thread.getCurrentRuntime().pushReturnValue(function.apply(self, argsList));
     }
 
     /**

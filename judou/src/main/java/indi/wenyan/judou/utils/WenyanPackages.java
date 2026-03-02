@@ -94,7 +94,7 @@ public enum WenyanPackages {
         @Override
         public boolean handle(IHandleContext context) throws WenyanException {
             if (life-- <= 0) {
-                thread().currentRuntime().pushReturnValue(WenyanNull.NULL);
+                thread().getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
                 thread().unblock();
                 return true;
             }

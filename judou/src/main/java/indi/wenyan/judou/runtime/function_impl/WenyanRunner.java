@@ -22,9 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 
 /**
@@ -37,13 +35,11 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
     @Setter
     private WenyanProgramImpl.PCB thread;
 
-    /**
-     * Stack of runtime environments
-     */
-    private final Deque<WenyanRuntime> runtimes = new ArrayDeque<>();
-
     @Getter
+    @Deprecated
     private final WenyanRuntime mainRuntime;
+    @Getter
+    private WenyanRuntime currentRuntime;
     @Nullable
     private final List<String> exportedIdentifier;
 
@@ -69,7 +65,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
 
-        return new WenyanRunner(new WenyanRuntime(bytecode, Collections.emptyList()), basicRuntime, environment.getExportedValues());
+        return new WenyanRunner(new WenyanRuntime(bytecode), basicRuntime, environment.getExportedValues());
     }
 
     public WenyanRunner forkRuntime(WenyanRuntime mainRuntime) throws WenyanCompileException {
@@ -81,7 +77,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         willPause = false;
         for (int i = 0; i < step && !willPause; i++) {
             try {
-                WenyanRuntime runtime = currentRuntime();
+                WenyanRuntime runtime = getCurrentRuntime();
                 if (validateRuntimeState(runtime)) return;
                 WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
                 WenyanCode code = bytecode.code().getCode();
@@ -106,7 +102,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
     }
 
     private boolean updateProgramCounter(WenyanRuntime runtime) {
-        if (getMainRuntime().finishFlag) {
+        if (currentRuntime == null) {
             safeDie();
             return true;
         }
@@ -141,7 +137,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
     }
 
     public void dieWithException(WenyanException e) {
-        var runtime = currentRuntime();
+        var runtime = getCurrentRuntime();
         Logger logger = LoggerManager.getLogger();
         WenyanException.ErrorContext errorContext = null;
         try {
@@ -166,24 +162,15 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
      * @param runtime The runtime to add
      */
     public void call(WenyanRuntime runtime) {
-        runtimes.push(runtime);
+        currentRuntime = runtime;
     }
 
     /**
      * Removes the top runtime environment from the stack.
      */
     public void ret() {
-        var runtime = runtimes.pop();
-        runtime.finishFlag = true;
-    }
-
-    /**
-     * Gets the current runtime environment from the top of the stack.
-     *
-     * @return The current runtime environment
-     */
-    public WenyanRuntime currentRuntime() {
-        return runtimes.peek();
+        currentRuntime.finishFlag = true;
+        currentRuntime = currentRuntime.getReturnRuntime();
     }
 
     /**
@@ -195,10 +182,6 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
      */
     public IWenyanValue getGlobalVariable(String id) throws WenyanException {
         return globals.getAttribute(id);
-    }
-
-    public int runtimeSize() {
-        return runtimes.size();
     }
 
     private boolean willDie = false;

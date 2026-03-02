@@ -22,7 +22,7 @@ public class StackCode extends WenyanCode {
 
     @Override
     public void exec(int arg, WenyanRunner thread) throws WenyanUnreachedException {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         switch (operation) {
             case PUSH -> runtime.pushReturnValue(runtime.getBytecode().getConst(arg));
             case POP -> runtime.getProcessStack().pop();

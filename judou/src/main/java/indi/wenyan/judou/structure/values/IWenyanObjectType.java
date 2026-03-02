@@ -35,6 +35,6 @@ public interface IWenyanObjectType extends IWenyanFunction {
     @Override
     default void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList)
             throws WenyanException {
-        thread.currentRuntime().pushReturnValue(createObject(argsList));
+        thread.getCurrentRuntime().pushReturnValue(createObject(argsList));
     }
 }

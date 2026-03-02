@@ -95,7 +95,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
         bytecode.setLabel(progStart);
         bytecode.add(WenyanCodes.FOR_ITER, forEnd);
-        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER().getText());
+        bytecode.addStoreCode(ctx.IDENTIFIER().getText());
         bytecode.enterScope();
         bodyVisitor.visit(ctx.statements());
         bytecode.exitScope();

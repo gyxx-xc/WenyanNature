@@ -24,7 +24,7 @@ public class BranchCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         switch (condition) {
             case NONE -> {
                 runtime.programCounter = runtime.getBytecode().getLabel(arg);

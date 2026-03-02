@@ -30,7 +30,7 @@ public class VariableCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         switch (operation) {
             case LOAD -> {
                 IWenyanValue value = runtime.getLocals().get(arg);
@@ -51,11 +51,7 @@ public class VariableCode extends WenyanCode {
             }
             case STORE -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
-                var locals = runtime.getLocals();
-                while (locals.size() <= arg) { // should only run one times
-                    locals.add(WenyanNull.NULL);
-                }
-                locals.set(arg, WenyanLeftValue.varOf(value));
+                runtime.setLocal(arg, WenyanLeftValue.varOf(value));
             }
             case SET_VALUE -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
@@ -86,14 +82,6 @@ public class VariableCode extends WenyanCode {
                 runtime.pushReturnValue(castedValue);
             }
         }
-    }
-
-    @Override
-    public int getStep(int args, WenyanRunner thread) throws WenyanException {
-        if (operation == Operation.LOAD) {
-            return thread.runtimeSize();
-        }
-        return super.getStep(args, thread);
     }
 
     /**

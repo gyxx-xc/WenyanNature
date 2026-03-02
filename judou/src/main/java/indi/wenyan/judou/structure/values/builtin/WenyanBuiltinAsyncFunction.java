@@ -16,7 +16,7 @@ public record WenyanBuiltinAsyncFunction(WenyanBytecode bytecode) implements IWe
     public void call(IWenyanValue self, WenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
-        var newThread = thread.forkRuntime(new WenyanRuntime(bytecode, List.of()));
+        var newThread = thread.forkRuntime(new WenyanRuntime(bytecode, List.of(), null));
         thread.program().create(newThread);
     }
 

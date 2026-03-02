@@ -27,7 +27,7 @@ public class AnsStackCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         switch (operation) {
             case PUSH -> runtime.getResultStack().push(runtime.getProcessStack().pop());
             case POP -> runtime.pushReturnValue(runtime.getResultStack().pop());
