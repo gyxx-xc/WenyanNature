@@ -18,6 +18,8 @@ public class WenyanBytecode {
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
+    @Getter
+    private final List<CapturedValue> capturedValues = new ArrayList<>();
     private final List<Context> debugTable = new ArrayList<>();
     @Getter
     private final String sourceCode;
@@ -148,6 +150,11 @@ public class WenyanBytecode {
         labelTable.set(index, label);
     }
 
+    public int addCapturedValue(CapturedValue value) {
+        capturedValues.add(value);
+        return capturedValues.size() - 1;
+    }
+
     /**
      * Returns the size of the bytecode.
      * @return Number of bytecode instructions
@@ -179,4 +186,6 @@ public class WenyanBytecode {
     public record Context(int line, int column,
                           int bytecodeStart, int bytecodeEnd,
                           int contentStart, int contentEnd){}
+
+    public record CapturedValue(int index, boolean fromLocal) {}
 }

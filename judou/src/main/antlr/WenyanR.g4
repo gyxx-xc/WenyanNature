@@ -7,12 +7,14 @@ grammar WenyanR;
 // call_attr:argc (arg..., self/ignore, func -> ret), handleWarper(h):argc (args... -> ret)
 // push:const (-> value), pop (value ->)
 // pushA (value ->), popA (-> value), peekA(-> value), peekA_N:cnt (-> cnt*val), empty
-// load:id (-> value), store:id (value -> ), set_val(value2, value1 -> ) [v1 -> v2]
 // casting:type (value -> value)
-// load_attr:id (self -> attr), load_attr_remain:id (self -> self, attr),
-// store_attr:id (attr, self -> ), store_a_meth:id (self, m -> self), s_a_prop:id (self, p -> self)
-// create_type:id (parent -> self), create_object:argc (arg..., obj_type -> obj_ins)
+// load_attr:id[string] (self -> attr), load_attr_remain:id[string] (self -> self, attr),
+// store_attr:id[string] (attr, self -> ), store_a_meth:id[string] (self, m -> self), s_a_prop:id[string] (self, p -> self)
+// create_type (parent -> self)
 // FOR_ITER:label_end (iter -> iter+1, i), FOR_NUM:label_end (i -> i - 1) [remove i f jump out]
+// load:id[index] (-> value), store:id[index] (value -> ), set_val(value2, value1 -> ) [v1 -> v2]
+// load_ref:id[index] (-> value), load_global:id[string] (-> value)
+// create_function:const (-> func)
 
 program                     : statements EOF;
 
@@ -27,6 +29,7 @@ statement                   : candy_statement // make the candy first
 candy_statement             : declare_write_candy_statement
                             | boolean_algebra_statement
                             | mod_math_statement
+                            | import_as_statement
                             ;
 
 expr_statement              : declare_statement
@@ -109,7 +112,8 @@ object_method_define        : OBJECT_STATIC_DECLARE (IDENTIFIER | CREATE_OBJECT)
                               function_define_body (IDENTIFIER | CREATE_OBJECT) FUNCTION_DEFINE_END ;
 object_property_define      : OBJECT_STATIC_DECLARE IDENTIFIER ZHE type (YUE data)? ;
 
-import_statement            : IMPORT_START IDENTIFIER IMPORT_PACKAGE (FROM_IMPORT IDENTIFIER+ FROM_IMPORT_END)? ;
+import_as_statement         : IMPORT_START name=IDENTIFIER IMPORT_PACKAGE define_statement ;
+import_statement            : IMPORT_START name=IDENTIFIER IMPORT_PACKAGE (FROM_IMPORT prop+=IDENTIFIER+ FROM_IMPORT_END)? ;
 
 function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
                               (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)

@@ -1,8 +1,8 @@
 package indi.wenyan.judou.runtime.executor;
 
 import indi.wenyan.judou.exec_interface.handler.IJavacallHandler;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
@@ -42,7 +42,7 @@ public class FunctionCode extends WenyanCode {
     //   a.b() -> set self, call
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
@@ -57,14 +57,14 @@ public class FunctionCode extends WenyanCode {
             // handleWarper self first
             if (operation == Operation.CALL_ATTR) {
                 // try casting to object (might be list)
-                // if not, ignore self
-                self = self.tryAs(IWenyanObject.TYPE).orElse(null);
+                // if not, throw error
+                self = self.as(IWenyanObject.TYPE);
             }
             callable = func.as(IWenyanFunction.TYPE);
         }
 
-        List<IWenyanValue> argsList = new ArrayList<>(args);
-        for (int i = 0; i < args; i++)
+        List<IWenyanValue> argsList = new ArrayList<>(arg);
+        for (int i = 0; i < arg; i++)
             argsList.add(runtime.getProcessStack().pop());
 
         // NOTE: must make the callF at end, because it may block thread
@@ -74,7 +74,7 @@ public class FunctionCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public int getStep(int args, @UnknownNullability WenyanRunner thread) throws WenyanException {
         var function = thread.currentRuntime().getProcessStack().peek();
         if (!function.is(IWenyanFunction.TYPE))
             throw new WenyanException("無法調用非函數類型的值");

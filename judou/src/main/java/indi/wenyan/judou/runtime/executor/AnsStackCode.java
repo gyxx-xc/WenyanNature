@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import org.jetbrains.annotations.UnknownNullability;
@@ -26,7 +26,7 @@ public class AnsStackCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case PUSH -> runtime.getResultStack().push(runtime.getProcessStack().pop());
@@ -34,7 +34,7 @@ public class AnsStackCode extends WenyanCode {
             case PEEK -> runtime.pushReturnValue(runtime.getResultStack().peek());
             case PEEK_N -> {
                 List<IWenyanValue> list = new ArrayList<>();
-                for (int i = 0; i < args; i++) {
+                for (int i = 0; i < arg; i++) {
                     list.add(runtime.getResultStack().pop());
                     runtime.pushReturnValue(list.getLast());
                 }
@@ -47,7 +47,7 @@ public class AnsStackCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, WenyanThread thread) throws WenyanException {
+    public int getStep(int args, WenyanRunner thread) throws WenyanException {
         if (operation == Operation.PEEK_N) {
             return args;
         }

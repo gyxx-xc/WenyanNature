@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import org.jetbrains.annotations.UnknownNullability;
 
 /**
@@ -17,7 +17,7 @@ public class ReturnCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int args, @UnknownNullability WenyanThread thread) {
+    public void exec(int arg, @UnknownNullability WenyanRunner thread) {
         WenyanRuntime runtime = thread.currentRuntime();
         thread.ret();
         if (!runtime.noReturnFlag)

@@ -9,7 +9,6 @@ import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanPackageBuilder;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
@@ -94,25 +93,6 @@ public final class HandlerPackageBuilder {
         });
     }
 
-    public HandlerPackageBuilder handler(String name, ImportFunction function) {
-        return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
-            String packageName = request.args().getFirst().as(WenyanString.TYPE).value();
-            WenyanPackage execPackage = function.getPackage(context, packageName);
-            if (request.args().size() == 1) {
-                request.thread().currentRuntime().setVariable(packageName, execPackage);
-                request.thread().currentRuntime().getResultStack().push(execPackage);
-            } else {
-                for (IWenyanValue arg : request.args().subList(1, request.args().size())) {
-                    String id = arg.as(WenyanString.TYPE).value();
-                    // not found error will throw inside getAttribute
-                    request.thread().currentRuntime().setVariable(id,
-                            execPackage.getAttribute(id));
-                }
-            }
-            return true;
-        });
-    }
-
     public HandlerPackageBuilder handler(String name, int power, HandlerReturnFunction function) {
         return handler(name, () -> new BaseHandleableRequest.IRawRequest() {
             int acquired = 0;
@@ -159,10 +139,5 @@ public final class HandlerPackageBuilder {
     @FunctionalInterface
     public interface HandlerSimpleFunction {
         IWenyanValue handle(@NotNull IHandleableRequest request) throws WenyanException;
-    }
-
-    @FunctionalInterface
-    public interface ImportFunction {
-        WenyanPackage getPackage(@NotNull IHandleContext context, @NotNull String name) throws WenyanException;
     }
 }

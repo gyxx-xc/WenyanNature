@@ -53,7 +53,9 @@ public class WenyanControlVisitor extends WenyanVisitor {
         exprVisitor.visit(ctx.data(0));
         int lastIfBody = bytecode.getNewLabel();
         bytecode.add(WenyanCodes.BRANCH_POP_FALSE, lastIfBody);
+        bytecode.enterScope();
         bodyVisitor.visit(ctx.if_); // if body
+        bytecode.exitScope();
 
         int endStmt = bytecode.getNewLabel();
         for (int i = 0; i < ctx.el_data.size(); i++) {
@@ -63,7 +65,9 @@ public class WenyanControlVisitor extends WenyanVisitor {
             exprVisitor.visit(ctx.el_data.get(i));
             lastIfBody = bytecode.getNewLabel();
             bytecode.add(WenyanCodes.BRANCH_POP_FALSE, lastIfBody);
+            bytecode.enterScope();
             bodyVisitor.visit(ctx.elif.get(i));
+            bytecode.exitScope();
         }
 
         if (ctx.else_ == null) {
@@ -72,7 +76,9 @@ public class WenyanControlVisitor extends WenyanVisitor {
             bytecode.add(WenyanCodes.JMP, endStmt);
 
             bytecode.setLabel(lastIfBody);
+            bytecode.enterScope();
             bodyVisitor.visit(ctx.else_);
+            bytecode.exitScope();
         }
         bytecode.setLabel(endStmt);
         return true;
@@ -90,7 +96,9 @@ public class WenyanControlVisitor extends WenyanVisitor {
         bytecode.setLabel(progStart);
         bytecode.add(WenyanCodes.FOR_ITER, forEnd);
         bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER().getText());
+        bytecode.enterScope();
         bodyVisitor.visit(ctx.statements());
+        bytecode.exitScope();
 
         bytecode.setProgEndLabel();
         bytecode.add(WenyanCodes.JMP, progStart);
@@ -110,7 +118,9 @@ public class WenyanControlVisitor extends WenyanVisitor {
 
         bytecode.setLabel(progStart);
         bytecode.add(WenyanCodes.FOR_NUM, forEnd);
+        bytecode.enterScope();
         bodyVisitor.visit(ctx.statements());
+        bytecode.exitScope();
 
         bytecode.setProgEndLabel();
         bytecode.add(WenyanCodes.JMP, progStart);
@@ -127,7 +137,9 @@ public class WenyanControlVisitor extends WenyanVisitor {
         int whileStart = bytecode.getNewLabel();
 
         bytecode.setLabel(whileStart);
+        bytecode.enterScope();
         bodyVisitor.visit(ctx.statements());
+        bytecode.exitScope();
 
         bytecode.setProgEndLabel();
         bytecode.add(WenyanCodes.JMP, whileStart);

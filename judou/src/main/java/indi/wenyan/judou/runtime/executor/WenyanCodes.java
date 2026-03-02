@@ -10,6 +10,7 @@ public enum WenyanCodes {
 
     CALL(new FunctionCode(FunctionCode.Operation.CALL)),
     CALL_ATTR(new FunctionCode(FunctionCode.Operation.CALL_ATTR)),
+    CREATE_FNCTION(new CreateFunctionCode()),
     RET(new ReturnCode()),
 
     PUSH(new StackCode(StackCode.Operation.PUSH)),
@@ -22,6 +23,8 @@ public enum WenyanCodes {
     FLUSH(new AnsStackCode(AnsStackCode.Operation.FLUSH)),
 
     LOAD(new VariableCode(VariableCode.Operation.LOAD)),
+    LOAD_REF(new VariableCode(VariableCode.Operation.LOAD_REF)),
+    LOAD_GLOBAL(new VariableCode(VariableCode.Operation.LOAD_GLOBAL)),
     STORE(new VariableCode(VariableCode.Operation.STORE)),
     SET_VAR(new VariableCode(VariableCode.Operation.SET_VALUE)),
     CAST(new VariableCode(VariableCode.Operation.CAST)),

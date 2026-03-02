@@ -2,7 +2,7 @@ package indi.wenyan.judou.exec_interface.handler;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class SimpleRequestHandler implements RequestCallHandler {
     }
 
     @Override
-    public IHandleableRequest newRequest(WenyanThread thread, IWenyanValue self, List<IWenyanValue> argsList) {
+    public IHandleableRequest newRequest(WenyanRunner thread, IWenyanValue self, List<IWenyanValue> argsList) {
         return new SimpleRequest(thread, self, argsList, handler);
     }
 }

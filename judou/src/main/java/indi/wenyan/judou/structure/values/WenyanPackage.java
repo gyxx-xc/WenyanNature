@@ -2,6 +2,7 @@ package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -15,6 +16,14 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
      * Type descriptor for packages
      */
     public static final WenyanType<WenyanPackage> TYPE = new WenyanType<>("package", WenyanPackage.class);
+
+    public void combine(@NotNull WenyanPackage other) {
+        variables.putAll(other.variables);
+    }
+
+    public void put(String name, IWenyanValue value) {
+        variables.put(name, value);
+    }
 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {

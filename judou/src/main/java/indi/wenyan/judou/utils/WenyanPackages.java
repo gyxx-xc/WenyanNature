@@ -3,7 +3,7 @@ package indi.wenyan.judou.utils;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
@@ -72,14 +72,14 @@ public enum WenyanPackages {
     @Accessors(fluent = true)
     @Value
     private static class AwaitRequest implements BaseHandleableRequest {
-        WenyanThread thread;
+        WenyanRunner thread;
         IWenyanValue self;
         List<IWenyanValue> args;
 
         @NonFinal
         int life;
 
-        private AwaitRequest(WenyanThread thread, IWenyanValue self, List<IWenyanValue> args) throws WenyanException {
+        private AwaitRequest(WenyanRunner thread, IWenyanValue self, List<IWenyanValue> args) throws WenyanException {
             this.thread = thread;
             this.self = self;
             this.args = args;
