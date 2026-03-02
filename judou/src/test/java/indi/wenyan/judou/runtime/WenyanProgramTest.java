@@ -3,7 +3,7 @@ package indi.wenyan.judou.runtime;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData;
 import indi.wenyan.judou.structure.WenyanCompileException;
@@ -230,7 +230,7 @@ class WenyanProgramTest {
         void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
             TestPlatform testPlatform = new TestPlatform();
             IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-            wenyanProgram.create(WenyanThread.ofCode(code, testPlatform.initEnvironment()));
+            wenyanProgram.create(WenyanRunner.ofCode(code, testPlatform.initEnvironment()));
             int cnt = 0;
             while (wenyanProgram.isRunning()) {
                 wenyanProgram.step(1000);
@@ -302,7 +302,7 @@ class WenyanProgramTest {
 
     private void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
         IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanThread.ofCode(code, testPlatform.initEnvironment()));
+        wenyanProgram.create(WenyanRunner.ofCode(code, testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(1000);
             testPlatform.handle(IHandleContext.NONE);

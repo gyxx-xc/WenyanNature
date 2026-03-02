@@ -2,11 +2,11 @@ package indi.wenyan.judou.exec_interface;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.WenyanPackages;
 
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Interface representing a platform that can execute Wenyan code and send
@@ -25,9 +25,9 @@ public interface IWenyanPlatform extends IExecReceiver {
     /**
      * Initializes the platform environment for the Wenyan runtime
      */
-    default WenyanRuntime initEnvironment() {
-        var environment = new WenyanRuntime(null, List.of());
-        environment.importPackage(WenyanPackages.WENYAN_BASIC_PACKAGES);
+    default WenyanPackage initEnvironment() {
+        var environment = new WenyanPackage(new HashMap<>());
+        environment.combine(WenyanPackages.WENYAN_BASIC_PACKAGES);
         return environment;
     }
 

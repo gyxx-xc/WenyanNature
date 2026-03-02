@@ -9,8 +9,7 @@ import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -88,10 +87,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private final Map<Vec3, Integer> communications = new HashMap<>();
 
     @Override
-    public WenyanRuntime initEnvironment() {
+    public WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
-        baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
-        baseEnvironment.setVariable("書", (RequestCallHandler) (thread, self, argsList) ->
+        baseEnvironment.put(WenyanPackages.IMPORT_ID, importFunction);
+        baseEnvironment.put("書", (RequestCallHandler) (thread, self, argsList) ->
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             String s = args.getFirst().as(WenyanString.TYPE).value();
@@ -108,7 +107,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         BlockPos attached = getBlockPos().relative(
                 AbstractFuluBlock.getConnectedDirection(getBlockState()).getOpposite());
         if (getLevel().getBlockEntity(attached) instanceof IWenyanBlockDevice device)
-            baseEnvironment.importPackage(processPackage(device.getExecPackage(), device));
+            baseEnvironment.combine(processPackage(device.getExecPackage(), device));
         return baseEnvironment;
     }
 
@@ -233,7 +232,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         super.setRemoved();
     }
 
-    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException {
+    private Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException {
         assert level != null;
         for (BlockPos b : BlockPos.betweenClosed(
                 getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
@@ -251,7 +250,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
     }
 
-    private WenyanThread createPlatformThread(RunnerBlockEntity platform) throws WenyanException {
+    private WenyanRunner createPlatformThread(RunnerBlockEntity platform) throws WenyanException {
         showCommunication(platform.getBlockPos());
         // STUB: better error handling
         var threadOptional = platform.newThread(platform.code);
@@ -260,14 +259,14 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return threadOptional.orElseThrow(() -> new WenyanException("cannot import"));
     }
 
-    public Optional<WenyanThread> newThread(String pages) {
+    public Optional<WenyanRunner> newThread(String pages) {
         assert getLevel() != null;
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
-        WenyanThread runner;
+        WenyanRunner runner;
         // STUB: better error handling
         try {
-            runner = WenyanThread.ofCode(pages, this.initEnvironment());
+            runner = WenyanRunner.ofCode(pages, this.initEnvironment());
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return Optional.empty();
@@ -344,7 +343,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Value
     @Accessors(fluent = true)
     public class BlockRequest implements BaseHandleableRequest {
-        WenyanThread thread;
+        WenyanRunner thread;
         IWenyanValue self;
         List<IWenyanValue> args;
 

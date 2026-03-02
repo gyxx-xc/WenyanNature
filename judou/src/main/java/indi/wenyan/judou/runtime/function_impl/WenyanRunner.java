@@ -13,24 +13,26 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.LoggerManager;
 import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * Represents a thread of execution in a Wenyan program.
  * Manages its execution state and runtime stack.
  */
 @WenyanThreading
-public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
+public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
     @Getter
     @Setter
     private WenyanProgramImpl.PCB thread;
@@ -42,14 +44,21 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     @Getter
     private final WenyanRuntime mainRuntime;
+    @Nullable
+    private final List<String> exportedIdentifier;
+
+    private final WenyanPackage globals;
 
     private boolean willPause = false;
 
-    private WenyanThread(WenyanRuntime mainRuntime) {
+    private WenyanRunner(WenyanRuntime mainRuntime, WenyanPackage globals, @Nullable List<String> exportedIdentifier) {
         this.mainRuntime = mainRuntime;
+        this.exportedIdentifier = exportedIdentifier;
+        this.globals = globals;
+        call(mainRuntime);
     }
 
-    public static @NotNull WenyanThread ofCode(String code, WenyanRuntime basicRuntime) throws WenyanCompileException {
+    public static @NotNull WenyanRunner ofCode(String code, WenyanPackage basicRuntime) throws WenyanCompileException {
         var bytecode = new WenyanBytecode(code);
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
@@ -60,14 +69,11 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
 
-        return ofRuntime(new WenyanRuntime(bytecode, Collections.emptyList()), basicRuntime);
+        return new WenyanRunner(new WenyanRuntime(bytecode, Collections.emptyList()), basicRuntime, environment.getExportedValues());
     }
 
-    public static @NotNull WenyanThread ofRuntime(WenyanRuntime mainRuntime, WenyanRuntime basicRuntime) throws WenyanCompileException {
-        WenyanThread thread = new WenyanThread(mainRuntime);
-        thread.call(basicRuntime);
-        thread.call(mainRuntime);
-        return thread;
+    public WenyanRunner forkRuntime(WenyanRuntime mainRuntime) throws WenyanCompileException {
+        return new WenyanRunner(mainRuntime, globals, null);
     }
 
     @Override
@@ -77,8 +83,6 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
             try {
                 WenyanRuntime runtime = currentRuntime();
                 if (validateRuntimeState(runtime)) return;
-
-                assert runtime.getBytecode() != null; //checked by validateRuntimeState
                 WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
                 WenyanCode code = bytecode.code().getCode();
                 int needStep = code.getStep(bytecode.arg(), this);
@@ -115,10 +119,6 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
     }
 
     private boolean validateRuntimeState(WenyanRuntime runtime) {
-        if (runtime.getBytecode() == null) {
-            dieWithException(new WenyanUnreachedException());
-            return true;
-        }
         if (runtime.programCounter < 0 || runtime.programCounter >= runtime.getBytecode().size()) {
             dieWithException(new WenyanUnreachedException());
             return true;
@@ -131,7 +131,7 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         try {
             die();
         } catch (WenyanUnreachedException e) {
-            logger.error("Unexpected, failed to die after handling an exception", e);
+            logger.error("Unexpected, failed to die");
         }
     }
 
@@ -145,7 +145,7 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
         Logger logger = LoggerManager.getLogger();
         WenyanException.ErrorContext errorContext = null;
         try {
-            if (runtime != null && runtime.getBytecode() != null) {
+            if (runtime != null) {
                 WenyanBytecode.Context context = runtime.getBytecode().getContext(runtime.programCounter - 1);
                 errorContext = new WenyanException.ErrorContext(
                         context.line(), context.column(),
@@ -194,17 +194,7 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
      * @throws WenyanException If the variable is not found
      */
     public IWenyanValue getGlobalVariable(String id) throws WenyanException {
-        IWenyanValue value = null;
-        // TODO: use closure or at least a cache
-        for (var runtime : runtimes) {
-            if (runtime.getVariables().containsKey(id)) {
-                value = runtime.getVariables().get(id);
-                break;
-            }
-        }
-        if (value == null)
-            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.variable_not_found_") + id);
-        return value;
+        return globals.getAttribute(id);
     }
 
     public int runtimeSize() {
@@ -221,5 +211,14 @@ public class WenyanThread implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     public boolean isDying() {
         return willDie;
+    }
+
+    public String getExportedIdentifier(int i) throws WenyanUnreachedException {
+        if (exportedIdentifier != null) {
+            return exportedIdentifier.get(i);
+        } else {
+            // called from fork thread, should be not got package
+            throw new WenyanUnreachedException();
+        }
     }
 }

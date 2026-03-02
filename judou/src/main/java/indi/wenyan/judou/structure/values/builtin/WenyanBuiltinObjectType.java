@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values.builtin;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
@@ -78,7 +78,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Override
-    public void call(IWenyanValue self, WenyanThread thread,
+    public void call(IWenyanValue self, WenyanRunner thread,
                      List<IWenyanValue> argsList) throws WenyanException {
         // create empty, run constructor, return self
         IWenyanValue selfObj = new WenyanBuiltinObject(this);

@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.utils.WenyanThreading;
@@ -33,7 +33,7 @@ public interface IWenyanObjectType extends IWenyanFunction {
             throws WenyanException;
 
     @Override
-    default void call(IWenyanValue self, WenyanThread thread, List<IWenyanValue> argsList)
+    default void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList)
             throws WenyanException {
         thread.currentRuntime().pushReturnValue(createObject(argsList));
     }

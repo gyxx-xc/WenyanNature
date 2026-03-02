@@ -26,6 +26,26 @@ public class WenyanCompilerEnvironment {
     private int localVariableCounter = 0;
 
     /**
+     * Gets exported values from the largest scope.
+     *
+     * @return List of exported variable names ordered by their indices
+     */
+    public List<String> getExportedValues() {
+        if (scopeStack.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        var variables = scopeStack.peekLast().variables;
+        List<String> result = new ArrayList<>(Collections.nCopies(variables.size(), null));
+        variables.forEach((k, v) -> result.set(v, k));
+        // validate not contain null, or throw
+        if (result.contains(null))
+            throw new WenyanCompileException("變量名稱重複");
+        return result;
+    }
+
+
+    /**
      * Represents a for-loop environment with its end labels.
      */
     private record ForEnvironment(int forEndLabel, int progEndLabel) {
@@ -48,9 +68,9 @@ public class WenyanCompilerEnvironment {
         var scope = new Scope(0);
         scopeStack.push(scope);
         for (String arg : argv) {
-            if (scope.varibles.containsKey(arg))
+            if (scope.variables.containsKey(arg))
                 throw new WenyanCompileException("變量名稱重複");
-            scope.varibles.put(arg, localVariableCounter ++);
+            scope.variables.put(arg, localVariableCounter++);
         }
     }
 
@@ -79,12 +99,12 @@ public class WenyanCompilerEnvironment {
     public void addStoreCode(String identifier) {
         Scope currentScope = scopeStack.peek();
         assert currentScope != null;
-        if (currentScope.varibles.containsKey(identifier)) {
-            int index = currentScope.varibles.get(identifier);
+        if (currentScope.variables.containsKey(identifier)) {
+            int index = currentScope.variables.get(identifier);
             add(WenyanCodes.STORE, index);
         }
-        int newIndex = localVariableCounter ++;
-        currentScope.varibles.put(identifier, newIndex);
+        int newIndex = localVariableCounter++;
+        currentScope.variables.put(identifier, newIndex);
         add(WenyanCodes.STORE, newIndex);
     }
 
@@ -212,8 +232,8 @@ public class WenyanCompilerEnvironment {
 
     private @Nullable ScopedValueHelper getScopedValue(String identifier) {
         for (Scope locals : scopeStack) {
-            if (locals.varibles.containsKey(identifier)) {
-                int index = locals.varibles.get(identifier);
+            if (locals.variables.containsKey(identifier)) {
+                int index = locals.variables.get(identifier);
                 return new ScopedValueHelper(new ScopedValue(index, this.bytecode),
                         new WenyanBytecode.CapturedValue(index, true));
             }
@@ -275,7 +295,7 @@ public class WenyanCompilerEnvironment {
 
     private static class Scope {
         private final int varibleBase;
-        private final Map<String, Integer> varibles = new HashMap<>();
+        private final Map<String, Integer> variables = new HashMap<>();
 
         public Scope(int varibleBase) {
             this.varibleBase = varibleBase;
@@ -283,6 +303,10 @@ public class WenyanCompilerEnvironment {
     }
 
     // if from local null, means it's local
-    private record ScopedValue(int index, WenyanBytecode from) {}
-    private record ScopedValueHelper(ScopedValue scopedValue, WenyanBytecode.CapturedValue capturedValue) {}
+    private record ScopedValue(int index, WenyanBytecode from) {
+    }
+
+    private record ScopedValueHelper(ScopedValue scopedValue,
+                                     WenyanBytecode.CapturedValue capturedValue) {
+    }
 }

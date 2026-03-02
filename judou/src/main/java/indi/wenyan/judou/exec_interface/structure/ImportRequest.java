@@ -1,8 +1,9 @@
 package indi.wenyan.judou.exec_interface.structure;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
@@ -12,20 +13,22 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Accessors(fluent = true)
 public final class ImportRequest implements BaseHandleableRequest {
-    final WenyanThread thread;
+    final WenyanRunner thread;
     final IWenyanPlatform platform;
     final ImportFunction getPackage;
     final List<IWenyanValue> args;
     private final String packageName;
     private Status status = Status.FIRST_RUN;
-    private Either<WenyanPackage, WenyanThread> packageOrThread;
+    private Either<WenyanPackage, WenyanRunner> packageOrThread;
 
-    public ImportRequest(WenyanThread thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException {
+    public ImportRequest(WenyanRunner thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException {
         this.thread = thread;
         this.platform = platform;
         this.getPackage = getPackage;
@@ -57,7 +60,7 @@ public final class ImportRequest implements BaseHandleableRequest {
                     }
                     // fallthrough
                 case WAITING:
-                    WenyanThread wenyanThread = packageOrThread.right().get();
+                    WenyanRunner wenyanThread = packageOrThread.right().get();
                     if (wenyanThread.isDying()) {
                         if (wenyanThread.getMainRuntime().finishFlag) {
                             status = Status.PROCESS_RUNTIME;
@@ -70,28 +73,27 @@ public final class ImportRequest implements BaseHandleableRequest {
                     }
                     // fallthrough
                 case PROCESS_RUNTIME:
-                    returnPackage(new WenyanPackage(packageOrThread.right().get().getMainRuntime().getVariables()));
+                    returnPackage(getWenyanPackage(packageOrThread.right().get()));
                     thread().unblock();
                     return true; // end
             }
     }
 
+    private @NotNull WenyanPackage getWenyanPackage(WenyanRunner runner) throws WenyanUnreachedException {
+        var runtime = runner.getMainRuntime();
+        Map<String, IWenyanValue> result = new HashMap<>();
+        for (int i = 0; i < runtime.getLocals().size(); i ++) {
+            result.put(runner.getExportedIdentifier(i), runtime.getLocals().get(i));
+        }
+        return new WenyanPackage(result);
+    }
+
     private void returnPackage(@NotNull WenyanPackage wenyanPackage) throws WenyanException {
-        if (args.isEmpty()) {
+        if (args.size() != 1) {
             throw new WenyanException("参数错误");
         }
 
-        if (args.size() == 1) {
-            thread.currentRuntime().setVariable(packageName, wenyanPackage);
-            thread.currentRuntime().getResultStack().push(wenyanPackage);
-        } else {
-            for (IWenyanValue arg : args.subList(1, args.size())) {
-                String id = arg.as(WenyanString.TYPE).value();
-                // not found error will throw inside getAttribute
-                thread.currentRuntime().setVariable(id,
-                        wenyanPackage.getAttribute(id));
-            }
-        }
+        thread.currentRuntime().pushReturnValue(wenyanPackage);
     }
 
     private enum Status {
@@ -111,6 +113,6 @@ public final class ImportRequest implements BaseHandleableRequest {
          * @return the requested package
          * @throws WenyanException if the package cannot be found or accessed
          */
-        Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException;
+        Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException;
     }
 }

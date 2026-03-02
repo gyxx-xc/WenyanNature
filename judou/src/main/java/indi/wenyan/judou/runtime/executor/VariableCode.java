@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
@@ -29,7 +29,7 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         switch (operation) {
             case LOAD -> {
@@ -42,7 +42,6 @@ public class VariableCode extends WenyanCode {
             }
             case LOAD_GLOBAL -> {
                 // cause this is bytecode level, use if to check still too slow
-                assert runtime.getBytecode() != null;
                 String id = runtime.getBytecode().getIdentifier(arg);
                 IWenyanValue value = thread.getGlobalVariable(id);
                 if (value == null) {
@@ -90,7 +89,7 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, WenyanThread thread) throws WenyanException {
+    public int getStep(int args, WenyanRunner thread) throws WenyanException {
         if (operation == Operation.LOAD) {
             return thread.runtimeSize();
         }

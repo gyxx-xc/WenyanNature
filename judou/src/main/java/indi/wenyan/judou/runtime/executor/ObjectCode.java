@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinObject;
@@ -25,7 +25,7 @@ public class ObjectCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanThread thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
         WenyanRuntime runtime = thread.currentRuntime();
         String id = runtime.getBytecode().getIdentifier(arg);
         switch (operation) {

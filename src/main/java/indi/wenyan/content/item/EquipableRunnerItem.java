@@ -5,8 +5,7 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -103,9 +102,9 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
 //    }
 
     @Override
-    public WenyanRuntime initEnvironment() {
+    public WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
-        baseEnvironment.setVariable(WenyanPackages.IMPORT_ID, importFunction);
+        baseEnvironment.put(WenyanPackages.IMPORT_ID, importFunction);
         return baseEnvironment;
     }
 
@@ -127,7 +126,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             throw new WenyanException("item changed");
     }
 
-    private Either<WenyanPackage, WenyanThread> getPackage(IHandleContext context, String packageName) throws WenyanException {
+    private Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException("Context is not an instance of ItemContext");
         }
@@ -157,7 +156,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
 
     private record ItemRequest(
             IWenyanPlatform platform,
-            WenyanThread thread,
+            WenyanRunner thread,
             IRawRequest request,
             IWenyanValue self,
             List<IWenyanValue> args,

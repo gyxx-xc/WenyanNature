@@ -2,12 +2,14 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
 /**
  * Represents the runtime environment for executing Wenyan bytecode.
@@ -19,17 +21,8 @@ public class WenyanRuntime {
      * -- GETTER --
      * The bytecode to be executed
      */
-    @Getter
-    @Nullable
+    @Getter @NotNull
     private final WenyanBytecode bytecode;
-
-    /**
-     * -- GETTER --
-     * Storage for program variables
-     */
-    // TODO: thread safety check
-    @Getter
-    private final Map<String, IWenyanValue> variables = new HashMap<>();
 
     @Getter
     private final List<IWenyanValue> locals = new ArrayList<>();
@@ -67,28 +60,9 @@ public class WenyanRuntime {
      *
      * @param bytecode The bytecode to execute (can be null)
      */
-    public WenyanRuntime(@Nullable WenyanBytecode bytecode, List<IWenyanValue> refs) {
+    public WenyanRuntime(@NotNull WenyanBytecode bytecode, List<IWenyanValue> refs) {
         this.bytecode = bytecode;
         this.references = refs;
-    }
-
-    /**
-     * Sets a variable in the current runtime scope.
-     *
-     * @param id The variable identifier
-     * @param value The value to store
-     */
-    public void setVariable(String id, IWenyanValue value) {
-        getVariables().put(id, value);
-    }
-
-    /**
-     * Imports all variables from a package into this runtime.
-     *
-     * @param aPackage The package containing variables to import
-     */
-    public void importPackage(WenyanPackage aPackage) {
-        getVariables().putAll(aPackage.variables());
     }
 
     public void pushReturnValue(IWenyanValue value) {

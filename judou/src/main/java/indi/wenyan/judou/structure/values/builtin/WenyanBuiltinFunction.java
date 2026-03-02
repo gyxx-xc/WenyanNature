@@ -1,7 +1,7 @@
 package indi.wenyan.judou.structure.values.builtin;
 
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
-import indi.wenyan.judou.runtime.function_impl.WenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
@@ -20,7 +20,7 @@ public record WenyanBuiltinFunction(WenyanBuiltinFunctionTemplete functionTemple
     public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
 
     @Override
-    public void call(IWenyanValue self, WenyanThread thread,
+    public void call(IWenyanValue self, WenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
         if (functionTemplete.args().size() != argsList.size())
