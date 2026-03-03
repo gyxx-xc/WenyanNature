@@ -2,10 +2,7 @@ package indi.wenyan.judou.structure.values.primitive;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanComparable;
-import indi.wenyan.judou.structure.values.IWenyanComputable;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.IWenyanWarperValue;
+import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * Supports arithmetic operations and comparisons.
  */
 public record WenyanDouble(Double value)
-        implements IWenyanWarperValue<Double>, IWenyanComputable, IWenyanComparable {
+        implements IWenyanWarperValue<Double>, IWenyanComputable, IWenyanComparable, IWenyanNumber {
     public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>("double", WenyanDouble.class);
 
     @Override
@@ -24,7 +21,6 @@ public record WenyanDouble(Double value)
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanInteger.TYPE) {
             return (T) WenyanValues.of(value.intValue());

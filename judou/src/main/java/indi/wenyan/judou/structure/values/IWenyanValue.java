@@ -44,7 +44,6 @@ public interface IWenyanValue {
      * @return Casted value
      * @throws WenyanException.WenyanTypeException If casting fails
      */
-    @SuppressWarnings("unchecked")
     default <T extends IWenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         if (type.tClass.isInstance(this)) {
             return (T) this;
@@ -65,12 +64,7 @@ public interface IWenyanValue {
      * @return True if this value can be cast to the target type
      */
     default boolean is(WenyanType<?> type) {
-        try {
-            as(type);
-            return true;
-        } catch (WenyanException.WenyanTypeException e) {
-            return false;
-        }
+        return type.tClass.isInstance(this) || casting(type) != null || type == WenyanString.TYPE;
     }
 
     /**
@@ -82,8 +76,11 @@ public interface IWenyanValue {
      */
     default <T extends IWenyanValue> Optional<T> tryAs(WenyanType<T> type) {
         try {
-            return Optional.of(as(type));
-        } catch (WenyanException.WenyanTypeException e) {
+            if (is(type))
+                return Optional.of(as(type));
+            return Optional.empty();
+        } catch (WenyanException.WenyanTypeException ignore) {
+            // should unreach
             return Optional.empty();
         }
     }
@@ -201,7 +198,7 @@ public interface IWenyanValue {
      * @return Empty value of the specified type
      */
     static IWenyanValue emptyOf(WenyanType<?> type) throws WenyanException {
-        if (type == WenyanDouble.TYPE) return WenyanValues.of(0.0);
+        if (type == IWenyanNumber.TYPE) return WenyanValues.of(0);
         if (type == WenyanBoolean.TYPE) return WenyanValues.of(false);
         if (type == WenyanString.TYPE) return WenyanValues.of("");
         if (type == WenyanList.TYPE) return new WenyanList();

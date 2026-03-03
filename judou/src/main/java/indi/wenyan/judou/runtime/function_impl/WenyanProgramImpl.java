@@ -14,17 +14,15 @@ import org.slf4j.Logger;
 
 import java.util.Collection;
 import java.util.concurrent.*;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 
 public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> {
     public static final int SLICE_STEP = 1000;
     public static final int MAX_THREAD = 10;
     public static final int WATCHDOG_TIMEOUT = 5;
 
-    private final Lock stepLock = new ReentrantLock();
-    private final Condition newStepsCondition = stepLock.newCondition();
+    private final AtomicReference<Thread> parkedThread = new AtomicReference<>();
     /**
      * Semaphore controlling execution steps across threads
      */
@@ -65,20 +63,15 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         if (steps <= 0) {
             throw new IllegalArgumentException("steps must be positive");
         }
-        stepLock.lock();
-        try {
-            if (accumulatedSteps > 0) {
-                // STUB: if no idle
-                if (!isIdle)
-                    LoggerManager.getLogger().warn(
-                            "program running too slow, step {} but {} accumulated",
-                            steps, accumulatedSteps); // make > 0 for less confused message
-            }
-            accumulatedSteps = steps;
-            newStepsCondition.signalAll(); // should be only one wait
-        } finally {
-            stepLock.unlock();
+        if (accumulatedSteps > 0) {
+            // STUB: if no idle
+            if (!isIdle)
+                LoggerManager.getLogger().warn(
+                        "program running too slow, step {} but {} accumulated",
+                        steps, accumulatedSteps); // make > 0 for less confused message
         }
+        accumulatedSteps = steps;
+        LockSupport.unpark(parkedThread.getAndSet(null));
         // update idle (i.e. case in update idle, consume step)
         // ignore case in consume step, no possible since we just signal it
         // connot use updateIdle() since thread not dying ot blocking
@@ -174,21 +167,17 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Override
     public void consumeStep(IThreadHolder<PCB> runner, int i) {
-        stepLock.lock();
-        try {
-            if (accumulatedSteps < i) {
-                runner.getThread().getWatchdog().cancel(false);
-                isIdle = true;
-                newStepsCondition.await();
-                // restart watchdog
-                startWatchdog(runner.getThread());
+        if (accumulatedSteps < i) {
+            runner.getThread().getWatchdog().cancel(false);
+            isIdle = true;
+            while (accumulatedSteps < i) {
+                parkedThread.set(Thread.currentThread());
+                LockSupport.park();
             }
-            accumulatedSteps -= i;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            stepLock.unlock();
+            // restart watchdog
+            startWatchdog(runner.getThread());
         }
+        accumulatedSteps -= i;
     }
 
     /**

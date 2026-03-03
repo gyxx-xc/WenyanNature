@@ -3,10 +3,10 @@ package indi.wenyan.judou.utils;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
+import indi.wenyan.judou.structure.values.IWenyanNumber;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
 
@@ -107,11 +107,11 @@ public enum WenyanDataParser {
 
     private static final HashMap<String, WenyanType<?>> TYPE_MAP = new HashMap<>() {{
         put("爻", WenyanBoolean.TYPE);
-        put("數", WenyanDouble.TYPE);
+        put("數", IWenyanNumber.TYPE);
         put("言", WenyanString.TYPE);
         put("列", WenyanList.TYPE);
 
-        put("数", WenyanDouble.TYPE);
+        put("数", IWenyanNumber.TYPE);
 
         put("物", IWenyanObject.TYPE);
         put("術", IWenyanFunction.TYPE);

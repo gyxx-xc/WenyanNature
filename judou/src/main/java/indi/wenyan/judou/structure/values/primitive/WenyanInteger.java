@@ -2,10 +2,7 @@ package indi.wenyan.judou.structure.values.primitive;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanComparable;
-import indi.wenyan.judou.structure.values.IWenyanComputable;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.IWenyanWarperValue;
+import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +14,7 @@ import java.math.BigInteger;
  * Represents an integer value in Wenyan language.
  * Supports arithmetic operations and comparisons.
  */
-public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable {
+public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable, IWenyanNumber {
     private final BigInteger value;
 
     private WenyanInteger(BigInteger value) {
@@ -50,17 +47,17 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
 
     @Override
     public IWenyanValue add(IWenyanValue other) throws WenyanException {
-        return WenyanValues.of(value.add(other.as(TYPE).value));
+        return valueOf(value.add(other.as(TYPE).value));
     }
 
     @Override
     public IWenyanValue subtract(IWenyanValue other) throws WenyanException {
-        return WenyanValues.of(value.subtract(other.as(TYPE).value));
+        return valueOf(value.subtract(other.as(TYPE).value));
     }
 
     @Override
     public IWenyanValue multiply(IWenyanValue other) throws WenyanException {
-        return WenyanValues.of(value.multiply(other.as(TYPE).value));
+        return valueOf(value.multiply(other.as(TYPE).value));
     }
 
     @Override
@@ -76,7 +73,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
         if (other.value.equals(BigInteger.ZERO)) {
             throw new WenyanException("Modulo by zero");
         }
-        return new WenyanInteger(value.mod(other.value.abs()));
+        return valueOf(value.mod(other.value.abs()));
     }
 
     @Override
@@ -85,7 +82,6 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanDouble.TYPE) {
             return (T) WenyanValues.of(value.doubleValue());

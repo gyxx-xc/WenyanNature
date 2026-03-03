@@ -31,7 +31,7 @@ public enum WenyanValues {;
     }
 
     public static IWenyanValue of(boolean b) {
-        return new WenyanBoolean(b);
+        return b ? WenyanBoolean.TRUE : WenyanBoolean.FALSE;
     }
 
     public static IWenyanValue of(String s) {
