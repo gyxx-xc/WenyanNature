@@ -14,6 +14,7 @@ import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
+import indi.wenyan.judou.utils.WenyanPackages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,6 +149,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
         int index = bytecode.getStoreIndex(ctx.IDENTIFIER(0).getText());
         visitFunction_define_body(ctx.function_define_body(), false);
         bytecode.add(WenyanCodes.CREATE_FNCTION, index);
+        if (ctx.t.getType() == WenyanRParser.ASYNC_DECLARE_OP) {
+            bytecode.add(WenyanCodes.PUSH, WenyanPackages.CREATE_ASYNC_ID);
+            bytecode.add(WenyanCodes.CALL, 1);
+        }
         bytecode.add(WenyanCodes.STORE, index);
         return true;
     }

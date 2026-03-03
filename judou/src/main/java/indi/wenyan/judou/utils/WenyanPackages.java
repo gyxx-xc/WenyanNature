@@ -1,9 +1,6 @@
 package indi.wenyan.judou.utils;
 
-import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.exec_interface.handler.AwaitCallHandler;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
@@ -12,11 +9,7 @@ import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinAsyncFunction;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
-import lombok.Value;
-import lombok.experimental.Accessors;
-import lombok.experimental.NonFinal;
 
 import java.util.List;
 
@@ -67,42 +60,9 @@ public enum WenyanPackages {
             .function("大於", WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) > 0))
             .function("小於", WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
-            .function("待", (RequestCallHandler) AwaitRequest::new)
+            .function("待", AwaitCallHandler.INSTANCE)
             .function(CREATE_ASYNC_ID, (self, args) -> new WenyanBuiltinAsyncFunction(args.getFirst().as(WenyanBuiltinFunction.TYPE)))
 
             .function(WenyanSymbol.var("Null"), (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
             .build();
-
-    @Accessors(fluent = true)
-    @Value
-    private static class AwaitRequest implements BaseHandleableRequest {
-        WenyanRunner thread;
-        IWenyanValue self;
-        List<IWenyanValue> args;
-
-        @NonFinal
-        int life;
-
-        private AwaitRequest(WenyanRunner thread, IWenyanValue self, List<IWenyanValue> args) throws WenyanException {
-            this.thread = thread;
-            this.self = self;
-            this.args = args;
-            if (args.size() != 1) throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
-            if (args.getFirst().is(WenyanInteger.TYPE)) {
-                life = args.getFirst().as(WenyanInteger.TYPE).value();
-            } else {
-                throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
-            }
-        }
-
-        @Override
-        public boolean handle(IHandleContext context) throws WenyanException {
-            if (life-- <= 0) {
-                thread().getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
-                thread().unblock();
-                return true;
-            }
-            return false;
-        }
-    }
 }

@@ -5,7 +5,6 @@ import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
@@ -23,7 +22,6 @@ public final class ImportRequest implements BaseHandleableRequest {
     final WenyanRunner thread;
     final IWenyanPlatform platform;
     final ImportFunction getPackage;
-    final List<IWenyanValue> args;
     private final String packageName;
     private Status status = Status.FIRST_RUN;
     private Either<WenyanPackage, WenyanRunner> packageOrThread;
@@ -32,12 +30,10 @@ public final class ImportRequest implements BaseHandleableRequest {
         this.thread = thread;
         this.platform = platform;
         this.getPackage = getPackage;
-        this.args = args;
+        if (args.size() != 1) {
+            throw new WenyanException("参数错误");
+        }
         this.packageName = args.getFirst().as(WenyanString.TYPE).value();
-    }
-
-    public IWenyanValue self() {
-        return WenyanNull.NULL;
     }
 
     // logic too complex, impl in Automata
@@ -88,11 +84,7 @@ public final class ImportRequest implements BaseHandleableRequest {
         return new WenyanPackage(result);
     }
 
-    private void returnPackage(@NotNull WenyanPackage wenyanPackage) throws WenyanException {
-        if (args.size() != 1) {
-            throw new WenyanException("参数错误");
-        }
-
+    private void returnPackage(@NotNull WenyanPackage wenyanPackage) {
         thread.getCurrentRuntime().pushReturnValue(wenyanPackage);
     }
 
