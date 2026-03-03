@@ -76,7 +76,9 @@ declare_write_candy_statement : declare_statement WRITE_KEY_FUNCTION ZHI
 mod_math_statement          : DIV data pp=(PREPOSITION_LEFT|PREPOSITION_RIGHT) data POST_MOD_MATH_OP ;
 boolean_algebra_statement   : FU data data op=(AND_STMT | OR_STMT) ;
 assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGHT_END   # assign_data_statement
-                            | ASSIGN_LEFT data ZHE (ASSIGN_RIGHT)? ASSIGN_RIGHT_NULL       # assign_null_statement;
+                            | ASSIGN_LEFT data ZHE (ASSIGN_RIGHT)? ASSIGN_RIGHT_NULL    # assign_null_statement
+                            | ASSIGNING data                                               # assign_simple_statement
+                            ;
 
 function_define_statement   : LOCAL_DECLARE_OP INT_NUM FUNCTION_TYPE NAMING YUE IDENTIFIER
                               function_define_body IDENTIFIER FUNCTION_DEFINE_END ;
@@ -195,6 +197,7 @@ DEFINE_CLOSURE              : '是謂';
 FOR_IF_END                  : '云云' | '是也' | '也' ;
 
 NAMING                      : '名之' ;
+ASSIGNING                   : '予之以' ;
 ASSIGN_LEFT                 : '昔之' ;
 DECLARE_HAVE                : '有' ;
 
