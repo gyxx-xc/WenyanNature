@@ -28,8 +28,10 @@ class WenyanProgramImplTest {
     private WenyanProgramImpl program;
 
     static {
-        LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
-        LanguageManager.registerLanguageProvider(s -> s);
+        try {
+            LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
+            LanguageManager.registerLanguageProvider(s -> s);
+        } catch (IllegalStateException ignore) {}
     }
 
     private static abstract class TestRunner implements IThreadHolder<WenyanProgramImpl.PCB> {

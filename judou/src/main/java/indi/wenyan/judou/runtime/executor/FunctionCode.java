@@ -73,7 +73,7 @@ public class FunctionCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, @UnknownNullability WenyanRunner thread) throws WenyanException {
+    public int getStep(int args, @UnknownNullability WenyanRunner thread) {
         return args;
     }
 

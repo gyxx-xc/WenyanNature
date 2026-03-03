@@ -136,12 +136,18 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Override
     public void stop() {
+        accumulatedSteps = Integer.MAX_VALUE;
         allThreads.forEach(thread -> {
             thread.getRunner().pause();
             if (thread.getWatchdog() != null)
                 thread.getWatchdog().cancel(false);
         });
         executor.shutdownNow();
+        var runningThread = parkedThread.get();
+        if (runningThread != null) {
+            LockSupport.unpark(runningThread);
+            runningThread.interrupt();
+        }
         allThreads.clear();
         available = false;
     }

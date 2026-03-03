@@ -29,7 +29,7 @@ public class WenyanLeftValue implements IWenyanValue {
      */
     public static IWenyanValue varOf(IWenyanValue value) {
         if (value instanceof WenyanLeftValue leftValue) {
-            return leftValue;
+            return new WenyanLeftValue(leftValue.value);
         } else {
             return new WenyanLeftValue(value);
         }
