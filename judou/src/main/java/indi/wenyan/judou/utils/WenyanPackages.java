@@ -9,6 +9,8 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
+import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinAsyncFunction;
+import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
@@ -25,6 +27,7 @@ public enum WenyanPackages {
     public static final String OR_ID = "或";
     public static final String MOD_ID = "模";
     public static final String IMPORT_ID = "觀";
+    public static final String CREATE_ASYNC_ID = "同";
 
     public static final WenyanPackage WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
             .function("加", WenyanPackageBuilder.reduceWith(IWenyanValue::add))
@@ -65,6 +68,7 @@ public enum WenyanPackages {
             .function("小於", WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
             .function("待", (RequestCallHandler) AwaitRequest::new)
+            .function(CREATE_ASYNC_ID, (self, args) -> new WenyanBuiltinAsyncFunction(args.getFirst().as(WenyanBuiltinFunction.TYPE)))
 
             .function(WenyanSymbol.var("Null"), (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
             .build();

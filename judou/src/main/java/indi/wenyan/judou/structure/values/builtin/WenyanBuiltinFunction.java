@@ -10,6 +10,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
 import indi.wenyan.judou.utils.LanguageManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -18,17 +19,24 @@ import java.util.List;
  * Represents a function created in Wenyan code.
  */
 public record WenyanBuiltinFunction(
-        WenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args, List<IWenyanValue> refs) implements IWenyanFunction {
+        WenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args, @Nullable List<IWenyanValue> refs) implements IWenyanFunction {
     public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
 
     @Override
     public void call(IWenyanValue self, WenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
+        WenyanRuntime newRuntime = getNewRuntime(self, argsList, thread.getCurrentRuntime());
+        thread.call(newRuntime);
+    }
+
+    public @NotNull WenyanRuntime getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanRuntime returnRuntime) throws WenyanException {
         if (args().size() != argsList.size())
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+        if (refs == null)
+            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.function_does_not_have_references"));
 
-        WenyanRuntime newRuntime = new WenyanRuntime(bytecode(), refs(), thread.getCurrentRuntime());
+        WenyanRuntime newRuntime = new WenyanRuntime(bytecode(), refs(), returnRuntime);
         int i = 0;
         if (self != null) {
             newRuntime.setLocal(i ++, self);
@@ -37,7 +45,7 @@ public record WenyanBuiltinFunction(
         for (; i < argsList.size(); i++)
             newRuntime.setLocal(i, WenyanLeftValue.varOf(
                     argsList.get(i).as(args().get(i).type())));
-        thread.call(newRuntime);
+        return newRuntime;
     }
 
     @Override

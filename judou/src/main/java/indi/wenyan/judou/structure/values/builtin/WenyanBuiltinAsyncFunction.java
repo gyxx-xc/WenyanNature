@@ -1,27 +1,34 @@
 package indi.wenyan.judou.structure.values.builtin;
 
-import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@Deprecated // not going to do until runtime refactored
-public record WenyanBuiltinAsyncFunction(WenyanBytecode bytecode) implements IWenyanFunction {
+public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements IWenyanFunction {
+    public static final WenyanType<WenyanBuiltinAsyncFunction> TYPE = new WenyanType<>("builtin_async_function", WenyanBuiltinAsyncFunction.class);
+
     @Override
     public void call(IWenyanValue self, WenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
-        var newThread = thread.forkRuntime(new WenyanRuntime(bytecode, List.of(), null));
+        var future = new WenyanBuiltinFuture();
+        var newThread = thread.forkRuntime(func.getNewRuntime(self, argsList, future.getDummyRuntime()));
         thread.program().create(newThread);
+        thread.getCurrentRuntime().pushReturnValue(future);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return func.toString();
     }
 
     @Override
     public WenyanType<?> type() {
-        return null;
+        return TYPE;
     }
 }
