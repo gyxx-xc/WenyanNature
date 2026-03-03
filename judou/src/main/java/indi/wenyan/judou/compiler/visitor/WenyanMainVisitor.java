@@ -40,7 +40,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
         bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
-        bytecode.add(WenyanCodes.LOAD, WenyanPackages.IMPORT_ID);
+        bytecode.addLoadCode(WenyanPackages.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size());
         // stack: id1, id2, ..., package, import
         for (Token id : ctx.prop) {

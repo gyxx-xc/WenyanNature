@@ -1,6 +1,5 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
@@ -43,7 +42,7 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
         IWenyanFunction callable;
@@ -74,13 +73,8 @@ public class FunctionCode extends WenyanCode {
     }
 
     @Override
-    public int getStep(int args, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        var function = thread.currentRuntime().getProcessStack().peek();
-        if (!function.is(IWenyanFunction.TYPE))
-            throw new WenyanException("無法調用非函數類型的值");
-        return function.tryAs(IJavacallHandler.TYPE)
-                .map(handler -> handler.getStep(args, thread))
-                .orElse(args);
+    public int getStep(int args, @UnknownNullability WenyanRunner thread) {
+        return args;
     }
 
     /**

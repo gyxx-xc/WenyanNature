@@ -4,6 +4,7 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.values.WenyanLeftValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 
@@ -37,7 +38,10 @@ public class TestPlatform implements IWenyanPlatform {
     public WenyanPackage initEnvironment() {
         var baseRuntime = IWenyanPlatform.super.initEnvironment();
         baseRuntime.put("書", new WenyanInlineJavacall((self, args) -> {
-            output.addAll(args);
+            output.addAll(args.stream().map(v -> {
+                if (v instanceof WenyanLeftValue) return ((WenyanLeftValue) v).value;
+                return v;
+            }).toList());
             return WenyanNull.NULL;
         }));
         return baseRuntime;

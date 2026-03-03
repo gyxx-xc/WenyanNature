@@ -45,7 +45,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
             lockHolder = request.thread();
             request.thread().unblock();
         }
-        request.thread().currentRuntime().pushReturnValue(WenyanNull.NULL);
+        request.thread().getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
         return true;
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 public record SimpleRequest(WenyanRunner thread, IWenyanValue self, List<IWenyanValue> args, SimpleHandleFunction handler) implements BaseHandleableRequest {
     @Override
     public boolean handle(IHandleContext context) throws WenyanException {
-        thread.currentRuntime().pushReturnValue(handler.handle(self, args));
+        thread.getCurrentRuntime().pushReturnValue(handler.handle(self, args));
         thread.unblock();
         return true;
     }

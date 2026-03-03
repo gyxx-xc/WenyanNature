@@ -29,7 +29,7 @@ public class ForCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         switch (operation) {
             case FOR_ITER -> {
                 Iterator<?> iter;

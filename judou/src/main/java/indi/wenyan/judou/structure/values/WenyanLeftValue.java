@@ -4,6 +4,8 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import lombok.Setter;
 
+import java.util.Optional;
+
 /**
  * Represents a variable that can assigned in Wenyan
  */
@@ -27,7 +29,7 @@ public class WenyanLeftValue implements IWenyanValue {
      */
     public static IWenyanValue varOf(IWenyanValue value) {
         if (value instanceof WenyanLeftValue leftValue) {
-            return leftValue;
+            return new WenyanLeftValue(leftValue.value);
         } else {
             return new WenyanLeftValue(value);
         }
@@ -42,6 +44,16 @@ public class WenyanLeftValue implements IWenyanValue {
     public <T extends IWenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         // turn into right if casting
         return value.as(type);
+    }
+
+    @Override
+    public boolean is(WenyanType<?> type) {
+        return value.is(type);
+    }
+
+    @Override
+    public <T extends IWenyanValue> Optional<T> tryAs(WenyanType<T> type) {
+        return value.tryAs(type);
     }
 
     @Override

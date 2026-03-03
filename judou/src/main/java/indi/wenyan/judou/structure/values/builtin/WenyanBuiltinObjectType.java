@@ -82,13 +82,13 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
                      List<IWenyanValue> argsList) throws WenyanException {
         // create empty, run constructor, return self
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
-        thread.currentRuntime().pushReturnValue(selfObj);
+        thread.getCurrentRuntime().pushReturnValue(selfObj);
 
         IWenyanFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
                 .as(IWenyanFunction.TYPE);
 
         constructor.call(selfObj, thread, argsList); // we got a runtime change here
-        thread.currentRuntime().noReturnFlag = true;
+        thread.getCurrentRuntime().noReturnFlag = true;
     }
 
     @Override

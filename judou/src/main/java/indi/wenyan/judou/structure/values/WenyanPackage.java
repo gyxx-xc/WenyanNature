@@ -27,9 +27,10 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
-        if (!variables.containsKey(name))
+        var value = variables.get(name);
+        if (value == null)
             throw new WenyanException("Unknown package attribute: " + name);
-        return variables.get(name);
+        return value;
     }
 
     @Override

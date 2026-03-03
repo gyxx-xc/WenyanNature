@@ -5,8 +5,6 @@ import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.structure.values.warper.WenyanList;
 import indi.wenyan.judou.utils.LanguageManager;
@@ -30,7 +28,7 @@ public class VariableCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         switch (operation) {
             case LOAD -> {
                 IWenyanValue value = runtime.getLocals().get(arg);
@@ -51,11 +49,7 @@ public class VariableCode extends WenyanCode {
             }
             case STORE -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
-                var locals = runtime.getLocals();
-                while (locals.size() <= arg) { // should only run one times
-                    locals.add(WenyanNull.NULL);
-                }
-                locals.set(arg, WenyanLeftValue.varOf(value));
+                runtime.setLocal(arg, WenyanLeftValue.varOf(value));
             }
             case SET_VALUE -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
@@ -72,28 +66,19 @@ public class VariableCode extends WenyanCode {
                 IWenyanValue value = runtime.getProcessStack().pop();
                 // TODO: use const with TYPE in bytecode?
                 var castedValue = switch (arg) {
-                    case 1 -> value.as(WenyanInteger.TYPE);
-                    case 2 -> value.as(WenyanDouble.TYPE);
-                    case 3 -> value.as(WenyanBoolean.TYPE);
-                    case 4 -> value.as(WenyanString.TYPE);
-                    case 5 -> value.as(WenyanList.TYPE);
-                    case 6 -> value.as(IWenyanObject.TYPE);
-                    case 7 -> value.as(IWenyanObjectType.TYPE);
-                    case 8 -> value.as(IWenyanFunction.TYPE);
+                    case 1 -> value.as(IWenyanNumber.TYPE);
+                    case 2 -> value.as(WenyanBoolean.TYPE);
+                    case 3 -> value.as(WenyanString.TYPE);
+                    case 4 -> value.as(WenyanList.TYPE);
+                    case 5 -> value.as(IWenyanObject.TYPE);
+                    case 6 -> value.as(IWenyanObjectType.TYPE);
+                    case 7 -> value.as(IWenyanFunction.TYPE);
                     default ->
                             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"));
                 };
                 runtime.pushReturnValue(castedValue);
             }
         }
-    }
-
-    @Override
-    public int getStep(int args, WenyanRunner thread) throws WenyanException {
-        if (operation == Operation.LOAD) {
-            return thread.runtimeSize();
-        }
-        return super.getStep(args, thread);
     }
 
     /**

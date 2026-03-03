@@ -12,7 +12,6 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
-import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunctionTemplete;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 
@@ -138,12 +137,14 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size() - 1).getText())) {
             throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.function_name_does_not_match"), ctx);
         }
+        int index = bytecode.getStoreIndex(ctx.IDENTIFIER(0).getText());
         visitFunction_define_body(ctx.function_define_body(), false);
-        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
+        bytecode.add(WenyanCodes.CREATE_FNCTION, index);
+        bytecode.add(WenyanCodes.STORE, index);
         return true;
     }
 
-    public void visitFunction_define_body(WenyanRParser.Function_define_bodyContext ctx, boolean isObject) {
+    private void visitFunction_define_body(WenyanRParser.Function_define_bodyContext ctx, boolean isObject) {
         ArrayList<WenyanBuiltinFunction.Arg> argsType = new ArrayList<>();
         int count = 0;
         for (int i = 0; i < ctx.args.size(); i++) {
@@ -176,7 +177,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         environment.add(WenyanCodes.RET);
         bytecode.exitContext();
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunctionTemplete(argsType, functionBytecode));
+        bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(functionBytecode, argsType, null));
     }
 
     @Override
@@ -297,13 +298,14 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         for (WenyanRParser.Object_method_defineContext func : ctx.object_method_define()) {
             visit(func);
+            bytecode.add(WenyanCodes.CREATE_FNCTION, -1);
             if (func.IDENTIFIER().isEmpty())
                 bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.CREATE_OBJECT(0).getText());
             else
                 bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.IDENTIFIER(0).getText());
         }
 
-        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
+        bytecode.addStoreCode(ctx.IDENTIFIER(0).getText());
         return true;
     }
 

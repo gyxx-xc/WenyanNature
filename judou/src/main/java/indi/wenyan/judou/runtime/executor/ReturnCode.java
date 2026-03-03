@@ -18,9 +18,9 @@ public class ReturnCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability WenyanRunner thread) {
-        WenyanRuntime runtime = thread.currentRuntime();
+        WenyanRuntime runtime = thread.getCurrentRuntime();
         thread.ret();
-        if (!runtime.noReturnFlag)
-            thread.currentRuntime().pushReturnValue(runtime.getProcessStack().pop());
+        if (!runtime.noReturnFlag && runtime.getReturnRuntime() != null)
+            runtime.getReturnRuntime().pushReturnValue(runtime.getProcessStack().pop());
     }
 }

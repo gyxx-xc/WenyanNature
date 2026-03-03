@@ -97,15 +97,21 @@ public class WenyanCompilerEnvironment {
     }
 
     public void addStoreCode(String identifier) {
+        int index = getStoreIndex(identifier);
+        add(WenyanCodes.STORE, index);
+    }
+
+    public int getStoreIndex(String identifier) {
         Scope currentScope = scopeStack.peek();
         assert currentScope != null;
+        int index;
         if (currentScope.variables.containsKey(identifier)) {
-            int index = currentScope.variables.get(identifier);
-            add(WenyanCodes.STORE, index);
+            index = currentScope.variables.get(identifier);
+        } else {
+            index = localVariableCounter++;
+            currentScope.variables.put(identifier, index);
         }
-        int newIndex = localVariableCounter++;
-        currentScope.variables.put(identifier, newIndex);
-        add(WenyanCodes.STORE, newIndex);
+        return index;
     }
 
     public void addLoadCode(String identifier) {

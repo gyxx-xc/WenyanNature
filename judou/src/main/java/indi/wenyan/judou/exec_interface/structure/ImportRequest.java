@@ -93,7 +93,7 @@ public final class ImportRequest implements BaseHandleableRequest {
             throw new WenyanException("参数错误");
         }
 
-        thread.currentRuntime().pushReturnValue(wenyanPackage);
+        thread.getCurrentRuntime().pushReturnValue(wenyanPackage);
     }
 
     private enum Status {

@@ -5,11 +5,9 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents the runtime environment for executing Wenyan bytecode.
@@ -44,6 +42,9 @@ public class WenyanRuntime {
     @Getter
     private final Deque<IWenyanValue> processStack = new ArrayDeque<>();
 
+    @Getter @Nullable
+    private final WenyanRuntime returnRuntime;
+
     /** Current instruction pointer */
     public int programCounter = 0;
 
@@ -58,11 +59,24 @@ public class WenyanRuntime {
     /**
      * Creates a new runtime environment with the specified bytecode.
      *
-     * @param bytecode The bytecode to execute (can be null)
+     * @param bytecode      The bytecode to execute (can be null)
      */
-    public WenyanRuntime(@NotNull WenyanBytecode bytecode, List<IWenyanValue> refs) {
+    public WenyanRuntime(@NotNull WenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanRuntime returnRuntime) {
         this.bytecode = bytecode;
         this.references = refs;
+        this.returnRuntime = returnRuntime;
+    }
+
+    public WenyanRuntime(@NotNull WenyanBytecode bytecode) {
+        this(bytecode, Collections.emptyList(), null);
+    }
+
+    public void setLocal(int index, IWenyanValue value) {
+        int currentSize = locals.size();
+        if (index >= currentSize) {
+            for (int i = currentSize; i <= index; i++) locals.add(null);
+        }
+        locals.set(index, value);
     }
 
     public void pushReturnValue(IWenyanValue value) {
