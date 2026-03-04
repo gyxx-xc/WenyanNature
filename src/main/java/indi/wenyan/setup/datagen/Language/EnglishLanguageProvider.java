@@ -35,7 +35,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(WenyanItems.FLOAT_NOTE.get(), "浮签");
         add(WenyanItems.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
         add(WenyanItems.CLOUD_PAPER.get(), "云篆纸 (Lv.2)");
-        add(WenyanItems.STAR_PAPER.get(), "星辉纸 (Lv.3)");
+        add(WenyanItems.STARLIGHT_PAPER.get(), "星辉纸 (Lv.3)");
         add(WenyanItems.FROST_PAPER.get(), "霜华纸 (Lv.4)");
         add(WenyanItems.PHOENIX_PAPER.get(), "凤羽纸 (Lv.5)");
         add(WenyanItems.DRAGON_PAPER.get(), "龙鳞纸 (Lv.6)");

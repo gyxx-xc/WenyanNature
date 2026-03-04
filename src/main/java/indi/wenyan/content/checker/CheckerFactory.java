@@ -36,6 +36,7 @@ public enum CheckerFactory {
             case CINNABAR_INK_CHECKER -> new CinnabarInkChecker(random);
             case CLOUD_PAPER_CHECKER -> new CloudPaperChecker(random);
             case HAND_RUNNER_2_CHECKER -> new HandRunner2Checker(random);
+            case STARLIGHT_INK_CHECKER -> new StarlightInkChecker(random);
             default -> throw new WenyanException("Unknown checker type: " + name);
         };
     }

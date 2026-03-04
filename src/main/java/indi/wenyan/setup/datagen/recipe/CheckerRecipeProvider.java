@@ -106,7 +106,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                                 .question(CheckerFactory.STARLIGHT_INK_CHECKER)
                                 .save(output, "starlight_ink");
                 AnsweringRecipeBuilder
-                                .create(WenyanItems.STAR_PAPER, 4)
+                                .create(WenyanItems.STARLIGHT_PAPER, 4)
                                 .addInput(Items.PAPER, 1)
                                 .addInput(Items.GLOWSTONE_DUST, 1)
                                 .question(CheckerFactory.PLUS_CHECKER) // Need change
@@ -114,7 +114,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 AnsweringRecipeBuilder // Hand Runner 3
                                 .create(WenyanItems.HAND_RUNNER_3, 2)
                                 .addInput(WenyanItems.STARLIGHT_INK.get(), 1)
-                                .addInput(WenyanItems.STAR_PAPER.get(), 1)
+                                .addInput(WenyanItems.STARLIGHT_PAPER.get(), 1)
                                 .question(CheckerFactory.PLUS_CHECKER) // Need change
                                 .save(output, "hand_runner_3");
 

@@ -31,7 +31,7 @@ public class ModItemModelProvider extends ModelSubProvider {
 
         basicItem(WenyanItems.BAMBOO_PAPER.get());
         basicItem(WenyanItems.CLOUD_PAPER.get());
-        basicItem(WenyanItems.STAR_PAPER.get());
+        basicItem(WenyanItems.STARLIGHT_PAPER.get());
         basicItem(WenyanItems.FROST_PAPER.get());
         basicItem(WenyanItems.PHOENIX_PAPER.get());
         basicItem(WenyanItems.DRAGON_PAPER.get());

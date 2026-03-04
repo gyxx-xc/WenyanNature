@@ -53,7 +53,7 @@ public enum WenyanItems {
     public static final DeferredItem<Item> CLOUD_PAPER = DR.registerItem(CloudPaper.ID, CloudPaper::new);
     public static final DeferredItem<Item> FROST_PAPER = DR.registerItem(FrostPaper.ID, FrostPaper::new);
     public static final DeferredItem<Item> PHOENIX_PAPER = DR.registerItem(PhoenixPaper.ID, PhoenixPaper::new);
-    public static final DeferredItem<Item> STAR_PAPER = DR.registerItem(StarPaper.ID, StarPaper::new);
+    public static final DeferredItem<Item> STARLIGHT_PAPER = DR.registerItem(StarlightPaper.ID, StarlightPaper::new);
     public static final DeferredItem<Item> DRAGON_PAPER = DR.registerItem(DragonPaper.ID, DragonPaper::new);
     // Ink items
     public static final DeferredItem<Item> ARCANE_INK = DR.registerItem(ArcaneInk.ID, ArcaneInk::new);
@@ -114,7 +114,7 @@ public enum WenyanItems {
 
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());
-                output.accept(STAR_PAPER.get());
+                output.accept(STARLIGHT_PAPER.get());
                 output.accept(FROST_PAPER.get());
                 output.accept(PHOENIX_PAPER.get());
                 output.accept(DRAGON_PAPER.get());

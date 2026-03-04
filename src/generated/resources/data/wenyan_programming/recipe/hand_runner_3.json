@@ -2,7 +2,7 @@
   "type": "wenyan_programming:answering_recipe",
   "input": [
     "wenyan_programming:starlight_ink",
-    "wenyan_programming:star_paper"
+    "wenyan_programming:starlight_paper"
   ],
   "output": {
     "count": 2,
