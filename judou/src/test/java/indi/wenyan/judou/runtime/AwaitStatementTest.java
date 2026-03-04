@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class AwaitStatementTest extends WenyanProgramBasicTest {
+class AwaitStatementTest extends WenyanProgramTestHelper {
     private static Stream<Arguments> testData() {
         return Stream.of(
                 timedArgs("待一\n", 3),

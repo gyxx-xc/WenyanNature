@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-class VaribleScopeStatementTest extends WenyanProgramBasicTest {
+class VaribleScopeStatementTest extends WenyanProgramTestHelper {
     private static Stream<Arguments> basicScopeTestData() {
         return Stream.of(
                 // Basic function scope - variables inside function don't affect outside

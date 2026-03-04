@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-class YouStatementTest extends WenyanProgramBasicTest {
+class YouStatementTest extends WenyanProgramTestHelper {
     private static Stream<Arguments> testData() {
         return Stream.of(
                 resultArgs("有數一書之\n", 1),
