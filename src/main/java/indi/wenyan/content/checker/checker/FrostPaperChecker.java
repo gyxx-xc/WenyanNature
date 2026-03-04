@@ -1,14 +1,14 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-public class StarlightPaperChecker extends CraftingAnswerChecker {
+public class FrostPaperChecker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public StarlightPaperChecker(RandomSource random) {
+    public FrostPaperChecker(RandomSource random) {
         super(random);
     }
 

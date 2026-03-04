@@ -13,7 +13,7 @@
 - [ ] running state save and load
 - [ ] some more function
   - rearrange libs
-- [ ] CHS/CHT opencc version
+- [x] CHS/CHT opencc version
   - opencc library
   - CHT to CHS will make different character to same. e.g. 隣邻
   - treatment to symbols
@@ -25,7 +25,7 @@
 - [ ] docs
   - ponder
 - [ ] asm jit compiler
-- [ ] annotation wenyan value processor
+- [x] annotation wenyan value processor
   - need source level annotation processing
 - [ ] variable symbol unify
   - variable symbol in runtime need to separate to wenyan grammar

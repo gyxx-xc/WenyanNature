@@ -1,14 +1,14 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-public class HandRunner6Checker extends CraftingAnswerChecker {
+public class HandRunner3Checker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public HandRunner6Checker(RandomSource random) {
+    public HandRunner3Checker(RandomSource random) {
         super(random);
     }
 

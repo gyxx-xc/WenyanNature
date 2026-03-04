@@ -1,13 +1,14 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HandRunner2CheckerTest {
 
@@ -22,7 +23,7 @@ class HandRunner2CheckerTest {
         double expectedAvg = (double) expectedAvgField.get(checker);
 
         checker.accept(WenyanValues.of(expectedAvg));
-        assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
+        Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @Test

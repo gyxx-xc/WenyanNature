@@ -1,41 +1,35 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-/**
- * EchoChecker is a simple checker that verifies if the input matches a randomly generated integer.
- * It initializes a random integer as the answer and checks if the input matches this value.
- * <p>
- * output var0
- */
-public class EchoChecker extends CraftingAnswerChecker {
+public class PhoenixPaperChecker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public EchoChecker(RandomSource random) {
+    public PhoenixPaperChecker(RandomSource random) {
         super(random);
     }
 
     @Override
     public void init() {
         super.init();
-        ans = WenyanValues.of(random.nextInt());
-        setVariable(0, ans);
+        // TODO: Implement specific initialization logic and answer generation
+        ans = WenyanValues.of(0);
     }
 
     @Override
     public void accept(IWenyanValue value) throws WenyanException {
         try {
-            if (IWenyanValue.equals(value, ans)){
+            if (IWenyanValue.equals(value, ans)) {
                 setResult(ResultStatus.ANSWER_CORRECT);
-                return;
+            } else {
+                setResult(ResultStatus.WRONG_ANSWER);
             }
         } catch (WenyanException e) {
             setResult(ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }
-        setResult(ResultStatus.WRONG_ANSWER);
     }
 }

@@ -1,22 +1,30 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-public class FrostPaperChecker extends CraftingAnswerChecker {
+/**
+ * HandRunner1Checker verifies if the user correctly implemented a conditional.
+ * It provides a random integer and expects true if it is greater than 5, false
+ * otherwise.
+ */
+public class HandRunner1Checker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public FrostPaperChecker(RandomSource random) {
+    public HandRunner1Checker(RandomSource random) {
         super(random);
     }
 
     @Override
     public void init() {
         super.init();
-        // TODO: Implement specific initialization logic and answer generation
-        ans = WenyanValues.of(0);
+        int a = random.nextInt(10000);
+        int b = random.nextInt(10000);
+        setVariable(0, WenyanValues.of(a));
+        setVariable(1, WenyanValues.of(b));
+        ans = WenyanValues.of(a > b);
     }
 
     @Override

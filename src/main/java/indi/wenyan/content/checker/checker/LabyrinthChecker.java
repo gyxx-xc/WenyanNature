@@ -1,4 +1,4 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;

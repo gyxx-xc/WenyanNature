@@ -1,11 +1,13 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PrintCheckerTest {
 
@@ -16,7 +18,7 @@ class PrintCheckerTest {
         checker.init();
 
         checker.accept(WenyanValues.of("吾有一術"));
-        assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
+        Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @Test

@@ -1,5 +1,6 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -25,25 +26,29 @@ public class CinnabarInkChecker extends CraftingAnswerChecker {
         int a = random.nextInt(1_000_000_000) + 1;
         setVariable(0, WenyanValues.of(a));
 
+        ans = WenyanValues.of(getAns(a));
+    }
+
+    static int getAns(int a) {
         int day = 1;
         int length = a;
         while (length > 1) {
             length /= 2;
             day++;
         }
-        ans = WenyanValues.of(day);
+        return day;
     }
 
     @Override
     public void accept(IWenyanValue value) throws WenyanException {
         try {
             if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
+                setResult(IAnsweringChecker.ResultStatus.ANSWER_CORRECT);
             } else {
-                setResult(ResultStatus.WRONG_ANSWER);
+                setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
             }
         } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
+            setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }
     }

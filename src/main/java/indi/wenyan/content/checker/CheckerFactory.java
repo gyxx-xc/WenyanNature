@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.item.ink.CelestialInk;
+import indi.wenyan.content.checker.checker.*;
 import indi.wenyan.judou.structure.WenyanException;
 import net.minecraft.util.RandomSource;
 

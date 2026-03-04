@@ -1,12 +1,14 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EchoCheckerTest {
 
@@ -18,7 +20,7 @@ class EchoCheckerTest {
 
         IWenyanValue ans = checker.getArgs().getAttribute("「甲」");
         checker.accept(ans);
-        assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
+        Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @Test

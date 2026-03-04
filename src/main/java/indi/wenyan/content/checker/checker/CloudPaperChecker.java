@@ -1,5 +1,6 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -41,12 +42,12 @@ public class CloudPaperChecker extends CraftingAnswerChecker {
     public void accept(IWenyanValue value) throws WenyanException {
         try {
             if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
+                setResult(IAnsweringChecker.ResultStatus.ANSWER_CORRECT);
             } else {
-                setResult(ResultStatus.WRONG_ANSWER);
+                setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
             }
         } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
+            setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }
     }

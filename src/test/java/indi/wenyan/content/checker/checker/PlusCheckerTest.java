@@ -1,38 +1,40 @@
-package indi.wenyan.content.checker;
+package indi.wenyan.content.checker.checker;
 
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class HandRunner1CheckerTest {
+class PlusCheckerTest {
 
     @Test
     void testCorrectAnswer() throws WenyanException {
         RandomSource random = RandomSource.create();
-        HandRunner1Checker checker = new HandRunner1Checker(random);
+        PlusChecker checker = new PlusChecker(random);
         checker.init();
 
         int a = checker.getArgs().getAttribute("「甲」").as(WenyanInteger.TYPE).value();
         int b = checker.getArgs().getAttribute("「乙」").as(WenyanInteger.TYPE).value();
 
-        checker.accept(WenyanValues.of(a > b));
-        assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
+        checker.accept(WenyanValues.of((long) a + b));
+        Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @Test
     void testWrongAnswer() throws WenyanException {
         RandomSource random = RandomSource.create();
-        HandRunner1Checker checker = new HandRunner1Checker(random);
+        PlusChecker checker = new PlusChecker(random);
         checker.init();
 
         int a = checker.getArgs().getAttribute("「甲」").as(WenyanInteger.TYPE).value();
         int b = checker.getArgs().getAttribute("「乙」").as(WenyanInteger.TYPE).value();
 
-        checker.accept(WenyanValues.of(a <= b)); // Wrong answer
+        checker.accept(WenyanValues.of((long) a + b + 1));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }
