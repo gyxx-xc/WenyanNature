@@ -1,7 +1,8 @@
 package indi.wenyan.client.block.renderer;
 
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import indi.wenyan.WenyanProgramming;
@@ -36,7 +37,9 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity,
     public static final RenderType FRONT_LINES = RenderType.create("lines",
             RenderSetup.builder(RenderPipeline
                             .builder(LINES_SNIPPET)
-                            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                            .withDepthStencilState(
+                                    new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true,
+                                            -3.0F, -3.0F))
                             .withLocation("pipeline/lines").build())
                     .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
                     .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
