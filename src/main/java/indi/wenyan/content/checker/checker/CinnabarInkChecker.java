@@ -26,17 +26,13 @@ public class CinnabarInkChecker extends CraftingAnswerChecker {
         int a = random.nextInt(1_000_000_000) + 1;
         setVariable(0, WenyanValues.of(a));
 
-        ans = WenyanValues.of(getAns(a));
-    }
-
-    static int getAns(int a) {
         int day = 1;
         int length = a;
         while (length > 1) {
             length /= 2;
             day++;
         }
-        return day;
+        ans = WenyanValues.of(day);
     }
 
     @Override
