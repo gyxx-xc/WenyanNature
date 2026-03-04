@@ -118,7 +118,6 @@ public record WenyanList(List<IWenyanValue> value)
         };
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanBoolean.TYPE) {
@@ -146,6 +145,7 @@ public record WenyanList(List<IWenyanValue> value)
                 try {
                     if (IWenyanValue.equals(value.get(i), list.value.get(i))) return false;
                 } catch (WenyanException ignore) {
+                    // unreachable
                     return false;
                 }
             }

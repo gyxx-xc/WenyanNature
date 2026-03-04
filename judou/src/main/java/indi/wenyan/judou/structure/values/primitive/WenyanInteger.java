@@ -109,9 +109,9 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     public boolean equals(Object obj) {
         if (obj instanceof IWenyanValue wenyanValue) {
             try {
-                return value.equals(wenyanValue.as(TYPE).value);
+                return wenyanValue.is(TYPE) && value.equals(wenyanValue.as(TYPE).value);
             } catch (WenyanException.WenyanTypeException ignored) {
-                // go outside
+                // unreached
             }
         }
         return false;

@@ -73,10 +73,16 @@ public class WenyanRuntime {
 
     public void setLocal(int index, IWenyanValue value) {
         int currentSize = locals.size();
-        if (index >= currentSize) {
-            for (int i = currentSize; i <= index; i++) locals.add(null);
+        assert index >= 0;
+        if (index < currentSize) {
+            locals.set(index, value);
+        } else if (index == currentSize) {
+            locals.add(value);
+        } else {
+            // however, this is not being entered normally
+            for (int i = currentSize; i < index; i++) locals.add(null);
+            locals.add(value);
         }
-        locals.set(index, value);
     }
 
     public void pushReturnValue(IWenyanValue value) {

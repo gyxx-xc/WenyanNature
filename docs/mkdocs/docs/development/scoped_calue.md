@@ -4,8 +4,9 @@
 
 var's value is referenced from the scope at compile time, regardless of the runtime situation.
 
-!!! note language
-use python as code demo, but it is not act as same as python
+!!! note "language"
+
+    use python as code demo, but it is not act as same as python
 
 ```python
 i = 0  # i0

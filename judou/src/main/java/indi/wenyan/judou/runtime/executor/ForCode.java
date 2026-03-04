@@ -33,11 +33,7 @@ public class ForCode extends WenyanCode {
         switch (operation) {
             case FOR_ITER -> {
                 Iterator<?> iter;
-                try {
-                    iter = runtime.getProcessStack().peek().as(WenyanIterator.TYPE).value();
-                } catch (WenyanException.WenyanTypeException e) {
-                    throw new WenyanException(e.getMessage());
-                }
+                iter = runtime.getProcessStack().peek().as(WenyanIterator.TYPE).value();
                 if (iter.hasNext()) {
                     runtime.pushReturnValue((IWenyanValue) iter.next());
                 } else {
