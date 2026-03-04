@@ -23,7 +23,7 @@ public interface BaseHandleableRequest extends IHandleableRequest {
 
     @FunctionalInterface
     interface IRawRequest {
-        boolean handle(IHandleContext context, IHandleableRequest request) throws WenyanException;
+        boolean handle(IHandleContext context, IArgsRequest request) throws WenyanException;
     }
 
     default void noticePlatform(IWenyanPlatform platform, IHandleContext context) throws WenyanException {

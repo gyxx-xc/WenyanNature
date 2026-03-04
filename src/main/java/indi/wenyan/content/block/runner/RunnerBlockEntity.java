@@ -342,7 +342,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Value
     @Accessors(fluent = true)
-    public class BlockRequest implements BaseHandleableRequest {
+    public class BlockRequest implements BaseHandleableRequest, IArgsRequest {
         WenyanRunner thread;
         IWenyanValue self;
         List<IWenyanValue> args;

@@ -162,7 +162,7 @@ public class EquipableRunnerItem extends Item implements Equipable, IWenyanPlatf
             List<IWenyanValue> args,
             ItemStack itemStack,
             int slotId
-    ) implements BaseHandleableRequest {
+    ) implements BaseHandleableRequest, IArgsRequest {
         @Override
         public boolean handle(IHandleContext context) throws WenyanException {
             return request.handle(context, this);
