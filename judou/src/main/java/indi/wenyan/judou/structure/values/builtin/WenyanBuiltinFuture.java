@@ -48,7 +48,10 @@ public class WenyanBuiltinFuture implements IWenyanValue {
             for (WenyanRunner thread : waitingThreads) {
                 try {
                     thread.unblock();
-                } catch (WenyanUnreachedException ignore) {}
+                } catch (WenyanUnreachedException ignore) {
+                    // should not happen
+                    // or maybe? if the program stopped when waiting, ignore it then.
+                }
             }
         }
 
