@@ -28,6 +28,7 @@ public class ModItemModelProvider extends ModelSubProvider {
         basicItem(WenyanItems.HAND_RUNNER_3.get());
         basicItem(WenyanItems.HAND_RUNNER_4.get());
         basicItem(WenyanItems.HAND_RUNNER_5.get());
+        basicItem(WenyanItems.HAND_RUNNER_6.get());
 
         basicItem(WenyanItems.BAMBOO_PAPER.get());
         basicItem(WenyanItems.CLOUD_PAPER.get());
