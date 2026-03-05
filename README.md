@@ -33,7 +33,7 @@ The mod is still in development.
 View our [roadmap board](https://trello.com/b/TWcIldPt/wenyan-nature-%E5%90%BE%E6%9C%89%E4%B8%80%E6%9C%AF) to check our development plan and schedule.
 
 To make suggestions or report bugs: 
-- Read [new feature template](./docs/mkdocs/new_feature_template.md) and [bug report template](./docs/mkdocs/report_bug_template.md).
+- Read [new feature template](docs/github/new_feature_template.md) and [bug report template](docs/github/report_bug_template.md).
 - Create an [issue](https://github.com/gyxx-xc/WenyanNature/issues/new).
 
 ---
