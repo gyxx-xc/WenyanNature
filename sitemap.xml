@@ -8,18 +8,25 @@
         <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/"/>
     </url>
     <url>
-        <loc>https://gyxx-xc.github.io/WenyanNature/development/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/development/in-game/cluster_core/</loc>
         <lastmod>2026-03-05</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/in-game/cluster_core/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/in-game/cluster_core/"/>
     </url>
     <url>
-        <loc>https://gyxx-xc.github.io/WenyanNature/development/scoped_calue/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/development/judou/</loc>
         <lastmod>2026-03-05</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/scoped_calue/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/scoped_calue/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/judou/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/judou/"/>
+    </url>
+    <url>
+        <loc>https://gyxx-xc.github.io/WenyanNature/development/judou/scoped_calue/</loc>
+        <lastmod>2026-03-05</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/judou/scoped_calue/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/judou/scoped_calue/"/>
     </url>
     <url>
         <loc>https://gyxx-xc.github.io/WenyanNature/in_game/float_note/</loc>
@@ -99,18 +106,25 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/"/>
     </url>
     <url>
-        <loc>https://gyxx-xc.github.io/WenyanNature/zh/development/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/development/in-game/cluster_core/</loc>
         <lastmod>2026-03-05</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/in-game/cluster_core/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/in-game/cluster_core/"/>
     </url>
     <url>
-        <loc>https://gyxx-xc.github.io/WenyanNature/zh/development/scoped_calue/</loc>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/development/judou/</loc>
         <lastmod>2026-03-05</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/scoped_calue/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/scoped_calue/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/judou/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/judou/"/>
+    </url>
+    <url>
+        <loc>https://gyxx-xc.github.io/WenyanNature/zh/development/judou/scoped_calue/</loc>
+        <lastmod>2026-03-05</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://gyxx-xc.github.io/WenyanNature/zh/development/judou/scoped_calue/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://gyxx-xc.github.io/WenyanNature/development/judou/scoped_calue/"/>
     </url>
     <url>
         <loc>https://gyxx-xc.github.io/WenyanNature/zh/in_game/float_note/</loc>
