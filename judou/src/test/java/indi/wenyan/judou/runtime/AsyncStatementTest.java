@@ -23,7 +23,42 @@ public class AsyncStatementTest extends WenyanProgramTestHelper {
                         是謂「a」之術也。
                         施「a」名之曰「a1」施「a」名之曰「a2」
                         待「a1」待「a2」
-                        """, 12)
+                        """, 12),
+                // Test multiple async calls with different wait times
+                timedArgs("""
+                        同有一術名之曰「fast」。是術曰。
+                        待五
+                        是謂「fast」之術也。
+                        同有一術名之曰「slow」。是術曰。
+                        待十五
+                        是謂「slow」之術也。
+                        施「fast」名之曰「f」施「slow」名之曰「s」
+                        待「f」待「s」
+                        """, 17),
+
+                // Test sequential async calls
+                timedArgs("""
+                        同有一術名之曰「task」。是術曰。
+                        待八
+                        是謂「task」之術也。
+                        施「task」名之曰「t1」
+                        待「t1」
+                        施「task」名之曰「t2」
+                        待「t2」
+                        """, 19),
+
+                // Test nested async calls
+                timedArgs("""
+                        同有一術名之曰「inner」。是術曰。
+                        待三
+                        是謂「inner」之術也。
+                        同有一術名之曰「outer」。是術曰。
+                        施「inner」名之曰「i」
+                        待「i」
+                        是謂「outer」之術也。
+                        施「outer」名之曰「o」
+                        待「o」
+                        """, 5)
         );
     }
 
