@@ -1,34 +1,35 @@
 package indi.wenyan.judou.exec_interface.structure;
 
-import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Data
 @Accessors(fluent = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class ImportRequest implements BaseHandleableRequest {
-    final WenyanRunner thread;
-    final IWenyanPlatform platform;
-    final ImportFunction getPackage;
-    private final String packageName;
-    private Status status = Status.FIRST_RUN;
-    private Either<WenyanPackage, WenyanRunner> packageOrThread;
+    @Getter
+    WenyanRunner thread;
+    ImportFunction getPackage;
+    String packageName;
 
-    public ImportRequest(WenyanRunner thread, IWenyanPlatform platform, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException {
+    @NonFinal
+    Status status = Status.FIRST_RUN;
+    @NonFinal
+    Either<WenyanPackage, WenyanRunner> packageOrThread;
+
+    public ImportRequest(WenyanRunner thread, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException {
         this.thread = thread;
-        this.platform = platform;
         this.getPackage = getPackage;
         if (args.size() != 1) {
             throw new WenyanException("参数错误");
@@ -37,6 +38,9 @@ public final class ImportRequest implements BaseHandleableRequest {
     }
 
     // logic too complex, impl in Automata
+    // first_run --<package>-> process_package
+    // L<thread>-> waiting --<finish>-> process_runtime
+    //             L<run>^
     @Override
     public boolean handle(IHandleContext context) throws WenyanException {
         //noinspection LoopStatementThatDoesntLoop
@@ -58,7 +62,7 @@ public final class ImportRequest implements BaseHandleableRequest {
                 case WAITING:
                     WenyanRunner wenyanThread = packageOrThread.right().get();
                     if (wenyanThread.isDying()) {
-                        if (wenyanThread.getMainRuntime().finishFlag) {
+                        if (wenyanThread.getExportedPackage() != null) {
                             status = Status.PROCESS_RUNTIME;
                         } else {
                             throw new WenyanException("运行时异常");
@@ -69,19 +73,12 @@ public final class ImportRequest implements BaseHandleableRequest {
                     }
                     // fallthrough
                 case PROCESS_RUNTIME:
-                    returnPackage(getWenyanPackage(packageOrThread.right().get()));
+                    var wenyanPackage = packageOrThread.right().get().getExportedPackage();
+                    assert wenyanPackage != null; // varified in waiting
+                    returnPackage(wenyanPackage);
                     thread().unblock();
                     return true; // end
             }
-    }
-
-    private @NotNull WenyanPackage getWenyanPackage(WenyanRunner runner) throws WenyanUnreachedException {
-        var runtime = runner.getMainRuntime();
-        Map<String, IWenyanValue> result = new HashMap<>();
-        for (int i = 0; i < runtime.getLocals().size(); i ++) {
-            result.put(runner.getExportedIdentifier(i), runtime.getLocals().get(i));
-        }
-        return new WenyanPackage(result);
     }
 
     private void returnPackage(@NotNull WenyanPackage wenyanPackage) {

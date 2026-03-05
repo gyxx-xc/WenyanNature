@@ -1,9 +1,12 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
+import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +24,12 @@ public class WenyanRuntime {
      */
     @Getter @NotNull
     private final WenyanBytecode bytecode;
+
+    /** Current instruction pointer */
+    public int programCounter = 0;
+
+    @Getter @Nullable
+    private final WenyanRuntime returnRuntime;
 
     @Getter
     private final List<IWenyanValue> locals = new ArrayList<>();
@@ -42,19 +51,11 @@ public class WenyanRuntime {
     @Getter
     private final Deque<IWenyanValue> processStack = new ArrayDeque<>();
 
-    @Getter @Nullable
-    private final WenyanRuntime returnRuntime;
-
-    /** Current instruction pointer */
-    public int programCounter = 0;
-
     /** Flag indicating program counter was modified */
     public boolean PCFlag = false;
 
-    /** Flag indicating no return value expected */
-    public boolean noReturnFlag = false;
-
-    public boolean finishFlag = false;
+    @Getter @Setter
+    private ReturnBehavior returnBehavior = this::onReturn;
 
     /**
      * Creates a new runtime environment with the specified bytecode.
@@ -87,5 +88,16 @@ public class WenyanRuntime {
 
     public void pushReturnValue(IWenyanValue value) {
         getProcessStack().push(value);
+    }
+
+    private void onReturn(WenyanRunner runner, IWenyanValue returnValue) throws WenyanUnreachedException {
+        runner.ret();
+        if (returnRuntime != null)
+            returnRuntime.pushReturnValue(returnValue);
+    }
+
+    @FunctionalInterface
+    public interface ReturnBehavior {
+        void onReturn(WenyanRunner runner, IWenyanValue returnValue) throws WenyanException;
     }
 }

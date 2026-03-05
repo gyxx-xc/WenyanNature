@@ -23,7 +23,9 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a thread of execution in a Wenyan program.
@@ -36,19 +38,19 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
     private WenyanProgramImpl.PCB thread;
 
     @Getter
-    @Deprecated
-    private final WenyanRuntime mainRuntime;
-    @Getter
     private WenyanRuntime currentRuntime;
     @Nullable
     private final List<String> exportedIdentifier;
+    /// if value is null, means the exported function is not finished
+    @Getter
+    @Nullable
+    private WenyanPackage exportedPackage = null;
 
     private final WenyanPackage globals;
 
     private boolean willPause = false;
 
     private WenyanRunner(WenyanRuntime mainRuntime, WenyanPackage globals, @Nullable List<String> exportedIdentifier) {
-        this.mainRuntime = mainRuntime;
         this.exportedIdentifier = exportedIdentifier;
         this.globals = globals;
         call(mainRuntime);
@@ -68,7 +70,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         return new WenyanRunner(new WenyanRuntime(bytecode), basicRuntime, environment.getExportedValues());
     }
 
-    public WenyanRunner forkRuntime(WenyanRuntime mainRuntime) throws WenyanCompileException {
+    public WenyanRunner forkRuntime(WenyanRuntime mainRuntime) {
         return new WenyanRunner(mainRuntime, globals, null);
     }
 
@@ -101,12 +103,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         }
     }
 
-    private boolean updateProgramCounter(WenyanRuntime runtime) {
-        if (currentRuntime == null) {
-            safeDie();
-            return true;
-        }
-
+    private boolean updateProgramCounter(WenyanRuntime runtime) throws WenyanUnreachedException {
         if (!runtime.PCFlag)
             runtime.programCounter++;
         runtime.PCFlag = false;
@@ -120,15 +117,6 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
             return true;
         }
         return false;
-    }
-
-    private void safeDie() {
-        Logger logger = LoggerManager.getLogger();
-        try {
-            die();
-        } catch (WenyanUnreachedException e) {
-            logger.error("Unexpected, failed to die");
-        }
     }
 
     @Override
@@ -153,7 +141,11 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         if (errorContext == null)
             logger.error("Unexpected, failed to get code context during handling an exception", e);
         e.handle(platform()::handleError, logger, errorContext);
-        safeDie();
+        try {
+            die();
+        } catch (WenyanUnreachedException e1) {
+            logger.error("Unexpected, failed to die");
+        }
     }
 
     /**
@@ -168,9 +160,19 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
     /**
      * Removes the top runtime environment from the stack.
      */
-    public void ret() {
-        currentRuntime.finishFlag = true;
-        currentRuntime = currentRuntime.getReturnRuntime();
+    public void ret() throws WenyanUnreachedException {
+        var returnRuntime = currentRuntime.getReturnRuntime();
+        if (returnRuntime == null) {
+            die();
+            if (exportedIdentifier == null) return;
+            Map<String, IWenyanValue> result = new HashMap<>();
+            for (int i = 0; i < exportedIdentifier.size(); i++) {
+                result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
+            }
+            exportedPackage = new WenyanPackage(result);
+        } else {
+            currentRuntime = returnRuntime;
+        }
     }
 
     /**
@@ -194,14 +196,5 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     public boolean isDying() {
         return willDie;
-    }
-
-    public String getExportedIdentifier(int i) throws WenyanUnreachedException {
-        if (exportedIdentifier != null) {
-            return exportedIdentifier.get(i);
-        } else {
-            // called from fork thread, should be not got package
-            throw new WenyanUnreachedException();
-        }
     }
 }
