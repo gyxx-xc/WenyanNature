@@ -33,4 +33,4 @@ hide:
 * **拓展 Minecraft 魔法系统**：与 Minecraft 的游戏机制进行深度整合。
 
 ## Docs
-[Quick start](usage/quick_start.md) | [Development](development/index.md)
+[Quick start](usage/quick_start.md) | [Development](development/judou/index.md)

@@ -248,6 +248,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return threadOptional.orElseThrow(() -> new WenyanException("cannot import"));
     }
 
+    public Optional<WenyanRunner> newThread() {
+        return newThread(code);
+    }
+
     public Optional<WenyanRunner> newThread(String pages) {
         assert getLevel() != null;
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
