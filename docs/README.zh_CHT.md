@@ -27,7 +27,7 @@
 查看我們的 [開發路線圖](https://trello.com/b/TWcIldPt/wenyan-nature-%E5%90%BE%E6%9C%89%E4%B8%80%E6%9C%AF) 以了解我們的開發計畫和進度。
 
 想要提交建議或報告錯誤？
-- 閱讀並使用 [新功能模板](./mkdocs/new_feature_template_ch.md) 和 [錯誤報告模板](./mkdocs/report_bug_template_ch.md)。
+- 閱讀並使用 [新功能模板](github/new_feature_template_ch.md) 和 [錯誤報告模板](github/report_bug_template_ch.md)。
 - 提交一個 [Issue](https://github.com/gyxx-xc/WenyanNature/issues/new)。
 
 ---
