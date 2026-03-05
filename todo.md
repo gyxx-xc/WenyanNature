@@ -10,23 +10,23 @@
   - design power consume api
   - render
 - [x] gui input code complete
-- [ ] running state save and load
-- [ ] some more function
-  - rearrange libs
 - [x] CHS/CHT opencc version
   - opencc library
   - CHT to CHS will make different character to same. e.g. 隣邻
   - treatment to symbols
-- [ ] error handler
+- [x] error handler
   - [x] may need to totally rewrite
   - [x] show error on gui
-  - [ ] complete JUnit test
+  - [x] complete JUnit test
+- [x] annotation wenyan value processor
+  - need source level annotation processing
+- [ ] running state save and load
+- [ ] some more function
+  - rearrange libs
 - [ ] docker block
 - [ ] docs
   - ponder
 - [ ] asm jit compiler
-- [x] annotation wenyan value processor
-  - need source level annotation processing
 - [ ] variable symbol unify
   - variable symbol in runtime need to separate to wenyan grammar
   - at least able to change the whole pre-defined variable symbol set

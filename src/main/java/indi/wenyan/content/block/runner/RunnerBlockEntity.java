@@ -189,14 +189,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (level == null || !level.isClientSide()) {
             return;
         }
-        var from = getBlockPos().getCenter().toVector3f();
-        // distance limit
-        if (from.distance(to) >= 2) {
-//            level.addParticle(Registration.COMMUNICATION_PARTICLES.get(),
-//                    from.x(), from.y(), from.z(),
-//                    to.x(), to.y(), to.z());
-            communications.put(to.sub(from), 0);
-        }
+        communications.put(to.sub(getBlockPos().getCenter().toVector3f()), 0);
     }
 
     public static final String PAGES_ID = "pages";
@@ -260,7 +253,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
         WenyanRunner runner;
-        // STUB: better error handling
         try {
             runner = WenyanRunner.ofCode(pages, this.initEnvironment());
         } catch (WenyanCompileException e) {
