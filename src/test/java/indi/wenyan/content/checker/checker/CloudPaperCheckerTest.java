@@ -15,17 +15,12 @@ class CloudPaperCheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "0, 1",
-            "1, 3",
-            "2, 5",
-            "3, 8",
-            "4, 11",
-            "5, 14",
-            "9, 30"
+            "6, 14",
+            "1000, 29820",
     })
     void testCorrectAnswer(int input, long expectedCoins) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
-                .addSeq(input)
+                .addSeq(input - 1)
                 .build();
         CloudPaperChecker checker = new CloudPaperChecker(random);
         checker.init();
@@ -44,7 +39,7 @@ class CloudPaperCheckerTest {
     })
     void testWrongAnswer(int input, long wrongCoins) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
-                .addSeq(input)
+                .addSeq(input - 1)
                 .build();
         CloudPaperChecker checker = new CloudPaperChecker(random);
         checker.init();

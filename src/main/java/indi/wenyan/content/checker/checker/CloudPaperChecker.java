@@ -24,17 +24,15 @@ public class CloudPaperChecker extends CraftingAnswerChecker {
         setVariable(0, WenyanValues.of(k));
 
         long totalCoins = 0;
-        int currentDay = 1;
-        int coinsPerDay = 1;
-
-        while (currentDay <= k) {
-            for (int i = 0; i < coinsPerDay && currentDay <= k; i++) {
-                totalCoins += coinsPerDay;
-                currentDay++;
+        int c = 1, q = 1;
+        for (int i = 1; i <= k; i++) {
+            totalCoins += c;
+            q--;
+            if (q == 0) {
+                c++;
+                q = c;
             }
-            coinsPerDay++;
         }
-
         ans = WenyanValues.of(totalCoins);
     }
 
