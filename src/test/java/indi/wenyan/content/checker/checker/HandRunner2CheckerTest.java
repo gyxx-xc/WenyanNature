@@ -1,12 +1,11 @@
 package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
+import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,31 +13,28 @@ class HandRunner2CheckerTest {
 
     @Test
     void testCorrectAnswer() throws Exception {
-        RandomSource random = RandomSource.create();
+        // n = 5 (input = 5 - 3 = 2)
+        // sequence of scores: 1, 2, 3, 4, 5
+        // calculation: max=5, min=1. sum=15. avg = (15 - 5 - 1) / (5 - 2) = 9 / 3 = 3.0
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .addSeq(2, 1, 2, 3, 4, 5)
+                .build();
         HandRunner2Checker checker = new HandRunner2Checker(random);
         checker.init();
 
-        Field expectedAvgField = HandRunner2Checker.class.getDeclaredField("expectedAvg");
-        expectedAvgField.setAccessible(true);
-        double expectedAvg = (double) expectedAvgField.get(checker);
-
-        checker.accept(WenyanValues.of(expectedAvg));
+        checker.accept(WenyanValues.of(3.0));
         Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @Test
     void testWrongAnswer() throws Exception {
-        RandomSource random = RandomSource.create();
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .addSeq(2, 1, 2, 3, 4, 5)
+                .build();
         HandRunner2Checker checker = new HandRunner2Checker(random);
         checker.init();
 
-        Field expectedAvgField = HandRunner2Checker.class.getDeclaredField("expectedAvg");
-        expectedAvgField.setAccessible(true);
-        double expectedAvg = (double) expectedAvgField.get(checker);
-
-        double wrongAns = expectedAvg + 1.0;
-
-        checker.accept(WenyanValues.of(wrongAns));
+        checker.accept(WenyanValues.of(4.0));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }

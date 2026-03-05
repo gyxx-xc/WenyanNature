@@ -1,55 +1,51 @@
 package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
+import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StarlightInkCheckerTest {
 
-    @Test
-    void testCorrectAnswer() throws WenyanException {
-        RandomSource random = RandomSource.create();
+    @ParameterizedTest
+    @CsvSource({
+            "0, 1", // n = 1 (input=0) -> 1! = 1
+            "1, 3", // n = 2 (input=1) -> 1! + 2! = 3
+            "2, 9", // n = 3 (input=2) -> 1! + 2! + 3! = 9
+            "3, 33", // n = 4 (input=3) -> 1! + 2! + 3! + 4! = 33
+            "4, 153" // n = 5 (input=4) -> 1! + 2! + 3! + 4! + 5! = 153
+    })
+    void testCorrectAnswer(int input, long expectedSum) throws WenyanException {
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .addSeq(input)
+                .build();
         StarlightInkChecker checker = new StarlightInkChecker(random);
         checker.init();
 
-        int n = checker.getArgs().getAttribute("「甲」").as(WenyanInteger.TYPE).value();
-
-        long sum = 0L;
-        long factorial = 1L;
-        for (int i = 1; i <= n; i++) {
-            factorial = factorial * i;
-            sum = sum + factorial;
-        }
-
-        checker.accept(WenyanValues.of(sum));
+        checker.accept(WenyanValues.of(expectedSum));
         Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
-    @Test
-    void testWrongAnswer() throws WenyanException {
-        RandomSource random = RandomSource.create();
+    @ParameterizedTest
+    @CsvSource({
+            "0, 2",
+            "1, 4",
+            "2, 10"
+    })
+    void testWrongAnswer(int input, long wrongSum) throws WenyanException {
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .addSeq(input)
+                .build();
         StarlightInkChecker checker = new StarlightInkChecker(random);
         checker.init();
 
-        var nValue = checker.getArgs().getAttribute("「甲」");
-        int n = nValue.as(WenyanInteger.TYPE).value();
-
-        Long sum = 0L;
-        Long factorial = 1L;
-        for (int i = 1; i <= n; i++) {
-            factorial = factorial * i;
-            sum = sum + factorial;
-        }
-
-        Long wrongAns = sum + 1L;
-
-        checker.accept(WenyanValues.of(wrongAns));
+        checker.accept(WenyanValues.of(wrongSum));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }

@@ -1,66 +1,55 @@
 package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
+import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CloudPaperCheckerTest {
 
-    @Test
-    void testCorrectAnswer() throws WenyanException {
-        RandomSource random = RandomSource.create();
+    @ParameterizedTest
+    @CsvSource({
+            "0, 1",
+            "1, 3",
+            "2, 5",
+            "3, 8",
+            "4, 11",
+            "5, 14",
+            "9, 30"
+    })
+    void testCorrectAnswer(int input, long expectedCoins) throws WenyanException {
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .addSeq(input)
+                .build();
         CloudPaperChecker checker = new CloudPaperChecker(random);
         checker.init();
 
-        var kValue = checker.getArgs().getAttribute("「甲」");
-        int k = kValue.as(WenyanInteger.TYPE).value();
-
-        long totalCoins = 0;
-        int currentDay = 1;
-        int coinsPerDay = 1;
-
-        while (currentDay <= k) {
-            for (int i = 0; i < coinsPerDay && currentDay <= k; i++) {
-                totalCoins += coinsPerDay;
-                currentDay++;
-            }
-            coinsPerDay++;
-        }
-
-        checker.accept(WenyanValues.of(totalCoins));
+        checker.accept(WenyanValues.of(expectedCoins));
         Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
-    @Test
-    void testWrongAnswer() throws WenyanException {
-        RandomSource random = RandomSource.create();
+    @ParameterizedTest
+    @CsvSource({
+            "0, 2",
+            "1, 4",
+            "2, 6",
+            "3, 9",
+            "9, 31"
+    })
+    void testWrongAnswer(int input, long wrongCoins) throws WenyanException {
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .addSeq(input)
+                .build();
         CloudPaperChecker checker = new CloudPaperChecker(random);
         checker.init();
 
-        var kValue = checker.getArgs().getAttribute("「甲」");
-        int k = kValue.as(WenyanInteger.TYPE).value();
-
-        long totalCoins = 0;
-        int currentDay = 1;
-        int coinsPerDay = 1;
-
-        while (currentDay <= k) {
-            for (int i = 0; i < coinsPerDay && currentDay <= k; i++) {
-                totalCoins += coinsPerDay;
-                currentDay++;
-            }
-            coinsPerDay++;
-        }
-
-        long wrongAns = totalCoins + 1;
-
-        checker.accept(WenyanValues.of(wrongAns));
+        checker.accept(WenyanValues.of(wrongCoins));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }

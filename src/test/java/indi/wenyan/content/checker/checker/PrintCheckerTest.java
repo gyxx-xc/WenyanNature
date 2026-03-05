@@ -1,6 +1,7 @@
 package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
+import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
@@ -13,7 +14,8 @@ class PrintCheckerTest {
 
     @Test
     void testCorrectAnswer() throws WenyanException {
-        RandomSource random = RandomSource.create();
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .build();
         PrintChecker checker = new PrintChecker(random);
         checker.init();
 
@@ -23,7 +25,8 @@ class PrintCheckerTest {
 
     @Test
     void testWrongAnswer() throws WenyanException {
-        RandomSource random = RandomSource.create();
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .build();
         PrintChecker checker = new PrintChecker(random);
         checker.init();
 
