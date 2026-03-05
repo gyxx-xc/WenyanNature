@@ -15,6 +15,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -36,7 +37,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler("「start」", request -> {
+            .handler("「啓」", request -> {
                 for (var arg : request.args()) {
                     var block = getRunner(arg.as(WenyanString.TYPE).value());
                     if (block == null) throw new WenyanException("can't find fu");
@@ -44,14 +45,14 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
                 }
                 return WenyanNull.NULL;
             })
-            .handler("status", request -> {
+            .handler("「狀」", request -> {
                 if (request.args().size() != 1) throw new WenyanException("args not correct");
                 var block = getRunner(request.args().getFirst().as(WenyanString.TYPE).value());
                 if (block == null) throw new WenyanException("can't find fu");
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
                 return new WenyanRunningState(state);
             })
-            .handler("join", (BaseHandleableRequest.IRawRequest) (_, request) -> {
+            .handler("「歸」", (BaseHandleableRequest.IRawRequest) (_, request) -> {
                 var running = BlockPos.betweenClosedStream(getBlockPos().offset(RANGE, -RANGE, RANGE), getBlockPos().offset(-RANGE, RANGE, -RANGE))
                         .map(pos -> {
                             assert level != null;
@@ -69,7 +70,8 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
             })
             .build();
 
-    private @Nullable RunnerBlockEntity getRunner(String runnerName) {
+    private @Nullable RunnerBlockEntity getRunner(String name) {
+        String runnerName = Component.translatable("code.wenyan_programming.bracket", name).getString();
         // check cache
         var cachedPlatform = platforms.get(runnerName);
         if (cachedPlatform != null) {

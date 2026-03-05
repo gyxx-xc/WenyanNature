@@ -1,6 +1,8 @@
 package indi.wenyan.content.block.runner;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.code_editor.CodeEditorScreen;
 import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
@@ -13,7 +15,6 @@ import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
-import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.PlatformRenamePacket;
 import lombok.Getter;
@@ -36,7 +37,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -52,19 +52,23 @@ import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_R
 
 @ParametersAreNonnullByDefault
 public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
-    public static final String ID = "runner_block";
     public static final EnumProperty<RunningState> RUNNING_STATE = EnumProperty.create("running_state",
             RunningState.class);
-    public static final IntegerProperty RUNNING_TIER = IntegerProperty.create("running_tier", 0, 5);
+    @Getter
+    private final int tier;
 
-    public RunnerBlock(Properties properties) {
+    public RunnerBlock(int tier, Properties properties) {
         super(properties.noCollision().lightLevel(state -> state.getValue(RUNNING_STATE).getLightLevel()));
+        this.tier = tier;
         registerDefaultState(defaultBlockState()
-                .setValue(RUNNING_STATE, RunningState.NOT_RUNNING)
-                .setValue(RUNNING_TIER, 1));
+                .setValue(RUNNING_STATE, RunningState.NOT_RUNNING));
     }
 
-    public static final MapCodec<RunnerBlock> CODEC = simpleCodec(RunnerBlock::new);
+    public static final MapCodec<RunnerBlock> CODEC = RecordCodecBuilder.mapCodec(
+            (i) -> i
+                    .group(Codec.intRange(0, 6).fieldOf("tier").forGetter(RunnerBlock::getTier),
+                            propertiesCodec())
+                    .apply(i, RunnerBlock::new));
 
     @Override
     protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
@@ -73,7 +77,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     @Override
     protected @NotNull InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
-            Player player, InteractionHand hand, BlockHitResult hitResult) {
+                                                   Player player, InteractionHand hand, BlockHitResult hitResult) {
         var entity = level.getBlockEntity(pos);
         if (!(entity instanceof RunnerBlockEntity runner)) {
             WenyanProgramming.LOGGER.error("RunnerBlock: entity is not a RunnerBlockEntity");
@@ -99,7 +103,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-            BlockEntityType<T> blockEntityType) {
+                                                                  BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, entity) -> {
             if (blockEntityType == WenyanBlocks.RUNNER_BLOCK_ENTITY.get())
                 ((RunnerBlockEntity) entity).tick(level1, pos, state1);
@@ -110,7 +114,6 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(RUNNING_STATE);
-        builder.add(RUNNING_TIER);
     }
 
     @Override
@@ -118,8 +121,6 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         var blockState = super.getStateForPlacement(context);
         if (blockState == null) return null;
         blockState.setValue(RUNNING_STATE, RunningState.NOT_RUNNING);
-        int speedTier = context.getItemInHand().getOrDefault(WyRegistration.RUNNING_TIER_DATA.get(), 0);
-        blockState.setValue(RUNNING_TIER, speedTier);
         return blockState;
     }
 
@@ -154,7 +155,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     // @OnlyIn(Dist.CLIENT)
     private static @NotNull CodeEditorBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos,
-            List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
+                                                                   List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {
@@ -200,7 +201,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     // @OnlyIn(Dist.CLIENT)
     private PackageSnippetWidget.PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack,
-            String name) {
+                                                               String name) {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
         execPackage.variables().forEach((k, v) -> {
             if (v.is(IWenyanObjectType.TYPE))

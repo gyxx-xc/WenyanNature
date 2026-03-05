@@ -1,0 +1,14 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:blaze_powder",
+    "minecraft:feather",
+    "minecraft:paper"
+  ],
+  "output": {
+    "count": 4,
+    "id": "wenyan_programming:phoenix_paper"
+  },
+  "question": "phoenix_paper",
+  "round": 1
+}

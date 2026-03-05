@@ -45,7 +45,14 @@ public class ModBlockStateProvider extends ModelSubProvider {
                         .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
                         .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));
 
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK);
+        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_0);
+        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_1);
+        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_2);
+        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_3);
+        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_4);
+        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_5);
+        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_6);
+
         registerFuluBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK);
         registerFuluBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK);
         registerFuluBlock(WenyanBlocks.MATH_MODULE_BLOCK);

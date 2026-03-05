@@ -11,7 +11,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
@@ -58,7 +57,6 @@ public final class WyRegistration {
 
     public static final Supplier<SimpleParticleType> COMMUNICATION_PARTICLES;
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RUNNING_TIER_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> NOTE_LOCK_DATA;
 
@@ -79,10 +77,6 @@ public final class WyRegistration {
         CRAFTING_CONTAINER = MENU_TYPE.register(CraftingBlock.ID,
                 () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
 
-        RUNNING_TIER_DATA = DATA.register("runner_tier_data",
-                () -> DataComponentType.<Integer>builder()
-                        .persistent(ExtraCodecs.intRange(0, 6))
-                        .build());
         PROGRAM_CODE_DATA = DATA.register("program_code_data",
                 () -> DataComponentType.<String>builder()
                         .persistent(Codec.STRING)

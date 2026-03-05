@@ -18,7 +18,7 @@ public class LockModuleBlockTest {
     public static void lockModuleTest(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 2, 1)
                 .set(0, 0, 0, WenyanBlocks.LOCK_MODULE_BLOCK.get().defaultBlockState())
-                .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK.get().defaultBlockState())
+                .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK_0.get().defaultBlockState())
         );
 
         test.onGameTest(RunnerTestHelper.class, helper -> {

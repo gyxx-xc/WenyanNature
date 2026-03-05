@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:netherite_scrap",
+    "wenyan_programming:arcane_ink"
+  ],
+  "output": {
+    "count": 4,
+    "id": "wenyan_programming:celestial_ink"
+  },
+  "question": "celestial_ink",
+  "round": 1
+}

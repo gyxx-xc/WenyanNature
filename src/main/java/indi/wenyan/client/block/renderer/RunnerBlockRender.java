@@ -40,7 +40,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
     private static final RenderType RENDER_TYPE =
             RenderTypes.entityTranslucent(STATUE_TEXTURE_LOCATION);
     private static final RenderType COMMUNICATION_RENDER_TYPE =
-            RenderTypes.entityTranslucentEmissive(COMMUNICATION_TEXTURE_LOCATION);
+            RenderTypes.entityTranslucent(COMMUNICATION_TEXTURE_LOCATION);
     public static final float UV_OFFSET = 0.25F;
 
     public RunnerBlockRender(BlockEntityRendererProvider.Context ignore) {
@@ -50,13 +50,14 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
         if (state.communications.isEmpty()) return;
         poseStack.pushPose();
         poseStack.translate(0.5F, 0.5F, 0.5F);
+        Vector3f cameraOriebtation = new Vector3f(0,0,-1).rotate(cameraState.orientation);
         for (var entry : state.communications.entrySet()) {
             poseStack.pushPose();
             float time = entry.getValue() + state.partialTicks;
             double adsr = adsr(2, 1, 2, 0.7, 4, time);
             int emissiveLight = LightCoordsUtil.addSmoothBlockEmission(state.lightCoords, (float) adsr);
             int alpha = (int) (255 * adsr);
-            transferPoint(poseStack, entry.getKey(), cameraState.orientation.positiveY(new Vector3f()), 2, 4, time);
+            transferPoint(poseStack, entry.getKey(), cameraOriebtation, 2, 4, time);
             collector.submitCustomGeometry(poseStack, COMMUNICATION_RENDER_TYPE, (pose, vertexConsumer) -> quad(
                     vertexConsumer, pose,
                     -1.0F, 0F, 1.0F, 1.0F,

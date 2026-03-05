@@ -30,6 +30,7 @@ import lombok.experimental.Accessors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -49,13 +50,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
-import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_TIER;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
     public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
     public static final int COMMUNICATE_EFFECT_LIFETIME = 12;
+    public static final String ID = "runner_block_entity";
     private IWenyanProgram optionalProgram = null;
 
     private IWenyanProgram getProgram() {
@@ -131,7 +132,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (!level.isClientSide()) {
             ifProgram().ifPresentOrElse(program -> {
                 if (program.isRunning()) {
-                    program.step(speedFromTier(getBlockState().getValue(RUNNING_TIER)));
+                    program.step(speedFromTier(((RunnerBlock) getBlockState().getBlock()).getTier()));
                     handle(new BlockContext(level, pos, state));
                 }
                 // update showing state
@@ -212,6 +213,13 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         super.applyImplicitComponents(components);
         code = components.getOrDefault(WyRegistration.PROGRAM_CODE_DATA.get(), "");
         platformName = components.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(WyRegistration.PROGRAM_CODE_DATA.get(), code);
+        components.set(DataComponents.CUSTOM_NAME, Component.literal(platformName));
     }
 
     @SneakyThrows

@@ -40,7 +40,16 @@ public class RunnerItem extends BlockItem {
     public final int runningLevel;
 
     public RunnerItem(Properties properties, int runningLevel) {
-        super(WenyanBlocks.RUNNER_BLOCK.get(), properties);
+        super(switch (runningLevel) {
+            case 0 -> WenyanBlocks.RUNNER_BLOCK_0.get();
+            case 1 -> WenyanBlocks.RUNNER_BLOCK_1.get();
+            case 2 -> WenyanBlocks.RUNNER_BLOCK_2.get();
+            case 3 -> WenyanBlocks.RUNNER_BLOCK_3.get();
+            case 4 -> WenyanBlocks.RUNNER_BLOCK_4.get();
+            case 5 -> WenyanBlocks.RUNNER_BLOCK_5.get();
+            case 6 -> WenyanBlocks.RUNNER_BLOCK_6.get();
+            default -> throw new IllegalArgumentException("Invalid running level: " + runningLevel);
+        }, properties);
         this.runningLevel = runningLevel;
     }
 
@@ -80,7 +89,6 @@ public class RunnerItem extends BlockItem {
     public InteractionResult useOn(UseOnContext context) {
         if (context.getPlayer() == null) return InteractionResult.FAIL;
         if (context.getPlayer().isShiftKeyDown()) {
-            context.getItemInHand().set(WyRegistration.RUNNING_TIER_DATA.get(), runningLevel);
             return super.useOn(context);
         }
         return InteractionResult.PASS;
