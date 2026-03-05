@@ -1,6 +1,7 @@
 package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
@@ -17,7 +18,9 @@ public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements 
                      List<IWenyanValue> argsList)
             throws WenyanException {
         var future = new WenyanBuiltinFuture();
-        var newThread = thread.forkRuntime(func.getNewRuntime(self, argsList, future.getDummyRuntime()));
+        WenyanRuntime newRuntime = func.getNewRuntime(self, argsList, null);
+        newRuntime.setReturnBehavior(future::onRunnerReturn);
+        var newThread = thread.forkRuntime(newRuntime);
         thread.program().create(newThread);
         thread.getCurrentRuntime().pushReturnValue(future);
     }

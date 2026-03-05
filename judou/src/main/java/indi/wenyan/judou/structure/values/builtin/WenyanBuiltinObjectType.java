@@ -1,10 +1,10 @@
 package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -84,11 +84,12 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
         thread.getCurrentRuntime().pushReturnValue(selfObj);
 
-        IWenyanFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
-                .as(IWenyanFunction.TYPE);
+        WenyanBuiltinFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
+                .as(WenyanBuiltinFunction.TYPE);
 
-        constructor.call(selfObj, thread, argsList); // we got a runtime change here
-        thread.getCurrentRuntime().noReturnFlag = true;
+        WenyanRuntime newRuntime = constructor.getNewRuntime(self, argsList, thread.getCurrentRuntime());
+        newRuntime.setReturnBehavior((runner, ignore) -> runner.ret());
+        thread.call(newRuntime);
     }
 
     @Override

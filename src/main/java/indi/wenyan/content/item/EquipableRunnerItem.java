@@ -43,7 +43,7 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     @Getter
     private final ExecQueue execQueue = new ExecQueue(this);
     private final RequestCallHandler importFunction = (t, s, a) ->
-            new ImportRequest(t, this, this::getPackage, a);
+            new ImportRequest(t, this::getPackage, a);
 
     @Getter @Setter
     private String platformName = Component.translatable("code.wenyan_programming.bracket", Component.translatable("item.wenyan_programming.equipable_runner")).getString();

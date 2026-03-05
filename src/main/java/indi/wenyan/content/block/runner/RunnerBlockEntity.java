@@ -78,7 +78,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public final ExecQueue execQueue = new ExecQueue(this);
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final RequestCallHandler importFunction = (t, _, a) ->
-            new ImportRequest(t, this, this::getPackage, a);
+            new ImportRequest(t, this::getPackage, a);
 
     @Getter
     private String platformName = Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString();

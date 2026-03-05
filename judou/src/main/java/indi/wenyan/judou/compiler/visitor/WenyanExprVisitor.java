@@ -150,7 +150,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         visitFunction_define_body(ctx.function_define_body(), false);
         bytecode.add(WenyanCodes.CREATE_FNCTION, index);
         if (ctx.t.getType() == WenyanRParser.ASYNC_DECLARE_OP) {
-            bytecode.add(WenyanCodes.PUSH, WenyanPackages.CREATE_ASYNC_ID);
+            bytecode.addLoadCode(WenyanPackages.CREATE_ASYNC_ID);
             bytecode.add(WenyanCodes.CALL, 1);
         }
         bytecode.add(WenyanCodes.STORE, index);
