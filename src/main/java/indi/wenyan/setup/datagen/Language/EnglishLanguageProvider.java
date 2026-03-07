@@ -25,13 +25,6 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add(WenyanItems.HAND_RUNNER_0.get(), "一阶符");
-        add(WenyanItems.HAND_RUNNER_1.get(), "二阶符");
-        add(WenyanItems.HAND_RUNNER_2.get(), "三阶符");
-        add(WenyanItems.HAND_RUNNER_3.get(), "四阶符");
-        add(WenyanItems.HAND_RUNNER_4.get(), "五阶符");
-        add(WenyanItems.HAND_RUNNER_5.get(), "六阶符");
-
         add(WenyanItems.FLOAT_NOTE.get(), "浮签");
         add(WenyanItems.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
         add(WenyanItems.CLOUD_PAPER.get(), "云篆纸 (Lv.2)");
@@ -46,6 +39,13 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(WenyanItems.LUNAR_INK.get(), "月华墨 (Lv.4)");
         add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
         add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
+
+        addBlockAndItem(WenyanItems.HAND_RUNNER_0.get(), "一阶符");
+        addBlockAndItem(WenyanItems.HAND_RUNNER_1.get(), "二阶符");
+        addBlockAndItem(WenyanItems.HAND_RUNNER_2.get(), "三阶符");
+        addBlockAndItem(WenyanItems.HAND_RUNNER_3.get(), "四阶符");
+        addBlockAndItem(WenyanItems.HAND_RUNNER_4.get(), "五阶符");
+        addBlockAndItem(WenyanItems.HAND_RUNNER_5.get(), "六阶符");
 
         addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
         addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");

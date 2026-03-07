@@ -12,7 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.neoforged.fml.loading.FMLPaths;
@@ -32,7 +32,7 @@ import static indi.wenyan.WenyanProgramming.LOGGER;
 public enum FileLoader {
     ;
 
-    public static DeferredItem<Item> runnerItem;
+    public static DeferredItem<BlockItem> runnerItem;
 
     public static final LiteralArgumentBuilder<CommandSourceStack> FILE_COMMAND = Commands.literal("wenyan")
             .then(Commands.literal("import")

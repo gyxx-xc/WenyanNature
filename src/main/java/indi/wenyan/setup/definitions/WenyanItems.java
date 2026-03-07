@@ -31,19 +31,19 @@ public enum WenyanItems {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, WenyanProgramming.MODID);
 
     // Hand Runner items
-    public static final DeferredItem<Item> HAND_RUNNER_0 = DR.registerItem(RunnerItem.ID_0,
+    public static final DeferredItem<BlockItem> HAND_RUNNER_0 = DR.registerItem(RunnerItem.ID_0,
             (Item.Properties properties) -> new RunnerItem(properties, 0));
-    public static final DeferredItem<Item> HAND_RUNNER_1 = DR.registerItem(RunnerItem.ID_1,
+    public static final DeferredItem<BlockItem> HAND_RUNNER_1 = DR.registerItem(RunnerItem.ID_1,
             (Item.Properties properties) -> new RunnerItem(properties, 1));
-    public static final DeferredItem<Item> HAND_RUNNER_2 = DR.registerItem(RunnerItem.ID_2,
+    public static final DeferredItem<BlockItem> HAND_RUNNER_2 = DR.registerItem(RunnerItem.ID_2,
             (Item.Properties properties) -> new RunnerItem(properties, 2));
-    public static final DeferredItem<Item> HAND_RUNNER_3 = DR.registerItem(RunnerItem.ID_3,
+    public static final DeferredItem<BlockItem> HAND_RUNNER_3 = DR.registerItem(RunnerItem.ID_3,
             (Item.Properties properties) -> new RunnerItem(properties, 3));
-    public static final DeferredItem<Item> HAND_RUNNER_4 = DR.registerItem(RunnerItem.ID_4,
+    public static final DeferredItem<BlockItem> HAND_RUNNER_4 = DR.registerItem(RunnerItem.ID_4,
             (Item.Properties properties) -> new RunnerItem(properties, 4));
-    public static final DeferredItem<Item> HAND_RUNNER_5 = DR.registerItem(RunnerItem.ID_5,
+    public static final DeferredItem<BlockItem> HAND_RUNNER_5 = DR.registerItem(RunnerItem.ID_5,
             (Item.Properties properties) -> new RunnerItem(properties, 5));
-    public static final DeferredItem<Item> HAND_RUNNER_6 = DR.registerItem(RunnerItem.ID_6,
+    public static final DeferredItem<BlockItem> HAND_RUNNER_6 = DR.registerItem(RunnerItem.ID_6,
             (Item.Properties properties) -> new RunnerItem(properties, 6));
 
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,

@@ -22,5 +22,4 @@ public class FormationCoreModuleBlockTest {
         test.onGameTest(RunnerTestHelper.class, helper -> {
         });
     }
-
 }
