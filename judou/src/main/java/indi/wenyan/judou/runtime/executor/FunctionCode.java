@@ -56,8 +56,10 @@ public class FunctionCode extends WenyanCode {
             // handleWarper self first
             if (operation == Operation.CALL_ATTR) {
                 // try casting to object (might be list)
-                // if not, throw error
-                self = self.as(IWenyanObject.TYPE);
+                // if not, static method
+                if (!self.is(IWenyanObject.TYPE)) {
+                    self = null;
+                }
             }
             callable = func.as(IWenyanFunction.TYPE);
         }

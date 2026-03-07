@@ -4,6 +4,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Map;
  *
  * @param variables Map of variable names to values
  */
-public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWenyanObject {
+public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWenyanObjectType {
     /**
      * Type descriptor for packages
      */
@@ -31,6 +32,11 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
         if (value == null)
             throw new WenyanException("Unknown package attribute: " + name);
         return value;
+    }
+
+    @Override
+    public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
+        throw new WenyanException("Cannot create an object from a package");
     }
 
     @Override

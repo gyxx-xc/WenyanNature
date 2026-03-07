@@ -74,12 +74,12 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
         poseStack.translate(0.5F, 0.5F, 0.5F);
         poseStack.scale(UV_OFFSET, UV_OFFSET, UV_OFFSET);
         poseStack.mulPose(state.face);
-        int emissiveLight = LightCoordsUtil.lightCoordsWithEmission(state.lightCoords, 5);
+        int emissiveLight = LightCoordsUtil.FULL_BRIGHT;
         float uvOffset = state.stateOffset;
         collector.submitCustomGeometry(poseStack, RENDER_TYPE, (pose, vertexConsumer) -> RenderUtils.quad(
                 vertexConsumer, pose,
                 -1.0F, -1.0F, 1.0F, 1.0F,
-                Color.WHITE, 125,
+                Color.WHITE, 0xE0,
                 0.0F, uvOffset, 1.0F, uvOffset + UV_OFFSET,
                 emissiveLight));
         poseStack.popPose();

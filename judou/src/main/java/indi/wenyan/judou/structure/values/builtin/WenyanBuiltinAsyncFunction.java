@@ -20,7 +20,7 @@ public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements 
         var future = new WenyanBuiltinFuture();
         WenyanRuntime newRuntime = func.getNewRuntime(self, argsList, null);
         newRuntime.setReturnBehavior(future::onRunnerReturn);
-        var newThread = thread.forkRuntime(newRuntime);
+        var newThread = thread.of(newRuntime);
         thread.program().create(newThread);
         thread.getCurrentRuntime().pushReturnValue(future);
     }

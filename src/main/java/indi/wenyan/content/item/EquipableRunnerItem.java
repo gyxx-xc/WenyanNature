@@ -8,7 +8,6 @@ import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.Either;
@@ -103,19 +102,19 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     public void handleError(String error) {
     }
 
-    @Override
-    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanException {
-        if (!(context instanceof ItemContext itemContext)) {
-            throw new WenyanUnreachedException();
-        }
-        if (!(request instanceof ItemRequest itemRequest))
-            throw new WenyanUnreachedException();
-
-        ItemStack current = itemContext.player().getInventory().getItem(itemRequest.slotId());
-        // STUB: better equal
-        if (!current.equals(itemRequest.itemStack()))
-            throw new WenyanException("item changed");
-    }
+//    @Override
+//    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanException {
+//        if (!(context instanceof ItemContext itemContext)) {
+//            throw new WenyanUnreachedException();
+//        }
+//        if (!(request instanceof ItemRequest itemRequest))
+//            throw new WenyanUnreachedException();
+//
+//        ItemStack current = itemContext.player().getInventory().getItem(itemRequest.slotId());
+//        // STUB: better equal
+//        if (!current.equals(itemRequest.itemStack()))
+//            throw new WenyanException("item changed");
+//    }
 
     private Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException {
         if (!(context instanceof ItemContext itemContext)) {

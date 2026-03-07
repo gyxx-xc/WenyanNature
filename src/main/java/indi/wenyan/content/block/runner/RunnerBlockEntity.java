@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.experimental.NonFinal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
@@ -267,16 +268,18 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public Optional<WenyanRunner> newThread(String pages) {
-        assert getLevel() != null;
-        if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
-            getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
-        WenyanRunner runner;
         try {
-            runner = WenyanRunner.ofCode(pages, this.initEnvironment());
+            return newThread(WenyanRunner.ofCode(pages, this.initEnvironment()));
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return Optional.empty();
         }
+    }
+
+    public Optional<WenyanRunner> newThread(WenyanRunner runner) {
+        assert getLevel() != null;
+        if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
+            getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
         try {
             getProgram().create(runner);
         } catch (WenyanException e) {
@@ -361,17 +364,26 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         IWenyanBlockDevice device;
         IRawRequest request;
 
-        @Override
-        public boolean handle(IHandleContext context) throws WenyanException {
-            return request.handle(context, this);
+        @NonFinal
+        boolean communicationShown = false;
+
+        public BlockRequest(WenyanRunner thread, IWenyanValue self, List<IWenyanValue> argsList, IWenyanBlockDevice device, IRawRequest request) {
+            this.thread = thread;
+            this.self = self;
+            this.args = argsList;
+            this.device = device;
+            this.request = request;
         }
 
         @Override
-        public void noticePlatform(IWenyanPlatform platform, IHandleContext context) throws WenyanException {
-            if (device().isRemoved()) {
+        public boolean handle(IHandleContext context) throws WenyanException {
+            if (device().isRemoved())
                 throw new WenyanException("device removed");
+            if (!communicationShown) {
+                showCommunication(device.blockPos());
+                communicationShown = true;
             }
-            showCommunication(device.blockPos());
+            return request.handle(context, this);
         }
     }
 }

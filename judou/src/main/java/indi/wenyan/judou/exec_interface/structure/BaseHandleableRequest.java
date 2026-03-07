@@ -10,7 +10,6 @@ public interface BaseHandleableRequest extends IHandleableRequest {
     @Override
     default boolean run(IWenyanPlatform platform, IHandleContext context) {
         try {
-            noticePlatform(platform, context);
             return handle(context);
         } catch (WenyanException e) {
             thread().dieWithException(e);
@@ -24,9 +23,5 @@ public interface BaseHandleableRequest extends IHandleableRequest {
     @FunctionalInterface
     interface IRawRequest {
         boolean handle(IHandleContext context, IArgsRequest request) throws WenyanException;
-    }
-
-    default void noticePlatform(IWenyanPlatform platform, IHandleContext context) throws WenyanException {
-        platform.notice(this, context);
     }
 }

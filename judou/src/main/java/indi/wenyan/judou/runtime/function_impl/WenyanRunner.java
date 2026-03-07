@@ -70,7 +70,11 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         return new WenyanRunner(new WenyanRuntime(bytecode), basicRuntime, environment.getExportedValues());
     }
 
-    public WenyanRunner forkRuntime(WenyanRuntime mainRuntime) {
+    public WenyanRunner of(WenyanRuntime mainRuntime) {
+        return new WenyanRunner(mainRuntime, globals, null);
+    }
+
+    public static WenyanRunner of(WenyanRuntime mainRuntime, WenyanPackage globals) {
         return new WenyanRunner(mainRuntime, globals, null);
     }
 
