@@ -33,8 +33,7 @@ project
 pyvenv
 __pycache__
 /.lingma/
-/src/main/java/indi/wenyan/content/gui/code_editor/_generator_py/py_map.json
-venv
 .run
 .profileconfig.json
 *.jfr
+/src/main/java/indi/wenyan/client/gui/code_editor/_generator_py/py_map.json
