@@ -178,6 +178,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
     }
 
+    public boolean isRunning() {
+        return ifProgram()
+                .map(IWenyanProgram::isRunning)
+                .orElse(false);
+    }
+
     public void playerRun() {
         if (getProgram().isRunning()) {
             handleError(Component.translatable("error.wenyan_programming.already_run").getString());

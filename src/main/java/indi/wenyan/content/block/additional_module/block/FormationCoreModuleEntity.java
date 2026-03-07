@@ -54,7 +54,8 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
                 for (var arg : request.args()) {
                     var block = getRunner(arg.as(WenyanString.TYPE).value());
                     if (block == null) throw new WenyanException("can't find fu");
-                    block.newThread().orElseThrow(() -> new WenyanException("can't start"));
+                    block.newThread()
+                            .orElseThrow(() -> new WenyanException("can't start"));
                 }
                 return WenyanNull.NULL;
             })
@@ -75,8 +76,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
                     RunnerBlockEntity entity = platformEntry.getValue();
                     if (entity.isRemoved())
                         iter.remove();
-                    else if (entity.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE,
-                            RunnerBlock.RunningState.NOT_RUNNING) == RunnerBlock.RunningState.RUNNING) {
+                    else if (entity.isRunning()) {
                         running = true;
                         break;
                     }
@@ -134,7 +134,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
     public void tick(Level level, BlockPos pos, BlockState state) {
         super.tick(level, pos, state);
         effects.removeIf(communicationEffect ->
-            communicationEffect.life -- <= 0
+                communicationEffect.life-- <= 0
         );
     }
 
