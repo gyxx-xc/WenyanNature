@@ -72,11 +72,6 @@ public class FunctionCode extends WenyanCode {
         callable.call(self, thread, argsList);
     }
 
-    @Override
-    public int getStep(int args, @UnknownNullability WenyanRunner thread) {
-        return args;
-    }
-
     /**
      * Types of function call operations.
      */

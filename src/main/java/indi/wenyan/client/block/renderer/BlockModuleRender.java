@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.*;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.AABB;
@@ -81,59 +80,59 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity,
         int combinedLight = LightCoordsUtil.FULL_BRIGHT;
         int alpha = 80;
         // down
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
                 color, alpha, 0, 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxZ - aabb.minZ), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
                 color, alpha, 0, (float) (aabb.maxZ - aabb.minZ), combinedLight);
         // up
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
                 color, alpha, 0, 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
                 color, alpha, 0, (float) (aabb.maxZ - aabb.minZ), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxZ - aabb.minZ), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
 
         // north
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
                 color, alpha, 0, 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
                 color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxY - aabb.minY), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
         // south
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
                 color, alpha, 0, 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxX - aabb.minX), (float) (aabb.maxY - aabb.minY), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
                 color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
         // west
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ,
                 color, alpha, 0, 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxZ - aabb.minZ), 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxZ - aabb.minZ), (float) (aabb.maxY - aabb.minY), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ,
                 color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
         // east
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ,
                 color, alpha, 0, 0, combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ,
                 color, alpha, 0, (float) (aabb.maxY - aabb.minY), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxZ - aabb.minZ), (float) (aabb.maxY - aabb.minY), combinedLight);
-        vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
+        RenderUtils.vertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ,
                 color, alpha, (float) (aabb.maxZ - aabb.minZ), 0, combinedLight);
     }
 
@@ -142,65 +141,43 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity,
         int alpha = 255;
         Color color = Color.WHITE;
 
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
 
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
 
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
 
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-
-
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
 
 
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
 
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
 
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
 
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
-        lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
-    }
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
 
-    private static void vertex(
-            VertexConsumer consumer, PoseStack.Pose pose,
-            float x, float y, float z,
-            Color color, int alpha,
-            float u, float v, int packedLight) {
-        consumer.addVertex(pose, x, y, z)
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), alpha)
-                .setUv(u, v)
-                .setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight)
-                .setNormal(pose, 0.0F, 1.0F, 0.0F);
-    }
 
-    @SuppressWarnings("SameParameterValue")
-    private static void lineVertex(
-            VertexConsumer consumer, PoseStack.Pose pose,
-            float x, float y, float z,
-            Color color, int alpha, int packedLight,
-            float lineWidth) {
-        vertex(consumer, pose, x, y, z, color, alpha, 0, 0, packedLight);
-        consumer.setLineWidth(lineWidth);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
+
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ, color, alpha, combinedLight, 1.0f);
+        RenderUtils.lineVertex(vertexconsumer, pose, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ, color, alpha, combinedLight, 1.0f);
     }
 
     @Override

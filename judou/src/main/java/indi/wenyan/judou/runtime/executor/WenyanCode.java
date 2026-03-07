@@ -27,17 +27,6 @@ public abstract class WenyanCode {
      */
     public abstract void exec(int arg, WenyanRunner thread) throws WenyanException;
 
-    /**
-     * Gets the number of steps this code execution requires.
-     *
-     * @param args The arguments for execution
-     * @param thread The thread context
-     * @return The number of steps
-     */
-    public int getStep(int args, WenyanRunner thread) throws WenyanException {
-        return 1;
-    }
-
     @Override
     public String toString() {
         return name;

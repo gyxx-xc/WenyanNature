@@ -83,8 +83,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
                 if (validateRuntimeState(runtime)) return;
                 WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
                 WenyanCode code = bytecode.code().getCode();
-                int needStep = code.getStep(bytecode.arg(), this);
-                consumeStep(needStep);
+                consumeStep(1);
                 code.exec(bytecode.arg(), this);
 
                 if (updateProgramCounter(runtime)) return;

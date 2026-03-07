@@ -46,14 +46,6 @@ public class AnsStackCode extends WenyanCode {
         }
     }
 
-    @Override
-    public int getStep(int args, WenyanRunner thread) throws WenyanException {
-        if (operation == Operation.PEEK_N) {
-            return args;
-        }
-        return super.getStep(args, thread);
-    }
-
     /**
      * Operations that can be performed on the result stack.
      */

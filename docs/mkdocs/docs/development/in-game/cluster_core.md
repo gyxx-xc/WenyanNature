@@ -16,9 +16,9 @@ function provided by a set of wenyan function.
 
 1. void start(string... fu_name): start a set of fu, this reach range should be a litte bit futher
    then the fu (r = 10)
-2. status status(string fu_name): return the status of a fu, return status should be one of:
+2. status status(string fu_name): return the status of a fu which started by this module, return status should be one of:
    not-running, running, error
-3. void join(): waiting all fu inside the range is done
+3. void join(): waiting all fu started by this is done
 
 the fu search and call should be cached.
 

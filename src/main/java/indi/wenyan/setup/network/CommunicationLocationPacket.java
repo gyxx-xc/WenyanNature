@@ -1,6 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.block.additional_module.block.FormationCoreModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
@@ -9,12 +10,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import org.joml.Vector3f;
 
 /**
  * Packet for communication location data between blocks
  */
-public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vector3f to) implements CustomPacketPayload {
+public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull BlockPos to) implements CustomPacketPayload {
     /**
      * Packet type identifier
      */
@@ -28,12 +28,12 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vecto
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.from);
-                        buffer.writeVector3f(packet.to());
+                        buffer.writeBlockPos(packet.to());
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
-                        Vector3f output1 = buffer.readVector3f();
-                        return new CommunicationLocationPacket(pos1, output1);
+                        BlockPos pos2 = buffer.readBlockPos();
+                        return new CommunicationLocationPacket(pos1, pos2);
                     });
 
     /**
@@ -44,6 +44,8 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Vecto
             var entity = context.player().level().getBlockEntity(packet.from());
             if (entity instanceof RunnerBlockEntity runner) {
                 runner.setCommunicate(packet.to());
+            } else if (entity instanceof FormationCoreModuleEntity core) {
+                core.setCommunicate(packet.to());
             }
         }
     };

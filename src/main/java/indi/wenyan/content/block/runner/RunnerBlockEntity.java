@@ -186,11 +186,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         newThread(code);
     }
 
-    public void setCommunicate(Vector3f to) {
+    public void setCommunicate(BlockPos to) {
         if (level == null || !level.isClientSide()) {
             return;
         }
-        communications.put(to.sub(getBlockPos().getCenter().toVector3f()), 0);
+        communications.put(to.getCenter().toVector3f().sub(getBlockPos().getCenter().toVector3f()), 0);
     }
 
     public static final String PAGES_ID = "pages";
@@ -298,7 +298,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl,
                     ChunkPos.containing(getBlockPos()),
-                    new CommunicationLocationPacket(getBlockPos(), blockPos.getCenter().toVector3f())
+                    new CommunicationLocationPacket(getBlockPos(), blockPos)
             );
         }
     }
