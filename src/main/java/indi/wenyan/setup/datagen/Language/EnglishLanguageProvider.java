@@ -59,6 +59,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(), "爆裂符");
         addBlockAndItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(), "物品符");
         addBlockAndItem(WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(), "天下情報符");
+        addBlockAndItem(WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get(), "阻塞隊列符");
 
         addBlockAndItem(WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(), "螢幕石");
         addBlockAndItem(WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(), "信號量石");

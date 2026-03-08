@@ -100,6 +100,8 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.LOCK_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM = DR.registerItem(FormationCoreModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> BLOCKING_QUEUE_MODULE_BLOCK_ITEM = DR.registerItem(BlockingQueueModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get(), properties));
 
     @SuppressWarnings("unused")
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
@@ -149,6 +151,7 @@ public enum WenyanItems {
                 output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
 
                 output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
+                output.accept(BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
 
                 output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
                 output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());

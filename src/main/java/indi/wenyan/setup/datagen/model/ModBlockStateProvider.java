@@ -65,6 +65,7 @@ public class ModBlockStateProvider extends ModelSubProvider {
         registerFuluBlock(WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
         registerFuluBlock(WenyanBlocks.COLLECTION_MODULE_BLOCK);
         registerFuluBlock(WenyanBlocks.STRING_MODULE_BLOCK);
+        registerFuluBlock(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK);
     }
 
     private void modeledBlock(DeferredBlock<?> deferredBlock) {

@@ -14,35 +14,35 @@ import java.math.BigInteger;
 import java.util.List;
 
 public enum WenyanValues {;
-    public static IWenyanValue of() {
+    public static WenyanNull of() {
         return WenyanNull.NULL;
     }
 
-    public static IWenyanValue of(long l) {
+    public static WenyanInteger of(long l) {
         return WenyanInteger.valueOf(l);
     }
 
-    public static IWenyanValue of(@NotNull BigInteger bi) {
+    public static WenyanInteger of(@NotNull BigInteger bi) {
         return WenyanInteger.valueOf(bi);
     }
 
-    public static IWenyanValue of(double d) {
+    public static WenyanDouble of(double d) {
         return new WenyanDouble(d);
     }
 
-    public static IWenyanValue of(boolean b) {
+    public static WenyanBoolean of(boolean b) {
         return b ? WenyanBoolean.TRUE : WenyanBoolean.FALSE;
     }
 
-    public static IWenyanValue of(String s) {
+    public static WenyanString of(String s) {
         return new WenyanString(s);
     }
 
-    public static IWenyanValue of(List<IWenyanValue> l) {
-        return new WenyanList(l);
+    public static WenyanList of(List<? extends IWenyanValue> l) {
+        return new WenyanList((List<IWenyanValue>) l);
     }
 
-    public static IWenyanValue of(IWenyanValue... l) {
+    public static WenyanList of(IWenyanValue... l) {
         return WenyanValues.of(List.of(l));
     }
 

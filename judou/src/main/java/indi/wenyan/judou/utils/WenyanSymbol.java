@@ -119,6 +119,15 @@ public enum WenyanSymbol {;
         addSymbol("WorldModule.trigger", "觸");
         addSymbol("WorldModule.changeWeather", "變天");
 
+        addSymbol("BlockingQueueModule", "佇列");
+        addSymbol("BlockingQueueModule.put", "入");
+        addSymbol("BlockingQueueModule.take", "取");
+        addSymbol("BlockingQueueModule.offer", "試入");
+        addSymbol("BlockingQueueModule.poll", "試取");
+        addSymbol("BlockingQueueModule.peek", "窺");
+        addSymbol("BlockingQueueModule.size", "長");
+        addSymbol("BlockingQueueModule.clear", "清空");
+
         addSymbol("Null", "");
     }
 }

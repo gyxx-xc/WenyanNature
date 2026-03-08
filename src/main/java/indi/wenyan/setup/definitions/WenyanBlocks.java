@@ -102,6 +102,9 @@ public enum WenyanBlocks {
     public static final DeferredBlock<FormationCoreModuleBlock> FORMATION_CORE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(FormationCoreModuleBlock.ID, FormationCoreModuleBlock::new);
     public static final Supplier<BlockEntityType<FormationCoreModuleEntity>> FORMATION_CORE_MODULE_ENTITY = WenyanBlocks.registerEntity(FormationCoreModuleBlock.ID, FormationCoreModuleEntity::new, WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
 
+    public static final DeferredBlock<BlockingQueueModuleBlock> BLOCKING_QUEUE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(BlockingQueueModuleBlock.ID, BlockingQueueModuleBlock::new);
+    public static final Supplier<BlockEntityType<BlockingQueueModuleEntity>> BLOCKING_QUEUE_MODULE_ENTITY = WenyanBlocks.registerEntity(BlockingQueueModuleBlock.ID, BlockingQueueModuleEntity::new, WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK);
+
     private static <BE extends BlockEntity> Supplier<BlockEntityType<BE>>
     registerEntity(final String name, final BlockEntityType.BlockEntitySupplier<BE> supplier,
                    final Supplier<? extends Block> block) {
