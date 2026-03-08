@@ -56,6 +56,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder constant(String name, IWenyanValue value) {
         variables.put(name, value);
+        variables.put(ChineseUtils.toSimplifiedVar(name), value);
         return this;
     }
 
@@ -124,6 +125,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder function(String name, IJavacallHandler javacall) {
         variables.put(name, javacall);
+        variables.put(ChineseUtils.toSimplifiedVar(name), javacall);
         return this;
     }
 
@@ -135,6 +137,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder object(String name, IWenyanObjectType objectType) {
         variables.put(name, objectType);
+        variables.put(ChineseUtils.toSimplifiedVar(name), objectType);
         return this;
     }
 

@@ -75,4 +75,11 @@ public enum ChineseUtils {
 
         return result.toString();
     }
+
+    public static @NotNull String toSimplifiedVar(String s) {
+        // STUB: whatever, it works
+        if (s.startsWith("「"))
+            return ZhConverterUtil.toSimple(s);
+        return s;
+    }
 }

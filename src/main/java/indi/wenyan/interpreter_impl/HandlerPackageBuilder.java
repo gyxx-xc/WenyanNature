@@ -9,6 +9,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanPackageBuilder;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
@@ -68,6 +69,7 @@ public final class HandlerPackageBuilder {
 
     public HandlerPackageBuilder handler(String name, Supplier<BaseHandleableRequest.IRawRequest> function) {
         functions.put(name, function);
+        functions.put(ChineseUtils.toSimplifiedVar(name), function);
         return this;
     }
 
