@@ -41,12 +41,17 @@ public class WenyanMainVisitor extends WenyanVisitor {
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
         bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
         bytecode.addLoadCode(WenyanPackages.IMPORT_ID);
-        bytecode.add(WenyanCodes.CALL, ctx.IDENTIFIER().size());
+        bytecode.add(WenyanCodes.CALL, 1);
+        if (ctx.prop.isEmpty()) {
+            bytecode.addStoreCode(ctx.name.getText());
+            return true;
+        }
         // stack: id1, id2, ..., package, import
         for (Token id : ctx.prop) {
-            bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanValues.of(id.getText()));
+            bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, id.getText());
             bytecode.addStoreCode(id.getText());
         }
+        bytecode.add(WenyanCodes.POP);
         return true;
     }
 }

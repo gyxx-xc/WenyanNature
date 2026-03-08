@@ -57,14 +57,6 @@ neoForge {
         }
     }
 
-//    parchment {
-//        mappingsVersion = project.parchment_mappings_version
-//        minecraftVersion = project.parchment_minecraft_version
-//    }
-
-    // This line is optional. Access Transformers are automatically detected
-    // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
-
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
@@ -89,6 +81,12 @@ neoForge {
 
         gameTestServer {
             type = "gameTestServer"
+            sourceSet = sourceSets.gameTest
+            loadedMods.add(mods.wenyanTest)
+        }
+
+        gameTestWClient {
+            client()
             sourceSet = sourceSets.gameTest
             loadedMods.add(mods.wenyanTest)
         }

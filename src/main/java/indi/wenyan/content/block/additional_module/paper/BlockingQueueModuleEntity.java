@@ -1,5 +1,6 @@
 package indi.wenyan.content.block.additional_module.paper;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
@@ -19,6 +20,8 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -27,6 +30,8 @@ import java.util.Queue;
  * Provides thread-safe queue operations for synchronization.
  * Uses manual blocking/unblocking mechanism similar to LockModuleEntity.
  */
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class BlockingQueueModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.var("BlockingQueueModule");
@@ -73,6 +78,9 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
 
     private boolean putHandler(IHandleContext context, IArgsRequest request) throws WenyanException {
         IWenyanValue value = extractSingleValueFromRequest(request);
+        if (value == null) {
+            throw new WenyanException("Invalid value for BlockingQueueModule.put");
+        }
 
         if (queue.size() >= capacity) {
             // Queue is full, block the producer thread
@@ -140,7 +148,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
      * Extracts value from request parameters.
      * This is a simplified extraction - adjust based on actual request structure.
      */
-    private IWenyanValue extractSingleValueFromRequest(IArgsRequest request) {
+    private @Nullable IWenyanValue extractSingleValueFromRequest(IArgsRequest request) {
         if (request.args().size() != 1) return null;
         return request.args().getFirst();
     }
