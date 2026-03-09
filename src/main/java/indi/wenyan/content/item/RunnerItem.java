@@ -1,9 +1,9 @@
 package indi.wenyan.content.item;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.client.gui.code_editor.CodeEditorScreen;
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackendSynchronizer;
+import indi.wenyan.client.gui.code_editor.RunnerBlockScreen;
+import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditorBackendSynchronizer;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.RunnerCodePacket;
@@ -12,12 +12,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -59,14 +56,14 @@ public class RunnerItem extends BlockItem {
 //        return Util.makeDescriptionId("item", BuiltInRegistries.ITEM.getKey(this));
 //    }
 
-    @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        if (level.isClientSide()) {
-            openGui(itemstack, player, hand);
-        }
-        return InteractionResult.SUCCESS;
-    }
+//    @Override
+//    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+//        ItemStack itemstack = player.getItemInHand(hand);
+//        if (level.isClientSide()) {
+//            openGui(itemstack, player, hand);
+//        }
+//        return InteractionResult.SUCCESS;
+//    }
 
     // FIXME
     // @Override
@@ -85,14 +82,14 @@ public class RunnerItem extends BlockItem {
     // return super.onDroppedByPlayer(item, player);
     // }
 
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        if (context.getPlayer() == null) return InteractionResult.FAIL;
-        if (context.getPlayer().isShiftKeyDown()) {
-            return super.useOn(context);
-        }
-        return InteractionResult.PASS;
-    }
+//    @Override
+//    public InteractionResult useOn(UseOnContext context) {
+//        if (context.getPlayer() == null) return InteractionResult.FAIL;
+//        if (context.getPlayer().isShiftKeyDown()) {
+//            return super.useOn(context);
+//        }
+//        return InteractionResult.PASS;
+//    }
 
 //    @OnlyIn(Dist.CLIENT)
     private void openGui(ItemStack itemstack, Player player, InteractionHand hand) {
@@ -129,7 +126,7 @@ public class RunnerItem extends BlockItem {
                 return false;
             }
         };
-        var backend = new CodeEditorBackend(List.of(), synchronizer);
-        Minecraft.getInstance().setScreen(new CodeEditorScreen(backend));
+        var backend = new RunnerBlockBackend(List.of(), synchronizer);
+        Minecraft.getInstance().setScreen(new RunnerBlockScreen(backend));
     }
 }

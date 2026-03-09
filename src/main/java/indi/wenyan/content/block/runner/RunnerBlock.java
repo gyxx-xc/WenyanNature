@@ -4,9 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.client.gui.code_editor.CodeEditorScreen;
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackendSynchronizer;
+import indi.wenyan.client.gui.code_editor.RunnerBlockScreen;
+import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditorBackendSynchronizer;
 import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
@@ -150,12 +150,12 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                         entity.getPlatformName(), List.of()));
             }
         }
-        Minecraft.getInstance().setScreen(new CodeEditorScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
+        Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
     }
 
     // @OnlyIn(Dist.CLIENT)
-    private static @NotNull CodeEditorBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos,
-                                                                   List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
+    private static @NotNull RunnerBlockBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos,
+                                                                    List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {
@@ -196,7 +196,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 return runner.isOutputChanged();
             }
         };
-        return new CodeEditorBackend(packageSnippets, synchronizer);
+        return new RunnerBlockBackend(packageSnippets, synchronizer);
     }
 
     // @OnlyIn(Dist.CLIENT)

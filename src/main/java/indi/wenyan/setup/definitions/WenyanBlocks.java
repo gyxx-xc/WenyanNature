@@ -12,6 +12,8 @@ import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.content.block.writing_block.WritingBlock;
+import indi.wenyan.content.block.writing_block.WritingBlockEntity;
 import indi.wenyan.content.item.RunnerItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -53,6 +55,9 @@ public enum WenyanBlocks {
 
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK = WenyanBlocks.DR.registerBlock(PedestalBlock.ID, PedestalBlock::new);
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY = WenyanBlocks.registerEntity(PedestalBlock.ID, PedestalBlockEntity::new, WenyanBlocks.PEDESTAL_BLOCK);
+
+    public static final DeferredBlock<WritingBlock> WRITING_BLOCK = WenyanBlocks.DR.registerBlock(WritingBlock.ID, WritingBlock::new);
+    public static final Supplier<BlockEntityType<WritingBlockEntity>> WRITING_BLOCK_ENTITY = WenyanBlocks.registerEntity(WritingBlock.ID, WritingBlockEntity::new, WenyanBlocks.WRITING_BLOCK);
 
     public static final DeferredBlock<PowerBlock> POWER_BLOCK = WenyanBlocks.DR.registerBlock(PowerBlock.ID, PowerBlock::new);
     public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY = WenyanBlocks.registerEntity(PowerBlock.ID, PowerBlockEntity::new, WenyanBlocks.POWER_BLOCK);

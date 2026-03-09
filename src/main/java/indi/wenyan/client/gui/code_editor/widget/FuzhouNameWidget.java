@@ -1,5 +1,6 @@
 package indi.wenyan.client.gui.code_editor.widget;
 
+import indi.wenyan.client.gui.code_editor.backend.interfaces.TitleBackend;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -14,7 +15,7 @@ public class FuzhouNameWidget extends EditBox {
     private static final String PREFIX = "符名: 「";
     private static final String SUFFIX = "」";
 
-    public FuzhouNameWidget(Font font, int x, int y, int width, int height, Component message) {
+    public FuzhouNameWidget(Font font, int x, int y, int width, int height, Component message, TitleBackend backend) {
         // Shift the actual EditBox to the right to make room for prefix
         // And shift down for bottom alignment
         super(font, x + font.width(PREFIX) + 4, y + 4, width - font.width(PREFIX) - 4, height, message);
@@ -24,6 +25,8 @@ public class FuzhouNameWidget extends EditBox {
         this.fullWidth = width;
         this.setBordered(false);
         this.setTextColor(0xFFFFFF); // White text matches usual Minecraft/Snippet style
+        setValue(backend.getTitle());
+        setResponder(backend::setTitle);
 
         // Formatter only handles text, suffix is rendered manually
 //        this.setFormatter((text, firstCharIndex) -> FormattedCharSequence.forward(text, Style.EMPTY));

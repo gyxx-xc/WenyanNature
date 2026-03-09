@@ -1,4 +1,4 @@
-package indi.wenyan.client.gui.code_editor.backend;
+package indi.wenyan.client.gui.code_editor.backend.behaviour;
 
 import lombok.Setter;
 import lombok.Value;

@@ -2,9 +2,9 @@ package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.Utils;
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.client.gui.code_editor.backend.CodeField;
-import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
+import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -31,7 +31,7 @@ import java.util.Optional;
 // for some historical reasons, only text area work for this situation
 public class PackageSnippetWidget extends AbstractTextAreaWidget {
     private final Font font;
-    private final CodeEditorBackend backend;
+    private final RunnerBlockBackend backend;
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
             Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
@@ -71,7 +71,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
         return Optional.empty();
     }
 
-    public PackageSnippetWidget(Font font, CodeEditorBackend backend, int x, int y, int width, int height) {
+    public PackageSnippetWidget(Font font, RunnerBlockBackend backend, int x, int y, int width, int height) {
         int scrollbarWidth = 4;
         super(x, y, width - scrollbarWidth, height, Component.empty(), new ScrollbarSettings(
                 // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...

@@ -1,6 +1,7 @@
-package indi.wenyan.client.gui.code_editor.backend;
+package indi.wenyan.client.gui.code_editor.backend.behaviour;
 
 import com.google.common.collect.Lists;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,11 +34,11 @@ public class CodeField {
     @Setter
     boolean selecting = false;
 
-    private final CodeEditorBackend backend;
+    private final CodeEditBackend backend;
 
     private final Supplier<Integer> widthUpdater;
 
-    public CodeField(Font font, CodeEditorBackend backend,
+    public CodeField(Font font, CodeEditBackend backend,
                      Supplier<Integer> widthUpdater,
                      Runnable cursorListener
     ) {

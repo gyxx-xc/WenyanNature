@@ -38,12 +38,8 @@ public class ModBlockStateProvider extends ModelSubProvider {
         modeledBlock(WenyanBlocks.POWER_BLOCK);
         modeledBlock(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
 
-//        modeledBlock(WenyanBlocks.LOCK_MODULE_BLOCK);
-        MultiVariant off = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get()));
-        MultiVariant on = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get(), "_1"));
-        blockModels.blockStateOutput.accept(MultiVariantGenerator
-                        .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
-                        .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));
+        writingBlock();
+        lockModuleBlock();
 
         registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_0);
         registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_1);
@@ -89,5 +85,21 @@ public class ModBlockStateProvider extends ModelSubProvider {
         MultiVariant model = plainVariant((new TexturedModel(TextureMapping.defaultTexture(deferredBlock.get()), templete)).create(deferredBlock.get(), blockModels.modelOutput));
         // copy from lever
         blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(deferredBlock.get(), model).with(PropertyDispatch.modify(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING).select(AttachFace.CEILING, Direction.NORTH, X_ROT_180.then(Y_ROT_180)).select(AttachFace.CEILING, Direction.EAST, X_ROT_180.then(Y_ROT_270)).select(AttachFace.CEILING, Direction.SOUTH, X_ROT_180).select(AttachFace.CEILING, Direction.WEST, X_ROT_180.then(Y_ROT_90)).select(AttachFace.FLOOR, Direction.NORTH, NOP).select(AttachFace.FLOOR, Direction.EAST, Y_ROT_90).select(AttachFace.FLOOR, Direction.SOUTH, Y_ROT_180).select(AttachFace.FLOOR, Direction.WEST, Y_ROT_270).select(AttachFace.WALL, Direction.NORTH, X_ROT_90).select(AttachFace.WALL, Direction.EAST, X_ROT_90.then(Y_ROT_90)).select(AttachFace.WALL, Direction.SOUTH, X_ROT_90.then(Y_ROT_180)).select(AttachFace.WALL, Direction.WEST, X_ROT_90.then(Y_ROT_270))));
+    }
+
+    public void writingBlock() {
+        TextureMapping mapping = new TextureMapping()
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(WenyanBlocks.WRITING_BLOCK.get(), "_top"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(WenyanBlocks.WRITING_BLOCK.get(), "_side"));
+        blockModels.blockStateOutput
+                .accept(createSimpleBlock(WenyanBlocks.WRITING_BLOCK.get(), plainVariant(ModelTemplates.CUBE_TOP.create(WenyanBlocks.WRITING_BLOCK.get(), mapping, blockModels.modelOutput))));
+    }
+
+    private void lockModuleBlock() {
+        MultiVariant off = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get()));
+        MultiVariant on = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get(), "_1"));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator
+                .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
+                .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));
     }
 }

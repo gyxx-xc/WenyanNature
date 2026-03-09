@@ -2,9 +2,9 @@ package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.Utils;
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.client.gui.code_editor.backend.CodeField;
-import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import lombok.Setter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public class SnippetWidget extends AbstractTextAreaWidget {
     private final Font font;
-    private final CodeEditorBackend backend;
+    private final CodeEditBackend backend;
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(
             Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "entry"),
@@ -57,7 +57,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
         return Optional.ofNullable(renderingSnippetTooltip);
     }
 
-    public SnippetWidget(Font font, CodeEditorBackend backend, int x, int y, int width, int height) {
+    public SnippetWidget(Font font, CodeEditBackend backend, int x, int y, int width, int height) {
         int scrollbarWidth = 4;
         super(x, y, width, height - scrollbarWidth, Component.empty(), new ScrollbarSettings(
                 // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...

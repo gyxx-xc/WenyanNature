@@ -25,6 +25,10 @@ public enum ModSetup {;
                 Capabilities.Item.BLOCK,
                 WenyanBlocks.PEDESTAL_ENTITY.get(),
                 (be, _) -> be.getItemHandler());
+        event.registerBlockEntity(
+                Capabilities.Item.BLOCK,
+                WenyanBlocks.WRITING_BLOCK_ENTITY.get(),
+                (be, _) -> be.getItemHandler());
     }
 
     /**
@@ -53,6 +57,12 @@ public enum ModSetup {;
         registrar.playToServer(DeviceRenamePacket.TYPE,
                 DeviceRenamePacket.STREAM_CODEC,
                 DeviceRenamePacket.HANDLER);
+        registrar.playToServer(WritingCodePacket.TYPE,
+                WritingCodePacket.STREAM_CODEC,
+                WritingCodePacket.HANDLER);
+        registrar.playToServer(WritingTitlePacket.TYPE,
+                WritingTitlePacket.STREAM_CODEC,
+                WritingTitlePacket.HANDLER);
         registrar.commonToClient(BlockOutputPacket.TYPE,
                 BlockOutputPacket.STREAM_CODEC,
                 BlockOutputPacket.HANDLER);

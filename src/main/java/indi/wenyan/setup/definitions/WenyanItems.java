@@ -9,6 +9,7 @@ import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.power.PowerBlock;
+import indi.wenyan.content.block.writing_block.WritingBlock;
 import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.content.item.FloatNoteItem;
 import indi.wenyan.content.item.RunnerItem;
@@ -68,6 +69,8 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.CRAFTING_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM = DR.registerItem(PedestalBlock.ID,
             properties -> new BlockItem(WenyanBlocks.PEDESTAL_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> WRITING_BLOCK_ITEM = DR.registerItem(WritingBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.WRITING_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> POWER_BLOCK_ITEM = DR.registerItem(PowerBlock.ID,
             properties -> new BlockItem(WenyanBlocks.POWER_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> EXPLOSION_MODULE_BLOCK_ITEM = DR.registerItem(ExplosionModuleBlock.ID,
@@ -137,6 +140,7 @@ public enum WenyanItems {
                 output.accept(FLOAT_NOTE.get());
                 output.accept(CRAFTING_BLOCK_ITEM.get());
                 output.accept(PEDESTAL_BLOCK_ITEM.get());
+                output.accept(WRITING_BLOCK_ITEM.get());
 
                 output.accept(BIT_MODULE_BLOCK_ITEM.get());
                 output.accept(MATH_MODULE_BLOCK_ITEM.get());

@@ -1,7 +1,7 @@
 package indi.wenyan.client.gui.code_editor;
 
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.client.gui.code_editor.backend.SnippetSet;
+import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.widget.*;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
@@ -23,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CodeEditorScreen extends Screen {
+public class RunnerBlockScreen extends Screen {
 
-    private final CodeEditorBackend backend;
+    private final RunnerBlockBackend backend;
 
     public static final int CHARACTER_LIMIT = 16384;
     public static final int TITLE_LENGTH_LIMIT = 18;
@@ -39,7 +39,7 @@ public class CodeEditorScreen extends Screen {
     @SuppressWarnings("FieldCanBeLocal")
     private CodeOutputWidget outputWindow;
 
-    public CodeEditorScreen(CodeEditorBackend backend) {
+    public RunnerBlockScreen(RunnerBlockBackend backend) {
         super(Component.empty());
         this.backend = backend;
     }
@@ -71,21 +71,17 @@ public class CodeEditorScreen extends Screen {
         int titleBarHeight = 15;
         titleBar = new FuzhouNameWidget(font, snippetWidth + 4, 2,
                 width - (snippetWidth + 4) - (packageSnippetWidth + 4), titleBarHeight,
-                Component.literal(""));
+                Component.literal(""), backend);
         titleBar.setTextColor(-1);
         titleBar.setBordered(false);
         titleBar.setMaxLength(18);
-        titleBar.setValue(backend.getTitle());
-        titleBar.setResponder(backend::setTitle);
         addRenderableWidget(titleBar);
 
         int outputWindowHeight = height - titleBarHeight - textFileHeight - 4;
         outputWindow = new CodeOutputWidget(
                 snippetWidth + 4, textFileHeight + titleBarHeight + 4,
                 textFieldWidth, outputWindowHeight,
-                Component.literal(""), font);
-        outputWindow.setOutput(backend.getOutput());
-        backend.setOutputListener(outputWindow::setOutput);
+                Component.literal(""), font, backend);
         addRenderableWidget(outputWindow);
     }
 

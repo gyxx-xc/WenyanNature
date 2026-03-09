@@ -1,6 +1,7 @@
 package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.OutputBackend;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollArea;
@@ -24,9 +25,12 @@ public class CodeOutputWidget extends AbstractTextAreaWidget {
     private int imageWidth = 256;
     private int imageHeight = 142;
 
-    public CodeOutputWidget(int x, int y, int width, int height, Component message, Font font) {
+    public CodeOutputWidget(int x, int y, int width, int height, Component message, Font font, OutputBackend backend) {
         super(x, y, width, height, message, AbstractScrollArea.defaultSettings(9));
         this.multilineWidget = (new MultiLineTextWidget(message, font)).setMaxWidth(this.getWidth() - this.totalInnerPadding());
+        setOutput(backend.getOutput());
+        backend.setOutputListener(this::setOutput);
+
     }
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(

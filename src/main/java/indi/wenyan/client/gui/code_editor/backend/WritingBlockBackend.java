@@ -1,21 +1,24 @@
 package indi.wenyan.client.gui.code_editor.backend;
 
-import indi.wenyan.client.gui.code_editor.CodeEditorScreen;
-import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
+import indi.wenyan.client.gui.code_editor.RunnerBlockScreen;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.generated_Snippets;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.BaseTickBackend;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.TitleBackend;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.WritingBackendSynchronizer;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
-import java.util.function.Consumer;
 
 // the following content will be saved within one gui open (across window resize and init() in screen)
 // but will be removed when screen is closed
-public class CodeEditorBackend {
+public class WritingBlockBackend implements BaseTickBackend, CodeEditBackend, TitleBackend {
     private final DoubleSidedData sidedData;
     // PLAN: change to map[player, cursor] and save
     @Getter
@@ -26,8 +29,6 @@ public class CodeEditorBackend {
     @Getter
     @Setter
     private List<SnippetSet> curSnippets = generated_Snippets.STMT_CONTEXT;
-    @Getter
-    private final List<PackageSnippetWidget.PackageSnippet> packages;
 
     @Setter
     private Runnable cursorListener = () -> {
@@ -35,45 +36,40 @@ public class CodeEditorBackend {
     @Setter
     private Runnable valueListener = () -> {
     };
-    @Setter
-    private Consumer<Deque<Component>> outputListener = _ -> {
-    };
 
-    private final CodeEditorBackendSynchronizer synchronizer;
+    private final WritingBackendSynchronizer synchronizer;
 
-    public CodeEditorBackend(List<PackageSnippetWidget.PackageSnippet> packages,
-                             CodeEditorBackendSynchronizer synchronizer) {
+    public WritingBlockBackend(WritingBackendSynchronizer synchronizer) {
         this.synchronizer = synchronizer;
-        sidedData = new DoubleSidedData(synchronizer.getContent(), synchronizer.getTitle(), synchronizer.getOutput());
-        this.packages = packages;
+        sidedData = new DoubleSidedData(synchronizer.getContent(), synchronizer.getTitle());
     }
 
-    public void tick() {
-        if (synchronizer.isOutputChanged()) {
-            sidedData.output = synchronizer.getOutput();
-            outputListener.accept(sidedData.output);
-        }
-    }
+    @Override
+    public void tick() {}
 
+    @Override
     public void save() {
         synchronizer.sendContent(sidedData.content.toString());
         synchronizer.sendTitle(sidedData.title.toString());
     }
 
+    @Override
     public String getContent() {
         return sidedData.content.toString();
     }
 
+    @Override
     public List<CodeField.Placeholder> getPlaceholders() {
         return sidedData.placeholders;
     }
 
     // following part need to communicated
+    @Override
     public void insertText(String text) {
         if (!text.isEmpty() || selectCursor != cursor) {
             String filteredText = StringUtil.filterText(text.replace("\t", "    "), true);
             String string = StringUtil.truncateStringIfNecessary(filteredText,
-                    CodeEditorScreen.CHARACTER_LIMIT - sidedData.content.length(), false);
+                    RunnerBlockScreen.CHARACTER_LIMIT - sidedData.content.length(), false);
             int beginIndex = Math.min(selectCursor, cursor);
             int endIndex = Math.max(selectCursor, cursor);
             sidedData.content.replace(beginIndex, endIndex, string);
@@ -101,6 +97,7 @@ public class CodeEditorBackend {
         }
     }
 
+    @Override
     public void setCursor(int cursor) {
         if (this.cursor != cursor) {
             this.cursor = cursor;
@@ -108,23 +105,22 @@ public class CodeEditorBackend {
         }
     }
 
+    @Override
     public void setSelectCursor(int selectCursor) {
         if (this.selectCursor != selectCursor) {
             this.selectCursor = selectCursor;
         }
     }
 
+    @Override
     public String getTitle() {
         return sidedData.getTitle().toString();
     }
 
+    @Override
     public void setTitle(String title) {
         sidedData.title.setLength(0);
-        sidedData.title.append(StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
-    }
-
-    public Deque<Component> getOutput() {
-        return sidedData.output;
+        sidedData.title.append(StringUtil.truncateStringIfNecessary(title, RunnerBlockScreen.TITLE_LENGTH_LIMIT, false));
     }
 
     @Data
@@ -132,14 +128,12 @@ public class CodeEditorBackend {
         final StringBuilder content;
         final StringBuilder title;
         final List<CodeField.Placeholder> placeholders = new ArrayList<>();
-        Deque<Component> output;
 
-        public DoubleSidedData(String content, String title, Deque<Component> output) {
+        public DoubleSidedData(String content, String title) {
             this.content = new StringBuilder(
-                    StringUtil.truncateStringIfNecessary(content, CodeEditorScreen.CHARACTER_LIMIT, false));
+                    StringUtil.truncateStringIfNecessary(content, RunnerBlockScreen.CHARACTER_LIMIT, false));
             this.title = new StringBuilder(
-                    StringUtil.truncateStringIfNecessary(title, CodeEditorScreen.TITLE_LENGTH_LIMIT, false));
-            this.output = output;
+                    StringUtil.truncateStringIfNecessary(title, RunnerBlockScreen.TITLE_LENGTH_LIMIT, false));
         }
     }
 }

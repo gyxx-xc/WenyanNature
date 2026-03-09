@@ -2,9 +2,9 @@ package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.Utils;
-import indi.wenyan.client.gui.code_editor.backend.CodeEditorBackend;
-import indi.wenyan.client.gui.code_editor.backend.CodeField;
-import indi.wenyan.client.gui.code_editor.backend.Completion;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.Completion;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
@@ -56,7 +56,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
 
-    private final CodeEditorBackend backend;
+    private final CodeEditBackend backend;
 
     @Getter
     private final CodeField textField;
@@ -64,7 +64,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     private int firstCompletionLine = 0;
     private int selectedCompletion = 0;
 
-    public CodeEditorWidget(Font font, CodeEditorBackend backend,
+    public CodeEditorWidget(Font font, CodeEditBackend backend,
                             int x, int y, int width, int height) {
         super(x + outerPadding.left(), y + outerPadding.top(),
                 width - outerPadding.horizontal(), height - outerPadding.vertical(),
