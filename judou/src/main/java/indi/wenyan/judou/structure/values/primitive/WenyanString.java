@@ -17,7 +17,6 @@ public record WenyanString(String value)
         implements IWenyanWarperValue<String>, IWenyanComputable {
     public static final WenyanType<WenyanString> TYPE = new WenyanType<>("string", WenyanString.class);
 
-    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanBoolean.TYPE) {

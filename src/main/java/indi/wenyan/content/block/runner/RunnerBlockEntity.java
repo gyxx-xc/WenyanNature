@@ -343,9 +343,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private int speedFromTier(int tier) {
         return switch (tier) {
             case 0 -> 1;
-            case 1 -> COMMUNICATE_EFFECT_LIFETIME;
+            case 1 -> 10;
             case 2 -> 100;
             case 3 -> 1000;
+            case 4 -> 10000;
+            case 5 -> 100000;
+            case 6 -> 1000000;
             default -> throw new IllegalArgumentException("invalid tier");
         };
     }

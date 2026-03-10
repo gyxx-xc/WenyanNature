@@ -13,6 +13,8 @@ public enum WenyanCodes {
     CREATE_FNCTION(new CreateFunctionCode()),
     RET(new ReturnCode()),
 
+    CREATE_LIST(new CreateListCode()),
+
     PUSH(new StackCode(StackCode.Operation.PUSH)),
     POP(new StackCode(StackCode.Operation.POP)),
 
