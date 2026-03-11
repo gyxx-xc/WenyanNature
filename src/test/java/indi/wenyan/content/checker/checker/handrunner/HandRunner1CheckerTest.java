@@ -1,7 +1,7 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.checker.handrunner;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.checker.ink.StarlightInkChecker;
+import indi.wenyan.content.checker.handrunner.HandRunner1Checker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -12,41 +12,39 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class StarlightInkCheckerTest {
+class HandRunner1CheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "0, 1", // n = 1 (input=0) -> 1! = 1
-            "1, 3", // n = 2 (input=1) -> 1! + 2! = 3
-            "2, 9", // n = 3 (input=2) -> 1! + 2! + 3! = 9
-            "3, 33", // n = 4 (input=3) -> 1! + 2! + 3! + 4! = 33
-            "4, 153" // n = 5 (input=4) -> 1! + 2! + 3! + 4! + 5! = 153
+            "10, 5, true",
+            "5, 10, false",
+            "5, 5, false"
     })
-    void testCorrectAnswer(int input, long expectedSum) throws WenyanException {
+    void testCorrectAnswer(int a, int b, boolean expected) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
-                .addSeq(input)
+                .addSeq(a, b)
                 .build();
-        StarlightInkChecker checker = new StarlightInkChecker(random);
+        HandRunner1Checker checker = new HandRunner1Checker(random);
         checker.init();
 
-        checker.accept(WenyanValues.of(expectedSum));
+        checker.accept(WenyanValues.of(expected));
         Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @ParameterizedTest
     @CsvSource({
-            "0, 2",
-            "1, 4",
-            "2, 10"
+            "10, 5, false",
+            "5, 10, true",
+            "5, 5, true"
     })
-    void testWrongAnswer(int input, long wrongSum) throws WenyanException {
+    void testWrongAnswer(int a, int b, boolean wrong) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
-                .addSeq(input)
+                .addSeq(a, b)
                 .build();
-        StarlightInkChecker checker = new StarlightInkChecker(random);
+        HandRunner1Checker checker = new HandRunner1Checker(random);
         checker.init();
 
-        checker.accept(WenyanValues.of(wrongSum));
+        checker.accept(WenyanValues.of(wrong));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }

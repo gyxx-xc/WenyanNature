@@ -1,7 +1,7 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.checker.paper;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.checker.handrunner.HandRunner1Checker;
+import indi.wenyan.content.checker.paper.BambooPaperChecker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -12,19 +12,19 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class HandRunner1CheckerTest {
+class BambooPaperCheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "10, 5, true",
-            "5, 10, false",
-            "5, 5, false"
+            "10, 20, 30",
+            "0, 0, 0",
+            "99, 1, 100"
     })
-    void testCorrectAnswer(int a, int b, boolean expected) throws WenyanException {
+    void testCorrectAnswer(int a, int b, long expected) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(a, b)
                 .build();
-        HandRunner1Checker checker = new HandRunner1Checker(random);
+        BambooPaperChecker checker = new BambooPaperChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(expected));
@@ -33,15 +33,15 @@ class HandRunner1CheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "10, 5, false",
-            "5, 10, true",
-            "5, 5, true"
+            "10, 20, 31",
+            "0, 0, 1",
+            "99, 1, 99"
     })
-    void testWrongAnswer(int a, int b, boolean wrong) throws WenyanException {
+    void testWrongAnswer(int a, int b, long wrong) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(a, b)
                 .build();
-        HandRunner1Checker checker = new HandRunner1Checker(random);
+        BambooPaperChecker checker = new BambooPaperChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(wrong));

@@ -1,7 +1,7 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.checker.ink;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.checker.paper.CloudPaperChecker;
+import indi.wenyan.content.checker.ink.StarlightInkChecker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -12,26 +12,24 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CloudPaperCheckerTest {
+class StarlightInkCheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "0, 1",
-            "1, 3",
-            "2, 5",
-            "3, 8",
-            "4, 11",
-            "5, 14",
-            "9, 30"
+            "0, 1", // n = 1 (input=0) -> 1! = 1
+            "1, 3", // n = 2 (input=1) -> 1! + 2! = 3
+            "2, 9", // n = 3 (input=2) -> 1! + 2! + 3! = 9
+            "3, 33", // n = 4 (input=3) -> 1! + 2! + 3! + 4! = 33
+            "4, 153" // n = 5 (input=4) -> 1! + 2! + 3! + 4! + 5! = 153
     })
-    void testCorrectAnswer(int input, long expectedCoins) throws WenyanException {
+    void testCorrectAnswer(int input, long expectedSum) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(input)
                 .build();
-        CloudPaperChecker checker = new CloudPaperChecker(random);
+        StarlightInkChecker checker = new StarlightInkChecker(random);
         checker.init();
 
-        checker.accept(WenyanValues.of(expectedCoins));
+        checker.accept(WenyanValues.of(expectedSum));
         Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
@@ -39,18 +37,16 @@ class CloudPaperCheckerTest {
     @CsvSource({
             "0, 2",
             "1, 4",
-            "2, 6",
-            "3, 9",
-            "9, 31"
+            "2, 10"
     })
-    void testWrongAnswer(int input, long wrongCoins) throws WenyanException {
+    void testWrongAnswer(int input, long wrongSum) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(input)
                 .build();
-        CloudPaperChecker checker = new CloudPaperChecker(random);
+        StarlightInkChecker checker = new StarlightInkChecker(random);
         checker.init();
 
-        checker.accept(WenyanValues.of(wrongCoins));
+        checker.accept(WenyanValues.of(wrongSum));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }

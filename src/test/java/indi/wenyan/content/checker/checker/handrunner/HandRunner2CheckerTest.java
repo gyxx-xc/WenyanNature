@@ -1,4 +1,4 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.checker.handrunner;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.handrunner.HandRunner2Checker;

@@ -1,7 +1,7 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.checker.paper;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.checker.paper.BambooPaperChecker;
+import indi.wenyan.content.checker.paper.CloudPaperChecker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -12,39 +12,45 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class BambooPaperCheckerTest {
+class CloudPaperCheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "10, 20, 30",
-            "0, 0, 0",
-            "99, 1, 100"
+            "0, 1",
+            "1, 3",
+            "2, 5",
+            "3, 8",
+            "4, 11",
+            "5, 14",
+            "9, 30"
     })
-    void testCorrectAnswer(int a, int b, long expected) throws WenyanException {
+    void testCorrectAnswer(int input, long expectedCoins) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
-                .addSeq(a, b)
+                .addSeq(input)
                 .build();
-        BambooPaperChecker checker = new BambooPaperChecker(random);
+        CloudPaperChecker checker = new CloudPaperChecker(random);
         checker.init();
 
-        checker.accept(WenyanValues.of(expected));
+        checker.accept(WenyanValues.of(expectedCoins));
         Assertions.assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult());
     }
 
     @ParameterizedTest
     @CsvSource({
-            "10, 20, 31",
-            "0, 0, 1",
-            "99, 1, 99"
+            "0, 2",
+            "1, 4",
+            "2, 6",
+            "3, 9",
+            "9, 31"
     })
-    void testWrongAnswer(int a, int b, long wrong) throws WenyanException {
+    void testWrongAnswer(int input, long wrongCoins) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
-                .addSeq(a, b)
+                .addSeq(input)
                 .build();
-        BambooPaperChecker checker = new BambooPaperChecker(random);
+        CloudPaperChecker checker = new CloudPaperChecker(random);
         checker.init();
 
-        checker.accept(WenyanValues.of(wrong));
+        checker.accept(WenyanValues.of(wrongCoins));
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }
