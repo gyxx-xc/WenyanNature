@@ -3,7 +3,11 @@ package indi.wenyan.client.block.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.client.block.renderer.utils.ICommunicateRendererState;
+import indi.wenyan.client.block.renderer.utils.RenderUtils;
+import indi.wenyan.content.block.ICommunicateEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import lombok.Getter;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -17,12 +21,11 @@ import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
-import java.util.Map;
+import java.util.Collection;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 
@@ -36,18 +39,6 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
     public static final float UV_OFFSET = 0.25F;
 
     public RunnerBlockRender(BlockEntityRendererProvider.Context ignore) {
-    }
-
-    private void renderCommunications(RunnerBlockRenderState state, CameraRenderState cameraState, PoseStack poseStack, SubmitNodeCollector collector) {
-        if (state.communications.isEmpty()) return;
-        poseStack.pushPose();
-        poseStack.translate(0.5F, 0.5F, 0.5F);
-        Vector3f cameraOriebtation = new Vector3f(0, 0, -1).rotate(cameraState.orientation);
-        for (var entry : state.communications.entrySet()) {
-            float time = entry.getValue() + state.partialTicks;
-            RenderUtils.renderCommunicate(poseStack, collector, cameraOriebtation, entry.getKey(), time, state.lightCoords);
-        }
-        poseStack.popPose();
     }
 
     private void renderStatus(RunnerBlockRenderState state, PoseStack poseStack, SubmitNodeCollector collector) {
@@ -83,20 +74,29 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
             default -> throw new IllegalStateException("Unexpected value: " + face);
         };
         state.stateOffset = UV_OFFSET * be.getBlockState().getValue(RUNNING_STATE).getUvOrder();
-        state.communications = be.getCommunications();
+        state.communicates = be.getCommunicates();
         state.partialTicks = partialTicks;
     }
 
     @Override
     public void submit(RunnerBlockRenderState runnerBlockRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
-        renderCommunications(runnerBlockRenderState, cameraRenderState, poseStack, submitNodeCollector);
+        runnerBlockRenderState.renderCommunicates(poseStack, submitNodeCollector, cameraRenderState);
         renderStatus(runnerBlockRenderState, poseStack, submitNodeCollector);
     }
 
-    public static class RunnerBlockRenderState extends BlockEntityRenderState {
+    public static class RunnerBlockRenderState extends BlockEntityRenderState implements ICommunicateRendererState {
         public Quaternionf face;
         public float stateOffset;
-        public Map<Vector3f, Integer> communications;
+
+        @Getter
+        private Collection<ICommunicateEntity.CommunicationEffect> communicates;
+
+        @Getter
         public float partialTicks;
+
+        @Override
+        public int getLightCoords() {
+            return lightCoords;
+        }
     }
 }

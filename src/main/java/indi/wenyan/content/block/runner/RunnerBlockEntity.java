@@ -3,6 +3,7 @@ package indi.wenyan.content.block.runner;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.DataBlockEntity;
+import indi.wenyan.content.block.ICommunicateEntity;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
@@ -45,7 +46,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
-import org.joml.Vector3f;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
@@ -54,9 +54,8 @@ import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
+public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform, ICommunicateEntity {
     public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
-    public static final int COMMUNICATE_EFFECT_LIFETIME = 12;
     public static final String ID = "runner_block_entity";
     private IWenyanProgram optionalProgram = null;
 
@@ -86,7 +85,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private String platformName = Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString();
 
     @Getter
-    private final Map<Vector3f, Integer> communications = new HashMap<>();
+    private final List<CommunicationEffect> communicates = new ArrayList<>();
 
     @Override
     public WenyanPackage initEnvironment() {
@@ -156,14 +155,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 updateShowingState(runningState);
             }, () -> updateShowingState(RunnerBlock.RunningState.NOT_RUNNING));
         } else {
-            var iterator = communications.entrySet().iterator();
-            while (iterator.hasNext()) {
-                var entry = iterator.next();
-                if (entry.getValue() > COMMUNICATE_EFFECT_LIFETIME)
-                    iterator.remove();
-                else
-                    entry.setValue(entry.getValue() + 1);
-            }
+            tickUpdate();
         }
     }
 
@@ -191,13 +183,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             return;
         }
         newThread(code);
-    }
-
-    public void setCommunicate(BlockPos to) {
-        if (level == null || !level.isClientSide()) {
-            return;
-        }
-        communications.put(to.getCenter().toVector3f().sub(getBlockPos().getCenter().toVector3f()), 0);
     }
 
     public static final String PAGES_ID = "pages";
@@ -307,7 +292,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (getLevel() instanceof ServerLevel sl) {
             PacketDistributor.sendToPlayersTrackingChunk(sl,
                     ChunkPos.containing(getBlockPos()),
-                    new CommunicationLocationPacket(getBlockPos(), blockPos)
+                    new CommunicationLocationPacket(getBlockPos(), blockPos.subtract(getBlockPos()))
             );
         }
     }

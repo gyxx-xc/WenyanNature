@@ -1,6 +1,7 @@
 package indi.wenyan.content.block.additional_module.block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.content.block.ICommunicateEntity;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,11 +34,11 @@ import java.util.Map;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class FormationCoreModuleEntity extends AbstractModuleEntity {
+public class FormationCoreModuleEntity extends AbstractModuleEntity implements ICommunicateEntity {
 
     private final Map<String, RunnerBlockEntity> platforms = new HashMap<>();
     @Getter
-    private final List<CommunicationEffect> effects = new ArrayList<>();
+    private final List<ICommunicateEntity.CommunicationEffect> communicates = new ArrayList<>();
     private static final int RANGE = 10;
 
     public FormationCoreModuleEntity(BlockPos pos, BlockState blockState) {
@@ -54,6 +54,9 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
                 for (var arg : request.args()) {
                     var block = getRunner(arg.as(WenyanString.TYPE).value());
                     if (block == null) throw new WenyanException("can't find fu");
+                    if (level instanceof ServerLevel serverLevel)
+                        PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(getBlockPos()),
+                                new CommunicationLocationPacket(getBlockPos(), block.getBlockPos().subtract(getBlockPos())));
                     block.newThread()
                             .orElseThrow(() -> new WenyanException("can't start"));
                 }
@@ -108,9 +111,6 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
             if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform &&
                     runnerName.equals(platform.getPlatformName())) {
                 platforms.put(runnerName, platform);
-                if (level instanceof ServerLevel serverLevel)
-                    PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(getBlockPos()),
-                            new CommunicationLocationPacket(getBlockPos(), pos.subtract(getBlockPos())));
                 return platform;
             }
         }
@@ -133,13 +133,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         super.tick(level, pos, state);
-        effects.removeIf(communicationEffect ->
-                communicationEffect.life-- <= 0
-        );
-    }
-
-    public void setCommunicate(BlockPos pos) {
-        effects.add(new CommunicationEffect(new Vector3f(pos.getX(), pos.getY(), pos.getZ())));
+        ICommunicateEntity.super.tickUpdate();
     }
 
     public record WenyanRunningState(RunnerBlock.RunningState value)
@@ -172,15 +166,6 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
                 case ERROR -> "error";
                 case NOT_RUNNING -> "not_running";
             };
-        }
-    }
-
-    public static class CommunicationEffect {
-        public final Vector3f pos;
-        public int life = 14;
-
-        public CommunicationEffect(Vector3f pos) {
-            this.pos = pos;
         }
     }
 }

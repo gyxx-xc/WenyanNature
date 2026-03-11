@@ -1,8 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.additional_module.block.FormationCoreModuleEntity;
-import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.content.block.ICommunicateEntity;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,10 +41,8 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Block
     public static final IPayloadHandler<CommunicationLocationPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.from());
-            if (entity instanceof RunnerBlockEntity runner) {
-                runner.setCommunicate(packet.to());
-            } else if (entity instanceof FormationCoreModuleEntity core) {
-                core.setCommunicate(packet.to());
+            if (entity instanceof ICommunicateEntity runner) {
+                runner.addCommunicate(packet.to());
             }
         }
     };
