@@ -39,7 +39,7 @@ class BambooPaperCheckerTest {
             "50, -50, 101",
             "0, 0, -10"
     })
-    void testWrongAnswer(int a, int b, String wrong) throws WenyanException {
+    void testWrongAnswer(int a, int b, long wrong) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(a, b)
                 .build();
@@ -47,6 +47,26 @@ class BambooPaperCheckerTest {
         checker.init();
 
         checker.accept(WenyanValues.of(wrong));
+        assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1, 2, '3'",
+            "1, 2, '\n'",
+            "1, 2, 'abc'"
+    })
+    void testInvalidType(int a, int b, String wrongStr) throws WenyanException {
+        RandomSource random = MockRandomSource.InputBuilder.create()
+                .addSeq(a, b)
+                .build();
+        BambooPaperChecker checker = new BambooPaperChecker(random);
+        checker.init();
+
+        // Remove the single quotes wrapping the value
+        String actualStr = wrongStr.startsWith("'") ? wrongStr.substring(1, wrongStr.length() - 1) : wrongStr;
+        checker.accept(WenyanValues.of(actualStr));
+        
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());
     }
 }

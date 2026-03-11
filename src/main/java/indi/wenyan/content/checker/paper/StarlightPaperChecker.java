@@ -6,6 +6,8 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
+import java.math.BigInteger;
+
 public class StarlightPaperChecker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
@@ -16,8 +18,19 @@ public class StarlightPaperChecker extends CraftingAnswerChecker {
     @Override
     public void init() {
         super.init();
-        // TODO: Implement specific initialization logic and answer generation
-        ans = WenyanValues.of(0);
+
+        int n = random.nextInt(19) + 1; // 1 <= n <= 20
+        setVariable(0, WenyanValues.of(n));
+
+        long sum = 0;
+        long currentFactorial = 1;
+
+        for (int i = 1; i <= n; i++) {
+            currentFactorial = currentFactorial*i;
+            sum += currentFactorial;
+        }
+
+        ans = WenyanValues.of(sum);
     }
 
     @Override

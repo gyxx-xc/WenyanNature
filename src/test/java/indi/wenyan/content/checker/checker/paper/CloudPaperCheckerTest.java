@@ -22,7 +22,8 @@ class CloudPaperCheckerTest {
             "3, 8",
             "4, 11",
             "5, 14",
-            "9, 30"
+            "9, 30",
+            "999,29820"
     })
     void testCorrectAnswer(int input, long expectedCoins) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()

@@ -16,11 +16,12 @@ class StarlightInkCheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "0, 1", // n = 1 (input=0) -> 1! = 1
-            "1, 3", // n = 2 (input=1) -> 1! + 2! = 3
-            "2, 9", // n = 3 (input=2) -> 1! + 2! + 3! = 9
-            "3, 33", // n = 4 (input=3) -> 1! + 2! + 3! + 4! = 33
-            "4, 153" // n = 5 (input=4) -> 1! + 2! + 3! + 4! + 5! = 153
+            "0, 1",
+            "1, 3",
+            "2, 9",
+            "3, 33",
+            "4, 153",
+            "19, 2561327494111820313"
     })
     void testCorrectAnswer(int input, long expectedSum) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
