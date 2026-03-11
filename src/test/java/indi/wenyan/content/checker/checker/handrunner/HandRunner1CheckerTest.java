@@ -16,8 +16,9 @@ class HandRunner1CheckerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "10, 5, true",
-            "5, 10, false",
+            "90, 5, true",
+            "5, -10, true",
+            "-5, 0, false",
             "5, 5, false"
     })
     void testCorrectAnswer(int a, int b, boolean expected) throws WenyanException {
@@ -35,7 +36,8 @@ class HandRunner1CheckerTest {
     @CsvSource({
             "10, 5, false",
             "5, 10, true",
-            "5, 5, true"
+            "0, 0, true",
+            "-5,0, true"
     })
     void testWrongAnswer(int a, int b, boolean wrong) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
