@@ -1,4 +1,4 @@
-package indi.wenyan.content.checker.ink;
+package indi.wenyan.content.checker.checker.ink;
 
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
@@ -26,8 +26,8 @@ public class StarlightInkChecker extends CraftingAnswerChecker {
         int n = random.nextInt(20) + 1;
         setVariable(0, WenyanValues.of(n));
 
-        Long sum = 0L;
-        Long factorial = 1L;
+        long sum = 0L;
+        long factorial = 1L;
         for (int i = 1; i <= n; i++) {
             factorial = factorial * i;
             sum = sum + factorial;

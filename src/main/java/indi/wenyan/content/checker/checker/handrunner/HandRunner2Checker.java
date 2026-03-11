@@ -1,4 +1,4 @@
-package indi.wenyan.content.checker.handrunner;
+package indi.wenyan.content.checker.checker.handrunner;
 
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;

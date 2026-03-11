@@ -1,33 +1,30 @@
-package indi.wenyan.content.checker.paper;
+package indi.wenyan.content.checker.checker.ink;
 
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 /**
- * PlusChecker is a simple checker that verifies if the input matches the sum of two randomly generated integers.
- * It initializes two random integers as inputs and checks if the input matches their sum.
+ * PlusChecker is a simple checker that verifies if the input matches the sum of
+ * two randomly generated integers.
+ * It initializes two random integers as inputs and checks if the input matches
+ * their sum.
  * <p>
  * output var0 + var1
  */
-public class BambooPaperChecker extends CraftingAnswerChecker {
+public class BambooInkChecker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public BambooPaperChecker(RandomSource random) {
+    public BambooInkChecker(RandomSource random) {
         super(random);
     }
 
     @Override
     public void init() {
         super.init();
-        int a = random.nextInt(100);
-        int b = random.nextInt(100);
-        setVariable(0, WenyanValues.of(a));
-        setVariable(1, WenyanValues.of(b));
-        ans = WenyanValues.of((long) a + b);
+        ans = WenyanValues.of("吾有一術");
     }
 
     @Override

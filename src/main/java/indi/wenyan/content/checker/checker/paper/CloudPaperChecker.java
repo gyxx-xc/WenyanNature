@@ -1,4 +1,4 @@
-package indi.wenyan.content.checker.paper;
+package indi.wenyan.content.checker.checker.paper;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;

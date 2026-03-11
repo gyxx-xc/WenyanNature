@@ -1,15 +1,16 @@
-package indi.wenyan.content.checker.handrunner;
+package indi.wenyan.content.checker.checker.ink;
 
+import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-public class HandRunner3Checker extends CraftingAnswerChecker {
+public class CelestialInkChecker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public HandRunner3Checker(RandomSource random) {
+    public CelestialInkChecker(RandomSource random) {
         super(random);
     }
 
@@ -24,12 +25,12 @@ public class HandRunner3Checker extends CraftingAnswerChecker {
     public void accept(IWenyanValue value) throws WenyanException {
         try {
             if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
+                setResult(IAnsweringChecker.ResultStatus.ANSWER_CORRECT);
             } else {
-                setResult(ResultStatus.WRONG_ANSWER);
+                setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
             }
         } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
+            setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
             throw new WenyanException(e.getMessage());
         }
     }

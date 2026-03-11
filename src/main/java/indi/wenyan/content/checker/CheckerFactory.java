@@ -1,9 +1,10 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.checker.checker.*;
-import indi.wenyan.content.checker.handrunner.*;
-import indi.wenyan.content.checker.ink.*;
-import indi.wenyan.content.checker.paper.*;
+import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.checker.EchoChecker;
+import indi.wenyan.content.checker.checker.handrunner.*;
+import indi.wenyan.content.checker.checker.ink.*;
+import indi.wenyan.content.checker.checker.paper.*;
 import indi.wenyan.judou.structure.WenyanException;
 import net.minecraft.util.RandomSource;
 

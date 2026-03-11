@@ -1,7 +1,6 @@
 package indi.wenyan.content.checker.checker.handrunner;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.checker.handrunner.HandRunner1Checker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;

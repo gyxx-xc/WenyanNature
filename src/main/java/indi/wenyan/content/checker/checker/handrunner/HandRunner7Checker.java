@@ -1,4 +1,4 @@
-package indi.wenyan.content.checker.handrunner;
+package indi.wenyan.content.checker.checker.handrunner;
 
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
@@ -102,7 +102,7 @@ public class HandRunner7Checker extends CraftingAnswerChecker {
                 case "「终」" -> new Position(endX + 1, endY + 1);
                 case "「長」" -> WenyanValues.of(MAX_X);
                 case "「寬」" -> WenyanValues.of(MAX_Y);
-                case "「尋路」" -> new WenyanInlineJavacall(((self, args) -> {
+                case "「尋路」" -> new WenyanInlineJavacall(((_, args) -> {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return WenyanValues.of(!isWall(x - 1, y - 1));
                     } else {
