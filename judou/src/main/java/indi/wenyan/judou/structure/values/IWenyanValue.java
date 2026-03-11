@@ -7,7 +7,6 @@ import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.jetbrains.annotations.Nullable;
@@ -201,7 +200,6 @@ public interface IWenyanValue {
         if (type == IWenyanNumber.TYPE) return WenyanValues.of(0);
         if (type == WenyanBoolean.TYPE) return WenyanValues.of(false);
         if (type == WenyanString.TYPE) return WenyanValues.of("");
-        if (type == WenyanList.TYPE) return new WenyanList();
         throw new WenyanUnreachedException();
     }
 }

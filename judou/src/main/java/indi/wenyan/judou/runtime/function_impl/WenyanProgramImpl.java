@@ -195,7 +195,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     private void submitThread(@NotNull IThreadHolder<PCB> runner) {
         var thread = runner.getThread();
-        executor.submit(() -> {
+        executor.execute(() -> {
             startWatchdog(thread);
             try {
                 thread.getRunner().run(SLICE_STEP);

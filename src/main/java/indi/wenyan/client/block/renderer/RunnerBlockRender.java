@@ -25,19 +25,14 @@ import java.awt.*;
 import java.util.Map;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
-import static indi.wenyan.content.block.runner.RunnerBlockEntity.COMMUNICATE_EFFECT_LIFETIME;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity, RunnerBlockRender.RunnerBlockRenderState> {
     private static final Identifier STATUE_TEXTURE_LOCATION =
             Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/state_icon.png");
-    private static final Identifier COMMUNICATION_TEXTURE_LOCATION =
-            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/lazer.png");
     private static final RenderType RENDER_TYPE =
             RenderTypes.entityTranslucent(STATUE_TEXTURE_LOCATION);
-    private static final RenderType COMMUNICATION_RENDER_TYPE =
-            RenderTypes.entityTranslucent(COMMUNICATION_TEXTURE_LOCATION);
     public static final float UV_OFFSET = 0.25F;
 
     public RunnerBlockRender(BlockEntityRendererProvider.Context ignore) {
@@ -49,22 +44,8 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
         poseStack.translate(0.5F, 0.5F, 0.5F);
         Vector3f cameraOriebtation = new Vector3f(0, 0, -1).rotate(cameraState.orientation);
         for (var entry : state.communications.entrySet()) {
-            poseStack.pushPose();
             float time = entry.getValue() + state.partialTicks;
-            double adsr = RenderUtils.adsr(2, 1, 2, 0.7, 4, time, COMMUNICATE_EFFECT_LIFETIME - 4);
-            int emissiveLight = LightCoordsUtil.addSmoothBlockEmission(state.lightCoords, (float) adsr);
-            int alpha = (int) (255 * adsr);
-            double fadeLength = time > COMMUNICATE_EFFECT_LIFETIME - 4 ?
-                    (time - COMMUNICATE_EFFECT_LIFETIME) / 4 + 1.0 : 0.0;
-            double length = time < 2 ? time / 2 : 1.0;
-            RenderUtils.shootLine(poseStack, cameraOriebtation, entry.getKey(), fadeLength, length, 0.1F);
-            collector.submitCustomGeometry(poseStack, COMMUNICATION_RENDER_TYPE, (pose, vertexConsumer) -> RenderUtils.quad(
-                    vertexConsumer, pose,
-                    -1.0F, 0F, 1.0F, 1.0F,
-                    Color.WHITE, alpha,
-                    0, 0, 1, 1,
-                    emissiveLight));
-            poseStack.popPose();
+            RenderUtils.renderCommunicate(poseStack, collector, cameraOriebtation, entry.getKey(), time, state.lightCoords);
         }
         poseStack.popPose();
     }

@@ -50,6 +50,8 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
 
     private boolean willPause = false;
 
+    private int recursionDepth = 0;
+
     private WenyanRunner(WenyanRuntime mainRuntime, WenyanPackage globals, @Nullable List<String> exportedIdentifier) {
         this.exportedIdentifier = exportedIdentifier;
         this.globals = globals;
@@ -157,6 +159,11 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
      * @param runtime The runtime to add
      */
     public void call(WenyanRuntime runtime) {
+        recursionDepth ++;
+        if (recursionDepth > 3000) {
+            dieWithException(new WenyanException("递归深度过深"));
+            return;
+        }
         currentRuntime = runtime;
     }
 
@@ -164,6 +171,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
      * Removes the top runtime environment from the stack.
      */
     public void ret() throws WenyanUnreachedException {
+        recursionDepth --;
         var returnRuntime = currentRuntime.getReturnRuntime();
         if (returnRuntime == null) {
             die();

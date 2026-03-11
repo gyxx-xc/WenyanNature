@@ -12,6 +12,7 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
+import indi.wenyan.judou.structure.values.warper.WenyanList;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanPackages;
@@ -71,10 +72,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
         for (int i = 0; i < n; i++) {
             if (ctx.d.isEmpty()) {
-                try {
-                    bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
-                } catch (WenyanException e) {
-                    throw new WenyanCompileException(e.getMessage(), ctx);
+                if (type == WenyanList.TYPE) bytecode.add(WenyanCodes.CREATE_LIST);
+                else {
+                    try {
+                        bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
+                    } catch (WenyanException e) {
+                        throw new WenyanCompileException(e.getMessage(), ctx);
+                    }
                 }
             } else {
                 visit(ctx.d.get(i));
@@ -297,11 +301,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         try {
             for (WenyanRParser.Object_property_defineContext variable : ctx.object_property_define()) {
+                WenyanType<?> type = WenyanDataParser.parseType(variable.type().getText());
                 if (variable.data() != null) {
                     visit(variable.data());
-                    bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(variable.type().getText()).ordinal());
+                    bytecode.add(WenyanCodes.CAST, type.ordinal());
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(WenyanDataParser.parseType(variable.type().getText())));
+                    if (type == WenyanList.TYPE) bytecode.add(WenyanCodes.CREATE_LIST);
+                    else bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
                 }
                 bytecode.add(WenyanCodes.STORE_STATIC_ATTR, variable.IDENTIFIER().getText());
             }

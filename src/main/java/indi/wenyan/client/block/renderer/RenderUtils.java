@@ -2,7 +2,13 @@ package indi.wenyan.client.block.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import indi.wenyan.WenyanProgramming;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -10,6 +16,11 @@ import java.awt.*;
 
 public enum RenderUtils {
     ;
+
+    public static final Identifier COMMUNICATION_TEXTURE_LOCATION =
+            Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/lazer.png");
+    private static final RenderType COMMUNICATION_RENDER_TYPE =
+            RenderTypes.entityTranslucentCullItemTarget(COMMUNICATION_TEXTURE_LOCATION);
 
     public static void shootLine(PoseStack poseStack, Vector3f lookVector, Vector3f direction, double start, double end, float radious) {
         var newY = direction.mul((float) end, new Vector3f());
@@ -79,5 +90,23 @@ public enum RenderUtils {
         } else {
             return 0.0;
         }
+    }
+
+    public static void renderCommunicate(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Vector3f lookVector, Vector3f pos, float time, int lightCoords) {
+        poseStack.pushPose();
+        double adsr = adsr(2, 1, 2, 0.7, 4, time, 14 - 4);
+        int emissiveLight = LightCoordsUtil.addSmoothBlockEmission(lightCoords, (float) adsr);
+        int alpha = (int) (255 * adsr);
+        double fadeLength = time > 14 - 4 ?
+                (time - 14) / 4 + 1.0 : 0.0;
+        double length = time < 2 ? time / 2 : 1.0;
+        shootLine(poseStack, lookVector, pos, fadeLength, length, 0.1F);
+        submitNodeCollector.submitCustomGeometry(poseStack, COMMUNICATION_RENDER_TYPE, (pose, vertexConsumer) -> quad(
+                vertexConsumer, pose,
+                -1.0F, 0F, 1.0F, 1.0F,
+                Color.WHITE, alpha,
+                0, 0, 1, 1,
+                emissiveLight));
+        poseStack.popPose();
     }
 }

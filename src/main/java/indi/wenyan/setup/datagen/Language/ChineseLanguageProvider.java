@@ -67,6 +67,7 @@ public class ChineseLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.PEDESTAL_BLOCK_ITEM.get(), "基石");
         addBlockAndItem(WenyanItems.WRITING_BLOCK_ITEM.get(), "刻印台");
         addBlockAndItem(WenyanItems.POWER_BLOCK_ITEM.get(), "算核");
+        addBlockAndItem(WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get(), "阵眼");
 
         add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
         add(WenyanItems.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
