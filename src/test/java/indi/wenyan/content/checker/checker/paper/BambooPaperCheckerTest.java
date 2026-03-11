@@ -32,12 +32,14 @@ class BambooPaperCheckerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
+    @CsvSource(value = {
             "10, 20, 31",
             "0, 0, 1",
-            "99, 1, 99"
+            "99, 1, 99",
+            "50, -50, 101",
+            "0, 0, -10"
     })
-    void testWrongAnswer(int a, int b, long wrong) throws WenyanException {
+    void testWrongAnswer(int a, int b, String wrong) throws WenyanException {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(a, b)
                 .build();

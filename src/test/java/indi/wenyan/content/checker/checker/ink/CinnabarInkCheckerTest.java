@@ -32,7 +32,7 @@ class CinnabarInkCheckerTest {
                 .addLong(input - 1)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(expectedDays));
@@ -55,7 +55,7 @@ class CinnabarInkCheckerTest {
                 .addLong(input - 1)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(wrongDays));
@@ -68,7 +68,7 @@ class CinnabarInkCheckerTest {
                 .addLong(100L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         assertNotNull(checker.getArgs(), "Arguments should not be null after initialization");
@@ -83,7 +83,7 @@ class CinnabarInkCheckerTest {
                 .addLong(0L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         long a = checker.getArgs().getAttribute("「甲」").as(WenyanInteger.TYPE).value();
@@ -99,7 +99,7 @@ class CinnabarInkCheckerTest {
                 .addLong(1_000_000_000L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         long a = checker.getArgs().getAttribute("「甲」").as(WenyanInteger.TYPE).value();
@@ -115,7 +115,7 @@ class CinnabarInkCheckerTest {
                 .addLong(100L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(0L));
@@ -128,7 +128,7 @@ class CinnabarInkCheckerTest {
                 .addLong(100L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(-1L));
@@ -141,7 +141,7 @@ class CinnabarInkCheckerTest {
                 .addLong(8L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(3L));
@@ -161,7 +161,7 @@ class CinnabarInkCheckerTest {
                     .addLong(powersOfTwo[i])
                     .build();
 
-            CinnabarInkChecker checker = new CinnabarInkChecker(random);
+            IAnsweringChecker checker = new CinnabarInkChecker(random);
             checker.init();
 
             checker.accept(WenyanValues.of((long) expectedDays[i]));
@@ -176,7 +176,7 @@ class CinnabarInkCheckerTest {
                 .addLong(15L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(5L));
@@ -189,7 +189,7 @@ class CinnabarInkCheckerTest {
                 .addLong(100L)
                 .build();
 
-        CinnabarInkChecker checker = new CinnabarInkChecker(random);
+        IAnsweringChecker checker = new CinnabarInkChecker(random);
 
         assertNull(checker.getResult(), "Should be null before init");
 
