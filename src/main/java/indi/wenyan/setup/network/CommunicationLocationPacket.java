@@ -13,7 +13,7 @@ import net.neoforged.neoforge.network.handling.IPayloadHandler;
 /**
  * Packet for communication location data between blocks
  */
-public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull BlockPos to) implements CustomPacketPayload {
+public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull BlockPos pos) implements CustomPacketPayload {
     /**
      * Packet type identifier
      */
@@ -27,7 +27,7 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Block
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.from);
-                        buffer.writeBlockPos(packet.to());
+                        buffer.writeBlockPos(packet.pos());
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
@@ -42,7 +42,7 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Block
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.from());
             if (entity instanceof ICommunicateEntity runner) {
-                runner.addCommunicate(packet.to());
+                runner.addCommunicate(packet.pos());
             }
         }
     };

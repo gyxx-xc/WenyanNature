@@ -133,7 +133,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         super.tick(level, pos, state);
-        ICommunicateEntity.super.tickUpdate();
+        ICommunicateEntity.super.tickCommunicate();
     }
 
     public record WenyanRunningState(RunnerBlock.RunningState value)

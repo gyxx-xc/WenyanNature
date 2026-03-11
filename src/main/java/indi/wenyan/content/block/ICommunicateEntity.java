@@ -3,14 +3,14 @@ package indi.wenyan.content.block;
 import net.minecraft.core.BlockPos;
 import org.joml.Vector3f;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface ICommunicateEntity {
     int COMMUNICATE_EFFECT_LIFETIME = 12;
 
-    Collection<CommunicationEffect> getCommunicates();
+    List<CommunicationEffect> getCommunicates();
 
-    default void tickUpdate() {
+    default void tickCommunicate() {
         getCommunicates().removeIf(c -> c.life -- <= 0);
     }
 

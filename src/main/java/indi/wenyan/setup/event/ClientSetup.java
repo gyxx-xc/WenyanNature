@@ -32,6 +32,7 @@ public enum ClientSetup {;
         event.registerBlockEntityRenderer(WenyanBlocks.SCREEN_MODULE_BLOCK_ENTITY.get(), ScreenModuleBlockRenderer::new);
         event.registerBlockEntityRenderer(WenyanBlocks.CRAFTING_BLOCK_ENTITY.get(), CraftingBlockRender::new);
         event.registerBlockEntityRenderer(WenyanBlocks.FORMATION_CORE_MODULE_ENTITY.get(), FormationCoreModuleBlockRenderer::new);
+        event.registerBlockEntityRenderer(WenyanBlocks.BLOCKING_QUEUE_MODULE_ENTITY.get(), BlockingQueueModuleRenderer::new);
     }
 
     /**

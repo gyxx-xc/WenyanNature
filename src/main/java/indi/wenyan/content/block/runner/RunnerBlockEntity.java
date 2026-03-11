@@ -155,7 +155,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 updateShowingState(runningState);
             }, () -> updateShowingState(RunnerBlock.RunningState.NOT_RUNNING));
         } else {
-            tickUpdate();
+            tickCommunicate();
         }
     }
 
@@ -338,7 +338,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         };
     }
 
-    private record BlockContext(Level level, BlockPos pos,
+    public record BlockContext(Level level, BlockPos pos,
                                 BlockState state) implements IHandleContext {
     }
 

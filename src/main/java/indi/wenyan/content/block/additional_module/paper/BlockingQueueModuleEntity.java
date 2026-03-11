@@ -1,7 +1,9 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.content.block.ICommunicateEntity;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
+import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
@@ -16,14 +18,22 @@ import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.network.CommunicationLocationPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
+import java.util.function.Supplier;
 
 /**
  * Entity for the blocking queue module.
@@ -32,15 +42,18 @@ import java.util.Queue;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class BlockingQueueModuleEntity extends AbstractModuleEntity {
+public class BlockingQueueModuleEntity extends AbstractModuleEntity implements ICommunicateEntity {
+    @Getter
+    private final List<CommunicationEffect> communicates = new ArrayList<>();
+
     @Getter
     private final String basePackageName = WenyanSymbol.var("BlockingQueueModule");
 
     private final Queue<IWenyanValue> queue = new ArrayDeque<>();
     private final int capacity = 10; // Default capacity
 
-    private final Queue<ThreadWithValue> waitingProducers = new ArrayDeque<>();
-    private final Queue<WenyanRunner> waitingConsumers = new ArrayDeque<>();
+    private final Queue<BlockedThread> waitingProducers = new ArrayDeque<>();
+    private final Queue<BlockedThread> waitingConsumers = new ArrayDeque<>();
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
@@ -56,25 +69,13 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
 
                 queue.clear();
                 for (int i = 0; i < Math.min(10, waitingProducers.size()); i++) {
-                    ThreadWithValue threadWithValue = waitingProducers.poll();
-                    offer(threadWithValue.thread, threadWithValue.value);
+                    BlockedThread blockedThread = waitingProducers.poll();
+                    blockedThread.awake(queue, getLevel(), this::getBlockPos);
                 }
 
                 return WenyanNull.NULL;
             })
             .build();
-
-    private void offer(WenyanRunner thread, IWenyanValue value) throws WenyanUnreachedException {
-        queue.offer(value);
-        thread.getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
-        thread.unblock();
-    }
-
-    private void poll(WenyanRunner thread) throws WenyanUnreachedException {
-        IWenyanValue value = queue.poll();
-        thread.getCurrentRuntime().pushReturnValue(value);
-        thread.unblock();
-    }
 
     private boolean putHandler(IHandleContext context, IArgsRequest request) throws WenyanException {
         IWenyanValue value = extractSingleValueFromRequest(request);
@@ -84,13 +85,18 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
 
         if (queue.size() >= capacity) {
             // Queue is full, block the producer thread
-            waitingProducers.add(new ThreadWithValue(request.thread(), value));
+            waitingProducers.add(new BlockedThread(request.thread(), value,
+                    context instanceof RunnerBlockEntity.BlockContext bc ? bc.pos() : null));
         } else {
-            offer(request.thread(), value);
+            WenyanRunner thread = request.thread();
+            queue.offer(value);
+            thread.getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
+            thread.unblock();
 
             // Wake up a waiting consumer if any
             if (!waitingConsumers.isEmpty()) {
-                poll(waitingConsumers.poll());
+                BlockedThread blockedThread = waitingConsumers.poll();
+                blockedThread.awake(queue, getLevel(), this::getBlockPos);
             }
         }
         return true;
@@ -98,14 +104,18 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
 
     private boolean takeHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
         if (queue.isEmpty()) {
-            waitingConsumers.add(request.thread());
+            waitingConsumers.add(new BlockedThread(request.thread(), null,
+                    context instanceof RunnerBlockEntity.BlockContext bc ? bc.pos() : null));
         } else {
-            poll(request.thread());
+            WenyanRunner thread = request.thread();
+            IWenyanValue value = queue.poll();
+            thread.getCurrentRuntime().pushReturnValue(value);
+            thread.unblock();
 
             // Wake up a waiting producer if any
             if (!waitingProducers.isEmpty()) {
-                ThreadWithValue threadWithValue = waitingProducers.poll();
-                offer(threadWithValue.thread, threadWithValue.value);
+                BlockedThread blockedThread = waitingProducers.poll();
+                blockedThread.awake(queue, getLevel(), this::getBlockPos);
             }
         }
         return true;
@@ -121,7 +131,8 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
 
             // Wake up a waiting consumer if any
             if (!waitingConsumers.isEmpty()) {
-                poll(waitingConsumers.poll());
+                BlockedThread blockedThread = waitingConsumers.poll();
+                blockedThread.awake(queue, getLevel(), this::getBlockPos);
             }
             return WenyanValues.of(true);
         }
@@ -137,8 +148,8 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
 
             // Wake up a waiting producer if any
             if (!waitingProducers.isEmpty()) {
-                ThreadWithValue threadWithValue = waitingProducers.poll();
-                offer(threadWithValue.thread, threadWithValue.value);
+                BlockedThread blockedThread = waitingProducers.poll();
+                blockedThread.awake(queue, getLevel(), this::getBlockPos);
             }
             return value;
         }
@@ -157,10 +168,37 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity {
         super(WenyanBlocks.BLOCKING_QUEUE_MODULE_ENTITY.get(), pos, blockState);
     }
 
-    private record ThreadWithValue(WenyanRunner thread, IWenyanValue value) {
+    @Override
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        super.tick(level, pos, state);
+        tickCommunicate();
+    }
+
+    private record BlockedThread(WenyanRunner thread, @Nullable IWenyanValue value, @Nullable BlockPos pos) {
         @Override
         public boolean equals(Object o) {
             return false;
+        }
+
+        private void awake(Queue<IWenyanValue> queue, @Nullable Level level, Supplier<BlockPos> blockPos) throws WenyanUnreachedException {
+            if (pos != null) {
+                if (level instanceof ServerLevel sl) {
+                    PacketDistributor.sendToPlayersTrackingChunk(sl,
+                            ChunkPos.containing(pos),
+                            new CommunicationLocationPacket(blockPos.get(), pos.subtract(blockPos.get()))
+                    );
+                }
+            }
+
+            if (value != null) {
+                queue.offer(value);
+                thread.getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
+            } else {
+                IWenyanValue value1 = queue.poll();
+                thread.getCurrentRuntime().pushReturnValue(value1);
+            }
+
+            thread.unblock();
         }
     }
 }
