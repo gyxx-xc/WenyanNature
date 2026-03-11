@@ -1,38 +1,42 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.paper;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
+import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 /**
- * CinnabarInkChecker verifies if the user correctly implemented a halving loop.
- * It provides a random integer and expects the number of days until the length
- * reaches 1
- * when it is halved daily.
+ * CloudPaperChecker verifies if the user correctly implemented the NOIP2015
+ * knight coin problem.
  */
-public class CinnabarInkChecker extends CraftingAnswerChecker {
+public class CloudPaperChecker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public CinnabarInkChecker(RandomSource random) {
+    public CloudPaperChecker(RandomSource random) {
         super(random);
     }
 
     @Override
     public void init() {
         super.init();
-        // 1 <= a <= 10^9
-        int a = random.nextInt(1_000_000_000) + 1;
-        setVariable(0, WenyanValues.of(a));
+        int k = random.nextInt(10000) + 1;
+        setVariable(0, WenyanValues.of(k));
 
-        int day = 1;
-        int length = a;
-        while (length > 1) {
-            length /= 2;
-            day++;
+        long totalCoins = 0;
+        int currentDay = 1;
+        int coinsPerDay = 1;
+
+        while (currentDay <= k) {
+            for (int i = 0; i < coinsPerDay && currentDay <= k; i++) {
+                totalCoins += coinsPerDay;
+                currentDay++;
+            }
+            coinsPerDay++;
         }
-        ans = WenyanValues.of(day);
+
+        ans = WenyanValues.of(totalCoins);
     }
 
     @Override

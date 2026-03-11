@@ -1,6 +1,7 @@
 package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
+import indi.wenyan.content.checker.handrunner.HandRunner2Checker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;

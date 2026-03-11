@@ -1,5 +1,6 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.paper;
 
+import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -11,10 +12,10 @@ import net.minecraft.util.RandomSource;
  * <p>
  * output var0 + var1
  */
-public class PlusChecker extends CraftingAnswerChecker {
+public class BambooPaperChecker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public PlusChecker(RandomSource random) {
+    public BambooPaperChecker(RandomSource random) {
         super(random);
     }
 

@@ -1,6 +1,7 @@
 package indi.wenyan.content.checker.checker;
 
 import indi.wenyan.content.checker.IAnsweringChecker;
+import indi.wenyan.content.checker.paper.BambooPaperChecker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -11,7 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PlusCheckerTest {
+class BambooPaperCheckerTest {
 
     @ParameterizedTest
     @CsvSource({
@@ -23,7 +24,7 @@ class PlusCheckerTest {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(a, b)
                 .build();
-        PlusChecker checker = new PlusChecker(random);
+        BambooPaperChecker checker = new BambooPaperChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(expected));
@@ -40,7 +41,7 @@ class PlusCheckerTest {
         RandomSource random = MockRandomSource.InputBuilder.create()
                 .addSeq(a, b)
                 .build();
-        PlusChecker checker = new PlusChecker(random);
+        BambooPaperChecker checker = new BambooPaperChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(wrong));

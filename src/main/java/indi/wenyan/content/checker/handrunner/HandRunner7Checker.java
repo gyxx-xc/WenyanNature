@@ -1,5 +1,6 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker.handrunner;
 
+import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class LabyrinthChecker extends CraftingAnswerChecker {
+public class HandRunner7Checker extends CraftingAnswerChecker {
     private record Position(int x, int y) implements IWenyanObject {
         public static final WenyanType<Position> TYPE = new WenyanType<>("position", Position.class);
         public static final Position UP = new Position(-1, 0);
@@ -177,7 +178,7 @@ public class LabyrinthChecker extends CraftingAnswerChecker {
     private int curY;
     private Map input;
 
-    public LabyrinthChecker(RandomSource random) {
+    public HandRunner7Checker(RandomSource random) {
         super(random);
     }
 

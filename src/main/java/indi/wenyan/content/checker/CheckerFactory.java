@@ -1,6 +1,9 @@
 package indi.wenyan.content.checker;
 
 import indi.wenyan.content.checker.checker.*;
+import indi.wenyan.content.checker.handrunner.*;
+import indi.wenyan.content.checker.ink.*;
+import indi.wenyan.content.checker.paper.*;
 import indi.wenyan.judou.structure.WenyanException;
 import net.minecraft.util.RandomSource;
 
@@ -40,10 +43,10 @@ public enum CheckerFactory {
      */
     public static CraftingAnswerChecker produce(String name, RandomSource random) throws WenyanException {
         return switch (name) {
-            case PLUS_CHECKER -> new PlusChecker(random);
+            case PLUS_CHECKER -> new BambooPaperChecker(random);
             case ECHO_CHECKER -> new EchoChecker(random);
-            case LABYRINTH_CHECKER -> new LabyrinthChecker(random);
-            case PRINT_CHECKER -> new PrintChecker(random);
+            case LABYRINTH_CHECKER -> new HandRunner7Checker(random);
+            case PRINT_CHECKER -> new BambooInkChecker(random);
             case HAND_RUNNER_1_CHECKER -> new HandRunner1Checker(random);
             case CINNABAR_INK_CHECKER -> new CinnabarInkChecker(random);
             case CLOUD_PAPER_CHECKER -> new CloudPaperChecker(random);
