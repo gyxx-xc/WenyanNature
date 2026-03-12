@@ -1,4 +1,4 @@
-package indi.wenyan.content.checker.checker.paper;
+package indi.wenyan.content.checker.checker.challenge;
 
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
@@ -9,10 +9,10 @@ import net.minecraft.util.RandomSource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StarlightPaperChecker extends CraftingAnswerChecker {
+public class Ex1Checker extends CraftingAnswerChecker {
     private IWenyanValue ans;
 
-    public StarlightPaperChecker(RandomSource random) {
+    public Ex1Checker(RandomSource random) {
         super(random);
     }
 

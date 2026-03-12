@@ -2,6 +2,7 @@ package indi.wenyan.content.checker;
 
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.content.checker.checker.EchoChecker;
+import indi.wenyan.content.checker.checker.challenge.Ex1Checker;
 import indi.wenyan.content.checker.checker.handrunner.*;
 import indi.wenyan.content.checker.checker.ink.*;
 import indi.wenyan.content.checker.checker.paper.*;
@@ -53,7 +54,7 @@ public enum CheckerFactory {
             case CLOUD_PAPER_CHECKER -> new CloudPaperChecker(random);
             case HAND_RUNNER_2_CHECKER -> new HandRunner2Checker(random);
             case STARLIGHT_INK_CHECKER -> new StarlightInkChecker(random);
-            case STARLIGHT_PAPER_CHECKER -> new StarlightPaperChecker(random);
+            case STARLIGHT_PAPER_CHECKER -> new Ex1Checker(random);
             case HAND_RUNNER_3_CHECKER -> new HandRunner3Checker(random);
             case LUNAR_INK_CHECKER -> new LunarInkChecker(random);
             case FROST_PAPER_CHECKER -> new FrostPaperChecker(random);

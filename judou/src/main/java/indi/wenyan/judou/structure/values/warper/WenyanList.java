@@ -143,7 +143,7 @@ public record WenyanList(List<IWenyanValue> value)
             if (value.size() != list.value.size()) return false;
             for (int i = 0; i < value.size(); i++) {
                 try {
-                    if (IWenyanValue.equals(value.get(i), list.value.get(i))) return false;
+                    if (!IWenyanValue.equals(value.get(i), list.value.get(i))) return false;
                 } catch (WenyanException ignore) {
                     // unreachable
                     return false;
