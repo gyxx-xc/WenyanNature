@@ -1,6 +1,7 @@
 package indi.wenyan.content.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -11,11 +12,12 @@ public interface ICommunicateEntity {
     List<CommunicationEffect> getCommunicates();
 
     default void tickCommunicate() {
-        getCommunicates().removeIf(c -> c.life -- <= 0);
+        getCommunicates().removeIf(c -> c.life-- <= 0);
     }
 
     default void addCommunicate(BlockPos pos) {
-        getCommunicates().add(new ICommunicateEntity.CommunicationEffect(new Vector3f(pos.getX(), pos.getY(), pos.getZ())));
+        if (!pos.closerThan(Vec3i.ZERO, 1.2))
+            getCommunicates().add(new ICommunicateEntity.CommunicationEffect(new Vector3f(pos.getX(), pos.getY(), pos.getZ())));
     }
 
     class CommunicationEffect {

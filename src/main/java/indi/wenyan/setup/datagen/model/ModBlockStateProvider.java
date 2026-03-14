@@ -11,8 +11,10 @@ import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.PistonType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.Optional;
@@ -40,6 +42,7 @@ public class ModBlockStateProvider extends ModelSubProvider {
 
         writingBlock();
         lockModuleBlock();
+        decorativePistonHeads();
 
         registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_0);
         registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_1);
@@ -62,6 +65,7 @@ public class ModBlockStateProvider extends ModelSubProvider {
         registerFuluBlock(WenyanBlocks.COLLECTION_MODULE_BLOCK);
         registerFuluBlock(WenyanBlocks.STRING_MODULE_BLOCK);
         registerFuluBlock(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK);
+        registerFuluBlock(WenyanBlocks.PISTON_MODULE_BLOCK);
     }
 
     private void modeledBlock(DeferredBlock<?> deferredBlock) {
@@ -101,5 +105,24 @@ public class ModBlockStateProvider extends ModelSubProvider {
         blockModels.blockStateOutput.accept(MultiVariantGenerator
                 .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
                 .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));
+    }
+
+    public void decorativePistonHeads() {
+        TextureMapping commonMapping = (new TextureMapping())
+                .put(TextureSlot.UNSTICKY, TextureMapping.getBlockTexture(Blocks.PISTON, "_top"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(Blocks.PISTON, "_side"));
+        TextureMapping stickyTextures = commonMapping.copyAndUpdate(TextureSlot.PLATFORM,
+                TextureMapping.getBlockTexture(Blocks.PISTON, "_top_sticky"));
+        TextureMapping normalTextures = commonMapping.copyAndUpdate(TextureSlot.PLATFORM,
+                TextureMapping.getBlockTexture(Blocks.PISTON, "_top"));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator
+                .dispatch(WenyanBlocks.DECORATIVE_PISTON_HEAD_BLOCK.get())
+                .with(PropertyDispatch
+                        .initial(BlockStateProperties.PISTON_TYPE)
+                        .select(PistonType.DEFAULT, plainVariant(ModelTemplates.PISTON_HEAD
+                                .createWithSuffix(Blocks.PISTON, "_head", normalTextures, blockModels.modelOutput)))
+                        .select(PistonType.STICKY, plainVariant(ModelTemplates.PISTON_HEAD
+                                .createWithSuffix(Blocks.PISTON, "_head_sticky", stickyTextures, blockModels.modelOutput))))
+                .with(ROTATION_FACING));
     }
 }

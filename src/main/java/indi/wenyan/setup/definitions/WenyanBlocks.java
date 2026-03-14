@@ -4,6 +4,9 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.additional_module.block.*;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
+import indi.wenyan.content.block.additional_module.paper.piston.DecorativePistonHead;
+import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBlock;
+import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleEntity;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
@@ -109,6 +112,10 @@ public enum WenyanBlocks {
 
     public static final DeferredBlock<BlockingQueueModuleBlock> BLOCKING_QUEUE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(BlockingQueueModuleBlock.ID, BlockingQueueModuleBlock::new);
     public static final Supplier<BlockEntityType<BlockingQueueModuleEntity>> BLOCKING_QUEUE_MODULE_ENTITY = WenyanBlocks.registerEntity(BlockingQueueModuleBlock.ID, BlockingQueueModuleEntity::new, WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK);
+
+    public static final DeferredBlock<PistonModuleBlock> PISTON_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(PistonModuleBlock.ID, PistonModuleBlock::new);
+    public static final Supplier<BlockEntityType<PistonModuleEntity>> PISTON_MODULE_ENTITY = WenyanBlocks.registerEntity(PistonModuleBlock.ID, PistonModuleEntity::new, WenyanBlocks.PISTON_MODULE_BLOCK);
+    public static final DeferredBlock<DecorativePistonHead> DECORATIVE_PISTON_HEAD_BLOCK = WenyanBlocks.DR.registerBlock(DecorativePistonHead.ID, DecorativePistonHead::new);
 
     private static <BE extends BlockEntity> Supplier<BlockEntityType<BE>>
     registerEntity(final String name, final BlockEntityType.BlockEntitySupplier<BE> supplier,

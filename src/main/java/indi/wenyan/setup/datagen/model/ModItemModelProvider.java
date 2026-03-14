@@ -60,6 +60,8 @@ public class ModItemModelProvider extends ModelSubProvider {
         basicItem(WenyanItems.RANDOM_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
+        basicItem(WenyanItems.PISTON_MODULE_BLOCK_ITEM.get());
+
         basicItem(WenyanItems.EQUIPABLE_RUNNER_ITEM.get());
     }
 

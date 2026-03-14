@@ -6,6 +6,7 @@ import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
+import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.power.PowerBlock;
@@ -105,6 +106,8 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> BLOCKING_QUEUE_MODULE_BLOCK_ITEM = DR.registerItem(BlockingQueueModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> PISTON_MODULE_BLOCK_ITEM = DR.registerItem(PistonModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.PISTON_MODULE_BLOCK.get(), properties));
 
     @SuppressWarnings("unused")
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
@@ -156,6 +159,7 @@ public enum WenyanItems {
 
                 output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
                 output.accept(BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
+                output.accept(PISTON_MODULE_BLOCK_ITEM.get());
 
                 output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
                 output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());

@@ -81,5 +81,8 @@ public enum ModSetup {;
         registrar.commonToClient(PlatformOutputPacket.TYPE,
                 PlatformOutputPacket.STREAM_CODEC,
                 PlatformOutputPacket.HANDLER);
+        registrar.commonToClient(PistonMovePacket.TYPE,
+                PistonMovePacket.STREAM_CODEC,
+                PistonMovePacket.HANDLER);
     }
 }
