@@ -1,4 +1,4 @@
-package indi.wenyan.judou.structure.values.warper;
+package indi.wenyan.judou.structure.values.primitive;
 
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
@@ -6,8 +6,6 @@ import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
-import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -15,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -139,5 +138,29 @@ public record WenyanList(List<IWenyanValue> value)
             }
             return true;
         }).orElse(false);
+    }
+
+    /**
+     * Wrapper for an iterator of Wenyan values.
+     * Used for iteration operations in the language.
+     */
+    public static final class WenyanIterator
+            implements IWenyanWarperValue<Iterator<IWenyanValue>> {
+        public static final WenyanType<WenyanIterator> TYPE = new WenyanType<>("iterator", WenyanIterator.class);
+        private final Iterator<IWenyanValue> value;
+
+        WenyanIterator(Iterator<IWenyanValue> value) {
+            this.value = value;
+        }
+
+        @Override
+        public WenyanType<?> type() {
+            return TYPE;
+        }
+
+        @Override
+        public Iterator<IWenyanValue> value() {
+            return value;
+        }
     }
 }

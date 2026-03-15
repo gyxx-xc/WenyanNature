@@ -5,8 +5,8 @@ import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
 import indi.wenyan.judou.utils.LanguageManager;
 import org.jetbrains.annotations.UnknownNullability;
 

@@ -3,11 +3,7 @@ package indi.wenyan.judou.utils;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
+import indi.wenyan.judou.structure.values.primitive.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;

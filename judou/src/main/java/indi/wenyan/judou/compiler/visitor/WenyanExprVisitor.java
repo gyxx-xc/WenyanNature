@@ -12,7 +12,7 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanPackages;

@@ -5,7 +5,7 @@ import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.structure.values.warper.WenyanIterator;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -33,7 +33,8 @@ public class ForCode extends WenyanCode {
         switch (operation) {
             case FOR_ITER -> {
                 Iterator<?> iter;
-                iter = runtime.getProcessStack().peek().as(WenyanIterator.TYPE).value();
+                assert runtime.getProcessStack().peek() != null;
+                iter = runtime.getProcessStack().peek().as(WenyanList.WenyanIterator.TYPE).value();
                 if (iter.hasNext()) {
                     runtime.pushReturnValue((IWenyanValue) iter.next());
                 } else {
