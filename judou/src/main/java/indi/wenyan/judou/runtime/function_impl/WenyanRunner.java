@@ -32,7 +32,7 @@ import java.util.Map;
  * Manages its execution state and runtime stack.
  */
 @WenyanThreading
-public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
+public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFrameManager<WenyanRuntime> {
     @Getter
     @Setter
     private WenyanProgramImpl.PCB thread;
@@ -72,8 +72,8 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         return new WenyanRunner(new WenyanRuntime(bytecode), basicRuntime, environment.getExportedValues());
     }
 
-    public WenyanRunner of(WenyanRuntime mainRuntime) {
-        return new WenyanRunner(mainRuntime, globals, null);
+    public static WenyanRunner of(WenyanRunner runner, WenyanRuntime mainRuntime) {
+        return new WenyanRunner(mainRuntime, runner.globals, null);
     }
 
     public static WenyanRunner of(WenyanRuntime mainRuntime, WenyanPackage globals) {
@@ -153,11 +153,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         }
     }
 
-    /**
-     * Adds a runtime environment to the top of the stack.
-     *
-     * @param runtime The runtime to add
-     */
+    @Override
     public void call(WenyanRuntime runtime) {
         recursionDepth ++;
         if (recursionDepth > 3000) {
@@ -167,9 +163,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         currentRuntime = runtime;
     }
 
-    /**
-     * Removes the top runtime environment from the stack.
-     */
+    @Override
     public void ret() throws WenyanUnreachedException {
         recursionDepth --;
         var returnRuntime = currentRuntime.getReturnRuntime();
