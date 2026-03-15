@@ -131,6 +131,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             addOutput(error, PlatformOutputPacket.OutputStyle.ERROR);
 
         }
+        errors.clear();
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
