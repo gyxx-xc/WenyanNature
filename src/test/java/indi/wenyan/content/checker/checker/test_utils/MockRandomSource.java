@@ -3,6 +3,7 @@ package indi.wenyan.content.checker.checker.test_utils;
 import indi.wenyan.judou.utils.Either;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.PositionalRandomFactory;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * <p>
  * use {@link InputBuilder} to create the sequence of inputs.
  */
-@SuppressWarnings({"NullableProblems", "DataFlowIssue", "OptionalGetWithoutIsPresent"})
+@SuppressWarnings({"NullableProblems", "OptionalGetWithoutIsPresent"})
 public class MockRandomSource implements RandomSource {
     private final List<Either<Long, Double>> outputSequence;
     private int outputCounter = 0;
@@ -29,12 +30,12 @@ public class MockRandomSource implements RandomSource {
     }
 
     @Override
-    public RandomSource fork() {
+    public @Nullable RandomSource fork() {
         return null;
     }
 
     @Override
-    public PositionalRandomFactory forkPositional() {
+    public @Nullable PositionalRandomFactory forkPositional() {
         return null;
     }
 

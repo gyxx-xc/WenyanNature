@@ -163,7 +163,7 @@ class CinnabarInkCheckerTest {
             IAnsweringChecker checker = new CinnabarInkChecker(random);
             checker.init();
 
-            checker.accept(WenyanValues.of((long) expectedDays[i]));
+            checker.accept(WenyanValues.of(expectedDays[i]));
             assertEquals(IAnsweringChecker.ResultStatus.ANSWER_CORRECT, checker.getResult(),
                     "Failed for input " + powersOfTwo[i]);
         }

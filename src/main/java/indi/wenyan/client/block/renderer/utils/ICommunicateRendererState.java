@@ -52,10 +52,10 @@ public interface ICommunicateRendererState {
         var offset = pos.mul((float) fadeLength, new Vector3f());
         poseStack.translate(offset.x, offset.y, offset.z);
         poseStack.mulPose(RenderUtils.axialCameraRotation(lookVector, newY.sub(offset)));
-        poseStack.scale(0.1F, 1F, 1F);
+        poseStack.scale(0.1F, 1.0F, 1.0F);
         submitNodeCollector.submitCustomGeometry(poseStack, COMMUNICATION_RENDER_TYPE, (pose, vertexConsumer) -> RenderUtils.quad(
                 vertexConsumer, pose,
-                -1.0F, 0F, 1.0F, 1.0F,
+                -1.0F, 0.0F, 1.0F, 1.0F,
                 Color.WHITE, alpha,
                 0, 0, 1, 1,
                 emissiveLight));

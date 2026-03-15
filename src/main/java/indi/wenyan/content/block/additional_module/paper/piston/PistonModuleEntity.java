@@ -54,7 +54,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
         if (!extending) {
             Direction opposite = direction.getOpposite();
             BlockState state1 = WenyanBlocks.DECORATIVE_PISTON_HEAD_BLOCK.get().defaultBlockState()
-                    .setValue(DecorativePistonHead.FACING, direction)
+                    .setValue(FACING, direction)
                     .setValue(DecorativePistonHead.TYPE, PistonType.STICKY);
             BlockState blockState = Blocks.MOVING_PISTON.defaultBlockState()
                     .setValue(MovingPistonBlock.FACING, direction)

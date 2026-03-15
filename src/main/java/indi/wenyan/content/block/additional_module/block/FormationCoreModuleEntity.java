@@ -177,7 +177,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
         public boolean equals(Object obj) {
             if (obj instanceof IWenyanValue wenyanValue) {
                 try {
-                    return wenyanValue.is(TYPE) && value.equals(wenyanValue.as(TYPE).value);
+                    return wenyanValue.is(TYPE) && value == wenyanValue.as(TYPE).value;
                 } catch (WenyanException.WenyanTypeException ignored) {
                     // unreached
                 }

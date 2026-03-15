@@ -74,7 +74,7 @@ public class WenyanProgramTestHelper {
     }
 
     protected void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
-        IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
+        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
         wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(8000);

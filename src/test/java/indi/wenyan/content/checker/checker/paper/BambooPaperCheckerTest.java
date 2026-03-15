@@ -31,7 +31,7 @@ class BambooPaperCheckerTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
+    @CsvSource({
             "10, 20, 31",
             "0, 0, 1",
             "99, 1, 99",
@@ -50,7 +50,7 @@ class BambooPaperCheckerTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
+    @CsvSource({
             "1, 2, '3'",
             "1, 2, '\n'",
             "1, 2, 'abc'"
@@ -63,7 +63,7 @@ class BambooPaperCheckerTest {
         checker.init();
 
         // Remove the single quotes wrapping the value
-        String actualStr = wrongStr.startsWith("'") ? wrongStr.substring(1, wrongStr.length() - 1) : wrongStr;
+        String actualStr = !wrongStr.isEmpty() && wrongStr.charAt(0) == '\'' ? wrongStr.substring(1, wrongStr.length() - 1) : wrongStr;
         checker.accept(WenyanValues.of(actualStr));
         
         assertEquals(IAnsweringChecker.ResultStatus.WRONG_ANSWER, checker.getResult());

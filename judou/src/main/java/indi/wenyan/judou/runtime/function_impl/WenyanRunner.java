@@ -73,7 +73,7 @@ public class WenyanRunner implements IWenyanRunner {
         willPause = false;
         for (int i = 0; i < step; i++) {
             try {
-                WenyanFrame runtime = getCurrentRuntime();
+                WenyanFrame runtime = currentRuntime;
                 if (validateRuntimeState(runtime)) return;
                 WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
                 WenyanCode code = bytecode.code().getCode();

@@ -116,16 +116,17 @@ public class WenyanFrame {
 
     private static @NotNull WenyanFrame getRuntime(WenyanFrame returnRuntime, WenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
         WenyanFrame wenyanRuntime = new WenyanFrame(bytecode, Collections.emptyList(), returnRuntime);
-        wenyanRuntime.setReturnBehavior((runner, returnValue) -> {
-            Map<String, IWenyanValue> result = new HashMap<>();
-            var exportedIdentifier = environment.getExportedValues();
+        var exportedIdentifier = environment.getExportedValues();
+        int exportSize = exportedIdentifier.size();
+        wenyanRuntime.returnBehavior = (runner, returnValue) -> {
+            Map<String, IWenyanValue> result = new HashMap<>(exportSize);
             WenyanFrame currentRuntime = runner.getCurrentRuntime();
-            for (int i = 0; i < exportedIdentifier.size(); i++) {
-                result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
+            for (int i = 0; i < exportSize; i++) {
+                result.put(exportedIdentifier.get(i), currentRuntime.locals.get(i));
             }
             runner.ret();
             runner.getCurrentRuntime().pushReturnValue(new WenyanPackage(result));
-        });
+        };
         return wenyanRuntime;
     }
 
@@ -144,16 +145,16 @@ public class WenyanFrame {
     }
 
     public void pushReturnValue(IWenyanValue value) {
-        getProcessStack().push(value);
+        processStack.push(value);
     }
 
     public WenyanException.@Nullable ErrorContext getErrorContext(WenyanException e, Logger logger) {
         WenyanException.ErrorContext errorContext = null;
         try {
-            WenyanBytecode.Context context = getBytecode().getContext(programCounter - 1);
+            WenyanBytecode.Context context = bytecode.getContext(programCounter - 1);
             errorContext = new WenyanException.ErrorContext(
                     context.line(), context.column(),
-                    getBytecode().getSourceCode().substring(context.contentStart(), context.contentEnd()));
+                    bytecode.getSourceCode().substring(context.contentStart(), context.contentEnd()));
         } catch (WenyanException.WenyanVarException |
                  IndexOutOfBoundsException ignore) {// cause error context be null, handled below
         }

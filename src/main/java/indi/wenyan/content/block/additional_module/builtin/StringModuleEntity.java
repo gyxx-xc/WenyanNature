@@ -44,7 +44,7 @@ public class StringModuleEntity extends AbstractModuleEntity {
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var sep = args.get(1).as(WenyanString.TYPE).value();
-                                return WenyanValues.of(Arrays.stream(str.split(sep)).map(WenyanValues::of).toList());
+                                return WenyanValues.of(Arrays.stream(str.split(sep)).<IWenyanValue>map(WenyanValues::of).toList());
                             })
                     .function(WenyanSymbol.var("StringModule.replace"),
                             (IWenyanValue _, List<IWenyanValue> args) -> {

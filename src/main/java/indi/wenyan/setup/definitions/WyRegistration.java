@@ -28,8 +28,8 @@ import static indi.wenyan.WenyanProgramming.MODID;
 /**
  * Central registration class for all mod content
  */
-public final class WyRegistration {
-    private WyRegistration() {}
+public enum WyRegistration {
+    ;
 
     /**
      * Registers all content with the mod event bus

@@ -2,7 +2,10 @@ package indi.wenyan.judou.structure.values.primitive;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.*;
+import indi.wenyan.judou.structure.values.IWenyanComparable;
+import indi.wenyan.judou.structure.values.IWenyanComputable;
+import indi.wenyan.judou.structure.values.IWenyanNumber;
+import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +17,7 @@ import java.math.BigInteger;
  * Represents an integer value in Wenyan language.
  * Supports arithmetic operations and comparisons.
  */
-public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable, IWenyanNumber {
+public final class WenyanInteger implements IWenyanComputable, IWenyanComparable, IWenyanNumber {
     private final BigInteger value;
 
     private WenyanInteger(BigInteger value) {
@@ -22,8 +25,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     }
 
     // in most cases, int is enough; and is much better for other to deal with
-    @Override
-    public Integer value() throws WenyanException {
+    public int value() throws WenyanException {
         try {
             return value.intValueExact();
         } catch (ArithmeticException e) {
@@ -81,6 +83,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
         return TYPE;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanDouble.TYPE) {

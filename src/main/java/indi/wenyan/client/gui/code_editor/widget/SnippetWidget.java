@@ -186,7 +186,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
         // get indent
         StringBuilder indent = new StringBuilder();
         if (backend.getCursor() > 0) {
-            int lastNewline = backend.getContent().lastIndexOf("\n", backend.getCursor() - 1);
+            int lastNewline = backend.getContent().lastIndexOf('\n', backend.getCursor() - 1);
             int firstChar;
             if (lastNewline >= 0)
                 firstChar = lastNewline + 1;

@@ -39,7 +39,7 @@ public class TestPlatform implements IWenyanPlatform {
         var baseRuntime = IWenyanPlatform.super.initEnvironment();
         baseRuntime.put("書", new WenyanInlineJavacall((self, args) -> {
             output.addAll(args.stream().map(v -> {
-                if (v instanceof WenyanLeftValue) return ((WenyanLeftValue) v).value;
+                if (v instanceof WenyanLeftValue) return ((WenyanLeftValue) v).getValue();
                 return v;
             }).toList());
             return WenyanNull.NULL;

@@ -43,7 +43,8 @@ public record WenyanBuiltinFunction(
             newRuntime.setLocal(i ++, self);
             newRuntime.setLocal(i ++, self.as(WenyanBuiltinObject.TYPE).getObjectType().getParent());
         }
-        for (; i < argsList.size(); i++)
+        int size = argsList.size();
+        for (; i < size; i++)
             newRuntime.setLocal(i, WenyanLeftValue.varOf(
                     argsList.get(i).as(args().get(i).type())));
         return newRuntime;
@@ -54,9 +55,10 @@ public record WenyanBuiltinFunction(
         StringBuilder sb = new StringBuilder();
         sb.append(LanguageManager.getTranslation("type.wenyan_programming.function"));
         sb.append("(");
-        for (int i = 0; i < args().size(); i++) {
+        int size = args().size();
+        for (int i = 0; i < size; i++) {
             sb.append(args().get(i).toString());
-            if (i < args().size() - 1) {
+            if (i < size - 1) {
                 sb.append(", ");
             }
         }

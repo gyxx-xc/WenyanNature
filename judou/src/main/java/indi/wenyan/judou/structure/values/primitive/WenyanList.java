@@ -105,6 +105,7 @@ public record WenyanList(List<IWenyanValue> value)
         };
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanBoolean.TYPE) {
@@ -127,17 +128,18 @@ public record WenyanList(List<IWenyanValue> value)
     public boolean equals(Object o) {
         if (!(o instanceof IWenyanValue otherValue)) return false;
         return otherValue.tryAs(TYPE).map(list -> {
-            if (value.size() != list.value.size()) return false;
-            for (int i = 0; i < value.size(); i++) {
+            int size = value.size();
+            if (size != list.value.size()) return Boolean.FALSE;
+            for (int i = 0; i < size; i++) {
                 try {
-                    if (!IWenyanValue.equals(value.get(i), list.value.get(i))) return false;
+                    if (!IWenyanValue.equals(value.get(i), list.value.get(i))) return Boolean.FALSE;
                 } catch (WenyanException ignore) {
                     // unreachable
-                    return false;
+                    return Boolean.FALSE;
                 }
             }
-            return true;
-        }).orElse(false);
+            return Boolean.TRUE;
+        }).orElse(Boolean.FALSE).booleanValue();
     }
 
     /**

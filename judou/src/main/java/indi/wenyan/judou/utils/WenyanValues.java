@@ -34,8 +34,8 @@ public enum WenyanValues {;
         return new WenyanString(s);
     }
 
-    public static WenyanList of(List<? extends IWenyanValue> l) {
-        return new WenyanList((List<IWenyanValue>) l);
+    public static WenyanList of(List<IWenyanValue> l) {
+        return new WenyanList(l);
     }
 
     public static WenyanList of(IWenyanValue... l) {

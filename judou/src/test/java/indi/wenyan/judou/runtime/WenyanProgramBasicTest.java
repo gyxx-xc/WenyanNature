@@ -36,7 +36,7 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 //                云云
 //                """;
         TestPlatform testPlatform = new TestPlatform();
-        IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
+        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
         wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         long start = System.nanoTime();
         wenyanProgram.step(1000000000);

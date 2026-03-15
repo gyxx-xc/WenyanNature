@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -68,7 +69,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                 if (!(getLevel() instanceof ServerLevel sl))
                     throw new WenyanUnreachedException();
                 var e = new LargeFireball(EntityType.FIREBALL, sl);
-                LargeFireball.spawnProjectile(e, sl, ItemStack.EMPTY);
+                Projectile.spawnProjectile(e, sl, ItemStack.EMPTY);
                 e.setPos(blockPos().offset(0, 1, 0).getCenter());
                 e.setDeltaMovement(speed);
                 return WenyanNull.NULL;

@@ -25,7 +25,7 @@ public class TestPassValue {
         return WenyanValues.of("test-method-inline");
     }
 
-    @WenyanMethod(value = "test-method-request")
+    @WenyanMethod("test-method-request")
     public IWenyanValue testMethodRequest(IWenyanValue ignoredSelf, List<IWenyanValue> ignoredArgs) {
         return WenyanValues.of("test-method-request");
     }
@@ -43,7 +43,7 @@ public class TestPassValue {
         return WenyanValues.of("test-method-inline");
     }
 
-    @WenyanMethod(value = "test-method-request")
+    @WenyanMethod("test-method-request")
     public static IWenyanValue testMethodRequestStat(IWenyanValue ignoredSelf, List<IWenyanValue> ignoredArgs) {
         return WenyanValues.of("test-method-request");
     }

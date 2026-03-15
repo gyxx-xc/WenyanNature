@@ -20,6 +20,7 @@ public interface IWenyanFunction extends IWenyanValue {
               List<IWenyanValue> argsList)
             throws WenyanException;
 
+    @SuppressWarnings("unchecked")
     @Override
     @Nullable
     default <T extends IWenyanValue> T casting(WenyanType<T> type) {

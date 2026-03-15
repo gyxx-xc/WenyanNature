@@ -43,6 +43,7 @@ public interface IWenyanValue {
      * @return Casted value
      * @throws WenyanException.WenyanTypeException If casting fails
      */
+    @SuppressWarnings("unchecked")
     default <T extends IWenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         if (type.tClass.isInstance(this)) {
             return (T) this;
@@ -167,8 +168,8 @@ public interface IWenyanValue {
      * @throws WenyanException If comparison fails
      */
     static boolean equals(IWenyanValue self, IWenyanValue other) throws WenyanException {
-        if (self instanceof WenyanLeftValue leftValue) self = leftValue.value;
-        if (other instanceof WenyanLeftValue leftValue) other = leftValue.value;
+        if (self instanceof WenyanLeftValue leftValue) self = leftValue.getValue();
+        if (other instanceof WenyanLeftValue leftValue) other = leftValue.getValue();
         if (self.type() == WenyanDouble.TYPE || other.type() == WenyanDouble.TYPE) {
             return self.as(WenyanDouble.TYPE).equals(other.as(WenyanDouble.TYPE));
         }

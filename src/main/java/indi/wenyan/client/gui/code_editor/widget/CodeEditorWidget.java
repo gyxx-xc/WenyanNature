@@ -9,6 +9,7 @@ import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -68,7 +69,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                             int x, int y, int width, int height) {
         super(x + outerPadding.left(), y + outerPadding.top(),
                 width - outerPadding.horizontal(), height - outerPadding.vertical(),
-                Component.empty(), AbstractTextAreaWidget.defaultSettings(3 * font.lineHeight));
+                Component.empty(), AbstractScrollArea.defaultSettings(3 * font.lineHeight));
         this.font = font;
         this.backend = backend;
         textField = new CodeField(font, backend,

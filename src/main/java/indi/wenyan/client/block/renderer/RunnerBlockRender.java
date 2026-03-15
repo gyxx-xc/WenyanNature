@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
-import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.jspecify.annotations.Nullable;
@@ -65,7 +65,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
     @Override
     public void extractRenderState(RunnerBlockEntity be, RunnerBlockRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(be, state, partialTicks, cameraPosition, breakProgress);
-        var face = be.getBlockState().getValue(FaceAttachedHorizontalDirectionalBlock.FACING);
+        var face = be.getBlockState().getValue(HorizontalDirectionalBlock.FACING);
         state.face = switch (face) {
             case NORTH -> new Quaternionf().rotateY((float) Math.toRadians(180));
             case SOUTH -> new Quaternionf().rotateY((float) Math.toRadians(0));

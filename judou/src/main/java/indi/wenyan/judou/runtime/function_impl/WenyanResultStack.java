@@ -42,11 +42,11 @@ public class WenyanResultStack {
      * @throws WenyanException if the stack is empty
      */
     public IWenyanValue peek() throws WenyanException {
-        int len = stack.size();
-        if (len == 0) {
+        var value = stack.peekLast();
+        if (value == null) {
             throw new WenyanException("error.wenyan_programming.stack_empty");
         }
-        return stack.getLast();
+        return value;
     }
 
     /**
@@ -56,11 +56,11 @@ public class WenyanResultStack {
      * @throws WenyanException if the stack is empty
      */
     public IWenyanValue pop() throws WenyanException {
-        int len = stack.size();
-        if (len == 0) {
+        var value = stack.pollLast();
+        if (value == null) {
             throw new WenyanException("error.wenyan_programming.stack_empty");
         }
-        return stack.removeLast();
+        return value;
     }
 
     /**

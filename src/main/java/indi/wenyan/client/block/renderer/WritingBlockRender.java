@@ -64,7 +64,7 @@ public class WritingBlockRender implements BlockEntityRenderer<WritingBlockEntit
         poseStack.mulPose(new Quaternionf().rotateX((float) (Math.PI / 2)));
         Quaternionf rot = new Quaternionf().rotateZ((float) (Math.PI / 16));
         for (int i = 0; i < blockEntityRenderState.amount; i++) {
-            poseStack.translate(0, 0, -1 / 16f);
+            poseStack.translate(0, 0, -1 / 16.0f);
             poseStack.mulPose(rot);
             blockEntityRenderState.itemState.submit(poseStack, submitNodeCollector,
                     blockEntityRenderState.upperLightCoords, OverlayTexture.NO_OVERLAY, 0);

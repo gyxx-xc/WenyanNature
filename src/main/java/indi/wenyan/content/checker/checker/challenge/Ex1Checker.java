@@ -5,6 +5,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Ex1Checker extends CraftingAnswerChecker {
         Node left, right;
     }
 
-    private Node buildRandomTree(int n) {
+    private @Nullable Node buildRandomTree(int n) {
         if (n == 0) return null;
         Node root = new Node();
         int leftSize = random.nextInt(n);

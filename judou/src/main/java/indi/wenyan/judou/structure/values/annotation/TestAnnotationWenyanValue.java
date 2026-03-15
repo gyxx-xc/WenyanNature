@@ -31,7 +31,7 @@ public class TestAnnotationWenyanValue {
         return WenyanNull.NULL;
     }
 
-    @WenyanMethod(value = "meth1")
+    @WenyanMethod("meth1")
     public IWenyanValue meth1(IWenyanValue self, List<IWenyanValue> arg) {
         return WenyanNull.NULL;
     }

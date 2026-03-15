@@ -2,7 +2,9 @@ package indi.wenyan.judou.utils;
 
 import org.slf4j.Logger;
 
-public class LoggerManager {
+public enum LoggerManager {
+    ;
+
     private static Logger logger = null;
 
     public static void registerLogger(Logger provider) {

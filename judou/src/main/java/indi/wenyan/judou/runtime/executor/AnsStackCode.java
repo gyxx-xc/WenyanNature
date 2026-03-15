@@ -33,7 +33,7 @@ public class AnsStackCode extends WenyanCode {
             case POP -> runtime.pushReturnValue(runtime.getResultStack().pop());
             case PEEK -> runtime.pushReturnValue(runtime.getResultStack().peek());
             case PEEK_N -> {
-                List<IWenyanValue> list = new ArrayList<>();
+                List<IWenyanValue> list = new ArrayList<>(arg);
                 for (int i = 0; i < arg; i++) {
                     list.add(runtime.getResultStack().pop());
                     runtime.pushReturnValue(list.getLast());

@@ -60,15 +60,15 @@ import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform, ICommunicateEntity {
     public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
     public static final String ID = "runner_block_entity";
-    private IWenyanProgram optionalProgram = null;
+    private IWenyanProgram<WenyanProgramImpl.PCB> optionalProgram = null;
 
-    private IWenyanProgram getProgram() {
+    private IWenyanProgram<WenyanProgramImpl.PCB> getProgram() {
         if (optionalProgram == null || !optionalProgram.isAvailable())
             optionalProgram = new WenyanProgramImpl(this);
         return optionalProgram;
     }
 
-    private Optional<IWenyanProgram> ifProgram() {
+    private Optional<IWenyanProgram<WenyanProgramImpl.PCB>> ifProgram() {
         return Optional.ofNullable(optionalProgram);
     }
 
@@ -245,7 +245,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                     return Either.left(getExecutorPackage(executor));
             } else if (blockEntity instanceof RunnerBlockEntity platform) {
                 if (platform == this) continue;
-                if (platform.getPlatformName().equals(packageName))
+                if (platform.platformName.equals(packageName))
                     return Either.right(platform.code);
             }
         }

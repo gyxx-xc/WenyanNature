@@ -2,10 +2,12 @@ package indi.wenyan.judou.utils;
 
 import org.jetbrains.annotations.Nullable;
 
-public class LanguageManager {
+public enum LanguageManager {
+    ;
+
     @Nullable
     private static ILanguageProvider languageProvider = null;
-    private LanguageManager() {}
+
     public static void registerLanguageProvider(ILanguageProvider provider) {
         if (languageProvider != null)
             throw new IllegalStateException("Language provider already registered");

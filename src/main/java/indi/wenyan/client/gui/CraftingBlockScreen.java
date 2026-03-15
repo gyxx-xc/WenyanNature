@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 @Deprecated
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
@@ -20,7 +21,7 @@ public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockCo
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NonNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 //        int relX = (width - imageWidth) / 2;
 //        int relY = (height - imageHeight) / 2;
 //        graphics.blit(GUI, relX, relY, 0, 0, imageWidth, imageHeight);

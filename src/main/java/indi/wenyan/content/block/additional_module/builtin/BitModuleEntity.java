@@ -13,17 +13,18 @@ public class BitModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.var("BitModule");
 
+    @SuppressWarnings("UnnecessaryBoxing") // better performance
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction(WenyanSymbol.var("BitModule.leftShift"), args -> args.getFirst() << args.get(1))
-                    .intFunction(WenyanSymbol.var("BitModule.rightShift"), args -> args.getFirst() >> args.get(1))
-                    .intFunction(WenyanSymbol.var("BitModule.zeroFillRightShift"), args -> args.getFirst() >>> args.get(1))
-                    .intFunction(WenyanSymbol.var("BitModule.bitAnd"), args -> args.getFirst() & args.get(1))
-                    .intFunction(WenyanSymbol.var("BitModule.bitOr"), args -> args.getFirst() | args.get(1))
-                    .intFunction(WenyanSymbol.var("BitModule.bitXor"), args -> args.getFirst() ^ args.get(1))
-                    .intFunction(WenyanSymbol.var("BitModule.bitNand"), args -> ~(args.getFirst() & args.get(1)))
-                    .intFunction(WenyanSymbol.var("BitModule.bitNot"), args -> ~args.getFirst())
+                    .intFunction(WenyanSymbol.var("BitModule.leftShift"), args -> Integer.valueOf(args.getFirst() << args.get(1)))
+                    .intFunction(WenyanSymbol.var("BitModule.rightShift"), args -> Integer.valueOf(args.getFirst() >> args.get(1)))
+                    .intFunction(WenyanSymbol.var("BitModule.zeroFillRightShift"), args -> Integer.valueOf(args.getFirst() >>> args.get(1)))
+                    .intFunction(WenyanSymbol.var("BitModule.bitAnd"), args -> Integer.valueOf(args.getFirst() & args.get(1)))
+                    .intFunction(WenyanSymbol.var("BitModule.bitOr"), args -> Integer.valueOf(args.getFirst() | args.get(1)))
+                    .intFunction(WenyanSymbol.var("BitModule.bitXor"), args -> Integer.valueOf(args.getFirst() ^ args.get(1)))
+                    .intFunction(WenyanSymbol.var("BitModule.bitNand"), args -> Integer.valueOf(~(args.getFirst() & args.get(1))))
+                    .intFunction(WenyanSymbol.var("BitModule.bitNot"), args -> Integer.valueOf(~args.getFirst()))
             )
             .build();
 
