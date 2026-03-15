@@ -1,7 +1,7 @@
 package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
@@ -88,7 +88,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
         WenyanBuiltinFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
                 .as(WenyanBuiltinFunction.TYPE);
 
-        WenyanRuntime newRuntime = constructor.getNewRuntime(self, argsList, thread.getCurrentRuntime());
+        WenyanFrame newRuntime = constructor.getNewRuntime(self, argsList, thread.getCurrentRuntime());
         newRuntime.setReturnBehavior((runner, ignore) -> runner.ret());
         thread.call(newRuntime);
     }

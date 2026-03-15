@@ -25,7 +25,7 @@ import java.util.*;
  * Stores variables, execution state, and handles the program flow.
  */
 @WenyanThreading
-public class WenyanRuntime {
+public class WenyanFrame {
     /**
      * -- GETTER --
      * The bytecode to be executed
@@ -41,7 +41,7 @@ public class WenyanRuntime {
 
     @Getter
     @Nullable
-    private final WenyanRuntime returnRuntime;
+    private final WenyanFrame returnRuntime;
 
     @Getter
     private final List<IWenyanValue> locals = new ArrayList<>();
@@ -77,17 +77,17 @@ public class WenyanRuntime {
      *
      * @param bytecode The bytecode to execute (can be null)
      */
-    public WenyanRuntime(@NotNull WenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanRuntime returnRuntime) {
+    public WenyanFrame(@NotNull WenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanFrame returnRuntime) {
         this.bytecode = bytecode;
         this.references = refs;
         this.returnRuntime = returnRuntime;
     }
 
-    public WenyanRuntime(@NotNull WenyanBytecode bytecode) {
+    public WenyanFrame(@NotNull WenyanBytecode bytecode) {
         this(bytecode, Collections.emptyList(), null);
     }
 
-    public static @NotNull WenyanRuntime ofCode(String code) {
+    public static @NotNull WenyanFrame ofCode(String code) {
         var bytecode = new WenyanBytecode(code);
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
         WenyanVisitor visitor = new WenyanMainVisitor(environment);
@@ -97,10 +97,10 @@ public class WenyanRuntime {
         environment.add(WenyanCodes.RET);
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
-        return new WenyanRuntime(bytecode);
+        return new WenyanFrame(bytecode);
     }
 
-    public static @NotNull WenyanRuntime ofImportCode(String code, WenyanRuntime returnRuntime) {
+    public static @NotNull WenyanFrame ofImportCode(String code, WenyanFrame returnRuntime) {
         // FIXME: reduce code redundancy
         var bytecode = new WenyanBytecode(code);
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
@@ -114,12 +114,12 @@ public class WenyanRuntime {
         return getRuntime(returnRuntime, bytecode, environment);
     }
 
-    private static @NotNull WenyanRuntime getRuntime(WenyanRuntime returnRuntime, WenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
-        WenyanRuntime wenyanRuntime = new WenyanRuntime(bytecode, Collections.emptyList(), returnRuntime);
+    private static @NotNull WenyanFrame getRuntime(WenyanFrame returnRuntime, WenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
+        WenyanFrame wenyanRuntime = new WenyanFrame(bytecode, Collections.emptyList(), returnRuntime);
         wenyanRuntime.setReturnBehavior((runner, returnValue) -> {
             Map<String, IWenyanValue> result = new HashMap<>();
             var exportedIdentifier = environment.getExportedValues();
-            WenyanRuntime currentRuntime = runner.getCurrentRuntime();
+            WenyanFrame currentRuntime = runner.getCurrentRuntime();
             for (int i = 0; i < exportedIdentifier.size(); i++) {
                 result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
             }

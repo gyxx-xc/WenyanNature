@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
@@ -42,7 +42,7 @@ public class FunctionCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.getCurrentRuntime();
+        WenyanFrame runtime = thread.getCurrentRuntime();
         IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
         IWenyanFunction callable;

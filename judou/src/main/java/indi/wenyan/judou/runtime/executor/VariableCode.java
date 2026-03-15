@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
@@ -28,7 +28,7 @@ public class VariableCode extends WenyanCode {
 
     @Override
     public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.getCurrentRuntime();
+        WenyanFrame runtime = thread.getCurrentRuntime();
         switch (operation) {
             case LOAD -> {
                 IWenyanValue value = runtime.getLocals().get(arg);

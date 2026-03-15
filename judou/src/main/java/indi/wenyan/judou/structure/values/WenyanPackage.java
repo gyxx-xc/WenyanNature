@@ -1,5 +1,6 @@
 package indi.wenyan.judou.structure.values;
 
+import indi.wenyan.judou.runtime.function_impl.IGlobalResolver;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +13,7 @@ import java.util.Map;
  *
  * @param variables Map of variable names to values
  */
-public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWenyanObjectType {
+public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWenyanObjectType, IGlobalResolver {
     /**
      * Type descriptor for packages
      */

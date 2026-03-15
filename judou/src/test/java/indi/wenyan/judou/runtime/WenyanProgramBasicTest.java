@@ -1,8 +1,8 @@
 package indi.wenyan.judou.runtime;
 
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData;
 import indi.wenyan.judou.structure.WenyanException;
@@ -37,7 +37,7 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 //                """;
         TestPlatform testPlatform = new TestPlatform();
         IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanRunner.of(WenyanRuntime.ofCode(code), testPlatform.initEnvironment()));
+        wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         long start = System.nanoTime();
         wenyanProgram.step(1000000000);
         while (wenyanProgram.isRunning()) {

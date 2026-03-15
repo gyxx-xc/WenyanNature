@@ -2,9 +2,9 @@ package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
@@ -75,7 +75,7 @@ public class WenyanProgramTestHelper {
 
     protected void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
         IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanRunner.of(WenyanRuntime.ofCode(code), testPlatform.initEnvironment()));
+        wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(8000);
             testPlatform.handle(IHandleContext.NONE);

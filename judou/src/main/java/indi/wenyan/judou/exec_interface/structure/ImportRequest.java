@@ -1,7 +1,7 @@
 package indi.wenyan.judou.exec_interface.structure;
 
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
@@ -37,7 +37,7 @@ public final class ImportRequest implements BaseHandleableRequest {
         if (packageOrCode.left().isPresent())
             thread().getCurrentRuntime().pushReturnValue(packageOrCode.left().get());
         if (packageOrCode.right().isPresent())
-            thread().call(WenyanRuntime.ofImportCode(packageOrCode.right().get(), thread.getCurrentRuntime()));
+            thread().call(WenyanFrame.ofImportCode(packageOrCode.right().get(), thread.getCurrentRuntime()));
         thread().unblock();
         return true;
     }

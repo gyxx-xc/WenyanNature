@@ -2,7 +2,7 @@ package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
@@ -27,17 +27,17 @@ public record WenyanBuiltinFunction(
     public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
-        WenyanRuntime newRuntime = getNewRuntime(self, argsList, thread.getCurrentRuntime());
+        WenyanFrame newRuntime = getNewRuntime(self, argsList, thread.getCurrentRuntime());
         thread.call(newRuntime);
     }
 
-    public @NotNull WenyanRuntime getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanRuntime returnRuntime) throws WenyanException {
+    public @NotNull WenyanFrame getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanFrame returnRuntime) throws WenyanException {
         if (args().size() != argsList.size())
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
         if (refs == null)
             throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.function_does_not_have_references"));
 
-        WenyanRuntime newRuntime = new WenyanRuntime(bytecode(), refs(), returnRuntime);
+        WenyanFrame newRuntime = new WenyanFrame(bytecode(), refs(), returnRuntime);
         int i = 0;
         if (self != null) {
             newRuntime.setLocal(i ++, self);
