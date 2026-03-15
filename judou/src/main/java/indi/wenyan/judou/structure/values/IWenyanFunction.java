@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
@@ -16,7 +16,7 @@ import java.util.List;
 public interface IWenyanFunction extends IWenyanValue {
     WenyanType<IWenyanFunction> TYPE = new WenyanType<>("function", IWenyanFunction.class);
 
-    void call(@Nullable IWenyanValue self, WenyanRunner thread,
+    void call(@Nullable IWenyanValue self, IWenyanRunner thread,
               List<IWenyanValue> argsList)
             throws WenyanException;
 

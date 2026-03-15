@@ -6,7 +6,7 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
@@ -146,7 +146,7 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
 
     private record ItemRequest(
             IWenyanPlatform platform,
-            WenyanRunner thread,
+            IWenyanRunner thread,
             IRawRequest request,
             IWenyanValue self,
             List<IWenyanValue> args,

@@ -1,6 +1,7 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.structure.WenyanUnreachedException;
+import indi.wenyan.judou.structure.values.WenyanPackage;
 
 public interface IFrameManager<T> {
     /**
@@ -16,4 +17,6 @@ public interface IFrameManager<T> {
     void ret() throws WenyanUnreachedException;
 
     T getCurrentRuntime();
+
+    WenyanPackage getGlobals();
 }

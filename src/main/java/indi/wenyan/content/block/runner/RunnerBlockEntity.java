@@ -10,6 +10,7 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
@@ -251,11 +252,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
     }
 
-    public Optional<WenyanRunner> newThread() {
+    public Optional<IWenyanRunner> newThread() {
         return newThread(code);
     }
 
-    public Optional<WenyanRunner> newThread(String pages) {
+    public Optional<IWenyanRunner> newThread(String pages) {
         try {
             return newThread(WenyanRunner.of(WenyanRuntime.ofCode(pages), this.initEnvironment()));
         } catch (WenyanCompileException e) {
@@ -264,7 +265,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
     }
 
-    public Optional<WenyanRunner> newThread(WenyanRunner runner) {
+    public Optional<IWenyanRunner> newThread(IWenyanRunner runner) {
         assert getLevel() != null;
         if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
             getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
@@ -348,7 +349,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Value
     @Accessors(fluent = true)
     public class BlockRequest implements BaseHandleableRequest, IArgsRequest {
-        WenyanRunner thread;
+        IWenyanRunner thread;
         IWenyanValue self;
         List<IWenyanValue> args;
 
@@ -358,7 +359,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         @NonFinal
         boolean communicationShown = false;
 
-        public BlockRequest(WenyanRunner thread, IWenyanValue self, List<IWenyanValue> argsList, IWenyanBlockDevice device, IRawRequest request) {
+        public BlockRequest(IWenyanRunner thread, IWenyanValue self, List<IWenyanValue> argsList, IWenyanBlockDevice device, IRawRequest request) {
             this.thread = thread;
             this.self = self;
             this.args = argsList;

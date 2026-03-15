@@ -9,7 +9,7 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -88,7 +88,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
             waitingProducers.add(new BlockedThread(request.thread(), value,
                     context instanceof RunnerBlockEntity.BlockContext bc ? bc.pos() : null));
         } else {
-            WenyanRunner thread = request.thread();
+            IWenyanRunner thread = request.thread();
             queue.offer(value);
             thread.getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
             thread.unblock();
@@ -107,7 +107,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
             waitingConsumers.add(new BlockedThread(request.thread(), null,
                     context instanceof RunnerBlockEntity.BlockContext bc ? bc.pos() : null));
         } else {
-            WenyanRunner thread = request.thread();
+            IWenyanRunner thread = request.thread();
             IWenyanValue value = queue.poll();
             thread.getCurrentRuntime().pushReturnValue(value);
             thread.unblock();
@@ -174,7 +174,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
         tickCommunicate();
     }
 
-    private record BlockedThread(WenyanRunner thread, @Nullable IWenyanValue value, @Nullable BlockPos pos) {
+    private record BlockedThread(IWenyanRunner thread, @Nullable IWenyanValue value, @Nullable BlockPos pos) {
         @Override
         public boolean equals(Object o) {
             return false;

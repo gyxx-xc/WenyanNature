@@ -1,6 +1,6 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.*;
@@ -25,7 +25,7 @@ public class ObjectCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
         WenyanRuntime runtime = thread.getCurrentRuntime();
         String id = runtime.getBytecode().getIdentifier(arg);
         switch (operation) {
@@ -33,6 +33,7 @@ public class ObjectCode extends WenyanCode {
                 IWenyanValue attr;
                 IWenyanValue value = operation == Operation.ATTR ?
                         runtime.getProcessStack().pop() : runtime.getProcessStack().peek();
+                assert value != null;
                 if (value.is(IWenyanObjectType.TYPE)) {
                     IWenyanObjectType object = value.as(IWenyanObjectType.TYPE);
                     attr = object.getAttribute(id);
@@ -44,11 +45,13 @@ public class ObjectCode extends WenyanCode {
             }
             case STORE_STATIC_ATTR -> {
                 IWenyanValue value = WenyanLeftValue.varOf(runtime.getProcessStack().pop());
+                assert runtime.getProcessStack().peek() != null;
                 WenyanBuiltinObjectType type = runtime.getProcessStack().peek().as(WenyanBuiltinObjectType.TYPE);
                 type.addStaticVariable(id, value);
             }
             case STORE_FUNCTION_ATTR -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
+                assert runtime.getProcessStack().peek() != null;
                 WenyanBuiltinObjectType type = runtime.getProcessStack().peek().as(WenyanBuiltinObjectType.TYPE);
                 type.addFunction(id, value);
             }

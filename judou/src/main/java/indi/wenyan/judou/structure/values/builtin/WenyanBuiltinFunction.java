@@ -1,7 +1,7 @@
 package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -11,6 +11,7 @@ import indi.wenyan.judou.structure.values.WenyanLeftValue;
 import indi.wenyan.judou.utils.LanguageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public record WenyanBuiltinFunction(
     public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread,
+    public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
         WenyanRuntime newRuntime = getNewRuntime(self, argsList, thread.getCurrentRuntime());

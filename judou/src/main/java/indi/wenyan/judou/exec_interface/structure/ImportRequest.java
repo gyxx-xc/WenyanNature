@@ -1,6 +1,6 @@
 package indi.wenyan.judou.exec_interface.structure;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -18,11 +18,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class ImportRequest implements BaseHandleableRequest {
     @Getter
-    WenyanRunner thread;
+    IWenyanRunner thread;
     ImportFunction getPackage;
     String packageName;
 
-    public ImportRequest(WenyanRunner thread, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException {
+    public ImportRequest(IWenyanRunner thread, ImportFunction getPackage, List<IWenyanValue> args) throws WenyanException {
         this.thread = thread;
         this.getPackage = getPackage;
         if (args.size() != 1) {

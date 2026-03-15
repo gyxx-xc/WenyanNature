@@ -1,12 +1,12 @@
 package indi.wenyan.judou.exec_interface.structure;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 
 import java.util.List;
 
-public record SimpleRequest(WenyanRunner thread, IWenyanValue self,
+public record SimpleRequest(IWenyanRunner thread, IWenyanValue self,
                             List<IWenyanValue> args, SimpleHandleFunction handler)
         implements BaseHandleableRequest, IArgsRequest {
     @Override

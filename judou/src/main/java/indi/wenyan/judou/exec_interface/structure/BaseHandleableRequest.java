@@ -1,6 +1,7 @@
 package indi.wenyan.judou.exec_interface.structure;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
+import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 
@@ -12,10 +13,10 @@ public interface BaseHandleableRequest extends IHandleableRequest {
         try {
             return handle(context);
         } catch (WenyanException e) {
-            thread().dieWithException(e);
+            WenyanRunner.dieWithException(thread(), e);
             return true;
         } catch (RuntimeException e) {
-            thread().dieWithException(new WenyanUnreachedException.WenyanUnexceptedException(e));
+            WenyanRunner.dieWithException(thread(), new WenyanUnreachedException.WenyanUnexceptedException(e));
             return true;
         }
     }

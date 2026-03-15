@@ -1,6 +1,6 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
@@ -23,7 +23,7 @@ public class BranchCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
+    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
         WenyanRuntime runtime = thread.getCurrentRuntime();
         switch (condition) {
             case NONE -> {
@@ -39,6 +39,7 @@ public class BranchCode extends WenyanCode {
                 }
             }
             case FALSE -> {
+                assert runtime.getProcessStack().peek() != null;
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (!value) {
@@ -47,6 +48,7 @@ public class BranchCode extends WenyanCode {
                 }
             }
             case TRUE -> {
+                assert runtime.getProcessStack().peek() != null;
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (value) {

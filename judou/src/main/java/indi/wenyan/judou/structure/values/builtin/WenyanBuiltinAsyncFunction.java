@@ -1,5 +1,6 @@
 package indi.wenyan.judou.structure.values.builtin;
 
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
@@ -14,7 +15,7 @@ public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements 
     public static final WenyanType<WenyanBuiltinAsyncFunction> TYPE = new WenyanType<>("builtin_async_function", WenyanBuiltinAsyncFunction.class);
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread,
+    public void call(IWenyanValue self, IWenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
         var future = new WenyanBuiltinFuture();

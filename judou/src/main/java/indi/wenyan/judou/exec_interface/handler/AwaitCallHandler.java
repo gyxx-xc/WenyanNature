@@ -2,7 +2,7 @@ package indi.wenyan.judou.exec_interface.handler;
 
 import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -21,7 +21,7 @@ public class AwaitCallHandler implements IJavacallHandler {
     }
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
+    public void call(IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
         if (argsList.size() != 1)
             throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
         if (argsList.getFirst().is(WenyanInteger.TYPE)) {
@@ -39,10 +39,10 @@ public class AwaitCallHandler implements IJavacallHandler {
     public static class AwaitRequest implements BaseHandleableRequest {
         @Accessors(fluent = true)
         @Getter
-        private final WenyanRunner thread;
+        private final IWenyanRunner thread;
         private int life;
 
-        private AwaitRequest(WenyanRunner thread, int life) {
+        private AwaitRequest(IWenyanRunner thread, int life) {
             this.thread = thread;
             this.life = life;
         }

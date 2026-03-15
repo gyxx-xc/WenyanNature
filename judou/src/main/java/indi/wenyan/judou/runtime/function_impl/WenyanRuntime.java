@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -146,7 +147,22 @@ public class WenyanRuntime {
         getProcessStack().push(value);
     }
 
-    private void onReturn(WenyanRunner runner, IWenyanValue returnValue) throws WenyanUnreachedException {
+    public WenyanException.@Nullable ErrorContext getErrorContext(WenyanException e, Logger logger) {
+        WenyanException.ErrorContext errorContext = null;
+        try {
+            WenyanBytecode.Context context = getBytecode().getContext(programCounter - 1);
+            errorContext = new WenyanException.ErrorContext(
+                    context.line(), context.column(),
+                    getBytecode().getSourceCode().substring(context.contentStart(), context.contentEnd()));
+        } catch (WenyanException.WenyanVarException |
+                 IndexOutOfBoundsException ignore) {// cause error context be null, handled below
+        }
+        if (errorContext == null)
+            logger.error("Unexpected, failed to get code context during handling an exception", e);
+        return errorContext;
+    }
+
+    private void onReturn(IWenyanRunner runner, IWenyanValue returnValue) throws WenyanUnreachedException {
         runner.ret();
         if (returnRuntime != null)
             returnRuntime.pushReturnValue(returnValue);
@@ -154,6 +170,6 @@ public class WenyanRuntime {
 
     @FunctionalInterface
     public interface ReturnBehavior {
-        void onReturn(WenyanRunner runner, IWenyanValue returnValue) throws WenyanException;
+        void onReturn(IWenyanRunner runner, IWenyanValue returnValue) throws WenyanException;
     }
 }

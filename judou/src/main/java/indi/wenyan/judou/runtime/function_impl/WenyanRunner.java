@@ -1,12 +1,9 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
-import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.executor.WenyanCode;
-import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.LoggerManager;
 import indi.wenyan.judou.utils.WenyanThreading;
@@ -21,38 +18,34 @@ import org.slf4j.Logger;
  * Manages its execution state and runtime stack.
  */
 @WenyanThreading
-public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFrameManager<WenyanRuntime> {
+public class WenyanRunner implements IWenyanRunner {
     @Getter
     @Setter
     private WenyanProgramImpl.PCB thread;
 
     @Getter
+    @NotNull
     private WenyanRuntime currentRuntime;
 
+    @Getter
     private final WenyanPackage globals;
 
     private boolean willPause = false;
 
     private int recursionDepth = 0;
 
-    private WenyanRunner(WenyanRuntime mainRuntime, WenyanPackage globals) {
+    private WenyanRunner(@NotNull WenyanRuntime mainRuntime, WenyanPackage globals) {
         this.globals = globals;
-        call(mainRuntime);
-    }
-
-    @Deprecated
-    public static @NotNull WenyanRunner ofCode(String code, WenyanPackage basicRuntime) throws WenyanCompileException {
-        // TODO: refactor test
-        return new WenyanRunner(WenyanRuntime.ofCode(code), basicRuntime);
+        currentRuntime = mainRuntime;
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull WenyanRunner of(WenyanRuntime mainRuntime, WenyanRunner runner) {
-        return new WenyanRunner(mainRuntime, runner.globals);
+    public static @NotNull IWenyanRunner of(WenyanRuntime mainRuntime, IWenyanRunner runner) {
+        return new WenyanRunner(mainRuntime, runner.getGlobals());
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull WenyanRunner of(WenyanRuntime mainRuntime, WenyanPackage globals) {
+    public static @NotNull IWenyanRunner of(WenyanRuntime mainRuntime, WenyanPackage globals) {
         return new WenyanRunner(mainRuntime, globals);
     }
 
@@ -70,17 +63,17 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
 
                 if (updateProgramCounter(runtime)) return;
             } catch (WenyanException e) {
-                dieWithException(e);
+                dieWithException(this, e);
                 return;
             } catch (RuntimeException e) { // for any other missing exceptions
-                dieWithException(new WenyanUnreachedException.WenyanUnexceptedException(e));
+                dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
                 return;
             }
         }
         try {
             this.yield();
         } catch (WenyanException e) {
-            dieWithException(e);
+            dieWithException(this, e);
         }
     }
 
@@ -94,7 +87,7 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
 
     private boolean validateRuntimeState(WenyanRuntime runtime) {
         if (runtime.programCounter < 0 || runtime.programCounter >= runtime.getBytecode().size()) {
-            dieWithException(new WenyanUnreachedException());
+            dieWithException(this, new WenyanUnreachedException());
             return true;
         }
         return false;
@@ -105,25 +98,12 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
         willPause = true;
     }
 
-    public void dieWithException(WenyanException e) {
-        var runtime = getCurrentRuntime();
+    public static void dieWithException(IWenyanRunner runner, WenyanException e) {
         Logger logger = LoggerManager.getLogger();
-        WenyanException.ErrorContext errorContext = null;
+        e.handle(runner.platform()::handleError, logger,
+                runner.getCurrentRuntime().getErrorContext(e, logger));
         try {
-            if (runtime != null) {
-                WenyanBytecode.Context context = runtime.getBytecode().getContext(runtime.programCounter - 1);
-                errorContext = new WenyanException.ErrorContext(
-                        context.line(), context.column(),
-                        runtime.getBytecode().getSourceCode().substring(context.contentStart(), context.contentEnd()));
-            }
-        } catch (WenyanException.WenyanVarException |
-                 IndexOutOfBoundsException ignore) {// cause error context be null, handled below
-        }
-        if (errorContext == null)
-            logger.error("Unexpected, failed to get code context during handling an exception", e);
-        e.handle(platform()::handleError, logger, errorContext);
-        try {
-            die();
+            runner.die();
         } catch (WenyanUnreachedException e1) {
             logger.error("Unexpected, failed to die");
         }
@@ -131,9 +111,9 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
 
     @Override
     public void call(WenyanRuntime runtime) {
-        recursionDepth ++;
+        recursionDepth++;
         if (recursionDepth > 3000) {
-            dieWithException(new WenyanException("递归深度过深"));
+            dieWithException(this, new WenyanException("递归深度过深"));
             return;
         }
         currentRuntime = runtime;
@@ -141,23 +121,12 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
 
     @Override
     public void ret() throws WenyanUnreachedException {
-        recursionDepth --;
+        recursionDepth--;
         var returnRuntime = currentRuntime.getReturnRuntime();
         if (returnRuntime == null) {
             die();
         } else {
             currentRuntime = returnRuntime;
         }
-    }
-
-    /**
-     * Searches for a variable in all runtime environments, from top to bottom.
-     *
-     * @param id The variable identifier
-     * @return The variable value
-     * @throws WenyanException If the variable is not found
-     */
-    public IWenyanValue getGlobalVariable(String id) throws WenyanException {
-        return globals.getAttribute(id);
     }
 }

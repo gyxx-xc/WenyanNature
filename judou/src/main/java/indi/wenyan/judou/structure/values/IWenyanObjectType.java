@@ -1,9 +1,10 @@
 package indi.wenyan.judou.structure.values;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.utils.WenyanThreading;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface IWenyanObjectType extends IWenyanFunction {
             throws WenyanException;
 
     @Override
-    default void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList)
+    default void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread, List<IWenyanValue> argsList)
             throws WenyanException {
         thread.getCurrentRuntime().pushReturnValue(createObject(argsList));
     }

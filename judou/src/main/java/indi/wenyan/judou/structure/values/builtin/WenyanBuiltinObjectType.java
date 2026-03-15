@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values.builtin;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -12,6 +12,7 @@ import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +79,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread,
+    public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread,
                      List<IWenyanValue> argsList) throws WenyanException {
         // create empty, run constructor, return self
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
