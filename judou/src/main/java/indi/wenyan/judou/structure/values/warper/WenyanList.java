@@ -32,18 +32,6 @@ public record WenyanList(List<IWenyanValue> value)
     }
 
     /**
-     * Concatenates another list to this list.
-     *
-     * @param other the list to concatenate
-     * @return this list after concatenation
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public WenyanList concat(WenyanList other) {
-        value.addAll(other.value);
-        return this;
-    }
-
-    /**
      * Adds a value to this list.
      *
      * @param wenyanValue the value to add

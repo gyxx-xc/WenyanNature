@@ -36,7 +36,7 @@ public enum WenyanPackages {
                     throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
                 for (IWenyanValue v : args.subList(1, args.size())) {
-                    value.concat(v.as(WenyanList.TYPE));
+                    v.as(WenyanList.TYPE).value().stream().map(WenyanLeftValue::varOf).forEach(value::add);
                 }
                 return value;
             })
