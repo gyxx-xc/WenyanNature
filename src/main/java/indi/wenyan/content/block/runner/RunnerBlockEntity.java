@@ -49,6 +49,7 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 
@@ -77,6 +78,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Getter
     public final ExecQueue execQueue = new ExecQueue(this);
+    private final Deque<String> errors = new ConcurrentLinkedDeque<>();
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final RequestCallHandler importFunction = (t, _, a) ->
             new ImportRequest(t, this::getPackage, a);
@@ -115,12 +117,19 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Override
     public void handleError(String error) {
         error = StringUtils.left(error, 512);
-        assert getLevel() != null;
-        getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
-        if (getLevel() instanceof ServerLevel sl)
-            PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
-                    new PlatformOutputPacket(getBlockPos(), error, PlatformOutputPacket.OutputStyle.ERROR));
-        addOutput(error, PlatformOutputPacket.OutputStyle.ERROR);
+        errors.addLast(error);
+    }
+
+    private void handleErrorTicked() {
+        for (String error : errors) {
+            assert getLevel() != null;
+            getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
+            if (getLevel() instanceof ServerLevel sl)
+                PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
+                        new PlatformOutputPacket(getBlockPos(), error, PlatformOutputPacket.OutputStyle.ERROR));
+            addOutput(error, PlatformOutputPacket.OutputStyle.ERROR);
+
+        }
     }
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
@@ -154,6 +163,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 }
                 updateShowingState(runningState);
             }, () -> updateShowingState(RunnerBlock.RunningState.NOT_RUNNING));
+            handleErrorTicked();
         } else {
             tickCommunicate();
         }
@@ -339,7 +349,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public record BlockContext(Level level, BlockPos pos,
-                                BlockState state) implements IHandleContext {
+                               BlockState state) implements IHandleContext {
     }
 
     @Value
