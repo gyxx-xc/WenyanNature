@@ -116,7 +116,7 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
 //            throw new WenyanException("item changed");
 //    }
 
-    private Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException {
+    private Either<WenyanPackage, String> getPackage(IHandleContext context, String packageName) throws WenyanException {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException("Context is not an instance of ItemContext");
         }

@@ -12,6 +12,7 @@ import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -231,7 +232,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         super.setRemoved();
     }
 
-    private Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException {
+    private Either<WenyanPackage, String> getPackage(IHandleContext context, String packageName) throws WenyanException {
         assert level != null;
         for (BlockPos b : BlockPos.betweenClosed(
                 getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
@@ -243,19 +244,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             } else if (blockEntity instanceof RunnerBlockEntity platform) {
                 if (platform == this) continue;
                 if (platform.getPlatformName().equals(packageName))
-                    return Either.right(createPlatformThread(platform));
+                    return Either.right(platform.code);
             }
         }
         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
-    }
-
-    private WenyanRunner createPlatformThread(RunnerBlockEntity platform) throws WenyanException {
-        showCommunication(platform.getBlockPos());
-        // STUB: better error handling
-        var threadOptional = platform.newThread(platform.code);
-        // this exception is for import-er thread
-        // in the same time, there's an error in import-ee's platform
-        return threadOptional.orElseThrow(() -> new WenyanException("cannot import"));
     }
 
     public Optional<WenyanRunner> newThread() {
@@ -264,7 +256,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public Optional<WenyanRunner> newThread(String pages) {
         try {
-            return newThread(WenyanRunner.ofCode(pages, this.initEnvironment()));
+            return newThread(WenyanRunner.of(WenyanRuntime.ofCode(pages), this.initEnvironment()));
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return Optional.empty();

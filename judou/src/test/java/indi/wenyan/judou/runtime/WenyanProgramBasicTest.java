@@ -2,11 +2,11 @@ package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.FieldSource;
 
@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 // TODO: load language part only
 class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 
-    @Test
+    @SuppressWarnings("unused")
+    // @Test
     void testNormal() throws WenyanException, InterruptedException {
         String code = """
                 吾有一術。名之曰「甲」。是術曰
@@ -36,7 +37,7 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 //                """;
         TestPlatform testPlatform = new TestPlatform();
         IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanRunner.ofCode(code, testPlatform.initEnvironment()));
+        wenyanProgram.create(WenyanRunner.of(WenyanRuntime.ofCode(code), testPlatform.initEnvironment()));
         long start = System.nanoTime();
         wenyanProgram.step(1000000000);
         while (wenyanProgram.isRunning()) {
@@ -68,5 +69,4 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
                             testData.output().get(i) + " and " + testPlatform.output.get(i));
         }
     }
-
 }

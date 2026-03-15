@@ -1,31 +1,20 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
-import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.judou.compiler.WenyanVerifier;
-import indi.wenyan.judou.compiler.visitor.WenyanMainVisitor;
-import indi.wenyan.judou.compiler.visitor.WenyanVisitor;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.executor.WenyanCode;
-import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.LoggerManager;
 import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a thread of execution in a Wenyan program.
@@ -39,12 +28,6 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
 
     @Getter
     private WenyanRuntime currentRuntime;
-    @Nullable
-    private final List<String> exportedIdentifier;
-    /// if value is null, means the exported function is not finished
-    @Getter
-    @Nullable
-    private WenyanPackage exportedPackage = null;
 
     private final WenyanPackage globals;
 
@@ -52,32 +35,25 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
 
     private int recursionDepth = 0;
 
-    private WenyanRunner(WenyanRuntime mainRuntime, WenyanPackage globals, @Nullable List<String> exportedIdentifier) {
-        this.exportedIdentifier = exportedIdentifier;
+    private WenyanRunner(WenyanRuntime mainRuntime, WenyanPackage globals) {
         this.globals = globals;
         call(mainRuntime);
     }
 
+    @Deprecated
     public static @NotNull WenyanRunner ofCode(String code, WenyanPackage basicRuntime) throws WenyanCompileException {
-        var bytecode = new WenyanBytecode(code);
-        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
-        WenyanVisitor visitor = new WenyanMainVisitor(environment);
-        visitor.visit(WenyanVisitor.program(code));
-        environment.enterContext(0, 0, 0, 0);
-        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-        environment.add(WenyanCodes.RET);
-        environment.exitContext();
-        WenyanVerifier.verify(bytecode);
-
-        return new WenyanRunner(new WenyanRuntime(bytecode), basicRuntime, environment.getExportedValues());
+        // TODO: refactor test
+        return new WenyanRunner(WenyanRuntime.ofCode(code), basicRuntime);
     }
 
-    public static WenyanRunner of(WenyanRunner runner, WenyanRuntime mainRuntime) {
-        return new WenyanRunner(mainRuntime, runner.globals, null);
+    @Contract("_, _ -> new")
+    public static @NotNull WenyanRunner of(WenyanRuntime mainRuntime, WenyanRunner runner) {
+        return new WenyanRunner(mainRuntime, runner.globals);
     }
 
-    public static WenyanRunner of(WenyanRuntime mainRuntime, WenyanPackage globals) {
-        return new WenyanRunner(mainRuntime, globals, null);
+    @Contract("_, _ -> new")
+    public static @NotNull WenyanRunner of(WenyanRuntime mainRuntime, WenyanPackage globals) {
+        return new WenyanRunner(mainRuntime, globals);
     }
 
     @Override
@@ -169,12 +145,6 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
         var returnRuntime = currentRuntime.getReturnRuntime();
         if (returnRuntime == null) {
             die();
-            if (exportedIdentifier == null) return;
-            Map<String, IWenyanValue> result = new HashMap<>();
-            for (int i = 0; i < exportedIdentifier.size(); i++) {
-                result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
-            }
-            exportedPackage = new WenyanPackage(result);
         } else {
             currentRuntime = returnRuntime;
         }
@@ -189,17 +159,5 @@ public class WenyanRunner implements IThreadHolder<WenyanProgramImpl.PCB>, IFram
      */
     public IWenyanValue getGlobalVariable(String id) throws WenyanException {
         return globals.getAttribute(id);
-    }
-
-    private boolean willDie = false;
-
-    @Override
-    public void die() throws WenyanUnreachedException {
-        willDie = true;
-        IThreadHolder.super.die();
-    }
-
-    public boolean isDying() {
-        return willDie;
     }
 }

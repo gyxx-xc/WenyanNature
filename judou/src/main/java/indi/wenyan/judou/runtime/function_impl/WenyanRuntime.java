@@ -1,9 +1,16 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
+import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.judou.compiler.WenyanVerifier;
+import indi.wenyan.judou.compiler.visitor.WenyanMainVisitor;
+import indi.wenyan.judou.compiler.visitor.WenyanVisitor;
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.values.WenyanNull;
+import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,13 +29,17 @@ public class WenyanRuntime {
      * -- GETTER --
      * The bytecode to be executed
      */
-    @Getter @NotNull
+    @Getter
+    @NotNull
     private final WenyanBytecode bytecode;
 
-    /** Current instruction pointer */
+    /**
+     * Current instruction pointer
+     */
     public int programCounter = 0;
 
-    @Getter @Nullable
+    @Getter
+    @Nullable
     private final WenyanRuntime returnRuntime;
 
     @Getter
@@ -51,16 +62,19 @@ public class WenyanRuntime {
     @Getter
     private final Deque<IWenyanValue> processStack = new ArrayDeque<>();
 
-    /** Flag indicating program counter was modified */
+    /**
+     * Flag indicating program counter was modified
+     */
     public boolean PCFlag = false;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private ReturnBehavior returnBehavior = this::onReturn;
 
     /**
      * Creates a new runtime environment with the specified bytecode.
      *
-     * @param bytecode      The bytecode to execute (can be null)
+     * @param bytecode The bytecode to execute (can be null)
      */
     public WenyanRuntime(@NotNull WenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanRuntime returnRuntime) {
         this.bytecode = bytecode;
@@ -70,6 +84,48 @@ public class WenyanRuntime {
 
     public WenyanRuntime(@NotNull WenyanBytecode bytecode) {
         this(bytecode, Collections.emptyList(), null);
+    }
+
+    public static @NotNull WenyanRuntime ofCode(String code) {
+        var bytecode = new WenyanBytecode(code);
+        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
+        WenyanVisitor visitor = new WenyanMainVisitor(environment);
+        visitor.visit(WenyanVisitor.program(code));
+        environment.enterContext(0, 0, 0, 0);
+        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
+        environment.add(WenyanCodes.RET);
+        environment.exitContext();
+        WenyanVerifier.verify(bytecode);
+        return new WenyanRuntime(bytecode);
+    }
+
+    public static @NotNull WenyanRuntime ofImportCode(String code, WenyanRuntime returnRuntime) {
+        // FIXME: reduce code redundancy
+        var bytecode = new WenyanBytecode(code);
+        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
+        WenyanVisitor visitor = new WenyanMainVisitor(environment);
+        visitor.visit(WenyanVisitor.program(code));
+        environment.enterContext(0, 0, 0, 0);
+        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
+        environment.add(WenyanCodes.RET);
+        environment.exitContext();
+        WenyanVerifier.verify(bytecode);
+        return getRuntime(returnRuntime, bytecode, environment);
+    }
+
+    private static @NotNull WenyanRuntime getRuntime(WenyanRuntime returnRuntime, WenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
+        WenyanRuntime wenyanRuntime = new WenyanRuntime(bytecode, Collections.emptyList(), returnRuntime);
+        wenyanRuntime.setReturnBehavior((runner, returnValue) -> {
+            Map<String, IWenyanValue> result = new HashMap<>();
+            var exportedIdentifier = environment.getExportedValues();
+            WenyanRuntime currentRuntime = runner.getCurrentRuntime();
+            for (int i = 0; i < exportedIdentifier.size(); i++) {
+                result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
+            }
+            runner.ret();
+            runner.getCurrentRuntime().pushReturnValue(new WenyanPackage(result));
+        });
+        return wenyanRuntime;
     }
 
     public void setLocal(int index, IWenyanValue value) {
