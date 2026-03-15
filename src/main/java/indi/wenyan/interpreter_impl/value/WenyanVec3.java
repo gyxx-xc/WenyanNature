@@ -12,7 +12,6 @@ import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanThreading;
 import indi.wenyan.judou.utils.WenyanValues;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,10 +21,6 @@ import java.util.List;
 public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenyanObject {
     public static final IWenyanObjectType OBJECT_TYPE = new Vec3ObjectType();
     public static final WenyanType<WenyanVec3> TYPE = new WenyanType<>("vec3", WenyanVec3.class);
-
-    public WenyanVec3(Vec3i value) {
-        this(new Vec3(value.getX(), value.getY(), value.getZ()));
-    }
 
     @Override
     public WenyanType<?> type() {
@@ -49,7 +44,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
             case "「長」" -> WenyanValues.of(value.length());
             case "「方長」" -> WenyanValues.of(value.lengthSqr());
             case "「偏移」" -> new WenyanInlineJavacall(
-                    (self, args) -> {
+                    (_, args) -> {
                         if (args.size() == 1) {
                             return WenyanMinecraftValues.of(value.add(args.getFirst().as(TYPE).value));
                         } else if (args.size() == 3) {
@@ -127,6 +122,6 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     @Override
     public @NotNull String toString() {
         return "(" + WenyanValues.of(value().x()) + ", " +
-                WenyanValues.of(value().y()) + ", " + new WenyanDouble(value().z()) + ")";
+                WenyanValues.of(value().y()) + ", " + WenyanValues.of(value().z()) + ")";
     }
 }

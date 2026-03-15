@@ -9,7 +9,7 @@ import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinAsyncFunction;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public enum WenyanPackages {
                     throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
                 for (IWenyanValue v : args.subList(1, args.size())) {
-                    value.concat(v.as(WenyanList.TYPE));
+                    v.as(WenyanList.TYPE).value().stream().map(WenyanLeftValue::varOf).forEach(value::add);
                 }
                 return value;
             })

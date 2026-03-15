@@ -4,7 +4,7 @@ import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 

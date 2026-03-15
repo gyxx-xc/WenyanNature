@@ -18,7 +18,7 @@ public class WenyanLeftValue implements IWenyanValue {
      * Creates a new left value
      * @param value The initial value
      */
-    public WenyanLeftValue(IWenyanValue value) {
+    private WenyanLeftValue(IWenyanValue value) {
         this.value = value;
     }
 
