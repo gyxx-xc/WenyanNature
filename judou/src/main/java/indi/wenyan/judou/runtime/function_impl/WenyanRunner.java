@@ -75,7 +75,7 @@ public class WenyanRunner implements IWenyanRunner {
             try {
                 WenyanFrame runtime = currentRuntime;
                 if (validateRuntimeState(runtime)) return;
-                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.programCounter);
+                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.getProgramCounter());
                 WenyanCode code = bytecode.code().getCode();
                 consumeStep(1);
                 code.exec(bytecode.arg(), this);
@@ -97,15 +97,15 @@ public class WenyanRunner implements IWenyanRunner {
     }
 
     private boolean updateProgramCounter(WenyanFrame runtime) throws WenyanUnreachedException {
-        if (!runtime.PCFlag)
-            runtime.programCounter++;
-        runtime.PCFlag = false;
+        if (!runtime.isPCFlag())
+            runtime.setProgramCounter(runtime.getProgramCounter() + 1);
+        runtime.setPCFlag(false);
 
         return willPause;
     }
 
     private boolean validateRuntimeState(WenyanFrame runtime) {
-        if (runtime.programCounter < 0 || runtime.programCounter >= runtime.getBytecode().size()) {
+        if (runtime.getProgramCounter() < 0 || runtime.getProgramCounter() >= runtime.getBytecode().size()) {
             IWenyanRunner.dieWithException(this, new WenyanUnreachedException());
             return true;
         }

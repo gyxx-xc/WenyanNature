@@ -27,15 +27,15 @@ public class BranchCode extends WenyanCode {
         WenyanFrame runtime = thread.getCurrentRuntime();
         switch (condition) {
             case NONE -> {
-                runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                runtime.PCFlag = true;
+                runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                runtime.setPCFlag(true);
             }
             case POP_FALSE -> {
                 boolean value = runtime.getProcessStack().pop()
                         .as(WenyanBoolean.TYPE).value();
                 if (!value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
             case FALSE -> {
@@ -43,8 +43,8 @@ public class BranchCode extends WenyanCode {
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (!value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
             case TRUE -> {
@@ -52,8 +52,8 @@ public class BranchCode extends WenyanCode {
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
         }

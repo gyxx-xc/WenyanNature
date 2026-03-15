@@ -35,9 +35,12 @@ public class WenyanFrame {
     private final WenyanBytecode bytecode;
 
     /**
-     * Current instruction pointer
+     * -- GETTER --
+     *  Current instruction pointer
      */
-    public int programCounter = 0;
+    @Setter
+    @Getter
+    private int programCounter = 0;
 
     @Getter
     @Nullable
@@ -63,10 +66,9 @@ public class WenyanFrame {
     @Getter
     private final Deque<IWenyanValue> processStack = new ArrayDeque<>();
 
-    /**
-     * Flag indicating program counter was modified
-     */
-    public boolean PCFlag = false;
+    @Getter
+    @Setter
+    private boolean PCFlag = false;
 
     @Getter
     @Setter
@@ -83,7 +85,7 @@ public class WenyanFrame {
         this.returnRuntime = returnRuntime;
     }
 
-    public WenyanFrame(@NotNull WenyanBytecode bytecode) {
+    private WenyanFrame(@NotNull WenyanBytecode bytecode) {
         this(bytecode, Collections.emptyList(), null);
     }
 
@@ -151,7 +153,7 @@ public class WenyanFrame {
     public WenyanException.@Nullable ErrorContext getErrorContext(WenyanException e, Logger logger) {
         WenyanException.ErrorContext errorContext = null;
         try {
-            WenyanBytecode.Context context = bytecode.getContext(programCounter - 1);
+            WenyanBytecode.Context context = bytecode.getContext(getProgramCounter() - 1);
             errorContext = new WenyanException.ErrorContext(
                     context.line(), context.column(),
                     bytecode.getSourceCode().substring(context.contentStart(), context.contentEnd()));
