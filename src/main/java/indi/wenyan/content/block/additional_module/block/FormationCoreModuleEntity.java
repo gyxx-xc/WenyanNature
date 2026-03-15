@@ -36,7 +36,8 @@ import java.util.Map;
 @MethodsReturnNonnullByDefault
 public class FormationCoreModuleEntity extends AbstractModuleEntity implements ICommunicateEntity {
 
-    private final Map<String, RunnerBlockEntity> platforms = new HashMap<>();
+    private final Map<String, RunnerBlockEntity> startedPlatforms = new HashMap<>();
+    private final Map<String, BlockPos> findedPlatforms = new HashMap<>();
     @Getter
     private final List<ICommunicateEntity.CommunicationEffect> communicates = new ArrayList<>();
     private static final int RANGE = 10;
@@ -52,13 +53,14 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler("「啓」", request -> {
                 for (var arg : request.args()) {
-                    var block = getRunner(arg.as(WenyanString.TYPE).value());
+                    String platformName = arg.as(WenyanString.TYPE).value();
+                    var block = getRunner(platformName);
                     if (block == null) throw new WenyanException("can't find fu");
                     if (level instanceof ServerLevel serverLevel)
                         PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(getBlockPos()),
                                 new CommunicationLocationPacket(getBlockPos(), block.getBlockPos().subtract(getBlockPos())));
                     block.newThread()
-                            .orElseThrow(() -> new WenyanException("can't start"));
+                            .orElseThrow(() -> new WenyanException("can't start " + platformName));
                 }
                 return WenyanNull.NULL;
             })
@@ -73,15 +75,19 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
             })
             .handler("「歸」", (BaseHandleableRequest.IRawRequest) (_, request) -> {
                 boolean running = false;
-                var iter = platforms.entrySet().iterator();
+                var iter = startedPlatforms.entrySet().iterator();
                 while (iter.hasNext()) {
                     var platformEntry = iter.next();
                     RunnerBlockEntity entity = platformEntry.getValue();
-                    if (entity.isRemoved())
+                    if (entity.isRemoved()) {
                         iter.remove();
-                    else if (entity.isRunning()) {
+                        continue; // ignore
+                    }
+                    if (entity.isRunning()) {
                         running = true;
                         break;
+                    } else {
+                        iter.remove();
                     }
                 }
                 if (!running) {
@@ -95,7 +101,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
 
     private @Nullable RunnerBlockEntity getRunner(String name) {
         String runnerName = Component.translatable("code.wenyan_programming.bracket", name).getString();
-        // check cache
+        // check started
         RunnerBlockEntity cachedPlatform = getStartedRunner(runnerName);
         if (cachedPlatform != null) {
             if (level instanceof ServerLevel serverLevel)
@@ -104,14 +110,36 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
             return cachedPlatform;
         }
 
+        if (findedPlatforms.containsKey(runnerName)) {
+            var pos = findedPlatforms.get(runnerName);
+            assert level != null;
+            if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform) {
+                String platformName = platform.getPlatformName();
+                if (runnerName.equals(platformName)) {
+                    startedPlatforms.put(runnerName, platform);
+                    return platform;
+                } else  {
+                    findedPlatforms.remove(runnerName);
+                    findedPlatforms.put(platformName, pos);
+                    // fall through
+                }
+            } else {
+                findedPlatforms.remove(runnerName);
+                // fall through
+            }
+        }
+
         // iter found
         // TODO: performance issue
         assert level != null;
         for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE), getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
-            if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform &&
-                    runnerName.equals(platform.getPlatformName())) {
-                platforms.put(runnerName, platform);
-                return platform;
+            if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform) {
+                String platformName = platform.getPlatformName();
+                findedPlatforms.put(platformName, pos);
+                if (runnerName.equals(platformName)) {
+                    startedPlatforms.put(runnerName, platform);
+                    return platform;
+                }
             }
         }
 
@@ -120,12 +148,12 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
     }
 
     private @Nullable RunnerBlockEntity getStartedRunner(String runnerName) {
-        var cachedPlatform = platforms.get(runnerName);
-        if (cachedPlatform != null) {
-            if (!cachedPlatform.isRemoved())
-                return cachedPlatform;
+        var started = startedPlatforms.get(runnerName);
+        if (started != null) {
+            if (!started.isRemoved())
+                return started;
             else
-                platforms.remove(runnerName);
+                startedPlatforms.remove(runnerName);
         }
         return null;
     }
