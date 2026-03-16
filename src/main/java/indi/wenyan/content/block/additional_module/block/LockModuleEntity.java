@@ -6,6 +6,7 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
 import indi.wenyan.judou.runtime.IThreadHolder;
+import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.WenyanSymbol;
@@ -24,8 +25,8 @@ public class LockModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.var("SemaphoreModule");
 
-    private IThreadHolder lockHolder;
-    private final Queue<IThreadHolder> waitingThreads = new ArrayDeque<>();
+    private IThreadHolder<WenyanProgramImpl.PCB> lockHolder;
+    private final Queue<IThreadHolder<WenyanProgramImpl.PCB>> waitingThreads = new ArrayDeque<>();
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
@@ -34,7 +35,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
             .build();
 
     private boolean acquireSemaphoreHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
-        boolean locked = blockState().getValue(LockModuleBlock.LOCK_STATE);
+        boolean locked = getBlockState().getValue(LockModuleBlock.LOCK_STATE);
         if (locked) {
             if (lockHolder == request.thread() || waitingThreads.contains(request.thread()))
                 throw new WenyanException("thread already hold lock");
@@ -50,7 +51,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
     }
 
     private @NotNull WenyanNull releaseSemaphore(IHandleableRequest request) throws WenyanException {
-        boolean locked = blockState().getValue(LockModuleBlock.LOCK_STATE);
+        boolean locked = getBlockState().getValue(LockModuleBlock.LOCK_STATE);
         if (!locked || lockHolder != request.thread()) {
             throw new WenyanException("lock not holded by thread");
         }

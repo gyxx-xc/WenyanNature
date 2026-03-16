@@ -79,7 +79,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private boolean outputChanged = false;
 
     @Getter
-    public final ExecQueue execQueue = new ExecQueue(this);
+    private final ExecQueue execQueue = new ExecQueue(this);
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
     public static final int DEVICE_SEARCH_RANGE = 3;
     private final RequestCallHandler importFunction = (t, _, a) ->
@@ -111,7 +111,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         assert getLevel() != null;
         BlockPos attached = getBlockPos().relative(
                 AbstractFuluBlock.getConnectedDirection(getBlockState()).getOpposite());
-        if (getLevel().getBlockEntity(attached) instanceof IWenyanBlockDevice device)
+        if (getLevel().getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, attached) instanceof IWenyanBlockDevice device)
             baseEnvironment.combine(processPackage(device.getExecPackage(), device));
         return baseEnvironment;
     }
@@ -139,7 +139,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
     }
 
-    @SuppressWarnings("unused")
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide()) {
             ifProgram().ifPresentOrElse(program -> {
@@ -236,20 +235,23 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     private Either<WenyanPackage, String> getPackage(IHandleContext context, String packageName) throws WenyanException {
         assert level != null;
-        for (BlockPos b : BlockPos.betweenClosed(
+        for (BlockPos pos : BlockPos.betweenClosed(
                 getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
                 getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
-            BlockEntity blockEntity = level.getBlockEntity(b);
-            if (blockEntity instanceof IWenyanBlockDevice executor) {
-                if (executor.getPackageName().equals(packageName)) {
-                    showCommunication(executor.blockPos());
-                    return Either.left(processPackage(executor.getExecPackage(), executor));
-                }
-            } else if (blockEntity instanceof RunnerBlockEntity platform) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof RunnerBlockEntity platform) {
                 if (platform == this) continue;
                 if (platform.platformName.equals(packageName)) {
-                    showCommunication(platform.getBlockPos());
+                    showCommunication(pos);
                     return Either.right(platform.code);
+                }
+            } else {
+                var executor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, pos);
+                if (executor != null) {
+                    if (executor.getPackageName().equals(packageName)) {
+                        showCommunication(pos);
+                        return Either.left(processPackage(executor.getExecPackage(), executor));
+                    }
                 }
             }
         }
@@ -353,6 +355,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         List<IWenyanValue> args;
 
         IWenyanBlockDevice device;
+        BlockPos pos;
         IRawRequest request;
 
         @NonFinal
@@ -363,6 +366,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             this.self = self;
             this.args = argsList;
             this.device = device;
+            this.pos = device.blockPos();
             this.request = request;
         }
 
