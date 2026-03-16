@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -8,19 +8,19 @@
       
       
       
-        <link rel="canonical" href="https://gyxx-xc.github.io/WenyanNature/zh/in_game/hand_runner/">
+        <link rel="canonical" href="https://gyxx-xc.github.io/WenyanNature/development/in-game/blocking_queue/">
       
       
-        <link rel="prev" href="../float_note/">
+        <link rel="prev" href="../../..">
       
       
-        <link rel="next" href="../../usage/">
+        <link rel="next" href="../cloud_module/">
       
       
         
-          <link rel="alternate" href="../../../in_game/hand_runner/" hreflang="en">
+          <link rel="alternate" href="./" hreflang="en">
         
-          <link rel="alternate" href="./" hreflang="zh">
+          <link rel="alternate" href="../../../zh/development/in-game/blocking_queue/" hreflang="zh">
         
       
       
@@ -29,7 +29,7 @@
     
     
       
-        <title>Hand runner - 吾有一術</title>
+        <title>Blocking queue - 吾有一術</title>
       
     
     
@@ -83,6 +83,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#feature" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -92,8 +97,8 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
-    <a href="../../" title="吾有一術" class="md-header__button md-logo" aria-label="吾有一術" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="吾有一術" class="md-header__button md-logo" aria-label="吾有一術" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -113,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Hand runner
+              Blocking queue
             
           </span>
         </div>
@@ -163,20 +168,20 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="选择当前语言">
+    <button class="md-header__button md-icon" aria-label="Select language">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../../in_game/hand_runner/" hreflang="en" class="md-select__link">
+            <a href="./" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="./" hreflang="zh" class="md-select__link">
+            <a href="../../../zh/development/in-game/blocking_queue/" hreflang="zh" class="md-select__link">
               简体中文
             </a>
           </li>
@@ -197,16 +202,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -217,7 +222,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -238,7 +243,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -248,7 +253,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../" class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -265,6 +270,8 @@
   
   
   
+    
+  
   
     
     
@@ -272,11 +279,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../development/in-game/blocking_queue/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -297,13 +306,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../float_note/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../in_game/float_note/" class="md-tabs__link">
           
   
   
@@ -325,7 +332,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../usage/" class="md-tabs__link">
+        <a href="../../../usage/" class="md-tabs__link">
           
   
   
@@ -359,9 +366,9 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../" title="吾有一術" class="md-nav__button md-logo" aria-label="吾有一術" data-md-component="logo">
+    <a href="../../.." title="吾有一術" class="md-nav__button md-logo" aria-label="吾有一術" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -379,7 +386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -403,8 +410,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -416,17 +425,20 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -444,7 +456,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -459,8 +471,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -481,11 +495,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
         
           
           <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
@@ -506,7 +520,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -521,10 +535,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../development/in-game/blocking_queue/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blocking queue
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -540,6 +579,146 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        feature
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="feature">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apperance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apperance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        impl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="impl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#put" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        put
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#take" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        take
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offerpool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        offer/pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        peek
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        clear
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -552,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/in-game/cloud_module/" class="md-nav__link">
+      <a href="../cloud_module/" class="md-nav__link">
         
   
   
@@ -580,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/in-game/cluster_core/" class="md-nav__link">
+      <a href="../cluster_core/" class="md-nav__link">
         
   
   
@@ -608,7 +787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/in-game/hand_runer/" class="md-nav__link">
+      <a href="../hand_runer/" class="md-nav__link">
         
   
   
@@ -636,7 +815,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/in-game/writing_block/" class="md-nav__link">
+      <a href="../writing_block/" class="md-nav__link">
         
   
   
@@ -695,7 +874,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../development/judou/" class="md-nav__link ">
+            <a href="../../judou/" class="md-nav__link ">
               
   
   
@@ -739,7 +918,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/judou/scoped_calue/" class="md-nav__link">
+      <a href="../../judou/scoped_calue/" class="md-nav__link">
         
   
   
@@ -779,10 +958,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -794,20 +971,17 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -825,7 +999,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -843,7 +1017,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../float_note/" class="md-nav__link">
+      <a href="../../../in_game/float_note/" class="md-nav__link">
         
   
   
@@ -868,17 +1042,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../in_game/hand_runner/" class="md-nav__link">
         
   
   
@@ -894,7 +1061,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -951,7 +1117,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../usage/" class="md-nav__link ">
+            <a href="../../../usage/" class="md-nav__link ">
               
   
   
@@ -995,7 +1161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/quick_start/" class="md-nav__link">
+      <a href="../../../usage/quick_start/" class="md-nav__link">
         
   
   
@@ -1023,7 +1189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/varible/" class="md-nav__link">
+      <a href="../../../usage/varible/" class="md-nav__link">
         
   
   
@@ -1051,7 +1217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/calculation/" class="md-nav__link">
+      <a href="../../../usage/calculation/" class="md-nav__link">
         
   
   
@@ -1079,7 +1245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/control/" class="md-nav__link">
+      <a href="../../../usage/control/" class="md-nav__link">
         
   
   
@@ -1107,7 +1273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/function/" class="md-nav__link">
+      <a href="../../../usage/function/" class="md-nav__link">
         
   
   
@@ -1135,7 +1301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/object/" class="md-nav__link">
+      <a href="../../../usage/object/" class="md-nav__link">
         
   
   
@@ -1163,7 +1329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/import/" class="md-nav__link">
+      <a href="../../../usage/import/" class="md-nav__link">
         
   
   
@@ -1191,7 +1357,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/misc/" class="md-nav__link">
+      <a href="../../../usage/misc/" class="md-nav__link">
         
   
   
@@ -1232,10 +1398,140 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        feature
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="feature">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apperance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apperance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        impl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="impl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#put" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        put
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#take" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        take
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offerpool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        offer/pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        peek
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        clear
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1252,9 +1548,66 @@
 
 
 
-  <h1>Hand runner</h1>
+  <h1>Blocking queue</h1>
 
-
+<h2 id="feature">feature</h2>
+<h3 id="apperance">apperance</h3>
+<p>paper</p>
+<h3 id="function">function</h3>
+<ol>
+<li>put(blocked)</li>
+<li>take(blocked)</li>
+<li>offer?(non-blocked, return bool)</li>
+<li>poll?(non-blocked, return null if empty)</li>
+<li>peek?(return null if empty)</li>
+<li>clear</li>
+<li>size</li>
+</ol>
+<h2 id="impl">impl</h2>
+<p>array deque inner, also two queue store producer and consumer.
+differ from java, since hard to run javacall after unblock.
+if blocking, the rest of the request is done by the unblocker (producer do put, consumer do take).
+note that all request is in single thread.</p>
+<h4 id="put">put</h4>
+<ol>
+<li>if full, block</li>
+<li>else:</li>
+<li>put inside the queue</li>
+<li>get one consumer, currently consumer is blocked from take</li>
+<li>do consumer's take
+   but no need do unblock producer, cause currently producer should be empty</li>
+<li>unblock</li>
+</ol>
+<p>for producer should be empty assume. any operation that decrease
+the size of array deque will filled from the producer queue first, so that, since array deque not
+full,
+indicated that all producer queue is already filled in and producer queue is empty.</p>
+<h4 id="take">take</h4>
+<ol>
+<li>if empty, block</li>
+<li>else:</li>
+<li>take from the queue</li>
+<li>get one producer, currently producer is blocked from put</li>
+<li>do producer's put, same we don't need to do unblock consumer</li>
+<li>unblock</li>
+</ol>
+<h4 id="offerpool">offer/pool</h4>
+<ol>
+<li>if full/empty, return false</li>
+<li>else: same as put/take</li>
+</ol>
+<h4 id="peek">peek</h4>
+<p>if empty: return null
+else: just peek</p>
+<h4 id="size">size</h4>
+<p>just return queue size</p>
+<h4 id="clear">clear</h4>
+<ol>
+<li>if empty: do nothing</li>
+<li>clear queue</li>
+<li>while: get the producer until queue full (i.e. get min(capacity, producer size))</li>
+<li>do producer's put, don't need to do unblock, since consumer is empty (base on fact that queue is not empty)</li>
+</ol>
 
 
 
@@ -1304,7 +1657,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.instant", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.instant", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>

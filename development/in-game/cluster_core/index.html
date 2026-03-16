@@ -11,10 +11,10 @@
         <link rel="canonical" href="https://gyxx-xc.github.io/WenyanNature/development/in-game/cluster_core/">
       
       
-        <link rel="prev" href="../../..">
+        <link rel="prev" href="../cloud_module/">
       
       
-        <link rel="next" href="../../judou/">
+        <link rel="next" href="../hand_runer/">
       
       
         
@@ -285,7 +285,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../blocking_queue/" class="md-tabs__link">
           
   
   
@@ -480,6 +480,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -522,6 +530,62 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blocking_queue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blocking queue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_module/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -643,6 +707,62 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hand_runer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hand Runner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writing_block/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    刻印台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -912,6 +1032,8 @@
       
         
       
+        
+      
     
     
     
@@ -1139,6 +1261,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../usage/import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    府库第七
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../usage/misc/" class="md-nav__link">
         
   
@@ -1272,9 +1422,9 @@ showing the range of captured fu.</p>
 <ol>
 <li>void start(string... fu_name): start a set of fu, this reach range should be a litte bit futher
    then the fu (r = 10)</li>
-<li>status status(string fu_name): return the status of a fu, return status should be one of:
+<li>status status(string fu_name): return the status of a fu which started by this module, return status should be one of:
    not-running, running, error</li>
-<li>void join(): waiting all fu inside the range is done</li>
+<li>void join(): waiting all fu started by this is done</li>
 </ol>
 <p>the fu search and call should be cached.</p>
 <h2 id="impl">impl</h2>
