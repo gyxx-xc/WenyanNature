@@ -40,19 +40,19 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
             .handler(WenyanSymbol.var("ExplosionModule.lightning"), _ -> {
                 if (!(getLevel() instanceof ServerLevel sl))
                     throw new WenyanUnreachedException();
-                EntityType.LIGHTNING_BOLT.spawn(sl, blockPos(), EntitySpawnReason.COMMAND);
+                EntityType.LIGHTNING_BOLT.spawn(sl, getBlockPos(), EntitySpawnReason.COMMAND);
                 return WenyanNull.NULL;
             })
             .handler(WenyanSymbol.var("ExplosionModule.explode"), _ -> {
                 assert level != null;
                 level.explode(null,
-                        blockPos().getX() + 0.5, blockPos().getY() + 0.5, blockPos().getZ() + 0.5,
+                        getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
                         3.0f, true, Level.ExplosionInteraction.BLOCK);
                 return WenyanNull.NULL;
             })
             .handler(WenyanSymbol.var("ExplosionModule.ignite"), request -> {
                 var offset = request.args().getFirst().as(WenyanVec3.TYPE).value(); 
-                BlockPos pos = blockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
+                BlockPos pos = getBlockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
                 if (!(getLevel() instanceof ServerLevel serverLevel)) {
                     throw new WenyanUnreachedException();
                 }
@@ -70,7 +70,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                     throw new WenyanUnreachedException();
                 var e = new LargeFireball(EntityType.FIREBALL, sl);
                 Projectile.spawnProjectile(e, sl, ItemStack.EMPTY);
-                e.setPos(blockPos().offset(0, 1, 0).getCenter());
+                e.setPos(getBlockPos().offset(0, 1, 0).getCenter());
                 e.setDeltaMovement(speed);
                 return WenyanNull.NULL;
             })

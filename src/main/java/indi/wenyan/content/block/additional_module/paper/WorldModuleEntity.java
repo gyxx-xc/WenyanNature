@@ -33,13 +33,13 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler(WenyanSymbol.var("WorldModule.signalStrength"), _ -> {
-                int value = getLevel() != null ? getLevel().getBestNeighborSignal(blockPos()) : 0;
+                int value = getLevel() != null ? getLevel().getBestNeighborSignal(getBlockPos()) : 0;
                 return WenyanValues.of(value);
             })
             .handler(WenyanSymbol.var("WorldModule.emitSignal"), request -> {
                 signal = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 assert getLevel() != null;
-                WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), blockPos());
+                WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
                 return WenyanNull.NULL;
             })
             .handler(WenyanSymbol.var("WorldModule.changeWeather"), 5, (_, request) -> {

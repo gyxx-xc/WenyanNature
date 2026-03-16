@@ -40,7 +40,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
             .handler(WenyanSymbol.var("EntityModule.nearby"), request -> {
                     assert getLevel() != null;
                     double radius = request.args().getFirst().as(WenyanDouble.TYPE).value();
-                    BlockPos pos = blockPos();
+                    BlockPos pos = getBlockPos();
                     List<Entity> entities = getLevel().getEntities((Entity) null,
                             new AABB(pos).inflate(radius), EntitySelector.NO_SPECTATORS);
                     // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]

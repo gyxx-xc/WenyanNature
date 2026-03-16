@@ -172,7 +172,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         if (!(getLevel() instanceof ServerLevel sl))
             throw new WenyanUnreachedException();
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        forNearbyPedestal(sl, blockPos(), pedestal -> pedestalItems.add(ItemUtil.getStack(pedestal.getItemHandler(), 0)));
+        forNearbyPedestal(sl, getBlockPos(), pedestal -> pedestalItems.add(ItemUtil.getStack(pedestal.getItemHandler(), 0)));
         var optionalRecipeHolder = sl.recipeAccess().getRecipeFor(WyRegistration.ANSWERING_RECIPE_TYPE.get(),
                 new AnsweringRecipeInput(pedestalItems), sl, this.recipeHolder); // set last recipe as hint
         if (optionalRecipeHolder.isEmpty()) {
@@ -194,7 +194,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     public void craftAndEjectItem() {
         assert level != null;
         // TODO: for recipe with remaining item
-        forNearbyPedestal(level, blockPos(), pedestal ->
+        forNearbyPedestal(level, getBlockPos(), pedestal ->
                 ResourceHandlerUtil.extractFirst(pedestal.getItemHandler(), _ -> true, 1, null));
         BlockPos pos = worldPosition.relative(Direction.UP);
         Block.popResource(level, pos, recipeHolder.value().assemble());

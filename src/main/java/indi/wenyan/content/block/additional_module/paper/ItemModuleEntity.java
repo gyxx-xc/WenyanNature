@@ -40,7 +40,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
                 }
                 int slot = Math.clamp(request.args().getFirst().as(WenyanInteger.TYPE).value(),
                         0, capability.size() - 1);
-                return new WenyanCapabilitySlot(blockPos().getCenter(), capability, slot);
+                return new WenyanCapabilitySlot(getBlockPos().getCenter(), capability, slot);
             })
             .build();
 
@@ -52,6 +52,6 @@ public class ItemModuleEntity extends AbstractModuleEntity {
         var attached = AbstractFuluBlock.getConnectedDirection(getBlockState()).getOpposite();
         assert level != null;
         return level.getCapability(Capabilities.Item.BLOCK,
-                blockPos().relative(attached), attached.getOpposite());
+                getBlockPos().relative(attached), attached.getOpposite());
     }
 }

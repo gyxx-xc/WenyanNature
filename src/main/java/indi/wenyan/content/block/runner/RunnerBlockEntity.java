@@ -241,12 +241,16 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
             BlockEntity blockEntity = level.getBlockEntity(b);
             if (blockEntity instanceof IWenyanBlockDevice executor) {
-                if (executor.getPackageName().equals(packageName))
-                    return Either.left(getExecutorPackage(executor));
+                if (executor.getPackageName().equals(packageName)) {
+                    showCommunication(executor.blockPos());
+                    return Either.left(processPackage(executor.getExecPackage(), executor));
+                }
             } else if (blockEntity instanceof RunnerBlockEntity platform) {
                 if (platform == this) continue;
-                if (platform.platformName.equals(packageName))
+                if (platform.platformName.equals(packageName)) {
+                    showCommunication(platform.getBlockPos());
                     return Either.right(platform.code);
+                }
             }
         }
         throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
@@ -276,11 +280,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             return Optional.empty();
         }
         return Optional.of(runner);
-    }
-
-    private WenyanPackage getExecutorPackage(IWenyanBlockDevice executor) {
-        showCommunication(executor.blockPos());
-        return processPackage(executor.getExecPackage(), executor);
     }
 
     @Contract("_, _ -> new")

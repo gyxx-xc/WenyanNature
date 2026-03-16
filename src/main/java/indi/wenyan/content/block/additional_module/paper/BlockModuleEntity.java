@@ -52,8 +52,8 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                         // search from start to end
                         var target = blockItem.getBlock();
                         assert level != null;
-                        for (var pos : BlockPos.betweenClosed(start.offset(blockPos()),
-                                end.offset(blockPos()))) {
+                        for (var pos : BlockPos.betweenClosed(start.offset(getBlockPos()),
+                                end.offset(getBlockPos()))) {
                             if (level.getBlockState(pos).is(target)) {
                                 found = true;
                                 break;
@@ -65,8 +65,8 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                 } else if (compare.is(WenyanBlock.TYPE)) {
                     BlockState target = compare.as(WenyanBlock.TYPE).value();
                     assert level != null;
-                    for (var pos : BlockPos.betweenClosed(start.offset(blockPos()),
-                            end.offset(blockPos()))) {
+                    for (var pos : BlockPos.betweenClosed(start.offset(getBlockPos()),
+                            end.offset(getBlockPos()))) {
                         if (level.getBlockState(pos).is(target.getBlock())) {
                             found = true;
                             break;
@@ -78,8 +78,8 @@ public class BlockModuleEntity extends AbstractModuleEntity {
 
                 if (level instanceof ServerLevel serverLevel)
                     PacketDistributor.sendToPlayersTrackingChunk(serverLevel,
-                            ChunkPos.containing(blockPos()),
-                            new BlockPosRangePacket(blockPos(), start, end, found));
+                            ChunkPos.containing(getBlockPos()),
+                            new BlockPosRangePacket(getBlockPos(), start, end, found));
                 return WenyanValues.of(found);
             })
             .handler(WenyanSymbol.var("BlockModule.get"), request -> {
@@ -92,7 +92,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
             .handler(WenyanSymbol.var("BlockModule.attach"), _ -> {
                 Direction attachedDirection = AbstractFuluBlock
                         .getConnectedDirection(getBlockState()).getOpposite();
-                BlockPos pos = blockPos().relative(attachedDirection);
+                BlockPos pos = getBlockPos().relative(attachedDirection);
                 assert level != null;
                 BlockState state = level.getBlockState(pos);
                 return WenyanMinecraftValues.of(state);
