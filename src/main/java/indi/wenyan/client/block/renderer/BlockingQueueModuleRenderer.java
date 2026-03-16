@@ -2,7 +2,7 @@ package indi.wenyan.client.block.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import indi.wenyan.client.block.renderer.utils.ICommunicateRendererState;
-import indi.wenyan.content.block.ICommunicateEntity;
+import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.additional_module.paper.BlockingQueueModuleEntity;
 import lombok.Getter;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -43,7 +43,7 @@ public class BlockingQueueModuleRenderer implements BlockEntityRenderer<Blocking
     public static class RenderState extends BlockEntityRenderState implements ICommunicateRendererState {
 
         @Getter
-        private List<ICommunicateEntity.CommunicationEffect> communicates;
+        private List<ICommunicateHolder.CommunicationEffect> communicates;
 
         @Getter
         private float partialTicks;

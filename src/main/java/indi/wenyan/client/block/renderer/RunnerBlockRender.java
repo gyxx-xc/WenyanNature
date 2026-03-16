@@ -5,7 +5,7 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.block.renderer.utils.ICommunicateRendererState;
 import indi.wenyan.client.block.renderer.utils.RenderUtils;
-import indi.wenyan.content.block.ICommunicateEntity;
+import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import lombok.Getter;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -89,7 +89,7 @@ public class RunnerBlockRender implements BlockEntityRenderer<RunnerBlockEntity,
         public float stateOffset;
 
         @Getter
-        private Collection<ICommunicateEntity.CommunicationEffect> communicates;
+        private Collection<ICommunicateHolder.CommunicationEffect> communicates;
 
         @Getter
         public float partialTicks;

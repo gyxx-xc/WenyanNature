@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.content.block.runner.ICodeOutputHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -41,7 +41,7 @@ public record PlatformRenamePacket(BlockPos pos, String name) implements CustomP
     public static final IPayloadHandler<PlatformRenamePacket> HANDLER = (packet, context) -> {
         if (context.flow().isServerbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
-            if (entity instanceof RunnerBlockEntity runner) {
+            if (entity instanceof ICodeOutputHolder runner) {
                 runner.setPlatformName(packet.name());
             }
         }

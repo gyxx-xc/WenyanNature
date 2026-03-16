@@ -2,7 +2,7 @@ package indi.wenyan.client.block.renderer.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.ICommunicateEntity;
+import indi.wenyan.content.block.ICommunicateHolder;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -22,7 +22,7 @@ public interface ICommunicateRendererState {
     RenderType COMMUNICATION_RENDER_TYPE =
                     RenderTypes.entityTranslucentCullItemTarget(COMMUNICATION_TEXTURE_LOCATION);
 
-    Collection<ICommunicateEntity.CommunicationEffect> getCommunicates();
+    Collection<ICommunicateHolder.CommunicationEffect> getCommunicates();
 
     float getPartialTicks();
 

@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.content.block.runner.ICodeOutputHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -49,7 +49,7 @@ public record PlatformOutputPacket(BlockPos pos, String output, OutputStyle styl
         if (context.flow().isClientbound()) {
             var level = context.player().level();
             var entity = level.getBlockEntity(packet.pos());
-            if (entity instanceof RunnerBlockEntity runner) {
+            if (entity instanceof ICodeOutputHolder runner) {
                 // Process the output on the client side
                 runner.addOutput(packet.output(), packet.style());
             }

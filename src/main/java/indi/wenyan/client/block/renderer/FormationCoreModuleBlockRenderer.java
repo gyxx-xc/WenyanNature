@@ -3,7 +3,7 @@ package indi.wenyan.client.block.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.client.block.renderer.utils.ICommunicateRendererState;
-import indi.wenyan.content.block.ICommunicateEntity;
+import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.additional_module.block.FormationCoreModuleEntity;
 import lombok.Getter;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -46,7 +46,7 @@ public class FormationCoreModuleBlockRenderer implements BlockEntityRenderer<For
         @Getter
         private float partialTicks;
         @Getter
-        private Collection<ICommunicateEntity.CommunicationEffect> communicates;
+        private Collection<ICommunicateHolder.CommunicationEffect> communicates;
 
         @Override
         public int getLightCoords() {

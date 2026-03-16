@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.block.ICommunicateEntity;
+import indi.wenyan.content.block.ICommunicateHolder;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -41,7 +41,7 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Block
     public static final IPayloadHandler<CommunicationLocationPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.from());
-            if (entity instanceof ICommunicateEntity runner) {
+            if (entity instanceof ICommunicateHolder runner) {
                 runner.addCommunicate(packet.pos());
             }
         }

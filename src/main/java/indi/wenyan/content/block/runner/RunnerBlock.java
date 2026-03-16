@@ -145,7 +145,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
                 packageSnippets.add(packageSnippet(execPackage,
                         executor.blockState().getCloneItemStack(pos, level, false, player),
                         executor.getPackageName()));
-            } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos)) {
+            } else if (blockEntity instanceof ICodeHolder entity && !b.equals(pos)) {
                 packageSnippets.add(new PackageSnippetWidget.PackageSnippet(WenyanItems.HAND_RUNNER_1.toStack(),
                         entity.getPlatformName(), List.of()));
             }
@@ -154,13 +154,12 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     }
 
     // @OnlyIn(Dist.CLIENT)
-    private static @NotNull RunnerBlockBackend getCodeEditorBackend(RunnerBlockEntity runner, BlockPos pos,
+    private static @NotNull RunnerBlockBackend getCodeEditorBackend(ICodeOutputHolder runner, BlockPos pos,
                                                                     List<PackageSnippetWidget.PackageSnippet> packageSnippets) {
         var synchronizer = new CodeEditorBackendSynchronizer() {
             @Override
             public void sendContent(String content) {
                 runner.setCode(content);
-                runner.setChanged();
                 ClientPacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
             }
 
@@ -171,9 +170,9 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
             @Override
             public void sendTitle(String title) {
-                title = Component.translatable("code.wenyan_programming.bracket", title).getString();
-                runner.setPlatformName(title);
-                ClientPacketDistributor.sendToServer(new PlatformRenamePacket(pos, title));
+                String warppedTitle = Component.translatable("code.wenyan_programming.bracket", title).getString();
+                runner.setPlatformName(warppedTitle);
+                ClientPacketDistributor.sendToServer(new PlatformRenamePacket(pos, warppedTitle));
             }
 
             @Override
