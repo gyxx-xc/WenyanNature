@@ -59,7 +59,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                     if (level instanceof ServerLevel serverLevel)
                         PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(getBlockPos()),
                                 new CommunicationLocationPacket(getBlockPos(), block.getBlockPos().subtract(getBlockPos())));
-                    block.newThread()
+                    block.newThread(block.getCode())
                             .orElseThrow(() -> new WenyanException("can't start " + platformName));
                 }
                 return WenyanNull.NULL;
