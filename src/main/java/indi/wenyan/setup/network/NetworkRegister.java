@@ -34,27 +34,14 @@ public enum NetworkRegister {
         serverbound(registrar, WritingCodePacket.TYPE, WritingCodePacket.STREAM_CODEC);
         serverbound(registrar, WritingTitlePacket.TYPE, WritingTitlePacket.STREAM_CODEC);
 
-        registrar.playToClient(BlockOutputPacket.TYPE,
-                BlockOutputPacket.STREAM_CODEC,
-                BlockOutputPacket.HANDLER);
-        registrar.playToClient(CommunicationLocationPacket.TYPE,
-                CommunicationLocationPacket.STREAM_CODEC,
-                CommunicationLocationPacket.HANDLER);
-        registrar.playToClient(CraftClearParticlePacket.TYPE,
-                CraftClearParticlePacket.STREAM_CODEC,
-                CraftClearParticlePacket.HANDLER);
-        registrar.playToClient(BlockPosRangePacket.TYPE,
-                BlockPosRangePacket.STREAM_CODEC,
-                BlockPosRangePacket.HANDLER);
-        registrar.playToClient(CraftingParticlePacket.TYPE,
-                CraftingParticlePacket.STREAM_CODEC,
-                CraftingParticlePacket.HANDLER);
-        registrar.playToClient(PlatformOutputPacket.TYPE,
-                PlatformOutputPacket.STREAM_CODEC,
-                PlatformOutputPacket.HANDLER);
-        registrar.playToClient(PistonMovePacket.TYPE,
-                PistonMovePacket.STREAM_CODEC,
-                PistonMovePacket.HANDLER);
+        registrar.playToClient(BlockOutputPacket.TYPE, BlockOutputPacket.STREAM_CODEC);
+        registrar.playToClient(CommunicationLocationPacket.TYPE, CommunicationLocationPacket.STREAM_CODEC);
+        registrar.playToClient(CraftClearParticlePacket.TYPE, CraftClearParticlePacket.STREAM_CODEC);
+        registrar.playToClient(BlockPosRangePacket.TYPE, BlockPosRangePacket.STREAM_CODEC);
+        registrar.playToClient(CraftingParticlePacket.TYPE, CraftingParticlePacket.STREAM_CODEC);
+        registrar.playToClient(PlatformOutputPacket.TYPE, PlatformOutputPacket.STREAM_CODEC);
+        registrar.playToClient(PistonMovePacket.TYPE, PistonMovePacket.STREAM_CODEC);
+        registrar.playToClient(BlockSetScreenPacket.TYPE, BlockSetScreenPacket.STREAM_CODEC);
     }
 
     private static <T extends IServerboundPacket> void serverbound(PayloadRegistrar registrar,

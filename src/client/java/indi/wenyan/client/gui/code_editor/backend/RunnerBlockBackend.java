@@ -5,7 +5,6 @@ import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.generated_Snippets;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.*;
-import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +30,7 @@ public class RunnerBlockBackend implements BaseTickBackend, CodeEditBackend, Out
     @Setter
     private List<SnippetSet> curSnippets = generated_Snippets.STMT_CONTEXT;
     @Getter
-    private final List<PackageSnippetWidget.PackageSnippet> packages;
+    private final List<PackageSnippet> packages;
 
     @Setter
     private Runnable cursorListener = () -> {
@@ -45,7 +44,7 @@ public class RunnerBlockBackend implements BaseTickBackend, CodeEditBackend, Out
 
     private final CodeEditorBackendSynchronizer synchronizer;
 
-    public RunnerBlockBackend(List<PackageSnippetWidget.PackageSnippet> packages,
+    public RunnerBlockBackend(List<PackageSnippet> packages,
                               CodeEditorBackendSynchronizer synchronizer) {
         this.synchronizer = synchronizer;
         sidedData = new DoubleSidedData(synchronizer.getContent(), synchronizer.getTitle(), synchronizer.getOutput());

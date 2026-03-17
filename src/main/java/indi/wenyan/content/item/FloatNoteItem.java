@@ -1,13 +1,11 @@
 package indi.wenyan.content.item;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.client.gui.float_note.FloatNoteNamingScreen;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.DeviceRenamePacket;
 import indi.wenyan.setup.network.server.PlatformRenamePacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -140,14 +138,7 @@ public class FloatNoteItem extends Item {
             stack.hurtAndBreak(1, player, hand);
     }
 
-//    @Override
-//    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
-//        return repairCandidate.is(Items.PAPER) || super.isValidRepairItem(stack, repairCandidate);
-//    }
-
     // FIXME
-//    @OnlyIn(Dist.CLIENT)
     private void openGui(Consumer<Component> setNameFunc, ItemStack stack) {
-        Minecraft.getInstance().setScreen(new FloatNoteNamingScreen(setNameFunc, stack));
     }
 }

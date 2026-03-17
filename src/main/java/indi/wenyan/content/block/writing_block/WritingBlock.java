@@ -1,16 +1,9 @@
 package indi.wenyan.content.block.writing_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.client.gui.code_editor.WritingEditorScreen;
-import indi.wenyan.client.gui.code_editor.backend.WritingBlockBackend;
-import indi.wenyan.client.gui.code_editor.backend.interfaces.WritingBackendSynchronizer;
-import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.server.WritingCodePacket;
-import indi.wenyan.setup.network.server.WritingTitlePacket;
-import net.minecraft.client.Minecraft;
+import indi.wenyan.setup.network.client.BlockSetScreenPacket;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -22,7 +15,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
@@ -46,9 +39,8 @@ public class WritingBlock extends Block implements EntityBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (player.isShiftKeyDown()) {
-            if (world.isClientSide())
-                if (world.getBlockEntity(pos) instanceof WritingBlockEntity tile)
-                    openGui(tile.getItemStack(), pos);
+            if (!world.isClientSide() && player instanceof ServerPlayer sp)
+                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, "writing_block_set_screen"));
             return InteractionResult.SUCCESS;
         }
         if (handIn != InteractionHand.MAIN_HAND)
@@ -70,44 +62,5 @@ public class WritingBlock extends Block implements EntityBlock {
             }
         }
         return InteractionResult.SUCCESS;
-    }
-
-    // FIXME
-    // @OnlyIn(Dist.CLIENT)
-    private void openGui(ItemStack runners, BlockPos pos) {
-        Minecraft.getInstance().setScreen(new WritingEditorScreen(getCodeEditorBackend(runners, pos)));
-    }
-
-    private WritingBlockBackend getCodeEditorBackend(ItemStack runners, BlockPos pos) {
-        return new WritingBlockBackend(new WritingBackendSynchronizer() {
-            @Override
-            public void sendContent(String content) {
-                runners.set(WyRegistration.PROGRAM_CODE_DATA.get(), content);
-                ClientPacketDistributor.sendToServer(new WritingCodePacket(pos, content));
-            }
-
-            @Override
-            public String getContent() {
-                return runners.getOrDefault(WyRegistration.PROGRAM_CODE_DATA.get(), "");
-            }
-
-            @Override
-            public void sendTitle(String title) {
-                var warppedTitle = Component.translatable("code.wenyan_programming.bracket", title);
-                runners.set(DataComponents.CUSTOM_NAME, warppedTitle);
-                ClientPacketDistributor.sendToServer(new WritingTitlePacket(pos, warppedTitle.getString()));
-
-            }
-
-            @Override
-            public String getTitle() {
-                var title = runners.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
-
-                if (title.length() < 2) {
-                    return "";
-                }
-                return title.substring(1, title.length() - 1);
-            }
-        });
     }
 }

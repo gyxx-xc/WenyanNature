@@ -2,12 +2,11 @@ package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.Utils;
+import indi.wenyan.client.gui.code_editor.backend.PackageSnippet;
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
-import lombok.Data;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
@@ -20,11 +19,9 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 // although it is not a text area,
@@ -139,7 +136,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
                     PACKAGE_DIR_ICON_SPRITES.get(true, buttonHoveredLeft),
                     getX() + innerPadding(), currentY,
                     ICON_WIDTH + buttonPadding.horizontal(), DIR_HEIGHT);
-            guiGraphics.renderFakeItem(pack.itemStack, x, y);
+            guiGraphics.renderFakeItem(pack.itemStack(), x, y);
 
             boolean buttonHoveredRight = mouseX >= getX() + innerPadding() + ICON_WIDTH + buttonPadding.horizontal() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
@@ -206,7 +203,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
 
     public int getInnerHeight() {
         return backend.getPackages().stream()
-                .mapToInt(pack -> pack.fold() ? 0 : pack.members.size()).sum() * ENTRY_HEIGHT +
+                .mapToInt(pack -> pack.fold() ? 0 : pack.members().size()).sum() * ENTRY_HEIGHT +
                 backend.getPackages().size() * DIR_HEIGHT;
     }
 
@@ -220,21 +217,6 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
         if (next != null) {
             backend.setCursor(next.index());
             backend.setSelectCursor(backend.getCursor());
-        }
-    }
-
-    @Data
-    @Accessors(fluent = true)
-    public static class PackageSnippet {
-        final ItemStack itemStack;
-        final String name;
-        final List<Member> members;
-        boolean fold = false;
-
-        public PackageSnippet(ItemStack itemStack, String name, List<Member> members) {
-            this.itemStack = itemStack;
-            this.name = name;
-            this.members = members;
         }
     }
 

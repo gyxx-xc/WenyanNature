@@ -1,0 +1,127 @@
+package indi.wenyan.client.block.behaviour;
+
+import indi.wenyan.client.gui.code_editor.RunnerBlockScreen;
+import indi.wenyan.client.gui.code_editor.backend.PackageSnippet;
+import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditorBackendSynchronizer;
+import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
+import indi.wenyan.content.block.AbstractFuluBlock;
+import indi.wenyan.content.block.runner.ICodeHolder;
+import indi.wenyan.content.block.runner.ICodeOutputHolder;
+import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
+import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.structure.values.IWenyanFunction;
+import indi.wenyan.judou.structure.values.IWenyanObjectType;
+import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.network.server.BlockRunnerCodePacket;
+import indi.wenyan.setup.network.server.PlatformRenamePacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+import java.util.Objects;
+
+import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
+
+public enum RunnerBlockBehaviour {
+    ;
+
+    public static void openGui(BlockPos pos, Player player) {
+        var level = player.level();
+        BlockState state = level.getBlockState(pos);
+        if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
+        List<PackageSnippet> packageSnippets = new ArrayList<>();
+        BlockPos attached = pos.relative(
+                AbstractFuluBlock.getConnectedDirection(state).getOpposite());
+        if (level.getBlockEntity(attached) instanceof IWenyanBlockDevice device)
+            packageSnippets.add(packageSnippet(device.getExecPackage(),
+                    device.blockState().getCloneItemStack(pos, level, false, player),
+                    device.getPackageName()));
+
+        for (BlockPos b : BlockPos.betweenClosed(
+                pos.offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
+                pos.offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+            BlockEntity blockEntity = level.getBlockEntity(b);
+            if (blockEntity instanceof IWenyanBlockDevice executor) {
+                if (Objects.equals(executor.getPackageName(), "")) continue;
+                RawHandlerPackage execPackage = executor.getExecPackage();
+                packageSnippets.add(packageSnippet(execPackage,
+                        executor.blockState().getCloneItemStack(pos, level, false, player),
+                        executor.getPackageName()));
+            } else if (blockEntity instanceof ICodeHolder entity && !b.equals(pos)) {
+                packageSnippets.add(new PackageSnippet(WenyanItems.HAND_RUNNER_1.toStack(),
+                        entity.getPlatformName(), List.of()));
+            }
+        }
+        Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
+    }
+
+    private static @NotNull RunnerBlockBackend getCodeEditorBackend(ICodeOutputHolder runner, BlockPos pos,
+                                                                    List<PackageSnippet> packageSnippets) {
+        var synchronizer = new CodeEditorBackendSynchronizer() {
+            @Override
+            public void sendContent(String content) {
+                runner.setCode(content);
+                ClientPacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
+            }
+
+            @Override
+            public String getContent() {
+                return runner.getCode();
+            }
+
+            @Override
+            public void sendTitle(String title) {
+                String warppedTitle = Component.translatable("code.wenyan_programming.bracket", title).getString();
+                runner.setPlatformName(warppedTitle);
+                ClientPacketDistributor.sendToServer(new PlatformRenamePacket(pos, warppedTitle));
+            }
+
+            @Override
+            public String getTitle() {
+                var title = runner.getPlatformName();
+
+                if (title.length() < 2) {
+                    return "";
+                }
+                return title.substring(1, title.length() - 1);
+            }
+
+            @Override
+            public Deque<Component> getOutput() {
+                return runner.getOutputQueue();
+            }
+
+            @Override
+            public boolean isOutputChanged() {
+                return runner.isOutputChanged();
+            }
+        };
+        return new RunnerBlockBackend(packageSnippets, synchronizer);
+    }
+
+    private static PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack,
+                                                 String name) {
+        List<PackageSnippetWidget.Member> members = new ArrayList<>();
+        execPackage.variables().forEach((k, v) -> {
+            if (v.is(IWenyanObjectType.TYPE))
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.CLASS));
+            else if (v.is(IWenyanFunction.TYPE))
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD));
+            else
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.FIELD));
+        });
+        execPackage.functions().forEach((k, _) ->
+                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD)));
+        return new PackageSnippet(itemStack, name, members);
+    }
+}

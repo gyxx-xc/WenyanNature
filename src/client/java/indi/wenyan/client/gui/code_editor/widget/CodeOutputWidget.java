@@ -21,9 +21,6 @@ import java.util.Deque;
 // copy from FittingMultiLineTextWidget
 public class CodeOutputWidget extends AbstractTextAreaWidget {
     private final MultiLineTextWidget multilineWidget;
-    //    public static Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,"guantai.png");
-    private int imageWidth = 256;
-    private int imageHeight = 142;
 
     public CodeOutputWidget(int x, int y, int width, int height, Component message, Font font, OutputBackend backend) {
         super(x, y, width, height, message, AbstractScrollArea.defaultSettings(9));

@@ -1,15 +1,18 @@
-package indi.wenyan.setup.event;
+package indi.wenyan.client;
 
 import indi.wenyan.client.block.renderer.*;
 import indi.wenyan.client.gui.CraftingBlockScreen;
+import indi.wenyan.client.gui.ScreenOpenerFactroy;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.network.client.*;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
@@ -49,5 +52,17 @@ public enum ClientSetup {;
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
 //        event.registerSpriteSet(WYRegistration.COMMUNICATION_PARTICLES.get(), CommunicationParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void onClientHandler(RegisterClientPayloadHandlersEvent event) {
+        event.register(BlockOutputPacket.TYPE, BlockOutputPacket.HANDLER);
+        event.register(CommunicationLocationPacket.TYPE, CommunicationLocationPacket.HANDLER);
+        event.register(CraftClearParticlePacket.TYPE, CraftClearParticlePacket.HANDLER);
+        event.register(BlockPosRangePacket.TYPE, BlockPosRangePacket.HANDLER);
+        event.register(CraftingParticlePacket.TYPE, CraftingParticlePacket.HANDLER);
+        event.register(PlatformOutputPacket.TYPE, PlatformOutputPacket.HANDLER);
+        event.register(PistonMovePacket.TYPE, PistonMovePacket.HANDLER);
+        event.register(BlockSetScreenPacket.TYPE, ScreenOpenerFactroy.BLOCK_HANDLER);
     }
 }
