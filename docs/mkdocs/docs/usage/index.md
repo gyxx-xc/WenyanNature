@@ -1,9 +1,9 @@
 # 语法
 
-[快速开始](quick_start.md)
+更多详细信息，请参阅 [快速开始](quick_start.md) 指南。
 
 本项目的语法与原始 [Wenyan](https://github.com/wenyan-lang/wenyan)
-项目的 [语法](https://github.com/wenyan-lang/wenyan/wiki/Syntax-Cheatsheet) 大体相同，仅有一些细微变化。
+项目的 [语法](https://github.com/wenyan-lang/wenyan/wiki/Syntax-Cheatsheet) 大体相同，两者之间仅存在一些细微的差异。
 
 ## 目录
 

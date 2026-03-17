@@ -10,7 +10,6 @@ theme:
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
-      scheme: default
       toggle:
         icon: material/brightness-auto
         name: Switch to light mode
@@ -38,24 +37,9 @@ markdown_extensions:
   - pymdownx.tilde
 
 extra_css:
-  - css/quote.css
   - css/recipe.css
+  - css/theme.css
 
 plugins:
   - search
   - awesome-nav
-  - mkdocs-nav-weight:
-      warning: true
-      reverse: false
-      headless_included: false
-      default_page_weight: 1000
-  - i18n:
-      docs_structure: suffix
-      languages:
-        - locale: en
-          default: true
-          name: English
-          build: true
-        - locale: zh
-          name: 简体中文
-          build: true
