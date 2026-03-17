@@ -39,6 +39,8 @@
   --md-code-bg-color: #EEE9DE;              /* Aged silk background */
   --md-code-fg-color: #2C3E4F;              /* Ink text */
   --md-code-hl-color: rgba(199, 65, 59, 0.15);
+
+    background-color: var(--md-default-bg-color);
 }
 
 /* Dark Mode - 夜观星象 (Stargazing Scholar) */
@@ -67,6 +69,32 @@
   --md-code-bg-color: #26323D;              /* Dark silk */
   --md-code-fg-color: #E8D9C5;              /* Paper text */
   --md-code-hl-color: rgba(200, 159, 104, 0.15);
+}
+
+.md-main {
+  /* 注意：background-color由上面的主题色提供，这里利用多层背景叠加纹理 */
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(0, 0, 0, 0.02) 0px,
+      rgba(0, 0, 0, 0.05) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    radial-gradient(rgba(0, 0, 0, 0.02) 2px, transparent 2px);
+  background-size: auto, 20px 20px;
+  background-color: var(--md-default-bg-color);
+  background-blend-mode: normal; /* 保持纹理在上层，颜色在下层可见 */
+}
+
+[data-md-color-scheme="slate"] .md-main {
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(200, 159, 104, 0.03) 0px,
+      rgba(200, 159, 104, 0.08) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    radial-gradient(rgba(200, 159, 104, 0.03) 2px, transparent 2px);
 }
 
 /* Navigation - Traditional scroll motif */
