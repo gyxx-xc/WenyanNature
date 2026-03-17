@@ -1,7 +1,7 @@
 package indi.wenyan.client.gui.float_note;
 
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.FloatNotePacket;
+import indi.wenyan.setup.network.server.FloatNotePacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -41,7 +41,7 @@ public class FloatNoteNamingScreen extends Screen {
         this.name.setValue(item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString());
         addRenderableWidget(name);
 
-        Button confirmButton = Button.builder(Component.translatable("gui.done"), button -> onClose())
+        Button confirmButton = Button.builder(Component.translatable("gui.done"), _ -> onClose())
                 .bounds(this.width / 2 + 4, 52, 50, 20)
                 .tooltip(Tooltip.create(Component.empty()))
                 .build();

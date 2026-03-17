@@ -3,6 +3,7 @@ package indi.wenyan.client.block.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
+import indi.wenyan.content.block.crafting_block.TextEffect;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -61,7 +62,7 @@ public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEnt
     }
 
     public static class CraftingBlockRenderState extends BlockEntityRenderState {
-        public Deque<CraftingBlockEntity.TextEffect> particles;
+        public Deque<TextEffect> particles;
         float partialTick;
     }
 }

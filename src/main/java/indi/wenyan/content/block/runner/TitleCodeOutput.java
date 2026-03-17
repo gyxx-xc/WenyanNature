@@ -1,6 +1,6 @@
 package indi.wenyan.content.block.runner;
 
-import indi.wenyan.setup.network.PlatformOutputPacket;
+import indi.wenyan.setup.network.client.PlatformOutputPacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.ChatFormatting;

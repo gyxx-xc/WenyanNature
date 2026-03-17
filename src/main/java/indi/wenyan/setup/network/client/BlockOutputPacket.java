@@ -1,4 +1,4 @@
-package indi.wenyan.setup.network;
+package indi.wenyan.setup.network.client;
 
 import indi.wenyan.WenyanProgramming;
 import net.minecraft.core.BlockPos;

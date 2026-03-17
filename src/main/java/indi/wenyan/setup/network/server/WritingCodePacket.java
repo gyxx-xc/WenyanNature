@@ -1,30 +1,30 @@
-package indi.wenyan.setup.network;
+package indi.wenyan.setup.network.server;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.writing_block.WritingBlockEntity;
 import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.network.IServerboundPacket;
+import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Packet for sending code to a runner block
  */
-public record WritingCodePacket(BlockPos pos, String code) implements CustomPacketPayload {
+public record WritingCodePacket(BlockPos pos, String code) implements IServerboundPacket {
     /**
      * Packet type identifier
      */
     public static final Type<WritingCodePacket> TYPE =
-            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "writing_code_packet"));
+            IWenyanPacketPayload.createType("writing_code_packet");
 
     /**
      * Codec for serializing and deserializing the packet
      */
-    public static final StreamCodec<FriendlyByteBuf, WritingCodePacket> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, WritingCodePacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
@@ -39,17 +39,16 @@ public record WritingCodePacket(BlockPos pos, String code) implements CustomPack
     /**
      * Handler for processing the packet
      */
-    public static final IPayloadHandler<WritingCodePacket> HANDLER = (packet, context) -> {
-        if (context.flow().isServerbound()) {
-            var entity = context.player().level().getBlockEntity(packet.pos());
-            if (entity instanceof WritingBlockEntity runner) {
-                var stack = runner.getItemStack();
-                if (!stack.isEmpty()) {
-                    stack.set(WyRegistration.PROGRAM_CODE_DATA, packet.code);
-                }
+    @Override
+    public void handleOnServer(ServerPlayer player) {
+        var entity = player.level().getBlockEntity(pos());
+        if (entity instanceof WritingBlockEntity runner) {
+            var stack = runner.getItemStack();
+            if (!stack.isEmpty()) {
+                stack.set(WyRegistration.PROGRAM_CODE_DATA, code());
             }
         }
-    };
+    }
 
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {

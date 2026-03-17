@@ -3,6 +3,7 @@ package indi.wenyan.content.checker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface for checkers that validate answers in Wenyan programs.
@@ -22,7 +23,7 @@ public interface IAnsweringChecker {
      */
     void accept(IWenyanValue value) throws WenyanException;
 
-    default void accept(Iterable<IWenyanValue> value) throws WenyanException {
+    default void accept(@NonNull Iterable<IWenyanValue> value) throws WenyanException {
         for (var v : value)
             accept(v);
     }
@@ -43,8 +44,5 @@ public interface IAnsweringChecker {
         RUNNING,
         ANSWER_CORRECT,
         WRONG_ANSWER,
-//        RUNTIME_ERROR,
-//        COMPILE_ERROR,
-//        TIME_LIMIT_EXCEEDED,
     }
 }

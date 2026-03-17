@@ -12,7 +12,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.network.PistonMovePacket;
+import indi.wenyan.setup.network.client.PistonMovePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -15,8 +15,8 @@ import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
-import indi.wenyan.setup.network.BlockRunnerCodePacket;
-import indi.wenyan.setup.network.PlatformRenamePacket;
+import indi.wenyan.setup.network.server.BlockRunnerCodePacket;
+import indi.wenyan.setup.network.server.PlatformRenamePacket;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -126,7 +126,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     // FIXME
     // @OnlyIn(Dist.CLIENT)
-    private void openGui(RunnerBlockEntity runner, BlockPos pos, Level level, Player player, BlockState state) {
+    private void openGui(ICodeOutputHolder runner, BlockPos pos, Level level, Player player, BlockState state) {
         List<PackageSnippetWidget.PackageSnippet> packageSnippets = new ArrayList<>();
         BlockPos attached = pos.relative(
                 getConnectedDirection(state).getOpposite());

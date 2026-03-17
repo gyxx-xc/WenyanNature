@@ -1,29 +1,28 @@
-package indi.wenyan.setup.network;
+package indi.wenyan.setup.network.server;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.runner.ICodeOutputHolder;
+import indi.wenyan.setup.network.IServerboundPacket;
+import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Packet for sending code to a runner block
  */
-public record BlockRunnerCodePacket(BlockPos pos, String code) implements CustomPacketPayload {
+public record BlockRunnerCodePacket(BlockPos pos, String code) implements IServerboundPacket {
     /**
      * Packet type identifier
      */
-    public static final Type<BlockRunnerCodePacket> TYPE =
-            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block_runner_code"));
+    public static final Type<BlockRunnerCodePacket> TYPE = IWenyanPacketPayload.createType("block_runner_code");
 
     /**
      * Codec for serializing and deserializing the packet
      */
-    public static final StreamCodec<FriendlyByteBuf, BlockRunnerCodePacket> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockRunnerCodePacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
@@ -38,14 +37,13 @@ public record BlockRunnerCodePacket(BlockPos pos, String code) implements Custom
     /**
      * Handler for processing the packet
      */
-    public static final IPayloadHandler<BlockRunnerCodePacket> HANDLER = (packet, context) -> {
-        if (context.flow().isServerbound()) {
-            var entity = context.player().level().getBlockEntity(packet.pos());
-            if (entity instanceof ICodeOutputHolder runner) {
-                runner.setCode(packet.code());
-            }
+    @Override
+    public void handleOnServer(ServerPlayer player) {
+        var entity = player.level().getBlockEntity(pos());
+        if (entity instanceof ICodeOutputHolder runner) {
+            runner.setCode(code());
         }
-    };
+    }
 
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {

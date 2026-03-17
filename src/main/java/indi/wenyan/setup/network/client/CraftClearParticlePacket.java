@@ -1,4 +1,4 @@
-package indi.wenyan.setup.network;
+package indi.wenyan.setup.network.client;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;

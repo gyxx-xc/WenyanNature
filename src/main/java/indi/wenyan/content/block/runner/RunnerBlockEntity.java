@@ -26,7 +26,7 @@ import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.PlatformOutputPacket;
+import indi.wenyan.setup.network.client.PlatformOutputPacket;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import net.minecraft.core.BlockPos;
@@ -179,8 +179,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     protected void loadData(ValueInput tag) {
-        tag.getString(PAGES_ID).ifPresent(this::setCode);
-        tag.getString(PLATFORM_NAME_ID).ifPresent(this::setPlatformName);
+        tag.getString(PAGES_ID).ifPresent(titleCodeOutput::setCode);
+        tag.getString(PLATFORM_NAME_ID).ifPresent(titleCodeOutput::setPlatformName);
     }
 
     @Override
@@ -206,7 +206,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             return Optional.empty();
         }
         try {
-            lazyProgram.get().create(runner);
+            lazyProgram.create().create(runner);
         } catch (WenyanException e) {
             handleError(e.getMessage());
             return Optional.empty();
@@ -225,7 +225,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public void playerRun() {
-        if (lazyProgram.get().isRunning()) {
+        if (lazyProgram.create().isRunning()) {
             handleError(Component.translatable("error.wenyan_programming.already_run").getString());
             return;
         }

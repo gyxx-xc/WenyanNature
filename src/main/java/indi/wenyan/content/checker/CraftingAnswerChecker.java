@@ -1,6 +1,5 @@
-package indi.wenyan.content.checker.checker;
+package indi.wenyan.content.checker;
 
-import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;

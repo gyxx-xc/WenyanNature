@@ -16,16 +16,13 @@ import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.CraftClearParticlePacket;
-import indi.wenyan.setup.network.CraftingParticlePacket;
-import lombok.Data;
+import indi.wenyan.setup.network.client.CraftClearParticlePacket;
+import indi.wenyan.setup.network.client.CraftingParticlePacket;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +36,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
@@ -49,7 +45,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
 import java.util.function.Consumer;
 
 // two logic of running it
@@ -65,46 +60,22 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class CraftingBlockEntity extends AbstractModuleEntity implements MenuProvider {
-    private int craftingProgress;
-    private IAnsweringChecker checker = null;
-    private RecipeHolder<AnsweringRecipe> recipeHolder = null;
-
-    // for gui deprecated
-    public IAnsweringChecker.ResultStatus result;
-    protected final ContainerData data = new ContainerData() {
-        @Override
-        public int get(int i) {
-            return switch (i) {
-                case 0 -> craftingProgress;
-                case 1 -> result != null ? result.ordinal() : -1;
-                default -> 0;
-            };
-        }
-
-        @Override
-        public void set(int i, int v) {
-            // do nothing
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
-    };
     private static final int RANGE = 3; // the offset to search for pedestals
+    private static final String PARTICLE_ID = "particle";
 
-    @Getter
-    private final Deque<TextEffect> particles = new ArrayDeque<>();
+    private int craftingProgress = 0;
+    @Nullable private IAnsweringChecker checker = null;
+    @Nullable private RecipeHolder<AnsweringRecipe> recipeHolder = null;
+
+    @Getter private final Deque<TextEffect> particles = new ArrayDeque<>();
 
     @Override
     public String getBasePackageName() {
         return "";
     }
 
-    public static final String PARTICLE_ID = "particle";
-
     @Getter
-    public final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+    private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler("「参」", request -> {
                 if (!request.args().isEmpty())
                     throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
@@ -132,7 +103,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                         checker.init();
                     }
                     case ANSWER_CORRECT -> {
-                        craftingProgress ++;
+                        craftingProgress++;
                         checker.init();
                         if (craftingProgress >= recipeHolder.value().round()) {
                             // prevent sudden change of recipe, although not needed since one tick
@@ -147,6 +118,30 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             // TODO: .const of a builtin function
             .build();
 
+    @Deprecated
+    private IAnsweringChecker.ResultStatus result;
+    @Deprecated
+    private final ContainerData data = new ContainerData() {
+        @Override
+        public int get(int i) {
+            return switch (i) {
+                case 0 -> craftingProgress;
+                case 1 -> result != null ? result.ordinal() : -1;
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int i, int v) {
+            // do nothing
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
+
     public CraftingBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.CRAFTING_BLOCK_ENTITY.get(), pos, blockState);
     }
@@ -156,7 +151,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         super.tick(level, pos, state);
         for (var particle : particles) {
             if (particle.remainTick() > 0) {
-                particle.remainTick --;
+                particle.remainTick--;
                 particle.setPos(particle.pos.multiply(0.95, 0.95, 0.95));
             } else {
                 // should be faster, since the particle remove from head
@@ -180,7 +175,8 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
             throw new WenyanException("No valid recipe found for the current pedestal items.");
         }
 
-        if (this.recipeHolder != null && this.recipeHolder.equals(optionalRecipeHolder.get())) {
+        if (this.recipeHolder != null && this.recipeHolder.equals(optionalRecipeHolder.get()) &&
+                this.checker != null) { // checker is always not null
             return checker;
         } else resetCrafting();
         this.recipeHolder = optionalRecipeHolder.get();
@@ -191,13 +187,15 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         return recipeChecker;
     }
 
-    public void craftAndEjectItem() {
-        assert level != null;
-        // TODO: for recipe with remaining item
-        forNearbyPedestal(level, getBlockPos(), pedestal ->
-                ResourceHandlerUtil.extractFirst(pedestal.getItemHandler(), _ -> true, 1, null));
-        BlockPos pos = worldPosition.relative(Direction.UP);
-        Block.popResource(level, pos, recipeHolder.value().assemble());
+    private void craftAndEjectItem() {
+        if (recipeHolder != null) {
+            // TODO: for recipe with remaining item
+            assert level != null;
+            forNearbyPedestal(level, getBlockPos(), pedestal ->
+                    ResourceHandlerUtil.extractFirst(pedestal.getItemHandler(), _ -> true, 1, null));
+            BlockPos pos = worldPosition.relative(Direction.UP);
+            Block.popResource(level, pos, recipeHolder.value().assemble());
+        }
     }
 
     private void resetCrafting() {
@@ -217,7 +215,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         return new CraftingBlockContainer(i, this, data);
     }
 
-    public static void forNearbyPedestal(Level level, BlockPos pos, Consumer<PedestalBlockEntity> consumer) {
+    private static void forNearbyPedestal(Level level, BlockPos pos, Consumer<PedestalBlockEntity> consumer) {
         for (BlockPos b : BlockPos.betweenClosed(pos.offset(RANGE, -RANGE, RANGE), pos.offset(-RANGE, RANGE, -RANGE))) {
             if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && !pedestal.getItemHandler().getResource(0).isEmpty()) {
                 consumer.accept(pedestal);
@@ -245,41 +243,5 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     public void clearParticles() {
         particles.clear();
-    }
-
-    @Data
-    @Accessors(fluent = true)
-    public static class TextEffect {
-        final float rot;
-        final String data;
-        Vec3 oPos;
-        Vec3 pos;
-        int remainTick = 20;
-
-        public TextEffect(Vec3 pos, float rot, String data) {
-            this.oPos = pos;
-            this.pos = pos;
-            this.rot = rot;
-            this.data = data;
-        }
-
-        public Vec3 getPosition(float partialTicks) {
-            return oPos.lerp(pos, partialTicks);
-        }
-
-        public void setPos(Vec3 pos) {
-            this.oPos = this.pos;
-            this.pos = pos;
-        }
-
-        public static List<TextEffect> randomSplash(String data, RandomSource random) {
-            final int range = 1;
-            List<TextEffect> particles = new ArrayList<>();
-            for (var c : data.toCharArray()) {
-                Vec3 pos = new Vec3(random.triangle(0, range), random.triangle(0, range), random.triangle(0, range));
-                particles.add(new TextEffect(pos, random.nextFloat() * 360, String.valueOf(c)));
-            }
-            return particles;
-        }
     }
 }

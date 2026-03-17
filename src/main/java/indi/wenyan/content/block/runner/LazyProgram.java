@@ -13,7 +13,7 @@ public class LazyProgram<T extends IWenyanProgram<?>> {
         this.programSupplier = programSupplier;
     }
 
-    public T get() {
+    public T create() {
         if (optionalProgram == null || !optionalProgram.isAvailable())
             optionalProgram = programSupplier.get();
         return optionalProgram;

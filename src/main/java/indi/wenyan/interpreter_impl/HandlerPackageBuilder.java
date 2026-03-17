@@ -95,6 +95,7 @@ public final class HandlerPackageBuilder {
         });
     }
 
+    @Deprecated
     public HandlerPackageBuilder handler(String name, int power, HandlerReturnFunction function) {
         return handler(name, () -> new BaseHandleableRequest.IRawRequest() {
             int acquired = 0;

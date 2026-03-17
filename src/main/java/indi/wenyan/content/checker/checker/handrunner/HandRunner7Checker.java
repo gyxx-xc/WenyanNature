@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker.checker.handrunner;
 
-import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
