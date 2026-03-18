@@ -2,150 +2,174 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/development/in-game/blocking_queue/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/development/in-game/cloud_module/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/development/in-game/cluster_core/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/development/in-game/hand_runer/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/development/in-game/writing_block/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/development/judou/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/development/judou/scoped_calue/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
+    </url>
+    <url>
+         <loc>https://gyxx-xc.github.io/WenyanNature/in_game/crafting_block/</loc>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/in_game/float_note/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
-         <loc>https://gyxx-xc.github.io/WenyanNature/in_game/hand_runner/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <loc>https://gyxx-xc.github.io/WenyanNature/in_game/power_block/</loc>
+         <lastmod>2026-03-18</lastmod>
+    </url>
+    <url>
+         <loc>https://gyxx-xc.github.io/WenyanNature/in_game/runner_block/</loc>
+         <lastmod>2026-03-18</lastmod>
+    </url>
+    <url>
+         <loc>https://gyxx-xc.github.io/WenyanNature/in_game/runner_block_screen/</loc>
+         <lastmod>2026-03-18</lastmod>
+    </url>
+    <url>
+         <loc>https://gyxx-xc.github.io/WenyanNature/in_game/writing_block/</loc>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/bit/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/block/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/blocking_queue/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/collection/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/communicate/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/entity/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/explosion/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
+    </url>
+    <url>
+         <loc>https://gyxx-xc.github.io/WenyanNature/modules/formation_core/</loc>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/item/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/lock/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/math/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
+    </url>
+    <url>
+         <loc>https://gyxx-xc.github.io/WenyanNature/modules/piston/</loc>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/random/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/screen/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/string/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/vec3/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/modules/world/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/advanced/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/calculation/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/control/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/function/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/import/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/misc/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/object/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/quick_reference/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/quick_start/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/syntax_cheatsheet/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
     <url>
          <loc>https://gyxx-xc.github.io/WenyanNature/usage/varible/</loc>
-         <lastmod>2026-03-17</lastmod>
+         <lastmod>2026-03-18</lastmod>
     </url>
 </urlset>
