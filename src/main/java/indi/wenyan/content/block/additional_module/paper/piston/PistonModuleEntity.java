@@ -38,7 +38,7 @@ import static net.minecraft.world.level.block.DirectionalBlock.FACING;
 
 public class PistonModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = "「眼」";
+    private final String basePackageName = "「移」";
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
