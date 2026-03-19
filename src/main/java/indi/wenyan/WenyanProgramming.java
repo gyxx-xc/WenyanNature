@@ -37,8 +37,8 @@ public class WenyanProgramming {
     }
 
     private static void register(IEventBus modEventBus) {
-        WenyanBlocks.DR.register(modEventBus);
-        WenyanBlocks.DR_ENTITY.register(modEventBus);
+        for (var dr : WenyanBlocks.ALL_DR)
+            dr.register(modEventBus);
         WenyanItems.DR.register(modEventBus);
         WenyanItems.CREATIVE_MODE_TABS.register(modEventBus);
         WyRegistration.register(modEventBus);

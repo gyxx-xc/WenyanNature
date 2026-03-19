@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,10 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
     ItemStackTemplate output;
     int round;
 
-    @With(AccessLevel.PRIVATE)
-    @NonFinal
-    PlacementInfo info;
+    @With(AccessLevel.PRIVATE) @NonFinal @Nullable
+    PlacementInfo info = null;
 
+    @SuppressWarnings("unused") // need implicit in lombok
     public AnsweringRecipe(List<Ingredient> input, String question, ItemStackTemplate output, int round, PlacementInfo info) {
         this.input = input;
         this.question = question;
@@ -68,7 +69,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
                 .filter(itemStack -> !itemStack.isEmpty())
                 .toList();
 
-        StackedContents stackedContents = new StackedContents();
+        StackedContents<ItemStack> stackedContents = new StackedContents<>();
         for (ItemStack stack : item)
             stackedContents.account(stack, 1);
 
@@ -81,6 +82,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
         //noinspection DataFlowIssue
         return assemble(null);
     }
+
     @Override
     public ItemStack assemble(AnsweringRecipeInput answeringRecipeInput) {
         return output.create();

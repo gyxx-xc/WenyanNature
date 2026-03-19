@@ -5,18 +5,21 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.gui_api.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
+import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -64,6 +67,8 @@ public enum WyRegistration {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
 
+    public static final BlockCapability<IWenyanBlockDevice, Void> WENYAN_BLOCK_DEVICE_CAPABILITY;
+
     // Static initialization block
     static {
         ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
@@ -103,5 +108,9 @@ public enum WyRegistration {
 
         COMMUNICATION_PARTICLES = PARTICLE_TYPES.register("communication_particles",
                 () -> new SimpleParticleType(true));
+
+        WENYAN_BLOCK_DEVICE_CAPABILITY = BlockCapability.createVoid(
+                Identifier.fromNamespaceAndPath(MODID, "wenyan_block_device"),
+                IWenyanBlockDevice.class);
     }
 }

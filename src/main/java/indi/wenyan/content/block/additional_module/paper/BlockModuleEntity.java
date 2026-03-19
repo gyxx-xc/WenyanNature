@@ -12,7 +12,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.network.BlockPosRangePacket;
+import indi.wenyan.setup.network.client.BlockPosRangePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

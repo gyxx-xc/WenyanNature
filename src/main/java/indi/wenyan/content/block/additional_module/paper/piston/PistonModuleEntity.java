@@ -12,7 +12,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.network.PistonMovePacket;
+import indi.wenyan.setup.network.client.PistonMovePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +38,7 @@ import static net.minecraft.world.level.block.DirectionalBlock.FACING;
 
 public class PistonModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = "「眼」";
+    private final String basePackageName = "「移」";
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()

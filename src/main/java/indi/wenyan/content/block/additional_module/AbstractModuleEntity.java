@@ -3,6 +3,8 @@ package indi.wenyan.content.block.additional_module;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
+import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
@@ -23,8 +25,11 @@ import java.util.Objects;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractModuleEntity extends DataBlockEntity implements IWenyanBlockDevice {
+public abstract class AbstractModuleEntity extends DataBlockEntity {
     public static final String PACKAGE_NAME_ID = "packageName";
+
+    @Getter
+    private final BlockDeviceCapability blockDeviceCapability = new BlockDeviceCapability();
 
     @Nullable
     private String packageName;
@@ -42,26 +47,7 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
      */
     public abstract String getBasePackageName();
 
-    @Override
-    public BlockState blockState() {
-        return getBlockState();
-    }
-
-    @Override
-    public BlockPos blockPos() {
-        return getBlockPos();
-    }
-
-    @Override
-    // make the override explicitly to make it clear that this method is overridden
-    public boolean isRemoved() {
-        return super.isRemoved();
-    }
-
-    @Override
-    public String getPackageName() {
-        return Objects.requireNonNullElseGet(packageName, this::getBasePackageName);
-    }
+    public abstract RawHandlerPackage getExecPackage();
 
     /**
      * Sets the package name for this module entity.
@@ -96,5 +82,35 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IW
      * Called every tick to handle execution requests.
      */
     public void tick(Level level, BlockPos pos, BlockState state) {
+    }
+
+    public class BlockDeviceCapability implements IWenyanBlockDevice {
+        private BlockDeviceCapability() {
+        }
+
+        @Override
+        public BlockState blockState() {
+            return getBlockState();
+        }
+
+        @Override
+        public BlockPos blockPos() {
+            return getBlockPos();
+        }
+
+        @Override
+        public boolean isRemoved() {
+            return AbstractModuleEntity.this.isRemoved();
+        }
+
+        @Override
+        public RawHandlerPackage getExecPackage() {
+            return AbstractModuleEntity.this.getExecPackage();
+        }
+
+        @Override
+        public String getPackageName() {
+            return Objects.requireNonNullElseGet(packageName, AbstractModuleEntity.this::getBasePackageName);
+        }
     }
 }

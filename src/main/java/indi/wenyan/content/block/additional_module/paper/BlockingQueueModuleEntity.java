@@ -1,9 +1,9 @@
 package indi.wenyan.content.block.additional_module.paper;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.content.block.ICommunicateEntity;
+import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.content.block.runner.BlockRequest;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
@@ -18,7 +18,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.network.CommunicationLocationPacket;
+import indi.wenyan.setup.network.client.CommunicationLocationPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -42,7 +42,7 @@ import java.util.function.Supplier;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class BlockingQueueModuleEntity extends AbstractModuleEntity implements ICommunicateEntity {
+public class BlockingQueueModuleEntity extends AbstractModuleEntity implements ICommunicateHolder {
     @Getter
     private final List<CommunicationEffect> communicates = new ArrayList<>();
 
@@ -86,7 +86,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
         if (queue.size() >= capacity) {
             // Queue is full, block the producer thread
             waitingProducers.add(new BlockedThread(request.thread(), value,
-                    context instanceof RunnerBlockEntity.BlockContext bc ? bc.pos() : null));
+                    context instanceof BlockRequest.BlockContext bc ? bc.pos() : null));
         } else {
             IWenyanRunner thread = request.thread();
             queue.offer(value);
@@ -105,7 +105,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
     private boolean takeHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
         if (queue.isEmpty()) {
             waitingConsumers.add(new BlockedThread(request.thread(), null,
-                    context instanceof RunnerBlockEntity.BlockContext bc ? bc.pos() : null));
+                    context instanceof BlockRequest.BlockContext bc ? bc.pos() : null));
         } else {
             IWenyanRunner thread = request.thread();
             IWenyanValue value = queue.poll();

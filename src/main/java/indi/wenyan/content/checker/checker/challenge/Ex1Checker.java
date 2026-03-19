@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker.checker.challenge;
 
-import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;

@@ -1,0 +1,259 @@
+/* Ancient Chinese Theme - 文雅自然 (Elegant Nature) */
+
+/* Color System - Inspired by Traditional Chinese Art */
+:root {
+  /* Light Mode - Scholar's Studio (书斋) */
+  --ink-black: #2C3E4F;           /* 松烟墨 - Pine soot ink */
+  --rice-paper: #F8F5E9;           /* 宣纸色 - Xuan paper */
+  --cinnabar: #C7413B;             /* 朱砂红 - Authentic cinnabar */
+  --jade-green: #5F7B6E;           /* 碧玉色 - Imperial jade */
+  --bronze: #8B6B4D;               /* 青铜色 - Aged bronze */
+  --gold-thread: #C89F68;          /* 金线黄 - Gold thread */
+  --plum-blossom: #B32D4A;         /* 梅花红 - Plum red */
+  --bamboo-leaf: #3A7254;          /* 竹青色 - Bamboo green */
+}
+
+/* Light Mode - 水墨意境 (Ink Wash Aesthetic) */
+[data-md-color-scheme="default"] {
+  /* Primary colors - Scholar's palette */
+  --md-primary-fg-color: #2C3E4F;        /* Deep ink for header */
+  --md-primary-fg-color--light: #F8F5E9; /* Paper color for navigation */
+  --md-primary-fg-color--dark: #1E2B36;   /* Darker ink */
+  --md-primary-bg-color: #F8F5E9;         /* Paper text on dark bg */
+  
+  /* Accent colors - Traditional treasures */
+  --md-accent-fg-color: #C7413B;          /* Cinnabar red for links */
+  --md-accent-fg-color--transparent: rgba(199, 65, 59, 0.12);
+  --md-accent-bg-color: #5F7B6E;          /* Jade green for hover */
+  
+  /* Text and backgrounds */
+  --md-text-color: #2C3E4F;                /* Ink black text */
+  --md-text-link-color: #C7413B;           /* Cinnabar links */
+  --md-typeset-a-color: #C7413B;
+  --md-default-bg-color: #F8F5E9;          /* Rice paper background */
+  --md-default-fg-color: #5D4E3C;           /* Bronze for secondary text */
+  --md-default-fg-color--light: #8B6B4D;    /* Aged bronze */
+  --md-default-fg-color--lighter: #C9B7A2;  /* Faded parchment */
+  
+  /* Code blocks - like ink on silk */
+  --md-code-bg-color: #EEE9DE;              /* Aged silk background */
+  --md-code-fg-color: #2C3E4F;              /* Ink text */
+  --md-code-hl-color: rgba(199, 65, 59, 0.15);
+
+    background-color: var(--md-default-bg-color);
+}
+
+/* Dark Mode - 夜观星象 (Stargazing Scholar) */
+[data-md-color-scheme="slate"] {
+  /* Primary colors - Night ink */
+  --md-primary-fg-color: #1A242B;        /* Deep night sky */
+  --md-primary-fg-color--light: #2C3E4F;  /* Dark jade */
+  --md-primary-fg-color--dark: #0F171F;   /* Abyss black */
+  --md-primary-bg-color: #E8D9C5;          /* Starlight text */
+  
+  /* Accent colors - Night treasures */
+  --md-accent-fg-color: #C89F68;          /* Gold thread for links */
+  --md-accent-fg-color--transparent: rgba(200, 159, 104, 0.15);
+  --md-accent-bg-color: #B32D4A;           /* Plum blossom for hover */
+  
+  /* Text and backgrounds */
+  --md-text-color: #E8D9C5;                /* Aged paper text */
+  --md-text-link-color: #C89F68;           /* Gold links */
+  --md-typeset-a-color: #B32D4A !important;
+  --md-default-bg-color: #1E2B36;          /* Indigo night */
+  --md-default-fg-color: #B5A48E;           /* Muted bronze */
+  --md-default-fg-color--light: #8B9A9B;    /* Misty jade */
+  --md-default-fg-color--lighter: #4A5B66;  /* Deep water */
+  
+  /* Code blocks - ink on dark silk */
+  --md-code-bg-color: #26323D;              /* Dark silk */
+  --md-code-fg-color: #E8D9C5;              /* Paper text */
+  --md-code-hl-color: rgba(200, 159, 104, 0.15);
+}
+
+.md-main {
+  /* 注意：background-color由上面的主题色提供，这里利用多层背景叠加纹理 */
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(0, 0, 0, 0.02) 0px,
+      rgba(0, 0, 0, 0.05) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    radial-gradient(rgba(0, 0, 0, 0.02) 2px, transparent 2px);
+  background-size: auto, 20px 20px;
+  background-color: var(--md-default-bg-color);
+  background-blend-mode: normal; /* 保持纹理在上层，颜色在下层可见 */
+}
+
+[data-md-color-scheme="slate"] .md-main {
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(200, 159, 104, 0.03) 0px,
+      rgba(200, 159, 104, 0.08) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    radial-gradient(rgba(200, 159, 104, 0.03) 2px, transparent 2px);
+}
+
+/* Navigation - Traditional scroll motif */
+.md-tabs {
+  background-color: var(--md-primary-fg-color);
+  border-bottom: 2px solid var(--md-accent-fg-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.md-tabs__link {
+  color: var(--md-primary-bg-color);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding: 0.6rem 0;
+}
+
+.md-tabs__link:hover {
+  color: var(--md-accent-bg-color);
+  background: none;
+}
+
+.md-tabs__link--active {
+  color: var(--md-accent-fg-color);
+  border-bottom: 2px solid var(--md-accent-fg-color);
+}
+
+/* Links - Calligraphy brush effect */
+.md-typeset a {
+  color: var(--md-text-link-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.md-typeset a:hover {
+  color: var(--md-accent-bg-color);
+  border-bottom: 1px solid currentColor;
+}
+
+/* Code blocks - Scroll fragment aesthetic */
+.md-typeset pre > code {
+  border-left: 4px solid var(--md-accent-fg-color);
+  border-radius: 0 4px 4px 0;
+  background-color: var(--md-code-bg-color);
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Blockquotes - Traditional poetry frame */
+.md-typeset blockquote {
+  border-left: 4px solid var(--md-accent-fg-color);
+  background-color: rgba(199, 65, 59, 0.03);
+  padding: 1em 1.5em;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+  font-style: italic;
+}
+
+.md-typeset blockquote::before {
+  content: "「";
+  font-size: 2em;
+  color: var(--md-accent-fg-color);
+  opacity: 0.3;
+  position: absolute;
+  left: 0.2em;
+  top: -0.1em;
+}
+
+/* Minimalist Admonitions - Ink on Paper */
+.md-typeset .admonition {
+  border: 1px solid var(--md-default-fg-color--light);
+  border-left-width: 4px;
+  border-left-color: var(--md-accent-fg-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.md-typeset .admonition-title {
+  background: transparent !important;
+  border-bottom: 1px dashed var(--md-default-fg-color--light);
+  color: var(--md-text-color);
+  font-style: italic;
+  padding-left: 1.5em !important;
+}
+
+.md-typeset .admonition-title::before {
+  display: none;
+}
+
+.md-typeset .admonition.note {
+  border-color: var(--jade-green);
+}
+
+.md-typeset .admonition.warning,
+.md-typeset .admonition.attention,
+.md-typeset .admonition.caution {
+  border-color: var(--gold-thread);
+}
+
+.md-typeset .admonition.tip,
+.md-typeset .admonition.hint {
+  border-color: var(--bamboo-leaf);
+}
+
+/* Search - Refined scholar's implement */
+.md-search__input {
+  background-color: rgba(248, 245, 233, 0.1);
+  border: 1px solid var(--md-accent-fg-color);
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.md-search__input:hover {
+  background-color: rgba(248, 245, 233, 0.2);
+  border-color: var(--md-accent-bg-color);
+}
+
+/* Footer - Seals and signatures */
+.md-footer {
+  border-top: 2px solid var(--md-accent-fg-color);
+  background-color: var(--md-primary-fg-color--dark);
+  position: relative;
+}
+
+/* Tables - Ancient grid patterns */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--md-accent-fg-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  font-weight: 500;
+  border-bottom: 2px solid var(--md-accent-fg-color);
+}
+
+.md-typeset table:not([class]) td {
+  border-bottom: 1px solid rgba(199, 65, 59, 0.1);
+}
+
+/* Selection - Like ink on paper */
+[data-md-color-scheme="default"] ::-moz-selection {
+  background-color: var(--md-accent-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+[data-md-color-scheme="default"] ::selection {
+  background-color: var(--md-accent-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+[data-md-color-scheme="slate"] ::-moz-selection {
+  background-color: var(--md-accent-fg-color);
+  color: var(--md-primary-fg-color--dark);
+}
+
+[data-md-color-scheme="slate"] ::selection {
+  background-color: var(--md-accent-fg-color);
+  color: var(--md-primary-fg-color--dark);
+}

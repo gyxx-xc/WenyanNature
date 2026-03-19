@@ -1,6 +1,5 @@
 ---
 title: 吾有一术
-weight: -10
 hide:
   - navigation
   - toc

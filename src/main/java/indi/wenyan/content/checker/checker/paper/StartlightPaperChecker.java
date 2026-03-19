@@ -1,7 +1,7 @@
 package indi.wenyan.content.checker.checker.paper;
 
+import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;

@@ -1,13 +1,11 @@
 package indi.wenyan.setup.event;
 
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.network.*;
+import indi.wenyan.setup.definitions.WyRegistration;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
@@ -15,7 +13,9 @@ import static indi.wenyan.WenyanProgramming.MODID;
  * Common mod setup handling events
  */
 @EventBusSubscriber(modid = MODID)
-public enum ModSetup {;
+public enum ModSetup {
+    ;
+
     /**
      * Registers capabilities for mod blocks and entities
      */
@@ -29,60 +29,74 @@ public enum ModSetup {;
                 Capabilities.Item.BLOCK,
                 WenyanBlocks.WRITING_BLOCK_ENTITY.get(),
                 (be, _) -> be.getItemHandler());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.BLOCKING_QUEUE_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.EXPLOSION_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.INFORMATION_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.MATH_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.BIT_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.BLOCK_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.RANDOM_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.ITEM_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.VEC3_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.COMMUNICATE_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.COLLECTION_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.STRING_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.ENTITY_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.SCREEN_MODULE_BLOCK_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.LOCK_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.FORMATION_CORE_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.PISTON_MODULE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
     }
 
-    /**
-     * Registers network packet handlers
-     */
-    @SubscribeEvent
-    public static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(MODID)
-                .versioned("1.0")
-                .optional();
-        registrar.playToServer(RunnerCodePacket.TYPE,
-                RunnerCodePacket.STREAM_CODEC,
-                RunnerCodePacket.HANDLER);
-        registrar.playToServer(FloatNotePacket.TYPE,
-                FloatNotePacket.STREAM_CODEC,
-                FloatNotePacket.HANDLER);
-        registrar.playToServer(BlockRunnerCodePacket.TYPE,
-                BlockRunnerCodePacket.STREAM_CODEC,
-                BlockRunnerCodePacket.HANDLER);
-        registrar.playToServer(RunnerTitlePacket.TYPE,
-                RunnerTitlePacket.STREAM_CODEC,
-                RunnerTitlePacket.HANDLER);
-        registrar.playToServer(PlatformRenamePacket.TYPE,
-                PlatformRenamePacket.STREAM_CODEC,
-                PlatformRenamePacket.HANDLER);
-        registrar.playToServer(DeviceRenamePacket.TYPE,
-                DeviceRenamePacket.STREAM_CODEC,
-                DeviceRenamePacket.HANDLER);
-        registrar.playToServer(WritingCodePacket.TYPE,
-                WritingCodePacket.STREAM_CODEC,
-                WritingCodePacket.HANDLER);
-        registrar.playToServer(WritingTitlePacket.TYPE,
-                WritingTitlePacket.STREAM_CODEC,
-                WritingTitlePacket.HANDLER);
-        registrar.commonToClient(BlockOutputPacket.TYPE,
-                BlockOutputPacket.STREAM_CODEC,
-                BlockOutputPacket.HANDLER);
-        registrar.commonToClient(CommunicationLocationPacket.TYPE,
-                CommunicationLocationPacket.STREAM_CODEC,
-                CommunicationLocationPacket.HANDLER);
-        registrar.commonToClient(CraftClearParticlePacket.TYPE,
-                CraftClearParticlePacket.STREAM_CODEC,
-                CraftClearParticlePacket.HANDLER);
-        registrar.commonToClient(BlockPosRangePacket.TYPE,
-                BlockPosRangePacket.STREAM_CODEC,
-                BlockPosRangePacket.HANDLER);
-        registrar.commonToClient(CraftingParticlePacket.TYPE,
-                CraftingParticlePacket.STREAM_CODEC,
-                CraftingParticlePacket.HANDLER);
-        registrar.commonToClient(PlatformOutputPacket.TYPE,
-                PlatformOutputPacket.STREAM_CODEC,
-                PlatformOutputPacket.HANDLER);
-        registrar.commonToClient(PistonMovePacket.TYPE,
-                PistonMovePacket.STREAM_CODEC,
-                PistonMovePacket.HANDLER);
-    }
 }

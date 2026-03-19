@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public enum WenyanBlocks {
@@ -33,6 +34,7 @@ public enum WenyanBlocks {
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, WenyanProgramming.MODID);
     public static final DeferredRegister.Blocks DR =
             DeferredRegister.createBlocks(WenyanProgramming.MODID);
+    public static final List<DeferredRegister<?>> ALL_DR = List.of(DR, DR_ENTITY);
 
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_0 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_0, p -> new RunnerBlock(0, p));
     public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_1 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_1, p -> new RunnerBlock(1, p));
@@ -64,6 +66,7 @@ public enum WenyanBlocks {
 
     public static final DeferredBlock<PowerBlock> POWER_BLOCK = WenyanBlocks.DR.registerBlock(PowerBlock.ID, PowerBlock::new);
     public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY = WenyanBlocks.registerEntity(PowerBlock.ID, PowerBlockEntity::new, WenyanBlocks.POWER_BLOCK);
+
 
     public static final DeferredBlock<ExplosionModuleBlock> EXPLOSION_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(ExplosionModuleBlock.ID, ExplosionModuleBlock::new);
     public static final Supplier<BlockEntityType<ExplosionModuleEntity>> EXPLOSION_MODULE_ENTITY = WenyanBlocks.registerEntity(ExplosionModuleBlock.ID, ExplosionModuleEntity::new, WenyanBlocks.EXPLOSION_MODULE_BLOCK);

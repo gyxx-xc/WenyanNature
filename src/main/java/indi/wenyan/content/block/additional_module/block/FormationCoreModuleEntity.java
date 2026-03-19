@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.content.block.ICommunicateEntity;
+import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
@@ -15,15 +15,12 @@ import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.network.CommunicationLocationPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,12 +31,12 @@ import java.util.Map;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class FormationCoreModuleEntity extends AbstractModuleEntity implements ICommunicateEntity {
+public class FormationCoreModuleEntity extends AbstractModuleEntity implements ICommunicateHolder {
 
     private final Map<String, RunnerBlockEntity> startedPlatforms = new HashMap<>();
     private final Map<String, BlockPos> findedPlatforms = new HashMap<>();
     @Getter
-    private final List<ICommunicateEntity.CommunicationEffect> communicates = new ArrayList<>();
+    private final List<ICommunicateHolder.CommunicationEffect> communicates = new ArrayList<>();
     private static final int RANGE = 10;
 
     public FormationCoreModuleEntity(BlockPos pos, BlockState blockState) {
@@ -57,9 +54,8 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                     var block = getRunner(platformName);
                     if (block == null) throw new WenyanException("can't find fu");
                     if (level instanceof ServerLevel serverLevel)
-                        PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(getBlockPos()),
-                                new CommunicationLocationPacket(getBlockPos(), block.getBlockPos().subtract(getBlockPos())));
-                    block.newThread()
+                        addCommunicateServer(serverLevel, getBlockPos(), block.getBlockPos().subtract(getBlockPos()));
+                    block.newThread(block.getCode())
                             .orElseThrow(() -> new WenyanException("can't start " + platformName));
                 }
                 return WenyanNull.NULL;
@@ -105,8 +101,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
         RunnerBlockEntity cachedPlatform = getStartedRunner(runnerName);
         if (cachedPlatform != null) {
             if (level instanceof ServerLevel serverLevel)
-                PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(getBlockPos()),
-                        new CommunicationLocationPacket(getBlockPos(), cachedPlatform.getBlockPos().subtract(getBlockPos())));
+                addCommunicateServer(serverLevel, getBlockPos(), cachedPlatform.getBlockPos().subtract(getBlockPos()));
             return cachedPlatform;
         }
 
@@ -118,7 +113,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 if (runnerName.equals(platformName)) {
                     startedPlatforms.put(runnerName, platform);
                     return platform;
-                } else  {
+                } else {
                     findedPlatforms.remove(runnerName);
                     findedPlatforms.put(platformName, pos);
                     // fall through
@@ -161,7 +156,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         super.tick(level, pos, state);
-        ICommunicateEntity.super.tickCommunicate();
+        ICommunicateHolder.super.tickCommunicate();
     }
 
     public record WenyanRunningState(RunnerBlock.RunningState value)

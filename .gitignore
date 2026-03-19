@@ -36,4 +36,4 @@ __pycache__
 .run
 .profileconfig.json
 *.jfr
-/src/main/java/indi/wenyan/client/gui/code_editor/_generator_py/py_map.json
+/src/client/java/indi/wenyan/client/gui/code_editor/_generator_py/py_map.json

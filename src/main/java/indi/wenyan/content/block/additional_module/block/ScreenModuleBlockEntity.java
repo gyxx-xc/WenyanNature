@@ -7,7 +7,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.network.BlockOutputPacket;
+import indi.wenyan.setup.network.client.BlockOutputPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

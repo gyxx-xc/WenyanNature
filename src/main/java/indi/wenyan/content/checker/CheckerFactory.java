@@ -1,6 +1,5 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.checker.checker.CraftingAnswerChecker;
 import indi.wenyan.content.checker.checker.EchoChecker;
 import indi.wenyan.content.checker.checker.challenge.Ex1Checker;
 import indi.wenyan.content.checker.checker.handrunner.*;
