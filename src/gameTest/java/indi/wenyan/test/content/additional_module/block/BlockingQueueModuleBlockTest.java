@@ -2,6 +2,7 @@ package indi.wenyan.test.content.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.paper.BlockingQueueModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.test.utils.RunnerTestHelper;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,7 @@ public class BlockingQueueModuleBlockTest {
 
     public static final Supplier<StructureTemplateBuilder> STRUCTURE_TEMPLATE_BUILDER = () -> StructureTemplateBuilder.withSize(2, 2, 1)
             .set(0, 0, 0, Blocks.STONE.defaultBlockState())
-            .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK_2.get().defaultBlockState())
+            .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK.getBlock(RunnerTier.RUNNER_2).defaultBlockState())
             .set(1, 0, 0, Blocks.STONE.defaultBlockState())
             .set(1, 1, 0, WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get().defaultBlockState());
 

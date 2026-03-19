@@ -36,24 +36,11 @@ public enum WenyanBlocks {
             DeferredRegister.createBlocks(WenyanProgramming.MODID);
     public static final List<DeferredRegister<?>> ALL_DR = List.of(DR, DR_ENTITY);
 
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_0 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_0, p -> new RunnerBlock(0, p));
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_1 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_1, p -> new RunnerBlock(1, p));
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_2 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_2, p -> new RunnerBlock(2, p));
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_3 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_3, p -> new RunnerBlock(3, p));
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_4 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_4, p -> new RunnerBlock(4, p));
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_5 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_5, p -> new RunnerBlock(5, p));
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK_6 = WenyanBlocks.DR.registerBlock(RunnerItem.ID_6, p -> new RunnerBlock(6, p));
+    public static final RunnerTier.TieredBlockRegistrator<RunnerBlock> RUNNER_BLOCK = RunnerTier.TieredBlockRegistrator.registerTieredBlock(
+            RunnerItem.ID, RunnerBlock::new);
 
     public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY =
-            WenyanBlocks.DR_ENTITY.register(RunnerBlockEntity.ID, () -> new BlockEntityType<>(RunnerBlockEntity::new,
-                    WenyanBlocks.RUNNER_BLOCK_0.get(),
-                    WenyanBlocks.RUNNER_BLOCK_1.get(),
-                    WenyanBlocks.RUNNER_BLOCK_2.get(),
-                    WenyanBlocks.RUNNER_BLOCK_3.get(),
-                    WenyanBlocks.RUNNER_BLOCK_4.get(),
-                    WenyanBlocks.RUNNER_BLOCK_5.get(),
-                    WenyanBlocks.RUNNER_BLOCK_6.get()
-            ));
+            WenyanBlocks.DR_ENTITY.register(RunnerBlockEntity.ID, () -> new BlockEntityType<>(RunnerBlockEntity::new, RUNNER_BLOCK.getBlocks().toArray(Block[]::new)));
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK = WenyanBlocks.DR.registerBlock(CraftingBlock.ID, CraftingBlock::new);
     public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_BLOCK_ENTITY = WenyanBlocks.registerEntity(CraftingBlock.ID, CraftingBlockEntity::new, WenyanBlocks.CRAFTING_BLOCK);

@@ -11,6 +11,7 @@ import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -44,28 +45,24 @@ public class ModBlockStateProvider extends ModelSubProvider {
         lockModuleBlock();
         decorativePistonHeads();
 
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_0);
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_1);
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_2);
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_3);
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_4);
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_5);
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK_6);
+        for (var block : WenyanBlocks.RUNNER_BLOCK.getBlocks()){
+            registerFuluBlock(block);
+        }
 
-        registerFuluBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.MATH_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.BIT_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.BLOCK_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.RANDOM_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.ITEM_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.VEC3_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.ENTITY_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.COLLECTION_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.STRING_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.PISTON_MODULE_BLOCK);
+        registerFuluBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.MATH_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.BIT_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.BLOCK_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.RANDOM_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.ITEM_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.VEC3_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.ENTITY_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.COMMUNICATE_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.COLLECTION_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.STRING_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.PISTON_MODULE_BLOCK.get());
     }
 
     private void modeledBlock(DeferredBlock<?> deferredBlock) {
@@ -79,16 +76,16 @@ public class ModBlockStateProvider extends ModelSubProvider {
     /**
      * Registers a module block with standardized models.
      *
-     * @param deferredBlock The module block to register
+     * @param block The module block to register
      */
-    private void registerFuluBlock(DeferredBlock<?> deferredBlock) {
+    private void registerFuluBlock(Block block) {
         var templete = new ModelTemplate(Optional.of(
                 Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block")),
                 Optional.empty(),
                 TextureSlot.TEXTURE);
-        MultiVariant model = plainVariant((new TexturedModel(TextureMapping.defaultTexture(deferredBlock.get()), templete)).create(deferredBlock.get(), blockModels.modelOutput));
+        MultiVariant model = plainVariant((new TexturedModel(TextureMapping.defaultTexture(block), templete)).create(block, blockModels.modelOutput));
         // copy from lever
-        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(deferredBlock.get(), model).with(PropertyDispatch.modify(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING).select(AttachFace.CEILING, Direction.NORTH, X_ROT_180.then(Y_ROT_180)).select(AttachFace.CEILING, Direction.EAST, X_ROT_180.then(Y_ROT_270)).select(AttachFace.CEILING, Direction.SOUTH, X_ROT_180).select(AttachFace.CEILING, Direction.WEST, X_ROT_180.then(Y_ROT_90)).select(AttachFace.FLOOR, Direction.NORTH, NOP).select(AttachFace.FLOOR, Direction.EAST, Y_ROT_90).select(AttachFace.FLOOR, Direction.SOUTH, Y_ROT_180).select(AttachFace.FLOOR, Direction.WEST, Y_ROT_270).select(AttachFace.WALL, Direction.NORTH, X_ROT_90).select(AttachFace.WALL, Direction.EAST, X_ROT_90.then(Y_ROT_90)).select(AttachFace.WALL, Direction.SOUTH, X_ROT_90.then(Y_ROT_180)).select(AttachFace.WALL, Direction.WEST, X_ROT_90.then(Y_ROT_270))));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model).with(PropertyDispatch.modify(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING).select(AttachFace.CEILING, Direction.NORTH, X_ROT_180.then(Y_ROT_180)).select(AttachFace.CEILING, Direction.EAST, X_ROT_180.then(Y_ROT_270)).select(AttachFace.CEILING, Direction.SOUTH, X_ROT_180).select(AttachFace.CEILING, Direction.WEST, X_ROT_180.then(Y_ROT_90)).select(AttachFace.FLOOR, Direction.NORTH, NOP).select(AttachFace.FLOOR, Direction.EAST, Y_ROT_90).select(AttachFace.FLOOR, Direction.SOUTH, Y_ROT_180).select(AttachFace.FLOOR, Direction.WEST, Y_ROT_270).select(AttachFace.WALL, Direction.NORTH, X_ROT_90).select(AttachFace.WALL, Direction.EAST, X_ROT_90.then(Y_ROT_90)).select(AttachFace.WALL, Direction.SOUTH, X_ROT_90.then(Y_ROT_180)).select(AttachFace.WALL, Direction.WEST, X_ROT_90.then(Y_ROT_270))));
     }
 
     public void writingBlock() {

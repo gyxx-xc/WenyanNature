@@ -1,10 +1,10 @@
 package indi.wenyan.content.block.runner;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.AbstractFuluBlock;
+import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.client.BlockSetScreenPacket;
 import lombok.Getter;
@@ -38,9 +38,9 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
     public static final EnumProperty<RunningState> RUNNING_STATE = EnumProperty.create("running_state",
             RunningState.class);
     @Getter
-    private final int tier;
+    private final RunnerTier tier;
 
-    public RunnerBlock(int tier, Properties properties) {
+    public RunnerBlock(RunnerTier tier, Properties properties) {
         super(properties.noCollision().lightLevel(state -> state.getValue(RUNNING_STATE).getLightLevel()));
         this.tier = tier;
         registerDefaultState(defaultBlockState()
@@ -49,7 +49,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
 
     public static final MapCodec<RunnerBlock> CODEC = RecordCodecBuilder.mapCodec(
             (i) -> i
-                    .group(Codec.intRange(0, 6).fieldOf("tier").forGetter(RunnerBlock::getTier),
+                    .group(RunnerTier.CODEC.fieldOf("tier").forGetter(RunnerBlock::getTier),
                             propertiesCodec())
                     .apply(i, RunnerBlock::new));
 

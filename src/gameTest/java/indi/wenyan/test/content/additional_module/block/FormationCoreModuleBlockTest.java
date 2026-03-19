@@ -2,6 +2,7 @@ package indi.wenyan.test.content.additional_module.block;
 
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.test.utils.RunnerTestHelper;
 import net.minecraft.core.BlockPos;
@@ -21,11 +22,11 @@ public class FormationCoreModuleBlockTest {
     public static void formationModuleStartTest(final @NonNull DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 6, 1)
                 .set(0, 0, 0, WenyanBlocks.FORMATION_CORE_MODULE_BLOCK.get().defaultBlockState())
-                .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK_3.get().defaultBlockState())
+                .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK.getBlock(RunnerTier.RUNNER_3).defaultBlockState())
                 .set(0, 2, 0, Blocks.STONE.defaultBlockState())
-                .set(0, 3, 0, WenyanBlocks.RUNNER_BLOCK_3.get().defaultBlockState())
+                .set(0, 3, 0, WenyanBlocks.RUNNER_BLOCK.getBlock(RunnerTier.RUNNER_3).defaultBlockState())
                 .set(0, 4, 0, Blocks.STONE.defaultBlockState())
-                .set(0, 5, 0, WenyanBlocks.RUNNER_BLOCK_3.get().defaultBlockState())
+                .set(0, 5, 0, WenyanBlocks.RUNNER_BLOCK.getBlock(RunnerTier.RUNNER_3).defaultBlockState())
         );
 
         test.onGameTest(RunnerTestHelper.class, helper -> {
@@ -76,11 +77,11 @@ public class FormationCoreModuleBlockTest {
     public static void formationModuleJoinTest(final @NonNull DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 6, 1)
                 .set(0, 0, 0, WenyanBlocks.FORMATION_CORE_MODULE_BLOCK.get().defaultBlockState())
-                .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK_3.get().defaultBlockState())
+                .set(0, 1, 0, WenyanBlocks.RUNNER_BLOCK.getBlock(RunnerTier.RUNNER_3).defaultBlockState())
                 .set(0, 2, 0, Blocks.STONE.defaultBlockState())
-                .set(0, 3, 0, WenyanBlocks.RUNNER_BLOCK_3.get().defaultBlockState())
+                .set(0, 3, 0, WenyanBlocks.RUNNER_BLOCK.getBlock(RunnerTier.RUNNER_3).defaultBlockState())
                 .set(0, 4, 0, Blocks.STONE.defaultBlockState())
-                .set(0, 5, 0, WenyanBlocks.RUNNER_BLOCK_3.get().defaultBlockState())
+                .set(0, 5, 0, WenyanBlocks.RUNNER_BLOCK.getBlock(RunnerTier.RUNNER_3).defaultBlockState())
         );
 
         test.onGameTest(RunnerTestHelper.class, helper -> {

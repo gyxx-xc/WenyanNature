@@ -33,20 +33,8 @@ public enum WenyanItems {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, WenyanProgramming.MODID);
 
     // Hand Runner items
-    public static final DeferredItem<BlockItem> HAND_RUNNER_0 = DR.registerItem(RunnerItem.ID_0,
-            (Item.Properties properties) -> new RunnerItem(properties, 0));
-    public static final DeferredItem<BlockItem> HAND_RUNNER_1 = DR.registerItem(RunnerItem.ID_1,
-            (Item.Properties properties) -> new RunnerItem(properties, 1));
-    public static final DeferredItem<BlockItem> HAND_RUNNER_2 = DR.registerItem(RunnerItem.ID_2,
-            (Item.Properties properties) -> new RunnerItem(properties, 2));
-    public static final DeferredItem<BlockItem> HAND_RUNNER_3 = DR.registerItem(RunnerItem.ID_3,
-            (Item.Properties properties) -> new RunnerItem(properties, 3));
-    public static final DeferredItem<BlockItem> HAND_RUNNER_4 = DR.registerItem(RunnerItem.ID_4,
-            (Item.Properties properties) -> new RunnerItem(properties, 4));
-    public static final DeferredItem<BlockItem> HAND_RUNNER_5 = DR.registerItem(RunnerItem.ID_5,
-            (Item.Properties properties) -> new RunnerItem(properties, 5));
-    public static final DeferredItem<BlockItem> HAND_RUNNER_6 = DR.registerItem(RunnerItem.ID_6,
-            (Item.Properties properties) -> new RunnerItem(properties, 6));
+    public static final RunnerTier.TieredItemRegistrator<BlockItem> HAND_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(RunnerItem.ID,
+            RunnerItem::new);
 
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
             (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
@@ -113,15 +101,11 @@ public enum WenyanItems {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
             .title(Component.translatable("title.wenyan_programming.create_tab"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> HAND_RUNNER_1.get().getDefaultInstance())
+            .icon(() -> HAND_RUNNER.getItem(RunnerTier.RUNNER_0).getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(HAND_RUNNER_0.get());
-                output.accept(HAND_RUNNER_1.get());
-                output.accept(HAND_RUNNER_2.get());
-                output.accept(HAND_RUNNER_3.get());
-                output.accept(HAND_RUNNER_4.get());
-                output.accept(HAND_RUNNER_5.get());
-                output.accept(HAND_RUNNER_6.get());
+                for (var runner : HAND_RUNNER.getItemsSorted()) {
+                    output.accept(runner);
+                }
 
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());
@@ -169,4 +153,3 @@ public enum WenyanItems {
                 output.accept(POWER_BLOCK_ITEM.get());
             }).build());
 }
-

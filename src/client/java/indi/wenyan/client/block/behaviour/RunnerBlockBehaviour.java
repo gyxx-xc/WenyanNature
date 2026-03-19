@@ -6,13 +6,12 @@ import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditorBackendSynchronizer;
 import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.block.runner.ICodeOutputHolder;
+import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
-import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.network.server.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.server.PlatformRenamePacket;
 import net.minecraft.client.Minecraft;
@@ -57,8 +56,8 @@ public enum RunnerBlockBehaviour {
                 packageSnippets.add(packageSnippet(execPackage,
                         executor.blockState().getCloneItemStack(pos, level, false, player),
                         executor.getPackageName()));
-            } else if (blockEntity instanceof ICodeHolder entity && !b.equals(pos)) {
-                packageSnippets.add(new PackageSnippet(WenyanItems.HAND_RUNNER_1.toStack(),
+            } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos)) {
+                packageSnippets.add(new PackageSnippet(entity.getBlockState().getCloneItemStack(level, b, true),
                         entity.getPlatformName(), List.of()));
             }
         }

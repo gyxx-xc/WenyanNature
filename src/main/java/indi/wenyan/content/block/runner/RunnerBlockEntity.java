@@ -59,15 +59,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public static final String PLATFORM_NAME_ID = "platformName";
     public static final String ID = "runner_block_entity";
     public static final int DEVICE_SEARCH_RANGE = 3;
-    private static final Map<Integer, Integer> TIER_SPEED_MAP = Map.of(
-            0, 1,
-            1, 10,
-            2, 100,
-            3, 1000,
-            4, 10000,
-            5, 100000,
-            6, 1000000
-    );
 
     @Getter private final ExecQueue execQueue = new ExecQueue(this);
     @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
@@ -87,7 +78,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString());
         titleCodeOutput.setOnChanged(this::setChanged);
         if (blockState.getBlock() instanceof RunnerBlock block)
-            steps = TIER_SPEED_MAP.get(block.getTier());
+            steps = block.getTier().getStepSpeed();
         else steps = 1;
         runningState = blockState.getValue(RUNNING_STATE);
     }
@@ -128,9 +119,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             if (runningState == RunnerBlock.RunningState.ERROR && newState == RunnerBlock.RunningState.NOT_RUNNING)
                 return;
 
+            System.out.println(runningState);
             if (runningState != newState) {
                 runningState = newState;
-                level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, newState), Block.UPDATE_CLIENTS);
+                level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
             }
         } else {
             tickCommunicate();
@@ -211,10 +203,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             handleError(e.getMessage());
             return Optional.empty();
         }
-        assert getLevel() != null;
-        if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
-            getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE,
-                    RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
         return Optional.of(runner);
     }
 

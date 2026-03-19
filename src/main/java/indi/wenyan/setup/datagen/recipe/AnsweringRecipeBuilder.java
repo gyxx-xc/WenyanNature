@@ -2,7 +2,6 @@ package indi.wenyan.setup.datagen.recipe;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.recipe.AnsweringRecipe;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
@@ -34,22 +33,18 @@ public final class AnsweringRecipeBuilder {
         this.output = output;
     }
 
-    public static AnsweringRecipeBuilder create(Holder<Item> output) {
-        return new AnsweringRecipeBuilder(new ItemStackTemplate(output));
-    }
-
-    public static AnsweringRecipeBuilder create(Holder<Item> output, int count) {
+    public static AnsweringRecipeBuilder create(Item output, int count) {
         return new AnsweringRecipeBuilder(new ItemStackTemplate(output, count));
     }
 
     /**
      * Creates a new builder for a recipe with the specified item as output.
      *
-     * @param item The output item
+     * @param output The output item
      * @return A new builder instance
      */
-    public static AnsweringRecipeBuilder create(Item item) {
-        return new AnsweringRecipeBuilder(new ItemStackTemplate(item));
+    public static AnsweringRecipeBuilder create(Item output) {
+        return new AnsweringRecipeBuilder(new ItemStackTemplate(output));
     }
 
     /**

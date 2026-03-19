@@ -5,6 +5,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
+import java.util.List;
+
 /**
  * Provider for generating Chinese language translations during data generation.
  * Contains all Chinese translations used in the mod.
@@ -39,12 +41,11 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
         add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
 
-        addBlockAndItem(WenyanItems.HAND_RUNNER_0.get(), "一阶符");
-        addBlockAndItem(WenyanItems.HAND_RUNNER_1.get(), "二阶符");
-        addBlockAndItem(WenyanItems.HAND_RUNNER_2.get(), "三阶符");
-        addBlockAndItem(WenyanItems.HAND_RUNNER_3.get(), "四阶符");
-        addBlockAndItem(WenyanItems.HAND_RUNNER_4.get(), "五阶符");
-        addBlockAndItem(WenyanItems.HAND_RUNNER_5.get(), "六阶符");
+        List<BlockItem> items = WenyanItems.HAND_RUNNER.getItemsSorted();
+        List<String> names = List.of("一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符", "七阶符");
+        for (int i = 0; i < items.size(); i++) {
+            addBlockAndItem(items.get(i), names.get(i));
+        }
 
         addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
         addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");

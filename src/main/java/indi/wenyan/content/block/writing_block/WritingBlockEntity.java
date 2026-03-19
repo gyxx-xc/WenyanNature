@@ -48,13 +48,11 @@ public class WritingBlockEntity extends DataBlockEntity {
 
             @Override
             protected boolean isValid(ItemResource resource) {
-                return resource.is(WenyanItems.HAND_RUNNER_0.get()) ||
-                        resource.is(WenyanItems.HAND_RUNNER_1.get()) ||
-                        resource.is(WenyanItems.HAND_RUNNER_2.get()) ||
-                        resource.is(WenyanItems.HAND_RUNNER_3.get()) ||
-                        resource.is(WenyanItems.HAND_RUNNER_4.get()) ||
-                        resource.is(WenyanItems.HAND_RUNNER_5.get()) ||
-                        resource.is(WenyanItems.HAND_RUNNER_6.get());
+                for (var i : WenyanItems.HAND_RUNNER.getItems()) {
+                    if (resource.is(i))
+                        return true;
+                }
+                return false;
             }
         };
     }
