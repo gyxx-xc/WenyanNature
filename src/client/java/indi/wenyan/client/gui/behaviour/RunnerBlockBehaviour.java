@@ -29,7 +29,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
-import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
+import static indi.wenyan.content.block.runner.BlockPackageGetter.DEVICE_SEARCH_RANGE;
 
 public enum RunnerBlockBehaviour {
     ;

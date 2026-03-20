@@ -6,8 +6,10 @@ import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.entity.ThrowRunnerEntity;
 import indi.wenyan.content.gui_api.CraftingBlockContainer;
+import indi.wenyan.content.item.throw_runner.FuContainerComponent;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
+import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -66,6 +68,7 @@ public enum WyRegistration {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA;
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> NOTE_LOCK_DATA;
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FuContainerComponent>> FU_DATA;
 
     public static final Supplier<RecipeBookCategory> CALCULATION_BLOCK_CATEGORY;
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER;
@@ -73,6 +76,7 @@ public enum WyRegistration {
 
     public static final BlockCapability<IWenyanBlockDevice, Void> WENYAN_BLOCK_DEVICE_CAPABILITY;
     public static final ItemCapability<ICodeHolder, Void> ITEM_CODE_HOLDER_CAPABILITY;
+    public static final ItemCapability<IWenyanDevice, Void> WENYAN_ITEM_DEVICE_CAPABILITY;
 
     public static final Supplier<EntityType<ThrowRunnerEntity>> THROW_RUNNER_ENTITY;
 
@@ -99,6 +103,11 @@ public enum WyRegistration {
                         .persistent(Codec.BOOL)
                         .networkSynchronized(ByteBufCodecs.BOOL)
                         .build());
+        FU_DATA = DATA.register(FuContainerComponent.ID,
+                () -> DataComponentType.<FuContainerComponent>builder()
+                        .persistent(FuContainerComponent.CODEC)
+                        .networkSynchronized(FuContainerComponent.STREAM_CODEC)
+                        .build());
 
         CALCULATION_BLOCK_CATEGORY = RECIPE_BOOK_CATEGORIES.register(
                 "calculation_block", RecipeBookCategory::new);
@@ -122,6 +131,9 @@ public enum WyRegistration {
         ITEM_CODE_HOLDER_CAPABILITY  = ItemCapability.createVoid(
                 Identifier.fromNamespaceAndPath(MODID, "item_code_holder"),
                 ICodeHolder.class);
+        WENYAN_ITEM_DEVICE_CAPABILITY = ItemCapability.createVoid(
+                Identifier.fromNamespaceAndPath(MODID, "wenyan_item_device"),
+                IWenyanDevice.class);
 
         THROW_RUNNER_ENTITY = ENTITY.registerEntityType(ThrowRunnerEntity.ID,
                 ThrowRunnerEntity::new, MobCategory.MISC,

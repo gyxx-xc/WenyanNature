@@ -1,4 +1,4 @@
-package indi.wenyan.content.item;
+package indi.wenyan.content.item.throw_runner;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.entity.ThrowRunnerEntity;

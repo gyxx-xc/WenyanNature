@@ -24,7 +24,7 @@ public interface ICommunicateHolder {
             getCommunicates().add(new ICommunicateHolder.CommunicationEffect(new Vector3f(pos.getX(), pos.getY(), pos.getZ())));
     }
 
-    default void addCommunicateServer(ServerLevel sl, BlockPos from, BlockPos pos) {
+    static void blockAddCommunicateServer(ServerLevel sl, BlockPos from, BlockPos pos) {
         if (!pos.closerThan(Vec3i.ZERO, 1.2))
             PacketDistributor.sendToPlayersTrackingChunk(sl,
                     ChunkPos.containing(from),

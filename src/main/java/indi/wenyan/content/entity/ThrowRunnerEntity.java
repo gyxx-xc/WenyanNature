@@ -1,20 +1,34 @@
 package indi.wenyan.content.entity;
 
+import indi.wenyan.content.block.ICommunicateHolder;
+import indi.wenyan.content.block.runner.BlockPackageGetter;
 import indi.wenyan.content.block.runner.LazyProgram;
+import indi.wenyan.content.item.throw_runner.FuContainerComponent;
+import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
+import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.exec_interface.structure.ImportRequest;
+import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.values.WenyanNull;
+import indi.wenyan.judou.structure.values.WenyanPackage;
+import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.utils.Either;
+import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,20 +41,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Deque;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class ThrowRunnerEntity extends ThrowableItemProjectile
-        implements IWenyanPlatform {
+        implements IWenyanPlatform, ICommunicateHolder {
     public static final String ID = "throw_runner_entity";
     private static final int LIFE_TIME = 100;
 
     @Getter private String platformName;
     @Getter private final ExecQueue execQueue = new ExecQueue(this);
+    @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
 
     @Nullable
     private final Player player;
@@ -48,6 +64,8 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
     private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram =
             new LazyProgram<>(() -> new WenyanProgramImpl(this));
+    private final Map<String, IWenyanDevice> packages = new HashMap<>();
+    private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(_ -> {});
 
     private int life = 0;
 
@@ -75,6 +93,12 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
                     handleError(e.getMessage());
                     // add will show this message and kill itself at tick
                 }
+                List<ItemStack> items = itemStack.getOrDefault(WyRegistration.FU_DATA, FuContainerComponent.EMPTY).createOne();
+                for (ItemStack stack : items) {
+                    IWenyanDevice device = stack.getCapability(WyRegistration.WENYAN_ITEM_DEVICE_CAPABILITY);
+                    if (device != null)
+                        packages.put(device.getPackageName(), device);
+                }
             } else {
                 platformName = "";
                 // and discard in tick
@@ -88,6 +112,23 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     @Override
     public void handleError(String error) {
         errors.add(error);
+    }
+
+    @Override
+    public WenyanPackage initEnvironment() {
+        var basePackage = IWenyanPlatform.super.initEnvironment();
+        basePackage.put(WenyanPackages.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
+                new ImportRequest(t, this::getPackage, a));
+        basePackage.put("書", (RequestCallHandler) (thread, self, argsList) ->
+                new SimpleRequest(thread, self, argsList,
+                        (ignore, args) -> {
+                            if (player != null) {
+                                String s = args.getFirst().as(WenyanString.TYPE).value();
+                                player.sendSystemMessage(Component.literal(s));
+                            }
+                            return WenyanNull.NULL;
+                        }));
+        return basePackage;
     }
 
     @Override
@@ -161,20 +202,30 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
         super.setRemainingFireTicks(1);
     }
 
-//    @WenyanThreading
-//    abstract class ThisCallHandler implements ISimpleExecCallHandler {
-//        @Override
-//        public @NotNull Optional<IWenyanDevice> getExecutor() {
-//            if (isRemoved())
-//                return Optional.empty();
-//            return Optional.of(HandRunnerEntity.this);
-//        }
-//    }
-
     private @NonNull ThrowEntityContext getContext() {
         return new ThrowEntityContext();
     }
 
-    public static class ThrowEntityContext implements IHandleContext {
+    private Either<WenyanPackage, String> getPackage(IHandleContext iHandleContext, String s) throws WenyanException {
+        // check local first
+        var localDevice = packages.get(s);
+        if (localDevice != null)
+            return Either.left(processInternalPackage(localDevice.getExecPackage(), localDevice));
+
+        // check external
+        var externalPackage = blockPackageGetter.getPackage(level(), BlockPos.containing(getPosition(0)), s);
+        if (externalPackage != null)
+            return externalPackage;
+        throw new WenyanException("Package " + s + " not found");
+    }
+
+    @Contract("_, _ -> new")
+    private WenyanPackage processInternalPackage(RawHandlerPackage rawPackage, IWenyanDevice device) {
+        var map = new HashMap<>(rawPackage.variables());
+        rawPackage.functions().forEach((name, function) ->
+                map.put(name, (RequestCallHandler) (thread, self, argsList) ->
+                        new ThrowEntityRequest(self, argsList, thread, function.get(),
+                                () -> packages.remove(device.getPackageName()) != null)));
+        return new WenyanPackage(map);
     }
 }

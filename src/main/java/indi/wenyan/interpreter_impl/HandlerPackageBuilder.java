@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
+import static indi.wenyan.content.block.runner.BlockPackageGetter.DEVICE_SEARCH_RANGE;
 
 /**
  * Builder for creating WenyanPackage values

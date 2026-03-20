@@ -4,12 +4,9 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.DataBlockEntity;
 import indi.wenyan.content.block.ICommunicateHolder;
-import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IWenyanProgram;
@@ -22,7 +19,6 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -38,16 +34,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
@@ -58,7 +55,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public static final String PAGES_ID = "pages";
     public static final String PLATFORM_NAME_ID = "platformName";
     public static final String ID = "runner_block_entity";
-    public static final int DEVICE_SEARCH_RANGE = 3;
 
     @Getter private final ExecQueue execQueue = new ExecQueue(this);
     @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
@@ -71,6 +67,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
     private final int steps;
     private RunnerBlock.RunningState runningState;
+    private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(this::safeAddCommunicate);
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
@@ -133,7 +130,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
 
         baseEnvironment.put(WenyanPackages.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
-                new ImportRequest(t, this::getPackage, a));
+                new ImportRequest(t, (_, name) -> {
+                    var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
+                    if (either == null)
+                        throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", name).getString());
+                    return either;
+                }, a));
         baseEnvironment.put("書", (RequestCallHandler) (thread, self, argsList) ->
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
@@ -147,7 +149,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 AbstractFuluBlock.getConnectedDirection(getBlockState()).getOpposite());
         var device = getLevel().getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, attached);
         if (device != null)
-            baseEnvironment.combine(processPackage(device.getExecPackage(), device));
+            baseEnvironment.combine(blockPackageGetter.processPackage(device.getExecPackage(), device));
         return baseEnvironment;
     }
 
@@ -227,39 +229,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         addOutput(error, style);
     }
 
-    private Either<WenyanPackage, String> getPackage(IHandleContext context, String packageName) throws WenyanException {
-        assert level != null;
-        for (BlockPos pos : BlockPos.betweenClosed(
-                getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
-                getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
-            if (pos.equals(getBlockPos())) continue;
-
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof RunnerBlockEntity platform && platform.getPlatformName().equals(packageName)) {
-                if (getLevel() instanceof ServerLevel sl)
-                    addCommunicateServer(sl, getBlockPos(), pos.subtract(getBlockPos()));
-                return Either.right(platform.getCode());
-            }
-
-            var executor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, pos);
-            if (executor != null && executor.getPackageName().equals(packageName)) {
-                if (getLevel() instanceof ServerLevel sl)
-                    addCommunicateServer(sl, getBlockPos(), pos.subtract(getBlockPos()));
-                return Either.left(processPackage(executor.getExecPackage(), executor));
-            }
-        }
-        throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
-    }
-
-    @Contract("_, _ -> new")
-    private WenyanPackage processPackage(RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
-        var map = new HashMap<>(rawPackage.variables());
-        rawPackage.functions().forEach((name, function) ->
-                map.put(name, (RequestCallHandler) (thread, self, argsList) ->
-                        new BlockRequest(thread, self, argsList, device, function.get(), blockPos -> {
-                            if (getLevel() instanceof ServerLevel sl)
-                                addCommunicateServer(sl, getBlockPos(), blockPos.subtract(getBlockPos()));
-                        })));
-        return new WenyanPackage(map);
+    private void safeAddCommunicate(BlockPos blockPos) {
+        if (getLevel() instanceof ServerLevel sl)
+            ICommunicateHolder.blockAddCommunicateServer(sl, getBlockPos(), blockPos.subtract(getBlockPos()));
     }
 }

@@ -54,7 +54,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                     var block = getRunner(platformName);
                     if (block == null) throw new WenyanException("can't find fu");
                     if (level instanceof ServerLevel serverLevel)
-                        addCommunicateServer(serverLevel, getBlockPos(), block.getBlockPos().subtract(getBlockPos()));
+                        ICommunicateHolder.blockAddCommunicateServer(serverLevel, getBlockPos(), block.getBlockPos().subtract(getBlockPos()));
                     block.newThread(block.getCode())
                             .orElseThrow(() -> new WenyanException("can't start " + platformName));
                 }
@@ -101,7 +101,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
         RunnerBlockEntity cachedPlatform = getStartedRunner(runnerName);
         if (cachedPlatform != null) {
             if (level instanceof ServerLevel serverLevel)
-                addCommunicateServer(serverLevel, getBlockPos(), cachedPlatform.getBlockPos().subtract(getBlockPos()));
+                ICommunicateHolder.blockAddCommunicateServer(serverLevel, getBlockPos(), cachedPlatform.getBlockPos().subtract(getBlockPos()));
             return cachedPlatform;
         }
 
