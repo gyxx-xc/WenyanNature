@@ -4,33 +4,24 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;
 import lombok.AccessLevel;
 import lombok.Getter;
-import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipProvider;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class FuContainerComponent implements TooltipProvider {
+public class FuContainerComponent {
     public static final String ID = "fu_data";
     public static final FuContainerComponent EMPTY = new FuContainerComponent(List.of());
 
     @Getter(AccessLevel.PRIVATE)
     private final List<ItemStackTemplate> items;
-
-    @Override
-    public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag, DataComponentGetter dataComponentGetter) {
-    }
+    private final int hashcode;
 
     public static final Codec<FuContainerComponent> CODEC = ItemStackTemplate.CODEC
             .sizeLimitedListOf(256)
@@ -44,6 +35,7 @@ public class FuContainerComponent implements TooltipProvider {
             throw new IllegalArgumentException("Got " + items.size() + " items, but maximum is 256");
         } else {
             this.items = items;
+            this.hashcode = items.hashCode();
         }
     }
 
@@ -55,5 +47,18 @@ public class FuContainerComponent implements TooltipProvider {
         return new FuContainerComponent(stacks.stream()
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(ItemStackTemplate::fromNonEmptyStack).toList());
+    }
+
+    @Override
+    public int hashCode() {
+        return hashcode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FuContainerComponent other) {
+            return items.equals(other.items);
+        }
+        return false;
     }
 }

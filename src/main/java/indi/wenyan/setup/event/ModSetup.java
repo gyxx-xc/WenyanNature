@@ -1,6 +1,10 @@
 package indi.wenyan.setup.event;
 
 import indi.wenyan.content.item.ItemCodeHolder;
+import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.judou.exec_interface.IWenyanDevice;
+import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -39,6 +43,23 @@ public enum ModSetup {
         event.registerItem(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY,
                 (item, _) -> ItemCodeHolder.getCodeCapability(item),
                 WenyanItems.THROW_RUNNER.getItems().toArray(ItemLike[]::new));
+
+        event.registerItem(WyRegistration.WENYAN_ITEM_DEVICE_CAPABILITY,
+                (_, _) -> new IWenyanDevice() {
+                    @Override
+                    public RawHandlerPackage getExecPackage() {
+                        return HandlerPackageBuilder.create()
+                                .handler("「乙」", (HandlerPackageBuilder.HandlerReturnFunction)
+                                        (_, _) -> WenyanValues.of(100))
+                                .build();
+                    }
+
+                    @Override
+                    public String getPackageName() {
+                        return "「甲」";
+                    }
+                },
+                WenyanItems.PRINT_INVENTORY_MODULE.get());
     }
 
     private static void registerDevice(RegisterCapabilitiesEvent event) {
