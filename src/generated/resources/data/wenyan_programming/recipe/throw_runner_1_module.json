@@ -1,0 +1,4 @@
+{
+  "type": "wenyan_programming:throw_module_recipe",
+  "target": "wenyan_programming:throw_runner_1"
+}
