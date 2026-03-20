@@ -1,7 +1,10 @@
 package indi.wenyan.setup.event;
 
+import indi.wenyan.content.item.ItemCodeHolder;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -29,6 +32,16 @@ public enum ModSetup {
                 Capabilities.Item.BLOCK,
                 WenyanBlocks.WRITING_BLOCK_ENTITY.get(),
                 (be, _) -> be.getItemHandler());
+        registerDevice(event);
+        event.registerItem(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY,
+                (item, _) -> ItemCodeHolder.getCodeCapability(item),
+                WenyanItems.HAND_RUNNER.getItems().toArray(ItemLike[]::new));
+        event.registerItem(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY,
+                (item, _) -> ItemCodeHolder.getCodeCapability(item),
+                WenyanItems.THROW_RUNNER.getItems().toArray(ItemLike[]::new));
+    }
+
+    private static void registerDevice(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
                 WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
                 WenyanBlocks.BLOCKING_QUEUE_MODULE_ENTITY.get(),

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -31,10 +32,16 @@ public class ThrowRunnerItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (level instanceof ServerLevel serverLevel) {
-            Projectile.spawnProjectileFromRotation(ThrowRunnerEntity::new, serverLevel, itemStack, player, 0.5F, 0.1F, 5.0F);
+            Projectile.spawnProjectileFromRotation(throwRunnerEntityFromTier(),
+                    serverLevel, itemStack, player, 0.5F, 0.1F, 5.0F);
         }
 
         itemStack.consume(1, player);
         return InteractionResult.SUCCESS;
+    }
+
+    private Projectile.@NonNull ProjectileFactory<ThrowRunnerEntity> throwRunnerEntityFromTier() {
+        return (s, p, l) ->
+                new ThrowRunnerEntity(s, p, l, tier);
     }
 }

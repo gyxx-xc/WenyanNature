@@ -3,6 +3,7 @@ package indi.wenyan.setup.definitions;
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
+import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.entity.ThrowRunnerEntity;
 import indi.wenyan.content.gui_api.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -70,6 +72,7 @@ public enum WyRegistration {
     public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE;
 
     public static final BlockCapability<IWenyanBlockDevice, Void> WENYAN_BLOCK_DEVICE_CAPABILITY;
+    public static final ItemCapability<ICodeHolder, Void> ITEM_CODE_HOLDER_CAPABILITY;
 
     public static final Supplier<EntityType<ThrowRunnerEntity>> THROW_RUNNER_ENTITY;
 
@@ -116,6 +119,9 @@ public enum WyRegistration {
         WENYAN_BLOCK_DEVICE_CAPABILITY = BlockCapability.createVoid(
                 Identifier.fromNamespaceAndPath(MODID, "wenyan_block_device"),
                 IWenyanBlockDevice.class);
+        ITEM_CODE_HOLDER_CAPABILITY  = ItemCapability.createVoid(
+                Identifier.fromNamespaceAndPath(MODID, "item_code_holder"),
+                ICodeHolder.class);
 
         THROW_RUNNER_ENTITY = ENTITY.registerEntityType(ThrowRunnerEntity.ID,
                 ThrowRunnerEntity::new, MobCategory.MISC,

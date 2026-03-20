@@ -52,6 +52,10 @@ public class WritingBlockEntity extends DataBlockEntity {
                     if (resource.is(i))
                         return true;
                 }
+                for (var i : WenyanItems.THROW_RUNNER.getItems()) {
+                    if (resource.is(i))
+                        return true;
+                }
                 return false;
             }
         };
