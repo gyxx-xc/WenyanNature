@@ -450,7 +450,7 @@ class WenyanProgramImplTest {
         Thread.sleep(20);
         program.stop();
 
-        Class obj = program.getClass();
+        Class<? extends WenyanProgramImpl> obj = program.getClass();
         Field execField = obj.getDeclaredField("executor");
         execField.setAccessible(true);
         ExecutorService exec = (ExecutorService) execField.get(program);

@@ -223,11 +223,11 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Data
     public static class PCB implements IWenyanThread { // i.e. PCB
         final IThreadHolder<PCB> runner;
-        final IWenyanProgram program;
+        final IWenyanProgram<PCB> program;
         State state = State.BLOCKED;
         ScheduledFuture<?> watchdog;
 
-        public PCB(IThreadHolder<PCB> runner, IWenyanProgram program) {
+        public PCB(IThreadHolder<PCB> runner, IWenyanProgram<PCB> program) {
             this.runner = runner;
             this.program = program;
         }

@@ -41,11 +41,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
         add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
 
-        List<BlockItem> items = WenyanItems.HAND_RUNNER.getItemsSorted();
-        List<String> names = List.of("一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符", "七阶符");
-        for (int i = 0; i < items.size(); i++) {
-            addBlockAndItem(items.get(i), names.get(i));
-        }
+        forTiered(this::addBlockAndItem, WenyanItems.HAND_RUNNER.getItemsSorted(), "一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符", "七阶符");
+        forTiered(this::add, WenyanItems.THROW_RUNNER.getItemsSorted(), "一阶投符", "二阶投符", "三阶投符", "四阶投符", "五阶投符", "六阶投符", "七阶投符");
 
         addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
         addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");
@@ -145,5 +142,16 @@ public class ChineseLanguageProvider extends LanguageProvider {
     private void addBlockAndItem(BlockItem blockItem, String name) {
         add(blockItem.getDescriptionId(), name);
         add(blockItem.getBlock(), name);
+    }
+
+    private <T> void forTiered(NamingFunction<T> function, List<T> items, String... names) {
+        for (int i = 0; i < items.size(); i++) {
+            function.register(items.get(i), names[i]);
+        }
+    }
+
+    @FunctionalInterface
+    private interface NamingFunction<T> {
+        void register(T item, String name);
     }
 }

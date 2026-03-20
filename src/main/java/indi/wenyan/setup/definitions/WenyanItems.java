@@ -14,6 +14,7 @@ import indi.wenyan.content.block.writing_block.WritingBlock;
 import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.content.item.FloatNoteItem;
 import indi.wenyan.content.item.RunnerItem;
+import indi.wenyan.content.item.ThrowRunnerItem;
 import indi.wenyan.content.item.additional_module.PrintInventoryModule;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
@@ -35,6 +36,8 @@ public enum WenyanItems {
     // Hand Runner items
     public static final RunnerTier.TieredItemRegistrator<BlockItem> HAND_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(RunnerItem.ID,
             RunnerItem::new);
+    public static final RunnerTier.TieredItemRegistrator<Item> THROW_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(ThrowRunnerItem.ID,
+            ThrowRunnerItem::new);
 
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
             (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
@@ -103,9 +106,10 @@ public enum WenyanItems {
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.getItem(RunnerTier.RUNNER_0).getDefaultInstance())
             .displayItems((parameters, output) -> {
-                for (var runner : HAND_RUNNER.getItemsSorted()) {
+                for (var runner : HAND_RUNNER.getItemsSorted())
                     output.accept(runner);
-                }
+                for (var throwRunner : THROW_RUNNER.getItemsSorted())
+                    output.accept(throwRunner);
 
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());
