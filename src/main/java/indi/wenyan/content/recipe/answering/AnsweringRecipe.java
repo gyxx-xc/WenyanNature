@@ -1,4 +1,4 @@
-package indi.wenyan.content.recipe;
+package indi.wenyan.content.recipe.answering;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;

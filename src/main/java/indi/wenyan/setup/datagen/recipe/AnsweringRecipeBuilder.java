@@ -1,7 +1,7 @@
 package indi.wenyan.setup.datagen.recipe;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.recipe.AnsweringRecipe;
+import indi.wenyan.content.recipe.answering.AnsweringRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;

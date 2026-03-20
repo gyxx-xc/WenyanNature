@@ -1,5 +1,6 @@
 package indi.wenyan.content.item.throw_runner;
 
+import com.google.common.collect.Streams;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;
 import lombok.AccessLevel;
@@ -19,7 +20,7 @@ public class FuContainerComponent {
     public static final String ID = "fu_data";
     public static final FuContainerComponent EMPTY = new FuContainerComponent(List.of());
 
-    @Getter(AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PRIVATE) // NOTE: this list must be immutable
     private final List<ItemStackTemplate> items;
     private final int hashcode;
 
@@ -43,10 +44,12 @@ public class FuContainerComponent {
         return items.stream().map(ItemStackTemplate::create).toList();
     }
 
-    public static FuContainerComponent fromItemStack(List<ItemStack> stacks) {
-        return new FuContainerComponent(stacks.stream()
+    public FuContainerComponent withNewItemStacks(List<ItemStack> stacks) {
+        List<ItemStackTemplate> list = Streams.concat(stacks.stream()
                 .filter(itemStack -> !itemStack.isEmpty())
-                .map(ItemStackTemplate::fromNonEmptyStack).toList());
+                .map(ItemStackTemplate::fromNonEmptyStack),
+                items.stream()).toList();
+        return new FuContainerComponent(list);
     }
 
     @Override

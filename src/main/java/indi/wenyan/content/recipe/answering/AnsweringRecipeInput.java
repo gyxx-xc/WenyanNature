@@ -1,4 +1,4 @@
-package indi.wenyan.content.recipe;
+package indi.wenyan.content.recipe.answering;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;

@@ -6,6 +6,7 @@ import indi.wenyan.setup.datagen.model.ModBlockStateProvider;
 import indi.wenyan.setup.datagen.model.ModItemModelProvider;
 import indi.wenyan.setup.datagen.model.SubedModelProvider;
 import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
+import indi.wenyan.setup.datagen.tags.WyItemTagProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -35,6 +36,7 @@ public enum ModDataGeneratorHandler {
                 ModItemModelProvider::new));
         generator.addProvider(ModParticleDescriptionProvider::new);
         generator.addProvider(output -> new CheckerRecipeProvider.Runner(output, registries));
+        generator.addProvider(packOutput -> new WyItemTagProvider(packOutput, registries));
     }
 
     @SubscribeEvent

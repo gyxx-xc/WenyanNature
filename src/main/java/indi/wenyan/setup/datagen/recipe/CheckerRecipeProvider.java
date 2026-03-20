@@ -1,15 +1,21 @@
 package indi.wenyan.setup.datagen.recipe;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.checker.CheckerFactory;
+import indi.wenyan.content.recipe.combine_module.ThrowModuleRecipe;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +43,11 @@ public class CheckerRecipeProvider extends RecipeProvider {
         // recipe that clear code in runner
         for (var item : WenyanItems.HAND_RUNNER.getItems())
             clearDataRecipe(item);
+        for (var item : WenyanItems.THROW_RUNNER.getItems())
+            clearDataRecipe(item);
+
+        for (var item : WenyanItems.THROW_RUNNER.getItems())
+            throwAddModuleRecipe(item);
 
         AnsweringRecipeBuilder
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0))
@@ -183,12 +194,23 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .save(output, "hand_runner_6");
     }
 
-    private void clearDataRecipe(BlockItem item) {
+    private void clearDataRecipe(Item item) {
         ShapelessRecipeBuilder
                 .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC, item)
                 .requires(item)
                 .unlockedBy("has_hand_runner", has(item))
-                .save(output, item.getDescriptionId() + "_clear");
+                .save(output, ResourceKey.create(Registries.RECIPE,
+                        Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+                                // FIXME
+                                item.getDescriptionId().substring(item.getDescriptionId().lastIndexOf(".") + 1) + "_clean")));
+    }
+
+    private void throwAddModuleRecipe(Item item) {
+        SpecialRecipeBuilder.special(() -> new ThrowModuleRecipe(Ingredient.of(item)))
+                .save(output, ResourceKey.create(Registries.RECIPE,
+                        Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+                                // FIXME
+                                item.getDescriptionId().substring(item.getDescriptionId().lastIndexOf(".") + 1) + "_module")));
     }
 
     public static class Runner extends RecipeProvider.Runner {

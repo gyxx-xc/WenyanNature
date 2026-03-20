@@ -24,6 +24,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.setup.definitions.RunnerTier;
+import indi.wenyan.setup.definitions.WenyanEntities;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
 import lombok.Getter;
@@ -76,7 +77,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     }
 
     public ThrowRunnerEntity(Level level, LivingEntity owner, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
-        super(WyRegistration.THROW_RUNNER_ENTITY.get(), owner, level, itemStack);
+        super(WenyanEntities.THROW_RUNNER_ENTITY.get(), owner, level, itemStack);
         setRemainingFireTicks(1);
         this.tier = tier;
         if (!level.isClientSide()) {
