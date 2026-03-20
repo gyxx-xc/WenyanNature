@@ -1,4 +1,4 @@
-package indi.wenyan.client.block.renderer;
+package indi.wenyan.client.renderer.block;
 
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.client.block.renderer.utils.RenderUtils;
+import indi.wenyan.client.renderer.block.utils.RenderUtils;
 import indi.wenyan.content.block.additional_module.paper.BlockModuleEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

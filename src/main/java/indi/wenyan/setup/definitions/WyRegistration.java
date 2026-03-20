@@ -3,6 +3,7 @@ package indi.wenyan.setup.definitions;
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
+import indi.wenyan.content.entity.ThrowRunnerEntity;
 import indi.wenyan.content.gui_api.CraftingBlockContainer;
 import indi.wenyan.content.recipe.AnsweringRecipe;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
@@ -14,6 +15,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -48,7 +50,7 @@ public enum WyRegistration {
     }
 
     // Registry objects
-    public static final DeferredRegister<EntityType<?>> ENTITY;
+    public static final DeferredRegister.Entities ENTITY;
     public static final DeferredRegister<MenuType<?>> MENU_TYPE;
     public static final DeferredRegister<DataComponentType<?>> DATA;
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER;
@@ -69,9 +71,11 @@ public enum WyRegistration {
 
     public static final BlockCapability<IWenyanBlockDevice, Void> WENYAN_BLOCK_DEVICE_CAPABILITY;
 
+    public static final Supplier<EntityType<ThrowRunnerEntity>> THROW_RUNNER_ENTITY;
+
     // Static initialization block
     static {
-        ENTITY = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
+        ENTITY = DeferredRegister.createEntities(MODID);
         MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
         DATA = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, MODID);
         RECIPE_SERIALIZER = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
@@ -112,5 +116,13 @@ public enum WyRegistration {
         WENYAN_BLOCK_DEVICE_CAPABILITY = BlockCapability.createVoid(
                 Identifier.fromNamespaceAndPath(MODID, "wenyan_block_device"),
                 IWenyanBlockDevice.class);
+
+        THROW_RUNNER_ENTITY = ENTITY.registerEntityType(ThrowRunnerEntity.ID,
+                ThrowRunnerEntity::new, MobCategory.MISC,
+                builder -> builder
+                        .noLootTable()
+                        .sized(0.25F, 0.25F)
+                        .clientTrackingRange(4)
+                        .updateInterval(10));
     }
 }

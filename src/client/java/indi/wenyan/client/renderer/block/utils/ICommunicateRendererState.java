@@ -1,4 +1,4 @@
-package indi.wenyan.client.block.renderer.utils;
+package indi.wenyan.client.renderer.block.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import indi.wenyan.WenyanProgramming;

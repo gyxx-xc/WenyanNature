@@ -1,8 +1,9 @@
 package indi.wenyan.client;
 
-import indi.wenyan.client.block.renderer.*;
 import indi.wenyan.client.gui.CraftingBlockScreen;
 import indi.wenyan.client.gui.ScreenOpenerFactroy;
+import indi.wenyan.client.renderer.block.*;
+import indi.wenyan.client.renderer.entity.ThrowRunnerRender;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.client.*;
@@ -28,6 +29,7 @@ public enum ClientSetup {;
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
 //        event.registerEntityRenderer(Registration.HAND_RUNNER_ENTITY.get(), HandRunnerRender::new);
 //        event.registerEntityRenderer(Registration.BULLET_ENTITY.get(), BulletRender::new);
+        event.registerEntityRenderer(WyRegistration.THROW_RUNNER_ENTITY.get(), ThrowRunnerRender::new);
         event.registerBlockEntityRenderer(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), RunnerBlockRender::new);
         event.registerBlockEntityRenderer(WenyanBlocks.BLOCK_MODULE_ENTITY.get(), BlockModuleRender::new);
         event.registerBlockEntityRenderer(WenyanBlocks.PEDESTAL_ENTITY.get(), PedestalBlockRender::new);

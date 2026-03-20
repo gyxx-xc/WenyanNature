@@ -1,10 +1,10 @@
-package indi.wenyan.client.block.renderer;
+package indi.wenyan.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.client.block.renderer.utils.ICommunicateRendererState;
-import indi.wenyan.client.block.renderer.utils.RenderUtils;
+import indi.wenyan.client.renderer.block.utils.ICommunicateRendererState;
+import indi.wenyan.client.renderer.block.utils.RenderUtils;
 import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import lombok.Getter;

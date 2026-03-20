@@ -1,7 +1,7 @@
 package indi.wenyan.client.gui;
 
-import indi.wenyan.client.block.behaviour.RunnerBlockBehaviour;
-import indi.wenyan.client.block.behaviour.WritingBlockBehaviour;
+import indi.wenyan.client.gui.behaviour.RunnerBlockBehaviour;
+import indi.wenyan.client.gui.behaviour.WritingBlockBehaviour;
 import indi.wenyan.setup.network.client.BlockSetScreenPacket;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 

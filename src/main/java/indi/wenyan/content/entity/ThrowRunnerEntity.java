@@ -1,25 +1,40 @@
 package indi.wenyan.content.entity;
 
-import net.minecraft.network.syncher.SynchedEntityData;
+import indi.wenyan.setup.definitions.RunnerTier;
+import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
-@SuppressWarnings("ALL")
-@Deprecated
-public class HandRunnerEntity extends Projectile
+public class ThrowRunnerEntity extends ThrowableItemProjectile
 //        implements IWenyanPlatform, IWenyanDevice
 {
+    public static final String ID = "throw_runner_entity";
 //    public WenyanProgram program;
 //    public boolean hasRun = false;
 //    public int speed;
-//
+
 //    @Getter
 //    private final ExecQueue execQueue = new ExecQueue();
 
-    public HandRunnerEntity(EntityType<HandRunnerEntity> entityType, Level level) {
+//     @Getter @Nullable private final ItemStack itemStack;
+
+    public ThrowRunnerEntity(EntityType<ThrowRunnerEntity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public ThrowRunnerEntity(Level level, LivingEntity owner, @NotNull ItemStack itemStack) {
+        super(WyRegistration.THROW_RUNNER_ENTITY.get(), owner, level, itemStack);
     }
 
 //    public HandRunnerEntity(@NotNull Player holder, String code, int level) {
@@ -67,32 +82,16 @@ public class HandRunnerEntity extends Projectile
 //        baseEnvironment.importPackage(getExecPackage());
 //    }
 //
-//    @Override
-//    public void tick() {
-//        if (!hasRun) {
-//            if (getDeltaMovement().length() < 0.01) {
-//                setDeltaMovement(Vec3.ZERO);
-//                if (!level().isClientSide())
-//                    program.createMainThread();
-//                hasRun = true;
-//            } else {
-//                setDeltaMovement(getDeltaMovement().scale(0.5));
-//            }
-//        }
-//        if (!level().isClientSide() && hasRun) {
-//            if (program == null || !program.isRunning()) {
-//                discard();
-//                return;
-//            }
-//            handle(IHandleContext.NONE);
-//            program.step(speed);
-//        }
-//        checkInsideBlocks();
-//        updateRotation();
-//        setPos(position().add(getDeltaMovement()));
-//
-//        super.tick();
-//    }
+    @Override
+    public void tick() {
+        updateRotation();
+
+        Vec3 movement = this.getDeltaMovement();
+        setPos(position().add(movement));
+        setDeltaMovement(movement.scale(0.85));
+
+        super.tick();
+    }
 //
 //    @Override
 //    public void remove(@NotNull RemovalReason reason) {
@@ -100,40 +99,37 @@ public class HandRunnerEntity extends Projectile
 //            program.stop();
 //        super.remove(reason);
 //    }
-//
-//    @Override
-//    protected void onInsideBlock(@NotNull BlockState blockstate) {
-//        if (!blockstate.isAir()) {
-//            VoxelShape voxelshape = blockstate.getCollisionShape(level(), blockPosition());
-//            if (!voxelshape.isEmpty()) {
-//                for (AABB aabb : voxelshape.toAabbs()) {
-//                    if (aabb.move(blockPosition()).contains(position())) {
-//                        setDeltaMovement(Vec3.ZERO);
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
+
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {}
-//
-//    @Override
-//    public boolean ignoreExplosion(@NotNull Explosion explosion) {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isNoGravity() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isPickable() {
-//        return false;
-//    }
-//
+    protected void onInsideBlock(@NotNull BlockState blockstate) {
+        if (!blockstate.isAir() && !getDeltaMovement().equals(Vec3.ZERO)) {
+            VoxelShape voxelshape = blockstate.getCollisionShape(level(), blockPosition());
+            if (!voxelshape.isEmpty()) {
+                for (AABB aabb : voxelshape.toAabbs()) {
+                    if (aabb.move(blockPosition()).contains(position())) {
+                        setDeltaMovement(Vec3.ZERO);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected @NonNull Item getDefaultItem() {
+        return WenyanItems.THROW_RUNNER.getItem(RunnerTier.RUNNER_0);
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
+
 //    @Override
 //    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {}
 //

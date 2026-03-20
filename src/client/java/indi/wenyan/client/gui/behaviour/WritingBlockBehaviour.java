@@ -1,4 +1,4 @@
-package indi.wenyan.client.block.behaviour;
+package indi.wenyan.client.gui.behaviour;
 
 import indi.wenyan.client.gui.code_editor.WritingEditorScreen;
 import indi.wenyan.client.gui.code_editor.backend.WritingBlockBackend;

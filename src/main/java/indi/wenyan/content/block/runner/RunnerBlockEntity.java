@@ -119,7 +119,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             if (runningState == RunnerBlock.RunningState.ERROR && newState == RunnerBlock.RunningState.NOT_RUNNING)
                 return;
 
-            System.out.println(runningState);
             if (runningState != newState) {
                 runningState = newState;
                 level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
