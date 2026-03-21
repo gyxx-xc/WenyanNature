@@ -821,6 +821,8 @@
       
         
       
+        
+      
     
     
     
@@ -982,7 +984,7 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        答题规则
+        编程规则
       
     </span>
   </a>
@@ -1018,17 +1020,6 @@
       
         <li class="md-nav__item">
   <a href="#_9" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        技巧提示
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         相关方块
@@ -1146,6 +1137,34 @@
     
   
     界面
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../throw_runner/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    投掷符咒
   
 
     
@@ -2794,7 +2813,7 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        答题规则
+        编程规则
       
     </span>
   </a>
@@ -2832,17 +2851,6 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        技巧提示
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
         相关方块
       
     </span>
@@ -2872,48 +2880,42 @@
 <p class="admonition-title">Note</p>
 <p>由 AI 学习源码后生成（未检查）</p>
 </div>
-<p>用于<strong>解答问题</strong>来制作物品的核心方块</p>
+<p>用于<strong>解答编程问题</strong>来制作物品的核心方块</p>
 <h2 id="_2">用途</h2>
-<p>创石是一种特殊的合成装置，需要通过<strong>解答问题</strong>来完成物品制作。与普通的合成台不同，它需要你理解并正确回答题目，才能成功制作出目标物品。</p>
+<p>创石是一种特殊的合成装置，需要通过<strong>编写 Wenyan 程序</strong>来解答问题以完成物品制作。与普通的合成台不同，它需要你编写正确的程序来解决问题，才能成功制作出目标物品。</p>
 <h2 id="_3">使用方法</h2>
 <h3 id="_4">基础设置</h3>
 <ol>
 <li><strong>放置创石</strong>：将创石放置在合适的位置</li>
-<li><strong>布置基石</strong>：在创石周围放置<strong>基石</strong>（Pedestal），用于放置材料</li>
+<li><strong>布置基石</strong>：在创石周围<strong>3格范围内</strong>放置<strong>基石</strong>（Pedestal），用于放置材料</li>
 <li><strong>放入材料</strong>：在基石上放入所需的材料</li>
 </ol>
 <h3 id="_5">开始制作</h3>
 <ol>
-<li><strong>右键点击</strong>创石打开操作界面</li>
-<li>查看需要解答的<strong>题目</strong></li>
-<li>使用文言编程语言编写答案</li>
-<li>点击<strong>「书」</strong>提交答案</li>
+<li>与创石交互打开编程界面</li>
+<li>使用 <code>「参」</code> 函数获取输入变量（如 <code>「甲」</code>、<code>「乙」</code> 等）</li>
+<li>编写 Wenyan 程序计算正确答案</li>
+<li>使用 <code>書</code> 函数提交答案</li>
 </ol>
-<h3 id="_6">答题规则</h3>
+<h3 id="_6">编程规则</h3>
 <ul>
-<li>每道题可能需要<strong>多次正确答案</strong>才能完成制作</li>
-<li>答错时进度会<strong>清零</strong>，需要重新开始</li>
-<li>成功时会有<strong>视觉特效</strong>显示你的答案</li>
-<li>全部答对后，制作完成的物品会出现在创石上方</li>
+<li>每个配方有特定的<strong>问题类型</strong>（如 "plus"、"echo"、"print" 等）</li>
+<li>每个配方需要完成指定<strong>轮数</strong>（round）的正确回答</li>
+<li>答错时当前轮次进度会<strong>清零</strong>，需要重新开始该轮</li>
+<li>成功时会有<strong>文字粒子效果</strong>显示你的答案</li>
+<li>全部轮次答对后，制作完成的物品会出现在创石上方</li>
 </ul>
 <h2 id="_7">获取方式</h2>
 <div class="container"> <div class="crafting-grid"> <div class="slot">stone</div> <div class="slot">stone</div> <div class="slot">stone</div> <div class="slot">stone</div> <div class="slot">paper</div> <div class="slot">stone</div> <div class="slot">stone</div> <div class="slot">stone</div> <div class="slot">stone</div> </div> <div class="arrow">→</div> <div class="result">crafting_block</div> </div>
 
 <h2 id="_8">注意事项</h2>
 <ul>
-<li>创石会<strong>搜索周围 3 格内</strong>的基石来获取材料</li>
+<li>创石会<strong>搜索周围 3×3×3 立方体范围内</strong>的基石来获取材料</li>
 <li>制作过程中请确保基石上的材料<strong>不会被移走</strong></li>
-<li>不同的配方有不同的<strong>难度等级</strong>和<strong>所需轮数</strong></li>
-<li>答案提交时会消耗一定的<strong>耐久度</strong></li>
+<li>不同的配方有不同的<strong>问题类型</strong>和<strong>所需轮数</strong></li>
+<li>配方通过 JSON 文件定义，包含输入材料、输出物品、问题类型和轮数</li>
 </ul>
-<h2 id="_9">技巧提示</h2>
-<ul>
-<li>观察基石上的材料组合，确定要制作的物品</li>
-<li>仔细阅读题目要求，理解后再作答</li>
-<li>如果答错了不要气馁，重新思考后再次尝试</li>
-<li>成功的答案会产生漂亮的<strong>文字粒子效果</strong></li>
-</ul>
-<h2 id="_10">相关方块</h2>
+<h2 id="_9">相关方块</h2>
 <ul>
 <li><a href="">基石</a> - 用于放置材料的辅助方块</li>
 <li><a href="">刻印台</a> - 用于编辑符咒的方块</li>
