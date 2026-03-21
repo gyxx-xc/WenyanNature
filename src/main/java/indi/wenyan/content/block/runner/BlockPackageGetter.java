@@ -5,6 +5,7 @@ import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.Either;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -16,12 +17,11 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public record BlockPackageGetter(Consumer<BlockPos> communicateConsumer) {
-    public static final int DEVICE_SEARCH_RANGE = 3;
-
     public @Nullable Either<WenyanPackage, String> getPackage(Level level, BlockPos blockPos, String packageName) {
+        int range = WenyanConfig.getRunnerRange();
         for (BlockPos pos : BlockPos.betweenClosed(
-                blockPos.offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
-                blockPos.offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+                blockPos.offset(range, -range, range),
+                blockPos.offset(-range, range, -range))) {
             if (pos.equals(blockPos)) continue;
 
             BlockEntity blockEntity = level.getBlockEntity(pos);

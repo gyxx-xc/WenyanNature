@@ -10,9 +10,7 @@ import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.utils.LanguageManager;
-import indi.wenyan.judou.utils.LoggerManager;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.*;
 import org.junit.jupiter.params.provider.Arguments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +25,27 @@ public class WenyanProgramTestHelper {
         try {
             LanguageManager.registerLanguageProvider(s -> s);
             LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
+            ConfigManager.registerConfigProvider(new IConfigProvider() {
+                @Override
+                public int getMaxThread() {
+                    return 10;
+                }
+
+                @Override
+                public int getMaxSlice() {
+                    return 1000;
+                }
+
+                @Override
+                public int getWatchdogTimeout() {
+                    return 10;
+                }
+
+                @Override
+                public int getResultMaxSize() {
+                    return 64;
+                }
+            });
         } catch (IllegalStateException ignore) {
         }
     }

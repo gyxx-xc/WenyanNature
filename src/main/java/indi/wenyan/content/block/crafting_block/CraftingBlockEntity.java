@@ -14,6 +14,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.client.CraftClearParticlePacket;
@@ -60,7 +61,6 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class CraftingBlockEntity extends AbstractModuleEntity implements MenuProvider {
-    private static final int RANGE = 3; // the offset to search for pedestals
     private static final String PARTICLE_ID = "particle";
 
     private int craftingProgress = 0;
@@ -216,7 +216,8 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     }
 
     private static void forNearbyPedestal(Level level, BlockPos pos, Consumer<PedestalBlockEntity> consumer) {
-        for (BlockPos b : BlockPos.betweenClosed(pos.offset(RANGE, -RANGE, RANGE), pos.offset(-RANGE, RANGE, -RANGE))) {
+        int pedestalRange = WenyanConfig.getPedestalRange();
+        for (BlockPos b : BlockPos.betweenClosed(pos.offset(pedestalRange, -pedestalRange, pedestalRange), pos.offset(-pedestalRange, pedestalRange, -pedestalRange))) {
             if (level.getBlockEntity(b) instanceof PedestalBlockEntity pedestal && !pedestal.getItemHandler().getResource(0).isEmpty()) {
                 consumer.accept(pedestal);
             }

@@ -7,6 +7,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -23,12 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PowerBlockEntity extends AbstractModuleEntity {
     public static final int LARGE_PRIME = 1000000009;
-    public static final int DISAPPEAR_TICK = 20;
-    public final AtomicInteger power = new AtomicInteger(0);
-    public final SecureRandom random;
+
+    private final int powerDuration = WenyanConfig.getPowerDuration();
+    private final AtomicInteger power = new AtomicInteger(0);
+    private final SecureRandom random;
 
     public final List<Integer> generatedPower = new ArrayList<>(
-            Collections.nCopies(DISAPPEAR_TICK, 0)
+            Collections.nCopies(powerDuration, 0)
     );
     private int lastPower = 0;
 

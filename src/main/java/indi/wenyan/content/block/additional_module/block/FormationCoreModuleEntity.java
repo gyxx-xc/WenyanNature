@@ -14,6 +14,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
     private final Map<String, BlockPos> findedPlatforms = new HashMap<>();
     @Getter
     private final List<ICommunicateHolder.CommunicationEffect> communicates = new ArrayList<>();
-    private static final int RANGE = 10;
+    private final int formationRange = WenyanConfig.getFormationRange();
 
     public FormationCoreModuleEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.FORMATION_CORE_MODULE_ENTITY.get(), pos, blockState);
@@ -127,7 +128,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
         // iter found
         // TODO: performance issue
         assert level != null;
-        for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE), getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
+        for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(formationRange, -formationRange, formationRange), getBlockPos().offset(-formationRange, formationRange, -formationRange))) {
             if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform) {
                 String platformName = platform.getPlatformName();
                 findedPlatforms.put(platformName, pos);

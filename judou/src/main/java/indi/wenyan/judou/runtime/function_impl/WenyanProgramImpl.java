@@ -6,6 +6,7 @@ import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.IWenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
+import indi.wenyan.judou.utils.ConfigManager;
 import indi.wenyan.judou.utils.LoggerManager;
 import lombok.Data;
 import lombok.Getter;
@@ -18,9 +19,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 
 public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> {
-    public static final int SLICE_STEP = 1000;
-    public static final int MAX_THREAD = 10;
-    public static final int WATCHDOG_TIMEOUT = 5;
+    private final int sliceStep = ConfigManager.getConfig().getMaxSlice();
+    private final int maxThread = ConfigManager.getConfig().getMaxThread();
+    private final int watchdogTimeout = ConfigManager.getConfig().getWatchdogTimeout();
 
     private final AtomicReference<Thread> parkedThread = new AtomicReference<>();
     /**
@@ -36,7 +37,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     private boolean isIdle = false;
 
     // NOTE: all thread = current running thread + ready queue threads + blocked threads (hold by ExecQueue)
-    public final Collection<PCB> allThreads = ConcurrentHashMap.newKeySet(MAX_THREAD);
+    public final Collection<PCB> allThreads = ConcurrentHashMap.newKeySet(maxThread);
 
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
@@ -154,7 +155,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Override
     public void create(IThreadHolder<PCB> runner) throws WenyanException {
-        if (allThreads.size() + 1 > MAX_THREAD) {
+        if (allThreads.size() + 1 > maxThread) {
             throw new WenyanException.WenyanVarException("too many threads");
         }
 
@@ -163,7 +164,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         allThreads.add(thread);
         // after add, size = size + 1 if no other thread is creating
         // else size larger than MAX_THREAD. not allowed, so remove
-        if (allThreads.size() > MAX_THREAD) {
+        if (allThreads.size() > maxThread) {
             allThreads.remove(thread);
             throw new WenyanException.WenyanVarException("too many threads");
         } else {
@@ -198,7 +199,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         executor.execute(() -> {
             startWatchdog(thread);
             try {
-                thread.getRunner().run(SLICE_STEP);
+                thread.getRunner().run(sliceStep);
             } finally {
                 thread.getWatchdog().cancel(false);
             }
@@ -216,7 +217,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
             }
             stop(); // stop first, in case handleError throw unexpected error
             platform.handleError("program running too slow");
-        }, WATCHDOG_TIMEOUT, TimeUnit.MILLISECONDS);
+        }, watchdogTimeout, TimeUnit.MILLISECONDS);
         thread.setWatchdog(f);
     }
 

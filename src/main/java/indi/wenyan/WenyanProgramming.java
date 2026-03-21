@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import indi.wenyan.interpreter_impl.MinecraftLanguageProvider;
 import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.LoggerManager;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanEntities;
 import indi.wenyan.setup.definitions.WenyanItems;
@@ -31,10 +32,11 @@ public class WenyanProgramming {
     /**
      * Constructor initializes the mod
      */
-    public WenyanProgramming(IEventBus modEventBus, @SuppressWarnings("unused") ModContainer modContainer) {
+    public WenyanProgramming(IEventBus modEventBus, ModContainer modContainer) {
         LanguageManager.registerLanguageProvider(new MinecraftLanguageProvider());
         LoggerManager.registerLogger(LOGGER);
         register(modEventBus);
+        WenyanConfig.register(modContainer);
     }
 
     private static void register(IEventBus modEventBus) {

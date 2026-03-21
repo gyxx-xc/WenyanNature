@@ -70,6 +70,18 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
         add(WenyanItems.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
 
+        add("wenyan_programming.configuration.judou", "句读（程序运行）");
+        add("wenyan_programming.configuration.slice_step", "线程切换长度");
+        add("wenyan_programming.configuration.max_thread", "最大线程数");
+        add("wenyan_programming.configuration.watchdog_timeout", "超时倍率");
+        add("wenyan_programming.configuration.result_max_size", "结果堆栈最大长度");
+        add("wenyan_programming.configuration.in_game", "游戏（物品与世界）");
+        add("wenyan_programming.configuration.formation_range", "阵眼范围");
+        add("wenyan_programming.configuration.pedestal_range", "基石范围");
+        add("wenyan_programming.configuration.runner_range", "符範圍");
+        add("wenyan_programming.configuration.power_duration", "算核消散游戏刻");
+        add("wenyan_programming.configuration.throw_entity_lifetime", "投符持續時間");
+
         add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
         add("error.wenyan_programming.unknown_operator", "謬：不識此算子");

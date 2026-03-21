@@ -12,6 +12,7 @@ import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.server.PlatformRenamePacket;
@@ -29,8 +30,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import static indi.wenyan.content.block.runner.BlockPackageGetter.DEVICE_SEARCH_RANGE;
-
 public enum RunnerBlockBehaviour {
     ;
 
@@ -46,9 +45,10 @@ public enum RunnerBlockBehaviour {
                     device.blockState().getCloneItemStack(pos, level, false, player),
                     device.getPackageName()));
 
+        int range = WenyanConfig.getRunnerRange();
         for (BlockPos b : BlockPos.betweenClosed(
-                pos.offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
-                pos.offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+                pos.offset(range, -range, range),
+                pos.offset(-range, range, -range))) {
             if (b.equals(pos)) continue;
 
             BlockEntity blockEntity = level.getBlockEntity(b);

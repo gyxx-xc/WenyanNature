@@ -4,7 +4,6 @@ import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.runtime.function_impl.WenyanResultStack;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -262,7 +261,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanCompileException(e.getMessage(), ctx);
         }
 
-        if (count > WenyanResultStack.MAX_SIZE) {
+        if (count > WenyanCompilerEnvironment.FUNCTION_ARGS_MAX) {
             throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.too_many_variables"), ctx);
         }
         for (int i = 0; i < count; i++)

@@ -71,6 +71,18 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
         add(WenyanItems.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
 
+        add("wenyan_programming.configuration.judou", "Judou (Program Running)");
+        add("wenyan_programming.configuration.slice_step", "Thread Slice Step");
+        add("wenyan_programming.configuration.max_thread", "Max Thread");
+        add("wenyan_programming.configuration.watchdog_timeout", "Watchdog Timeout Adjust");
+        add("wenyan_programming.configuration.result_max_size", "Result Stack Max Size");
+        add("wenyan_programming.configuration.in_game", "In Game (Item & World)");
+        add("wenyan_programming.configuration.formation_range", "Formation Range");
+        add("wenyan_programming.configuration.pedestal_range", "Pedestal Range");
+        add("wenyan_programming.configuration.runner_range", "Runner Range");
+        add("wenyan_programming.configuration.power_duration", "Power Duration Tick");
+        add("wenyan_programming.configuration.throw_entity_lifetime", "Throw Entity Lifetime");
+
         add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
         add("error.wenyan_programming.unknown_operator", "謬：不識此算子");

@@ -3,6 +3,7 @@ package indi.wenyan.judou.runtime.function_impl;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
+import indi.wenyan.judou.utils.ConfigManager;
 import indi.wenyan.judou.utils.WenyanThreading;
 
 import java.util.ArrayDeque;
@@ -19,7 +20,7 @@ public class WenyanResultStack {
     private final Deque<IWenyanValue> stack = new ArrayDeque<>();
 
     /** Maximum allowed size for the stack */
-    public static final int MAX_SIZE = 64;
+    private final int maxSize = ConfigManager.getConfig().getResultMaxSize();
 
     /**
      * Pushes an item onto the stack if it's not null.
@@ -30,7 +31,7 @@ public class WenyanResultStack {
     public void push(IWenyanValue item) {
         if (item.type() != WenyanNull.TYPE)
             stack.addLast(item);
-        while (stack.size() > MAX_SIZE) {
+        while (stack.size() > maxSize) {
             stack.removeFirst();
         }
     }

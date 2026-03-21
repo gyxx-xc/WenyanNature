@@ -23,6 +23,7 @@ import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanEntities;
 import indi.wenyan.setup.definitions.WenyanItems;
@@ -53,7 +54,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class ThrowRunnerEntity extends ThrowableItemProjectile
         implements IWenyanPlatform, ICommunicateHolder {
     public static final String ID = "throw_runner_entity";
-    private static final int LIFE_TIME = 100;
+    private final int lifetime = WenyanConfig.getThrowEntityLifetime();
 
     @Getter private String platformName;
     @Getter private final ExecQueue execQueue = new ExecQueue(this);
@@ -139,7 +140,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     @Override
     public void tick() {
-        if (life++ > LIFE_TIME)
+        if (life++ > lifetime)
             discard();
 
         if (!level().isClientSide()) {
