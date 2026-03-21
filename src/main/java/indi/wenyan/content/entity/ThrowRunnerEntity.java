@@ -66,7 +66,8 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram =
             new LazyProgram<>(() -> new WenyanProgramImpl(this));
     private final Map<String, IWenyanDevice> packages = new HashMap<>();
-    private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(_ -> {});
+    private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(_ -> {
+    });
 
     private int life = 0;
 
@@ -97,8 +98,12 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
                 List<ItemStack> items = itemStack.getOrDefault(WyRegistration.FU_DATA, FuContainerComponent.EMPTY).createOne();
                 for (ItemStack stack : items) {
                     IWenyanDevice device = stack.getCapability(WyRegistration.WENYAN_ITEM_DEVICE_CAPABILITY);
-                    if (device != null)
-                        packages.put(device.getPackageName(), device);
+                    if (device != null) {
+                        if (!packages.containsKey(device.getPackageName()))
+                            packages.put(device.getPackageName(), device);
+                        else
+                            handleError("Warning: package " + device.getPackageName() + " is already registered");
+                    }
                 }
             } else {
                 platformName = "";
