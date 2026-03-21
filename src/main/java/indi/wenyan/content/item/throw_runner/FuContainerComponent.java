@@ -5,18 +5,26 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class FuContainerComponent {
+public class FuContainerComponent implements TooltipProvider {
     public static final String ID = "fu_data";
     public static final FuContainerComponent EMPTY = new FuContainerComponent(List.of());
 
@@ -46,10 +54,18 @@ public class FuContainerComponent {
 
     public FuContainerComponent withNewItemStacks(List<ItemStack> stacks) {
         List<ItemStackTemplate> list = Streams.concat(stacks.stream()
-                .filter(itemStack -> !itemStack.isEmpty())
-                .map(ItemStackTemplate::fromNonEmptyStack),
+                        .filter(itemStack -> !itemStack.isEmpty())
+                        .map(ItemStackTemplate::fromNonEmptyStack),
                 items.stream()).toList();
         return new FuContainerComponent(list);
+    }
+
+    @Override
+    public void addToTooltip(Item.TooltipContext tooltipContext,
+                             Consumer<Component> consumer,
+                             TooltipFlag tooltipFlag,
+                             DataComponentGetter dataComponentGetter) {
+        // FIXME: not work for unknow reason
     }
 
     @Override
