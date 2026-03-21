@@ -28,7 +28,7 @@ public enum ItemCodeHolder {
 
             @Override
             public String getPlatformName() {
-                return item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
+                return item.getOrDefault(DataComponents.CUSTOM_NAME, Component.translatable("code.wenyan_programming.bracket", item.getItemName())).getString();
             }
         };
     }

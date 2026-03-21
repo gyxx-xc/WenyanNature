@@ -12,6 +12,7 @@ import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
+import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.BlockRunnerCodePacket;
 import indi.wenyan.setup.network.server.PlatformRenamePacket;
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.Objects;
 
 import static indi.wenyan.content.block.runner.BlockPackageGetter.DEVICE_SEARCH_RANGE;
 
@@ -49,16 +49,19 @@ public enum RunnerBlockBehaviour {
         for (BlockPos b : BlockPos.betweenClosed(
                 pos.offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
                 pos.offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+            if (b.equals(pos)) continue;
+
             BlockEntity blockEntity = level.getBlockEntity(b);
-            if (blockEntity instanceof IWenyanBlockDevice executor) {
-                if (Objects.equals(executor.getPackageName(), "")) continue;
-                RawHandlerPackage execPackage = executor.getExecPackage();
-                packageSnippets.add(packageSnippet(execPackage,
-                        executor.blockState().getCloneItemStack(pos, level, false, player),
+            if (blockEntity instanceof RunnerBlockEntity platform) {
+                packageSnippets.add(new PackageSnippet(platform.getBlockState().getCloneItemStack(level, b, true),
+                        platform.getPlatformName(), List.of()));
+            }
+
+            var executor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, b);
+            if (executor != null) {
+                packageSnippets.add(packageSnippet(executor.getExecPackage(),
+                        executor.blockState().getCloneItemStack(b, level, false, player),
                         executor.getPackageName()));
-            } else if (blockEntity instanceof RunnerBlockEntity entity && !b.equals(pos)) {
-                packageSnippets.add(new PackageSnippet(entity.getBlockState().getCloneItemStack(level, b, true),
-                        entity.getPlatformName(), List.of()));
             }
         }
         Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
@@ -72,6 +75,7 @@ public enum RunnerBlockBehaviour {
                 runner.setCode(content);
                 ClientPacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
             }
+
 
             @Override
             public String getContent() {
