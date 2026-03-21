@@ -79,8 +79,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add("wenyan_programming.configuration.formation_range", "阵眼范围");
         add("wenyan_programming.configuration.pedestal_range", "基石范围");
         add("wenyan_programming.configuration.runner_range", "符範圍");
-        add("wenyan_programming.configuration.power_duration", "算核消散游戏刻");
-        add("wenyan_programming.configuration.throw_entity_lifetime", "投符持續時間");
+        add("wenyan_programming.configuration.duration", "算核消散游戏刻");
+        add("wenyan_programming.configuration.lifetime", "投符持續時間");
 
         add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");

@@ -5,6 +5,7 @@ import indi.wenyan.judou.utils.ConfigManager;
 import indi.wenyan.judou.utils.IConfigProvider;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 import net.neoforged.neoforge.common.ModConfigSpec.DoubleValue;
@@ -21,16 +22,17 @@ public final class WenyanConfig {
     private WenyanConfig(ModContainer container) {
         container.registerConfig(ModConfig.Type.CLIENT, client.spec);
         container.registerConfig(ModConfig.Type.COMMON, common.spec);
-//        container.getEventBus().addListener((ModConfigEvent.Loading evt) -> {
-//            if (evt.getConfig().getSpec() == common.spec) {
-//                common.sync();
-//            }
-//        });
-//        container.getEventBus().addListener((ModConfigEvent.Reloading evt) -> {
-//            if (evt.getConfig().getSpec() == common.spec) {
-//                common.sync();
-//            }
-//        });
+        assert container.getEventBus() != null;
+        container.getEventBus().addListener((ModConfigEvent.Loading evt) -> {
+            if (evt.getConfig().getSpec() == common.spec) {
+                common.sync();
+            }
+        });
+        container.getEventBus().addListener((ModConfigEvent.Reloading evt) -> {
+            if (evt.getConfig().getSpec() == common.spec) {
+                common.sync();
+            }
+        });
     }
 
     public static void register(ModContainer container) {
@@ -98,9 +100,6 @@ public final class WenyanConfig {
 
         public ClientConfig() {
             var builder = new ModConfigSpec.Builder();
-
-            builder.push("client");
-            builder.pop();
             spec = builder.build();
         }
     }
@@ -143,7 +142,7 @@ public final class WenyanConfig {
         }
 
         public void sync() {
-
+            // TODO: sync
         }
     }
 

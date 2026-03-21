@@ -80,8 +80,8 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add("wenyan_programming.configuration.formation_range", "Formation Range");
         add("wenyan_programming.configuration.pedestal_range", "Pedestal Range");
         add("wenyan_programming.configuration.runner_range", "Runner Range");
-        add("wenyan_programming.configuration.power_duration", "Power Duration Tick");
-        add("wenyan_programming.configuration.throw_entity_lifetime", "Throw Entity Lifetime");
+        add("wenyan_programming.configuration.duration", "Power Duration Tick");
+        add("wenyan_programming.configuration.lifetime", "Throw Entity Lifetime");
 
         add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");

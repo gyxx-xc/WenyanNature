@@ -129,15 +129,15 @@
   "type.wenyan_programming.object": "物",
   "type.wenyan_programming.object_type": "類",
   "type.wenyan_programming.string": "言",
+  "wenyan_programming.configuration.duration": "Power Duration Tick",
   "wenyan_programming.configuration.formation_range": "Formation Range",
   "wenyan_programming.configuration.in_game": "In Game (Item & World)",
   "wenyan_programming.configuration.judou": "Judou (Program Running)",
+  "wenyan_programming.configuration.lifetime": "Throw Entity Lifetime",
   "wenyan_programming.configuration.max_thread": "Max Thread",
   "wenyan_programming.configuration.pedestal_range": "Pedestal Range",
-  "wenyan_programming.configuration.power_duration": "Power Duration Tick",
   "wenyan_programming.configuration.result_max_size": "Result Stack Max Size",
   "wenyan_programming.configuration.runner_range": "Runner Range",
   "wenyan_programming.configuration.slice_step": "Thread Slice Step",
-  "wenyan_programming.configuration.throw_entity_lifetime": "Throw Entity Lifetime",
   "wenyan_programming.configuration.watchdog_timeout": "Watchdog Timeout Adjust"
 }
