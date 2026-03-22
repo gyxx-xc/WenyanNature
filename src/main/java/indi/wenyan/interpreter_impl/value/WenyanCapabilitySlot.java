@@ -4,6 +4,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.setup.language.ExceptionText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -37,7 +38,7 @@ public record WenyanCapabilitySlot(Vec3 pose, ResourceHandler<ItemResource> capa
 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
-        throw new WenyanException("Item slot has no such attribute: " + name);
+        throw new WenyanException(ExceptionText.NoAttribute.string(name));
     }
 
     @Override

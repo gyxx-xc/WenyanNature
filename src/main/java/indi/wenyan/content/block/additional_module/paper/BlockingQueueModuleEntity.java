@@ -5,6 +5,7 @@ import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.BlockRequest;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
@@ -15,7 +16,6 @@ import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.client.CommunicationLocationPacket;
@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.Supplier;
+
+import static indi.wenyan.setup.language.ExceptionText.ArgsNumWrong;
 
 /**
  * Entity for the blocking queue module.
@@ -79,10 +81,6 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
 
     private boolean putHandler(IHandleContext context, IArgsRequest request) throws WenyanException {
         IWenyanValue value = extractSingleValueFromRequest(request);
-        if (value == null) {
-            throw new WenyanException("Invalid value for BlockingQueueModule.put");
-        }
-
         if (queue.size() >= capacity) {
             // Queue is full, block the producer thread
             waitingProducers.add(new BlockedThread(request.thread(), value,
@@ -159,8 +157,8 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
      * Extracts value from request parameters.
      * This is a simplified extraction - adjust based on actual request structure.
      */
-    private @Nullable IWenyanValue extractSingleValueFromRequest(IArgsRequest request) {
-        if (request.args().size() != 1) return null;
+    private IWenyanValue extractSingleValueFromRequest(IArgsRequest request) throws WenyanException {
+        if (request.args().size() != 1) throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
         return request.args().getFirst();
     }
 
@@ -174,7 +172,8 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
         tickCommunicate();
     }
 
-    private record BlockedThread(IWenyanRunner thread, @Nullable IWenyanValue value, @Nullable BlockPos pos) {
+    private record BlockedThread(IWenyanRunner thread, @Nullable IWenyanValue value,
+                                 @Nullable BlockPos pos) {
         @Override
         public boolean equals(Object o) {
             return false;

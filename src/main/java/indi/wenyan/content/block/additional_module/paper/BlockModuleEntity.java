@@ -4,12 +4,12 @@ import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanBlock;
 import indi.wenyan.interpreter_impl.value.WenyanCapabilitySlot;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.client.BlockPosRangePacket;
@@ -25,6 +25,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+
+import static indi.wenyan.setup.language.ExceptionText.NeedBlockItem;
 
 public class BlockModuleEntity extends AbstractModuleEntity {
     @Getter
@@ -60,7 +62,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                             }
                         }
                     } else {
-                        throw new WenyanException("參數必須是方塊物品");
+                        throw new WenyanException(NeedBlockItem.string());
                     }
                 } else if (compare.is(WenyanBlock.TYPE)) {
                     BlockState target = compare.as(WenyanBlock.TYPE).value();
@@ -73,7 +75,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                         }
                     }
                 } else {
-                    throw new WenyanException("參數必須是方塊物品");
+                    throw new WenyanException(NeedBlockItem.string());
                 }
 
                 if (level instanceof ServerLevel serverLevel)

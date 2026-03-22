@@ -8,7 +8,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFuture;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.language.LanguageManager;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 

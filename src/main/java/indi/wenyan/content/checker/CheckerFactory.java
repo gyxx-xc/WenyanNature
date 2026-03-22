@@ -5,7 +5,6 @@ import indi.wenyan.content.checker.checker.challenge.Ex1Checker;
 import indi.wenyan.content.checker.checker.handrunner.*;
 import indi.wenyan.content.checker.checker.ink.*;
 import indi.wenyan.content.checker.checker.paper.*;
-import indi.wenyan.judou.structure.WenyanException;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -42,7 +41,7 @@ public enum CheckerFactory {
      * @param random a random source for the checker
      * @return the created checker, or null if the type is unknown
      */
-    public static CraftingAnswerChecker produce(String name, RandomSource random) throws WenyanException {
+    public static CraftingAnswerChecker produce(String name, RandomSource random) {
         return switch (name) {
             case PLUS_CHECKER -> new BambooPaperChecker(random);
             case ECHO_CHECKER -> new EchoChecker(random);
@@ -64,7 +63,7 @@ public enum CheckerFactory {
             case CELESTIAL_INK_CHECKER -> new CelestialInkChecker(random);
             case DRAGON_PAPER -> new DragonPaperChecker(random);
             case HAND_RUNNER_6_CHECKER -> new HandRunner6Checker(random);
-            default -> throw new WenyanException("Unknown checker type: " + name);
+            default -> throw new IllegalStateException("Unknown checker type: " + name);
         };
     }
 }

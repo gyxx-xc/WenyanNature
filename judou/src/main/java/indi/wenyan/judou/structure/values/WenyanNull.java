@@ -1,7 +1,7 @@
 package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.language.LanguageManager;
 
 public enum WenyanNull implements IWenyanValue {
     NULL;

@@ -2,8 +2,8 @@ package indi.wenyan;
 
 import com.mojang.logging.LogUtils;
 import indi.wenyan.interpreter_impl.MinecraftLanguageProvider;
-import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.LoggerManager;
+import indi.wenyan.judou.utils.language.LanguageManager;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanEntities;

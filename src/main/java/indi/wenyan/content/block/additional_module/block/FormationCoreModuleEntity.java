@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static indi.wenyan.setup.language.ExceptionText.*;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class FormationCoreModuleEntity extends AbstractModuleEntity implements ICommunicateHolder {
@@ -53,20 +55,20 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 for (var arg : request.args()) {
                     String platformName = arg.as(WenyanString.TYPE).value();
                     var block = getRunner(platformName);
-                    if (block == null) throw new WenyanException("can't find fu");
+                    if (block == null) throw new WenyanException(NotFindFu.string());
                     if (level instanceof ServerLevel serverLevel)
                         ICommunicateHolder.blockAddCommunicateServer(serverLevel, getBlockPos(), block.getBlockPos().subtract(getBlockPos()));
                     block.newThread(block.getCode())
-                            .orElseThrow(() -> new WenyanException("can't start " + platformName));
+                            .orElseThrow(() -> new WenyanException(CantStart.string(platformName)));
                 }
                 return WenyanNull.NULL;
             })
             .handler("「狀」", request -> {
-                if (request.args().size() != 1) throw new WenyanException("args not correct");
+                if (request.args().size() != 1) throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
                 String name = request.args().getFirst().as(WenyanString.TYPE).value();
                 String runnerName = Component.translatable("code.wenyan_programming.bracket", name).getString();
                 var block = getStartedRunner(runnerName);
-                if (block == null) throw new WenyanException("can't find fu");
+                if (block == null) throw new WenyanException(NotFindFu.string());
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
                 return new WenyanRunningState(state);
             })

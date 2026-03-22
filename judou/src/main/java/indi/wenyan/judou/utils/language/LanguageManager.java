@@ -1,4 +1,4 @@
-package indi.wenyan.judou.utils;
+package indi.wenyan.judou.utils.language;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -18,5 +18,11 @@ public enum LanguageManager {
         if (languageProvider == null)
             throw new IllegalStateException("Language provider not registered");
         return languageProvider.getTranslation(key);
+    }
+
+    public static String getTranslation(String key, Object... args) {
+        if (languageProvider == null)
+            throw new IllegalStateException("Language provider not registered");
+        return languageProvider.getTranslation(key, args);
     }
 }

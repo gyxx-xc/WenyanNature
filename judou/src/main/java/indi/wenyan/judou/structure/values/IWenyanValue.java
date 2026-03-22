@@ -7,8 +7,8 @@ import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.LanguageManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

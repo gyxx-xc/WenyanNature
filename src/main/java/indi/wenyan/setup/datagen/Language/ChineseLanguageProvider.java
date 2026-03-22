@@ -82,6 +82,24 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add("wenyan_programming.configuration.duration", "算核消散游戏刻");
         add("wenyan_programming.configuration.lifetime", "投符持續時間");
 
+        add("error.wenyan_programming.NotFindFu", "謬：不識此符");
+        add("error.wenyan_programming.CantStart", "謬：不可始%s");
+        add("error.wenyan_programming.ArgsNumWrong", "謬：參數數需%d得%d");
+        add("error.wenyan_programming.ArgsNumWrongRange", "謬：參數數需%d至%d得%d");
+        add("error.wenyan_programming.ArgsTypeWrong", "謬：參數類需%s得%s");
+        add("error.wenyan_programming.LockHoldAlready", "謬：線程已持鎖");
+        add("error.wenyan_programming.LockNotHold", "謬：線程未持鎖");
+        add("error.wenyan_programming.NeedBlockItem", "謬：參數需方塊物");
+        add("error.wenyan_programming.NeedItemCapability", "謬：需持物");
+        add("error.wenyan_programming.ArgsNeedWeather", "謬：參數須為「「晴」」「「雨」」「「雷」」");
+        add("error.wenyan_programming.InvaildDirection", "謬：無效之方塊向");
+        add("error.wenyan_programming.FailedToPlacePiston", "謬：置活塞敗");
+        add("error.wenyan_programming.FailedToMoveBlock", "謬：移方塊敗");
+        add("error.wenyan_programming.DeviceRemoved", "謬：器已除");
+        add("error.wenyan_programming.ImportNotFound", "謬：未尋之籍%s");
+        add("error.wenyan_programming.NoAttribute", "謬：無屬性%s");
+        add("error.wenyan_programming.NoConnectDirection", "謬：無連向");
+
         add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
         add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
         add("error.wenyan_programming.unknown_operator", "謬：不識此算子");

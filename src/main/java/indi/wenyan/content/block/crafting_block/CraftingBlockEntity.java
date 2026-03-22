@@ -17,6 +17,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.language.ExceptionText;
 import indi.wenyan.setup.network.client.CraftClearParticlePacket;
 import indi.wenyan.setup.network.client.CraftingParticlePacket;
 import lombok.Getter;
@@ -78,7 +79,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler("「参」", request -> {
                 if (!request.args().isEmpty())
-                    throw new WenyanException.WenyanVarException("「参」function takes no arguments.");
+                    throw new WenyanException.WenyanVarException(ExceptionText.ArgsNumWrong.string(0, request.args().size()));
                 return getChecker().getArgs();
             })
             .handler("書", request -> {

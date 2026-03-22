@@ -21,6 +21,7 @@ public class ArcaneInkChecker extends CraftingAnswerChecker {
         setVariable(0, WenyanValues.of(expr));
 
         boolean isMatching = checkMatching(expr);
+        // FIXME: may change to const
         ans = WenyanValues.of(isMatching ? "YES" : "NO");
     }
 

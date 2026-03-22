@@ -4,6 +4,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.setup.language.ExceptionText;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -86,7 +87,7 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
              if (attributes.containsKey(name)) {
                  return attributes.get(name);
              }
-             throw new WenyanException("Checker object has no such attribute: " + name);
+             throw new WenyanException(ExceptionText.NoAttribute.string(name));
         }
 
         @Override

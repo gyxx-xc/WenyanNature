@@ -6,6 +6,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.setup.language.ExceptionText;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import lombok.experimental.NonFinal;
@@ -37,7 +38,7 @@ public class ThrowEntityRequest implements BaseHandleableRequest, IArgsRequest {
     public boolean handle(IHandleContext context) throws WenyanException {
         if (firstTime) {
             if (!packageModifier.get()) {
-                throw new WenyanException("package not found");
+                throw new WenyanException(ExceptionText.DeviceRemoved.string());
             }
             firstTime = false;
         }

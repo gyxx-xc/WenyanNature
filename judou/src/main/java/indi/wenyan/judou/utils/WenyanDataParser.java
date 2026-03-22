@@ -9,6 +9,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.utils.language.LanguageManager;
 
 import java.math.BigInteger;
 import java.util.HashMap;

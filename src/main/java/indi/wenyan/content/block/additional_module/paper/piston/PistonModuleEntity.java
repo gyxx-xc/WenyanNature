@@ -12,6 +12,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.ExceptionText;
 import indi.wenyan.setup.network.client.PistonMovePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -179,7 +180,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
                 var direction = request.args().get(1).as(WenyanVec3.TYPE).value();
                 Direction nearest = Direction.getNearest((int) direction.x, (int) direction.y, (int) direction.z, null);
                 if (nearest == null) {
-                    throw new WenyanException("Invalid direction");
+                    throw new WenyanException(ExceptionText.InvaildDirection.string());
                 }
                 assert level != null;
                 BlockPos blockPos = getBlockPos().offset((int) pos.x, (int) pos.y, (int) pos.z);
@@ -188,12 +189,12 @@ public class PistonModuleEntity extends AbstractModuleEntity {
                     nearest = nearest.getOpposite();
                 }
                 if (!level.getBlockState(blockPos.relative(nearest.getOpposite())).isEmpty()) {
-                    throw new WenyanException("Block already exists");
+                    throw new WenyanException(ExceptionText.FailedToPlacePiston.string());
                 }
 
                 boolean success = triggleMoveBlock(level, extending, nearest, blockPos);
                 if (!success) {
-                    throw new WenyanException("Failed to move block");
+                    throw new WenyanException(ExceptionText.FailedToMoveBlock.string());
                 }
                 if (level instanceof ServerLevel sl)
                     PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(blockPos),

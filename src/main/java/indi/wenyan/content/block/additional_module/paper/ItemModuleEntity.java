@@ -3,13 +3,14 @@ package indi.wenyan.content.block.additional_module.paper;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanCapabilitySlot;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.ExceptionText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
             .handler(WenyanSymbol.var("ItemModule.read"), request -> {
                 var capability = getItemHandlerCapability();
                 if (capability == null) {
-                    throw new WenyanException.WenyanTypeException("無法取得物品處理器");
+                    throw new WenyanException.WenyanTypeException(ExceptionText.NeedItemCapability.string());
                 }
                 int slot = Math.clamp(request.args().getFirst().as(WenyanInteger.TYPE).value(),
                         0, capability.size() - 1);

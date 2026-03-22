@@ -12,6 +12,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanThreading;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.setup.language.ExceptionText;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +28,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         return TYPE;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE) {
@@ -53,11 +55,11 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
                                     args.get(1).as(WenyanDouble.TYPE).value(),
                                     args.get(2).as(WenyanDouble.TYPE).value()));
                         } else {
-                            throw new WenyanException.WenyanVarException("args?");
+                            throw new WenyanException.WenyanVarException(ExceptionText.ArgsNumWrong.string(3, args.size()));
                         }
                     }
             );
-            default -> throw new WenyanException("Unknown Vec3 attribute: " + name);
+            default -> throw new WenyanException(ExceptionText.NoAttribute.string(name));
         };
     }
 
@@ -86,7 +88,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
                 case "「西」" -> WEST;
                 case "「南」" -> SOUTH;
                 case "「北」" -> NORTH;
-                default -> throw new WenyanException("Unknown Vec3 static attribute: " + name);
+                default -> throw new WenyanException(ExceptionText.NoAttribute.string(name));
             };
         }
 

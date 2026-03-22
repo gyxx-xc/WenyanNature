@@ -12,9 +12,9 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.language.LanguageManager;
 
 import java.util.ArrayList;
 import java.util.List;

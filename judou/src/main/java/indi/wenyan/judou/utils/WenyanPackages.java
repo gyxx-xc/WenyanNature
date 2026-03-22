@@ -10,6 +10,7 @@ import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinAsyncFunction;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
+import indi.wenyan.judou.utils.language.LanguageManager;
 
 import java.util.List;
 
@@ -63,6 +64,6 @@ public enum WenyanPackages {
             .function("待", AwaitCallHandler.INSTANCE)
             .function(CREATE_ASYNC_ID, (self, args) -> new WenyanBuiltinAsyncFunction(args.getFirst().as(WenyanBuiltinFunction.TYPE)))
 
-            .function(WenyanSymbol.var("Null"), (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
+            .function("「」", (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
             .build();
 }

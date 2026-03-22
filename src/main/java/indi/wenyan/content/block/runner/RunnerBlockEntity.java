@@ -22,6 +22,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.language.ExceptionText;
 import indi.wenyan.setup.network.client.PlatformOutputPacket;
 import lombok.Getter;
 import lombok.experimental.Delegate;
@@ -133,7 +134,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 new ImportRequest(t, (_, name) -> {
                     var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
                     if (either == null)
-                        throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", name).getString());
+                        throw new WenyanException.WenyanVarException(ExceptionText.ImportNotFound.string(name));
                     return either;
                 }, a));
         baseEnvironment.put("書", (RequestCallHandler) (thread, self, argsList) ->

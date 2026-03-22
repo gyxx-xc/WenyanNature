@@ -7,6 +7,7 @@ import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.setup.language.ExceptionText;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
@@ -26,18 +27,18 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
     public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
             case "「名」" -> WenyanValues.of(value.getBlock().getName().toString());
-            case "「同物」" -> new WenyanInlineJavacall((self, args) -> {
+            case "「同物」" -> new WenyanInlineJavacall((_, args) -> {
                 if (args.getFirst().as(WenyanCapabilitySlot.TYPE).getStack().getItem() instanceof BlockItem blockItem)
                     return WenyanValues.of(value.is(blockItem.getBlock()));
                 else
-                    throw new WenyanException("參數必須是方塊物品");
+                    throw new WenyanException(ExceptionText.NeedBlockItem.string());
             });
-            case "「同塊」" -> new WenyanInlineJavacall((self, args) ->
+            case "「同塊」" -> new WenyanInlineJavacall((_, args) ->
                     WenyanValues.of(value.is(args.getFirst().as(WenyanBlock.TYPE).value.getBlock()))
             );
             case "「有實」" -> WenyanValues.of(value.hasBlockEntity());
             case "「向」" -> getConnectedDirection(value);
-            default -> throw new WenyanException("Unknown Block attribute: " + name);
+            default -> throw new WenyanException(ExceptionText.NoAttribute.string(name));
         };
     }
 
@@ -56,7 +57,7 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
                 default -> state.getValue(HorizontalDirectionalBlock.FACING).getUnitVec3();
             });
         } catch (IllegalArgumentException e) {
-            throw new WenyanException("此方塊無法取得面向");
+            throw new WenyanException(ExceptionText.NoConnectDirection.string());
         }
     }
 

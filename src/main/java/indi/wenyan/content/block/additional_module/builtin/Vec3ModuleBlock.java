@@ -3,9 +3,9 @@ package indi.wenyan.content.block.additional_module.builtin;
 import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.utils.WenyanSymbol;
 import org.jetbrains.annotations.NotNull;
 
 public class Vec3ModuleBlock extends AbstractFuluBlock {

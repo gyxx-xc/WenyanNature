@@ -6,7 +6,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.language.LanguageManager;
 
 /**
  * Represents a type in the Wenyan language

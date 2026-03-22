@@ -28,6 +28,7 @@ import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanEntities;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.language.ExceptionText;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -223,7 +224,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
         var externalPackage = blockPackageGetter.getPackage(level(), BlockPos.containing(getPosition(0)), s);
         if (externalPackage != null)
             return externalPackage;
-        throw new WenyanException("Package " + s + " not found");
+        throw new WenyanException(ExceptionText.ImportNotFound.string(s));
     }
 
     @Contract("_, _ -> new")

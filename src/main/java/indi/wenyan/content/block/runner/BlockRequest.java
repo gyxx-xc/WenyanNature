@@ -7,6 +7,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.setup.language.ExceptionText;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import lombok.experimental.NonFinal;
@@ -50,7 +51,7 @@ public class BlockRequest implements BaseHandleableRequest, IArgsRequest {
     @Override
     public boolean handle(IHandleContext context) throws WenyanException {
         if (device().isRemoved())
-            throw new WenyanException("device removed");
+            throw new WenyanException(ExceptionText.DeviceRemoved.string());
         if (!communicationShown) {
             communicateConsumer.accept(device.blockPos());
             communicationShown = true;
