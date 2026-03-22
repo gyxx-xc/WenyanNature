@@ -101,10 +101,11 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
                 for (ItemStack stack : items) {
                     IWenyanDevice device = stack.getCapability(WyRegistration.WENYAN_ITEM_DEVICE_CAPABILITY);
                     if (device != null) {
-                        if (!packages.containsKey(device.getPackageName()))
-                            packages.put(device.getPackageName(), device);
+                        String packageName = device.getPackageName();
+                        if (!packages.containsKey(packageName))
+                            packages.put(packageName, device);
                         else
-                            handleError("Warning: package " + device.getPackageName() + " is already registered");
+                            handleError(ExceptionText.PackageAlreadtRegistered.string(packageName));
                     }
                 }
             } else {

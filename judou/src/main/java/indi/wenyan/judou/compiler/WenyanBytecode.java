@@ -3,6 +3,7 @@ package indi.wenyan.judou.compiler;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -129,7 +130,7 @@ public class WenyanBytecode {
                 return context;
             }
         }
-        throw new WenyanException.WenyanVarException("No debug info for index " + index);
+        throw new WenyanException.WenyanVarException(JudouExceptionText.DebugInfoNotFound.string(index));
     }
 
     /**

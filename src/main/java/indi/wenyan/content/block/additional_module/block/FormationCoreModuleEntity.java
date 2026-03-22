@@ -14,6 +14,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
@@ -30,7 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static indi.wenyan.setup.language.ExceptionText.*;
+import static indi.wenyan.setup.language.ExceptionText.CantStart;
+import static indi.wenyan.setup.language.ExceptionText.NotFindFu;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -64,7 +66,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 return WenyanNull.NULL;
             })
             .handler("「狀」", request -> {
-                if (request.args().size() != 1) throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
+                if (request.args().size() != 1) throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(1, request.args().size()));
                 String name = request.args().getFirst().as(WenyanString.TYPE).value();
                 String runnerName = Component.translatable("code.wenyan_programming.bracket", name).getString();
                 var block = getStartedRunner(runnerName);

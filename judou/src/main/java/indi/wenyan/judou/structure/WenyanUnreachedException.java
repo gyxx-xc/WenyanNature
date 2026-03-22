@@ -1,5 +1,6 @@
 package indi.wenyan.judou.structure;
 
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.slf4j.Logger;
 
 import java.util.function.Consumer;
@@ -27,7 +28,7 @@ public class WenyanUnreachedException extends WenyanException {
                 logger.error("At {}:{} {}", context.line(), context.column(), context.segment());
             logger.error("WenyanThread died with an unexpected exception", this);
             logger.error("caused by: ", cause);
-            output.accept("WenyanThread died with an unexpected exception, killed");
+            output.accept(JudouExceptionText.Unreached.string());
         }
     }
 
@@ -36,6 +37,6 @@ public class WenyanUnreachedException extends WenyanException {
         if (context != null)
             logger.error("At {}:{} {}", context.line(), context.column(), context.segment());
         logger.error("WenyanThread died with an unexpected exception", this);
-        output.accept("WenyanThread died with an unexpected exception, killed");
+        output.accept(JudouExceptionText.Unreached.string());
     }
 }

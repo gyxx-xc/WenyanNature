@@ -8,7 +8,7 @@ import indi.wenyan.judou.structure.values.IWenyanNumber;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.judou.utils.language.ExceptionText;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ public final class WenyanInteger implements IWenyanComputable, IWenyanComparable
         try {
             return value.intValueExact();
         } catch (ArithmeticException e) {
-            throw new WenyanException(ExceptionText.IntegerOverflow.string());
+            throw new WenyanException(JudouExceptionText.IntegerOverflow.string());
         }
     }
 
@@ -67,14 +67,14 @@ public final class WenyanInteger implements IWenyanComputable, IWenyanComparable
     public IWenyanValue divide(IWenyanValue other) throws WenyanException {
         WenyanInteger divisor = other.as(TYPE);
         if (divisor.value.equals(BigInteger.ZERO)) {
-            throw new WenyanException(ExceptionText.DivisionByZero.string());
+            throw new WenyanException(JudouExceptionText.DivisionByZero.string());
         }
         return WenyanValues.of(value.divide(divisor.value));
     }
 
     public WenyanInteger mod(WenyanInteger other) throws WenyanException {
         if (other.value.equals(BigInteger.ZERO)) {
-            throw new WenyanException(ExceptionText.ModuloByZero.string());
+            throw new WenyanException(JudouExceptionText.DivisionByZero.string());
         }
         return valueOf(value.mod(other.value.abs()));
     }

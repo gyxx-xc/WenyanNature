@@ -216,7 +216,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public void playerRun() {
         if (lazyProgram.create().isRunning()) {
-            handleError(Component.translatable("error.wenyan_programming.already_run").getString());
+            handleError(ExceptionText.AlreadyRun.string());
             return;
         }
         newThread(titleCodeOutput.getCode());

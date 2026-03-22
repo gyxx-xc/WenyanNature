@@ -10,8 +10,8 @@ import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.language.ExceptionText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -52,7 +52,7 @@ public class WorldModuleEntity extends AbstractModuleEntity {
                     case "雨" -> serverLevel.getWeatherData().setRaining(true);
                     case "雷" -> serverLevel.getWeatherData().setThundering(true);
                     default ->
-                            throw new WenyanException.WenyanTypeException(ExceptionText.ArgsNumWrongRange.string());
+                            throw new WenyanException.WenyanTypeException(JudouExceptionText.ArgsNumWrongRange.string());
                 }
                 return WenyanNull.NULL;
             })

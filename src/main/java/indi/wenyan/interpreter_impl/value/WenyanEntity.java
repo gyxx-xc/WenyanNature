@@ -7,7 +7,7 @@ import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import net.minecraft.world.entity.Entity;
 
 public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, IWenyanObject {
@@ -22,7 +22,7 @@ public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, 
             case "「活」" -> WenyanValues.of(value().isAlive());
             case "「名」" -> WenyanValues.of(value().getDisplayName().getString());
             case "「高」" -> WenyanValues.of(value().getBbHeight());
-            default -> throw new WenyanException(ExceptionText.NoAttribute.string(name));
+            default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
         };
     }
 

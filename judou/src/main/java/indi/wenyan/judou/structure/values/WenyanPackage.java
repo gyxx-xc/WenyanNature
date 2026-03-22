@@ -3,7 +3,7 @@ package indi.wenyan.judou.structure.values;
 import indi.wenyan.judou.runtime.function_impl.IGlobalResolver;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.utils.language.ExceptionText;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,13 +32,13 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
     public IWenyanValue getAttribute(String name) throws WenyanException {
         var value = variables.get(name);
         if (value == null)
-            throw new WenyanException(ExceptionText.UnknownPackageAttribute.string(name));
+            throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
         return value;
     }
 
     @Override
     public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
-        throw new WenyanException(ExceptionText.CannotCreateObjectFromPackage.string());
+        throw new WenyanException(JudouExceptionText.CannotCreateObject.string());
     }
 
     @Override

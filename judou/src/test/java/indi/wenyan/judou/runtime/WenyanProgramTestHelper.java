@@ -69,7 +69,7 @@ public class WenyanProgramTestHelper {
             case String s -> WenyanValues.of(s);
             case List<?> l ->
                     WenyanValues.of(l.stream().map(WenyanProgramTestHelper::wenyanValueFromObject).toList());
-            default -> throw new RuntimeException("unsupported type: " + o.getClass());
+            default -> throw new IllegalArgumentException("unsupported type: " + o.getClass());
         };
     }
 

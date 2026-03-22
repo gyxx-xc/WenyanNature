@@ -6,7 +6,7 @@ import indi.wenyan.judou.structure.values.IWenyanComputable;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.judou.utils.language.ExceptionText;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,16 +44,16 @@ public record WenyanString(String value)
 
     @Override
     public IWenyanValue subtract(IWenyanValue other) throws WenyanException {
-        throw new WenyanException(ExceptionText.StringSubtractNotSupported.string());
+        throw new WenyanException(JudouExceptionText.OperationNotSupported.string());
     }
 
     @Override
     public IWenyanValue multiply(IWenyanValue other) throws WenyanException {
-        throw new WenyanException(ExceptionText.StringMultiplyNotSupported.string());
+        throw new WenyanException(JudouExceptionText.OperationNotSupported.string());
     }
 
     @Override
     public IWenyanValue divide(IWenyanValue other) throws WenyanException {
-        throw new WenyanException(ExceptionText.StringDivideNotSupported.string());
+        throw new WenyanException(JudouExceptionText.OperationNotSupported.string());
     }
 }

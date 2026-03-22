@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.Supplier;
 
-import static indi.wenyan.setup.language.ExceptionText.ArgsNumWrong;
+import static indi.wenyan.judou.utils.language.JudouExceptionText.ArgsNumWrong;
 
 /**
  * Entity for the blocking queue module.

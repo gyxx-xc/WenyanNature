@@ -7,6 +7,7 @@ import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.language.ExceptionText;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
@@ -38,7 +39,7 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
             );
             case "「有實」" -> WenyanValues.of(value.hasBlockEntity());
             case "「向」" -> getConnectedDirection(value);
-            default -> throw new WenyanException(ExceptionText.NoAttribute.string(name));
+            default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
         };
     }
 

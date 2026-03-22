@@ -7,7 +7,7 @@ import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.language.ExceptionText;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.UnknownNullability;
 
 /**
@@ -57,7 +57,7 @@ public class VariableCode extends WenyanCode {
                     else
                         lv.setValue(value.as(lv.type()));
                 } else
-                    throw new WenyanException(ExceptionText.SetValueToNonLeftValue.string());
+                    throw new WenyanException(JudouExceptionText.SetValueToNonLeftValue.string());
             }
             case CAST -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
@@ -71,7 +71,7 @@ public class VariableCode extends WenyanCode {
                     case 6 -> value.as(IWenyanObjectType.TYPE);
                     case 7 -> value.as(IWenyanFunction.TYPE);
                     default ->
-                            throw new WenyanException(ExceptionText.InvalidDataType.string());
+                            throw new WenyanException(JudouExceptionText.InvalidDataType.string());
                 };
                 runtime.pushReturnValue(castedValue);
             }

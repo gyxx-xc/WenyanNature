@@ -4,6 +4,7 @@ import indi.wenyan.judou.runtime.executor.BranchCode;
 import indi.wenyan.judou.runtime.executor.ForCode;
 import indi.wenyan.judou.runtime.executor.WenyanCode;
 import indi.wenyan.judou.structure.WenyanCompileException;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 /**
  * Verifier for WenyanBytecode to ensure execution safety.
@@ -25,23 +26,21 @@ public class WenyanVerifier {
             int arg = code.arg();
 
             if (op instanceof BranchCode || op instanceof ForCode) {
-                verifyLabel(bytecode, arg, i);
+                verifyLabel(bytecode, arg);
             }
         }
     }
 
-    private static void verifyLabel(WenyanBytecode bytecode, int labelIndex, int instructionIndex) throws WenyanCompileException {
+    private static void verifyLabel(WenyanBytecode bytecode, int labelIndex) throws WenyanCompileException {
         try {
             // Check if label index is valid via getLabel and target PC is in valid bytecode range
             int targetPC = bytecode.getLabel(labelIndex);
 
             if (targetPC < 0 || targetPC > bytecode.size()) {
-                throw new WenyanCompileException("Verification failed at instr " + instructionIndex +
-                        ": Jump target " + targetPC + " out of bounds [0, " + bytecode.size() + "]");
+                throw new WenyanCompileException(JudouExceptionText.VerificationFailed.string());
             }
         } catch (IndexOutOfBoundsException e) {
-            throw new WenyanCompileException("Verification failed at instr " + instructionIndex +
-                    ": Invalid label index " + labelIndex);
+            throw new WenyanCompileException(JudouExceptionText.VerificationFailed.string());
         }
     }
 }

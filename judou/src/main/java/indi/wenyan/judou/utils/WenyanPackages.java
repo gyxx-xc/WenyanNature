@@ -10,7 +10,7 @@ import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinAsyncFunction;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.utils.language.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public enum WenyanPackages {
 
             .function("銜", (IWenyanValue self, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
-                    throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+                    throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 256, args.size()));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
                 for (IWenyanValue v : args.subList(1, args.size())) {
                     v.as(WenyanList.TYPE).value().stream().map(WenyanLeftValue::varOf).forEach(value::add);
@@ -43,7 +43,7 @@ public enum WenyanPackages {
             })
             .function("充", (IWenyanValue self, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
-                    throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+                    throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 256, args.size()));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
                 args.subList(1, args.size()).forEach((v) -> value.add(WenyanLeftValue.varOf(v)));
                 return value;

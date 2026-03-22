@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Random;
 
-import static indi.wenyan.setup.language.ExceptionText.ArgsNumWrongRange;
+import static indi.wenyan.judou.utils.language.JudouExceptionText.ArgsNumWrongRange;
 
 public class RandomModuleBlock extends AbstractFuluBlock {
 

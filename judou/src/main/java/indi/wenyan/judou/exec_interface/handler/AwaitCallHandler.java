@@ -8,7 +8,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFuture;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.language.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -23,7 +23,7 @@ public class AwaitCallHandler implements IJavacallHandler {
     @Override
     public void call(IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
         if (argsList.size() != 1)
-            throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+            throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, argsList.size()));
         if (argsList.getFirst().is(WenyanInteger.TYPE)) {
             // wait n tick, use request(need tick information)
             thread.platform().receive(new AwaitRequest(thread, argsList.getFirst().as(WenyanInteger.TYPE).value()));
@@ -32,7 +32,7 @@ public class AwaitCallHandler implements IJavacallHandler {
             boolean needBlock = argsList.getFirst().as(WenyanBuiltinFuture.TYPE).addWaitingThread(thread);
             if (needBlock) thread.block();
         } else {
-            throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+            throw new WenyanException.WenyanVarException(JudouExceptionText.InvalidArgumentType.string());
         }
     }
 

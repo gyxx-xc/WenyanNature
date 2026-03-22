@@ -6,7 +6,7 @@ import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import net.minecraft.world.entity.player.Player;
 
 public record WenyanPlayer(WenyanEntity valueWarper)
@@ -24,7 +24,7 @@ public record WenyanPlayer(WenyanEntity valueWarper)
             return switch (name) {
                 case "name" -> WenyanValues.of(value().getName().getString());
                 case "uuid" -> WenyanValues.of(value().getUUID().toString());
-                default -> throw new WenyanException(ExceptionText.NoAttribute.string(name));
+                default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
             };
         }
     }

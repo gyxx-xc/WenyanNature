@@ -8,6 +8,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.ConfigManager;
 import indi.wenyan.judou.utils.LoggerManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -156,7 +157,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Override
     public void create(IThreadHolder<PCB> runner) throws WenyanException {
         if (allThreads.size() + 1 > maxThread) {
-            throw new WenyanException.WenyanVarException("too many threads");
+            throw new WenyanException.WenyanVarException(JudouExceptionText.TooManyThreads.string());
         }
 
         var thread = new PCB(runner, this);
@@ -166,7 +167,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         // else size larger than MAX_THREAD. not allowed, so remove
         if (allThreads.size() > maxThread) {
             allThreads.remove(thread);
-            throw new WenyanException.WenyanVarException("too many threads");
+            throw new WenyanException.WenyanVarException(JudouExceptionText.TooManyThreads.string());
         } else {
             unblock(runner);
         }

@@ -9,7 +9,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.judou.utils.language.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 /**
  * Visitor for handling candy statements in the Wenyan language.
@@ -59,7 +59,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             case WenyanRParser.AND -> bytecode.addLoadCode(WenyanPackages.AND_ID);
             case WenyanRParser.OR -> bytecode.addLoadCode(WenyanPackages.OR_ID);
             default ->
-                    throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.unknown_operator"), ctx);
+                    throw new WenyanCompileException(JudouExceptionText.UnknownOperator.string(), ctx);
         }
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
@@ -78,7 +78,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
                 exprVisitor.visit(ctx.data(1));
                 break;
             default:
-                throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.unknown_preposition"), ctx);
+                throw new WenyanCompileException(JudouExceptionText.UnknownPreposition.string(), ctx);
         }
         bytecode.addLoadCode(WenyanPackages.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);

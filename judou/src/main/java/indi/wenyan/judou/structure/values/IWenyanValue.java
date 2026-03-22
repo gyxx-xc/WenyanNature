@@ -8,7 +8,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.judou.utils.language.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -53,8 +53,7 @@ public interface IWenyanValue {
         } else if (type == WenyanString.TYPE) {
             return (T) WenyanValues.of(toString());
         }
-        throw new WenyanException.WenyanTypeException(LanguageManager.getTranslation("error.wenyan_programming.cannot_cast_") +
-                type() + LanguageManager.getTranslation("error.wenyan_programming._to_") + type);
+        throw new WenyanException.WenyanTypeException(JudouExceptionText.CannotCast.string(type(), type));
     }
 
     /**

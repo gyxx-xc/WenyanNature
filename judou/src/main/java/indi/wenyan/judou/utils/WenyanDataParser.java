@@ -9,7 +9,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.language.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -132,7 +132,7 @@ public enum WenyanDataParser {
         try {
             return WenyanValues.of(new BigInteger(value));
         } catch (NumberFormatException e1) {
-            throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"));
+            throw new WenyanException.WenyanNumberException(JudouExceptionText.InvalidNumber.string());
         }
     }
 
@@ -144,7 +144,7 @@ public enum WenyanDataParser {
         try {
             n = Integer.parseInt(num.num + "0".repeat(num.exp));
         } catch (NumberFormatException e) {
-            throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"));
+            throw new WenyanException.WenyanNumberException(JudouExceptionText.InvalidNumber.string());
         }
         return n;
     }
@@ -154,7 +154,7 @@ public enum WenyanDataParser {
             if (text.contains(div)) {
                 String[] parts = text.split(div);
                 if (parts.length != 2)
-                    throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_float_number"));
+                    throw new WenyanException.WenyanNumberException(JudouExceptionText.InvalidFloatNumber.string());
                 // parts 1
                 double result = parseInt(parts[0]);
                 // parts 2 (Int FLOAT_EXP)+
@@ -169,14 +169,14 @@ public enum WenyanDataParser {
                 return result;
             }
         }
-        throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_float_number"));
+        throw new WenyanException.WenyanNumberException(JudouExceptionText.InvalidFloatNumber.string());
     }
 
     public static boolean parseBool(String text) throws WenyanException.WenyanDataException {
         if (BOOL_MAP.containsKey(text))
             return BOOL_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException(LanguageManager.getTranslation("error.wenyan_programming.invalid_bool_value"));
+            throw new WenyanException.WenyanDataException(JudouExceptionText.InvalidBoolValue.string());
     }
 
     public static String parseString(String text) {
@@ -187,7 +187,7 @@ public enum WenyanDataParser {
         if (TYPE_MAP.containsKey(text))
             return TYPE_MAP.get(text);
         else
-            throw new WenyanException.WenyanDataException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"));
+            throw new WenyanException.WenyanDataException(JudouExceptionText.InvalidDataType.string());
     }
 
     private static Num parseIntHelper(String num) throws WenyanException.WenyanNumberException {
@@ -236,7 +236,7 @@ public enum WenyanDataParser {
             boolean zero = true;
             for (int i = 0; i < num.length(); i++) {
                 if (!DIGIT.containsKey(num.substring(i, i + 1)))
-                    throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.unexpected_character"));
+                    throw new WenyanException.WenyanNumberException(JudouExceptionText.UnexpectedCharacter.string());
                 if (zero && DIGIT.get(num.substring(i, i + 1)) != 0)
                     zero = false;
                 if (!zero)
@@ -247,7 +247,7 @@ public enum WenyanDataParser {
             else
                 return new Num(res.toString(), 0);
         } else {
-            throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.unexpected_character"));
+            throw new WenyanException.WenyanNumberException(JudouExceptionText.UnexpectedCharacter.string());
         }
     }
 
@@ -255,7 +255,7 @@ public enum WenyanDataParser {
 
         Num add(Num other) throws WenyanException.WenyanNumberException {
             if (exp - other.exp < other.num.length())
-                throw new WenyanException.WenyanNumberException(LanguageManager.getTranslation("error.wenyan_programming.invalid_number"));
+                throw new WenyanException.WenyanNumberException(JudouExceptionText.InvalidNumber.string());
             return new Num(
                     num + "0".repeat(exp - other.exp - other.num.length()) + other.num,
                     other.exp);

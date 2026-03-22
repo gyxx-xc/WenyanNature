@@ -7,6 +7,9 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.util.List;
 
+import static indi.wenyan.judou.utils.language.JudouExceptionText.*;
+import static indi.wenyan.setup.language.ExceptionText.*;
+
 /**
  * Provider for generating Chinese language translations during data generation.
  * Contains all Chinese translations used in the mod.
@@ -41,8 +44,10 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
         add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
 
-        forTiered(this::addBlockAndItem, WenyanItems.HAND_RUNNER.getItemsSorted(), "一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符", "七阶符");
-        forTiered(this::add, WenyanItems.THROW_RUNNER.getItemsSorted(), "一阶投符", "二阶投符", "三阶投符", "四阶投符", "五阶投符", "六阶投符", "七阶投符");
+        forTiered(this::addBlockAndItem, WenyanItems.HAND_RUNNER.getItemsSorted(),
+                "一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符", "七阶符");
+        forTiered(this::add, WenyanItems.THROW_RUNNER.getItemsSorted(),
+                "一阶投符", "二阶投符", "三阶投符", "四阶投符", "五阶投符", "六阶投符", "七阶投符");
 
         addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
         addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");
@@ -82,60 +87,54 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add("wenyan_programming.configuration.duration", "算核消散游戏刻");
         add("wenyan_programming.configuration.lifetime", "投符持續時間");
 
-        add("error.wenyan_programming.NotFindFu", "謬：不識此符");
-        add("error.wenyan_programming.CantStart", "謬：不可始%s");
-        add("error.wenyan_programming.ArgsNumWrong", "謬：參數數需%d得%d");
-        add("error.wenyan_programming.ArgsNumWrongRange", "謬：參數數需%d至%d得%d");
-        add("error.wenyan_programming.ArgsTypeWrong", "謬：參數類需%s得%s");
-        add("error.wenyan_programming.LockHoldAlready", "謬：線程已持鎖");
-        add("error.wenyan_programming.LockNotHold", "謬：線程未持鎖");
-        add("error.wenyan_programming.NeedBlockItem", "謬：參數需方塊物");
-        add("error.wenyan_programming.NeedItemCapability", "謬：需持物");
-        add("error.wenyan_programming.ArgsNeedWeather", "謬：參數須為「「晴」」「「雨」」「「雷」」");
-        add("error.wenyan_programming.InvaildDirection", "謬：無效之方塊向");
-        add("error.wenyan_programming.FailedToPlacePiston", "謬：置活塞敗");
-        add("error.wenyan_programming.FailedToMoveBlock", "謬：移方塊敗");
-        add("error.wenyan_programming.DeviceRemoved", "謬：器已除");
-        add("error.wenyan_programming.ImportNotFound", "謬：未尋之籍%s");
-        add("error.wenyan_programming.NoAttribute", "謬：無屬性%s");
-        add("error.wenyan_programming.NoConnectDirection", "謬：無連向");
+        add(NotFindFu.getTranslationKey(), "謬：不識此符");
+        add(CantStart.getTranslationKey(), "謬：不可始%s");
+        add(LockHoldAlready.getTranslationKey(), "謬：線程已持鎖");
+        add(LockNotHold.getTranslationKey(), "謬：線程未持鎖");
+        add(NeedBlockItem.getTranslationKey(), "謬：參數需方塊物");
+        add(NeedItemCapability.getTranslationKey(), "謬：需持物");
+        add(ArgsNeedWeather.getTranslationKey(), "謬：參數須為「「晴」」「「雨」」「「雷」」");
+        add(InvaildDirection.getTranslationKey(), "謬：無效之方塊向");
+        add(FailedToPlacePiston.getTranslationKey(), "謬：置活塞敗");
+        add(FailedToMoveBlock.getTranslationKey(), "謬：移方塊敗");
+        add(DeviceRemoved.getTranslationKey(), "謬：器已除");
+        add(ImportNotFound.getTranslationKey(), "謬：未尋之籍%s");
+        add(NoConnectDirection.getTranslationKey(), "謬：無連向");
+        add(AlreadyRun.getTranslationKey(), "已在運行");
+        add(PackageAlreadtRegistered.getTranslationKey(), "謬：已有此包名%s");
 
-        add("error.wenyan_programming.variables_not_match", "謬：參數非同於冊");
-        add("error.wenyan_programming.cannot_assign_to_constant", "謬：常數者無變也");
-        add("error.wenyan_programming.unknown_operator", "謬：不識此算子");
-        add("error.wenyan_programming.unknown_preposition", "謬：不識此介詞");
-        add("error.wenyan_programming.function_name_does_not_match", "謬：函名非相符");
-        add("error.wenyan_programming.last_result_is_null", "謬：末次為空");
-        add("error.wenyan_programming.not_implemented", "謬：not implemented");
-
-        add("error.wenyan_programming.invalid_float_number", "謬：不識此分數");
-        add("error.wenyan_programming.invalid_bool_value", "謬：不識此爻");
-        add("error.wenyan_programming.invalid_data_type", "謬：不識此參類");
-        add("error.wenyan_programming.unexpected_character", "謬：意外之字元");
-        add("error.wenyan_programming.number_of_arguments_does_not_match", "謬：參數數目不合");
-        add("error.wenyan_programming.cannot_create_empty_of_null", "謬：空或虛無所不能造也");
-
-        add("error.wenyan_programming.variable_not_found_", "謬：未尋之變數");
-        add("error.wenyan_programming.function_not_found_", "謬：未尋之術");
-
-        add("error.wenyan_programming.invalid_number", "謬：不識此數");
-
-        add("error.wenyan_programming.cannot_cast_", "謬：不可轉");
-        add("error.wenyan_programming._to_", "為");
-        add("error.wenyan_programming.type_cannot_be_added", "謬：類不可相加");
-        add("error.wenyan_programming.type_cannot_be_subtracted", "謬：類不可相減");
-        add("error.wenyan_programming.type_cannot_be_multiplied", "謬：類不可相乘");
-        add("error.wenyan_programming.type_cannot_be_divided", "謬：類不可相除");
-        add("error.wenyan_programming.type_cannot_be_mod", "謬：類不可相餘");
-        add("error.wenyan_programming.type_cannot_be_compared", "謬：類不可相比");
-
-        add("error.wenyan_programming.for_iter", "謬：不可迭代之物");
-        add("error.wenyan_programming.for_num", "謬：不可數之物");
-        add("error.wenyan_programming.too_many_variables", "謬：變數過多");
-
-        add("error.wenyan_programming.set_value_to_non_left_value", "謬：非左值不可設也");
-        add("error.wenyan_programming.import_package_not_found", "謬：未尋之籍%s");
-        add("error.wenyan_programming.already_run", "已在運行");
+        add(ArgsNumWrong.getTranslationKey(), "謬：參數數需%d得%d");
+        add(ArgsNumWrongRange.getTranslationKey(), "謬：參數數需%d至%d得%d");
+        add(NoAttribute.getTranslationKey(), "謬：無屬性%s");
+        add(StackEmpty.getTranslationKey(), "謬：棧空");
+        add(StackIndexOutOfBounds.getTranslationKey(), "謬：棧索引越界");
+        add(RecursionDepthTooDeep.getTranslationKey(), "謬：遞歸深度過深");
+        add(SetValueToNonLeftValue.getTranslationKey(), "謬：設值於非左值");
+        add(InvalidArgumentType.getTranslationKey(), "謬：無效參數類");
+        add(CannotCast.getTranslationKey(), "謬：不可轉%s為%s");
+        add(InvalidDataType.getTranslationKey(), "謬：無效資料類");
+        add(FunctionDoesNotHaveReferences.getTranslationKey(), "謬：術無引");
+        add(CannotCreateObject.getTranslationKey(), "謬：不可造物");
+        add(OperationNotSupported.getTranslationKey(), "謬：操作未支");
+        add(IntegerOverflow.getTranslationKey(), "謬：整數溢");
+        add(DivisionByZero.getTranslationKey(), "謬：除零");
+        add(LineError.getTranslationKey(), "謬：行%d:%d %s\n伴%s");
+        add(DebugInfoNotFound.getTranslationKey(), "謬：無除錯資訊於索引%d");
+        add(VariableNameDuplicate.getTranslationKey(), "謬：變量名稱重複");
+        add(UnknownOperator.getTranslationKey(), "謬：未知算子");
+        add(UnknownPreposition.getTranslationKey(), "謬：未知介詞");
+        add(FunctionNameDoesNotMatch.getTranslationKey(), "謬：術名不符");
+        add(VerificationFailed.getTranslationKey(), "謬：驗證敗");
+        add(TooManyVariables.getTranslationKey(), "謬：變數過多");
+        add(VariablesNotPositive.getTranslationKey(), "謬：變數非正");
+        add(VariablesNotMatch.getTranslationKey(), "謬：變數不符");
+        add(InvalidNumber.getTranslationKey(), "謬：無效數");
+        add(InvalidFloatNumber.getTranslationKey(), "謬：無效分數");
+        add(InvalidBoolValue.getTranslationKey(), "謬：無效爻");
+        add(UnexpectedCharacter.getTranslationKey(), "謬：意外字元");
+        add(IndexOutOfBounds.getTranslationKey(), "謬：索引越界");
+        add(TooManyThreads.getTranslationKey(), "謬：線程過多");
+        add(Unreached.getTranslationKey(), "未知错误，请提交issue");
 
         add("type.wenyan_programming.int", "數");
         add("type.wenyan_programming.double", "分數");
@@ -149,18 +148,6 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add("type.wenyan_programming.object_type", "類");
 
         add("title.wenyan_programming.create_tab", "吾有一術");
-
-        add("config.wenyan_programming.main.title", "吾有一术 参数板");
-        add("config.wenyan_programming.general.title", "通用");
-        add("config.wenyan_programming.general.test", "测试");
-
-        add("config.wenyan_programming.performance.title", "性能设置");
-        add("config.wenyan_programming.performance.thread_limit", "线程限制");
-        add("config.wenyan_programming.performance.thread_limit.description", "同时能够执行符咒的最大线程数。");
-
-        add("config.wenyan_programming.advanced.title", "进阶设置");
-        add("config.wenyan_programming.advanced.debug_mode", "调试模式");
-        add("config.wenyan_programming.advanced.debug_mode.description", "启用此选项以在控制台中输出调试信息。");
 
         add("code.wenyan_programming.bracket", "「%s」");
         add("gui.wenyan.hold_shift", "（按住Shift以顯示詳情）");
