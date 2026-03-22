@@ -1,6 +1,6 @@
 package indi.wenyan.setup.language;
 
-public enum ExceptionText implements LocalizationEnum {
+public enum ExceptionText implements ILocalizationEnum {
     NotFindFu,             // 謬：不識此符
     CantStart,             // 謬：不可始%s
     LockHoldAlready,       // 謬：線程已持鎖

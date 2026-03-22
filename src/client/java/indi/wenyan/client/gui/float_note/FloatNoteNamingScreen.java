@@ -1,6 +1,8 @@
 package indi.wenyan.client.gui.float_note;
 
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.language.GuiText;
 import indi.wenyan.setup.network.server.FloatNotePacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -32,7 +34,7 @@ public class FloatNoteNamingScreen extends Screen {
     @Override
     protected void init() {
         this.name = new EditBox(this.font, 62, 24, 103, 12,
-                Component.translatable("container.repair"));
+                GuiText.FloatNoteName.text());
         this.name.setCanLoseFocus(false);
         this.name.setTextColor(-1);
         this.name.setTextColorUneditable(-1);
@@ -41,7 +43,7 @@ public class FloatNoteNamingScreen extends Screen {
         this.name.setValue(item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString());
         addRenderableWidget(name);
 
-        Button confirmButton = Button.builder(Component.translatable("gui.done"), _ -> onClose())
+        Button confirmButton = Button.builder(GuiText.Done.text(), _ -> onClose())
                 .bounds(this.width / 2 + 4, 52, 50, 20)
                 .tooltip(Tooltip.create(Component.empty()))
                 .build();
@@ -72,7 +74,7 @@ public class FloatNoteNamingScreen extends Screen {
 
     @Override
     public void onClose() {
-        save.accept(Component.translatable("code.wenyan_programming.bracket", name.getValue()));
+        save.accept(Component.literal(ChineseUtils.bracketOf(name.getValue())));
         super.onClose();
     }
 }

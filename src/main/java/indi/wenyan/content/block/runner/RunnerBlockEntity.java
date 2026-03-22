@@ -19,6 +19,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -73,7 +74,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
         titleCodeOutput = new TitleCodeOutput("",
-                Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString());
+                ChineseUtils.bracketOf(blockState.getBlock().getName().getString()));
         titleCodeOutput.setOnChanged(this::setChanged);
         if (blockState.getBlock() instanceof RunnerBlock block)
             steps = block.getTier().getStepSpeed();

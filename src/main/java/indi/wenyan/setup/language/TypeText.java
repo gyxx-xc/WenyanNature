@@ -1,6 +1,6 @@
 package indi.wenyan.setup.language;
 
-public enum TypeText implements LocalizationEnum {
+public enum TypeText implements ILocalizationEnum {
     RunningState,
     CheckerObject,
     Checker7Map,

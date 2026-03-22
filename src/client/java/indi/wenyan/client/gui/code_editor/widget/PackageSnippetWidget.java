@@ -6,6 +6,7 @@ import indi.wenyan.client.gui.code_editor.backend.PackageSnippet;
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
+import indi.wenyan.setup.language.GuiText;
 import lombok.Setter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -197,8 +198,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE,
-                Component.translatable("gui.narrate.editBox", getMessage(), "snippet"));
+        narrationElementOutput.add(NarratedElementType.TITLE, GuiText.NarrateSnippet.text());
     }
 
     public int getInnerHeight() {

@@ -37,10 +37,9 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     public IWenyanValue getAttribute(String name) throws WenyanException {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunctionHelper(name);
-        if (attr == null)
-            throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
+        if (attr != null) return attr;
         else
-            return attr;
+            throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
     }
 
     @Nullable

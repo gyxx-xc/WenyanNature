@@ -18,8 +18,8 @@ import indi.wenyan.content.item.additional_module.PrintInventoryModule;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.item.throw_runner.ThrowRunnerItem;
+import indi.wenyan.setup.language.GuiText;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -102,7 +102,7 @@ public enum WenyanItems {
 
     @SuppressWarnings("unused")
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
-            .title(Component.translatable("title.wenyan_programming.create_tab"))
+            .title(GuiText.CreativeTabTitle.text())
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.getItem(RunnerTier.RUNNER_0).getDefaultInstance())
             .displayItems((parameters, output) -> {

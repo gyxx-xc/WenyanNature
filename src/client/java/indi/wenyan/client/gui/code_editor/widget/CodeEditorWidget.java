@@ -6,6 +6,7 @@ import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.Completion;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import indi.wenyan.judou.antlr.WenyanRLexer;
+import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -170,8 +171,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     }
 
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE,
-                Component.translatable("gui.narrate.editBox", getMessage(), backend.getContent()));
+        narrationElementOutput.add(NarratedElementType.TITLE, GuiText.NarrateEditBox.text());
     }
 
     // input

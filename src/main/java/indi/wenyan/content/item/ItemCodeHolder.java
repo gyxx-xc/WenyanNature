@@ -1,6 +1,7 @@
 package indi.wenyan.content.item;
 
 import indi.wenyan.content.block.runner.ICodeHolder;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,9 @@ public enum ItemCodeHolder {
 
             @Override
             public String getPlatformName() {
-                return item.getOrDefault(DataComponents.CUSTOM_NAME, Component.translatable("code.wenyan_programming.bracket", item.getItemName())).getString();
+                Component component = item.get(DataComponents.CUSTOM_NAME);
+                return component == null ? ChineseUtils.bracketOf(item.getItemName().getString())
+                        : component.getString();
             }
         };
     }

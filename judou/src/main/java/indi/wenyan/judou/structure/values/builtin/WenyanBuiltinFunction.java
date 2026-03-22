@@ -10,7 +10,6 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.judou.utils.language.JudouTypeText;
-import indi.wenyan.judou.utils.language.LanguageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -55,7 +54,7 @@ public record WenyanBuiltinFunction(
     @Override
     public @NotNull String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(LanguageManager.getTranslation("type.wenyan_programming.function"));
+        sb.append(JudouTypeText.Function.string());
         sb.append("(");
         int size = args().size();
         for (int i = 0; i < size; i++) {

@@ -3,6 +3,7 @@ package indi.wenyan.client.gui.code_editor;
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.widget.*;
+import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -113,7 +114,7 @@ public class RunnerBlockScreen extends Screen {
         tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(snippet.title(), Style.EMPTY)));
         if (!hasShiftDown) {
             tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
-                    Component.translatable("gui.wenyan.hold_shift").getString(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
+                    GuiText.HoldShift.string(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
         } else {
             int curInsert = 0;
             for (int row = 0; row < snippet.lines().size(); row++) {

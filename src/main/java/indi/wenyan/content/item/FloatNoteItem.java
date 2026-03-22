@@ -3,6 +3,7 @@ package indi.wenyan.content.item;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.DeviceRenamePacket;
 import indi.wenyan.setup.network.server.PlatformRenamePacket;
@@ -129,7 +130,7 @@ public class FloatNoteItem extends Item {
 
     private void setName(Level level, Consumer<Component> setNameFunc, ItemStack stack, @Nullable Player player, InteractionHand hand) {
         if (stack.getOrDefault(WyRegistration.NOTE_LOCK_DATA.get(), false)) {
-            setNameFunc.accept(Component.translatable("code.wenyan_programming.bracket", stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty())));
+            setNameFunc.accept(Component.literal(ChineseUtils.bracketOf(stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString())));
         } else {
             if (level.isClientSide())
                 openGui(setNameFunc, stack);

@@ -3,6 +3,7 @@ package indi.wenyan.setup.config;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.judou.utils.ConfigManager;
 import indi.wenyan.judou.utils.IConfigProvider;
+import indi.wenyan.setup.language.ConfigText;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -123,19 +124,19 @@ public final class WenyanConfig {
         public CommonConfig() {
             var builder = new ModConfigSpec.Builder();
 
-            builder.push("judou");
-            sliceStep = define(builder, "slice_step", 10, 5, 20, "x100 instructions");
-            maxThread = define(builder, "max_thread", 10, 5, 20);
-            watchdogTimeoutAdjust = define(builder, "watchdog_timeout", 1.0, 0.5, 5.0);
-            resultMaxSize = define(builder, "result_max_size", 64, 32, 256);
+            builder.push(ConfigText.Judou.getName());
+            sliceStep = define(builder, ConfigText.SliceStep.getName(), 10, 5, 20, "x100 instructions");
+            maxThread = define(builder, ConfigText.MaxThread.getName(), 10, 5, 20);
+            watchdogTimeoutAdjust = define(builder, ConfigText.WatchdogTimeout.getName(), 1.0, 0.5, 5.0);
+            resultMaxSize = define(builder, ConfigText.ResultMaxSize.getName(), 64, 32, 256);
             builder.pop();
 
-            builder.push("in_game");
-            formationRange = define(builder, "formation_range", 10, 5, 15);
-            pedestalRange = define(builder, "pedestal_range", 3, 1, 5);
-            runnerRange = define(builder, "runner_range", 3, 1, 5);
-            powerDuration = define(builder, "duration", 20, 2, 40);
-            throwEntityLifetime = define(builder, "lifetime", 5, 1, 10);
+            builder.push(ConfigText.InGame.getName());
+            formationRange = define(builder, ConfigText.FormationRange.getName(), 10, 5, 15);
+            pedestalRange = define(builder, ConfigText.PedestalRange.getName(), 3, 1, 5);
+            runnerRange = define(builder, ConfigText.RunnerRange.getName(), 3, 1, 5);
+            powerDuration = define(builder, ConfigText.Duration.getName(), 20, 2, 40);
+            throwEntityLifetime = define(builder, ConfigText.Lifetime.getName(), 5, 1, 10);
             builder.pop();
 
             spec = builder.build();

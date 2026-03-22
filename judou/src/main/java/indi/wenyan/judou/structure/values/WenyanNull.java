@@ -2,7 +2,6 @@ package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.utils.language.JudouTypeText;
-import indi.wenyan.judou.utils.language.LanguageManager;
 
 public enum WenyanNull implements IWenyanValue {
     NULL;
@@ -16,6 +15,6 @@ public enum WenyanNull implements IWenyanValue {
 
     @Override
     public String toString() {
-        return LanguageManager.getTranslation("type.wenyan_programming.null");
+        return JudouTypeText.Null.string();
     }
 }

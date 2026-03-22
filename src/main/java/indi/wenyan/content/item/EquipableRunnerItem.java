@@ -10,11 +10,13 @@ import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.Either;
 import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.language.ILocalizationEnum;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,6 +33,7 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @SuppressWarnings("ALL")
+@Deprecated
 public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     public static final String ID_1 = "equipable_runner";
 
@@ -44,8 +47,15 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     private final RequestCallHandler importFunction = (t, s, a) ->
             new ImportRequest(t, this::getPackage, a);
 
-    @Getter @Setter
-    private String platformName = Component.translatable("code.wenyan_programming.bracket", Component.translatable("item.wenyan_programming.equipable_runner")).getString();
+    @Setter
+    private String platformName;
+
+    public String getPlatformName() {
+        if (platformName == null)
+            platformName = ChineseUtils.bracketOf(ILocalizationEnum.getName(
+                    WenyanItems.EQUIPABLE_RUNNER_ITEM.get()).getString());
+        return platformName;
+    }
 
     public EquipableRunnerItem(Properties properties, int runningLevel) {
         super(properties);

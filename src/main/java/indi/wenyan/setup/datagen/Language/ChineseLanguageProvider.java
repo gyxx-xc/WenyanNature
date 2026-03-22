@@ -9,7 +9,9 @@ import java.util.List;
 
 import static indi.wenyan.judou.utils.language.JudouExceptionText.*;
 import static indi.wenyan.judou.utils.language.JudouTypeText.*;
+import static indi.wenyan.setup.language.ConfigText.*;
 import static indi.wenyan.setup.language.ExceptionText.*;
+import static indi.wenyan.setup.language.GuiText.*;
 import static indi.wenyan.setup.language.TypeText.*;
 
 /**
@@ -157,22 +159,25 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(Iterator.getTranslationKey(), "迭代器");
         add(String.getTranslationKey(), "言");
 
-        add("wenyan_programming.configuration.judou", "句读（程序运行）");
-        add("wenyan_programming.configuration.slice_step", "线程切换长度");
-        add("wenyan_programming.configuration.max_thread", "最大线程数");
-        add("wenyan_programming.configuration.watchdog_timeout", "超时倍率");
-        add("wenyan_programming.configuration.result_max_size", "结果堆栈最大长度");
-        add("wenyan_programming.configuration.in_game", "游戏（物品与世界）");
-        add("wenyan_programming.configuration.formation_range", "阵眼范围");
-        add("wenyan_programming.configuration.pedestal_range", "基石范围");
-        add("wenyan_programming.configuration.runner_range", "符範圍");
-        add("wenyan_programming.configuration.duration", "算核消散游戏刻");
-        add("wenyan_programming.configuration.lifetime", "投符持續時間");
+        add(HoldShift.getTranslationKey(), "（按住Shift以顯示詳情）");
+        add(NarrateEditBox.getTranslationKey(), "编辑");
+        add(NarrateSnippet.getTranslationKey(), "代码片段");
+        add(FloatNoteName.getTranslationKey(), "浮点笔记");
+        add(Done.getTranslationKey(), "完成");
+        add(Lock.getTranslationKey(), "鎖定");
+        add(CreativeTabTitle.getTranslationKey(), "吾有一術");
 
-        add("title.wenyan_programming.create_tab", "吾有一術");
-
-        add("code.wenyan_programming.bracket", "「%s」");
-        add("gui.wenyan.hold_shift", "（按住Shift以顯示詳情）");
+        add(Judou.getTranslationKey(), "句读（程序运行）");
+        add(SliceStep.getTranslationKey(), "线程切换长度");
+        add(MaxThread.getTranslationKey(), "最大线程数");
+        add(WatchdogTimeout.getTranslationKey(), "超时倍率");
+        add(ResultMaxSize.getTranslationKey(), "结果堆栈最大长度");
+        add(InGame.getTranslationKey(), "游戏（物品与世界）");
+        add(FormationRange.getTranslationKey(), "阵眼范围");
+        add(PedestalRange.getTranslationKey(), "基石范围");
+        add(RunnerRange.getTranslationKey(), "符範圍");
+        add(Duration.getTranslationKey(), "算核消散游戏刻");
+        add(Lifetime.getTranslationKey(), "投符持續時間");
 
         add("book.wenyan_programming.shuo_wen.name", "說文");
         add("book.wenyan_programming.shuo_wen.landing_text", "编程者，制机之令也。机铁无知，唯识原语。乃作典言，上合人意，下译机识，若算经然。");

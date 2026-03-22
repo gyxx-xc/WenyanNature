@@ -14,6 +14,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
@@ -69,7 +70,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
             .handler("「狀」", request -> {
                 if (request.args().size() != 1) throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(1, request.args().size()));
                 String name = request.args().getFirst().as(WenyanString.TYPE).value();
-                String runnerName = Component.translatable("code.wenyan_programming.bracket", name).getString();
+                String runnerName = ChineseUtils.bracketOf(name);
                 var block = getStartedRunner(runnerName);
                 if (block == null) throw new WenyanException(NotFindFu.string());
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);

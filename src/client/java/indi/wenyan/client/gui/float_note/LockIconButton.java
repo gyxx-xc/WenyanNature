@@ -1,5 +1,6 @@
 package indi.wenyan.client.gui.float_note;
 
+import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,7 +19,7 @@ public class LockIconButton extends Button {
         super(x, y, 20, 20,
                 Component.empty(), button -> onPress.onPress((LockIconButton) button),
                 DEFAULT_NARRATION);
-        setTooltip(Tooltip.create(Component.translatable("gui.wenyan.lock")));
+        setTooltip(Tooltip.create(GuiText.Lock.text()));
     }
 
     @Override

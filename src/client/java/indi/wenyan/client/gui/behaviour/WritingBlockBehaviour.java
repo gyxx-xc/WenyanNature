@@ -5,12 +5,12 @@ import indi.wenyan.client.gui.code_editor.backend.WritingBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.WritingBackendSynchronizer;
 import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.block.writing_block.WritingBlockEntity;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.WritingCodePacket;
 import indi.wenyan.setup.network.server.WritingTitlePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -43,9 +43,9 @@ public enum WritingBlockBehaviour {
 
             @Override
             public void sendTitle(String title) {
-                var warppedTitle = Component.translatable("code.wenyan_programming.bracket", title);
-                code.setPlatformName(warppedTitle.getString());
-                ClientPacketDistributor.sendToServer(new WritingTitlePacket(pos, warppedTitle.getString()));
+                var warppedTitle = ChineseUtils.bracketOf(title);
+                code.setPlatformName(warppedTitle);
+                ClientPacketDistributor.sendToServer(new WritingTitlePacket(pos, warppedTitle));
             }
 
             @Override

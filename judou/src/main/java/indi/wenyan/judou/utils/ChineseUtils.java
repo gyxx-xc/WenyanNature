@@ -83,4 +83,8 @@ public enum ChineseUtils {
             return ZhConverterUtil.toSimple(s);
         return s;
     }
+
+    public static String bracketOf(String string) {
+        return "「" + string + "」";
+    }
 }
