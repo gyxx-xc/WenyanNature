@@ -70,7 +70,7 @@ public final class WenyanConfig {
     }
 
     public static int getThrowEntityLifetime() {
-        return instance().common.throwEntityLifetime.get();
+        return instance().common.throwEntityLifetime.get() * 20;
     }
 
     private static final IConfigProvider judouConfigProvider = new IConfigProvider() {

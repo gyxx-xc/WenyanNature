@@ -21,7 +21,6 @@ import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.TypeText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -103,7 +102,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
             .build();
 
     private @Nullable RunnerBlockEntity getRunner(String name) {
-        String runnerName = Component.translatable("code.wenyan_programming.bracket", name).getString();
+        String runnerName = ChineseUtils.bracketOf(name);
         // check started
         RunnerBlockEntity cachedPlatform = getStartedRunner(runnerName);
         if (cachedPlatform != null) {

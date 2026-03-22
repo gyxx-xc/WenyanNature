@@ -2,6 +2,7 @@ package indi.wenyan.content.entity;
 
 import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.runner.BlockPackageGetter;
+import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.block.runner.LazyProgram;
 import indi.wenyan.content.item.throw_runner.FuContainerComponent;
 import indi.wenyan.judou.exec_interface.IWenyanDevice;
@@ -32,6 +33,7 @@ import indi.wenyan.setup.language.ExceptionText;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,9 +81,26 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
         player = null;
     }
 
+    public ThrowRunnerEntity(Level level, Position pos, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
+        super(WenyanEntities.THROW_RUNNER_ENTITY.get(), pos.x(), pos.y(), pos.z(), level, itemStack);
+        player = null;
+        this.tier = tier;
+        if (!level.isClientSide()) {
+            var code = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
+            if (code != null) {
+                platformName = code.getPlatformName();
+                startProgram(itemStack, code);
+            } else {
+                platformName = "";
+                // and discard in tick
+            }
+        } else {
+            platformName = "";
+        }
+    }
+
     public ThrowRunnerEntity(Level level, LivingEntity owner, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
         super(WenyanEntities.THROW_RUNNER_ENTITY.get(), owner, level, itemStack);
-        setRemainingFireTicks(1);
         this.tier = tier;
         if (!level.isClientSide()) {
             if (owner instanceof Player p)
@@ -91,30 +110,36 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
             var code = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
             if (code != null) {
                 platformName = code.getPlatformName();
-                try {
-                    lazyProgram.create().create(WenyanRunner.of(WenyanFrame.ofCode(code.getCode()), this.initEnvironment()));
-                } catch (WenyanException | WenyanCompileException e) {
-                    handleError(e.getMessage());
-                    // add will show this message and kill itself at tick
-                }
-                List<ItemStack> items = itemStack.getOrDefault(WyRegistration.FU_DATA, FuContainerComponent.EMPTY).createOne();
-                for (ItemStack stack : items) {
-                    IWenyanDevice device = stack.getCapability(WyRegistration.WENYAN_ITEM_DEVICE_CAPABILITY);
-                    if (device != null) {
-                        String packageName = device.getPackageName();
-                        if (!packages.containsKey(packageName))
-                            packages.put(packageName, device);
-                        else
-                            handleError(ExceptionText.PackageAlreadtRegistered.string(packageName));
-                    }
-                }
+                startProgram(itemStack, code);
             } else {
                 platformName = "";
                 // and discard in tick
             }
         } else {
+//            setRemainingFireTicks(1);
             this.player = null;
             platformName = "";
+        }
+    }
+
+    private void startProgram(@NonNull ItemStack itemStack, ICodeHolder code) {
+        setRemainingFireTicks(1);
+        try {
+            lazyProgram.create().create(WenyanRunner.of(WenyanFrame.ofCode(code.getCode()), this.initEnvironment()));
+        } catch (WenyanException | WenyanCompileException e) {
+            handleError(e.getMessage());
+            // add will show this message and kill itself at tick
+        }
+        List<ItemStack> items = itemStack.getOrDefault(WyRegistration.FU_DATA, FuContainerComponent.EMPTY).createOne();
+        for (ItemStack stack : items) {
+            IWenyanDevice device = stack.getCapability(WyRegistration.WENYAN_ITEM_DEVICE_CAPABILITY);
+            if (device != null) {
+                String packageName = device.getPackageName();
+                if (!packages.containsKey(packageName))
+                    packages.put(packageName, device);
+                else
+                    handleError(ExceptionText.PackageAlreadtRegistered.string(packageName));
+            }
         }
     }
 
