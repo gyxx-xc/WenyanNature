@@ -14,8 +14,6 @@ import net.minecraft.util.RandomSource;
  * when it is halved daily.
  */
 public class CinnabarInkChecker extends CraftingAnswerChecker {
-    private IWenyanValue ans;
-
     public CinnabarInkChecker(RandomSource random) {
         super(random);
     }
@@ -34,19 +32,5 @@ public class CinnabarInkChecker extends CraftingAnswerChecker {
             day++;
         }
         ans = WenyanValues.of(day);
-    }
-
-    @Override
-    public void accept(IWenyanValue value) throws WenyanException {
-        try {
-            if (IWenyanValue.equals(value, ans)) {
-                setResult(IAnsweringChecker.ResultStatus.ANSWER_CORRECT);
-            } else {
-                setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
-            }
-        } catch (WenyanException e) {
-            setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
-            throw new WenyanException(e.getMessage());
-        }
     }
 }

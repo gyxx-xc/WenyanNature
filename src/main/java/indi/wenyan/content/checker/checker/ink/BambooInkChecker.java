@@ -15,8 +15,6 @@ import net.minecraft.util.RandomSource;
  * output var0 + var1
  */
 public class BambooInkChecker extends CraftingAnswerChecker {
-    private IWenyanValue ans;
-
     public BambooInkChecker(RandomSource random) {
         super(random);
     }
@@ -25,19 +23,5 @@ public class BambooInkChecker extends CraftingAnswerChecker {
     public void init() {
         super.init();
         ans = WenyanValues.of("吾有一術");
-    }
-
-    @Override
-    public void accept(IWenyanValue value) throws WenyanException {
-        try {
-            if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
-            } else {
-                setResult(ResultStatus.WRONG_ANSWER);
-            }
-        } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
-            throw new WenyanException(e.getMessage());
-        }
     }
 }

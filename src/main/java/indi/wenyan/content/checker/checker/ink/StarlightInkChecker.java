@@ -13,12 +13,9 @@ import net.minecraft.util.RandomSource;
  * + ... + n!
  */
 public class StarlightInkChecker extends CraftingAnswerChecker {
-    private IWenyanValue ans;
-
     public StarlightInkChecker(RandomSource random) {
         super(random);
     }
-
     @Override
     public void init() {
         super.init();
@@ -33,19 +30,5 @@ public class StarlightInkChecker extends CraftingAnswerChecker {
             sum = sum + factorial;
         }
         ans = WenyanValues.of(sum);
-    }
-
-    @Override
-    public void accept(IWenyanValue value) throws WenyanException {
-        try {
-            if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
-            } else {
-                setResult(ResultStatus.WRONG_ANSWER);
-            }
-        } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
-            throw new WenyanException(e.getMessage());
-        }
     }
 }

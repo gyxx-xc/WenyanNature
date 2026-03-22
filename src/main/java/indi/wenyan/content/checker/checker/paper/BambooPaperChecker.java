@@ -13,8 +13,6 @@ import net.minecraft.util.RandomSource;
  * output var0 + var1
  */
 public class BambooPaperChecker extends CraftingAnswerChecker {
-    private IWenyanValue ans;
-
     public BambooPaperChecker(RandomSource random) {
         super(random);
     }
@@ -27,19 +25,5 @@ public class BambooPaperChecker extends CraftingAnswerChecker {
         setVariable(0, WenyanValues.of(a));
         setVariable(1, WenyanValues.of(b));
         ans = WenyanValues.of((long) a + b);
-    }
-
-    @Override
-    public void accept(IWenyanValue value) throws WenyanException {
-        try {
-            if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
-            } else {
-                setResult(ResultStatus.WRONG_ANSWER);
-            }
-        } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
-            throw new WenyanException(e.getMessage());
-        }
     }
 }

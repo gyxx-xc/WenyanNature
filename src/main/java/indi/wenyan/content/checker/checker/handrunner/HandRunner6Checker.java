@@ -7,8 +7,6 @@ import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 public class HandRunner6Checker extends CraftingAnswerChecker {
-    private IWenyanValue ans;
-
     public HandRunner6Checker(RandomSource random) {
         super(random);
     }
@@ -18,19 +16,5 @@ public class HandRunner6Checker extends CraftingAnswerChecker {
         super.init();
         // TODO: Implement specific initialization logic and answer generation
         ans = WenyanValues.of(0);
-    }
-
-    @Override
-    public void accept(IWenyanValue value) throws WenyanException {
-        try {
-            if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
-            } else {
-                setResult(ResultStatus.WRONG_ANSWER);
-            }
-        } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
-            throw new WenyanException(e.getMessage());
-        }
     }
 }

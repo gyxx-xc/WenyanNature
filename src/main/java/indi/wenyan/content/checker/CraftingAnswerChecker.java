@@ -21,7 +21,7 @@ import java.util.Map;
 public abstract class CraftingAnswerChecker implements IAnsweringChecker {
     /** Random source for generating test cases */
     protected final RandomSource random;
-
+    protected IWenyanValue ans;
     @Getter @Setter(AccessLevel.PROTECTED)
     private ResultStatus result;
     @Getter
@@ -35,7 +35,6 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
     protected CraftingAnswerChecker(RandomSource random) {
         this.random = random;
     }
-
     @Override
     public void init() {
         args = new CheckerWenyanObject();
@@ -94,6 +93,20 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
         @Override
         public WenyanType<?> type() {
             return TYPE;
+        }
+    }
+
+    @Override
+    public void accept(IWenyanValue value) throws WenyanException {
+        try {
+            if (IWenyanValue.equals(value, ans)) {
+                setResult(IAnsweringChecker.ResultStatus.ANSWER_CORRECT);
+            } else {
+                setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
+            }
+        } catch (WenyanException e) {
+            setResult(IAnsweringChecker.ResultStatus.WRONG_ANSWER);
+            throw new WenyanException(e.getMessage());
         }
     }
 }

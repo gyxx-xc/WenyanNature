@@ -9,8 +9,6 @@ import net.minecraft.util.RandomSource;
 import static java.lang.Math.sqrt;
 
 public class HandRunner3Checker extends CraftingAnswerChecker {
-    private IWenyanValue ans;
-
     public HandRunner3Checker(RandomSource random) {
         super(random);
     }
@@ -36,17 +34,4 @@ public class HandRunner3Checker extends CraftingAnswerChecker {
         ans = WenyanValues.of(true);
     }
 
-    @Override
-    public void accept(IWenyanValue value) throws WenyanException {
-        try {
-            if (IWenyanValue.equals(value, ans)) {
-                setResult(ResultStatus.ANSWER_CORRECT);
-            } else {
-                setResult(ResultStatus.WRONG_ANSWER);
-            }
-        } catch (WenyanException e) {
-            setResult(ResultStatus.WRONG_ANSWER);
-            throw new WenyanException(e.getMessage());
-        }
-    }
 }
