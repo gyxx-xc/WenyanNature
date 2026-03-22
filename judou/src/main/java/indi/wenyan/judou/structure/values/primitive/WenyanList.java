@@ -9,6 +9,7 @@ import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public record WenyanList(List<IWenyanValue> value)
         implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {
-    public static final WenyanType<WenyanList> TYPE = new WenyanType<>("list", WenyanList.class);
+    public static final WenyanType<WenyanList> TYPE = new WenyanType<>(JudouTypeText.List.string(), WenyanList.class);
 
     public WenyanList() {
         this(new ArrayList<>());
@@ -148,7 +149,7 @@ public record WenyanList(List<IWenyanValue> value)
      */
     public static final class WenyanIterator
             implements IWenyanWarperValue<Iterator<IWenyanValue>> {
-        public static final WenyanType<WenyanIterator> TYPE = new WenyanType<>("iterator", WenyanIterator.class);
+        public static final WenyanType<WenyanIterator> TYPE = new WenyanType<>(JudouTypeText.Iterator.string(), WenyanIterator.class);
         private final Iterator<IWenyanValue> value;
 
         WenyanIterator(Iterator<IWenyanValue> value) {

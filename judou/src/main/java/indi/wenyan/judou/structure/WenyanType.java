@@ -6,7 +6,6 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.language.LanguageManager;
 
 /**
  * Represents a type in the Wenyan language
@@ -85,6 +84,6 @@ public class WenyanType<T extends IWenyanValue> {
 
     @Override
     public String toString() {
-        return LanguageManager.getTranslation("type.wenyan_programming." + name.toLowerCase());
+        return name;
     }
 }

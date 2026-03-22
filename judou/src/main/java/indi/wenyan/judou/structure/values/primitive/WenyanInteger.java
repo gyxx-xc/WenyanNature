@@ -9,6 +9,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +47,7 @@ public final class WenyanInteger implements IWenyanComputable, IWenyanComparable
         }
     }
 
-    public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);
+    public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>(JudouTypeText.Int.string(), WenyanInteger.class);
 
     @Override
     public IWenyanValue add(IWenyanValue other) throws WenyanException {

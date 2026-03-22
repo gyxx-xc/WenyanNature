@@ -10,6 +10,7 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -26,7 +27,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     private final WenyanBuiltinObjectType parent;
     private final HashMap<String, IWenyanValue> staticVariable = new HashMap<>();
     private final HashMap<String, IWenyanValue> functions = new HashMap<>();
-    public static final WenyanType<WenyanBuiltinObjectType> TYPE = new WenyanType<>("dict_object_type", WenyanBuiltinObjectType.class);
+    public static final WenyanType<WenyanBuiltinObjectType> TYPE = new WenyanType<>(JudouTypeText.DictObjectType.string(), WenyanBuiltinObjectType.class);
 
     public WenyanBuiltinObjectType(WenyanBuiltinObjectType parent) {
         this.parent = parent;

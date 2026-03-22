@@ -17,6 +17,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.TypeText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -166,7 +167,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
 
     public record WenyanRunningState(RunnerBlock.RunningState value)
             implements IWenyanWarperValue<RunnerBlock.RunningState> {
-        public static final WenyanType<WenyanRunningState> TYPE = new WenyanType<>("running_state", WenyanRunningState.class);
+        public static final WenyanType<WenyanRunningState> TYPE = new WenyanType<>(TypeText.RunningState.string(), WenyanRunningState.class);
 
         @Override
         public WenyanType<?> type() {

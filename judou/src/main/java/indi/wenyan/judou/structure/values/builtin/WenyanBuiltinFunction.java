@@ -9,6 +9,7 @@ import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import indi.wenyan.judou.utils.language.LanguageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public record WenyanBuiltinFunction(
         WenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args, @Nullable List<IWenyanValue> refs) implements IWenyanFunction {
-    public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
+    public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>(JudouTypeText.BuiltinFunction.string(), WenyanBuiltinFunction.class);
 
     @Override
     public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread,

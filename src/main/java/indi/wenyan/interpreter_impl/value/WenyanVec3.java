@@ -13,6 +13,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanThreading;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenyanObject {
     public static final IWenyanObjectType OBJECT_TYPE = new Vec3ObjectType();
-    public static final WenyanType<WenyanVec3> TYPE = new WenyanType<>("vec3", WenyanVec3.class);
+    public static final WenyanType<WenyanVec3> TYPE = new WenyanType<>(TypeText.Vec3.string(), WenyanVec3.class);
 
     @Override
     public WenyanType<?> type() {
@@ -65,7 +66,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
 
     // store all static information
     public static class Vec3ObjectType implements IWenyanObjectType {
-        public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>("vec3_object_type", Vec3ObjectType.class);
+        public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>(TypeText.Vec3ObjectType.string(), Vec3ObjectType.class);
 
         public static final IWenyanValue ZERO;
         public static final IWenyanValue UP;

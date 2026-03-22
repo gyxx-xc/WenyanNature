@@ -4,6 +4,7 @@ import indi.wenyan.judou.runtime.function_impl.IGlobalResolver;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
     /**
      * Type descriptor for packages
      */
-    public static final WenyanType<WenyanPackage> TYPE = new WenyanType<>("package", WenyanPackage.class);
+    public static final WenyanType<WenyanPackage> TYPE = new WenyanType<>(JudouTypeText.Package.string(), WenyanPackage.class);
 
     public void combine(@NotNull WenyanPackage other) {
         variables.putAll(other.variables);

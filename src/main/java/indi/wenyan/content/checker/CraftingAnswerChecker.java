@@ -5,6 +5,7 @@ import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -74,7 +75,7 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
     // TODO: RW Lock
     protected static class CheckerWenyanObject implements IWenyanObject {
         public static final WenyanType<CheckerWenyanObject> TYPE =
-                new WenyanType<>("checker_object", CheckerWenyanObject.class);
+                new WenyanType<>(TypeText.CheckerObject.string(), CheckerWenyanObject.class);
 
         public final Map<String, IWenyanValue> attributes = new HashMap<>();
 

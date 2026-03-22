@@ -7,11 +7,12 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.entity.player.Player;
 
 public record WenyanPlayer(WenyanEntity valueWarper)
         implements IWenyanWarperValue<Player>, IWenyanObject {
-    public static final WenyanType<WenyanPlayer> TYPE = new WenyanType<>("player", WenyanPlayer.class);
+    public static final WenyanType<WenyanPlayer> TYPE = new WenyanType<>(TypeText.Player.string(), WenyanPlayer.class);
 
     public WenyanPlayer(Player valueWarper) {
         this(new WenyanEntity(valueWarper));

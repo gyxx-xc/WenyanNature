@@ -4,6 +4,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +21,7 @@ public enum WenyanBoolean implements IWenyanValue {
         this.value = value;
     }
 
-    public static final WenyanType<WenyanBoolean> TYPE = new WenyanType<>("bool", WenyanBoolean.class);
+    public static final WenyanType<WenyanBoolean> TYPE = new WenyanType<>(JudouTypeText.Bool.string(), WenyanBoolean.class);
 
     @Override
     public WenyanType<?> type() {

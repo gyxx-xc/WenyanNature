@@ -4,6 +4,7 @@ import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class WenyanBuiltinFuture implements IWenyanValue {
     private IWenyanValue returnValue = null;
     private final List<IWenyanRunner> waitingThreads = new ArrayList<>();
 
-    public static final WenyanType<WenyanBuiltinFuture> TYPE = new WenyanType<>("builtin_future", WenyanBuiltinFuture.class);
+    public static final WenyanType<WenyanBuiltinFuture> TYPE = new WenyanType<>(JudouTypeText.BuiltinFuture.string(), WenyanBuiltinFuture.class);
 
     public boolean addWaitingThread(IWenyanRunner thread) {
         if (returnValue == null) {

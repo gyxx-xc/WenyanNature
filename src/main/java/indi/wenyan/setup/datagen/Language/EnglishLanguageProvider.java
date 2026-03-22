@@ -8,7 +8,9 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 import java.util.List;
 
 import static indi.wenyan.judou.utils.language.JudouExceptionText.*;
+import static indi.wenyan.judou.utils.language.JudouTypeText.*;
 import static indi.wenyan.setup.language.ExceptionText.*;
+import static indi.wenyan.setup.language.TypeText.*;
 
 /**
  * Provider for generating English language translations during data generation.
@@ -123,17 +125,48 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(TooManyThreads.getTranslationKey(), "謬：線程過多");
         add(Unreached.getTranslationKey(), "未知错误，请提交issue");
 
-        add("type.wenyan_programming.int", "數");
-        add("type.wenyan_programming.double", "分數");
-        add("type.wenyan_programming.bool", "爻");
-        add("type.wenyan_programming.string", "言");
-        add("type.wenyan_programming.list", "列");
-        add("error.wenyan_programming.already_run", "Already Running");
+        add(RunningState.getTranslationKey(), "運行狀態");
+        add(CheckerObject.getTranslationKey(), "檢查物");
+        add(Checker7Map.getTranslationKey(), "地圖");
+        add(Position.getTranslationKey(), "位置");
+        add(PositionType.getTranslationKey(), "位置類");
+        add(Block.getTranslationKey(), "方塊");
+        add(Itemslot.getTranslationKey(), "物品槽");
+        add(Player.getTranslationKey(), "玩家");
+        add(Vec3.getTranslationKey(), "向量");
+        add(Vec3ObjectType.getTranslationKey(), "向量類");
+        add(Entity.getTranslationKey(), "實體");
 
-        add("type.wenyan_programming.null", "空無");
-        add("type.wenyan_programming.function", "術");
-        add("type.wenyan_programming.object", "物");
-        add("type.wenyan_programming.object_type", "類");
+        add(JavacallHandler.getTranslationKey(), "异術");
+        add(Comparable.getTranslationKey(), "可比較");
+        add(Function.getTranslationKey(), "術");
+        add(Number.getTranslationKey(), "數");
+        add(Object.getTranslationKey(), "物");
+        add(ObjectType.getTranslationKey(), "類");
+        add(Null.getTranslationKey(), "空無");
+        add(Package.getTranslationKey(), "包");
+        add(BuiltinAsyncFunction.getTranslationKey(), "內建異術");
+        add(BuiltinFunction.getTranslationKey(), "內建術");
+        add(BuiltinFuture.getTranslationKey(), "內建異程");
+        add(DictObject.getTranslationKey(), "字典物");
+        add(Bool.getTranslationKey(), "爻");
+        add(Double.getTranslationKey(), "分數");
+        add(Int.getTranslationKey(), "整數");
+        add(List.getTranslationKey(), "列");
+        add(Iterator.getTranslationKey(), "迭代器");
+        add(String.getTranslationKey(), "言");
+
+        add("wenyan_programming.configuration.judou", "句读（程序运行）");
+        add("wenyan_programming.configuration.slice_step", "线程切换长度");
+        add("wenyan_programming.configuration.max_thread", "最大线程数");
+        add("wenyan_programming.configuration.watchdog_timeout", "超时倍率");
+        add("wenyan_programming.configuration.result_max_size", "结果堆栈最大长度");
+        add("wenyan_programming.configuration.in_game", "游戏（物品与世界）");
+        add("wenyan_programming.configuration.formation_range", "阵眼范围");
+        add("wenyan_programming.configuration.pedestal_range", "基石范围");
+        add("wenyan_programming.configuration.runner_range", "符範圍");
+        add("wenyan_programming.configuration.duration", "算核消散游戏刻");
+        add("wenyan_programming.configuration.lifetime", "投符持續時間");
 
         add("gui.wenyan.lock", "锁定");
 

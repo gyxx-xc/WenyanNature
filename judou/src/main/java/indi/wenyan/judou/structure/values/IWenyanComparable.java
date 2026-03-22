@@ -2,9 +2,10 @@ package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 
 public interface IWenyanComparable extends IWenyanValue {
-    WenyanType<IWenyanComparable> TYPE = new WenyanType<>("comparable", IWenyanComparable.class);
+    WenyanType<IWenyanComparable> TYPE = new WenyanType<>(JudouTypeText.Comparable.string(), IWenyanComparable.class);
 
     /**
      * Compare this value with another value.

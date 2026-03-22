@@ -9,12 +9,13 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements IWenyanFunction {
-    public static final WenyanType<WenyanBuiltinAsyncFunction> TYPE = new WenyanType<>("builtin_async_function", WenyanBuiltinAsyncFunction.class);
+    public static final WenyanType<WenyanBuiltinAsyncFunction> TYPE = new WenyanType<>(JudouTypeText.BuiltinAsyncFunction.string(), WenyanBuiltinAsyncFunction.class);
 
     @Override
     public void call(IWenyanValue self, IWenyanRunner thread,

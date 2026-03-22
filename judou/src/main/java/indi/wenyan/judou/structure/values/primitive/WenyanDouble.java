@@ -8,6 +8,7 @@ import indi.wenyan.judou.structure.values.IWenyanNumber;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public record WenyanDouble(double value)
         implements IWenyanComputable, IWenyanComparable, IWenyanNumber {
-    public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>("double", WenyanDouble.class);
+    public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>(JudouTypeText.Double.string(), WenyanDouble.class);
 
     @Override
     public WenyanType<?> type() {

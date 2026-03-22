@@ -12,6 +12,7 @@ import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanThreading;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class HandRunner7Checker extends CraftingAnswerChecker {
     private record Position(int x, int y) implements IWenyanObject {
-        public static final WenyanType<Position> TYPE = new WenyanType<>("position", Position.class);
+        public static final WenyanType<Position> TYPE = new WenyanType<>(TypeText.Position.string(), Position.class);
         public static final Position UP = new Position(-1, 0);
         public static final Position DOWN = new Position(1, 0);
         public static final Position LEFT = new Position(0, -1);
@@ -52,7 +53,7 @@ public class HandRunner7Checker extends CraftingAnswerChecker {
 
         enum PositionType implements IWenyanObjectType {
             POSITION_TYPE;
-            public static final WenyanType<PositionType> TYPE = new WenyanType<>("position_type", PositionType.class);
+            public static final WenyanType<PositionType> TYPE = new WenyanType<>(TypeText.PositionType.string(), PositionType.class);
 
             @Override
             public IWenyanValue getAttribute(String name) {
@@ -83,7 +84,7 @@ public class HandRunner7Checker extends CraftingAnswerChecker {
     }
 
     class Map implements IWenyanObject {
-        public static final WenyanType<Map> TYPE = new WenyanType<>("map", Map.class);
+        public static final WenyanType<Map> TYPE = new WenyanType<>(TypeText.Checker7Map.string(), Map.class);
         @Override
         public WenyanType<Map> type() {
             return TYPE;

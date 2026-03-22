@@ -8,10 +8,11 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.entity.Entity;
 
 public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, IWenyanObject {
-    public static final WenyanType<WenyanEntity> TYPE = new WenyanType<>("entity", WenyanEntity.class);
+    public static final WenyanType<WenyanEntity> TYPE = new WenyanType<>(TypeText.Entity.string(), WenyanEntity.class);
 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
