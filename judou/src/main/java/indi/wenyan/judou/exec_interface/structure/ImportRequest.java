@@ -7,6 +7,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
+import indi.wenyan.judou.utils.language.ExceptionText;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -26,7 +27,7 @@ public final class ImportRequest implements BaseHandleableRequest {
         this.thread = thread;
         this.getPackage = getPackage;
         if (args.size() != 1) {
-            throw new WenyanException("参数错误");
+            throw new WenyanException(ExceptionText.ParameterError.string());
         }
         this.packageName = args.getFirst().as(WenyanString.TYPE).value();
     }

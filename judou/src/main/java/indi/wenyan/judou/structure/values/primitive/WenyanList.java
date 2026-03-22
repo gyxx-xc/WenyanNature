@@ -8,6 +8,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.ExceptionText;
 import indi.wenyan.judou.utils.language.LanguageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -101,7 +102,7 @@ public record WenyanList(List<IWenyanValue> value)
                 return WenyanValues.of(self.as(TYPE).value.subList(fromIndex, toIndex));
             });
             default ->
-                    throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.variable_not_found_") + name);
+                    throw new WenyanException(ExceptionText.VariableNotFound.string(name));
         };
     }
 

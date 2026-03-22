@@ -9,7 +9,7 @@ import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanDataParser;
-import indi.wenyan.judou.utils.language.LanguageManager;
+import indi.wenyan.judou.utils.language.ExceptionText;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -37,7 +37,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunctionHelper(name);
         if (attr == null)
-            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.function_not_found_") + name);
+            throw new WenyanException(ExceptionText.FunctionNotFound.string(name));
         else
             return attr;
     }
@@ -56,7 +56,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     public IWenyanValue getFunction(String id) throws WenyanException {
         var attr = getFunctionHelper(id);
         if (attr == null) {
-            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.function_not_found_") + id);
+            throw new WenyanException(ExceptionText.FunctionNotFound.string(id));
         }
         return attr;
     }

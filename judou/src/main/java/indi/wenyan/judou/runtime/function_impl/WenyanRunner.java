@@ -5,6 +5,7 @@ import indi.wenyan.judou.runtime.executor.WenyanCode;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.WenyanThreading;
+import indi.wenyan.judou.utils.language.ExceptionText;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.Contract;
@@ -50,7 +51,7 @@ public class WenyanRunner implements IWenyanRunner {
     public void call(WenyanFrame runtime) {
         recursionDepth++;
         if (recursionDepth > 3000) {
-            IWenyanRunner.dieWithException(this, new WenyanException("递归深度过深"));
+            IWenyanRunner.dieWithException(this, new WenyanException(ExceptionText.RecursionDepthTooDeep.string()));
             return;
         }
         currentRuntime = runtime;

@@ -8,6 +8,7 @@ import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
+import indi.wenyan.judou.utils.language.ExceptionText;
 import indi.wenyan.judou.utils.language.LanguageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,9 +34,9 @@ public record WenyanBuiltinFunction(
 
     public @NotNull WenyanFrame getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanFrame returnRuntime) throws WenyanException {
         if (args().size() != argsList.size())
-            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+            throw new WenyanException(ExceptionText.NumberOfArgumentsDoesNotMatch.string());
         if (refs == null)
-            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.function_does_not_have_references"));
+            throw new WenyanException(ExceptionText.FunctionDoesNotHaveReferences.string());
 
         WenyanFrame newRuntime = new WenyanFrame(bytecode(), refs(), returnRuntime);
         int i = 0;

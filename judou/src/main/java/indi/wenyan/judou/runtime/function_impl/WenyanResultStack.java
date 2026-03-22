@@ -5,6 +5,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.ConfigManager;
 import indi.wenyan.judou.utils.WenyanThreading;
+import indi.wenyan.judou.utils.language.ExceptionText;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -45,7 +46,7 @@ public class WenyanResultStack {
     public IWenyanValue peek() throws WenyanException {
         var value = stack.peekLast();
         if (value == null) {
-            throw new WenyanException("error.wenyan_programming.stack_empty");
+            throw new WenyanException(ExceptionText.StackEmpty.string());
         }
         return value;
     }
@@ -59,7 +60,7 @@ public class WenyanResultStack {
     public IWenyanValue pop() throws WenyanException {
         var value = stack.pollLast();
         if (value == null) {
-            throw new WenyanException("error.wenyan_programming.stack_empty");
+            throw new WenyanException(ExceptionText.StackEmpty.string());
         }
         return value;
     }
@@ -89,7 +90,7 @@ public class WenyanResultStack {
      */
     public IWenyanValue get(int index) throws WenyanException {
         if (index < 0 || index >= stack.size()) {
-            throw new WenyanException("error.wenyan_programming.stack_index_out_of_bounds");
+            throw new WenyanException(ExceptionText.StackIndexOutOfBounds.string());
         }
         return ((LinkedList<IWenyanValue>) stack).get(stack.size() - index - 1);
     }
