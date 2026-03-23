@@ -14,7 +14,13 @@ public class FrostPaperChecker extends CraftingAnswerChecker {
     @Override
     public void init() {
         super.init();
-        // TODO: Implement specific initialization logic and answer generation
-        ans = WenyanValues.of(0);
+        int target = random.nextInt(100) + 1;
+        long[] a = new long[target + 1];
+        a[0] = 0;
+
+        for (int i = 1; i <= target; i++) {
+            a[i] = a[i - 1] * 2 + 2;
+        }
+        ans = WenyanValues.of(a[target]);
     }
 }
