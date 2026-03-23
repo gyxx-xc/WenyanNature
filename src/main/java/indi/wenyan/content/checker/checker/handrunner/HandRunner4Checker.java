@@ -13,7 +13,5 @@ public class HandRunner4Checker extends CraftingAnswerChecker {
     @Override
     public void init() {
         super.init();
-        // TODO: Implement specific initialization logic and answer generation
-        ans = WenyanValues.of(0);
     }
 }

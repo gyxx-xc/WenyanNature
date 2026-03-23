@@ -13,7 +13,17 @@ public class LunarInkChecker extends CraftingAnswerChecker {
     @Override
     public void init() {
         super.init();
-        // TODO: Implement specific initialization logic and answer generation
-        ans = WenyanValues.of(0);
+        int target = random.nextInt(1000000) + 1;
+        setVariable(0, WenyanValues.of(target));
+
+        int counter = 0;
+        while (target > 1) {
+            if (target % 2 == 0)
+                target = target / 2;
+            else
+                target = target - 1;
+            counter++;
+        }
+        ans = WenyanValues.of(counter);
     }
 }
