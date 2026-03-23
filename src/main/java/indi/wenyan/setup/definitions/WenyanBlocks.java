@@ -4,6 +4,9 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.additional_module.block.*;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
+import indi.wenyan.content.block.additional_module.paper.piston.DecorativePistonHead;
+import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBlock;
+import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleEntity;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
@@ -12,6 +15,9 @@ import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.content.block.writing_block.WritingBlock;
+import indi.wenyan.content.block.writing_block.WritingBlockEntity;
+import indi.wenyan.content.item.RunnerItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public enum WenyanBlocks {
@@ -27,16 +34,29 @@ public enum WenyanBlocks {
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, WenyanProgramming.MODID);
     public static final DeferredRegister.Blocks DR =
             DeferredRegister.createBlocks(WenyanProgramming.MODID);
+    public static final List<DeferredRegister<?>> ALL_DR = List.of(DR, DR_ENTITY);
 
-    public static final DeferredBlock<RunnerBlock> RUNNER_BLOCK = WenyanBlocks.DR.registerBlock(RunnerBlock.ID, RunnerBlock::new);
-    public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY = WenyanBlocks.registerEntity(RunnerBlock.ID, RunnerBlockEntity::new, WenyanBlocks.RUNNER_BLOCK);
+    public static final RunnerTier.TieredBlockRegistrator<RunnerBlock> RUNNER_BLOCK = RunnerTier.TieredBlockRegistrator.registerTieredBlock(
+            RunnerItem.ID, RunnerBlock::new);
+
+    public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY =
+            WenyanBlocks.DR_ENTITY.register(RunnerBlockEntity.ID, () -> new BlockEntityType<>(RunnerBlockEntity::new, RUNNER_BLOCK.getBlocks().toArray(Block[]::new)));
+
+    public static final DeferredBlock<MathModuleBlock> MATH_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(MathModuleBlock.ID, MathModuleBlock::new);
+    public static final DeferredBlock<BitModuleBlock> BIT_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(BitModuleBlock.ID, BitModuleBlock::new);
+    public static final DeferredBlock<RandomModuleBlock> RANDOM_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(RandomModuleBlock.ID, RandomModuleBlock::new);
+    public static final DeferredBlock<Vec3ModuleBlock> VEC3_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(Vec3ModuleBlock.ID, Vec3ModuleBlock::new);
+    public static final DeferredBlock<CollectionModuleBlock> COLLECTION_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(CollectionModuleBlock.ID, CollectionModuleBlock::new);
+    public static final DeferredBlock<StringModuleBlock> STRING_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(StringModuleBlock.ID, StringModuleBlock::new);
 
     public static final DeferredBlock<CraftingBlock> CRAFTING_BLOCK = WenyanBlocks.DR.registerBlock(CraftingBlock.ID, CraftingBlock::new);
     public static final Supplier<BlockEntityType<CraftingBlockEntity>> CRAFTING_BLOCK_ENTITY = WenyanBlocks.registerEntity(CraftingBlock.ID, CraftingBlockEntity::new, WenyanBlocks.CRAFTING_BLOCK);
 
-
     public static final DeferredBlock<PedestalBlock> PEDESTAL_BLOCK = WenyanBlocks.DR.registerBlock(PedestalBlock.ID, PedestalBlock::new);
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY = WenyanBlocks.registerEntity(PedestalBlock.ID, PedestalBlockEntity::new, WenyanBlocks.PEDESTAL_BLOCK);
+
+    public static final DeferredBlock<WritingBlock> WRITING_BLOCK = WenyanBlocks.DR.registerBlock(WritingBlock.ID, WritingBlock::new);
+    public static final Supplier<BlockEntityType<WritingBlockEntity>> WRITING_BLOCK_ENTITY = WenyanBlocks.registerEntity(WritingBlock.ID, WritingBlockEntity::new, WenyanBlocks.WRITING_BLOCK);
 
     public static final DeferredBlock<PowerBlock> POWER_BLOCK = WenyanBlocks.DR.registerBlock(PowerBlock.ID, PowerBlock::new);
     public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY = WenyanBlocks.registerEntity(PowerBlock.ID, PowerBlockEntity::new, WenyanBlocks.POWER_BLOCK);
@@ -47,32 +67,15 @@ public enum WenyanBlocks {
     public static final DeferredBlock<WorldModuleBlock> INFORMATION_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(WorldModuleBlock.ID, WorldModuleBlock::new);
     public static final Supplier<BlockEntityType<WorldModuleEntity>> INFORMATION_MODULE_ENTITY = WenyanBlocks.registerEntity(WorldModuleBlock.ID, WorldModuleEntity::new, WenyanBlocks.INFORMATION_MODULE_BLOCK);
 
-    public static final DeferredBlock<MathModuleBlock> MATH_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(MathModuleBlock.ID, MathModuleBlock::new);
-    public static final Supplier<BlockEntityType<MathModuleEntity>> MATH_MODULE_ENTITY = WenyanBlocks.registerEntity(MathModuleBlock.ID, MathModuleEntity::new, WenyanBlocks.MATH_MODULE_BLOCK);
-
-    public static final DeferredBlock<BitModuleBlock> BIT_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(BitModuleBlock.ID, BitModuleBlock::new);
-    public static final Supplier<BlockEntityType<BitModuleEntity>> BIT_MODULE_ENTITY = WenyanBlocks.registerEntity(BitModuleBlock.ID, BitModuleEntity::new, WenyanBlocks.BIT_MODULE_BLOCK);
 
     public static final DeferredBlock<BlockModuleBlock> BLOCK_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(BlockModuleBlock.ID, BlockModuleBlock::new);
     public static final Supplier<BlockEntityType<BlockModuleEntity>> BLOCK_MODULE_ENTITY = WenyanBlocks.registerEntity(BlockModuleBlock.ID, BlockModuleEntity::new, WenyanBlocks.BLOCK_MODULE_BLOCK);
 
-    public static final DeferredBlock<RandomModuleBlock> RANDOM_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(RandomModuleBlock.ID, RandomModuleBlock::new);
-    public static final Supplier<BlockEntityType<RandomModuleEntity>> RANDOM_MODULE_ENTITY = WenyanBlocks.registerEntity(RandomModuleBlock.ID, RandomModuleEntity::new, WenyanBlocks.RANDOM_MODULE_BLOCK);
-
     public static final DeferredBlock<ItemModuleBlock> ITEM_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(ItemModuleBlock.ID, ItemModuleBlock::new);
     public static final Supplier<BlockEntityType<ItemModuleEntity>> ITEM_MODULE_ENTITY = WenyanBlocks.registerEntity(ItemModuleBlock.ID, ItemModuleEntity::new, WenyanBlocks.ITEM_MODULE_BLOCK);
 
-    public static final DeferredBlock<Vec3ModuleBlock> VEC3_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(Vec3ModuleBlock.ID, Vec3ModuleBlock::new);
-    public static final Supplier<BlockEntityType<Vec3ModuleEntity>> VEC3_MODULE_ENTITY = WenyanBlocks.registerEntity(Vec3ModuleBlock.ID, Vec3ModuleEntity::new, WenyanBlocks.VEC3_MODULE_BLOCK);
-
     public static final DeferredBlock<CommunicateModuleBlock> COMMUNICATE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(CommunicateModuleBlock.ID, CommunicateModuleBlock::new);
     public static final Supplier<BlockEntityType<CommunicateModuleEntity>> COMMUNICATE_MODULE_ENTITY = WenyanBlocks.registerEntity(CommunicateModuleBlock.ID, CommunicateModuleEntity::new, WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
-
-    public static final DeferredBlock<CollectionModuleBlock> COLLECTION_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(CollectionModuleBlock.ID, CollectionModuleBlock::new);
-    public static final Supplier<BlockEntityType<CollectionModuleEntity>> COLLECTION_MODULE_ENTITY = WenyanBlocks.registerEntity(CollectionModuleBlock.ID, CollectionModuleEntity::new, WenyanBlocks.COLLECTION_MODULE_BLOCK);
-
-    public static final DeferredBlock<StringModuleBlock> STRING_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(StringModuleBlock.ID, StringModuleBlock::new);
-    public static final Supplier<BlockEntityType<StringModuleEntity>> STRING_MODULE_ENTITY = WenyanBlocks.registerEntity(StringModuleBlock.ID, StringModuleEntity::new, WenyanBlocks.STRING_MODULE_BLOCK);
 
     public static final DeferredBlock<EntityModuleBlock> ENTITY_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(EntityModuleBlock.ID, EntityModuleBlock::new);
     public static final Supplier<BlockEntityType<EntityModuleEntity>> ENTITY_MODULE_ENTITY = WenyanBlocks.registerEntity(EntityModuleBlock.ID, EntityModuleEntity::new, WenyanBlocks.ENTITY_MODULE_BLOCK);
@@ -85,6 +88,13 @@ public enum WenyanBlocks {
 
     public static final DeferredBlock<FormationCoreModuleBlock> FORMATION_CORE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(FormationCoreModuleBlock.ID, FormationCoreModuleBlock::new);
     public static final Supplier<BlockEntityType<FormationCoreModuleEntity>> FORMATION_CORE_MODULE_ENTITY = WenyanBlocks.registerEntity(FormationCoreModuleBlock.ID, FormationCoreModuleEntity::new, WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
+
+    public static final DeferredBlock<BlockingQueueModuleBlock> BLOCKING_QUEUE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(BlockingQueueModuleBlock.ID, BlockingQueueModuleBlock::new);
+    public static final Supplier<BlockEntityType<BlockingQueueModuleEntity>> BLOCKING_QUEUE_MODULE_ENTITY = WenyanBlocks.registerEntity(BlockingQueueModuleBlock.ID, BlockingQueueModuleEntity::new, WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK);
+
+    public static final DeferredBlock<PistonModuleBlock> PISTON_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(PistonModuleBlock.ID, PistonModuleBlock::new);
+    public static final Supplier<BlockEntityType<PistonModuleEntity>> PISTON_MODULE_ENTITY = WenyanBlocks.registerEntity(PistonModuleBlock.ID, PistonModuleEntity::new, WenyanBlocks.PISTON_MODULE_BLOCK);
+    public static final DeferredBlock<DecorativePistonHead> DECORATIVE_PISTON_HEAD_BLOCK = WenyanBlocks.DR.registerBlock(DecorativePistonHead.ID, DecorativePistonHead::new);
 
     private static <BE extends BlockEntity> Supplier<BlockEntityType<BE>>
     registerEntity(final String name, final BlockEntityType.BlockEntitySupplier<BE> supplier,

@@ -1,6 +1,7 @@
 package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
@@ -30,8 +31,8 @@ class AwaitStatementTest extends WenyanProgramTestHelper {
     @MethodSource("testData")
     void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
         TestPlatform testPlatform = new TestPlatform();
-        IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanRunner.ofCode(code, testPlatform.initEnvironment()));
+        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
+        wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         int cnt = 0;
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(1000);

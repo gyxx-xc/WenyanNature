@@ -4,7 +4,7 @@ import indi.wenyan.WenyanProgramming;
 import net.minecraft.data.DataProvider;
 
 public enum WenyanLanguageProviderFactory {;
-    public static DataProvider.Factory create(String locale) {
+    public static DataProvider.Factory<?> create(String locale) {
         // going to have more language (at least tranditional chinese)
         //noinspection SwitchStatementWithTooFewBranches
         return switch (locale) {

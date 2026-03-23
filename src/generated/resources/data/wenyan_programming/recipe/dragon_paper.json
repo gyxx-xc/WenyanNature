@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:dragon_breath",
+    "minecraft:paper"
+  ],
+  "output": {
+    "count": 4,
+    "id": "wenyan_programming:dragon_paper"
+  },
+  "question": "dragon_paper",
+  "round": 1
+}

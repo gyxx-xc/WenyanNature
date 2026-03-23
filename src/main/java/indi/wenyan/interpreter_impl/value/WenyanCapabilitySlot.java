@@ -4,6 +4,8 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -18,7 +20,7 @@ import java.util.Objects;
  * Used for interacting with inventory slots in the Minecraft environment.
  */
 public record WenyanCapabilitySlot(Vec3 pose, ResourceHandler<ItemResource> capabilities, int slot) implements IWenyanObject {
-    public static final WenyanType<WenyanCapabilitySlot> TYPE = new WenyanType<>("item_slot",
+    public static final WenyanType<WenyanCapabilitySlot> TYPE = new WenyanType<>(TypeText.Itemslot.string(),
             WenyanCapabilitySlot.class);
 
     @Override
@@ -37,7 +39,7 @@ public record WenyanCapabilitySlot(Vec3 pose, ResourceHandler<ItemResource> capa
 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
-        throw new WenyanException("Item slot has no such attribute: " + name);
+        throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
     }
 
     @Override

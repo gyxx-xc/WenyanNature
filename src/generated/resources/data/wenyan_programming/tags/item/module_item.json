@@ -1,0 +1,25 @@
+{
+  "values": [
+    "wenyan_programming:crafting_block",
+    "wenyan_programming:pedestal_block",
+    "wenyan_programming:writing_block",
+    "wenyan_programming:power_block",
+    "wenyan_programming:explosion_module_block",
+    "wenyan_programming:information_module_block",
+    "wenyan_programming:math_module_block",
+    "wenyan_programming:bit_module_block",
+    "wenyan_programming:block_module_block",
+    "wenyan_programming:random_module_block",
+    "wenyan_programming:item_module_block",
+    "wenyan_programming:vec3_module_block",
+    "wenyan_programming:communicate_module_block",
+    "wenyan_programming:collection_module_block",
+    "wenyan_programming:string_module_block",
+    "wenyan_programming:entity_module_block",
+    "wenyan_programming:screen_block_module_block",
+    "wenyan_programming:lock_module_block",
+    "wenyan_programming:formation_core_module_block",
+    "wenyan_programming:blocking_queue_module_block",
+    "wenyan_programming:piston_module_block"
+  ]
+}

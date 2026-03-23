@@ -1,9 +1,11 @@
 package indi.wenyan.judou.structure.values;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.utils.WenyanThreading;
+import indi.wenyan.judou.utils.language.JudouTypeText;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
  * Interface representing a Wenyan object type that can create new instances.
  */
 public interface IWenyanObjectType extends IWenyanFunction {
-    WenyanType<IWenyanObjectType> TYPE = new WenyanType<>("object_type", IWenyanObjectType.class);
+    WenyanType<IWenyanObjectType> TYPE = new WenyanType<>(JudouTypeText.ObjectType.string(), IWenyanObjectType.class);
 
     /**
      * Gets an attribute from this object type.
@@ -33,7 +35,7 @@ public interface IWenyanObjectType extends IWenyanFunction {
             throws WenyanException;
 
     @Override
-    default void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList)
+    default void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread, List<IWenyanValue> argsList)
             throws WenyanException {
         thread.getCurrentRuntime().pushReturnValue(createObject(argsList));
     }

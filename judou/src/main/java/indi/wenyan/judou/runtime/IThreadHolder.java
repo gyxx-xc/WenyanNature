@@ -11,7 +11,7 @@ public interface IThreadHolder<T extends IWenyanThread> {
     T getThread();
 
     // Warpper functions for convenience
-    default IWenyanProgram program() {
+    default IWenyanProgram<T> program() {
         return getThread().getProgram();
     }
 

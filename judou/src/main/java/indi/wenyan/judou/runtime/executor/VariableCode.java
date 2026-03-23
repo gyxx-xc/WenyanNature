@@ -1,13 +1,13 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.UnknownNullability;
 
 /**
@@ -27,8 +27,8 @@ public class VariableCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.getCurrentRuntime();
+    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
         switch (operation) {
             case LOAD -> {
                 IWenyanValue value = runtime.getLocals().get(arg);
@@ -41,10 +41,7 @@ public class VariableCode extends WenyanCode {
             case LOAD_GLOBAL -> {
                 // cause this is bytecode level, use if to check still too slow
                 String id = runtime.getBytecode().getIdentifier(arg);
-                IWenyanValue value = thread.getGlobalVariable(id);
-                if (value == null) {
-                    throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.variable_not_found_") + id);
-                }
+                IWenyanValue value = thread.getGlobals().getAttribute(id);
                 runtime.pushReturnValue(value);
             }
             case STORE -> {
@@ -60,7 +57,7 @@ public class VariableCode extends WenyanCode {
                     else
                         lv.setValue(value.as(lv.type()));
                 } else
-                    throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.set_value_to_non_left_value"));
+                    throw new WenyanException(JudouExceptionText.SetValueToNonLeftValue.string());
             }
             case CAST -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
@@ -74,7 +71,7 @@ public class VariableCode extends WenyanCode {
                     case 6 -> value.as(IWenyanObjectType.TYPE);
                     case 7 -> value.as(IWenyanFunction.TYPE);
                     default ->
-                            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.invalid_data_type"));
+                            throw new WenyanException(JudouExceptionText.InvalidDataType.string());
                 };
                 runtime.pushReturnValue(castedValue);
             }

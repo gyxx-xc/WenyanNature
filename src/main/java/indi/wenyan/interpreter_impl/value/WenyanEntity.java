@@ -1,27 +1,30 @@
 package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.entity.Entity;
 
 public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, IWenyanObject {
-    public static final WenyanType<WenyanEntity> TYPE = new WenyanType<>("entity", WenyanEntity.class);
+    public static final WenyanType<WenyanEntity> TYPE = new WenyanType<>(TypeText.Entity.string(), WenyanEntity.class);
 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
-            case "「位」" -> WenyanMinecraftValues.of(value().getPosition(0));
-            case "「移」" -> WenyanMinecraftValues.of(value().getDeltaMovement());
-            case "「向」" -> WenyanMinecraftValues.of(value().getLookAngle());
-            case "「活」" -> WenyanValues.of(value().isAlive());
-            case "「名」" -> WenyanValues.of(value().getDisplayName().getString());
-            case "「高」" -> WenyanValues.of(value().getBbHeight());
-            default -> throw new WenyanException("实体没有这个属性: " + name);
+            case WenyanSymbol.ENTITY_POS -> WenyanMinecraftValues.of(value().getPosition(0));
+            case WenyanSymbol.ENTITY_MOVE -> WenyanMinecraftValues.of(value().getDeltaMovement());
+            case WenyanSymbol.ENTITY_LOOK -> WenyanMinecraftValues.of(value().getLookAngle());
+            case WenyanSymbol.ENTITY_ALIVE -> WenyanValues.of(value().isAlive());
+            case WenyanSymbol.ENTITY_NAME -> WenyanValues.of(value().getDisplayName().getString());
+            case WenyanSymbol.ENTITY_HEIGHT -> WenyanValues.of(value().getBbHeight());
+            default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
         };
     }
 

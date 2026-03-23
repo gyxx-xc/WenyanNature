@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "wenyan_programming:celestial_ink",
+    "wenyan_programming:dragon_paper"
+  ],
+  "output": {
+    "count": 2,
+    "id": "wenyan_programming:hand_runner_6"
+  },
+  "question": "hand_runner_6",
+  "round": 1
+}

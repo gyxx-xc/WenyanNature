@@ -77,5 +77,6 @@ public class WenyanException extends Exception {
         }
     }
 
-    public record ErrorContext(int line, int column, String segment) {}
+    public record ErrorContext(int line, int column, String segment) {
+    }
 }

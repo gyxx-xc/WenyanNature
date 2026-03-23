@@ -34,11 +34,15 @@ sourceSets {
             srcDir 'src/generated/resources'
         }
     }
+    client {
+        runtimeClasspath += main.output
+        compileClasspath += main.output
+    }
     gameTest {
-        resources {
-            srcDirs 'src/gameTest/generated'
-        }
-        compileClasspath += sourceSets.main.output
+        runtimeClasspath += main.output
+        compileClasspath += main.output
+        runtimeClasspath += client.output
+        compileClasspath += client.output
     }
 }
 
@@ -51,19 +55,12 @@ neoForge {
     mods {
         wenyan_programming {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets.client)
         }
         wenyanTest {
             sourceSet(sourceSets.gameTest)
         }
     }
-
-//    parchment {
-//        mappingsVersion = project.parchment_mappings_version
-//        minecraftVersion = project.parchment_minecraft_version
-//    }
-
-    // This line is optional. Access Transformers are automatically detected
-    // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -89,6 +86,12 @@ neoForge {
 
         gameTestServer {
             type = "gameTestServer"
+            sourceSet = sourceSets.gameTest
+            loadedMods.add(mods.wenyanTest)
+        }
+
+        gameTestWClient {
+            client()
             sourceSet = sourceSets.gameTest
             loadedMods.add(mods.wenyanTest)
         }
@@ -122,10 +125,14 @@ dependencies {
 
     implementation project(":judou")
     jarJar implementation(project(":judou"))
+    clientImplementation(project(":judou"))
+    jarJar clientImplementation(project(":judou"))
 
     // for annotation processor
     compileOnly project(":language_processor")
     annotationProcessor project(":language_processor")
+    clientCompileOnly project(":language_processor")
+    clientAnnotationProcessor project(":language_processor")
 
     // mod requirements
 //    implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
@@ -134,6 +141,8 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
+    clientCompileOnly("org.projectlombok:lombok:1.18.42")
+    clientAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 
     // copy from https://github.com/AppliedEnergistics/Applied-Energistics-2/blob/main/build.gradle
     testImplementation(platform("org.junit:junit-bom:6.0.2"))

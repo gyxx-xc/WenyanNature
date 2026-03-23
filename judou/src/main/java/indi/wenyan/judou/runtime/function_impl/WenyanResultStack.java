@@ -3,7 +3,9 @@ package indi.wenyan.judou.runtime.function_impl;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
+import indi.wenyan.judou.utils.ConfigManager;
 import indi.wenyan.judou.utils.WenyanThreading;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -19,7 +21,7 @@ public class WenyanResultStack {
     private final Deque<IWenyanValue> stack = new ArrayDeque<>();
 
     /** Maximum allowed size for the stack */
-    public static final int MAX_SIZE = 64;
+    private final int maxSize = ConfigManager.getConfig().getResultMaxSize();
 
     /**
      * Pushes an item onto the stack if it's not null.
@@ -30,7 +32,7 @@ public class WenyanResultStack {
     public void push(IWenyanValue item) {
         if (item.type() != WenyanNull.TYPE)
             stack.addLast(item);
-        while (stack.size() > MAX_SIZE) {
+        while (stack.size() > maxSize) {
             stack.removeFirst();
         }
     }
@@ -42,11 +44,11 @@ public class WenyanResultStack {
      * @throws WenyanException if the stack is empty
      */
     public IWenyanValue peek() throws WenyanException {
-        int len = stack.size();
-        if (len == 0) {
-            throw new WenyanException("error.wenyan_programming.stack_empty");
+        var value = stack.peekLast();
+        if (value == null) {
+            throw new WenyanException(JudouExceptionText.StackEmpty.string());
         }
-        return stack.getLast();
+        return value;
     }
 
     /**
@@ -56,11 +58,11 @@ public class WenyanResultStack {
      * @throws WenyanException if the stack is empty
      */
     public IWenyanValue pop() throws WenyanException {
-        int len = stack.size();
-        if (len == 0) {
-            throw new WenyanException("error.wenyan_programming.stack_empty");
+        var value = stack.pollLast();
+        if (value == null) {
+            throw new WenyanException(JudouExceptionText.StackEmpty.string());
         }
-        return stack.removeLast();
+        return value;
     }
 
     /**
@@ -88,7 +90,7 @@ public class WenyanResultStack {
      */
     public IWenyanValue get(int index) throws WenyanException {
         if (index < 0 || index >= stack.size()) {
-            throw new WenyanException("error.wenyan_programming.stack_index_out_of_bounds");
+            throw new WenyanException(JudouExceptionText.StackIndexOutOfBounds.string());
         }
         return ((LinkedList<IWenyanValue>) stack).get(stack.size() - index - 1);
     }

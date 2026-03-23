@@ -18,7 +18,7 @@ public class SubedModelProvider extends ModelProvider {
         this.supplier = supplier;
     }
 
-    public static DataProvider.Factory of(ModelSubProviderSupplier... supplier) {
+    public static DataProvider.Factory<?> of(ModelSubProviderSupplier... supplier) {
         return output -> new SubedModelProvider(output, supplier);
     }
 

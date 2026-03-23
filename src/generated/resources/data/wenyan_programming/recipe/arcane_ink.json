@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "minecraft:enchanted_book",
+    "wenyan_programming:lunar_ink"
+  ],
+  "output": {
+    "count": 4,
+    "id": "wenyan_programming:arcane_ink"
+  },
+  "question": "arcane_ink",
+  "round": 1
+}

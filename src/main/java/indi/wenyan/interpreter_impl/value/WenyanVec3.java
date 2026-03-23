@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -12,7 +13,8 @@ import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.WenyanThreading;
 import indi.wenyan.judou.utils.WenyanValues;
-import net.minecraft.core.Vec3i;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,17 +23,14 @@ import java.util.List;
 
 public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenyanObject {
     public static final IWenyanObjectType OBJECT_TYPE = new Vec3ObjectType();
-    public static final WenyanType<WenyanVec3> TYPE = new WenyanType<>("vec3", WenyanVec3.class);
-
-    public WenyanVec3(Vec3i value) {
-        this(new Vec3(value.getX(), value.getY(), value.getZ()));
-    }
+    public static final WenyanType<WenyanVec3> TYPE = new WenyanType<>(TypeText.Vec3.string(), WenyanVec3.class);
 
     @Override
     public WenyanType<?> type() {
         return TYPE;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanString.TYPE) {
@@ -43,13 +42,13 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
-            case "「上下」" -> WenyanValues.of(value.y);
-            case "「東西」" -> WenyanValues.of(value.x);
-            case "「南北」" -> WenyanValues.of(value.z);
-            case "「長」" -> WenyanValues.of(value.length());
-            case "「方長」" -> WenyanValues.of(value.lengthSqr());
-            case "「偏移」" -> new WenyanInlineJavacall(
-                    (self, args) -> {
+            case WenyanSymbol.VECTOR_Y -> WenyanValues.of(value.y);
+            case WenyanSymbol.VECTOR_X -> WenyanValues.of(value.x);
+            case WenyanSymbol.VECTOR_Z -> WenyanValues.of(value.z);
+            case WenyanSymbol.VECTOR_LENGTH -> WenyanValues.of(value.length());
+            case WenyanSymbol.VECTOR_LENGTH_SQR -> WenyanValues.of(value.lengthSqr());
+            case WenyanSymbol.VECTOR_OFFSET -> new WenyanInlineJavacall(
+                    (_, args) -> {
                         if (args.size() == 1) {
                             return WenyanMinecraftValues.of(value.add(args.getFirst().as(TYPE).value));
                         } else if (args.size() == 3) {
@@ -58,17 +57,17 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
                                     args.get(1).as(WenyanDouble.TYPE).value(),
                                     args.get(2).as(WenyanDouble.TYPE).value()));
                         } else {
-                            throw new WenyanException.WenyanVarException("args?");
+                            throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(3, args.size()));
                         }
                     }
             );
-            default -> throw new WenyanException("Unknown Vec3 attribute: " + name);
+            default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
         };
     }
 
     // store all static information
     public static class Vec3ObjectType implements IWenyanObjectType {
-        public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>("vec3_object_type", Vec3ObjectType.class);
+        public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>(TypeText.Vec3ObjectType.string(), Vec3ObjectType.class);
 
         public static final IWenyanValue ZERO;
         public static final IWenyanValue UP;
@@ -84,14 +83,14 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         @Override
         public IWenyanValue getAttribute(String name) throws WenyanException {
             return switch (name) {
-                case "「零」" -> ZERO;
-                case "「上」" -> UP;
-                case "「下」" -> DOWN;
-                case "「東」" -> EAST;
-                case "「西」" -> WEST;
-                case "「南」" -> SOUTH;
-                case "「北」" -> NORTH;
-                default -> throw new WenyanException("Unknown Vec3 static attribute: " + name);
+                case WenyanSymbol.VECTOR_TYPE_ZERO -> ZERO;
+                case WenyanSymbol.VECTOR_TYPE_UP -> UP;
+                case WenyanSymbol.VECTOR_TYPE_DOWN -> DOWN;
+                case WenyanSymbol.VECTOR_TYPE_EAST -> EAST;
+                case WenyanSymbol.VECTOR_TYPE_WEST -> WEST;
+                case WenyanSymbol.VECTOR_TYPE_SOUTH -> SOUTH;
+                case WenyanSymbol.VECTOR_TYPE_NORTH -> NORTH;
+                default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
             };
         }
 
@@ -127,6 +126,6 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     @Override
     public @NotNull String toString() {
         return "(" + WenyanValues.of(value().x()) + ", " +
-                WenyanValues.of(value().y()) + ", " + new WenyanDouble(value().z()) + ")";
+                WenyanValues.of(value().y()) + ", " + WenyanValues.of(value().z()) + ")";
     }
 }

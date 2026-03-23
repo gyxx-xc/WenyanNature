@@ -4,7 +4,6 @@ import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.runtime.function_impl.WenyanResultStack;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -12,9 +11,10 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanDataParser;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,13 +55,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanCompileException(e.getMessage(), ctx);
         }
         if (n <= 0) {
-            throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.variables_not_positive"), ctx);
+            throw new WenyanCompileException(JudouExceptionText.VariablesNotPositive.string(), ctx);
         }
         if (n > WenyanCompilerEnvironment.FUNCTION_ARGS_MAX) {
-            throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.too_many_variables"), ctx);
+            throw new WenyanCompileException(JudouExceptionText.TooManyVariables.string(), ctx);
         }
         if (!ctx.d.isEmpty() && n != ctx.d.size()) {
-            throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.variables_not_match"), ctx);
+            throw new WenyanCompileException(JudouExceptionText.VariablesNotMatch.string(), ctx);
         }
         WenyanType<?> type;
         try {
@@ -71,10 +71,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
         for (int i = 0; i < n; i++) {
             if (ctx.d.isEmpty()) {
-                try {
-                    bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
-                } catch (WenyanException e) {
-                    throw new WenyanCompileException(e.getMessage(), ctx);
+                if (type == WenyanList.TYPE) bytecode.add(WenyanCodes.CREATE_LIST);
+                else {
+                    try {
+                        bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
+                    } catch (WenyanException e) {
+                        throw new WenyanCompileException(e.getMessage(), ctx);
+                    }
                 }
             } else {
                 visit(ctx.d.get(i));
@@ -144,13 +147,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
     @Override
     public Boolean visitFunction_define_statement(WenyanRParser.Function_define_statementContext ctx) {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size() - 1).getText())) {
-            throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.function_name_does_not_match"), ctx);
+            throw new WenyanCompileException(JudouExceptionText.FunctionNameDoesNotMatch.string(), ctx);
         }
         int index = bytecode.getStoreIndex(ctx.IDENTIFIER(0).getText());
         visitFunction_define_body(ctx.function_define_body(), false);
         bytecode.add(WenyanCodes.CREATE_FNCTION, index);
         if (ctx.t.getType() == WenyanRParser.ASYNC_DECLARE_OP) {
-            bytecode.addLoadCode(WenyanPackages.CREATE_ASYNC_ID);
+            bytecode.addLoadCode(Symbol.CREATE_ASYNC_ID);
             bytecode.add(WenyanCodes.CALL, 1);
         }
         bytecode.add(WenyanCodes.STORE, index);
@@ -176,8 +179,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
         WenyanBytecode functionBytecode = new WenyanBytecode(bytecode.getSourceCode());
         List<String> argv = new ArrayList<>();
         if (isObject) {
-            argv.add(WenyanDataParser.SELF_ID);
-            argv.add(WenyanDataParser.PARENT_ID);
+            argv.add(Symbol.SELF_ID);
+            argv.add(Symbol.PARENT_ID);
         }
         for (var arg : argsType) argv.add(arg.id());
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode, bytecode, argv);
@@ -207,7 +210,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                     visit(ctx.data(1));
                 }
                 default ->
-                        throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.unknown_preposition"), ctx);
+                        throw new WenyanCompileException(JudouExceptionText.UnknownPreposition.string(), ctx);
             }
         } else {
             for (int i = ctx.data().size() - 1; i >= 0; i--) {
@@ -258,8 +261,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
             throw new WenyanCompileException(e.getMessage(), ctx);
         }
 
-        if (count > WenyanResultStack.MAX_SIZE) {
-            throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.too_many_variables"), ctx);
+        if (count > WenyanCompilerEnvironment.FUNCTION_ARGS_MAX) {
+            throw new WenyanCompileException(JudouExceptionText.TooManyVariables.string(), ctx);
         }
         for (int i = 0; i < count; i++)
             bytecode.add(WenyanCodes.POP_ANS);
@@ -288,7 +291,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     @Override
     public Boolean visitObject_statement(WenyanRParser.Object_statementContext ctx) {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size() - 1).getText())) {
-            throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.function_name_does_not_match"), ctx);
+            throw new WenyanCompileException(JudouExceptionText.FunctionNameDoesNotMatch.string(), ctx);
         }
 
         if (ctx.data() != null) visit(ctx.data());
@@ -297,11 +300,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         try {
             for (WenyanRParser.Object_property_defineContext variable : ctx.object_property_define()) {
+                WenyanType<?> type = WenyanDataParser.parseType(variable.type().getText());
                 if (variable.data() != null) {
                     visit(variable.data());
-                    bytecode.add(WenyanCodes.CAST, WenyanDataParser.parseType(variable.type().getText()).ordinal());
+                    bytecode.add(WenyanCodes.CAST, type.ordinal());
                 } else {
-                    bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(WenyanDataParser.parseType(variable.type().getText())));
+                    if (type == WenyanList.TYPE) bytecode.add(WenyanCodes.CREATE_LIST);
+                    else bytecode.add(WenyanCodes.PUSH, IWenyanValue.emptyOf(type));
                 }
                 bytecode.add(WenyanCodes.STORE_STATIC_ATTR, variable.IDENTIFIER().getText());
             }
@@ -326,7 +331,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     public Boolean visitObject_method_define(WenyanRParser.Object_method_defineContext ctx) {
         if ((!ctx.CREATE_OBJECT().isEmpty() && ctx.CREATE_OBJECT().size() != 2) ||
                 (ctx.IDENTIFIER().size() == 2 && !ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(1).getText()))) {
-            throw new WenyanCompileException(LanguageManager.getTranslation("error.wenyan_programming.function_name_does_not_match"), ctx);
+            throw new WenyanCompileException(JudouExceptionText.FunctionNameDoesNotMatch.string(), ctx);
         }
 
         visitFunction_define_body(ctx.function_define_body(), true);

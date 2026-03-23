@@ -30,7 +30,7 @@ class FuStatementTest extends WenyanProgramTestHelper {
     }
 
     @ParameterizedTest
-    @CsvSource({"夫「「一」」大於一書之"})
+    @CsvSource("夫「「一」」大於一書之")
     void testRuntimeError(String code) {
         assertRuntimeError(code);
     }

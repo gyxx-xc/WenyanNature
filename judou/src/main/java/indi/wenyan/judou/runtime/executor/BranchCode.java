@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import org.jetbrains.annotations.UnknownNullability;
@@ -23,35 +23,37 @@ public class BranchCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.getCurrentRuntime();
+    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
         switch (condition) {
             case NONE -> {
-                runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                runtime.PCFlag = true;
+                runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                runtime.setPCFlag(true);
             }
             case POP_FALSE -> {
                 boolean value = runtime.getProcessStack().pop()
                         .as(WenyanBoolean.TYPE).value();
                 if (!value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
             case FALSE -> {
+                assert runtime.getProcessStack().peek() != null;
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (!value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
             case TRUE -> {
+                assert runtime.getProcessStack().peek() != null;
                 boolean value = runtime.getProcessStack().peek()
                         .as(WenyanBoolean.TYPE).value();
                 if (value) {
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
         }

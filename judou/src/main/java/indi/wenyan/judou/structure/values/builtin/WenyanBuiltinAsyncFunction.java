@@ -1,26 +1,30 @@
 package indi.wenyan.judou.structure.values.builtin;
 
+import indi.wenyan.judou.runtime.IThreadHolder;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
+import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements IWenyanFunction {
-    public static final WenyanType<WenyanBuiltinAsyncFunction> TYPE = new WenyanType<>("builtin_async_function", WenyanBuiltinAsyncFunction.class);
+    public static final WenyanType<WenyanBuiltinAsyncFunction> TYPE = new WenyanType<>(JudouTypeText.BuiltinAsyncFunction.string(), WenyanBuiltinAsyncFunction.class);
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread,
+    public void call(IWenyanValue self, IWenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
         var future = new WenyanBuiltinFuture();
-        WenyanRuntime newRuntime = func.getNewRuntime(self, argsList, null);
+        WenyanFrame newRuntime = func.getNewRuntime(self, argsList, null);
         newRuntime.setReturnBehavior(future::onRunnerReturn);
-        var newThread = thread.forkRuntime(newRuntime);
+        IThreadHolder<WenyanProgramImpl.PCB> newThread = WenyanRunner.of(newRuntime, thread);
         thread.program().create(newThread);
         thread.getCurrentRuntime().pushReturnValue(future);
     }

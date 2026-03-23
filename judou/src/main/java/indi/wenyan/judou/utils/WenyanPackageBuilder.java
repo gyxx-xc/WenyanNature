@@ -9,6 +9,7 @@ import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +57,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder constant(String name, IWenyanValue value) {
         variables.put(name, value);
+        variables.put(ChineseUtils.toSimplifiedVar(name), value);
         return this;
     }
 
@@ -72,7 +74,7 @@ public final class WenyanPackageBuilder {
             for (IWenyanValue arg : args) {
                 newArgs.add(arg.as(WenyanDouble.TYPE).value());
             }
-            return WenyanValues.of(function.apply(newArgs));
+            return WenyanValues.of(function.apply(newArgs).doubleValue());
         });
     }
 
@@ -89,7 +91,7 @@ public final class WenyanPackageBuilder {
             for (IWenyanValue arg : args) {
                 newArgs.add(arg.as(WenyanInteger.TYPE).value());
             }
-            return WenyanValues.of(function.apply(newArgs));
+            return WenyanValues.of(function.apply(newArgs).longValue());
         });
     }
 
@@ -124,6 +126,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder function(String name, IJavacallHandler javacall) {
         variables.put(name, javacall);
+        variables.put(ChineseUtils.toSimplifiedVar(name), javacall);
         return this;
     }
 
@@ -135,6 +138,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder object(String name, IWenyanObjectType objectType) {
         variables.put(name, objectType);
+        variables.put(ChineseUtils.toSimplifiedVar(name), objectType);
         return this;
     }
 
@@ -146,7 +150,7 @@ public final class WenyanPackageBuilder {
     public static WenyanInlineJavacall.BuiltinFunction reduceWith(ReduceFunction function) {
         return (self, args) -> {
             if (args.size() <= 1)
-                throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+                throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 156, args.size()));
             IWenyanValue value = args.getFirst();
             for (int i = 1; i < args.size(); i++) {
                 value = function.apply(value, args.get(i));
@@ -163,9 +167,9 @@ public final class WenyanPackageBuilder {
     public static WenyanInlineJavacall.BuiltinFunction boolBinaryOperation(ThrowBiFunction<Boolean, Boolean, Boolean> function) {
         return (self, args) -> {
             if (args.size() != 2)
-                throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+                throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(2, args.size()));
             return WenyanValues.of(function.apply(args.get(0).as(WenyanBoolean.TYPE).value(),
-                    args.get(1).as(WenyanBoolean.TYPE).value()));
+                    args.get(1).as(WenyanBoolean.TYPE).value()).booleanValue());
         };
     }
 
@@ -177,7 +181,7 @@ public final class WenyanPackageBuilder {
     public static WenyanInlineJavacall.BuiltinFunction compareOperation(CompareFunction function) {
         return (self, args) -> {
             if (args.size() != 2)
-                throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+                throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(2, args.size()));
             return WenyanValues.of(function.apply(args.get(0), args.get(1)));
         };
     }

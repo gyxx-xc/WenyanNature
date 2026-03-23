@@ -15,7 +15,7 @@ public class RunnerTestHelper extends ExtendedGameTestHelper {
 
     public void assertOutput(RunnerBlockEntity runner, String valueName, String... output) {
         if (runner.getOutputQueue().size() != output.length) {
-            throw assertionException(Component.literal("Expected " + valueName + " to be " + Arrays.toString(output) +
+            throw assertionException(Component.literal("Expected " + valueName + " to be size=" + output.length +
                     ", but was " + stringFromOutputQueue(runner.getOutputQueue())));
         }
         int i = 0;

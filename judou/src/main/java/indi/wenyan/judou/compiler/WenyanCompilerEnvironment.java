@@ -3,6 +3,7 @@ package indi.wenyan.judou.compiler;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -40,7 +41,7 @@ public class WenyanCompilerEnvironment {
         variables.forEach((k, v) -> result.set(v, k));
         // validate not contain null, or throw
         if (result.contains(null))
-            throw new WenyanCompileException("變量名稱重複");
+            throw new WenyanCompileException(JudouExceptionText.VariableNameDuplicate.string());
         return result;
     }
 
@@ -69,7 +70,7 @@ public class WenyanCompilerEnvironment {
         scopeStack.push(scope);
         for (String arg : argv) {
             if (scope.variables.containsKey(arg))
-                throw new WenyanCompileException("變量名稱重複");
+                throw new WenyanCompileException(JudouExceptionText.VariableNameDuplicate.string());
             scope.variables.put(arg, localVariableCounter++);
         }
     }

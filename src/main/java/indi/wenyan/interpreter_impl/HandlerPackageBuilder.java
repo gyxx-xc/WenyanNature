@@ -9,7 +9,9 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanPackageBuilder;
+import indi.wenyan.setup.config.WenyanConfig;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-
-import static indi.wenyan.content.block.runner.RunnerBlockEntity.DEVICE_SEARCH_RANGE;
 
 /**
  * Builder for creating WenyanPackage values
@@ -68,6 +68,7 @@ public final class HandlerPackageBuilder {
 
     public HandlerPackageBuilder handler(String name, Supplier<BaseHandleableRequest.IRawRequest> function) {
         functions.put(name, function);
+        functions.put(ChineseUtils.toSimplifiedVar(name), function);
         return this;
     }
 
@@ -93,8 +94,10 @@ public final class HandlerPackageBuilder {
         });
     }
 
+    @Deprecated
     public HandlerPackageBuilder handler(String name, int power, HandlerReturnFunction function) {
         return handler(name, () -> new BaseHandleableRequest.IRawRequest() {
+            private final int range = WenyanConfig.getRunnerRange();
             int acquired = 0;
 
             @Override
@@ -102,8 +105,8 @@ public final class HandlerPackageBuilder {
                 boolean hasDevice = false;
                 if (request.thread().platform() instanceof RunnerBlockEntity entity) {
                     for (BlockPos b : BlockPos.betweenClosed(
-                            entity.getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
-                            entity.getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
+                            entity.getBlockPos().offset(range, -range, range),
+                            entity.getBlockPos().offset(-range, range, -range))) {
                         assert entity.getLevel() != null;
                         if (entity.getLevel().getBlockEntity(b) instanceof PowerBlockEntity executor) {
                             hasDevice = true;

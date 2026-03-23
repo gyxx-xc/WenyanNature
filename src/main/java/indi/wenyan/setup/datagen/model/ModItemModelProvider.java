@@ -22,13 +22,11 @@ public class ModItemModelProvider extends ModelSubProvider {
 
     @Override
     protected void registerModels() {
-        basicItem(WenyanItems.HAND_RUNNER_0.get());
-        basicItem(WenyanItems.HAND_RUNNER_1.get());
-        basicItem(WenyanItems.HAND_RUNNER_2.get());
-        basicItem(WenyanItems.HAND_RUNNER_3.get());
-        basicItem(WenyanItems.HAND_RUNNER_4.get());
-        basicItem(WenyanItems.HAND_RUNNER_5.get());
-        basicItem(WenyanItems.HAND_RUNNER_6.get());
+
+        for (var item : WenyanItems.HAND_RUNNER.getItems())
+            basicItem(item);
+        for (var item : WenyanItems.THROW_RUNNER.getItems())
+            basicItem(item);
 
         basicItem(WenyanItems.BAMBOO_PAPER.get());
         basicItem(WenyanItems.CLOUD_PAPER.get());
@@ -59,6 +57,9 @@ public class ModItemModelProvider extends ModelSubProvider {
         basicItem(WenyanItems.VEC3_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.RANDOM_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get());
+        basicItem(WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
+        basicItem(WenyanItems.PISTON_MODULE_BLOCK_ITEM.get());
+
         basicItem(WenyanItems.EQUIPABLE_RUNNER_ITEM.get());
     }
 

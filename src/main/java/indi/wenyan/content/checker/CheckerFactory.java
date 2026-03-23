@@ -1,7 +1,10 @@
 package indi.wenyan.content.checker;
 
-import indi.wenyan.content.checker.checker.*;
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.content.checker.checker.EchoChecker;
+import indi.wenyan.content.checker.checker.challenge.Ex1Checker;
+import indi.wenyan.content.checker.checker.handrunner.*;
+import indi.wenyan.content.checker.checker.ink.*;
+import indi.wenyan.content.checker.checker.paper.*;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -10,6 +13,7 @@ import net.minecraft.util.RandomSource;
  */
 public enum CheckerFactory {
     ;
+    // TODO: Change this to enum some time
     public static final String PLUS_CHECKER = "plus";
     public static final String ECHO_CHECKER = "echo";
     public static final String LABYRINTH_CHECKER = "labyrinth";
@@ -38,18 +42,18 @@ public enum CheckerFactory {
      * @param random a random source for the checker
      * @return the created checker, or null if the type is unknown
      */
-    public static CraftingAnswerChecker produce(String name, RandomSource random) throws WenyanException {
+    public static CraftingAnswerChecker produce(String name, RandomSource random) {
         return switch (name) {
-            case PLUS_CHECKER -> new PlusChecker(random);
+            case PLUS_CHECKER -> new BambooPaperChecker(random);
             case ECHO_CHECKER -> new EchoChecker(random);
-            case LABYRINTH_CHECKER -> new LabyrinthChecker(random);
-            case PRINT_CHECKER -> new PrintChecker(random);
+            case LABYRINTH_CHECKER -> new HandRunner7Checker(random);
+            case PRINT_CHECKER -> new BambooInkChecker(random);
             case HAND_RUNNER_1_CHECKER -> new HandRunner1Checker(random);
             case CINNABAR_INK_CHECKER -> new CinnabarInkChecker(random);
             case CLOUD_PAPER_CHECKER -> new CloudPaperChecker(random);
             case HAND_RUNNER_2_CHECKER -> new HandRunner2Checker(random);
             case STARLIGHT_INK_CHECKER -> new StarlightInkChecker(random);
-            case STARLIGHT_PAPER_CHECKER -> new StarlightPaperChecker(random);
+            case STARLIGHT_PAPER_CHECKER -> new Ex1Checker(random);
             case HAND_RUNNER_3_CHECKER -> new HandRunner3Checker(random);
             case LUNAR_INK_CHECKER -> new LunarInkChecker(random);
             case FROST_PAPER_CHECKER -> new FrostPaperChecker(random);
@@ -60,7 +64,7 @@ public enum CheckerFactory {
             case CELESTIAL_INK_CHECKER -> new CelestialInkChecker(random);
             case DRAGON_PAPER -> new DragonPaperChecker(random);
             case HAND_RUNNER_6_CHECKER -> new HandRunner6Checker(random);
-            default -> throw new WenyanException("Unknown checker type: " + name);
+            default -> throw new IllegalStateException("Unknown checker type: " + name);
         };
     }
 }

@@ -2,9 +2,14 @@ package indi.wenyan.judou.structure.values.primitive;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.*;
+import indi.wenyan.judou.structure.values.IWenyanComparable;
+import indi.wenyan.judou.structure.values.IWenyanComputable;
+import indi.wenyan.judou.structure.values.IWenyanNumber;
+import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +19,7 @@ import java.math.BigInteger;
  * Represents an integer value in Wenyan language.
  * Supports arithmetic operations and comparisons.
  */
-public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyanComputable, IWenyanComparable, IWenyanNumber {
+public final class WenyanInteger implements IWenyanComputable, IWenyanComparable, IWenyanNumber {
     private final BigInteger value;
 
     private WenyanInteger(BigInteger value) {
@@ -22,12 +27,11 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     }
 
     // in most cases, int is enough; and is much better for other to deal with
-    @Override
-    public Integer value() throws WenyanException {
+    public int value() throws WenyanException {
         try {
             return value.intValueExact();
         } catch (ArithmeticException e) {
-            throw new WenyanException("Integer overflow");
+            throw new WenyanException(JudouExceptionText.IntegerOverflow.string());
         }
     }
 
@@ -43,7 +47,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
         }
     }
 
-    public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>("int", WenyanInteger.class);
+    public static final WenyanType<WenyanInteger> TYPE = new WenyanType<>(JudouTypeText.Int.string(), WenyanInteger.class);
 
     @Override
     public IWenyanValue add(IWenyanValue other) throws WenyanException {
@@ -64,14 +68,14 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
     public IWenyanValue divide(IWenyanValue other) throws WenyanException {
         WenyanInteger divisor = other.as(TYPE);
         if (divisor.value.equals(BigInteger.ZERO)) {
-            throw new WenyanException("Division by zero");
+            throw new WenyanException(JudouExceptionText.DivisionByZero.string());
         }
         return WenyanValues.of(value.divide(divisor.value));
     }
 
     public WenyanInteger mod(WenyanInteger other) throws WenyanException {
         if (other.value.equals(BigInteger.ZERO)) {
-            throw new WenyanException("Modulo by zero");
+            throw new WenyanException(JudouExceptionText.DivisionByZero.string());
         }
         return valueOf(value.mod(other.value.abs()));
     }
@@ -81,6 +85,7 @@ public final class WenyanInteger implements IWenyanWarperValue<Integer>, IWenyan
         return TYPE;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T extends IWenyanValue> T casting(WenyanType<T> type) {
         if (type == WenyanDouble.TYPE) {

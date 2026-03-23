@@ -1,11 +1,11 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.structure.values.warper.WenyanIterator;
+import indi.wenyan.judou.structure.values.primitive.WenyanList;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -28,18 +28,19 @@ public class ForCode extends WenyanCode {
     }
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.getCurrentRuntime();
+    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
         switch (operation) {
             case FOR_ITER -> {
                 Iterator<?> iter;
-                iter = runtime.getProcessStack().peek().as(WenyanIterator.TYPE).value();
+                assert runtime.getProcessStack().peek() != null;
+                iter = runtime.getProcessStack().peek().as(WenyanList.WenyanIterator.TYPE).value();
                 if (iter.hasNext()) {
                     runtime.pushReturnValue((IWenyanValue) iter.next());
                 } else {
                     runtime.getProcessStack().pop();
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
             case FOR_NUM -> {
@@ -48,8 +49,8 @@ public class ForCode extends WenyanCode {
                 if (num > 0) {
                     runtime.pushReturnValue(WenyanValues.of((long) num - 1));
                 } else {
-                    runtime.programCounter = runtime.getBytecode().getLabel(arg);
-                    runtime.PCFlag = true;
+                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+                    runtime.setPCFlag(true);
                 }
             }
         }

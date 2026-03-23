@@ -6,11 +6,15 @@ import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.entity.player.Player;
 
 public record WenyanPlayer(WenyanEntity valueWarper)
         implements IWenyanWarperValue<Player>, IWenyanObject {
-    public static final WenyanType<WenyanPlayer> TYPE = new WenyanType<>("player", WenyanPlayer.class);
+    public static final WenyanType<WenyanPlayer> TYPE = new WenyanType<>(TypeText.Player.string(), WenyanPlayer.class);
+    public static final String PLAYER_NAME = "name";
+    public static final String PLAYER_UUID = "uuid";
 
     public WenyanPlayer(Player valueWarper) {
         this(new WenyanEntity(valueWarper));
@@ -21,9 +25,9 @@ public record WenyanPlayer(WenyanEntity valueWarper)
             return valueWarper.getAttribute(name);
         } catch (WenyanException e) {
             return switch (name) {
-                case "name" -> WenyanValues.of(value().getName().getString());
-                case "uuid" -> WenyanValues.of(value().getUUID().toString());
-                default -> throw new WenyanException("玩家没有这个属性: " + name);
+                case PLAYER_NAME -> WenyanValues.of(value().getName().getString());
+                case PLAYER_UUID -> WenyanValues.of(value().getUUID().toString());
+                default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
             };
         }
     }

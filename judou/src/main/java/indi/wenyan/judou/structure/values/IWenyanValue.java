@@ -7,9 +7,8 @@ import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.structure.values.warper.WenyanList;
-import indi.wenyan.judou.utils.LanguageManager;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -44,6 +43,7 @@ public interface IWenyanValue {
      * @return Casted value
      * @throws WenyanException.WenyanTypeException If casting fails
      */
+    @SuppressWarnings("unchecked")
     default <T extends IWenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
         if (type.tClass.isInstance(this)) {
             return (T) this;
@@ -53,8 +53,7 @@ public interface IWenyanValue {
         } else if (type == WenyanString.TYPE) {
             return (T) WenyanValues.of(toString());
         }
-        throw new WenyanException.WenyanTypeException(LanguageManager.getTranslation("error.wenyan_programming.cannot_cast_") +
-                type() + LanguageManager.getTranslation("error.wenyan_programming._to_") + type);
+        throw new WenyanException.WenyanTypeException(JudouExceptionText.CannotCast.string(type(), type));
     }
 
     /**
@@ -168,8 +167,8 @@ public interface IWenyanValue {
      * @throws WenyanException If comparison fails
      */
     static boolean equals(IWenyanValue self, IWenyanValue other) throws WenyanException {
-        if (self instanceof WenyanLeftValue leftValue) self = leftValue.value;
-        if (other instanceof WenyanLeftValue leftValue) other = leftValue.value;
+        if (self instanceof WenyanLeftValue leftValue) self = leftValue.getValue();
+        if (other instanceof WenyanLeftValue leftValue) other = leftValue.getValue();
         if (self.type() == WenyanDouble.TYPE || other.type() == WenyanDouble.TYPE) {
             return self.as(WenyanDouble.TYPE).equals(other.as(WenyanDouble.TYPE));
         }
@@ -201,7 +200,6 @@ public interface IWenyanValue {
         if (type == IWenyanNumber.TYPE) return WenyanValues.of(0);
         if (type == WenyanBoolean.TYPE) return WenyanValues.of(false);
         if (type == WenyanString.TYPE) return WenyanValues.of("");
-        if (type == WenyanList.TYPE) return new WenyanList();
         throw new WenyanUnreachedException();
     }
 }

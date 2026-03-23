@@ -4,6 +4,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class WenyanBuiltinObject implements IWenyanObject {
     private final WenyanBuiltinObjectType type;
     private final Map<String, IWenyanValue> variable = new HashMap<>();
-    public static final WenyanType<WenyanBuiltinObject> TYPE = new WenyanType<>("dict_object", WenyanBuiltinObject.class);
+    public static final WenyanType<WenyanBuiltinObject> TYPE = new WenyanType<>(JudouTypeText.DictObject.string(), WenyanBuiltinObject.class);
 
     /**
      * Creates a new built-in object of the specified type.

@@ -1,12 +1,12 @@
 package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 
 public enum WenyanNull implements IWenyanValue {
     NULL;
 
-    public static final WenyanType<WenyanNull> TYPE = new WenyanType<>("null", WenyanNull.class);
+    public static final WenyanType<WenyanNull> TYPE = new WenyanType<>(JudouTypeText.Null.string(), WenyanNull.class);
 
     @Override
     public WenyanType<?> type() {
@@ -15,6 +15,6 @@ public enum WenyanNull implements IWenyanValue {
 
     @Override
     public String toString() {
-        return LanguageManager.getTranslation("type.wenyan_programming.null");
+        return JudouTypeText.Null.string();
     }
 }

@@ -2,6 +2,7 @@ package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
@@ -9,9 +10,11 @@ import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.ConfigManager;
+import indi.wenyan.judou.utils.IConfigProvider;
 import indi.wenyan.judou.utils.LoggerManager;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.LanguageManager;
 import org.junit.jupiter.params.provider.Arguments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,27 @@ public class WenyanProgramTestHelper {
         try {
             LanguageManager.registerLanguageProvider(s -> s);
             LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
+            ConfigManager.registerConfigProvider(new IConfigProvider() {
+                @Override
+                public int getMaxThread() {
+                    return 10;
+                }
+
+                @Override
+                public int getMaxSlice() {
+                    return 1000;
+                }
+
+                @Override
+                public int getWatchdogTimeout() {
+                    return 10;
+                }
+
+                @Override
+                public int getResultMaxSize() {
+                    return 64;
+                }
+            });
         } catch (IllegalStateException ignore) {
         }
     }
@@ -45,7 +69,7 @@ public class WenyanProgramTestHelper {
             case String s -> WenyanValues.of(s);
             case List<?> l ->
                     WenyanValues.of(l.stream().map(WenyanProgramTestHelper::wenyanValueFromObject).toList());
-            default -> throw new RuntimeException("unsupported type: " + o.getClass());
+            default -> throw new IllegalArgumentException("unsupported type: " + o.getClass());
         };
     }
 
@@ -73,8 +97,8 @@ public class WenyanProgramTestHelper {
     }
 
     protected void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
-        IWenyanProgram wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanRunner.ofCode(code, testPlatform.initEnvironment()));
+        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
+        wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(8000);
             testPlatform.handle(IHandleContext.NONE);

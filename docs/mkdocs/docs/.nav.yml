@@ -1,3 +1,6 @@
 nav:
+  - README.md
   - 文言语法: usage
-  - "*"
+  - 游戏内容: in_game
+  - 模块索引: modules
+  - development

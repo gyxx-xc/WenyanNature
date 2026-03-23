@@ -2,6 +2,7 @@ package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Optional;
@@ -9,21 +10,25 @@ import java.util.Optional;
 /**
  * Represents a variable that can assigned in Wenyan
  */
-@Setter
 public class WenyanLeftValue implements IWenyanValue {
-    /** The actual value stored in this variable */
-    public IWenyanValue value;
+    /**
+     * The actual value stored in this variable
+     */
+    @Setter @Getter
+    private IWenyanValue value;
 
     /**
      * Creates a new left value
+     *
      * @param value The initial value
      */
-    public WenyanLeftValue(IWenyanValue value) {
+    private WenyanLeftValue(IWenyanValue value) {
         this.value = value;
     }
 
     /**
      * Creates a variable from a value if not already a variable
+     *
      * @param value The value to wrap
      * @return A variable containing the value
      */

@@ -1,16 +1,18 @@
 package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
@@ -20,29 +22,30 @@ import java.util.List;
  */
 public record WenyanBuiltinFunction(
         WenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args, @Nullable List<IWenyanValue> refs) implements IWenyanFunction {
-    public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>("builtin_function", WenyanBuiltinFunction.class);
+    public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>(JudouTypeText.BuiltinFunction.string(), WenyanBuiltinFunction.class);
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread,
+    public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread,
                      List<IWenyanValue> argsList)
             throws WenyanException {
-        WenyanRuntime newRuntime = getNewRuntime(self, argsList, thread.getCurrentRuntime());
+        WenyanFrame newRuntime = getNewRuntime(self, argsList, thread.getCurrentRuntime());
         thread.call(newRuntime);
     }
 
-    public @NotNull WenyanRuntime getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanRuntime returnRuntime) throws WenyanException {
+    public @NotNull WenyanFrame getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanFrame returnRuntime) throws WenyanException {
         if (args().size() != argsList.size())
-            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+            throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(args().size(), argsList.size()));
         if (refs == null)
-            throw new WenyanException(LanguageManager.getTranslation("error.wenyan_programming.function_does_not_have_references"));
+            throw new WenyanException(JudouExceptionText.FunctionDoesNotHaveReferences.string());
 
-        WenyanRuntime newRuntime = new WenyanRuntime(bytecode(), refs(), returnRuntime);
+        WenyanFrame newRuntime = new WenyanFrame(bytecode(), refs(), returnRuntime);
         int i = 0;
         if (self != null) {
             newRuntime.setLocal(i ++, self);
             newRuntime.setLocal(i ++, self.as(WenyanBuiltinObject.TYPE).getObjectType().getParent());
         }
-        for (; i < argsList.size(); i++)
+        int size = argsList.size();
+        for (; i < size; i++)
             newRuntime.setLocal(i, WenyanLeftValue.varOf(
                     argsList.get(i).as(args().get(i).type())));
         return newRuntime;
@@ -51,11 +54,12 @@ public record WenyanBuiltinFunction(
     @Override
     public @NotNull String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(LanguageManager.getTranslation("type.wenyan_programming.function"));
+        sb.append(JudouTypeText.Function.string());
         sb.append("(");
-        for (int i = 0; i < args().size(); i++) {
+        int size = args().size();
+        for (int i = 0; i < size; i++) {
             sb.append(args().get(i).toString());
-            if (i < args().size() - 1) {
+            if (i < size - 1) {
                 sb.append(", ");
             }
         }

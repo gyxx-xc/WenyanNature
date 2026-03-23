@@ -1,8 +1,9 @@
 package indi.wenyan.judou.exec_interface.handler;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class WenyanInlineJavacall implements IJavacallHandler {
     }
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
+    public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
         thread.getCurrentRuntime().pushReturnValue(function.apply(self, argsList));
     }
 

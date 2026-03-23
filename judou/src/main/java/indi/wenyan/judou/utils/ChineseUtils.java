@@ -13,7 +13,7 @@ public enum ChineseUtils {
     ;
     public static final boolean DIRECT_NUMBER_CONVERT = false;
 
-    private static final char[] WENYAN_NUMBERS = new char[]{'零', '一', '二', '三', '四', '五', '六', '七', '八', '九'};
+    private static final char[] WENYAN_NUMBERS = {'零', '一', '二', '三', '四', '五', '六', '七', '八', '九'};
 
     public static @NotNull String toChinese(BigInteger i) {
         if (!DIRECT_NUMBER_CONVERT) {
@@ -38,13 +38,14 @@ public enum ChineseUtils {
 
     public static final List<String> WENYAN_FRACTIONS = List.of("分", "釐", "毫", "絲", "忽", "微", "纖", "沙", "塵");
 
-    public static @NotNull String toChinese(Double value) {
-        StringBuilder number = new StringBuilder(toChinese(new BigInteger(String.valueOf(value.longValue()))));
+    public static @NotNull String toChinese(double value) {
+        StringBuilder number = new StringBuilder(toChinese(new BigInteger(String.valueOf((long) value))));
         String digit = String.format("%.9f", value).split("\\.")[1];
-        if (digit.equals("000000000"))
+        if ("000000000".equals(digit))
             return number.toString();
         number.append("又");
-        for (int i = 0; i < Math.min(digit.length(), WENYAN_FRACTIONS.size()); i++) {
+        int min = Math.min(digit.length(), WENYAN_FRACTIONS.size());
+        for (int i = 0; i < min; i++) {
             if (digit.charAt(i) != '0') {
                 number.append(WENYAN_NUMBERS[digit.charAt(i) - '0']);
                 number.append(WENYAN_FRACTIONS.get(i));
@@ -74,5 +75,16 @@ public enum ChineseUtils {
         result.append(ZhConverterUtil.toTraditional(remaining));
 
         return result.toString();
+    }
+
+    public static @NotNull String toSimplifiedVar(String s) {
+        // STUB: whatever, it works
+        if (!s.isEmpty() && s.charAt(0) == '「')
+            return ZhConverterUtil.toSimple(s);
+        return s;
+    }
+
+    public static String bracketOf(String string) {
+        return "「" + string + "」";
     }
 }

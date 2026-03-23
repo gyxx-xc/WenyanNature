@@ -1,0 +1,13 @@
+{
+  "type": "wenyan_programming:answering_recipe",
+  "input": [
+    "wenyan_programming:arcane_ink",
+    "wenyan_programming:phoenix_paper"
+  ],
+  "output": {
+    "count": 2,
+    "id": "wenyan_programming:hand_runner_5"
+  },
+  "question": "hand_runner_5",
+  "round": 1
+}

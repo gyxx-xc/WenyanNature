@@ -2,13 +2,13 @@ package indi.wenyan.content.block.additional_module.paper;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanBlock;
 import indi.wenyan.interpreter_impl.value.WenyanEntity;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
-import indi.wenyan.judou.utils.WenyanSymbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
@@ -24,11 +24,11 @@ import java.util.List;
 
 public class EntityModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = WenyanSymbol.var("EntityModule");
+    private final String basePackageName = WenyanSymbol.EntityModule;
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("EntityModule.inspectRange"), request -> {
+            .handler(WenyanSymbol.EntityModule$inspectRange, request -> {
                     assert getLevel() != null;
                     Vec3 start = request.args().getFirst().as(WenyanVec3.TYPE).value();
                     Vec3 end = request.args().getLast().as(WenyanVec3.TYPE).value();
@@ -37,16 +37,16 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                     // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
                     return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
                 })
-            .handler(WenyanSymbol.var("EntityModule.nearby"), request -> {
+            .handler(WenyanSymbol.EntityModule$nearby, request -> {
                     assert getLevel() != null;
                     double radius = request.args().getFirst().as(WenyanDouble.TYPE).value();
-                    BlockPos pos = blockPos();
+                    BlockPos pos = getBlockPos();
                     List<Entity> entities = getLevel().getEntities((Entity) null,
                             new AABB(pos).inflate(radius), EntitySelector.NO_SPECTATORS);
                     // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
                     return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
                 })
-            .handler(WenyanSymbol.var("EntityModule.lineOfSight"), request -> {
+            .handler(WenyanSymbol.EntityModule$lineOfSight, request -> {
                     var origin = request.args().getFirst().as(WenyanVec3.TYPE).value();
                     var look = request.args().getLast().as(WenyanVec3.TYPE).value();
                     assert getLevel() != null;

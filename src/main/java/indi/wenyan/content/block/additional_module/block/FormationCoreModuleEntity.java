@@ -1,9 +1,12 @@
 package indi.wenyan.content.block.additional_module.block;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
 import indi.wenyan.judou.structure.WenyanException;
@@ -12,54 +15,84 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.utils.ChineseUtils;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.TypeText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class FormationCoreModuleEntity extends AbstractModuleEntity {
+import static indi.wenyan.setup.language.ExceptionText.CantStart;
+import static indi.wenyan.setup.language.ExceptionText.NotFindFu;
 
-    private final Map<String, RunnerBlockEntity> platforms = new HashMap<>();
-    private static final int RANGE = 10;
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class FormationCoreModuleEntity extends AbstractModuleEntity implements ICommunicateHolder {
+
+    private final Map<String, RunnerBlockEntity> startedPlatforms = new HashMap<>();
+    private final Map<String, BlockPos> findedPlatforms = new HashMap<>();
+    @Getter
+    private final List<ICommunicateHolder.CommunicationEffect> communicates = new ArrayList<>();
+    private final int formationRange = WenyanConfig.getFormationRange();
 
     public FormationCoreModuleEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.FORMATION_CORE_MODULE_ENTITY.get(), pos, blockState);
     }
 
     @Getter
-    private final String basePackageName = "「眼」";
+    private final String basePackageName = WenyanSymbol.FORMATION_CORE;
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler("「start」", request -> {
+            .handler(WenyanSymbol.CORE_START, request -> {
                 for (var arg : request.args()) {
-                    var block = getRunner(arg.as(WenyanString.TYPE).value());
-                    if (block == null) throw new WenyanException("can't find fu");
-                    block.newThread().orElseThrow(() -> new WenyanException("can't start"));
+                    String platformName = arg.as(WenyanString.TYPE).value();
+                    var block = getRunner(platformName);
+                    if (block == null) throw new WenyanException(NotFindFu.string());
+                    if (level instanceof ServerLevel serverLevel)
+                        ICommunicateHolder.blockAddCommunicateServer(serverLevel, getBlockPos(), block.getBlockPos().subtract(getBlockPos()));
+                    block.newThread(block.getCode())
+                            .orElseThrow(() -> new WenyanException(CantStart.string(platformName)));
                 }
                 return WenyanNull.NULL;
             })
-            .handler("status", request -> {
-                if (request.args().size() != 1) throw new WenyanException("args not correct");
-                var block = getRunner(request.args().getFirst().as(WenyanString.TYPE).value());
-                if (block == null) throw new WenyanException("can't find fu");
+            .handler(WenyanSymbol.CORE_STATUS, request -> {
+                if (request.args().size() != 1) throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(1, request.args().size()));
+                String name = request.args().getFirst().as(WenyanString.TYPE).value();
+                String runnerName = ChineseUtils.bracketOf(name);
+                var block = getStartedRunner(runnerName);
+                if (block == null) throw new WenyanException(NotFindFu.string());
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
                 return new WenyanRunningState(state);
             })
-            .handler("join", (BaseHandleableRequest.IRawRequest) (_, request) -> {
-                var running = BlockPos.betweenClosedStream(getBlockPos().offset(RANGE, -RANGE, RANGE), getBlockPos().offset(-RANGE, RANGE, -RANGE))
-                        .map(pos -> {
-                            assert level != null;
-                            var state = level.getBlockState(pos)
-                                    .getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
-                            return state == RunnerBlock.RunningState.RUNNING;
-                        })
-                        .reduce(false, (b1, b2) -> b1 || b2);
+            .handler(WenyanSymbol.CORE_JOIN, (BaseHandleableRequest.IRawRequest) (_, request) -> {
+                boolean running = false;
+                var iter = startedPlatforms.entrySet().iterator();
+                while (iter.hasNext()) {
+                    var platformEntry = iter.next();
+                    RunnerBlockEntity entity = platformEntry.getValue();
+                    if (entity.isRemoved()) {
+                        iter.remove();
+                        continue; // ignore
+                    }
+                    if (entity.isRunning()) {
+                        running = true;
+                        break;
+                    } else {
+                        iter.remove();
+                    }
+                }
                 if (!running) {
                     request.thread().getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
                     request.thread().unblock();
@@ -69,23 +102,44 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
             })
             .build();
 
-    private @Nullable RunnerBlockEntity getRunner(String runnerName) {
-        // check cache
-        var cachedPlatform = platforms.get(runnerName);
+    private @Nullable RunnerBlockEntity getRunner(String name) {
+        String runnerName = ChineseUtils.bracketOf(name);
+        // check started
+        RunnerBlockEntity cachedPlatform = getStartedRunner(runnerName);
         if (cachedPlatform != null) {
-            if (!cachedPlatform.isRemoved())
-                return cachedPlatform;
-            else
-                platforms.remove(runnerName);
+            if (level instanceof ServerLevel serverLevel)
+                ICommunicateHolder.blockAddCommunicateServer(serverLevel, getBlockPos(), cachedPlatform.getBlockPos().subtract(getBlockPos()));
+            return cachedPlatform;
+        }
+
+        if (findedPlatforms.containsKey(runnerName)) {
+            var pos = findedPlatforms.get(runnerName);
+            assert level != null;
+            if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform) {
+                String platformName = platform.getPlatformName();
+                if (runnerName.equals(platformName)) {
+                    startedPlatforms.put(runnerName, platform);
+                    return platform;
+                } else {
+                    findedPlatforms.remove(runnerName);
+                    findedPlatforms.put(platformName, pos);
+                    // fall through
+                }
+            } else {
+                findedPlatforms.remove(runnerName);
+                // fall through
+            }
         }
 
         // iter found
-        for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(RANGE, -RANGE, RANGE), getBlockPos().offset(-RANGE, RANGE, -RANGE))) {
-            assert level != null;
+        // TODO: performance issue
+        assert level != null;
+        for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(formationRange, -formationRange, formationRange), getBlockPos().offset(-formationRange, formationRange, -formationRange))) {
             if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform) {
-                platforms.putIfAbsent(platform.getPlatformName(), platform);
-                if (runnerName.equals(platform.getPlatformName())) {
-                    // if found, stop
+                String platformName = platform.getPlatformName();
+                findedPlatforms.put(platformName, pos);
+                if (runnerName.equals(platformName)) {
+                    startedPlatforms.put(runnerName, platform);
                     return platform;
                 }
             }
@@ -95,9 +149,26 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
         return null;
     }
 
-    public record WenyanRunningState(
-            RunnerBlock.RunningState value) implements IWenyanWarperValue<RunnerBlock.RunningState> {
-        public static final WenyanType<WenyanRunningState> TYPE = new WenyanType<>("running_state", WenyanRunningState.class);
+    private @Nullable RunnerBlockEntity getStartedRunner(String runnerName) {
+        var started = startedPlatforms.get(runnerName);
+        if (started != null) {
+            if (!started.isRemoved())
+                return started;
+            else
+                startedPlatforms.remove(runnerName);
+        }
+        return null;
+    }
+
+    @Override
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        super.tick(level, pos, state);
+        ICommunicateHolder.super.tickCommunicate();
+    }
+
+    public record WenyanRunningState(RunnerBlock.RunningState value)
+            implements IWenyanWarperValue<RunnerBlock.RunningState> {
+        public static final WenyanType<WenyanRunningState> TYPE = new WenyanType<>(TypeText.RunningState.string(), WenyanRunningState.class);
 
         @Override
         public WenyanType<?> type() {
@@ -108,7 +179,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
         public boolean equals(Object obj) {
             if (obj instanceof IWenyanValue wenyanValue) {
                 try {
-                    return wenyanValue.is(TYPE) && value.equals(wenyanValue.as(TYPE).value);
+                    return wenyanValue.is(TYPE) && value == wenyanValue.as(TYPE).value;
                 } catch (WenyanException.WenyanTypeException ignored) {
                     // unreached
                 }
@@ -117,7 +188,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity {
         }
 
         @Override
-        public @NonNull String toString() {
+        public String toString() {
             return switch (value) {
                 // TODO: change name
                 case RUNNING -> "running";

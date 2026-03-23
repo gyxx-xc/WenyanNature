@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.WenyanRuntime;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
@@ -41,8 +41,8 @@ public class FunctionCode extends WenyanCode {
     //   a.b() -> set self, call
 
     @Override
-    public void exec(int arg, @UnknownNullability WenyanRunner thread) throws WenyanException {
-        WenyanRuntime runtime = thread.getCurrentRuntime();
+    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
         IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
         IWenyanFunction callable;
@@ -56,8 +56,10 @@ public class FunctionCode extends WenyanCode {
             // handleWarper self first
             if (operation == Operation.CALL_ATTR) {
                 // try casting to object (might be list)
-                // if not, throw error
-                self = self.as(IWenyanObject.TYPE);
+                // if not, static method
+                if (!self.is(IWenyanObject.TYPE)) {
+                    self = null;
+                }
             }
             callable = func.as(IWenyanFunction.TYPE);
         }
@@ -70,11 +72,6 @@ public class FunctionCode extends WenyanCode {
         //   which is a fake block, it will still run the rest command before blocked
         //   it will only block the next WenyanCode being executed
         callable.call(self, thread, argsList);
-    }
-
-    @Override
-    public int getStep(int args, @UnknownNullability WenyanRunner thread) {
-        return args;
     }
 
     /**

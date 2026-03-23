@@ -1,8 +1,9 @@
 package indi.wenyan.judou.exec_interface.handler;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 
 /**
  * Interface for handlers that bridge between Java and Wenyan code.
@@ -10,7 +11,7 @@ import indi.wenyan.judou.structure.values.IWenyanFunction;
  */
 public interface IJavacallHandler extends IWenyanFunction {
     /** Type identifier for Javacall handlers */
-    WenyanType<IJavacallHandler> TYPE = new WenyanType<>("javacall_handler", IJavacallHandler.class);
+    WenyanType<IJavacallHandler> TYPE = new WenyanType<>(JudouTypeText.JavacallHandler.string(), IJavacallHandler.class);
 
     /**
      * The step of this handler.
@@ -25,7 +26,7 @@ public interface IJavacallHandler extends IWenyanFunction {
      * @return the step of this handler
      */
     @SuppressWarnings({"unused", "SameReturnValue"})
-    default int getStep(int args, WenyanRunner thread) {
+    default int getStep(int args, IWenyanRunner thread) {
         return 1;
     }
 

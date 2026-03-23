@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import indi.wenyan.content.item.RunnerItem;
+import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -12,7 +13,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.neoforged.fml.loading.FMLPaths;
@@ -32,7 +33,7 @@ import static indi.wenyan.WenyanProgramming.LOGGER;
 public enum FileLoader {
     ;
 
-    public static DeferredItem<Item> runnerItem;
+    public static DeferredItem<BlockItem> runnerItem;
 
     public static final LiteralArgumentBuilder<CommandSourceStack> FILE_COMMAND = Commands.literal("wenyan")
             .then(Commands.literal("import")
@@ -79,17 +80,17 @@ public enum FileLoader {
         List<String> lines = Arrays.asList(fullText.split("\\r?\\n"));
         // Create empty book item
 
+        RunnerItem bookItem;
         switch (level) {
-            case 1 -> runnerItem = WenyanItems.HAND_RUNNER_1;
-            case 2 -> runnerItem = WenyanItems.HAND_RUNNER_2;
-            case 3 -> runnerItem = WenyanItems.HAND_RUNNER_3;
-            case 4 -> runnerItem = WenyanItems.HAND_RUNNER_4;
-            case 5 -> runnerItem = WenyanItems.HAND_RUNNER_5;
+//            case 1 -> runnerItem = WenyanItems.HAND_RUNNER_1;
+//            case 2 -> runnerItem = WenyanItems.HAND_RUNNER_2;
+//            case 3 -> runnerItem = WenyanItems.HAND_RUNNER_3;
+//            case 4 -> runnerItem = WenyanItems.HAND_RUNNER_4;
+//            case 5 -> runnerItem = WenyanItems.HAND_RUNNER_5;
 
-            default -> runnerItem = WenyanItems.HAND_RUNNER_0;
+            default -> bookItem = (RunnerItem) WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0);
         }
 
-        RunnerItem bookItem = (RunnerItem) runnerItem.get();
         ItemStack handRunnerStack = new ItemStack(bookItem, 1);
         // Create pages
         List<Filterable<String>> pages = new ArrayList<>();

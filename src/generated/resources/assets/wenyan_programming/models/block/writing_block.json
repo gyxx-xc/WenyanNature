@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_top",
+  "textures": {
+    "side": "wenyan_programming:block/writing_block_side",
+    "top": "wenyan_programming:block/writing_block_top"
+  }
+}

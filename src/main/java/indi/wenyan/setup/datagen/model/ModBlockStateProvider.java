@@ -11,8 +11,11 @@ import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.PistonType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.Optional;
@@ -38,26 +41,28 @@ public class ModBlockStateProvider extends ModelSubProvider {
         modeledBlock(WenyanBlocks.POWER_BLOCK);
         modeledBlock(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
 
-//        modeledBlock(WenyanBlocks.LOCK_MODULE_BLOCK);
-        MultiVariant off = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get()));
-        MultiVariant on = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get(), "_1"));
-        blockModels.blockStateOutput.accept(MultiVariantGenerator
-                        .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
-                        .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));
+        writingBlock();
+        lockModuleBlock();
+        decorativePistonHeads();
 
-        registerFuluBlock(WenyanBlocks.RUNNER_BLOCK);
-        registerFuluBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.MATH_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.BIT_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.BLOCK_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.RANDOM_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.ITEM_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.VEC3_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.ENTITY_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.COLLECTION_MODULE_BLOCK);
-        registerFuluBlock(WenyanBlocks.STRING_MODULE_BLOCK);
+        for (var block : WenyanBlocks.RUNNER_BLOCK.getBlocks()){
+            registerFuluBlock(block);
+        }
+
+        registerFuluBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.INFORMATION_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.MATH_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.BIT_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.BLOCK_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.RANDOM_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.ITEM_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.VEC3_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.ENTITY_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.COMMUNICATE_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.COLLECTION_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.STRING_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get());
+        registerFuluBlock(WenyanBlocks.PISTON_MODULE_BLOCK.get());
     }
 
     private void modeledBlock(DeferredBlock<?> deferredBlock) {
@@ -71,15 +76,50 @@ public class ModBlockStateProvider extends ModelSubProvider {
     /**
      * Registers a module block with standardized models.
      *
-     * @param deferredBlock The module block to register
+     * @param block The module block to register
      */
-    private void registerFuluBlock(DeferredBlock<?> deferredBlock) {
+    private void registerFuluBlock(Block block) {
         var templete = new ModelTemplate(Optional.of(
                 Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block")),
                 Optional.empty(),
                 TextureSlot.TEXTURE);
-        MultiVariant model = plainVariant((new TexturedModel(TextureMapping.defaultTexture(deferredBlock.get()), templete)).create(deferredBlock.get(), blockModels.modelOutput));
+        MultiVariant model = plainVariant((new TexturedModel(TextureMapping.defaultTexture(block), templete)).create(block, blockModels.modelOutput));
         // copy from lever
-        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(deferredBlock.get(), model).with(PropertyDispatch.modify(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING).select(AttachFace.CEILING, Direction.NORTH, X_ROT_180.then(Y_ROT_180)).select(AttachFace.CEILING, Direction.EAST, X_ROT_180.then(Y_ROT_270)).select(AttachFace.CEILING, Direction.SOUTH, X_ROT_180).select(AttachFace.CEILING, Direction.WEST, X_ROT_180.then(Y_ROT_90)).select(AttachFace.FLOOR, Direction.NORTH, NOP).select(AttachFace.FLOOR, Direction.EAST, Y_ROT_90).select(AttachFace.FLOOR, Direction.SOUTH, Y_ROT_180).select(AttachFace.FLOOR, Direction.WEST, Y_ROT_270).select(AttachFace.WALL, Direction.NORTH, X_ROT_90).select(AttachFace.WALL, Direction.EAST, X_ROT_90.then(Y_ROT_90)).select(AttachFace.WALL, Direction.SOUTH, X_ROT_90.then(Y_ROT_180)).select(AttachFace.WALL, Direction.WEST, X_ROT_90.then(Y_ROT_270))));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model).with(PropertyDispatch.modify(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING).select(AttachFace.CEILING, Direction.NORTH, X_ROT_180.then(Y_ROT_180)).select(AttachFace.CEILING, Direction.EAST, X_ROT_180.then(Y_ROT_270)).select(AttachFace.CEILING, Direction.SOUTH, X_ROT_180).select(AttachFace.CEILING, Direction.WEST, X_ROT_180.then(Y_ROT_90)).select(AttachFace.FLOOR, Direction.NORTH, NOP).select(AttachFace.FLOOR, Direction.EAST, Y_ROT_90).select(AttachFace.FLOOR, Direction.SOUTH, Y_ROT_180).select(AttachFace.FLOOR, Direction.WEST, Y_ROT_270).select(AttachFace.WALL, Direction.NORTH, X_ROT_90).select(AttachFace.WALL, Direction.EAST, X_ROT_90.then(Y_ROT_90)).select(AttachFace.WALL, Direction.SOUTH, X_ROT_90.then(Y_ROT_180)).select(AttachFace.WALL, Direction.WEST, X_ROT_90.then(Y_ROT_270))));
+    }
+
+    public void writingBlock() {
+        TextureMapping mapping = new TextureMapping()
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(WenyanBlocks.WRITING_BLOCK.get(), "_top"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(WenyanBlocks.WRITING_BLOCK.get(), "_side"));
+        blockModels.blockStateOutput
+                .accept(createSimpleBlock(WenyanBlocks.WRITING_BLOCK.get(), plainVariant(ModelTemplates.CUBE_TOP.create(WenyanBlocks.WRITING_BLOCK.get(), mapping, blockModels.modelOutput))));
+    }
+
+    private void lockModuleBlock() {
+        MultiVariant off = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get()));
+        MultiVariant on = plainVariant(ModelLocationUtils.getModelLocation(WenyanBlocks.LOCK_MODULE_BLOCK.get(), "_1"));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator
+                .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
+                .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));
+    }
+
+    public void decorativePistonHeads() {
+        TextureMapping commonMapping = (new TextureMapping())
+                .put(TextureSlot.UNSTICKY, TextureMapping.getBlockTexture(Blocks.PISTON, "_top"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(Blocks.PISTON, "_side"));
+        TextureMapping stickyTextures = commonMapping.copyAndUpdate(TextureSlot.PLATFORM,
+                TextureMapping.getBlockTexture(Blocks.PISTON, "_top_sticky"));
+        TextureMapping normalTextures = commonMapping.copyAndUpdate(TextureSlot.PLATFORM,
+                TextureMapping.getBlockTexture(Blocks.PISTON, "_top"));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator
+                .dispatch(WenyanBlocks.DECORATIVE_PISTON_HEAD_BLOCK.get())
+                .with(PropertyDispatch
+                        .initial(BlockStateProperties.PISTON_TYPE)
+                        .select(PistonType.DEFAULT, plainVariant(ModelTemplates.PISTON_HEAD
+                                .createWithSuffix(Blocks.PISTON, "_head", normalTextures, blockModels.modelOutput)))
+                        .select(PistonType.STICKY, plainVariant(ModelTemplates.PISTON_HEAD
+                                .createWithSuffix(Blocks.PISTON, "_head_sticky", stickyTextures, blockModels.modelOutput))))
+                .with(ROTATION_FACING));
     }
 }

@@ -6,17 +6,20 @@ import indi.wenyan.content.block.additional_module.block.LockModuleBlock;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
+import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.power.PowerBlock;
+import indi.wenyan.content.block.writing_block.WritingBlock;
 import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.content.item.FloatNoteItem;
 import indi.wenyan.content.item.RunnerItem;
 import indi.wenyan.content.item.additional_module.PrintInventoryModule;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
+import indi.wenyan.content.item.throw_runner.ThrowRunnerItem;
+import indi.wenyan.setup.language.GuiText;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -31,20 +34,10 @@ public enum WenyanItems {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, WenyanProgramming.MODID);
 
     // Hand Runner items
-    public static final DeferredItem<Item> HAND_RUNNER_0 = DR.registerItem(RunnerItem.ID_0,
-            (Item.Properties properties) -> new RunnerItem(properties, 0));
-    public static final DeferredItem<Item> HAND_RUNNER_1 = DR.registerItem(RunnerItem.ID_1,
-            (Item.Properties properties) -> new RunnerItem(properties, 1));
-    public static final DeferredItem<Item> HAND_RUNNER_2 = DR.registerItem(RunnerItem.ID_2,
-            (Item.Properties properties) -> new RunnerItem(properties, 2));
-    public static final DeferredItem<Item> HAND_RUNNER_3 = DR.registerItem(RunnerItem.ID_3,
-            (Item.Properties properties) -> new RunnerItem(properties, 3));
-    public static final DeferredItem<Item> HAND_RUNNER_4 = DR.registerItem(RunnerItem.ID_4,
-            (Item.Properties properties) -> new RunnerItem(properties, 4));
-    public static final DeferredItem<Item> HAND_RUNNER_5 = DR.registerItem(RunnerItem.ID_5,
-            (Item.Properties properties) -> new RunnerItem(properties, 5));
-    public static final DeferredItem<Item> HAND_RUNNER_6 = DR.registerItem(RunnerItem.ID_6,
-            (Item.Properties properties) -> new RunnerItem(properties, 6));
+    public static final RunnerTier.TieredItemRegistrator<BlockItem> HAND_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(RunnerItem.ID,
+            RunnerItem::new);
+    public static final RunnerTier.TieredItemRegistrator<Item> THROW_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(ThrowRunnerItem.ID,
+            ThrowRunnerItem::new);
 
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
             (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
@@ -68,6 +61,8 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.CRAFTING_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM = DR.registerItem(PedestalBlock.ID,
             properties -> new BlockItem(WenyanBlocks.PEDESTAL_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> WRITING_BLOCK_ITEM = DR.registerItem(WritingBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.WRITING_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> POWER_BLOCK_ITEM = DR.registerItem(PowerBlock.ID,
             properties -> new BlockItem(WenyanBlocks.POWER_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> EXPLOSION_MODULE_BLOCK_ITEM = DR.registerItem(ExplosionModuleBlock.ID,
@@ -100,20 +95,21 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.LOCK_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM = DR.registerItem(FormationCoreModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> BLOCKING_QUEUE_MODULE_BLOCK_ITEM = DR.registerItem(BlockingQueueModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> PISTON_MODULE_BLOCK_ITEM = DR.registerItem(PistonModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.PISTON_MODULE_BLOCK.get(), properties));
 
     @SuppressWarnings("unused")
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
-            .title(Component.translatable("title.wenyan_programming.create_tab"))
+            .title(GuiText.CreativeTabTitle.text())
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> HAND_RUNNER_1.get().getDefaultInstance())
+            .icon(() -> HAND_RUNNER.getItem(RunnerTier.RUNNER_0).getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(HAND_RUNNER_0.get());
-                output.accept(HAND_RUNNER_1.get());
-                output.accept(HAND_RUNNER_2.get());
-                output.accept(HAND_RUNNER_3.get());
-                output.accept(HAND_RUNNER_4.get());
-                output.accept(HAND_RUNNER_5.get());
-                output.accept(HAND_RUNNER_6.get());
+                for (var runner : HAND_RUNNER.getItemsSorted())
+                    output.accept(runner);
+                for (var throwRunner : THROW_RUNNER.getItemsSorted())
+                    output.accept(throwRunner);
 
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());
@@ -135,6 +131,7 @@ public enum WenyanItems {
                 output.accept(FLOAT_NOTE.get());
                 output.accept(CRAFTING_BLOCK_ITEM.get());
                 output.accept(PEDESTAL_BLOCK_ITEM.get());
+                output.accept(WRITING_BLOCK_ITEM.get());
 
                 output.accept(BIT_MODULE_BLOCK_ITEM.get());
                 output.accept(MATH_MODULE_BLOCK_ITEM.get());
@@ -149,6 +146,8 @@ public enum WenyanItems {
                 output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
 
                 output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
+                output.accept(BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
+                output.accept(PISTON_MODULE_BLOCK_ITEM.get());
 
                 output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
                 output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
@@ -158,4 +157,3 @@ public enum WenyanItems {
                 output.accept(POWER_BLOCK_ITEM.get());
             }).build());
 }
-

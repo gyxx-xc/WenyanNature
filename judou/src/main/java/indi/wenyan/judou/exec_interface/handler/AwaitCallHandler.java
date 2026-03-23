@@ -2,13 +2,13 @@ package indi.wenyan.judou.exec_interface.handler;
 
 import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFuture;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -21,9 +21,9 @@ public class AwaitCallHandler implements IJavacallHandler {
     }
 
     @Override
-    public void call(IWenyanValue self, WenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
+    public void call(IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
         if (argsList.size() != 1)
-            throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+            throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, argsList.size()));
         if (argsList.getFirst().is(WenyanInteger.TYPE)) {
             // wait n tick, use request(need tick information)
             thread.platform().receive(new AwaitRequest(thread, argsList.getFirst().as(WenyanInteger.TYPE).value()));
@@ -32,17 +32,17 @@ public class AwaitCallHandler implements IJavacallHandler {
             boolean needBlock = argsList.getFirst().as(WenyanBuiltinFuture.TYPE).addWaitingThread(thread);
             if (needBlock) thread.block();
         } else {
-            throw new WenyanException.WenyanVarException(LanguageManager.getTranslation("error.wenyan_programming.number_of_arguments_does_not_match"));
+            throw new WenyanException.WenyanVarException(JudouExceptionText.InvalidArgumentType.string());
         }
     }
 
     public static class AwaitRequest implements BaseHandleableRequest {
         @Accessors(fluent = true)
         @Getter
-        private final WenyanRunner thread;
+        private final IWenyanRunner thread;
         private int life;
 
-        private AwaitRequest(WenyanRunner thread, int life) {
+        private AwaitRequest(IWenyanRunner thread, int life) {
             this.thread = thread;
             this.life = life;
         }

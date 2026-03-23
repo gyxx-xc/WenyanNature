@@ -6,6 +6,8 @@ import indi.wenyan.judou.structure.values.IWenyanComputable;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public record WenyanString(String value)
         implements IWenyanWarperValue<String>, IWenyanComputable {
-    public static final WenyanType<WenyanString> TYPE = new WenyanType<>("string", WenyanString.class);
+    public static final WenyanType<WenyanString> TYPE = new WenyanType<>(JudouTypeText.String.string(), WenyanString.class);
 
     @SuppressWarnings("unchecked")
     @Override
@@ -43,16 +45,16 @@ public record WenyanString(String value)
 
     @Override
     public IWenyanValue subtract(IWenyanValue other) throws WenyanException {
-        throw new WenyanException("");
+        throw new WenyanException(JudouExceptionText.OperationNotSupported.string());
     }
 
     @Override
     public IWenyanValue multiply(IWenyanValue other) throws WenyanException {
-        throw new WenyanException("");
+        throw new WenyanException(JudouExceptionText.OperationNotSupported.string());
     }
 
     @Override
     public IWenyanValue divide(IWenyanValue other) throws WenyanException {
-        throw new WenyanException("");
+        throw new WenyanException(JudouExceptionText.OperationNotSupported.string());
     }
 }

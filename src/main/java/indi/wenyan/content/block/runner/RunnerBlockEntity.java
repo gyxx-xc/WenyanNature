@@ -3,268 +3,205 @@ package indi.wenyan.content.block.runner;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
+import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.exec_interface.structure.*;
+import indi.wenyan.judou.exec_interface.structure.ExecQueue;
+import indi.wenyan.judou.exec_interface.structure.ImportRequest;
+import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.Either;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.ChineseUtils;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.CommunicationLocationPacket;
-import indi.wenyan.setup.network.PlatformOutputPacket;
+import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.setup.network.client.PlatformOutputPacket;
 import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.Value;
-import lombok.experimental.Accessors;
-import net.minecraft.ChatFormatting;
+import lombok.experimental.Delegate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Contract;
-import org.joml.Vector3f;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
-import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_TIER;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform {
-    public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
-    public static final int COMMUNICATE_EFFECT_LIFETIME = 12;
-    private IWenyanProgram optionalProgram = null;
+public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform, ICommunicateHolder, ICodeOutputHolder {
+    public static final String PAGES_ID = "pages";
+    public static final String PLATFORM_NAME_ID = "platformName";
+    public static final String ID = "runner_block_entity";
 
-    private IWenyanProgram getProgram() {
-        if (optionalProgram == null || !optionalProgram.isAvailable())
-            optionalProgram = new WenyanProgramImpl(this);
-        return optionalProgram;
+    @Getter private final ExecQueue execQueue = new ExecQueue(this);
+    @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
+
+    @Delegate(types = ICodeOutputHolder.class)
+    private final TitleCodeOutput titleCodeOutput;
+
+    private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram = new LazyProgram<>(() ->
+            new WenyanProgramImpl(this));
+    private final Deque<String> errors = new ConcurrentLinkedDeque<>();
+    private final int steps;
+    private RunnerBlock.RunningState runningState;
+    private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(this::safeAddCommunicate);
+
+    public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
+        super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
+        titleCodeOutput = new TitleCodeOutput("",
+                ChineseUtils.bracketOf(blockState.getBlock().getName().getString()));
+        titleCodeOutput.setOnChanged(this::setChanged);
+        if (blockState.getBlock() instanceof RunnerBlock block)
+            steps = block.getTier().getStepSpeed();
+        else steps = 1;
+        runningState = blockState.getValue(RUNNING_STATE);
     }
 
-    private Optional<IWenyanProgram> ifProgram() {
-        return Optional.ofNullable(optionalProgram);
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (!level.isClientSide()) {
+            if (!errors.isEmpty()) {
+                for (String error : errors) {
+                    level.setBlock(getBlockPos(), getBlockState()
+                            .setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
+                    addOutputBothSide(error, PlatformOutputPacket.OutputStyle.ERROR);
+                }
+                errors.clear();
+            }
+
+            RunnerBlock.RunningState newState = lazyProgram.ifCreated()
+                    .filter(IWenyanProgram::isRunning)
+                    .map(program -> {
+                        program.step(steps);
+                        handle(new BlockRequest.BlockContext(level, pos, state));
+
+                        if (program instanceof WenyanProgramImpl impl && impl.isIdle()) {
+                            return RunnerBlock.RunningState.IDLE;
+                        } else {
+                            return RunnerBlock.RunningState.RUNNING;
+                        }
+                    }).orElse(RunnerBlock.RunningState.NOT_RUNNING);
+
+            // update showing state
+            // As you can see, it's a busy wait checking if the program status
+            // but why not listener?
+            // the program loop is running on a different thread, access to level
+            // when listener is toggle might produce strange result. Meanwhile, ways
+            // like sync result until next tick has almost same cost as this
+            // (both need const level op every tick)
+
+            // error state will continue showed unless next step's change
+            if (runningState == RunnerBlock.RunningState.ERROR && newState == RunnerBlock.RunningState.NOT_RUNNING)
+                return;
+
+            if (runningState != newState) {
+                runningState = newState;
+                level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
+            }
+        } else {
+            tickCommunicate();
+        }
     }
-
-    @Getter
-    private String code = "";
-    @Getter
-    private final Deque<Component> outputQueue = new ArrayDeque<>();
-    private boolean outputChanged = false;
-
-    @Getter
-    public final ExecQueue execQueue = new ExecQueue(this);
-    public static final int DEVICE_SEARCH_RANGE = 3;
-    private final RequestCallHandler importFunction = (t, _, a) ->
-            new ImportRequest(t, this::getPackage, a);
-
-    @Getter
-    private String platformName = Component.translatable("code.wenyan_programming.bracket", getBlockState().getBlock().getName()).getString();
-
-    @Getter
-    private final Map<Vector3f, Integer> communications = new HashMap<>();
 
     @Override
     public WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
-        baseEnvironment.put(WenyanPackages.IMPORT_ID, importFunction);
+
+        baseEnvironment.put(Symbol.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
+                new ImportRequest(t, (_, name) -> {
+                    var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
+                    if (either == null)
+                        throw new WenyanException.WenyanVarException(ExceptionText.ImportNotFound.string(name));
+                    return either;
+                }, a));
         baseEnvironment.put("書", (RequestCallHandler) (thread, self, argsList) ->
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             String s = args.getFirst().as(WenyanString.TYPE).value();
-                            s = StringUtils.left(s, 512);
-                            if (getLevel() instanceof ServerLevel sl) {
-                                PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
-                                        new PlatformOutputPacket(getBlockPos(), s, PlatformOutputPacket.OutputStyle.NORMAL));
-                            }
-                            addOutput(s, PlatformOutputPacket.OutputStyle.NORMAL);
+                            addOutputBothSide(s, PlatformOutputPacket.OutputStyle.NORMAL);
                             return WenyanNull.NULL;
                         }));
 
         assert getLevel() != null;
         BlockPos attached = getBlockPos().relative(
                 AbstractFuluBlock.getConnectedDirection(getBlockState()).getOpposite());
-        if (getLevel().getBlockEntity(attached) instanceof IWenyanBlockDevice device)
-            baseEnvironment.combine(processPackage(device.getExecPackage(), device));
+        var device = getLevel().getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, attached);
+        if (device != null)
+            baseEnvironment.combine(blockPackageGetter.processPackage(device.getExecPackage(), device));
         return baseEnvironment;
     }
 
     @Override
     public void handleError(String error) {
-        error = StringUtils.left(error, 512);
-        assert getLevel() != null;
-        getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
-        if (getLevel() instanceof ServerLevel sl)
-            PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
-                    new PlatformOutputPacket(getBlockPos(), error, PlatformOutputPacket.OutputStyle.ERROR));
-        addOutput(error, PlatformOutputPacket.OutputStyle.ERROR);
+        errors.addLast(error);
     }
 
-    public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
-        super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
+    @Override
+    public void setRemoved() {
+        lazyProgram.ifCreated().ifPresent(IWenyanProgram::stop);
+        super.setRemoved();
     }
-
-    @SuppressWarnings("unused")
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide()) {
-            ifProgram().ifPresentOrElse(program -> {
-                if (program.isRunning()) {
-                    program.step(speedFromTier(getBlockState().getValue(RUNNING_TIER)));
-                    handle(new BlockContext(level, pos, state));
-                }
-                // update showing state
-                // As you can see, it's a busy wait checking if the program status
-                // but why not listener?
-                // the program loop is running on a different thread, access to level
-                // when listener is toggle might produce strange result. Meanwhile, ways
-                // like sync result until next tick has almost same cost as this
-                // (both need const level op every tick)
-                RunnerBlock.RunningState runningState;
-                if (program.isRunning()) {
-                    if (program instanceof WenyanProgramImpl impl && impl.isIdle()) {
-                        runningState = RunnerBlock.RunningState.IDLE;
-                    } else {
-                        runningState = RunnerBlock.RunningState.RUNNING;
-                    }
-                } else {
-                    runningState = RunnerBlock.RunningState.NOT_RUNNING;
-                }
-                updateShowingState(runningState);
-            }, () -> updateShowingState(RunnerBlock.RunningState.NOT_RUNNING));
-        } else {
-            var iterator = communications.entrySet().iterator();
-            while (iterator.hasNext()) {
-                var entry = iterator.next();
-                if (entry.getValue() > COMMUNICATE_EFFECT_LIFETIME)
-                    iterator.remove();
-                else
-                    entry.setValue(entry.getValue() + 1);
-            }
-        }
-    }
-
-    private void updateShowingState(RunnerBlock.RunningState state) {
-        var oldState = getBlockState().getValue(RUNNING_STATE);
-        if (oldState != state) {
-            // error state will continue showed unless next step's change
-            if (oldState == RunnerBlock.RunningState.ERROR &&
-                    (state == RunnerBlock.RunningState.NOT_RUNNING || state == RunnerBlock.RunningState.IDLE))
-                return;
-            assert level != null;
-            level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, state), Block.UPDATE_CLIENTS);
-        }
-    }
-
-    public void playerRun() {
-        if (getProgram().isRunning()) {
-            handleError(Component.translatable("error.wenyan_programming.already_run").getString());
-            return;
-        }
-        newThread(code);
-    }
-
-    public void setCommunicate(Vector3f to) {
-        if (level == null || !level.isClientSide()) {
-            return;
-        }
-        communications.put(to.sub(getBlockPos().getCenter().toVector3f()), 0);
-    }
-
-    public static final String PAGES_ID = "pages";
-    public static final String PLATFORM_NAME_ID = "platformName";
 
     @Override
     protected void saveData(ValueOutput tag) {
-        tag.putString(PAGES_ID, code);
-        tag.putString(PLATFORM_NAME_ID, platformName);
+        tag.putString(PAGES_ID, titleCodeOutput.getCode());
+        tag.putString(PLATFORM_NAME_ID, titleCodeOutput.getPlatformName());
     }
 
     @Override
     protected void loadData(ValueInput tag) {
-        tag.getString(PAGES_ID).ifPresent(this::setCode);
-        tag.getString(PLATFORM_NAME_ID).ifPresent(this::setPlatformName);
+        tag.getString(PAGES_ID).ifPresent(titleCodeOutput::setCode);
+        tag.getString(PLATFORM_NAME_ID).ifPresent(titleCodeOutput::setPlatformName);
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
-        code = components.getOrDefault(WyRegistration.PROGRAM_CODE_DATA.get(), "");
-        platformName = components.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(platformName)).getString();
+        titleCodeOutput.setCode(components.getOrDefault(WyRegistration.PROGRAM_CODE_DATA.get(), ""));
+        titleCodeOutput.setPlatformName(components.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(titleCodeOutput.getPlatformName())).getString());
     }
 
-    @SneakyThrows
     @Override
-    public void setRemoved() {
-        ifProgram().ifPresent(IWenyanProgram::stop);
-        super.setRemoved();
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(WyRegistration.PROGRAM_CODE_DATA.get(), titleCodeOutput.getCode());
+        components.set(DataComponents.CUSTOM_NAME, Component.literal(titleCodeOutput.getPlatformName()));
     }
 
-    private Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException {
-        assert level != null;
-        for (BlockPos b : BlockPos.betweenClosed(
-                getBlockPos().offset(DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE),
-                getBlockPos().offset(-DEVICE_SEARCH_RANGE, DEVICE_SEARCH_RANGE, -DEVICE_SEARCH_RANGE))) {
-            BlockEntity blockEntity = level.getBlockEntity(b);
-            if (blockEntity instanceof IWenyanBlockDevice executor) {
-                if (executor.getPackageName().equals(packageName))
-                    return Either.left(getExecutorPackage(executor));
-            } else if (blockEntity instanceof RunnerBlockEntity platform) {
-                if (platform == this) continue;
-                if (platform.getPlatformName().equals(packageName))
-                    return Either.right(createPlatformThread(platform));
-            }
-        }
-        throw new WenyanException.WenyanVarException(Component.translatable("error.wenyan_programming.import_package_not_found", packageName).getString());
-    }
-
-    private WenyanRunner createPlatformThread(RunnerBlockEntity platform) throws WenyanException {
-        showCommunication(platform.getBlockPos());
-        // STUB: better error handling
-        var threadOptional = platform.newThread(platform.code);
-        // this exception is for import-er thread
-        // in the same time, there's an error in import-ee's platform
-        return threadOptional.orElseThrow(() -> new WenyanException("cannot import"));
-    }
-
-    public Optional<WenyanRunner> newThread() {
-        return newThread(code);
-    }
-
-    public Optional<WenyanRunner> newThread(String pages) {
-        assert getLevel() != null;
-        if (getBlockState().getValue(RUNNING_STATE) != RunnerBlock.RunningState.RUNNING)
-            getLevel().setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, RunnerBlock.RunningState.RUNNING), Block.UPDATE_CLIENTS);
-        WenyanRunner runner;
+    public Optional<IWenyanRunner> newThread(String pages) {
+        IWenyanRunner runner;
         try {
-            runner = WenyanRunner.ofCode(pages, this.initEnvironment());
+            runner = WenyanRunner.of(WenyanFrame.ofCode(pages), this.initEnvironment());
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return Optional.empty();
         }
         try {
-            getProgram().create(runner);
+            lazyProgram.create().create(runner);
         } catch (WenyanException e) {
             handleError(e.getMessage());
             return Optional.empty();
@@ -272,92 +209,30 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         return Optional.of(runner);
     }
 
-    private WenyanPackage getExecutorPackage(IWenyanBlockDevice executor) {
-        showCommunication(executor.blockPos());
-        return processPackage(executor.getExecPackage(), executor);
+    public boolean isRunning() {
+        return lazyProgram.ifCreated()
+                .map(IWenyanProgram::isRunning)
+                .orElse(false);
     }
 
-    @Contract("_, _ -> new")
-    private WenyanPackage processPackage(RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
-        var map = new HashMap<>(rawPackage.variables());
-        rawPackage.functions().forEach((name, function) ->
-                map.put(name, (RequestCallHandler) (thread, self, argsList) ->
-                        new BlockRequest(thread, self, argsList, device, function.get())));
-        return new WenyanPackage(map);
-    }
-
-    private void showCommunication(BlockPos blockPos) {
-        if (getLevel() instanceof ServerLevel sl) {
-            PacketDistributor.sendToPlayersTrackingChunk(sl,
-                    ChunkPos.containing(getBlockPos()),
-                    new CommunicationLocationPacket(getBlockPos(), blockPos.getCenter().toVector3f())
-            );
+    public void playerRun() {
+        if (lazyProgram.create().isRunning()) {
+            handleError(ExceptionText.AlreadyRun.string());
+            return;
         }
+        newThread(titleCodeOutput.getCode());
     }
 
-    public void setCode(String code) {
-        this.code = code;
-        setChanged();
+    private void addOutputBothSide(String error, PlatformOutputPacket.OutputStyle style) {
+        error = StringUtils.left(error, 512);
+        if (getLevel() instanceof ServerLevel sl)
+            PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
+                    new PlatformOutputPacket(getBlockPos(), error, style));
+        addOutput(error, style);
     }
 
-    public void setPlatformName(String platformName) {
-        this.platformName = platformName;
-        setChanged();
-    }
-
-    public boolean isOutputChanged() {
-        var temp = outputChanged;
-        outputChanged = false;
-        return temp;
-    }
-
-    public void addOutput(String output, PlatformOutputPacket.OutputStyle style) {
-        if (style == PlatformOutputPacket.OutputStyle.ERROR)
-            outputQueue.addLast(Component.literal(output).withStyle(ChatFormatting.RED));
-        else if (style == PlatformOutputPacket.OutputStyle.NORMAL)
-            outputQueue.addLast(Component.literal(output));
-        while (outputQueue.size() > MAX_OUTPUT_SHOWING_SIZE) {
-            outputQueue.removeFirst();
-        }
-        outputChanged = true;
-        setChanged();
-    }
-
-    private int speedFromTier(int tier) {
-        return switch (tier) {
-            case 0 -> 1;
-            case 1 -> COMMUNICATE_EFFECT_LIFETIME;
-            case 2 -> 100;
-            case 3 -> 1000;
-            default -> throw new IllegalArgumentException("invalid tier");
-        };
-    }
-
-    private record BlockContext(Level level, BlockPos pos,
-                                BlockState state) implements IHandleContext {
-    }
-
-    @Value
-    @Accessors(fluent = true)
-    public class BlockRequest implements BaseHandleableRequest, IArgsRequest {
-        WenyanRunner thread;
-        IWenyanValue self;
-        List<IWenyanValue> args;
-
-        IWenyanBlockDevice device;
-        IRawRequest request;
-
-        @Override
-        public boolean handle(IHandleContext context) throws WenyanException {
-            return request.handle(context, this);
-        }
-
-        @Override
-        public void noticePlatform(IWenyanPlatform platform, IHandleContext context) throws WenyanException {
-            if (device().isRemoved()) {
-                throw new WenyanException("device removed");
-            }
-            showCommunication(device.blockPos());
-        }
+    private void safeAddCommunicate(BlockPos blockPos) {
+        if (getLevel() instanceof ServerLevel sl)
+            ICommunicateHolder.blockAddCommunicateServer(sl, getBlockPos(), blockPos.subtract(getBlockPos()));
     }
 }

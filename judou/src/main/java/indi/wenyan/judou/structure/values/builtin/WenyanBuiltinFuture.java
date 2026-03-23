@@ -1,9 +1,10 @@
 package indi.wenyan.judou.structure.values.builtin;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ import java.util.List;
 public class WenyanBuiltinFuture implements IWenyanValue {
     @Nullable
     private IWenyanValue returnValue = null;
-    private final List<WenyanRunner> waitingThreads = new ArrayList<>();
+    private final List<IWenyanRunner> waitingThreads = new ArrayList<>();
 
-    public static final WenyanType<WenyanBuiltinFuture> TYPE = new WenyanType<>("builtin_future", WenyanBuiltinFuture.class);
+    public static final WenyanType<WenyanBuiltinFuture> TYPE = new WenyanType<>(JudouTypeText.BuiltinFuture.string(), WenyanBuiltinFuture.class);
 
-    public boolean addWaitingThread(WenyanRunner thread) {
+    public boolean addWaitingThread(IWenyanRunner thread) {
         if (returnValue == null) {
             waitingThreads.add(thread);
             return true;
@@ -30,9 +31,9 @@ public class WenyanBuiltinFuture implements IWenyanValue {
         return TYPE;
     }
 
-    public void onRunnerReturn(WenyanRunner runner, IWenyanValue value) throws WenyanUnreachedException {
+    public void onRunnerReturn(IWenyanRunner runner, IWenyanValue value) throws WenyanUnreachedException {
         returnValue = value;
-        for (WenyanRunner thread : waitingThreads) {
+        for (IWenyanRunner thread : waitingThreads) {
             try {
                 thread.getCurrentRuntime().pushReturnValue(value);
                 thread.unblock();

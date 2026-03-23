@@ -1,5 +1,5 @@
 package indi.wenyan.judou.runtime;
 
 public interface IWenyanThread {
-    IWenyanProgram getProgram();
+    <T extends IWenyanThread> IWenyanProgram<T> getProgram();
 }

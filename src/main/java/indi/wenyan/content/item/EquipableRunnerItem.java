@@ -6,16 +6,17 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
+import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.Either;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.Symbol;
+import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.language.ILocalizationEnum;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,6 +33,7 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @SuppressWarnings("ALL")
+@Deprecated
 public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     public static final String ID_1 = "equipable_runner";
 
@@ -45,8 +47,15 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     private final RequestCallHandler importFunction = (t, s, a) ->
             new ImportRequest(t, this::getPackage, a);
 
-    @Getter @Setter
-    private String platformName = Component.translatable("code.wenyan_programming.bracket", Component.translatable("item.wenyan_programming.equipable_runner")).getString();
+    @Setter
+    private String platformName;
+
+    public String getPlatformName() {
+        if (platformName == null)
+            platformName = ChineseUtils.bracketOf(ILocalizationEnum.getName(
+                    WenyanItems.EQUIPABLE_RUNNER_ITEM.get()).getString());
+        return platformName;
+    }
 
     public EquipableRunnerItem(Properties properties, int runningLevel) {
         super(properties);
@@ -95,7 +104,7 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     @Override
     public WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
-        baseEnvironment.put(WenyanPackages.IMPORT_ID, importFunction);
+        baseEnvironment.put(Symbol.IMPORT_ID, importFunction);
         return baseEnvironment;
     }
 
@@ -103,21 +112,21 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     public void handleError(String error) {
     }
 
-    @Override
-    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanException {
-        if (!(context instanceof ItemContext itemContext)) {
-            throw new WenyanUnreachedException();
-        }
-        if (!(request instanceof ItemRequest itemRequest))
-            throw new WenyanUnreachedException();
+//    @Override
+//    public void notice(IHandleableRequest request, IHandleContext context) throws WenyanException {
+//        if (!(context instanceof ItemContext itemContext)) {
+//            throw new WenyanUnreachedException();
+//        }
+//        if (!(request instanceof ItemRequest itemRequest))
+//            throw new WenyanUnreachedException();
+//
+//        ItemStack current = itemContext.player().getInventory().getItem(itemRequest.slotId());
+//        // STUB: better equal
+//        if (!current.equals(itemRequest.itemStack()))
+//            throw new WenyanException("item changed");
+//    }
 
-        ItemStack current = itemContext.player().getInventory().getItem(itemRequest.slotId());
-        // STUB: better equal
-        if (!current.equals(itemRequest.itemStack()))
-            throw new WenyanException("item changed");
-    }
-
-    private Either<WenyanPackage, WenyanRunner> getPackage(IHandleContext context, String packageName) throws WenyanException {
+    private Either<WenyanPackage, String> getPackage(IHandleContext context, String packageName) throws WenyanException {
         if (!(context instanceof ItemContext itemContext)) {
             throw new WenyanException("Context is not an instance of ItemContext");
         }
@@ -147,7 +156,7 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
 
     private record ItemRequest(
             IWenyanPlatform platform,
-            WenyanRunner thread,
+            IWenyanRunner thread,
             IRawRequest request,
             IWenyanValue self,
             List<IWenyanValue> args,

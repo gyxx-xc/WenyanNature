@@ -1,6 +1,6 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 
 /**
@@ -25,18 +25,7 @@ public abstract class WenyanCode {
      * @param arg The arguments for execution
      * @param thread The thread context
      */
-    public abstract void exec(int arg, WenyanRunner thread) throws WenyanException;
-
-    /**
-     * Gets the number of steps this code execution requires.
-     *
-     * @param args The arguments for execution
-     * @param thread The thread context
-     * @return The number of steps
-     */
-    public int getStep(int args, WenyanRunner thread) throws WenyanException {
-        return 1;
-    }
+    public abstract void exec(int arg, IWenyanRunner thread) throws WenyanException;
 
     @Override
     public String toString() {

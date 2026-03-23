@@ -5,8 +5,10 @@ import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.utils.LanguageManager;
+import indi.wenyan.judou.utils.ConfigManager;
+import indi.wenyan.judou.utils.IConfigProvider;
 import indi.wenyan.judou.utils.LoggerManager;
+import indi.wenyan.judou.utils.language.LanguageManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +32,27 @@ class WenyanProgramImplTest {
         try {
             LoggerManager.registerLogger(NOPLogger.NOP_LOGGER);
             LanguageManager.registerLanguageProvider(s -> s);
+            ConfigManager.registerConfigProvider(new IConfigProvider() {
+                @Override
+                public int getMaxThread() {
+                    return 10;
+                }
+
+                @Override
+                public int getMaxSlice() {
+                    return 1000;
+                }
+
+                @Override
+                public int getWatchdogTimeout() {
+                    return 10;
+                }
+
+                @Override
+                public int getResultMaxSize() {
+                    return 64;
+                }
+            });
         } catch (IllegalStateException ignore) { // already registered by other class
         }
     }
@@ -166,7 +189,7 @@ class WenyanProgramImplTest {
                 }
             });
             program.step(1000);
-            Thread.sleep(10);
+            Thread.sleep(20);
             assertFalse(program.isRunning());
         }
 
@@ -450,7 +473,7 @@ class WenyanProgramImplTest {
         Thread.sleep(20);
         program.stop();
 
-        Class obj = program.getClass();
+        Class<? extends WenyanProgramImpl> obj = program.getClass();
         Field execField = obj.getDeclaredField("executor");
         execField.setAccessible(true);
         ExecutorService exec = (ExecutorService) execField.get(program);
