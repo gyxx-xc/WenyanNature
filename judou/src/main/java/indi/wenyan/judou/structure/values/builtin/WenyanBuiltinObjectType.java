@@ -8,7 +8,7 @@ import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.utils.WenyanDataParser;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.judou.utils.language.JudouTypeText;
 import lombok.Getter;
@@ -85,7 +85,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
         thread.getCurrentRuntime().pushReturnValue(selfObj);
 
-        WenyanBuiltinFunction constructor = getAttribute(WenyanDataParser.CONSTRUCTOR_ID)
+        WenyanBuiltinFunction constructor = getAttribute(Symbol.CONSTRUCTOR_ID)
                 .as(WenyanBuiltinFunction.TYPE);
 
         WenyanFrame newRuntime = constructor.getNewRuntime(self, argsList, thread.getCurrentRuntime());

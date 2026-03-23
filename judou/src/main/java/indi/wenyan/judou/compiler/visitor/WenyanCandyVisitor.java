@@ -6,8 +6,8 @@ import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanDataParser;
-import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 
@@ -56,8 +56,8 @@ public class WenyanCandyVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.CAST, WenyanBoolean.TYPE.ordinal());
 
         switch (ctx.op.getType()) {
-            case WenyanRParser.AND -> bytecode.addLoadCode(WenyanPackages.AND_ID);
-            case WenyanRParser.OR -> bytecode.addLoadCode(WenyanPackages.OR_ID);
+            case WenyanRParser.AND -> bytecode.addLoadCode(Symbol.AND_ID);
+            case WenyanRParser.OR -> bytecode.addLoadCode(Symbol.OR_ID);
             default ->
                     throw new WenyanCompileException(JudouExceptionText.UnknownOperator.string(), ctx);
         }
@@ -80,7 +80,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
             default:
                 throw new WenyanCompileException(JudouExceptionText.UnknownPreposition.string(), ctx);
         }
-        bytecode.addLoadCode(WenyanPackages.MOD_ID);
+        bytecode.addLoadCode(Symbol.MOD_ID);
         bytecode.add(WenyanCodes.CALL, 2);
         bytecode.add(WenyanCodes.PUSH_ANS);
         return true;
@@ -90,7 +90,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     public Boolean visitImport_as_statement(WenyanRParser.Import_as_statementContext ctx) {
         // stack: id1, id2, ..., package, import
         bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.IDENTIFIER().getText()));
-        bytecode.addLoadCode(WenyanPackages.IMPORT_ID);
+        bytecode.addLoadCode(Symbol.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, 1);
         bytecode.add(WenyanCodes.PUSH_ANS);
         exprVisitor.visit(ctx.define_statement());

@@ -9,7 +9,7 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.WenyanDataParser;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanThreading;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.setup.language.TypeText;
@@ -63,7 +63,7 @@ public class HandRunner7Checker extends CraftingAnswerChecker {
                     case "「左」" -> LEFT;
                     case "「右」" -> RIGHT;
                     case "「方向」" -> WenyanValues.of(List.copyOf(DIRECTIONS));
-                    case WenyanDataParser.CONSTRUCTOR_ID -> WenyanNull.NULL;
+                    case Symbol.CONSTRUCTOR_ID -> WenyanNull.NULL;
                     default -> throw new UnsupportedOperationException("Unknown DirectionType attribute: " + name);
                 };
             }

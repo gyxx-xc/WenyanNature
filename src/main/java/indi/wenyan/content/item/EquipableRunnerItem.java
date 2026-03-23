@@ -12,7 +12,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.judou.utils.Either;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.language.ILocalizationEnum;
 import lombok.Getter;
@@ -104,7 +104,7 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
     @Override
     public WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
-        baseEnvironment.put(WenyanPackages.IMPORT_ID, importFunction);
+        baseEnvironment.put(Symbol.IMPORT_ID, importFunction);
         return baseEnvironment;
     }
 

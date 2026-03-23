@@ -6,7 +6,7 @@ import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
-import indi.wenyan.judou.utils.WenyanDataParser;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.judou.utils.language.JudouTypeText;
@@ -26,12 +26,6 @@ import java.util.List;
 public record WenyanList(List<IWenyanValue> value)
         implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {
     public static final WenyanType<WenyanList> TYPE = new WenyanType<>(JudouTypeText.List.string(), WenyanList.class);
-    public static final String LIST_REMOVE_ID = "「移除」";
-    public static final String LIST_INCLUDE_ID = "「包含」";
-    public static final String LIST_CLEAR_ID = "「清空」";
-    public static final String LIST_NON_EMPTY_ID = "「非空」";
-    public static final String LIST_INDEX_ID = "「索引」";
-    public static final String LIST_SUBLIST_ID = "「子列」";
 
     public WenyanList() {
         this(new ArrayList<>());
@@ -63,44 +57,44 @@ public record WenyanList(List<IWenyanValue> value)
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
-            case WenyanDataParser.ARRAY_GET_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.ARRAY_GET_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, args.size()));
                 return self.as(TYPE).get(args.getFirst().as(WenyanInteger.TYPE).value());
             });
-            case WenyanDataParser.ITER_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.ITER_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, args.size()));
                 return new WenyanIterator(self.as(TYPE).value.iterator());
             });
-            case WenyanDataParser.LONG_ID -> WenyanValues.of(value.size());
-            case LIST_REMOVE_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.LONG_ID -> WenyanValues.of(value.size());
+            case Symbol.LIST_REMOVE_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, args.size()));
                 return WenyanValues.of(self.as(TYPE).value.remove(args.getFirst()));
             });
-            case LIST_INCLUDE_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.LIST_INCLUDE_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, args.size()));
                 return WenyanValues.of(self.as(TYPE).value.contains(args.getFirst()));
             });
-            case LIST_CLEAR_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.LIST_CLEAR_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(0, args.size()));
                 self.as(TYPE).value.clear();
                 return self;
             });
-            case LIST_NON_EMPTY_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.LIST_NON_EMPTY_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (!args.isEmpty())
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(0, args.size()));
                 return WenyanValues.of(!self.as(TYPE).value.isEmpty());
             });
-            case LIST_INDEX_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.LIST_INDEX_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, args.size()));
                 return WenyanValues.of(self.as(TYPE).value.indexOf(args.getFirst()) + 1); // 1-based index
             });
-            case LIST_SUBLIST_ID -> new WenyanInlineJavacall((self, args) -> {
+            case Symbol.LIST_SUBLIST_ID -> new WenyanInlineJavacall((self, args) -> {
                 if (args.size() != 2)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(2, args.size()));
                 int fromIndex = args.getFirst().as(WenyanInteger.TYPE).value() - 1; // 1-based to 0-based

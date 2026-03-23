@@ -20,7 +20,7 @@ import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.ChineseUtils;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.language.ExceptionText;
@@ -131,7 +131,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.super.initEnvironment();
 
-        baseEnvironment.put(WenyanPackages.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
+        baseEnvironment.put(Symbol.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
                 new ImportRequest(t, (_, name) -> {
                     var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
                     if (either == null)

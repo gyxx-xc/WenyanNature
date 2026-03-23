@@ -3,7 +3,7 @@ package indi.wenyan.judou.compiler.visitor;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanValues;
 import org.antlr.v4.runtime.Token;
 
@@ -40,7 +40,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
         bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
-        bytecode.addLoadCode(WenyanPackages.IMPORT_ID);
+        bytecode.addLoadCode(Symbol.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, 1);
         if (ctx.prop.isEmpty()) {
             bytecode.addStoreCode(ctx.name.getText());
