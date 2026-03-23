@@ -17,7 +17,8 @@ public record BlockRunnerCodePacket(BlockPos pos, String code) implements IServe
     /**
      * Packet type identifier
      */
-    public static final Type<BlockRunnerCodePacket> TYPE = IWenyanPacketPayload.createType("block_runner_code");
+    public static final Type<BlockRunnerCodePacket> TYPE =
+            IWenyanPacketPayload.createType("block_runner_code");
 
     /**
      * Codec for serializing and deserializing the packet

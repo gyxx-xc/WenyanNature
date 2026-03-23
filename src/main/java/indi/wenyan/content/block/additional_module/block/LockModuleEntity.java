@@ -26,15 +26,15 @@ import static indi.wenyan.setup.language.ExceptionText.LockNotHold;
 // TODO: UnitTest
 public class LockModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = WenyanSymbol.var("SemaphoreModule");
+    private final String basePackageName = WenyanSymbol.SemaphoreModule;
 
     private IThreadHolder<WenyanProgramImpl.PCB> lockHolder;
     private final Queue<IThreadHolder<WenyanProgramImpl.PCB>> waitingThreads = new ArrayDeque<>();
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("SemaphoreModule.acquire"), this::acquireSemaphoreHandler)
-            .handler(WenyanSymbol.var("SemaphoreModule.release"), this::releaseSemaphore)
+            .handler(WenyanSymbol.SemaphoreModule$acquire, this::acquireSemaphoreHandler)
+            .handler(WenyanSymbol.SemaphoreModule$release, this::releaseSemaphore)
             .build();
 
     private boolean acquireSemaphoreHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {

@@ -16,12 +16,12 @@ import java.util.Collections;
 
 public class CommunicateModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = WenyanSymbol.var("CommunicateModule");
+    private final String basePackageName = WenyanSymbol.CommunicateModule;
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .constant(WenyanSymbol.var("CommunicateModule.self"), new WenyanList(Collections.nCopies(8,
+                    .constant(WenyanSymbol.CommunicateModule$self, new WenyanList(Collections.nCopies(8,
                     WenyanLeftValue.varOf(WenyanNull.NULL)))))
             .build();
 

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
@@ -39,12 +40,12 @@ import static net.minecraft.world.level.block.DirectionalBlock.FACING;
 
 public class PistonModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = "「移」";
+    private final String basePackageName = WenyanSymbol.PISTON;
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler("「推」", () -> new PistonRequest(true))
-            .handler("「拉」", () -> new PistonRequest(false))
+            .handler(WenyanSymbol.PISTON_PUSH, () -> new PistonRequest(true))
+            .handler(WenyanSymbol.PISTON_PULL, () -> new PistonRequest(false))
             .build();
 
     public PistonModuleEntity(BlockPos pos, BlockState blockState) {

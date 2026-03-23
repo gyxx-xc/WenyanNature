@@ -9,6 +9,7 @@ import indi.wenyan.content.gui_api.CraftingBlockContainer;
 import indi.wenyan.content.recipe.answering.AnsweringRecipe;
 import indi.wenyan.content.recipe.answering.AnsweringRecipeInput;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
@@ -70,19 +71,16 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     @Getter private final Deque<TextEffect> particles = new ArrayDeque<>();
 
-    @Override
-    public String getBasePackageName() {
-        return "";
-    }
+    @Getter private final String basePackageName = WenyanSymbol.CRAFTING;
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler("「参」", request -> {
+            .handler(WenyanSymbol.CRAFTING_ARGS, request -> {
                 if (!request.args().isEmpty())
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
                 return getChecker().getArgs();
             })
-            .handler("書", request -> {
+            .handler(WenyanSymbol.PRINT, request -> {
                 getChecker().accept(request.args());
                 IAnsweringChecker.ResultStatus checkerResult = checker.getResult();
                 assert getLevel() != null;

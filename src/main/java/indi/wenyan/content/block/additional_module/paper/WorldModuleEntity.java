@@ -22,7 +22,7 @@ import java.util.List;
 
 public class WorldModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = WenyanSymbol.var("WorldModule");
+    private final String basePackageName = WenyanSymbol.WorldModule;
 
     @Getter
     private final List<String> output = new ArrayList<>();
@@ -33,17 +33,17 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     // redstone get/set, show text, entity detection
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("WorldModule.signalStrength"), _ -> {
+            .handler(WenyanSymbol.WorldModule$signalStrength, _ -> {
                 int value = getLevel() != null ? getLevel().getBestNeighborSignal(getBlockPos()) : 0;
                 return WenyanValues.of(value);
             })
-            .handler(WenyanSymbol.var("WorldModule.emitSignal"), request -> {
+            .handler(WenyanSymbol.WorldModule$emitSignal, request -> {
                 signal = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 assert getLevel() != null;
                 WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("WorldModule.changeWeather"), 5, (_, request) -> {
+            .handler(WenyanSymbol.WorldModule$changeWeather, 5, (_, request) -> {
                 if (!(getLevel() instanceof ServerLevel serverLevel))
                     throw new WenyanUnreachedException();
                 String cmd = request.args().getFirst().as(WenyanString.TYPE).value();

@@ -1,12 +1,11 @@
 package indi.wenyan.setup.network.client;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.additional_module.paper.BlockModuleEntity;
+import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +18,7 @@ public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end, bo
      * Packet type identifier
      */
     public static final Type<BlockPosRangePacket> TYPE =
-            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "output_pos_text"));
+            IWenyanPacketPayload.createType("output_pos_text");
 
     /**
      * Codec for serializing and deserializing the packet

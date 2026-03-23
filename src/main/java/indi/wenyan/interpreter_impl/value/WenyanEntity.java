@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanObject;
@@ -17,12 +18,12 @@ public record WenyanEntity(Entity value) implements IWenyanWarperValue<Entity>, 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
-            case "「位」" -> WenyanMinecraftValues.of(value().getPosition(0));
-            case "「移」" -> WenyanMinecraftValues.of(value().getDeltaMovement());
-            case "「向」" -> WenyanMinecraftValues.of(value().getLookAngle());
-            case "「活」" -> WenyanValues.of(value().isAlive());
-            case "「名」" -> WenyanValues.of(value().getDisplayName().getString());
-            case "「高」" -> WenyanValues.of(value().getBbHeight());
+            case WenyanSymbol.ENTITY_POS -> WenyanMinecraftValues.of(value().getPosition(0));
+            case WenyanSymbol.ENTITY_MOVE -> WenyanMinecraftValues.of(value().getDeltaMovement());
+            case WenyanSymbol.ENTITY_LOOK -> WenyanMinecraftValues.of(value().getLookAngle());
+            case WenyanSymbol.ENTITY_ALIVE -> WenyanValues.of(value().isAlive());
+            case WenyanSymbol.ENTITY_NAME -> WenyanValues.of(value().getDisplayName().getString());
+            case WenyanSymbol.ENTITY_HEIGHT -> WenyanValues.of(value().getBbHeight());
             default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
         };
     }

@@ -1,12 +1,11 @@
 package indi.wenyan.setup.network.client;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.runner.ICodeOutputHolder;
+import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +22,7 @@ public record PlatformOutputPacket(BlockPos pos, String output, OutputStyle styl
      * Packet type identifier
      */
     public static final Type<PlatformOutputPacket> TYPE =
-            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "platform_output"));
+            IWenyanPacketPayload.createType("platform_output");
 
     /**
      * Codec for serializing and deserializing the packet

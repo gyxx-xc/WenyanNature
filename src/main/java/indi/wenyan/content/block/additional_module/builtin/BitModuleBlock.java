@@ -14,17 +14,17 @@ public class BitModuleBlock extends AbstractFuluBlock {
     @SuppressWarnings("UnnecessaryBoxing") // better performance
     public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction(WenyanSymbol.var("BitModule.leftShift"), args -> Integer.valueOf(args.getFirst() << args.get(1)))
-                    .intFunction(WenyanSymbol.var("BitModule.rightShift"), args -> Integer.valueOf(args.getFirst() >> args.get(1)))
-                    .intFunction(WenyanSymbol.var("BitModule.zeroFillRightShift"), args -> Integer.valueOf(args.getFirst() >>> args.get(1)))
-                    .intFunction(WenyanSymbol.var("BitModule.bitAnd"), args -> Integer.valueOf(args.getFirst() & args.get(1)))
-                    .intFunction(WenyanSymbol.var("BitModule.bitOr"), args -> Integer.valueOf(args.getFirst() | args.get(1)))
-                    .intFunction(WenyanSymbol.var("BitModule.bitXor"), args -> Integer.valueOf(args.getFirst() ^ args.get(1)))
-                    .intFunction(WenyanSymbol.var("BitModule.bitNand"), args -> Integer.valueOf(~(args.getFirst() & args.get(1))))
-                    .intFunction(WenyanSymbol.var("BitModule.bitNot"), args -> Integer.valueOf(~args.getFirst()))
+                    .intFunction(WenyanSymbol.BitModule$leftShift, args -> Integer.valueOf(args.getFirst() << args.get(1)))
+                    .intFunction(WenyanSymbol.BitModule$rightShift, args -> Integer.valueOf(args.getFirst() >> args.get(1)))
+                    .intFunction(WenyanSymbol.BitModule$zeroFillRightShift, args -> Integer.valueOf(args.getFirst() >>> args.get(1)))
+                    .intFunction(WenyanSymbol.BitModule$bitAnd, args -> Integer.valueOf(args.getFirst() & args.get(1)))
+                    .intFunction(WenyanSymbol.BitModule$bitOr, args -> Integer.valueOf(args.getFirst() | args.get(1)))
+                    .intFunction(WenyanSymbol.BitModule$bitXor, args -> Integer.valueOf(args.getFirst() ^ args.get(1)))
+                    .intFunction(WenyanSymbol.BitModule$bitNand, args -> Integer.valueOf(~(args.getFirst() & args.get(1))))
+                    .intFunction(WenyanSymbol.BitModule$bitNot, args -> Integer.valueOf(~args.getFirst()))
             )
             .build();
-    public static final String DEVICE_NAME = WenyanSymbol.var("BitModule");
+    public static final String DEVICE_NAME = WenyanSymbol.BitModule;
 
     public BitModuleBlock(Properties properties) {
         super(properties);

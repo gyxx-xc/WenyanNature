@@ -20,19 +20,19 @@ public class RandomModuleBlock extends AbstractFuluBlock {
     public static final String ID = "random_module_block";
 
     public static final MapCodec<RandomModuleBlock> CODEC = simpleCodec(RandomModuleBlock::new);
-    public static final String DEVICE_NAME = WenyanSymbol.var("RandomModule");
+    public static final String DEVICE_NAME = WenyanSymbol.RandomModule;
     public static final Random RANDOM = new Random();
     public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction(WenyanSymbol.var("RandomModule.nextInt"), args -> switch (args.size()) {
+                    .intFunction(WenyanSymbol.RandomModule$nextInt, args -> switch (args.size()) {
                         case 0 -> RANDOM.nextInt();
                         case 1 -> RANDOM.nextInt(args.getFirst());
                         case 2 -> RANDOM.nextInt(args.get(0), args.get(1));
                         default -> throw new WenyanException(ArgsNumWrongRange.string(0, 2, args.size()));
                     })
-                    .doubleFunction(WenyanSymbol.var("RandomModule.nextDouble"), _ -> RANDOM.nextDouble())
-                    .doubleFunction(WenyanSymbol.var("RandomModule.nextTriangle"), args -> RANDOM.nextDouble(args.getFirst() - args.get(1), args.getFirst() + args.get(1)))
-                    .function(WenyanSymbol.var("RandomModule.nextBoolean"), (IWenyanValue _, List<IWenyanValue> _) -> WenyanValues.of(RANDOM.nextBoolean())))
+                    .doubleFunction(WenyanSymbol.RandomModule$nextDouble, _ -> RANDOM.nextDouble())
+                    .doubleFunction(WenyanSymbol.RandomModule$nextTriangle, args -> RANDOM.nextDouble(args.getFirst() - args.get(1), args.getFirst() + args.get(1)))
+                    .function(WenyanSymbol.RandomModule$nextBoolean, (IWenyanValue _, List<IWenyanValue> _) -> WenyanValues.of(RANDOM.nextBoolean())))
             .build();
 
     public RandomModuleBlock(Properties properties) {

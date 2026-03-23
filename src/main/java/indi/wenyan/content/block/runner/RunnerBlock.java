@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.AbstractFuluBlock;
+import indi.wenyan.content.gui_api.ScreenEnum;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.client.BlockSetScreenPacket;
@@ -68,7 +69,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         }
         if (!level.isClientSide()) {
             if (player.isShiftKeyDown() && player instanceof ServerPlayer sp) { // serverplayer always true
-                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, "runner_block_set_screen"));
+                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.RUNNER_BLOCK));
             } else {
                 runner.playerRun();
             }

@@ -2,6 +2,7 @@ package indi.wenyan.content.block.power;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
@@ -44,17 +45,16 @@ public class PowerBlockEntity extends AbstractModuleEntity {
     private final boolean strong = false;
 
     @Getter
-    public String basePackageName = "";
+    public String basePackageName = WenyanSymbol.POWER;
 
     @Getter
     public RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .intFunction("「天根」", _ -> a)
-                    .intFunction("「数极」", _ -> LARGE_PRIME)
-
-                    .intFunction("「天机」", _ -> strong ? 0 : b)
-                    .intFunction("「天意」", _ -> strong ? ans : 0)
-                    .function("書", (_, args) -> {
+                    .intFunction(WenyanSymbol.POWER_BASE, _ -> a)
+                    .intFunction(WenyanSymbol.POWER_MOD, _ -> LARGE_PRIME)
+                    .intFunction(WenyanSymbol.POWER_UP, _ -> strong ? 0 : b)
+                    .intFunction(WenyanSymbol.POWER_ANS, _ -> strong ? ans : 0)
+                    .function(WenyanSymbol.PRINT, (_, args) -> {
                         int result = strong ? b : ans;
                         resetState();
                         if (args.getFirst().as(WenyanInteger.TYPE).value() == result) {

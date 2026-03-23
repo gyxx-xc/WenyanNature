@@ -6,6 +6,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
 import indi.wenyan.judou.structure.WenyanException;
@@ -50,11 +51,11 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
     }
 
     @Getter
-    private final String basePackageName = "「眼」";
+    private final String basePackageName = WenyanSymbol.FORMATION_CORE;
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler("「啓」", request -> {
+            .handler(WenyanSymbol.CORE_START, request -> {
                 for (var arg : request.args()) {
                     String platformName = arg.as(WenyanString.TYPE).value();
                     var block = getRunner(platformName);
@@ -66,7 +67,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 }
                 return WenyanNull.NULL;
             })
-            .handler("「狀」", request -> {
+            .handler(WenyanSymbol.CORE_STATUS, request -> {
                 if (request.args().size() != 1) throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(1, request.args().size()));
                 String name = request.args().getFirst().as(WenyanString.TYPE).value();
                 String runnerName = ChineseUtils.bracketOf(name);
@@ -75,7 +76,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
                 return new WenyanRunningState(state);
             })
-            .handler("「歸」", (BaseHandleableRequest.IRawRequest) (_, request) -> {
+            .handler(WenyanSymbol.CORE_JOIN, (BaseHandleableRequest.IRawRequest) (_, request) -> {
                 boolean running = false;
                 var iter = startedPlatforms.entrySet().iterator();
                 while (iter.hasNext()) {
