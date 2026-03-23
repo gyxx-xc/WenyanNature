@@ -1,6 +1,7 @@
 package indi.wenyan.content.block.writing_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.content.gui_api.ScreenEnum;
 import indi.wenyan.setup.network.client.BlockSetScreenPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +41,7 @@ public class WritingBlock extends Block implements EntityBlock {
     protected InteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (player.isShiftKeyDown()) {
             if (!world.isClientSide() && player instanceof ServerPlayer sp)
-                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, "writing_block_set_screen"));
+                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.WRITING_BLOCK));
             return InteractionResult.SUCCESS;
         }
         if (handIn != InteractionHand.MAIN_HAND)

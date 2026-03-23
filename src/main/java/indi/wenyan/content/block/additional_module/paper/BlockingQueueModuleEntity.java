@@ -49,7 +49,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
     private final List<CommunicationEffect> communicates = new ArrayList<>();
 
     @Getter
-    private final String basePackageName = WenyanSymbol.var("BlockingQueueModule");
+    private final String basePackageName = WenyanSymbol.BlockingQueueModule;
 
     private final Queue<IWenyanValue> queue = new ArrayDeque<>();
     private final int capacity = 10; // Default capacity
@@ -59,13 +59,13 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("BlockingQueueModule.put"), this::putHandler)
-            .handler(WenyanSymbol.var("BlockingQueueModule.take"), this::takeHandler)
-            .handler(WenyanSymbol.var("BlockingQueueModule.offer"), this::offerHandler)
-            .handler(WenyanSymbol.var("BlockingQueueModule.poll"), this::pollHandler)
-            .handler(WenyanSymbol.var("BlockingQueueModule.peek"), _ -> queue.isEmpty() ? WenyanNull.NULL : queue.peek())
-            .handler(WenyanSymbol.var("BlockingQueueModule.size"), _ -> WenyanValues.of(queue.size()))
-            .handler(WenyanSymbol.var("BlockingQueueModule.clear"), _ -> {
+            .handler(WenyanSymbol.BlockingQueueModule$put, this::putHandler)
+            .handler(WenyanSymbol.BlockingQueueModule$take, this::takeHandler)
+            .handler(WenyanSymbol.BlockingQueueModule$offer, this::offerHandler)
+            .handler(WenyanSymbol.BlockingQueueModule$poll, this::pollHandler)
+            .handler(WenyanSymbol.BlockingQueueModule$peek, _ -> queue.isEmpty() ? WenyanNull.NULL : queue.peek())
+            .handler(WenyanSymbol.BlockingQueueModule$size, _ -> WenyanValues.of(queue.size()))
+            .handler(WenyanSymbol.BlockingQueueModule$clear, _ -> {
                 if (queue.isEmpty())
                     return WenyanNull.NULL;
 

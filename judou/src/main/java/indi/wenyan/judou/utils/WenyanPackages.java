@@ -16,23 +16,17 @@ import java.util.List;
 
 public enum WenyanPackages {
     ;
-    // these string for candy visitor
-    public static final String AND_ID = "且";
-    public static final String OR_ID = "或";
-    public static final String MOD_ID = "模";
-    public static final String IMPORT_ID = "觀";
-    public static final String CREATE_ASYNC_ID = "同";
 
     public static final WenyanPackage WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
-            .function("加", WenyanPackageBuilder.reduceWith(IWenyanValue::add))
-            .function("減", WenyanPackageBuilder.reduceWith(IWenyanValue::sub))
-            .function("乘", WenyanPackageBuilder.reduceWith(IWenyanValue::mul))
-            .function("除", WenyanPackageBuilder.reduceWith(IWenyanValue::div))
+            .function(Symbol.PLUS_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::add))
+            .function(Symbol.SUB_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::sub))
+            .function(Symbol.MUL_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::mul))
+            .function(Symbol.DIV_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::div))
 
-            .function("變", (IWenyanValue self, List<IWenyanValue> args) ->
+            .function(Symbol.NOT_ID, (IWenyanValue self, List<IWenyanValue> args) ->
                     args.getFirst().as(WenyanBoolean.TYPE).not())
 
-            .function("銜", (IWenyanValue self, List<IWenyanValue> args) -> {
+            .function(Symbol.CONCAT_ID, (IWenyanValue self, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 256, args.size()));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
@@ -41,7 +35,7 @@ public enum WenyanPackages {
                 }
                 return value;
             })
-            .function("充", (IWenyanValue self, List<IWenyanValue> args) -> {
+            .function(Symbol.LIST_ADD_ID, (IWenyanValue self, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 256, args.size()));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
@@ -50,20 +44,20 @@ public enum WenyanPackages {
             })
 
             // 模, 且, 或
-            .function("模", WenyanPackageBuilder.reduceWith(IWenyanValue::mod))
-            .function("且", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalAnd))
-            .function("或", WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalOr))
+            .function(Symbol.MOD_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::mod))
+            .function(Symbol.AND_ID, WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalAnd))
+            .function(Symbol.OR_ID, WenyanPackageBuilder.boolBinaryOperation(Boolean::logicalOr))
 
-            .function("不等於", WenyanPackageBuilder.compareOperation((a, b) -> !IWenyanValue.equals(a, b)))
-            .function("不大於", WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) <= 0))
-            .function("不小於", WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) >= 0))
-            .function("等於", WenyanPackageBuilder.compareOperation((value, other) -> IWenyanValue.equals(value, other)))
-            .function("大於", WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) > 0))
-            .function("小於", WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
+            .function(Symbol.NEQ_ID, WenyanPackageBuilder.compareOperation((a, b) -> !IWenyanValue.equals(a, b)))
+            .function(Symbol.LESS_EQUAL_ID, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) <= 0))
+            .function(Symbol.GREAT_EQUAL_ID, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) >= 0))
+            .function(Symbol.EQ_ID, WenyanPackageBuilder.compareOperation((value, other) -> IWenyanValue.equals(value, other)))
+            .function(Symbol.GRATER_ID, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) > 0))
+            .function(Symbol.LESSER_ID, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
-            .function("待", AwaitCallHandler.INSTANCE)
-            .function(CREATE_ASYNC_ID, (self, args) -> new WenyanBuiltinAsyncFunction(args.getFirst().as(WenyanBuiltinFunction.TYPE)))
+            .function(Symbol.AWAIT_ID, AwaitCallHandler.INSTANCE)
+            .function(Symbol.CREATE_ASYNC_ID, (self, args) -> new WenyanBuiltinAsyncFunction(args.getFirst().as(WenyanBuiltinFunction.TYPE)))
 
-            .function("「」", (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
+            .function(Symbol.EMPTY_ID, (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
             .build();
 }

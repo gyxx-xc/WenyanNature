@@ -9,8 +9,8 @@ public enum ScreenOpenerFactroy {;
     public static final IPayloadHandler<BlockSetScreenPacket> BLOCK_HANDLER = (packet, context) -> {
         if (context.flow().isClientbound())
             switch (packet.screenId()) {
-                case "runner_block_set_screen" -> RunnerBlockBehaviour.openGui(packet.pos(), context.player());
-                case "writing_block_set_screen" -> WritingBlockBehaviour.openGui(packet.pos(), context.player());
+                case RUNNER_BLOCK -> RunnerBlockBehaviour.openGui(packet.pos(), context.player());
+                case WRITING_BLOCK -> WritingBlockBehaviour.openGui(packet.pos(), context.player());
                 default -> throw new IllegalStateException();
             }
     };

@@ -1,13 +1,12 @@
 package indi.wenyan.setup.network.client;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.ICommunicateHolder;
+import indi.wenyan.setup.network.IWenyanPacketPayload;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
 /**
@@ -18,7 +17,7 @@ public record CommunicationLocationPacket(@NonNull BlockPos from, @NonNull Block
      * Packet type identifier
      */
     public static final Type<CommunicationLocationPacket> TYPE =
-            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "communication_location"));
+            IWenyanPacketPayload.createType("communication_location");
 
     /**
      * Codec for serializing and deserializing the packet

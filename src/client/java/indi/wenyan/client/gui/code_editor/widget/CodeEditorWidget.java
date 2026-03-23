@@ -35,18 +35,37 @@ import java.util.ListIterator;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 public class CodeEditorWidget extends AbstractTextAreaWidget {
-    private static final int CURSOR_INSERT_COLOR = 0xff000000;
-    public static final float TOOLTIP_SCALE = 0.7f;
-    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-            "textures/gui/edit.png");
     // todo: make it larger (sprite)
     public static final int WIDTH = 256;
     public static final int HEIGH = 192;
 
-    public static final int MAX_COMPLETION_CHAR = 16;
-    public static final int MAX_RENDERED_COMPLETION_SIZE = 5;
-    public static final int COMPLETION_SCROLL_WIDTH = 4;
-    public static final int MAX_COMPLETION_WIDTH = 80;
+    private static final int CURSOR_INSERT_COLOR = 0xff000000;
+    private static final int LINE_NUM_COLOR = 0xFF303030;
+    private static final int PURE_WHITE = 0xFFFFFFFF;
+    private static final int COMPLETION_SELECTED = 0xff99CCFF;
+    private static final int COMPLETION_BACKGROUND = 0xFFFFFFFF;
+    private static final int COMPLETION_TEXT_COLOR = 0xff000000;
+    private static final int COMPLETION_SCROLL_BACKGROUND = 0xff000000;
+    private static final int COMPLETION_SCROLL_FOREGROUND = 0xffCCCCCC;
+    private static final int TOOLTIP_TEXT_COLOR = 0xff999999;
+
+    private static final Style CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);
+    private static final Style STRING_STYLE = Style.EMPTY.withColor(0x008000);
+    private static final Style DATA_STYLE = Style.EMPTY.withColor(0x1C00CF);
+    private static final Style COMMENT_STYLE = Style.EMPTY.withColor(0xAAAAAA);
+    private static final Style IDENTIFIER_STYLE = Style.EMPTY.withColor(0x005CC5);
+    private static final Style OPERATOR_STYLE = Style.EMPTY.withColor(0xD73A49);
+    private static final Style TYPE_STYLE = Style.EMPTY.withColor(0x795E26);
+    private static final Style DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);
+
+    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+            "textures/gui/edit.png");
+
+    private static final int MAX_COMPLETION_CHAR = 16;
+    private static final int MAX_RENDERED_COMPLETION_SIZE = 5;
+    private static final int MAX_COMPLETION_WIDTH = 80;
+    private static final float TOOLTIP_SCALE = 0.7f;
+    private static final int COMPLETION_SCROLL_WIDTH = 4;
 
     // NOTE: a minecraft inner padding of 4 is also need to be considered
     private static final int SCROLLBAR_WIDTH = 8;
@@ -54,6 +73,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             new Utils.BoxInformation(4, 4, 4, 4 + SCROLLBAR_WIDTH);
     private static final Utils.BoxInformation completionPadding =
             new Utils.BoxInformation(1, 1, 1, 1);
+
+    private static final String SPLIT_LINE_MARK = ">";
 
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
@@ -112,30 +133,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         setScrollAmount(scrollAmount);
     }
 
-    private static final Style CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);
-    private static final Style STRING_STYLE = Style.EMPTY.withColor(0x008000);
-    private static final Style DATA_STYLE = Style.EMPTY.withColor(0x1C00CF);
-    private static final Style COMMENT_STYLE = Style.EMPTY.withColor(0xAAAAAA);
-    private static final Style IDENTIFIER_STYLE = Style.EMPTY.withColor(0x005CC5);
-    private static final Style OPERATOR_STYLE = Style.EMPTY.withColor(0xD73A49);
-    private static final Style TYPE_STYLE = Style.EMPTY.withColor(0x795E26);
-    private static final Style DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);
-
     private static Style styleFromTokenType(int tokenType) {
-/*
-        things in default
-
-		FUNCTION_ARGS_START=30, FUNCTION_ARGS_GET=31, FUNCTION_BODY_START=32, FUNCTION_DEFINE_END=33, FUNCTION_GET_ARGS=34,
-		OBJECT_BODY_START=35, OBJECT_DEFINE_END=36, OBJECT_STATIC_DECLARE=37, EXTENDS=49,
-		DEFINE_CLOSURE=40,
-
-        ASSIGN_LEFT=43, ASSIGN_RIGHT_NULL=20, ASSIGN_RIGHT_END=21, ASSIGN_RIGHT=22,
-		LOCAL_DECLARE_OP=38, GLOBAL_DECLARE_OP=39,
-		NAMING=42, DECLARE_HAVE=44, YUE=52,
-		PREPOSITION_LEFT=45, PREPOSITION_RIGHT=46,
-		CALLING_FUNCTION=47, CREATE_OBJECT=48,
-		WS=78, NEWLINE=79
-        */
         return switch (tokenType) {
             // control
             case WenyanRLexer.RETURN_NULL, WenyanRLexer.RETURN, WenyanRLexer.RETURN_LAST,
@@ -285,8 +283,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                 if (isCurLine) {
                     int cursorX = getX() + innerPadding() + lineNoWidth() +
                             font.width(backend.getContent().substring(stringView.beginIndex(), cursorIndex)) - 1;
-                    boolean isCursorRender = isFocused() &&
-                            (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
+                    boolean isCursorRender = isFocused() && isBlinkShow();
                     renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
                     cursorPosition = new CursorPosition(cursorX, currentY);
                 }
@@ -309,21 +306,26 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             renderCompletion(guiGraphics, cursorPosition);
     }
 
+    private boolean isBlinkShow() {
+        return (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
+    }
+
     private void renderCursor(@NotNull GuiGraphics guiGraphics, int cursorX, int currentY, boolean isCursorRender) {
+        final int cursorWidth = 1;
         // cursor
         if (isCursorRender) {
             guiGraphics.fill(cursorX, currentY,
-                    cursorX + 1, currentY + font.lineHeight,
+                    cursorX + cursorWidth, currentY + font.lineHeight,
                     CURSOR_INSERT_COLOR);
         }
     }
 
     private void renderLineNumbers(@NotNull GuiGraphics guiGraphics, boolean isContinuedLine, int lineNo, boolean isCurLine, int currentY) {
-        Component component = Component.literal(isContinuedLine ? ">" : String.valueOf(lineNo))
+        Component component = Component.literal(isContinuedLine ? SPLIT_LINE_MARK : String.valueOf(lineNo))
                 .withStyle(Style.EMPTY.withBold(isCurLine));
         guiGraphics.drawString(font, component,
-                getX() + lineNoWidth() - font.width("0") * component.getString().length(), currentY,
-                0xFF303030, false);
+                getX() + lineNoWidth() - font.width(component), currentY,
+                LINE_NUM_COLOR, false);
     }
 
     private void renderStyledLine(@NotNull GuiGraphics guiGraphics, CodeField.StyledLineView stringView, int currentX, int currentY) {
@@ -334,7 +336,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                 guiGraphics.drawString(font,
                         Component.literal(tokenText).withStyle(style),
                         currentX, currentY,
-                        0xFFFFFFFF, false);
+                        PURE_WHITE, false);
                 currentX += font.width(Component.literal(tokenText).withStyle(style));
             }
         }
@@ -361,6 +363,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     private void renderCompletion(@NotNull GuiGraphics guiGraphics, CursorPosition cursor) {
         final int entryHeight = font.lineHeight + completionPadding.vertical();
         final int renderedSize = Math.min(completions.size(), MAX_RENDERED_COMPLETION_SIZE);
+        final int scrollBarHeight = 10;
         int w = completions.stream()
                 .map(completion -> font.width(completion.content()) + completionPadding.horizontal())
                 .reduce(50, Math::max) + COMPLETION_SCROLL_WIDTH;
@@ -375,10 +378,10 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
         // render content
         guiGraphics.fill(x, y, x + w, y + h,
-                0xffFFFFFF); // FIXME: change to a sprite
+                COMPLETION_BACKGROUND); // FIXME: change to a sprite
         guiGraphics.fill(x, y + (selectedCompletion - firstCompletionLine) * entryHeight,
                 x + w, y + (selectedCompletion - firstCompletionLine + 1) * entryHeight,
-                0xff99CCFF);
+                COMPLETION_SELECTED);
         int cnt = 0;
         for (int i = firstCompletionLine; i < firstCompletionLine + renderedSize; i++) {
             var completion = completions.get(i);
@@ -386,28 +389,28 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             guiGraphics.drawString(font, ellipsize,
                     x + completionPadding.left(),
                     y + (cnt++) * entryHeight + completionPadding.top(),
-                    0xff000000, false);
+                    COMPLETION_TEXT_COLOR, false);
         }
 
         // render scroll bar
         if (completions.size() > MAX_RENDERED_COMPLETION_SIZE) {
             guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y,
                     x + w, y + h - tooltipHeight,
-                    0xff000000);
-            int scrollY = (h - tooltipHeight - 10) *
+                    COMPLETION_SCROLL_BACKGROUND);
+            int scrollY = (h - tooltipHeight - scrollBarHeight) *
                     firstCompletionLine / (completions.size() - MAX_RENDERED_COMPLETION_SIZE);
             guiGraphics.fill(x + w - COMPLETION_SCROLL_WIDTH, y + scrollY,
-                    x + w, y + scrollY + 10,
-                    0xffCCCCCC);
+                    x + w, y + scrollY + scrollBarHeight,
+                    COMPLETION_SCROLL_FOREGROUND);
         }
 
         // render tooltip
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate((float) x + completionPadding.left(), (float) y + entryHeight * renderedSize);
         guiGraphics.pose().scale(TOOLTIP_SCALE, TOOLTIP_SCALE);
-        guiGraphics.drawString(font, Component.literal("Enter to input"),
+        guiGraphics.drawString(font, GuiText.EnterToInput.text(),
                 0, 0, // position handled by pose
-                0xff999999, false);
+                TOOLTIP_TEXT_COLOR, false);
         guiGraphics.pose().popMatrix();
     }
 

@@ -12,8 +12,8 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanDataParser;
-import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         visitFunction_define_body(ctx.function_define_body(), false);
         bytecode.add(WenyanCodes.CREATE_FNCTION, index);
         if (ctx.t.getType() == WenyanRParser.ASYNC_DECLARE_OP) {
-            bytecode.addLoadCode(WenyanPackages.CREATE_ASYNC_ID);
+            bytecode.addLoadCode(Symbol.CREATE_ASYNC_ID);
             bytecode.add(WenyanCodes.CALL, 1);
         }
         bytecode.add(WenyanCodes.STORE, index);
@@ -179,8 +179,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
         WenyanBytecode functionBytecode = new WenyanBytecode(bytecode.getSourceCode());
         List<String> argv = new ArrayList<>();
         if (isObject) {
-            argv.add(WenyanDataParser.SELF_ID);
-            argv.add(WenyanDataParser.PARENT_ID);
+            argv.add(Symbol.SELF_ID);
+            argv.add(Symbol.PARENT_ID);
         }
         for (var arg : argsType) argv.add(arg.id());
         WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode, bytecode, argv);

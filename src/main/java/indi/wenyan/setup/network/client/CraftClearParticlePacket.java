@@ -1,13 +1,12 @@
 package indi.wenyan.setup.network.client;
 
-import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
+import indi.wenyan.setup.network.IWenyanPacketPayload;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
 /**
@@ -16,7 +15,7 @@ import net.neoforged.neoforge.network.handling.IPayloadHandler;
 public record CraftClearParticlePacket(@NonNull BlockPos pos) implements CustomPacketPayload {
 
     public static final Type<CraftClearParticlePacket> TYPE =
-            new Type<>(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "clear_particle"));
+            IWenyanPacketPayload.createType("clear_particle");
 
     public static final StreamCodec<FriendlyByteBuf, CraftClearParticlePacket> STREAM_CODEC =
             StreamCodec.of(

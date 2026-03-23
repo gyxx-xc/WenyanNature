@@ -7,8 +7,9 @@ public enum GuiText implements ILocalizationEnum {
     FloatNoteName,
     Done,
     Lock,
-    CreativeTabTitle
-    ;
+    CreativeTabTitle,
+    EnterToInput, // Enter to input (able to show small)
+    FuNamePrompt;
 
     @Override
     public String getTranslationKey() {

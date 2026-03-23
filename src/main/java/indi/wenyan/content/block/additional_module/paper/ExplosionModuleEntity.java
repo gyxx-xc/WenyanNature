@@ -32,25 +32,25 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class ExplosionModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = WenyanSymbol.var("ExplosionModule");
+    private final String basePackageName = WenyanSymbol.ExplosionModule;
 
     // lighting fire heat harm
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("ExplosionModule.lightning"), _ -> {
+            .handler(WenyanSymbol.ExplosionModule$lightning, _ -> {
                 if (!(getLevel() instanceof ServerLevel sl))
                     throw new WenyanUnreachedException();
                 EntityType.LIGHTNING_BOLT.spawn(sl, getBlockPos(), EntitySpawnReason.COMMAND);
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("ExplosionModule.explode"), _ -> {
+            .handler(WenyanSymbol.ExplosionModule$explode, _ -> {
                 assert level != null;
                 level.explode(null,
                         getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
                         3.0f, true, Level.ExplosionInteraction.BLOCK);
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("ExplosionModule.ignite"), request -> {
+            .handler(WenyanSymbol.ExplosionModule$ignite, request -> {
                 var offset = request.args().getFirst().as(WenyanVec3.TYPE).value(); 
                 BlockPos pos = getBlockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
                 if (!(getLevel() instanceof ServerLevel serverLevel)) {
@@ -64,7 +64,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                         new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.var("ExplosionModule.fireball"), request -> {
+            .handler(WenyanSymbol.ExplosionModule$fireball, request -> {
                 var speed = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 if (!(getLevel() instanceof ServerLevel sl))
                     throw new WenyanUnreachedException();

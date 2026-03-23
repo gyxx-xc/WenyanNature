@@ -6,6 +6,7 @@ import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
@@ -96,7 +97,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
             default -> throw new WenyanCompileException(JudouExceptionText.InvalidDataType.string(), ctx);
         }
         visit(ctx.data());
-        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanDataParser.ARRAY_GET_ID);
+        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, Symbol.ARRAY_GET_ID);
         bytecode.add(WenyanCodes.CALL_ATTR, 1);
         return true;
     }

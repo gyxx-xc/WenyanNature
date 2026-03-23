@@ -21,9 +21,7 @@ public enum NetworkRegister {
      */
     @SubscribeEvent
     public static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(MODID)
-                .versioned("1.0")
-                .optional();
+        PayloadRegistrar registrar = event.registrar(MODID);
 
         serverbound(registrar, RunnerCodePacket.TYPE, RunnerCodePacket.STREAM_CODEC);
         serverbound(registrar, FloatNotePacket.TYPE, FloatNotePacket.STREAM_CODEC);

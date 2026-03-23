@@ -167,6 +167,8 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(Done.getTranslationKey(), "完成");
         add(Lock.getTranslationKey(), "鎖定");
         add(CreativeTabTitle.getTranslationKey(), "吾有一術");
+        add(EnterToInput.getTranslationKey(), "按Enter以输入");
+        add(FuNamePrompt.getTranslationKey(), "符名：");
 
         add(Judou.getTranslationKey(), "句读（程序运行）");
         add(SliceStep.getTranslationKey(), "线程切换长度");

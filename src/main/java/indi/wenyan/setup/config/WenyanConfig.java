@@ -125,6 +125,7 @@ public final class WenyanConfig {
             var builder = new ModConfigSpec.Builder();
 
             builder.push(ConfigText.Judou.getName());
+            // TODO: Change to language enum
             sliceStep = define(builder, ConfigText.SliceStep.getName(), 10, 5, 20, "x100 instructions");
             maxThread = define(builder, ConfigText.MaxThread.getName(), 10, 5, 20);
             watchdogTimeoutAdjust = define(builder, ConfigText.WatchdogTimeout.getName(), 1.0, 0.5, 5.0);

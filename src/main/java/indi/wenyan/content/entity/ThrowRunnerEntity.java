@@ -5,6 +5,7 @@ import indi.wenyan.content.block.runner.BlockPackageGetter;
 import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.block.runner.LazyProgram;
 import indi.wenyan.content.item.throw_runner.FuContainerComponent;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
@@ -23,7 +24,7 @@ import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.Either;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanEntities;
@@ -151,9 +152,9 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     @Override
     public WenyanPackage initEnvironment() {
         var basePackage = IWenyanPlatform.super.initEnvironment();
-        basePackage.put(WenyanPackages.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
+        basePackage.put(Symbol.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
                 new ImportRequest(t, this::getPackage, a));
-        basePackage.put("書", (RequestCallHandler) (thread, self, argsList) ->
+        basePackage.put(WenyanSymbol.PRINT, (RequestCallHandler) (thread, self, argsList) ->
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             if (player != null) {

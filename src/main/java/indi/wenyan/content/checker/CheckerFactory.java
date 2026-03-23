@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
  */
 public enum CheckerFactory {
     ;
+    // TODO: Change this to enum some time
     public static final String PLUS_CHECKER = "plus";
     public static final String ECHO_CHECKER = "echo";
     public static final String LABYRINTH_CHECKER = "labyrinth";

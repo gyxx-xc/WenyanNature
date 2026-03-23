@@ -1,6 +1,7 @@
 package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
@@ -41,12 +42,12 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
-            case "「上下」" -> WenyanValues.of(value.y);
-            case "「東西」" -> WenyanValues.of(value.x);
-            case "「南北」" -> WenyanValues.of(value.z);
-            case "「長」" -> WenyanValues.of(value.length());
-            case "「方長」" -> WenyanValues.of(value.lengthSqr());
-            case "「偏移」" -> new WenyanInlineJavacall(
+            case WenyanSymbol.VECTOR_Y -> WenyanValues.of(value.y);
+            case WenyanSymbol.VECTOR_X -> WenyanValues.of(value.x);
+            case WenyanSymbol.VECTOR_Z -> WenyanValues.of(value.z);
+            case WenyanSymbol.VECTOR_LENGTH -> WenyanValues.of(value.length());
+            case WenyanSymbol.VECTOR_LENGTH_SQR -> WenyanValues.of(value.lengthSqr());
+            case WenyanSymbol.VECTOR_OFFSET -> new WenyanInlineJavacall(
                     (_, args) -> {
                         if (args.size() == 1) {
                             return WenyanMinecraftValues.of(value.add(args.getFirst().as(TYPE).value));
@@ -82,13 +83,13 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         @Override
         public IWenyanValue getAttribute(String name) throws WenyanException {
             return switch (name) {
-                case "「零」" -> ZERO;
-                case "「上」" -> UP;
-                case "「下」" -> DOWN;
-                case "「東」" -> EAST;
-                case "「西」" -> WEST;
-                case "「南」" -> SOUTH;
-                case "「北」" -> NORTH;
+                case WenyanSymbol.VECTOR_TYPE_ZERO -> ZERO;
+                case WenyanSymbol.VECTOR_TYPE_UP -> UP;
+                case WenyanSymbol.VECTOR_TYPE_DOWN -> DOWN;
+                case WenyanSymbol.VECTOR_TYPE_EAST -> EAST;
+                case WenyanSymbol.VECTOR_TYPE_WEST -> WEST;
+                case WenyanSymbol.VECTOR_TYPE_SOUTH -> SOUTH;
+                case WenyanSymbol.VECTOR_TYPE_NORTH -> NORTH;
                 default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
             };
         }

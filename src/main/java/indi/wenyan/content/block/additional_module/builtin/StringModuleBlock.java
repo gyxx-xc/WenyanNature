@@ -18,62 +18,62 @@ public class StringModuleBlock extends AbstractFuluBlock {
     public static final String ID = "string_module_block";
 
     public static final MapCodec<StringModuleBlock> CODEC = simpleCodec(StringModuleBlock::new);
-    public static final String DEVICE_NAME = WenyanSymbol.var("StringModule");
+    public static final String DEVICE_NAME = WenyanSymbol.StringModule;
     public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .function(WenyanSymbol.var("StringModule.length"),
+                    .function(WenyanSymbol.StringModule$length,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.getFirst().as(WenyanString.TYPE).value();
                                 return WenyanValues.of(str.length());
                             })
-                    .function(WenyanSymbol.var("StringModule.charAt"),
+                    .function(WenyanSymbol.StringModule$charAt,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var idx = args.get(1).as(WenyanInteger.TYPE).value();
                                 return WenyanValues.of(str.substring(idx, idx + 1));
                             })
-                    .function(WenyanSymbol.var("StringModule.indexOf"),
+                    .function(WenyanSymbol.StringModule$indexOf,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var sub = args.get(1).as(WenyanString.TYPE).value();
                                 return WenyanValues.of(str.indexOf(sub));
                             })
-                    .function(WenyanSymbol.var("StringModule.split"),
+                    .function(WenyanSymbol.StringModule$split,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var sep = args.get(1).as(WenyanString.TYPE).value();
                                 return WenyanValues.of(Arrays.stream(str.split(sep)).<IWenyanValue>map(WenyanValues::of).toList());
                             })
-                    .function(WenyanSymbol.var("StringModule.replace"),
+                    .function(WenyanSymbol.StringModule$replace,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var target = args.get(1).as(WenyanString.TYPE).value();
                                 var replacement = args.get(2).as(WenyanString.TYPE).value();
                                 return WenyanValues.of(str.replace(target, replacement));
                             })
-                    .function(WenyanSymbol.var("StringModule.reverse"),
+                    .function(WenyanSymbol.StringModule$reverse,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.getFirst().as(WenyanString.TYPE).value();
                                 return WenyanValues.of(new StringBuilder(str).reverse().toString());
                             })
-                    .function(WenyanSymbol.var("StringModule.trim"),
+                    .function(WenyanSymbol.StringModule$trim,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.getFirst().as(WenyanString.TYPE).value();
                                 return WenyanValues.of(str.trim());
                             })
-                    .function(WenyanSymbol.var("StringModule.contains"),
+                    .function(WenyanSymbol.StringModule$contains,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var sub = args.get(1).as(WenyanString.TYPE).value();
                                 return WenyanValues.of(str.contains(sub));
                             })
-                    .function(WenyanSymbol.var("StringModule.startsWith"),
+                    .function(WenyanSymbol.StringModule$startsWith,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var prefix = args.get(1).as(WenyanString.TYPE).value();
                                 return WenyanValues.of(str.startsWith(prefix));
                             })
-                    .function(WenyanSymbol.var("StringModule.endsWith"),
+                    .function(WenyanSymbol.StringModule$endsWith,
                             (IWenyanValue _, List<IWenyanValue> args) -> {
                                 var str = args.get(0).as(WenyanString.TYPE).value();
                                 var suffix = args.get(1).as(WenyanString.TYPE).value();

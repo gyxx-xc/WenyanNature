@@ -2,6 +2,7 @@ package indi.wenyan.content.block.additional_module.block;
 
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
+import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +30,12 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements Blo
     @Getter
     private final List<String> output = new ArrayList<>();
 
-    @Override
-    public @NotNull String getBasePackageName() {
-        return "";
-    }
+    @Getter
+    private final String basePackageName = WenyanSymbol.SCREEN;
 
     @Getter
     public final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler("書", (HandlerPackageBuilder.HandlerReturnFunction) (ignore, request) -> {
+            .handler(WenyanSymbol.PRINT, (HandlerPackageBuilder.HandlerReturnFunction) (ignore, request) -> {
                 StringBuilder result = new StringBuilder();
                 for (IWenyanValue arg : request.args()) {
                     result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));

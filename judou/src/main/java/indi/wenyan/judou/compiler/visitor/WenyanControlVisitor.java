@@ -4,7 +4,7 @@ import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.utils.WenyanDataParser;
+import indi.wenyan.judou.utils.Symbol;
 
 // this class is for
 // flush_statement
@@ -88,7 +88,7 @@ public class WenyanControlVisitor extends WenyanVisitor {
     public Boolean visitFor_arr_statement(WenyanRParser.For_arr_statementContext ctx) {
         bytecode.enterFor();
         exprVisitor.visit(ctx.data());
-        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, WenyanDataParser.ITER_ID);
+        bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, Symbol.ITER_ID);
         bytecode.add(WenyanCodes.CALL_ATTR, 0);
         int forEnd = bytecode.getNewLabel();
         int progStart = bytecode.getNewLabel();

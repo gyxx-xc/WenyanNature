@@ -30,7 +30,7 @@ import static indi.wenyan.setup.language.ExceptionText.NeedBlockItem;
 
 public class BlockModuleEntity extends AbstractModuleEntity {
     @Getter
-    private final String basePackageName = WenyanSymbol.var("BlockModule");
+    private final String basePackageName = WenyanSymbol.BlockModule;
 
     @Getter
     private int continueCount = 0;
@@ -41,7 +41,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.var("BlockModule.search"), request -> {
+            .handler(WenyanSymbol.BlockModule$search, request -> {
                 Vec3 s = request.args().get(0).as(WenyanVec3.TYPE).value();
                 BlockPos start = new BlockPos((int) s.x, (int) s.y, (int) s.z);
                 Vec3 e = request.args().get(1).as(WenyanVec3.TYPE).value();
@@ -84,14 +84,14 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                             new BlockPosRangePacket(getBlockPos(), start, end, found));
                 return WenyanValues.of(found);
             })
-            .handler(WenyanSymbol.var("BlockModule.get"), request -> {
+            .handler(WenyanSymbol.BlockModule$get, request -> {
                 Vec3 p = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
                 assert level != null;
                 BlockState state = level.getBlockState(pos);
                 return WenyanMinecraftValues.of(state);
             })
-            .handler(WenyanSymbol.var("BlockModule.attach"), _ -> {
+            .handler(WenyanSymbol.BlockModule$attach, _ -> {
                 Direction attachedDirection = AbstractFuluBlock
                         .getConnectedDirection(getBlockState()).getOpposite();
                 BlockPos pos = getBlockPos().relative(attachedDirection);
