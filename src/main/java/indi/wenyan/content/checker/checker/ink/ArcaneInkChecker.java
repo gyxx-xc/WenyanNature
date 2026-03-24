@@ -12,7 +12,7 @@ public class ArcaneInkChecker extends CraftingAnswerChecker {
     @Override
     public void init() {
         super.init();
-        int n = random.nextInt(199) + 1;
+        int n = random.nextInt(19) + 1;
         setVariable(0,WenyanValues.of(n));
 
         int[] a = new int[2000];

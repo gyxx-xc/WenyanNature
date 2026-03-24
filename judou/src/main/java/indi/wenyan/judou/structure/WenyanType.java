@@ -6,6 +6,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 
 /**
  * Represents a type in the Wenyan language
@@ -70,14 +71,15 @@ public class WenyanType<T extends IWenyanValue> {
      */
     public int ordinal() {
         return switch (name) {
-            case "null" -> 0;
-            case "number" -> 1;
-            case "bool" -> 2;
-            case "string" -> 3;
-            case "list" -> 4;
+            // FIXME: refactor me some time
+            case "空無" -> 0;
+            case "數" -> 1;
+            case "爻" -> 2;
+            case "言" -> 3;
+            case "列" -> 4;
             case "object" -> 5;
             case "object_type" -> 6;
-            case "function" -> 7;
+            case "術" -> 7;
             default -> throw new IllegalArgumentException("Unknown WenyanType: " + name);
         };
     }
