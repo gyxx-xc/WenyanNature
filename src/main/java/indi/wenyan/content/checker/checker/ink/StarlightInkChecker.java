@@ -1,8 +1,6 @@
 package indi.wenyan.content.checker.checker.ink;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
@@ -12,7 +10,7 @@ import net.minecraft.util.RandomSource;
  * It provides a random integer n (1 <= n <= 50) and expects the sum of 1! + 2!
  * + ... + n!
  */
-public class StarlightInkChecker extends CraftingAnswerChecker {
+public class StarlightInkChecker extends ValueAnswerChecker {
     public StarlightInkChecker(RandomSource random) {
         super(random);
     }

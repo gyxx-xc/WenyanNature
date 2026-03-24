@@ -1,10 +1,10 @@
 package indi.wenyan.content.checker.checker.challenge;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-public class Ex2Checker extends CraftingAnswerChecker {
+public class Ex2Checker extends ValueAnswerChecker {
     public Ex2Checker(RandomSource random) {
         super(random);
     }

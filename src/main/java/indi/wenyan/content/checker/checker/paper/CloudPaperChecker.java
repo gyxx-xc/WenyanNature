@@ -1,9 +1,6 @@
 package indi.wenyan.content.checker.checker.paper;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
-import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
@@ -11,7 +8,7 @@ import net.minecraft.util.RandomSource;
  * CloudPaperChecker verifies if the user correctly implemented the NOIP2015
  * knight coin problem.
  */
-public class CloudPaperChecker extends CraftingAnswerChecker {
+public class CloudPaperChecker extends ValueAnswerChecker {
     public CloudPaperChecker(RandomSource random) {
         super(random);
     }

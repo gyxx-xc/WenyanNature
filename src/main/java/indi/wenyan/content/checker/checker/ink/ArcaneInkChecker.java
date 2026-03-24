@@ -1,10 +1,10 @@
 package indi.wenyan.content.checker.checker.ink;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-public class ArcaneInkChecker extends CraftingAnswerChecker {
+public class ArcaneInkChecker extends ValueAnswerChecker {
     public ArcaneInkChecker(RandomSource random) {
         super(random);
     }

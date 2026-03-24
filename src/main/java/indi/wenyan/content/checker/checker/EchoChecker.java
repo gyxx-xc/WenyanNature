@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker.checker;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -12,7 +12,7 @@ import net.minecraft.util.RandomSource;
  * <p>
  * output var0
  */
-public class EchoChecker extends CraftingAnswerChecker {
+public class EchoChecker extends ValueAnswerChecker {
     private IWenyanValue ans;
 
     public EchoChecker(RandomSource random) {

@@ -1,8 +1,6 @@
 package indi.wenyan.content.checker.checker.ink;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
@@ -14,7 +12,7 @@ import net.minecraft.util.RandomSource;
  * <p>
  * output var0 + var1
  */
-public class BambooInkChecker extends CraftingAnswerChecker {
+public class BambooInkChecker extends ValueAnswerChecker {
     public BambooInkChecker(RandomSource random) {
         super(random);
     }

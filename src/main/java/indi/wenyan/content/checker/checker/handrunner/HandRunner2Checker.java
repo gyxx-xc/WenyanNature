@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker.checker.handrunner;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
@@ -14,7 +14,7 @@ import java.util.List;
  * HandRunner2Checker verifies if the user correctly implemented the score
  * calculation.
  */
-public class HandRunner2Checker extends CraftingAnswerChecker {
+public class HandRunner2Checker extends ValueAnswerChecker {
     private double expectedAvg;
 
     public HandRunner2Checker(RandomSource random) {

@@ -1,12 +1,10 @@
 package indi.wenyan.content.checker.checker.handrunner;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-public class HandRunner6Checker extends CraftingAnswerChecker {
+public class HandRunner6Checker extends ValueAnswerChecker {
     public HandRunner6Checker(RandomSource random) {
         super(random);
     }

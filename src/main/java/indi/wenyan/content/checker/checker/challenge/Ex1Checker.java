@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker.checker.challenge;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ex1Checker extends CraftingAnswerChecker {
+public class Ex1Checker extends ValueAnswerChecker {
     private IWenyanValue ans;
 
     public Ex1Checker(RandomSource random) {

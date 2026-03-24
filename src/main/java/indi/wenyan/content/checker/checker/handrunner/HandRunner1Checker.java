@@ -1,8 +1,6 @@
 package indi.wenyan.content.checker.checker.handrunner;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
@@ -11,7 +9,7 @@ import net.minecraft.util.RandomSource;
  * It provides a random integer and expects true if it is greater than 5, false
  * otherwise.
  */
-public class HandRunner1Checker extends CraftingAnswerChecker {
+public class HandRunner1Checker extends ValueAnswerChecker {
     public HandRunner1Checker(RandomSource random) {
         super(random);
     }

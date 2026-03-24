@@ -1,9 +1,6 @@
 package indi.wenyan.content.checker.checker.ink;
 
-import indi.wenyan.content.checker.CraftingAnswerChecker;
-import indi.wenyan.content.checker.IAnsweringChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
@@ -13,7 +10,7 @@ import net.minecraft.util.RandomSource;
  * reaches 1
  * when it is halved daily.
  */
-public class CinnabarInkChecker extends CraftingAnswerChecker {
+public class CinnabarInkChecker extends ValueAnswerChecker {
     public CinnabarInkChecker(RandomSource random) {
         super(random);
     }
