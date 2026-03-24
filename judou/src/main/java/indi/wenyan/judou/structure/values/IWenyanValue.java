@@ -1,9 +1,9 @@
 package indi.wenyan.judou.structure.values;
 
+import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
@@ -196,10 +196,12 @@ public interface IWenyanValue {
      * @param type Target type
      * @return Empty value of the specified type
      */
-    static IWenyanValue emptyOf(WenyanType<?> type) throws WenyanException {
-        if (type == IWenyanNumber.TYPE) return WenyanValues.of(0);
-        if (type == WenyanBoolean.TYPE) return WenyanValues.of(false);
-        if (type == WenyanString.TYPE) return WenyanValues.of("");
-        throw new WenyanUnreachedException();
+    static IWenyanValue emptyOf(ParsableType type) throws WenyanException {
+        return switch (type) {
+            case NUMBER -> WenyanValues.of(0);
+            case STRING -> WenyanValues.of("");
+            case BOOLEAN -> WenyanValues.of(false);
+            default -> throw new WenyanUnreachedException();
+        };
     }
 }

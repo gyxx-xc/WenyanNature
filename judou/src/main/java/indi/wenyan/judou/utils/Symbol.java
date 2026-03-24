@@ -14,7 +14,6 @@ public enum Symbol {
     public static final String ARRAY_GET_ID = "取";
     public static final String CONSTRUCTOR_ID = "造";
     public static final String ITER_ID = "循";
-    // these string for candy visitor
     public static final String AND_ID = "且";
     public static final String OR_ID = "或";
     public static final String MOD_ID = "模";

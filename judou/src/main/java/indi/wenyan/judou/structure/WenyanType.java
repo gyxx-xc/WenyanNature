@@ -6,7 +6,6 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.language.JudouTypeText;
 
 /**
  * Represents a type in the Wenyan language
@@ -16,16 +15,20 @@ import indi.wenyan.judou.utils.language.JudouTypeText;
 @SuppressWarnings("ClassCanBeRecord") // no it can't
 public class WenyanType<T extends IWenyanValue> {
 
-    /** The name of this type */
+    /**
+     * The name of this type
+     */
     private final String name;
 
-    /** The Java class for this type */
+    /**
+     * The Java class for this type
+     */
     public final Class<T> tClass;
 
     /**
      * Creates a new type
      *
-     * @param name Type name
+     * @param name   Type name
      * @param tClass Java class for this type
      */
     public WenyanType(String name, Class<T> tClass) {
@@ -62,26 +65,6 @@ public class WenyanType<T extends IWenyanValue> {
             return WenyanDouble.TYPE;
         }
         return WenyanInteger.TYPE;
-    }
-
-    /**
-     * Returns the ordinal value of this type for comparison purposes
-     *
-     * @return An integer representing the type's position in the type hierarchy
-     */
-    public int ordinal() {
-        return switch (name) {
-            // FIXME: refactor me some time
-            case "空無" -> 0;
-            case "數" -> 1;
-            case "爻" -> 2;
-            case "言" -> 3;
-            case "列" -> 4;
-            case "object" -> 5;
-            case "object_type" -> 6;
-            case "術" -> 7;
-            default -> throw new IllegalArgumentException("Unknown WenyanType: " + name);
-        };
     }
 
     @Override

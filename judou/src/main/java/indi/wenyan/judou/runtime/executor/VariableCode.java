@@ -2,11 +2,11 @@ package indi.wenyan.judou.runtime.executor;
 
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
+import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.*;
-import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
+import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.values.WenyanLeftValue;
+import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -61,19 +61,7 @@ public class VariableCode extends WenyanCode {
             }
             case CAST -> {
                 IWenyanValue value = runtime.getProcessStack().pop();
-                // TODO: use const with TYPE in bytecode?
-                var castedValue = switch (arg) {
-                    case 1 -> value.as(IWenyanNumber.TYPE);
-                    case 2 -> value.as(WenyanBoolean.TYPE);
-                    case 3 -> value.as(WenyanString.TYPE);
-                    case 4 -> value.as(WenyanList.TYPE);
-                    case 5 -> value.as(IWenyanObject.TYPE);
-                    case 6 -> value.as(IWenyanObjectType.TYPE);
-                    case 7 -> value.as(IWenyanFunction.TYPE);
-                    default ->
-                            throw new WenyanException(JudouExceptionText.InvalidDataType.string());
-                };
-                runtime.pushReturnValue(castedValue);
+                runtime.pushReturnValue(value.as(ParsableType.values()[arg].getType()));
             }
         }
     }

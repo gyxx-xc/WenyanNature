@@ -17,7 +17,6 @@ import net.minecraft.resources.Identifier;
 
 import java.util.Deque;
 
-
 // copy from FittingMultiLineTextWidget
 public class CodeOutputWidget extends AbstractTextAreaWidget {
     private final MultiLineTextWidget multilineWidget;

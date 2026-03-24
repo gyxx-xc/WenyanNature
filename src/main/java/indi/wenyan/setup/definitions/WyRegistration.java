@@ -5,6 +5,7 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.gui_api.CraftingBlockContainer;
+import indi.wenyan.content.item.ink.BambooInk;
 import indi.wenyan.content.item.throw_runner.FuContainerComponent;
 import indi.wenyan.content.recipe.answering.AnsweringRecipe;
 import indi.wenyan.content.recipe.combine_module.ThrowModuleRecipe;
@@ -19,6 +20,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -58,6 +60,7 @@ public enum WyRegistration {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
     public static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = DeferredRegister.create(BuiltInRegistries.RECIPE_BOOK_CATEGORY, MODID);
+    public static final DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECT = DeferredRegister.create(BuiltInRegistries.CONSUME_EFFECT_TYPE, MODID);
 
     public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER = MENU_TYPE.register(CraftingBlock.ID,
             () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
@@ -107,4 +110,7 @@ public enum WyRegistration {
             Registries.ITEM,
             Identifier.fromNamespaceAndPath(MODID, "module_item")
     );
+
+    public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BambooInk.NoFireEffect>> NO_FIRE_EFFECT = CONSUME_EFFECT.register("no_fire_effect",
+            () -> new ConsumeEffect.Type<>(BambooInk.NoFireEffect.CODEC, BambooInk.NoFireEffect.STREAM_CODEC));
 }

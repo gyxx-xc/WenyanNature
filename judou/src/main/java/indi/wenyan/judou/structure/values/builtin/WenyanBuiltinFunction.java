@@ -3,6 +3,7 @@ package indi.wenyan.judou.structure.values.builtin;
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
+import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
@@ -47,7 +48,7 @@ public record WenyanBuiltinFunction(
         int size = argsList.size();
         for (; i < size; i++)
             newRuntime.setLocal(i, WenyanLeftValue.varOf(
-                    argsList.get(i).as(args().get(i).type())));
+                    argsList.get(i).as(args().get(i).type().getType())));
         return newRuntime;
     }
 
@@ -75,7 +76,7 @@ public record WenyanBuiltinFunction(
     /**
      * Represents a function argument with a type and identifier.
      */
-    public record Arg(WenyanType<?> type, String id){
+    public record Arg(ParsableType type, String id){
         @Override
         public @NotNull String toString() {
             return id + ":" + type.toString();

@@ -1,14 +1,8 @@
 package indi.wenyan.judou.utils;
 
+import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanFunction;
-import indi.wenyan.judou.structure.values.IWenyanNumber;
-import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.math.BigInteger;
@@ -50,20 +44,10 @@ public enum WenyanDataParser {
         put("正", 40);
         put("載", 44);
         put("極", 48);
-
-        //CHS
-        put("万", 4);
-        put("亿", 8);
-        put("沟", 32);
-        put("涧", 36);
-        put("载", 44);
-        put("极", 48);
-
     }};
 
     public static final Set<String> SIGN = new HashSet<>() {{
         add("負");
-        add("负");
     }};
 
     public static final Set<String> FLOAT_DIVISION = new HashSet<>() {{
@@ -83,32 +67,20 @@ public enum WenyanDataParser {
         put("埃", -10);
         put("渺", -11);
         put("漠", -12);
-
-        put("厘", -2);
-        put("丝", -4);
-        put("纤", -7);
-        put("尘", -9);
-
     }};
 
     private static final HashMap<String, Boolean> BOOL_MAP = new HashMap<>() {{
         put("陰", false);
         put("陽", true);
-
-        put("阴", false);
-        put("阳", true);
     }};
 
-    private static final HashMap<String, WenyanType<?>> TYPE_MAP = new HashMap<>() {{
-        put("爻", WenyanBoolean.TYPE);
-        put("數", IWenyanNumber.TYPE);
-        put("言", WenyanString.TYPE);
-        put("列", WenyanList.TYPE);
-
-        put("数", IWenyanNumber.TYPE);
-
-        put("物", IWenyanObject.TYPE);
-        put("術", IWenyanFunction.TYPE);
+    private static final HashMap<String, ParsableType> TYPE_MAP = new HashMap<>() {{
+        put("爻", ParsableType.BOOLEAN);
+        put("數", ParsableType.NUMBER);
+        put("言", ParsableType.STRING);
+        put("列", ParsableType.LIST);
+        put("物", ParsableType.OBJECT);
+        put("術", ParsableType.FUNCTION);
     }};
 
     public static IWenyanValue parseWyInt(String text) throws WenyanException.WenyanNumberException {
@@ -176,7 +148,7 @@ public enum WenyanDataParser {
         return text.substring(2, text.length() - 2);
     }
 
-    public static WenyanType<?> parseType(String text) throws WenyanException.WenyanDataException {
+    public static ParsableType parseType(String text) throws WenyanException.WenyanDataException {
         if (TYPE_MAP.containsKey(text))
             return TYPE_MAP.get(text);
         else

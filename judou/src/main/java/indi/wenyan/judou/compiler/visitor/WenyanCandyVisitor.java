@@ -3,9 +3,9 @@ package indi.wenyan.judou.compiler.visitor;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
+import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.utils.Symbol;
 import indi.wenyan.judou.utils.WenyanDataParser;
 import indi.wenyan.judou.utils.WenyanValues;
@@ -51,9 +51,9 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     @Override
     public Boolean visitBoolean_algebra_statement(WenyanRParser.Boolean_algebra_statementContext ctx) {
         exprVisitor.visit(ctx.data(0));
-        bytecode.add(WenyanCodes.CAST, WenyanBoolean.TYPE.ordinal());
+        bytecode.add(WenyanCodes.CAST, ParsableType.BOOLEAN.ordinal());
         exprVisitor.visit(ctx.data(1));
-        bytecode.add(WenyanCodes.CAST, WenyanBoolean.TYPE.ordinal());
+        bytecode.add(WenyanCodes.CAST, ParsableType.BOOLEAN.ordinal());
 
         switch (ctx.op.getType()) {
             case WenyanRParser.AND -> bytecode.addLoadCode(Symbol.AND_ID);
