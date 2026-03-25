@@ -9,7 +9,7 @@ import indi.wenyan.judou.antlr.WenyanRLexer;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -264,7 +264,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     }
 
     // rendering
-    protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    @Override
+    protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int cursorIndex = backend.getCursor();
         int currentY = getY() + innerPadding();
         int lineNo = 1;
@@ -310,7 +311,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         return (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
     }
 
-    private void renderCursor(@NotNull GuiGraphics guiGraphics, int cursorX, int currentY, boolean isCursorRender) {
+    private void renderCursor(@NotNull GuiGraphicsExtractor guiGraphics, int cursorX, int currentY, boolean isCursorRender) {
         final int cursorWidth = 1;
         // cursor
         if (isCursorRender) {
@@ -320,20 +321,20 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderLineNumbers(@NotNull GuiGraphics guiGraphics, boolean isContinuedLine, int lineNo, boolean isCurLine, int currentY) {
+    private void renderLineNumbers(@NotNull GuiGraphicsExtractor guiGraphics, boolean isContinuedLine, int lineNo, boolean isCurLine, int currentY) {
         Component component = Component.literal(isContinuedLine ? SPLIT_LINE_MARK : String.valueOf(lineNo))
                 .withStyle(Style.EMPTY.withBold(isCurLine));
-        guiGraphics.drawString(font, component,
+        guiGraphics.text(font, component,
                 getX() + lineNoWidth() - font.width(component), currentY,
                 LINE_NUM_COLOR, false);
     }
 
-    private void renderStyledLine(@NotNull GuiGraphics guiGraphics, CodeField.StyledLineView stringView, int currentX, int currentY) {
+    private void renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, CodeField.StyledLineView stringView, int currentX, int currentY) {
         if (stringView.beginIndex() != stringView.endIndex()) {
             for (var styledView : stringView.styles()) {
                 var style = styleFromTokenType(styledView.token());
                 String tokenText = backend.getContent().substring(styledView.beginIndex(), styledView.endIndex());
-                guiGraphics.drawString(font,
+                guiGraphics.text(font,
                         Component.literal(tokenText).withStyle(style),
                         currentX, currentY,
                         PURE_WHITE, false);
@@ -342,7 +343,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderPlaceholders(@NotNull GuiGraphics guiGraphics, ListIterator<CodeField.Placeholder> placeholderIter, CodeField.StyledLineView stringView, int currentY) {
+    private void renderPlaceholders(@NotNull GuiGraphicsExtractor guiGraphics, ListIterator<CodeField.Placeholder> placeholderIter, CodeField.StyledLineView stringView, int currentY) {
         while (placeholderIter.hasNext()) {
             var placeholder = placeholderIter.next();
             int place = placeholder.index();
@@ -360,7 +361,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderCompletion(@NotNull GuiGraphics guiGraphics, CursorPosition cursor) {
+    private void renderCompletion(@NotNull GuiGraphicsExtractor guiGraphics, CursorPosition cursor) {
         final int entryHeight = font.lineHeight + completionPadding.vertical();
         final int renderedSize = Math.min(completions.size(), MAX_RENDERED_COMPLETION_SIZE);
         final int scrollBarHeight = 10;
@@ -386,7 +387,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         for (int i = firstCompletionLine; i < firstCompletionLine + renderedSize; i++) {
             var completion = completions.get(i);
             String ellipsize = font.ellipsize(Component.literal(completion.content()), MAX_COMPLETION_WIDTH - COMPLETION_SCROLL_WIDTH).getString();
-            guiGraphics.drawString(font, ellipsize,
+            guiGraphics.text(font, ellipsize,
                     x + completionPadding.left(),
                     y + (cnt++) * entryHeight + completionPadding.top(),
                     COMPLETION_TEXT_COLOR, false);
@@ -408,13 +409,13 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate((float) x + completionPadding.left(), (float) y + entryHeight * renderedSize);
         guiGraphics.pose().scale(TOOLTIP_SCALE, TOOLTIP_SCALE);
-        guiGraphics.drawString(font, GuiText.EnterToInput.text(),
+        guiGraphics.text(font, GuiText.EnterToInput.text(),
                 0, 0, // position handled by pose
                 TOOLTIP_TEXT_COLOR, false);
         guiGraphics.pose().popMatrix();
     }
 
-    private void renderSelection(@NotNull GuiGraphics guiGraphics) {
+    private void renderSelection(@NotNull GuiGraphicsExtractor guiGraphics) {
         var selected = textField.getSelected();
         int k1 = getX() + innerPadding() + lineNoWidth();
         int currentY = getY() + innerPadding();
@@ -442,7 +443,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     }
 
     @Override
-    protected void renderBackground(@NotNull GuiGraphics guiGraphics) {
+    protected void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                 BACKGROUND,
                 getX() - outerPadding.left(), getY() - outerPadding.top(),

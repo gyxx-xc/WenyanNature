@@ -6,7 +6,7 @@ import indi.wenyan.client.gui.code_editor.widget.*;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -87,9 +87,9 @@ public class RunnerBlockScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics,
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics,
                        int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
         snippetWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
@@ -108,7 +108,7 @@ public class RunnerBlockScreen extends Screen {
         return super.keyReleased(event);
     }
     private boolean hasShiftDown = false;
-    public void renderSnippetTooltip(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY,
+    public void renderSnippetTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
                                      SnippetSet.Snippet snippet) {
         List<ClientTooltipComponent> tooltip = Lists.newArrayList();
         tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(snippet.title(), Style.EMPTY)));
@@ -139,14 +139,14 @@ public class RunnerBlockScreen extends Screen {
                 tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.composite(lineComp)));
             }
         }
-        guiGraphics.renderTooltip(font, tooltip, mouseX, mouseY,
+        guiGraphics.tooltip(font, tooltip, mouseX, mouseY,
                 DefaultTooltipPositioner.INSTANCE,
                 ItemStack.EMPTY.get(DataComponents.TOOLTIP_STYLE));
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderTransparentBackground(guiGraphics);
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        extractTransparentBackground(guiGraphics);
     }
 
 //    @Override

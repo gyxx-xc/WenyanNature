@@ -8,7 +8,7 @@ import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Setter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -71,7 +71,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
     }
 
     @Override
-    protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
         setScrollAmount(scrollAmount()); // clamp scroll amount
         int offsetMouseY = mouseY + (int) scrollAmount();
@@ -95,7 +95,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderEntry(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
+    private void renderEntry(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int currentY,
                            String title, @Nullable SnippetSet.Snippet tooltip, boolean isUnfold) {
         if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
@@ -110,7 +110,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
             var text = Language.getInstance().getVisualOrder(
                     font.ellipsize(FormattedText.of(title),
                             width - totalInnerPadding() - entryPadding.horizontal()));
-            guiGraphics.drawString(font, text,
+            guiGraphics.text(font, text,
                     getX() + innerPadding() + entryPadding.left(), currentY + entryPadding.top(),
                     0xFFFFFFFF, false);
 
@@ -120,7 +120,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderDir(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
+    private void renderDir(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int currentY,
                          String title, boolean isUnfold) {
         if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
@@ -135,7 +135,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
             var text = Language.getInstance().getVisualOrder(
                     font.ellipsize(FormattedText.of(title),
                             width - totalInnerPadding() - buttonPadding.horizontal()));
-            guiGraphics.drawString(font, text,
+            guiGraphics.text(font, text,
                     getX() + innerPadding() + buttonPadding.left(), currentY + buttonPadding.top(),
                     0xFFFFFFFF, false);
         }

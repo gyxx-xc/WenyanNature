@@ -9,7 +9,7 @@ import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Setter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -81,8 +81,9 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
         this.backend = backend;
     }
 
+
     @Override
-    protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int currentY = getY() + innerPadding();
         setScrollAmount(scrollAmount()); // clamp scroll amount
         int offsetMouseY = mouseY + (int) scrollAmount();
@@ -97,7 +98,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderEntry(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
+    private void renderEntry(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int currentY,
                              Member member) {
         if (withinContentAreaTopBottom(currentY, currentY + ENTRY_HEIGHT)) {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
@@ -117,13 +118,13 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
             var text = Language.getInstance().getVisualOrder(
                     font.ellipsize(FormattedText.of(member.name()),
                             width - totalInnerPadding() - entryPadding.horizontal()));
-            guiGraphics.drawString(font, text,
+            guiGraphics.text(font, text,
                     getX() + innerPadding() + entryPadding.left(), currentY + entryPadding.top(),
                     0xFFFFFFFF, false);
         }
     }
 
-    private void renderDir(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, int currentY,
+    private void renderDir(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int currentY,
                            PackageSnippet pack) {
         if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
             int x = getX() + innerPadding() + buttonPadding.left();
@@ -137,7 +138,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
                     PACKAGE_DIR_ICON_SPRITES.get(true, buttonHoveredLeft),
                     getX() + innerPadding(), currentY,
                     ICON_WIDTH + buttonPadding.horizontal(), DIR_HEIGHT);
-            guiGraphics.renderFakeItem(pack.itemStack(), x, y);
+            guiGraphics.item(pack.itemStack(), x, y);
 
             boolean buttonHoveredRight = mouseX >= getX() + innerPadding() + ICON_WIDTH + buttonPadding.horizontal() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
@@ -150,7 +151,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
             var text = Language.getInstance().getVisualOrder(
                     font.ellipsize(FormattedText.of(pack.name()),
                             width - totalInnerPadding() - buttonPadding.horizontal()));
-            guiGraphics.drawString(font, text, x + ICON_WIDTH + buttonPadding.horizontal() + buttonPadding.right(), y,
+            guiGraphics.text(font, text, x + ICON_WIDTH + buttonPadding.horizontal() + buttonPadding.right(), y,
                     0xFFFFFFFF, false);
         }
     }

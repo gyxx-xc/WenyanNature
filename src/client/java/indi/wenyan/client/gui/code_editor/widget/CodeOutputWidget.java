@@ -3,7 +3,7 @@ package indi.wenyan.client.gui.code_editor.widget;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.OutputBackend;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
@@ -42,10 +42,11 @@ public class CodeOutputWidget extends AbstractTextAreaWidget {
         return this.multilineWidget.getHeight();
     }
 
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    @Override
+    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate(getInnerLeft(), getInnerTop());
-        this.multilineWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.multilineWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.pose().popMatrix();
     }
 
@@ -65,7 +66,7 @@ public class CodeOutputWidget extends AbstractTextAreaWidget {
     }
 
     @Override
-    protected void renderBackground(GuiGraphics guiGraphics) {
+    protected void extractBackground(GuiGraphicsExtractor guiGraphics) {
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENTRY_SPRITES.get(true, true), this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 }

@@ -4,7 +4,7 @@ import indi.wenyan.judou.utils.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.language.GuiText;
 import indi.wenyan.setup.network.server.FloatNotePacket;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
@@ -67,9 +67,9 @@ public class FloatNoteNamingScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, TEXT_FIELD_SPRITE, 59, 20, 110, 16);
-        renderTransparentBackground(guiGraphics);
+        extractTransparentBackground(guiGraphics);
     }
 
     @Override

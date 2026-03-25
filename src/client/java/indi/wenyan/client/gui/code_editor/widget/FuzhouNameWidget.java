@@ -3,7 +3,7 @@ package indi.wenyan.client.gui.code_editor.widget;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.TitleBackend;
 import indi.wenyan.setup.language.GuiText;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 
@@ -38,7 +38,7 @@ public class FuzhouNameWidget extends EditBox {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Render pure black background
         guiGraphics.fill(this.fullX, this.fullY,
                 this.fullX + this.fullWidth, this.fullY + this.height,
@@ -46,15 +46,15 @@ public class FuzhouNameWidget extends EditBox {
 
         final int promptLength = font.width(GuiText.FuNamePrompt.text()) + font.width(PREFIX);
         // Render prefix "書「"
-        guiGraphics.drawString(font, GuiText.FuNamePrompt.text().append(PREFIX),
+        guiGraphics.text(font, GuiText.FuNamePrompt.text().append(PREFIX),
                 this.getX() - promptLength - 4, this.getY(),
                 FOREGROUND_COLOR, false);
 
         // Render the EditBox content
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // Render suffix "」" manually to ensure cursor is before it
-        guiGraphics.drawString(font, SUFFIX, this.getX() + font.width(this.getValue()) + 4,
+        guiGraphics.text(font, SUFFIX, this.getX() + font.width(this.getValue()) + 4,
                 this.getY(),
                 FOREGROUND_COLOR, false);
     }

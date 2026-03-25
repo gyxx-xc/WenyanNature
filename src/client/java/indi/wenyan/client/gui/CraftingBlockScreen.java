@@ -2,13 +2,10 @@ package indi.wenyan.client.gui;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.gui_api.CraftingBlockContainer;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 @Deprecated
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
@@ -20,15 +17,15 @@ public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockCo
         super(container, inventory, title);
     }
 
-    @Override
-    protected void renderBg(@NonNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+//    @Override
+//    protected void renderBg(@NonNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 //        int relX = (width - imageWidth) / 2;
 //        int relY = (height - imageHeight) / 2;
 //        graphics.blit(GUI, relX, relY, 0, 0, imageWidth, imageHeight);
 //        graphics.blit(GUI, relX+59, relY+108, 1, 202+menu.getResult()*11, menu.getProgress(58), 9);
-    }
+//    }
 
-    @Override
-    protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-    }
+//    @Override
+//    protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+//    }
 }
