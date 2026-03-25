@@ -6,12 +6,12 @@ import indi.wenyan.client.gui.code_editor.widget.*;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.input.KeyEvent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -96,22 +96,12 @@ public class RunnerBlockScreen extends Screen {
         packageWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
     }
 
-    // STUB/HACK
-    @Override
-    public boolean keyPressed(KeyEvent event) {
-        if (event.hasShiftDown()) hasShiftDown = true;
-        return super.keyPressed(event);
-    }
-    @Override
-    public boolean keyReleased(KeyEvent event) {
-        if (event.hasShiftDown()) hasShiftDown = false;
-        return super.keyReleased(event);
-    }
-    private boolean hasShiftDown = false;
     public void renderSnippetTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
                                      SnippetSet.Snippet snippet) {
         List<ClientTooltipComponent> tooltip = Lists.newArrayList();
         tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(snippet.title(), Style.EMPTY)));
+        // same as ClientTooltipFlag
+        boolean hasShiftDown = Minecraft.getInstance().hasShiftDown();
         if (!hasShiftDown) {
             tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
                     GuiText.HoldShift.string(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
