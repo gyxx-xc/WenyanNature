@@ -126,6 +126,7 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(UnexpectedCharacter.getTranslationKey(), "謬：意外字元");
         add(IndexOutOfBounds.getTranslationKey(), "謬：索引越界");
         add(TooManyThreads.getTranslationKey(), "謬：線程過多");
+        add(RunningTooSlow.getTranslationKey(), "謬：運行過慢");
         add(Unreached.getTranslationKey(), "未知错误，请提交issue");
 
         add(RunningState.getTranslationKey(), "運行狀態");

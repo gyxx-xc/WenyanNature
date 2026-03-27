@@ -62,6 +62,7 @@
   "error.wenyan_programming.judou.NoAttribute": "謬：無屬性%s",
   "error.wenyan_programming.judou.OperationNotSupported": "謬：操作未支",
   "error.wenyan_programming.judou.RecursionDepthTooDeep": "謬：遞歸深度過深",
+  "error.wenyan_programming.judou.RunningTooSlow": "謬：運行過慢",
   "error.wenyan_programming.judou.SetValueToNonLeftValue": "謬：設值於非左值",
   "error.wenyan_programming.judou.StackEmpty": "謬：棧空",
   "error.wenyan_programming.judou.StackIndexOutOfBounds": "謬：棧索引越界",

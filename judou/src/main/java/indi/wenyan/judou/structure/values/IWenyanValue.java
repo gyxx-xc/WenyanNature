@@ -63,7 +63,7 @@ public interface IWenyanValue {
      * @return True if this value can be cast to the target type
      */
     default boolean is(WenyanType<?> type) {
-        return type.tClass.isInstance(this) || casting(type) != null || type == WenyanString.TYPE;
+        return type == WenyanString.TYPE || type.tClass.isInstance(this) || casting(type) != null;
     }
 
     /**

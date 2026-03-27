@@ -32,6 +32,7 @@ public enum JudouExceptionText implements JudouLocalizationEnum {
     UnexpectedCharacter,                // 謬：意外字元
     IndexOutOfBounds,                   // 謬：索引越界
     TooManyThreads,                     // 謬：線程過多
+    RunningTooSlow,                     // 謬：運行過慢
     Unreached,                          // 未知错误，请提交issue
     ;
 
