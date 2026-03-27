@@ -182,6 +182,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(RunnerRange.getTranslationKey(), "符範圍");
         add(Duration.getTranslationKey(), "算核消散游戏刻");
         add(Lifetime.getTranslationKey(), "投符持續時間");
+        add(SliceInstructUnit.getTranslationKey(), "百指令每片");
 
         add("book.wenyan_programming.shuo_wen.name", "說文");
         add("book.wenyan_programming.shuo_wen.landing_text", "编程者，制机之令也。机铁无知，唯识原语。乃作典言，上合人意，下译机识，若算经然。");

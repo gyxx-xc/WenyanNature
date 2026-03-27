@@ -23,7 +23,6 @@ import java.util.Queue;
 import static indi.wenyan.setup.language.ExceptionText.LockHoldAlready;
 import static indi.wenyan.setup.language.ExceptionText.LockNotHold;
 
-// TODO: UnitTest
 public class LockModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.SemaphoreModule;

@@ -12,6 +12,7 @@ public enum ConfigText implements ILocalizationEnum {
     RunnerRange,      // 符範圍
     Duration,         // 算核消散游戏刻
     Lifetime,         // 投符持續時間
+    SliceInstructUnit
     ;
 
     public String getName() {

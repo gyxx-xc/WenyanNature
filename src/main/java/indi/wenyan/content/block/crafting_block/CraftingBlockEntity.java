@@ -188,7 +188,6 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     private void craftAndEjectItem() {
         if (recipeHolder != null) {
-            // TODO: for recipe with remaining item
             assert level != null;
             forNearbyPedestal(level, getBlockPos(), pedestal ->
                     ResourceHandlerUtil.extractFirst(pedestal.getItemHandler(), _ -> true, 1, null));

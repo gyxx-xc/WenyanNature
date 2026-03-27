@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 // all test are repeated as the program run in muti thread
 // one time run might cause coincident pass
-// TODO: load language part only
 class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 
     @SuppressWarnings("ALL")

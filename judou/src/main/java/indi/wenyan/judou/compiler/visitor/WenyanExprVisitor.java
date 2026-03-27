@@ -79,7 +79,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 }
             } else {
                 visit(ctx.d.get(i));
-                bytecode.add(WenyanCodes.CAST, type.ordinal()); // STUB type
+                bytecode.add(WenyanCodes.CAST, type.ordinal());
             }
             bytecode.add(WenyanCodes.PUSH_ANS);
         }

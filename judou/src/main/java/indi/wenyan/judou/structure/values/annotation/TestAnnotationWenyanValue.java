@@ -11,8 +11,7 @@ import indi.wenyan.judou.structure.values.WenyanNull;
 
 import java.util.List;
 
-// TODO: we may need a compile level solution of it,
-//   so, maybe delaying forever
+@SuppressWarnings("unused")
 @WenyanObjectValue
 public class TestAnnotationWenyanValue {
 
@@ -43,6 +42,7 @@ public class TestAnnotationWenyanValue {
         return WenyanNull.NULL;
     }
 
+    @SuppressWarnings("RedundantThrows")
     @WenyanConstructor
     public static IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
         return new TestAnnotationWenyanValueObject();

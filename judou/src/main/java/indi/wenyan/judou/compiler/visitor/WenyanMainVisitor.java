@@ -36,7 +36,6 @@ public class WenyanMainVisitor extends WenyanVisitor {
         return new WenyanControlVisitor(bytecode).visit(ctx);
     }
 
-    // STUB: might change
     @Override
     public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
         bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
