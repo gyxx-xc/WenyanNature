@@ -15,6 +15,7 @@ import indi.wenyan.judou.utils.IConfigProvider;
 import indi.wenyan.judou.utils.LoggerManager;
 import indi.wenyan.judou.utils.WenyanValues;
 import indi.wenyan.judou.utils.language.LanguageManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.provider.Arguments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WenyanProgramTestHelper {
-    static {
+
+    @BeforeAll
+    static void init() {
         try {
             LanguageManager.registerLanguageProvider(s -> s);
             LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
@@ -50,9 +53,10 @@ public class WenyanProgramTestHelper {
                     return 64;
                 }
             });
-        } catch (IllegalStateException ignore) {
+        } catch (IllegalStateException _) {
         }
     }
+
 
     protected static Arguments resultArgs(String code, Object... output) {
         return Arguments.of(code, output);
@@ -97,10 +101,10 @@ public class WenyanProgramTestHelper {
     }
 
     protected void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
-        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
+        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform, 8000);
         wenyanProgram.create(RunnerCreater.newRunner(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
-            wenyanProgram.step(8000);
+            wenyanProgram.step();
             testPlatform.handle(IHandleContext.NONE);
             //noinspection BusyWait
             Thread.sleep(20);

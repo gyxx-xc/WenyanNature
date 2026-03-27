@@ -24,7 +24,7 @@ public class TestPlatform implements IWenyanPlatform {
     @Override
     public void handleError(String error) {
         if (this.error != null) {
-            throw new RuntimeException("trigger error after error");
+            throw new RuntimeException("trigger error " + error + " after error " + this.error);
         }
         this.error = error;
     }
@@ -37,7 +37,7 @@ public class TestPlatform implements IWenyanPlatform {
     @Override
     public WenyanPackage initEnvironment() {
         var baseRuntime = IWenyanPlatform.super.initEnvironment();
-        baseRuntime.put("書", new WenyanInlineJavacall((self, args) -> {
+        baseRuntime.put("書", new WenyanInlineJavacall((_, args) -> {
             output.addAll(args.stream().map(v -> {
                 if (v instanceof WenyanLeftValue) return ((WenyanLeftValue) v).getValue();
                 return v;

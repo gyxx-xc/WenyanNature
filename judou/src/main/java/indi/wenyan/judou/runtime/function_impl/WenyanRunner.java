@@ -30,30 +30,32 @@ public class WenyanRunner implements IWenyanRunner {
     }
 
     @Override
-    public void run(int step) {
+    public int run(int step) {
         willPause = false;
+        int i = 0;
         try {
-            for (int i = 0; i < step; i++) {
+            for (; i < step; i++) {
                 WenyanFrame runtime = getFrameManager().getNullableCurrentRuntime();
                 if (runtime == null) { // reach return of main
                     die();
-                    return;
+                    return i;
                 }
-                if (validateRuntimeState(runtime)) return;
+                if (validateRuntimeState(runtime)) return i;
 
-                consumeStep(1);
                 WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.getProgramCounter());
                 bytecode.code().getCode().exec(bytecode.arg(), this);
 
-                if (updateProgramCounter(runtime)) return;
+                if (updateProgramCounter(runtime)) return i + 1;
             }
             this.yield();
+            return step;
         } catch (WenyanException e) {
             IWenyanRunner.dieWithException(this, e);
+            return i + 1; // might i here, but it's not a big deal
         } catch (RuntimeException e) { // for any other missing exceptions
             IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
+            return i + 1;
         }
-
     }
 
     private boolean updateProgramCounter(WenyanFrame runtime) {

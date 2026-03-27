@@ -16,22 +16,22 @@ import org.slf4j.Logger;
 
 import java.util.Collection;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.LockSupport;
 
 public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> {
     private final int sliceStep = ConfigManager.getConfig().getMaxSlice();
     private final int maxThread = ConfigManager.getConfig().getMaxThread();
     private final int watchdogTimeout = ConfigManager.getConfig().getWatchdogTimeout();
 
-    private final AtomicReference<Thread> parkedThread = new AtomicReference<>();
     /**
      * Semaphore controlling execution steps across threads.
      * Should be only read in wenyan thread.
      */
-    private int accumulatedSteps = 0;
+    private volatile int accumulatedSteps = 0;
+    private final Semaphore stepLock = new Semaphore(0);
+    private final int step;
+
     /**
-     * used for given warning and give status to platform only,
+     * used for given warning and give status to platform only, NOT ACCURATE.
      * will monitor if there's idle (empty thread in pool or has thread but blocked)
      * and remain the value until next step() is called
      **/
@@ -56,32 +56,22 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         return thread;
     });
 
-    public WenyanProgramImpl(IWenyanPlatform platform) {
+    public WenyanProgramImpl(IWenyanPlatform platform, int step) {
         this.platform = platform;
+        this.step = step;
     }
 
     @Override
-    public void step(int steps) {
+    public void step() {
         if (executor.isShutdown()) return;
-        if (steps <= 0) {
-            throw new IllegalArgumentException("steps must be positive");
-        }
         if (accumulatedSteps > 0) {
-            // STUB: if no idle
             if (!isIdle)
                 LoggerManager.getLogger().warn(
                         "program running too slow, step {} but {} accumulated",
-                        steps, accumulatedSteps); // make > 0 for less confused message
+                        step, accumulatedSteps);
         }
-        accumulatedSteps = steps;
-        LockSupport.unpark(parkedThread.getAndSet(null));
-        // update idle (i.e. case in update idle, consume step)
-        // ignore case in consume step, no possible since we just signal it
-        // connot use updateIdle() since thread not dying ot blocking
-
-        // use getActiveCount thought there's rare case that active thread is ending
-        // but that doesn't matter, since this only used for Visual effects
-        isIdle = executor.getActiveCount() == 0; // && queue.isEmpty (always true is first true)
+        if (stepLock.availablePermits() == 0)
+            stepLock.release(); // is fine if permits > 0 here
     }
 
     @Override
@@ -139,18 +129,12 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     @Override
     public void stop() {
-        accumulatedSteps = Integer.MAX_VALUE;
         allThreads.forEach(thread -> {
             thread.getRunner().pause();
             if (thread.getWatchdog() != null)
                 thread.getWatchdog().cancel(false);
         });
         executor.shutdownNow();
-        var runningThread = parkedThread.get();
-        if (runningThread != null) {
-            LockSupport.unpark(runningThread);
-            runningThread.interrupt();
-        }
         allThreads.clear();
         available = false;
     }
@@ -174,21 +158,6 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         }
     }
 
-    @Override
-    public void consumeStep(IThreadHolder<PCB> runner, int i) {
-        if (accumulatedSteps < i) {
-            runner.getThread().getWatchdog().cancel(false);
-            isIdle = true;
-            while (accumulatedSteps < i) {
-                parkedThread.set(Thread.currentThread());
-                LockSupport.park();
-            }
-            // restart watchdog
-            startWatchdog(runner.getThread());
-        }
-        accumulatedSteps -= i;
-    }
-
     /**
      * only intend to be called when thread is ended (i.e. die, block)
      */
@@ -199,9 +168,28 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     private void submitThread(@NotNull IThreadHolder<PCB> runner) {
         var thread = runner.getThread();
         executor.execute(() -> {
+            try {
+                if (accumulatedSteps <= 0) {
+                    isIdle = true; // although we might encounter non-blocking acquire here, never mind
+                    stepLock.acquire();
+                    stepLock.drainPermits(); // if permits > 1
+                    accumulatedSteps = step;
+                    isIdle = false;
+                } else {
+                    if (stepLock.tryAcquire()) {
+                        stepLock.drainPermits();
+                        accumulatedSteps = step;
+                    }
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
             startWatchdog(thread);
             try {
-                thread.getRunner().run(sliceStep);
+                // NOTE: only change the steps in this single thread, so no need to use atomic
+                //noinspection NonAtomicOperationOnVolatileField
+                accumulatedSteps -= thread.getRunner().run(Math.min(sliceStep, accumulatedSteps));
             } finally {
                 thread.getWatchdog().cancel(false);
             }

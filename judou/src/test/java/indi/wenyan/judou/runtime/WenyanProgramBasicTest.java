@@ -33,14 +33,14 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
                 """;
 
         TestPlatform testPlatform = new TestPlatform();
-        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
+        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform, 1000);
         WenyanPackage globalResolver = testPlatform.initEnvironment();
 
         while (true) {
             WenyanFrame mainRuntime = WenyanFrame.ofCode(code);
             wenyanProgram.create(RunnerCreater.newRunner(mainRuntime, globalResolver));
             while (wenyanProgram.isRunning()) {
-                wenyanProgram.step(1000);
+                wenyanProgram.step();
                 testPlatform.handle(IHandleContext.NONE);
                 //noinspection BusyWait
                 Thread.sleep(5);

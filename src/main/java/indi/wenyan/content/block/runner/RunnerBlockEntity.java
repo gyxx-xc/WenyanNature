@@ -64,10 +64,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Delegate(types = ICodeOutputHolder.class)
     private final TitleCodeOutput titleCodeOutput;
 
-    private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram = new LazyProgram<>(() ->
-            new WenyanProgramImpl(this));
+    private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
-    private final int steps;
     private RunnerBlock.RunningState runningState;
     private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(this::safeAddCommunicate);
 
@@ -76,9 +74,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         titleCodeOutput = new TitleCodeOutput("",
                 ChineseUtils.bracketOf(blockState.getBlock().getName().getString()));
         titleCodeOutput.setOnChanged(this::setChanged);
+        int steps;
         if (blockState.getBlock() instanceof RunnerBlock block)
             steps = block.getTier().getStepSpeed();
         else steps = 1;
+        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, steps));
         runningState = blockState.getValue(RUNNING_STATE);
     }
 
@@ -96,7 +96,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             RunnerBlock.RunningState newState = lazyProgram.ifCreated()
                     .filter(IWenyanProgram::isRunning)
                     .map(program -> {
-                        program.step(steps);
+                        program.step();
                         handle(new BlockRequest.BlockContext(level, pos, state));
 
                         if (program instanceof WenyanProgramImpl impl && impl.isIdle()) {

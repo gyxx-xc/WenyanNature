@@ -66,10 +66,8 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     @Nullable
     private final Player player;
-    private final RunnerTier tier;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
-    private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram =
-            new LazyProgram<>(() -> new WenyanProgramImpl(this));
+    private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram;
     private final Map<String, IWenyanDevice> packages = new HashMap<>();
     private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(_ -> {
     });
@@ -78,14 +76,14 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     public ThrowRunnerEntity(EntityType<ThrowRunnerEntity> entityType, Level level) {
         super(entityType, level);
-        this.tier = RunnerTier.RUNNER_0;
+        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, 1));
         player = null;
     }
 
     public ThrowRunnerEntity(Level level, Position pos, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
         super(WenyanEntities.THROW_RUNNER_ENTITY.get(), pos.x(), pos.y(), pos.z(), level, itemStack);
         player = null;
-        this.tier = tier;
+        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, tier.getStepSpeed()));
         if (!level.isClientSide()) {
             var code = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
             if (code != null) {
@@ -102,7 +100,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     public ThrowRunnerEntity(Level level, LivingEntity owner, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
         super(WenyanEntities.THROW_RUNNER_ENTITY.get(), owner, level, itemStack);
-        this.tier = tier;
+        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, tier.getStepSpeed()));
         if (!level.isClientSide()) {
             if (owner instanceof Player p)
                 this.player = p;
@@ -181,7 +179,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
             lazyProgram.ifCreated()
                     .filter(IWenyanProgram::isRunning)
                     .ifPresentOrElse(program -> {
-                        program.step(tier.getStepSpeed());
+                        program.step();
                         handle(getContext());
                     }, this::discard);
         }

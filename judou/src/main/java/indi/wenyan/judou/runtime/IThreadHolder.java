@@ -4,7 +4,8 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 
 public interface IThreadHolder<T extends IWenyanThread> {
-    void run(int step);
+    /// run for given step and return the actual step runned
+    int run(int step);
     void pause(); // for switch
 
     void setThread(T thread);
@@ -33,9 +34,5 @@ public interface IThreadHolder<T extends IWenyanThread> {
 
     default void die() throws WenyanUnreachedException {
         program().die(this);
-    }
-
-    default void consumeStep(int step) {
-        program().consumeStep(this, step);
     }
 }

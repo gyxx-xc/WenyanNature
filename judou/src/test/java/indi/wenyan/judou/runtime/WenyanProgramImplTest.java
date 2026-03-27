@@ -69,25 +69,31 @@ class WenyanProgramImplTest {
         }
 
         @Override
-        public void run(int step) {
+        public int run(int step) {
+            int i = 0;
             try {
-                for (int i = 0; i < step; i++) {
+                for (; i < step; i++) {
                     if (pc++ >= totalPc) {
                         program().die(this);
-                        return;
+                        return i;
                     }
-                    program().consumeStep(this, 1);
                     bytecodeRun();
+                    if (pc >= totalPc) {
+                        program().die(this);
+                        return i + 1;
+                    }
                 }
                 program().yield(this);
+                return i;
             } catch (WenyanException e) {
                 try {
                     program().getPlatform().handleError(e.getMessage());
                     program().die(this);
-                } catch (WenyanException ex) {
-                    program().getPlatform().handleError(ex.getMessage());
+                } catch (WenyanException _) {
                 }
+                return i;
             } catch (ReturnException ignore) {
+                return i + 1;
             }
         }
 
@@ -102,11 +108,11 @@ class WenyanProgramImplTest {
         }
     }
 
-    private int runUntilDone(int step) throws InterruptedException {
+    private int runUntilDone() throws InterruptedException {
         int tickCnt = 0;
         while (program.isRunning()) {
             tickCnt++;
-            program.step(step);
+            program.step();
             platform.handle(IHandleContext.NONE);
             Thread.sleep(20);
         }
@@ -116,14 +122,15 @@ class WenyanProgramImplTest {
     @BeforeEach
     void setUp() {
         platform = new TestPlatform();
-        program = new WenyanProgramImpl(platform);
+//        program = new WenyanProgramImpl(platform, 10);
     }
 
     @Test
     void run() throws WenyanException, InterruptedException {
+        program = new WenyanProgramImpl(platform, 10);
         program.create(new TestRunner(100) {
         });
-        assertEquals(10, runUntilDone(10));
+        assertEquals(10, runUntilDone());
         assertNull(platform.error);
     }
 
@@ -131,17 +138,19 @@ class WenyanProgramImplTest {
     class TestStep {
         @Test
         void step_singleThread_succcess() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 1000);
             program.create(new TestRunner(10) {
             });
-            assertEquals(1, runUntilDone(1000));
+            assertEquals(1, runUntilDone());
             assertNull(platform.error);
         }
 
         @Test
         void step_largeThread_success() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 5000);
             program.create(new TestRunner(5000) {
             });
-            program.step(5000);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
             assertNull(platform.error);
@@ -149,6 +158,7 @@ class WenyanProgramImplTest {
 
         @Test
         void step_mutiThread_succcess() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 15000);
             // test multi-thread
             program.create(new TestRunner(5000) {
             });
@@ -156,28 +166,24 @@ class WenyanProgramImplTest {
             });
             program.create(new TestRunner(5000) {
             });
-            program.step(15000);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
             assertNull(platform.error);
         }
 
         @Test
-        void step_negative_throwError() {
-            assertThrows(IllegalArgumentException.class, () -> program.step(-1));
-            assertThrows(IllegalArgumentException.class, () -> program.step(0));
-        }
-
-        @Test
         void step_emptyThread_noBehavior() {
+            program = new WenyanProgramImpl(platform, 1);
             // test step with empty program
             for (int i = 0; i < 100; i++)
-                program.step(1000);
+                program.step();
             assertNull(platform.error);
         }
 
         @Test
         void step_slowLongThread_warningAndStop() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 1000);
             program.create(new TestRunner(5000) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -188,13 +194,14 @@ class WenyanProgramImplTest {
                     }
                 }
             });
-            program.step(1000);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
         }
 
         @Test
         void step_slowShortThread_warningAndStop() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 1000);
             program.create(new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -205,13 +212,14 @@ class WenyanProgramImplTest {
                     }
                 }
             });
-            program.step(1000);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
         }
 
         @Test
         void step_fastTick_warning() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 1000);
             program.create(new TestRunner(2) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -222,11 +230,11 @@ class WenyanProgramImplTest {
                     }
                 }
             });
-            program.step(1000);
+            program.step();
             Thread.sleep(1);
-            program.step(1000);
+            program.step();
             Thread.sleep(1);
-            program.step(1000);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
         }
@@ -234,11 +242,12 @@ class WenyanProgramImplTest {
 
     @Test
     void isRunning() throws WenyanException, InterruptedException {
+        program = new WenyanProgramImpl(platform, 1000);
         assertFalse(program.isRunning());
         program.create(new TestRunner(10) {
         });
         assertTrue(program.isRunning());
-        program.step(1000);
+        program.step();
         Thread.sleep(100);
         assertFalse(program.isRunning());
         program.create(new TestRunner(10) {
@@ -252,6 +261,7 @@ class WenyanProgramImplTest {
     class TestBlock {
         @Test
         void block_singleThread_success() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -260,18 +270,19 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertTrue(program.isRunning());
             assertTrue(program.isIdle());
             program.unblock(runner);
-            program.step(10); // assert no logger output
+            program.step(); // assert no logger output
             Thread.sleep(20);
             assertFalse(program.isRunning());
         }
 
         @Test
         void block_multiThread_success() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 10);
             var runner1 = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -288,20 +299,20 @@ class WenyanProgramImplTest {
             };
             program.create(runner1);
             program.create(runner2);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertEquals(1, runner1.pc);
             assertEquals(1, runner2.pc);
             assertTrue(program.isRunning());
             assertTrue(program.isIdle());
             program.unblock(runner1);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertEquals(2, runner1.pc);
             assertEquals(1, runner2.pc);
             assertTrue(program.isRunning());
             program.unblock(runner2);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertEquals(2, runner1.pc);
             assertEquals(2, runner2.pc);
@@ -310,6 +321,7 @@ class WenyanProgramImplTest {
 
         @Test
         void block_redundentCall_fail() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -319,7 +331,7 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
             assertNotNull(platform.error);
@@ -330,6 +342,7 @@ class WenyanProgramImplTest {
     class TestUnblock {
         @Test
         void unblock_normal_success() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 10);
             var runner = new TestRunner(2) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -338,25 +351,26 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertTrue(program.isRunning());
             assertTrue(program.isIdle());
             assertEquals(1, runner.pc);
             program.unblock(runner);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertTrue(program.isRunning());
             assertTrue(program.isIdle());
             assertEquals(2, runner.pc);
             program.unblock(runner);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
         }
 
         @Test
         void unblock_runningThread_fail() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -364,7 +378,7 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            program.step(10);
+            program.step();
             Thread.sleep(20);
             assertFalse(program.isRunning());
             assertNotNull(platform.error);
@@ -375,6 +389,7 @@ class WenyanProgramImplTest {
     class TestYield {
         @Test
         void yield_normal_success() throws InterruptedException, WenyanException {
+            program = new WenyanProgramImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -383,16 +398,19 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            program.step(5);
+            program.step();
             Thread.sleep(20);
-            assertEquals(6, runner.pc);
-            program.step(15);
+            assertEquals(5, runner.pc);
+            program.step();
+            Thread.sleep(20);
+            program.step();
             Thread.sleep(20);
             assertEquals(11, runner.pc);
         }
 
         @Test
         void yield_mutiThreaad_success() throws WenyanException, InterruptedException {
+            program = new WenyanProgramImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -404,18 +422,15 @@ class WenyanProgramImplTest {
             };
             program.create(runner);
             program.create(runner1);
-            program.step(5);
+            program.step();
             Thread.sleep(20);
             assertEquals(1, runner.pc);
-            assertEquals(5, runner1.pc);
-            program.step(150);
-            Thread.sleep(20);
-            assertEquals(11, runner.pc);
-            assertEquals(101, runner1.pc);
+            assertEquals(4, runner1.pc);
         }
 
         @Test
         void yield_blocked_fail() throws InterruptedException, WenyanException {
+            program = new WenyanProgramImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -424,7 +439,7 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            program.step(5);
+            program.step();
             Thread.sleep(20);
             assertThrows(WenyanUnreachedException.class, () -> program.yield(runner));
             program.stop();
@@ -435,6 +450,7 @@ class WenyanProgramImplTest {
     class TestDie {
         @Test
         void die_normal_success() throws InterruptedException, WenyanException {
+            program = new WenyanProgramImpl(platform, 2);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -445,12 +461,13 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            assertEquals(4, runUntilDone(2));
+            assertEquals(4, runUntilDone());
             assertEquals(7, runner.pc);
         }
 
         @Test
         void die_dyingThreaad_error() throws InterruptedException, WenyanException {
+            program = new WenyanProgramImpl(platform, 2);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -461,15 +478,17 @@ class WenyanProgramImplTest {
                 }
             };
             program.create(runner);
-            assertEquals(4, runUntilDone(2));
+            assertEquals(4, runUntilDone());
             assertThrows(WenyanUnreachedException.class, () -> program.die(runner));
         }
     }
 
     @Test
     void stop() throws WenyanException, InterruptedException, NoSuchFieldException, IllegalAccessException {
-        program.create(new TestRunner(10){});
-        program.step(5);
+        program = new WenyanProgramImpl(platform, 5);
+        program.create(new TestRunner(10) {
+        });
+        program.step();
         Thread.sleep(20);
         program.stop();
 

@@ -10,10 +10,8 @@ public interface IWenyanProgram<T extends IWenyanThread> {
     /**
      * Allocates execution steps to the program.
      * Not Thread-safe, should be only called from minecraft thread.
-     *
-     * @param steps Number of execution steps to allocate
      */
-    void step(int steps);
+    void step();
 
     IWenyanPlatform getPlatform();
 
@@ -24,8 +22,6 @@ public interface IWenyanProgram<T extends IWenyanThread> {
     void stop();
 
     void create(IThreadHolder<T> runner) throws WenyanException;
-
-    void consumeStep(IThreadHolder<T> runner, int i);
 
     // NOTE: not intend to call anywhere outside run(steps)
     void block(IThreadHolder<T> runner) throws WenyanUnreachedException;

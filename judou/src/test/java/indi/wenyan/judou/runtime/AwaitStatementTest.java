@@ -31,11 +31,11 @@ class AwaitStatementTest extends WenyanProgramTestHelper {
     @MethodSource("testData")
     void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
         TestPlatform testPlatform = new TestPlatform();
-        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
+        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform, 1000);
         wenyanProgram.create(RunnerCreater.newRunner(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         int cnt = 0;
         while (wenyanProgram.isRunning()) {
-            wenyanProgram.step(1000);
+            wenyanProgram.step();
             testPlatform.handle(IHandleContext.NONE);
             cnt++;
             //noinspection BusyWait
