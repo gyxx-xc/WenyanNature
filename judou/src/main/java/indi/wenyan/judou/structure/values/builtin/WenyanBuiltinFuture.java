@@ -17,7 +17,7 @@ public class WenyanBuiltinFuture implements IWenyanValue {
 
     public static final WenyanType<WenyanBuiltinFuture> TYPE = new WenyanType<>(JudouTypeText.BuiltinFuture.string(), WenyanBuiltinFuture.class);
 
-    public boolean addWaitingThread(IWenyanRunner thread) {
+    public boolean addWaitingThread(IWenyanRunner thread) throws WenyanUnreachedException {
         if (returnValue == null) {
             waitingThreads.add(thread);
             return true;
@@ -43,6 +43,6 @@ public class WenyanBuiltinFuture implements IWenyanValue {
             }
         }
         waitingThreads.clear();
-        runner.ret();
+        runner.getFrameManager().ret();
     }
 }

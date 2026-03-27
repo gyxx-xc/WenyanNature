@@ -1,8 +1,8 @@
-package indi.wenyan.judou.runtime.function_impl;
+package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 
 public interface IGlobalResolver {
-    IWenyanValue getAttribute(String name) throws WenyanException;
+    IWenyanValue getGlobal(String name) throws WenyanException;
 }

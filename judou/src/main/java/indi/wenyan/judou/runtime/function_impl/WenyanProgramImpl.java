@@ -26,7 +26,8 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
 
     private final AtomicReference<Thread> parkedThread = new AtomicReference<>();
     /**
-     * Semaphore controlling execution steps across threads
+     * Semaphore controlling execution steps across threads.
+     * Should be only read in wenyan thread.
      */
     private int accumulatedSteps = 0;
     /**
@@ -217,6 +218,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
                 // unreached. however, if so, program still need stop
             }
             stop(); // stop first, in case handleError throw unexpected error
+            // FIXME: localize
             platform.handleError("program running too slow");
         }, watchdogTimeout, TimeUnit.MILLISECONDS);
         thread.setWatchdog(f);

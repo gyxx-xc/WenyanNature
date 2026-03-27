@@ -1,14 +1,18 @@
 package indi.wenyan.judou.runtime;
 
+import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.runtime.test_utils.generated_WenyanProgramTestData;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.values.WenyanPackage;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.FieldSource;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,43 +21,31 @@ import static org.junit.jupiter.api.Assertions.*;
 // TODO: load language part only
 class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 
-    @SuppressWarnings("unused")
-    // @Test
-    void testNormal() throws WenyanException, InterruptedException {
+    @SuppressWarnings("ALL")
+//    @Test
+    void testNormal() throws WenyanException, InterruptedException, IOException {
         String code = """
-                吾有一術。名之曰「甲」。是術曰
-                  加二以一
-                是謂「甲」之術也。
-                
-                恆為是
-                施「甲」
-                云云
+                        同有一術名之曰「a」。是術曰。
+                        待一
+                        是謂「a」之術也。
+                        施「a」名之曰「a1」施「a」名之曰「a2」
+                        待「a1」待「a2」
                 """;
-//        String code = """
-//                有數一名之曰「a」
-//                恆為是
-//                加「a」以一名之曰「a」
-//                云云
-//                """;
+
         TestPlatform testPlatform = new TestPlatform();
         IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
-        long start = System.nanoTime();
-        wenyanProgram.step(1000000000);
-        while (wenyanProgram.isRunning()) {
-            //noinspection BusyWait
-            Thread.sleep(20);
+        WenyanPackage globalResolver = testPlatform.initEnvironment();
+
+        while (true) {
+            WenyanFrame mainRuntime = WenyanFrame.ofCode(code);
+            wenyanProgram.create(RunnerCreater.newRunner(mainRuntime, globalResolver));
+            while (wenyanProgram.isRunning()) {
+                wenyanProgram.step(1000);
+                testPlatform.handle(IHandleContext.NONE);
+                //noinspection BusyWait
+                Thread.sleep(5);
+            }
         }
-        long t = System.nanoTime() - start;
-        System.out.println(t);
-        System.out.println(testPlatform.error);
-        System.out.println(testPlatform.output);
-//        while (wenyanProgram.isRunning()) {
-//            wenyanProgram.step(10000000);
-//            testPlatform.handle(IHandleContext.NONE);
-//            //noinspection BusyWait
-//            Thread.sleep(20);
-//        }
     }
 
     @ParameterizedTest

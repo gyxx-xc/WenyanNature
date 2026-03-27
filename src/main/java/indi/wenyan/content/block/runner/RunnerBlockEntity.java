@@ -11,9 +11,9 @@ import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -195,7 +195,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public Optional<IWenyanRunner> newThread(String pages) {
         IWenyanRunner runner;
         try {
-            runner = WenyanRunner.of(WenyanFrame.ofCode(pages), this.initEnvironment());
+            runner = RunnerCreater.newRunner(WenyanFrame.ofCode(pages), this.initEnvironment());
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return Optional.empty();

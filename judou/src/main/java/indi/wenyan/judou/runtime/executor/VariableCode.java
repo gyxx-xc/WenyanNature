@@ -41,7 +41,7 @@ public class VariableCode extends WenyanCode {
             case LOAD_GLOBAL -> {
                 // cause this is bytecode level, use if to check still too slow
                 String id = runtime.getBytecode().getIdentifier(arg);
-                IWenyanValue value = thread.getGlobals().getAttribute(id);
+                IWenyanValue value = thread.getGlobalResolver().getGlobal(id);
                 runtime.pushReturnValue(value);
             }
             case STORE -> {

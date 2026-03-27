@@ -1,9 +1,9 @@
 package indi.wenyan.judou.runtime;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.runtime.test_utils.TestPlatform;
 import indi.wenyan.judou.structure.WenyanException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,16 +66,17 @@ public class AsyncStatementTest extends WenyanProgramTestHelper {
     @ParameterizedTest
     @MethodSource("testData")
     void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
+
         TestPlatform testPlatform = new TestPlatform();
         IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform);
-        wenyanProgram.create(WenyanRunner.of(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
+        wenyanProgram.create(RunnerCreater.newRunner(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         int cnt = 0;
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step(1000);
             testPlatform.handle(IHandleContext.NONE);
             cnt++;
-            if (cnt > 100)
-                System.out.println(1111);
+            if (cnt % 100 == 0)
+                System.out.println("wait " + cnt / 100 + "x100 ticks");
             //noinspection BusyWait
             Thread.sleep(5);
         }

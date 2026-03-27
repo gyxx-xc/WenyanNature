@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values;
 
-import indi.wenyan.judou.runtime.function_impl.IGlobalResolver;
+import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
@@ -27,6 +27,11 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
 
     public void put(String name, IWenyanValue value) {
         variables.put(name, value);
+    }
+
+    @Override
+    public IWenyanValue getGlobal(String name) throws WenyanException {
+        return getAttribute(name);
     }
 
     @Override

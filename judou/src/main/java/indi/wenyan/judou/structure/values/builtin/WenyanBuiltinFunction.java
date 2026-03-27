@@ -30,7 +30,7 @@ public record WenyanBuiltinFunction(
                      List<IWenyanValue> argsList)
             throws WenyanException {
         WenyanFrame newRuntime = getNewRuntime(self, argsList, thread.getCurrentRuntime());
-        thread.call(newRuntime);
+        thread.getFrameManager().call(newRuntime);
     }
 
     public @NotNull WenyanFrame getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanFrame returnRuntime) throws WenyanException {

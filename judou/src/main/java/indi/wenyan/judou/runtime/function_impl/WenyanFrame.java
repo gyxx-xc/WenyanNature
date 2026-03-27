@@ -24,6 +24,7 @@ import java.util.*;
  * Represents the runtime environment for executing Wenyan bytecode.
  * Stores variables, execution state, and handles the program flow.
  */
+// TODO: to interface
 @WenyanThreading
 public class WenyanFrame {
     /**
@@ -120,13 +121,13 @@ public class WenyanFrame {
         WenyanFrame wenyanRuntime = new WenyanFrame(bytecode, Collections.emptyList(), returnRuntime);
         var exportedIdentifier = environment.getExportedValues();
         int exportSize = exportedIdentifier.size();
-        wenyanRuntime.returnBehavior = (runner, returnValue) -> {
+        wenyanRuntime.returnBehavior = (runner, _) -> {
             Map<String, IWenyanValue> result = new HashMap<>(exportSize);
             WenyanFrame currentRuntime = runner.getCurrentRuntime();
             for (int i = 0; i < exportSize; i++) {
                 result.put(exportedIdentifier.get(i), currentRuntime.locals.get(i));
             }
-            runner.ret();
+            runner.getFrameManager().ret();
             runner.getCurrentRuntime().pushReturnValue(new WenyanPackage(result));
         };
         return wenyanRuntime;
@@ -166,7 +167,7 @@ public class WenyanFrame {
     }
 
     private void onReturn(IWenyanRunner runner, IWenyanValue returnValue) throws WenyanUnreachedException {
-        runner.ret();
+        runner.getFrameManager().ret();
         if (returnRuntime != null)
             returnRuntime.pushReturnValue(returnValue);
     }

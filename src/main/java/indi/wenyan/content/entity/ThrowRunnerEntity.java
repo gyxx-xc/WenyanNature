@@ -15,9 +15,9 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
-import indi.wenyan.judou.runtime.function_impl.WenyanRunner;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -126,7 +126,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private void startProgram(@NonNull ItemStack itemStack, ICodeHolder code) {
         setRemainingFireTicks(1);
         try {
-            lazyProgram.create().create(WenyanRunner.of(WenyanFrame.ofCode(code.getCode()), this.initEnvironment()));
+            lazyProgram.create().create(RunnerCreater.newRunner(WenyanFrame.ofCode(code.getCode()), this.initEnvironment()));
         } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
             // add will show this message and kill itself at tick

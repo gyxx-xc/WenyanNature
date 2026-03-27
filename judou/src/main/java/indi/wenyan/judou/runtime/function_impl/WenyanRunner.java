@@ -1,14 +1,12 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
-import indi.wenyan.judou.runtime.executor.WenyanCode;
+import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.WenyanThreading;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,83 +19,44 @@ public class WenyanRunner implements IWenyanRunner {
     @Setter
     private WenyanProgramImpl.PCB thread;
 
-    @Getter
-    @NotNull
-    private WenyanFrame currentRuntime;
-
-    @Getter
-    private final IGlobalResolver globals;
+    @Getter private final IGlobalResolver globalResolver;
+    @Getter private final FrameManagerImpl frameManager;
 
     private boolean willPause = false;
 
-    private int recursionDepth = 0;
-
-    private WenyanRunner(@NotNull WenyanFrame mainRuntime, IGlobalResolver globals) {
-        this.globals = globals;
-        currentRuntime = mainRuntime;
+    public WenyanRunner(@NotNull WenyanFrame mainRuntime, IGlobalResolver globalResolver) {
+        this.globalResolver = globalResolver;
+        frameManager = new FrameManagerImpl(mainRuntime);
     }
-
-    @Contract("_, _ -> new")
-    public static @NotNull IWenyanRunner of(WenyanFrame mainRuntime, IWenyanRunner runner) {
-        return new WenyanRunner(mainRuntime, runner.getGlobals());
-    }
-
-    @Contract("_, _ -> new")
-    public static @NotNull IWenyanRunner of(WenyanFrame mainRuntime, IGlobalResolver globals) {
-        return new WenyanRunner(mainRuntime, globals);
-    }
-
-    @Override
-    public void call(WenyanFrame runtime) {
-        recursionDepth++;
-        if (recursionDepth > 3000) {
-            IWenyanRunner.dieWithException(this, new WenyanException(JudouExceptionText.RecursionDepthTooDeep.string()));
-            return;
-        }
-        currentRuntime = runtime;
-    }
-
-    @Override
-    public void ret() throws WenyanUnreachedException {
-        recursionDepth--;
-        var returnRuntime = currentRuntime.getReturnRuntime();
-        if (returnRuntime == null) {
-            die();
-        } else {
-            currentRuntime = returnRuntime;
-        }
-    }
-
 
     @Override
     public void run(int step) {
         willPause = false;
-        for (int i = 0; i < step; i++) {
-            try {
-                WenyanFrame runtime = currentRuntime;
+        try {
+            for (int i = 0; i < step; i++) {
+                WenyanFrame runtime = getFrameManager().getNullableCurrentRuntime();
+                if (runtime == null) { // reach return of main
+                    die();
+                    return;
+                }
                 if (validateRuntimeState(runtime)) return;
-                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.getProgramCounter());
-                WenyanCode code = bytecode.code().getCode();
+
                 consumeStep(1);
-                code.exec(bytecode.arg(), this);
+                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.getProgramCounter());
+                bytecode.code().getCode().exec(bytecode.arg(), this);
 
                 if (updateProgramCounter(runtime)) return;
-            } catch (WenyanException e) {
-                IWenyanRunner.dieWithException(this, e);
-                return;
-            } catch (RuntimeException e) { // for any other missing exceptions
-                IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
-                return;
             }
-        }
-        try {
             this.yield();
         } catch (WenyanException e) {
             IWenyanRunner.dieWithException(this, e);
+        } catch (RuntimeException e) { // for any other missing exceptions
+            IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
         }
+
     }
 
-    private boolean updateProgramCounter(WenyanFrame runtime) throws WenyanUnreachedException {
+    private boolean updateProgramCounter(WenyanFrame runtime) {
         if (!runtime.isPCFlag())
             runtime.setProgramCounter(runtime.getProgramCounter() + 1);
         runtime.setPCFlag(false);

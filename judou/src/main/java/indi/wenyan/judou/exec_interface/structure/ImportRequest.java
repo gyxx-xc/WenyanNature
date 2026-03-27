@@ -38,7 +38,7 @@ public final class ImportRequest implements BaseHandleableRequest {
         if (packageOrCode.left().isPresent())
             thread().getCurrentRuntime().pushReturnValue(packageOrCode.left().get());
         if (packageOrCode.right().isPresent())
-            thread().call(WenyanFrame.ofImportCode(packageOrCode.right().get(), thread.getCurrentRuntime()));
+            thread().getFrameManager().call(WenyanFrame.ofImportCode(packageOrCode.right().get(), thread.getCurrentRuntime()));
         thread().unblock();
         return true;
     }

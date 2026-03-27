@@ -89,8 +89,8 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
                 .as(WenyanBuiltinFunction.TYPE);
 
         WenyanFrame newRuntime = constructor.getNewRuntime(self, argsList, thread.getCurrentRuntime());
-        newRuntime.setReturnBehavior((runner, ignore) -> runner.ret());
-        thread.call(newRuntime);
+        newRuntime.setReturnBehavior((runner, ignore) -> runner.getFrameManager().ret());
+        thread.getFrameManager().call(newRuntime);
     }
 
     @Override
