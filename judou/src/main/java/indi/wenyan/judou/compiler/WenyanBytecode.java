@@ -1,9 +1,7 @@
 package indi.wenyan.judou.compiler;
 
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +12,7 @@ import java.util.List;
  * Represents the bytecode structure for the Wenyan interpreter.
  * Manages code instructions, constant values, identifiers, labels, and debug information.
  */
-public class WenyanBytecode implements IWenyanBytecode {
+public class WenyanBytecode {
     private final List<Code> bytecode = new ArrayList<>();
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
@@ -39,16 +37,6 @@ public class WenyanBytecode implements IWenyanBytecode {
         bytecode.add(new Code(code, arg));
     }
 
-    @Override
-    public Code get(int index) {
-        return bytecode.get(index);
-    }
-
-    @Override
-    public IWenyanValue getConst(int index) {
-        return constTable.get(index);
-    }
-
     /**
      * Adds a value to the constant table.
      *
@@ -58,11 +46,6 @@ public class WenyanBytecode implements IWenyanBytecode {
     public int addConst(IWenyanValue value) {
         constTable.add(value);
         return constTable.size() - 1;
-    }
-
-    @Override
-    public String getIdentifier(int index) {
-        return identifierTable.get(index);
     }
 
     /**
@@ -76,7 +59,6 @@ public class WenyanBytecode implements IWenyanBytecode {
         return identifierTable.size() - 1;
     }
 
-    @Override
     public int getNewLabel() {
         labelTable.add(0);
         return labelTable.size() - 1;
@@ -96,22 +78,6 @@ public class WenyanBytecode implements IWenyanBytecode {
         debugTable.add(new Context(line, column, start, end, contentStart, contentEnd));
     }
 
-    @Override
-    public Context getContext(int index) throws WenyanException.WenyanVarException {
-        // change to binary search
-        for (Context context : debugTable) {
-            if (context.bytecodeStart <= index && index < context.bytecodeEnd) {
-                return context;
-            }
-        }
-        throw new WenyanException.WenyanVarException(JudouExceptionText.DebugInfoNotFound.string(index));
-    }
-
-    @Override
-    public int getLabel(int index) {
-        return labelTable.get(index);
-    }
-
     /**
      * Sets a label value at the specified index.
      *
@@ -127,9 +93,22 @@ public class WenyanBytecode implements IWenyanBytecode {
         return capturedValues.size() - 1;
     }
 
-    @Override
     public int size() {
         return bytecode.size();
+    }
+
+    public IWenyanBytecode toImmutable() {
+        return new WenyanImmutableBytecode(
+                size(),
+                bytecode.stream().map(Code::code).mapToInt(WenyanCodes::ordinal).toArray(),
+                bytecode.stream().mapToInt(Code::arg).toArray(),
+                constTable.toArray(new IWenyanValue[0]),
+                identifierTable.toArray(new String[0]),
+                labelTable.stream().mapToInt(Integer::intValue).toArray(),
+                capturedValues,
+                debugTable,
+                sourceCode
+        );
     }
 
     @Override

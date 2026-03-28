@@ -1,16 +1,14 @@
 package indi.wenyan.judou.compiler;
 
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 
 public interface IWenyanBytecode {
-    /**
-     * Retrieves the bytecode instruction at the specified index.
-     *
-     * @param index The instruction index
-     * @return The bytecode instruction
-     */
-    WenyanBytecode.Code get(int index);
+    WenyanCodes getCode(int index);
+
+    int getCodeOrdinal(int index);
+
+    int getArg(int index);
 
     /**
      * Retrieves a constant value from the constant table.
@@ -29,19 +27,13 @@ public interface IWenyanBytecode {
     String getIdentifier(int index);
 
     /**
-     * Creates a new label in the label table.
-     *
-     * @return The index of the new label
-     */
-    int getNewLabel();
-
-    /**
      * Retrieves debug context information for a given index.
      *
      * @param index The code index
      * @return The context information, or null if not found
+     * @throws IndexOutOfBoundsException If the identifier is not found
      */
-    WenyanBytecode.Context getContext(int index) throws WenyanException.WenyanVarException;
+    WenyanBytecode.Context getContext(int index);
 
     /**
      * Gets the label value at the specified index.

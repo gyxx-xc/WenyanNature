@@ -1,6 +1,5 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanThread;
@@ -44,8 +43,10 @@ public class WenyanRunner<T extends IWenyanThread> implements IWenyanRunner, ITh
                 }
                 if (validateRuntimeState(runtime)) return i;
 
-                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.getProgramCounter());
-                bytecode.code().getCode().exec(bytecode.arg(), this);
+                int programCounter = runtime.getProgramCounter();
+                int arg = runtime.getBytecode().getArg(programCounter);
+                var code = runtime.getBytecode().getCode(programCounter);
+                code.getCode().exec(arg, this);
 
                 if (updateProgramCounter(runtime)) return i + 1;
             }

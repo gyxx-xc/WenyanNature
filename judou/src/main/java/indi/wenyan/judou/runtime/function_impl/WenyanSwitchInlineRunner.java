@@ -1,6 +1,6 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.compiler.WenyanBytecode;
+import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanThread;
@@ -48,6 +48,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
     @Override
     public int run(int step) {
         willPause = false;
+        boolean pcFlag = false;
         int i = 0;
         try {
             for (; i < step; i++) {
@@ -56,46 +57,43 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                     die();
                     return i;
                 }
-                if (runtime.getProgramCounter() < 0 || runtime.getProgramCounter() >= runtime.getBytecode().size()) {
-                    IWenyanRunner.dieWithException(this, new WenyanUnreachedException());
-                    return i;
-                }
 
-                WenyanBytecode.Code bytecode = runtime.getBytecode().get(runtime.getProgramCounter());
-                int args = bytecode.arg();
+                IWenyanBytecode bytecode = runtime.getBytecode();
+                int programCounter = runtime.getProgramCounter();
+                int args = bytecode.getArg(programCounter);
 
-                switch (bytecode.code()) {
-                    case BRANCH_POP_FALSE -> {
+                switch (bytecode.getCodeOrdinal(programCounter)) {
+                    case 0 -> {
                         boolean value = runtime.getProcessStack().pop()
                                 .as(WenyanBoolean.TYPE).value();
                         if (!value) {
-                            runtime.setProgramCounter(runtime.getBytecode().getLabel(args));
-                            runtime.setPCFlag(true);
+                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            pcFlag = true;
                         }
                     }
-                    case BRANCH_FALSE -> {
+                    case 1 -> {
                         assert runtime.getProcessStack().peek() != null;
                         boolean value = runtime.getProcessStack().peek()
                                 .as(WenyanBoolean.TYPE).value();
                         if (!value) {
-                            runtime.setProgramCounter(runtime.getBytecode().getLabel(args));
-                            runtime.setPCFlag(true);
+                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            pcFlag = true;
                         }
                     }
-                    case BRANCH_TRUE -> {
+                    case 2 -> {
                         assert runtime.getProcessStack().peek() != null;
                         boolean value = runtime.getProcessStack().peek()
                                 .as(WenyanBoolean.TYPE).value();
                         if (value) {
-                            runtime.setProgramCounter(runtime.getBytecode().getLabel(args));
-                            runtime.setPCFlag(true);
+                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            pcFlag = true;
                         }
                     }
-                    case JMP -> {
-                        runtime.setProgramCounter(runtime.getBytecode().getLabel(args));
-                        runtime.setPCFlag(true);
+                    case 3 -> {
+                        runtime.setProgramCounter(bytecode.getLabel(args));
+                        pcFlag = true;
                     }
-                    case CALL -> {
+                    case 4 -> {
                         IWenyanValue func = runtime.getProcessStack().pop();
                         IWenyanFunction callable;
 
@@ -116,7 +114,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                         //   it will only block the next WenyanCode being executed
                         callable.call(null, (IWenyanRunner) this, argsList);
                     }
-                    case CALL_ATTR -> {
+                    case 5 -> {
                         IWenyanValue func = runtime.getProcessStack().pop();
                         IWenyanValue self;
                         IWenyanFunction callable;
@@ -144,7 +142,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                         //   it will only block the next WenyanCode being executed
                         callable.call(self, (IWenyanRunner) this, argsList);
                     }
-                    case CREATE_FNCTION -> {
+                    case 6 -> {
                         WenyanBuiltinFunction func = runtime.getProcessStack().pop().as(WenyanBuiltinFunction.TYPE);
                         var newFunc = new WenyanBuiltinFunction(func.bytecode(), func.args(), new ArrayList<>());
                         func.bytecode().getCapturedValues().stream()
@@ -158,15 +156,15 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                                 .forEach(i1 -> newFunc.refs().add(i1));
                         runtime.pushReturnValue(newFunc);
                     }
-                    case RET -> {
+                    case 7 -> {
                         WenyanFrame currentRuntime = getCurrentRuntime();
                         currentRuntime.getReturnBehavior().onReturn((IWenyanRunner) this, currentRuntime.getProcessStack().pop());
                     }
-                    case CREATE_LIST -> getCurrentRuntime().pushReturnValue(new WenyanList());
-                    case PUSH -> runtime.pushReturnValue(runtime.getBytecode().getConst(args));
-                    case POP -> runtime.getProcessStack().pop();
-                    case PEEK_ANS -> runtime.pushReturnValue(runtime.getResultStack().peek());
-                    case PEEK_ANS_N -> {
+                    case 8 -> getCurrentRuntime().pushReturnValue(new WenyanList());
+                    case 9 -> runtime.pushReturnValue(bytecode.getConst(args));
+                    case 10 -> runtime.getProcessStack().pop();
+                    case 11 -> runtime.pushReturnValue(runtime.getResultStack().peek());
+                    case 12 -> {
                         // TODO: costy, consider ArrayCopy
                         List<IWenyanValue> list = new ArrayList<>(args);
                         for (int i1 = 0; i1 < args; i1++) {
@@ -177,27 +175,27 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                             runtime.getResultStack().push(i1);
                         }
                     }
-                    case POP_ANS -> runtime.pushReturnValue(runtime.getResultStack().pop());
-                    case PUSH_ANS -> runtime.getResultStack().push(runtime.getProcessStack().pop());
-                    case FLUSH -> runtime.getResultStack().clear();
-                    case LOAD -> {
+                    case 13 -> runtime.pushReturnValue(runtime.getResultStack().pop());
+                    case 14 -> runtime.getResultStack().push(runtime.getProcessStack().pop());
+                    case 15 -> runtime.getResultStack().clear();
+                    case 16 -> {
                         IWenyanValue value = runtime.getLocals().get(args);
                         runtime.pushReturnValue(value);
                     }
-                    case LOAD_REF -> {
+                    case 17 -> {
                         IWenyanValue value = runtime.getReferences().get(args);
                         runtime.pushReturnValue(value);
                     }
-                    case LOAD_GLOBAL -> {
-                        String id = runtime.getBytecode().getIdentifier(args);
+                    case 18 -> {
+                        String id = bytecode.getIdentifier(args);
                         IWenyanValue value = getGlobalResolver().getGlobal(id);
                         runtime.pushReturnValue(value);
                     }
-                    case STORE -> {
+                    case 19 -> {
                         IWenyanValue value = runtime.getProcessStack().pop();
                         runtime.setLocal(args, WenyanLeftValue.varOf(value));
                     }
-                    case SET_VAR -> {
+                    case 20 -> {
                         IWenyanValue value = runtime.getProcessStack().pop();
                         IWenyanValue variable = runtime.getProcessStack().pop();
                         if (variable instanceof WenyanLeftValue lv) {
@@ -208,12 +206,12 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                         } else
                             throw new WenyanException(JudouExceptionText.SetValueToNonLeftValue.string());
                     }
-                    case CAST -> {
+                    case 21 -> {
                         IWenyanValue value = runtime.getProcessStack().pop();
                         runtime.pushReturnValue(value.as(ParsableType.values()[args].getType()));
                     }
-                    case LOAD_ATTR -> {
-                        String id = runtime.getBytecode().getIdentifier(args);
+                    case 22 -> {
+                        String id = bytecode.getIdentifier(args);
                         IWenyanValue attr;
                         IWenyanValue value = runtime.getProcessStack().pop();
                         assert value != null;
@@ -226,8 +224,8 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                         }
                         runtime.pushReturnValue(attr);
                     }
-                    case LOAD_ATTR_REMAIN -> {
-                        String id = runtime.getBytecode().getIdentifier(args);
+                    case 23 -> {
+                        String id = bytecode.getIdentifier(args);
                         IWenyanValue attr;
                         IWenyanValue value = runtime.getProcessStack().peek();
                         assert value != null;
@@ -240,27 +238,27 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                         }
                         runtime.pushReturnValue(attr);
                     }
-                    case STORE_ATTR -> {
-                        String id = runtime.getBytecode().getIdentifier(args);
+                    case 24 -> {
+                        String id = bytecode.getIdentifier(args);
                         WenyanBuiltinObject self = runtime.getProcessStack().pop().as(WenyanBuiltinObject.TYPE);
                         IWenyanValue value = WenyanLeftValue.varOf(runtime.getProcessStack().pop());
                         self.createAttribute(id, value);
                     }
-                    case STORE_STATIC_ATTR -> {
-                        String id = runtime.getBytecode().getIdentifier(args);
+                    case 25 -> {
+                        String id = bytecode.getIdentifier(args);
                         IWenyanValue value = WenyanLeftValue.varOf(runtime.getProcessStack().pop());
                         assert runtime.getProcessStack().peek() != null;
                         WenyanBuiltinObjectType type = runtime.getProcessStack().peek().as(WenyanBuiltinObjectType.TYPE);
                         type.addStaticVariable(id, value);
                     }
-                    case STORE_FUNCTION_ATTR -> {
-                        String id = runtime.getBytecode().getIdentifier(args);
+                    case 26 -> {
+                        String id = bytecode.getIdentifier(args);
                         IWenyanValue value = runtime.getProcessStack().pop();
                         assert runtime.getProcessStack().peek() != null;
                         WenyanBuiltinObjectType type = runtime.getProcessStack().peek().as(WenyanBuiltinObjectType.TYPE);
                         type.addFunction(id, value);
                     }
-                    case CREATE_TYPE -> {
+                    case 27 -> {
                         var parent = runtime.getProcessStack().pop();
                         IWenyanValue type;
                         if (parent.is(WenyanNull.TYPE))
@@ -270,7 +268,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                                     .as(WenyanBuiltinObjectType.TYPE));
                         runtime.pushReturnValue(type);
                     }
-                    case FOR_ITER -> {
+                    case 28 -> {
                         Iterator<?> iter;
                         assert runtime.getProcessStack().peek() != null;
                         iter = runtime.getProcessStack().peek().as(WenyanList.WenyanIterator.TYPE).value();
@@ -278,25 +276,25 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                             runtime.pushReturnValue((IWenyanValue) iter.next());
                         } else {
                             runtime.getProcessStack().pop();
-                            runtime.setProgramCounter(runtime.getBytecode().getLabel(args));
-                            runtime.setPCFlag(true);
+                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            pcFlag = true;
                         }
                     }
-                    case FOR_NUM -> {
+                    case 29 -> {
                         IWenyanValue value = runtime.getProcessStack().pop();
                         int num = value.as(WenyanInteger.TYPE).value();
                         if (num > 0) {
                             runtime.pushReturnValue(WenyanValues.of((long) num - 1));
                         } else {
-                            runtime.setProgramCounter(runtime.getBytecode().getLabel(args));
-                            runtime.setPCFlag(true);
+                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            pcFlag = true;
                         }
                     }
                 }
 
-                if (!runtime.isPCFlag())
-                    runtime.setProgramCounter(runtime.getProgramCounter() + 1);
-                runtime.setPCFlag(false);
+                if (!pcFlag)
+                    runtime.setProgramCounter(programCounter + 1);
+                pcFlag = false;
 
                 if (willPause) return i + 1;
             }

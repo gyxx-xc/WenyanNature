@@ -69,7 +69,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder
     doubleFunction(String name, ThrowFunction<List<Double>, Double> function) {
-        return function(name, (self, args) -> {
+        return function(name, (_, args) -> {
             List<Double> newArgs = new ArrayList<>();
             for (IWenyanValue arg : args) {
                 newArgs.add(arg.as(WenyanDouble.TYPE).value());
@@ -86,7 +86,7 @@ public final class WenyanPackageBuilder {
      */
     public WenyanPackageBuilder
     intFunction(String name, ThrowFunction<List<Integer>, Integer> function) {
-        return function(name, (self, args) -> {
+        return function(name, (_, args) -> {
             List<Integer> newArgs = new ArrayList<>();
             for (IWenyanValue arg : args) {
                 newArgs.add(arg.as(WenyanInteger.TYPE).value());
@@ -148,7 +148,7 @@ public final class WenyanPackageBuilder {
      * @return A builtin function that reduces arguments
      */
     public static WenyanInlineJavacall.BuiltinFunction reduceWith(ReduceFunction function) {
-        return (self, args) -> {
+        return (_, args) -> {
             if (args.size() <= 1)
                 throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 156, args.size()));
             IWenyanValue value = args.getFirst();
@@ -165,7 +165,7 @@ public final class WenyanPackageBuilder {
      * @return A builtin function that applies the operation
      */
     public static WenyanInlineJavacall.BuiltinFunction boolBinaryOperation(ThrowBiFunction<Boolean, Boolean, Boolean> function) {
-        return (self, args) -> {
+        return (_, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(2, args.size()));
             return WenyanValues.of(function.apply(args.get(0).as(WenyanBoolean.TYPE).value(),
@@ -179,7 +179,7 @@ public final class WenyanPackageBuilder {
      * @return A builtin function that compares values
      */
     public static WenyanInlineJavacall.BuiltinFunction compareOperation(CompareFunction function) {
-        return (self, args) -> {
+        return (_, args) -> {
             if (args.size() != 2)
                 throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(2, args.size()));
             return WenyanValues.of(function.apply(args.get(0), args.get(1)));

@@ -191,7 +191,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         environment.add(WenyanCodes.RET);
         bytecode.exitContext();
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(functionBytecode, argsType, null));
+        bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(functionBytecode.toImmutable(), argsType, null));
     }
 
     @Override

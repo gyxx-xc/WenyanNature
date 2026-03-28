@@ -9,7 +9,7 @@ import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.judou.utils.language.ILanguageProvider;
 import indi.wenyan.judou.utils.language.LanguageManager;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,8 @@ public class RunnerBenchmarkTest {
         }
     }
 
-    @RepeatedTest(10)
+    //    @RepeatedTest(10)
+    @Test
     public void test() throws IOException {
         String code = """
                 吾有一術。名之曰「a 」。
@@ -71,12 +72,14 @@ public class RunnerBenchmarkTest {
                 
                 施「a 」以零
                 """;
-        IThreadHolder<NoScheProgram.SimpleThread> runner = new WenyanRunner<>(WenyanFrame.ofCode(code), WenyanPackages.WENYAN_BASIC_PACKAGES);
+        IThreadHolder<NoScheProgram.SimpleThread> runner = new WenyanSwitchInlineRunner<>(WenyanFrame.ofCode(code), WenyanPackages.WENYAN_BASIC_PACKAGES);
         var prog = new NoScheProgram();
         runner.setThread(prog.getThread());
+
 //        AsyncProfiler profiler = AsyncProfiler.getInstance();
 //        profiler.execute("start,jfr,event=cpu,file=%p.jfr");
-        runner.run(1_000_000_000);
+        for (int i = 0; i < 10; i++)
+            runner.run(1_000_000_000);
 //        profiler.execute("stop");
     }
 }

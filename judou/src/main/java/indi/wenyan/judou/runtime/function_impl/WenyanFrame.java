@@ -101,7 +101,7 @@ public class WenyanFrame {
         environment.add(WenyanCodes.RET);
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
-        return new WenyanFrame(bytecode);
+        return new WenyanFrame(bytecode.toImmutable());
     }
 
     public static @NotNull WenyanFrame ofImportCode(String code, WenyanFrame returnRuntime) {
@@ -115,7 +115,7 @@ public class WenyanFrame {
         environment.add(WenyanCodes.RET);
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
-        return getRuntime(returnRuntime, bytecode, environment);
+        return getRuntime(returnRuntime, bytecode.toImmutable(), environment);
     }
 
     private static @NotNull WenyanFrame getRuntime(WenyanFrame returnRuntime, IWenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
@@ -159,8 +159,7 @@ public class WenyanFrame {
             errorContext = new WenyanException.ErrorContext(
                     context.line(), context.column(),
                     bytecode.getSourceCode().substring(context.contentStart(), context.contentEnd()));
-        } catch (WenyanException.WenyanVarException |
-                 IndexOutOfBoundsException ignore) {// cause error context be null, handled below
+        } catch (IndexOutOfBoundsException ignore) {// cause error context be null, handled below
         }
         if (errorContext == null)
             logger.error("Unexpected, failed to get code context during handling an exception", e);

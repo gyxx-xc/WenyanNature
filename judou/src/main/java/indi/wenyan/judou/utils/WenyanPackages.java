@@ -23,10 +23,10 @@ public enum WenyanPackages {
             .function(Symbol.MUL_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::mul))
             .function(Symbol.DIV_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::div))
 
-            .function(Symbol.NOT_ID, (IWenyanValue self, List<IWenyanValue> args) ->
+            .function(Symbol.NOT_ID, (IWenyanValue _, List<IWenyanValue> args) ->
                     args.getFirst().as(WenyanBoolean.TYPE).not())
 
-            .function(Symbol.CONCAT_ID, (IWenyanValue self, List<IWenyanValue> args) -> {
+            .function(Symbol.CONCAT_ID, (IWenyanValue _, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 256, args.size()));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
@@ -35,7 +35,7 @@ public enum WenyanPackages {
                 }
                 return value;
             })
-            .function(Symbol.LIST_ADD_ID, (IWenyanValue self, List<IWenyanValue> args) -> {
+            .function(Symbol.LIST_ADD_ID, (IWenyanValue _, List<IWenyanValue> args) -> {
                 if (args.size() <= 1)
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 256, args.size()));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
@@ -56,8 +56,8 @@ public enum WenyanPackages {
             .function(Symbol.LESSER_ID, WenyanPackageBuilder.compareOperation((a, b) -> IWenyanValue.compareTo(a, b) < 0))
 
             .function(Symbol.AWAIT_ID, AwaitCallHandler.INSTANCE)
-            .function(Symbol.CREATE_ASYNC_ID, (self, args) -> new WenyanBuiltinAsyncFunction(args.getFirst().as(WenyanBuiltinFunction.TYPE)))
+            .function(Symbol.CREATE_ASYNC_ID, (_, args) -> new WenyanBuiltinAsyncFunction(args.getFirst().as(WenyanBuiltinFunction.TYPE)))
 
-            .function(Symbol.EMPTY_ID, (IWenyanValue self, List<IWenyanValue> args) -> WenyanNull.NULL)
+            .function(Symbol.EMPTY_ID, (IWenyanValue _, List<IWenyanValue> _) -> WenyanNull.NULL)
             .build();
 }
