@@ -3,7 +3,6 @@ package indi.wenyan.judou.exec_interface;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.judou.utils.WenyanThreading;
 
 public interface IExecReceiver {
     /**
@@ -16,7 +15,6 @@ public interface IExecReceiver {
      *
      * @param request The JavacallContext to process
      */
-    @WenyanThreading
     default void receive(IHandleableRequest request) {
         getExecQueue().receive(request);
     }

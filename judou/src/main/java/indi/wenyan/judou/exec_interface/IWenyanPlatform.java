@@ -1,7 +1,7 @@
 package indi.wenyan.judou.exec_interface;
 
 import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.utils.WenyanPackages;
+import indi.wenyan.judou.utils.function.WenyanPackages;
 
 import java.util.HashMap;
 

@@ -5,7 +5,7 @@ import indi.wenyan.client.gui.code_editor.backend.WritingBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.WritingBackendSynchronizer;
 import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.block.writing_block.WritingBlockEntity;
-import indi.wenyan.judou.utils.ChineseUtils;
+import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.WritingCodePacket;
 import indi.wenyan.setup.network.server.WritingTitlePacket;

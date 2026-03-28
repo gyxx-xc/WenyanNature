@@ -5,7 +5,6 @@ import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
  * Represents a thread of execution in a Wenyan program.
  * Manages its execution state and runtime stack.
  */
-@WenyanThreading
 public class WenyanRunner<T extends IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter

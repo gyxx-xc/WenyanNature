@@ -1,6 +1,6 @@
 package indi.wenyan.content.checker.checker.test_utils;
 
-import indi.wenyan.judou.utils.Either;
+import indi.wenyan.judou.utils.function.Either;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 import org.jspecify.annotations.Nullable;

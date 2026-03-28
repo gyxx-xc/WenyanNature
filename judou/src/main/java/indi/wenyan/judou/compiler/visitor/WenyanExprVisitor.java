@@ -10,9 +10,9 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
-import indi.wenyan.judou.utils.Symbol;
-import indi.wenyan.judou.utils.WenyanDataParser;
+import indi.wenyan.judou.utils.function.WenyanDataParser;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.Symbol;
 
 import java.util.ArrayList;
 import java.util.List;

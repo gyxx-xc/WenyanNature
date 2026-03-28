@@ -9,7 +9,7 @@ import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;

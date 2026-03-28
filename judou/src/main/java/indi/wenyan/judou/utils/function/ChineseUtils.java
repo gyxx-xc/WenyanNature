@@ -1,4 +1,4 @@
-package indi.wenyan.judou.utils;
+package indi.wenyan.judou.utils.function;
 
 import cn.hutool.core.convert.Convert;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;

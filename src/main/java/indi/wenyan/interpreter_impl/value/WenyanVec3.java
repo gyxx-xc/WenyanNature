@@ -11,8 +11,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.IWenyanWarperValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.WenyanThreading;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.phys.Vec3;
@@ -95,7 +94,6 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         }
 
         @Override
-        @WenyanThreading
         public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
             if (argsList.size() == 1) {
                 return argsList.getFirst().as(WenyanVec3.TYPE);

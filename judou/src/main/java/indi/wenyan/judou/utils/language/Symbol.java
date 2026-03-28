@@ -1,4 +1,4 @@
-package indi.wenyan.judou.utils;
+package indi.wenyan.judou.utils.language;
 
 public enum Symbol {
     ;

@@ -5,16 +5,11 @@ import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.test_utils.TestPlatform;
-import indi.wenyan.judou.utils.ConfigManager;
-import indi.wenyan.judou.utils.IConfigProvider;
-import indi.wenyan.judou.utils.LoggerManager;
-import indi.wenyan.judou.utils.language.LanguageManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ExecutorService;
@@ -27,35 +22,6 @@ class WenyanProgramImplTest {
 
     private TestPlatform platform;
     private WenyanProgramImpl program;
-
-    static {
-        try {
-            LoggerManager.registerLogger(NOPLogger.NOP_LOGGER);
-            LanguageManager.registerLanguageProvider(s -> s);
-            ConfigManager.registerConfigProvider(new IConfigProvider() {
-                @Override
-                public int getMaxThread() {
-                    return 10;
-                }
-
-                @Override
-                public int getMaxSlice() {
-                    return 1000;
-                }
-
-                @Override
-                public int getWatchdogTimeout() {
-                    return 10;
-                }
-
-                @Override
-                public int getResultMaxSize() {
-                    return 64;
-                }
-            });
-        } catch (IllegalStateException ignore) { // already registered by other class
-        }
-    }
 
     private static abstract class TestRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
         @Getter

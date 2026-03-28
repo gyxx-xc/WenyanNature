@@ -1,4 +1,4 @@
-package indi.wenyan.judou.utils;
+package indi.wenyan.judou.utils.function;
 
 import java.util.Objects;
 import java.util.Optional;

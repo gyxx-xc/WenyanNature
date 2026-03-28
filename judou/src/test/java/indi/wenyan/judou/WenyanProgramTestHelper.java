@@ -11,15 +11,8 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.test_utils.TestPlatform;
-import indi.wenyan.judou.utils.ConfigManager;
-import indi.wenyan.judou.utils.IConfigProvider;
-import indi.wenyan.judou.utils.LoggerManager;
-import indi.wenyan.judou.utils.WenyanValues;
-import indi.wenyan.judou.utils.language.LanguageManager;
-import org.junit.jupiter.api.BeforeAll;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import org.junit.jupiter.params.provider.Arguments;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,37 +20,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WenyanProgramTestHelper {
-
-    @BeforeAll
-    static void init() {
-        try {
-            LanguageManager.registerLanguageProvider(s -> s);
-            LoggerManager.registerLogger(LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME));
-            ConfigManager.registerConfigProvider(new IConfigProvider() {
-                @Override
-                public int getMaxThread() {
-                    return 10;
-                }
-
-                @Override
-                public int getMaxSlice() {
-                    return 1000;
-                }
-
-                @Override
-                public int getWatchdogTimeout() {
-                    return 10;
-                }
-
-                @Override
-                public int getResultMaxSize() {
-                    return 64;
-                }
-            });
-        } catch (IllegalStateException _) {
-        }
-    }
-
 
     protected static Arguments resultArgs(String code, Object... output) {
         return Arguments.of(code, output);
@@ -111,4 +73,5 @@ public class WenyanProgramTestHelper {
             Thread.sleep(20);
         }
     }
+
 }

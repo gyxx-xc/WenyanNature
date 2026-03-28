@@ -4,7 +4,7 @@ import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.utils.Either;
+import indi.wenyan.judou.utils.function.Either;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.BlockPos;

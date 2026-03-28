@@ -14,8 +14,7 @@ import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinObjectType;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.utils.WenyanThreading;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +28,6 @@ import java.util.List;
  * Represents a thread of execution in a Wenyan program.
  * Manages its execution state and runtime stack.
  */
-@WenyanThreading
 public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter

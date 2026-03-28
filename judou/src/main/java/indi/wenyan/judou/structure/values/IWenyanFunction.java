@@ -4,7 +4,7 @@ import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.Nullable;
 

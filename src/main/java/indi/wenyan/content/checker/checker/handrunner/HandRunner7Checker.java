@@ -9,9 +9,8 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.Symbol;
-import indi.wenyan.judou.utils.WenyanThreading;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.utils.language.Symbol;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.util.RandomSource;
 
@@ -70,7 +69,6 @@ public class HandRunner7Checker extends ValueAnswerChecker {
 
 
             @Override
-            @WenyanThreading
             public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
                 return new Position(argsList.get(0).as(WenyanInteger.TYPE).value(),
                         argsList.get(1).as(WenyanInteger.TYPE).value());

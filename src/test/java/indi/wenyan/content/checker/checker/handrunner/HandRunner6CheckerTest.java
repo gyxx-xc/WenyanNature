@@ -3,7 +3,7 @@ package indi.wenyan.content.checker.checker.handrunner;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import net.minecraft.util.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

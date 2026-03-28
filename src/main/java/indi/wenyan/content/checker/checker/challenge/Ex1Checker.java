@@ -3,7 +3,7 @@ package indi.wenyan.content.checker.checker.challenge;
 import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import net.minecraft.util.RandomSource;
 import org.jspecify.annotations.Nullable;
 

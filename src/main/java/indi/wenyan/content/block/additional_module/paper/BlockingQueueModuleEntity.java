@@ -16,7 +16,7 @@ import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.network.client.CommunicationLocationPacket;
 import lombok.Getter;

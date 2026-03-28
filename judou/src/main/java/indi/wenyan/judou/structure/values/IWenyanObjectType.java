@@ -3,7 +3,6 @@ package indi.wenyan.judou.structure.values;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.utils.WenyanThreading;
 import indi.wenyan.judou.utils.language.JudouTypeText;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -30,7 +29,6 @@ public interface IWenyanObjectType extends IWenyanFunction {
      * @return the new object instance
      * @throws WenyanException if object creation fails
      */
-    @WenyanThreading
     IWenyanObject createObject(List<IWenyanValue> argsList)
             throws WenyanException;
 

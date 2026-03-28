@@ -2,7 +2,7 @@ package indi.wenyan.content.checker.checker.paper;
 
 import indi.wenyan.content.checker.ValueAnswerChecker;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 

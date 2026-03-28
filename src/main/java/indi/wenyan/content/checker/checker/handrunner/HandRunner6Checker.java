@@ -5,7 +5,7 @@ import indi.wenyan.content.checker.CraftingAnswerChecker;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 public class HandRunner6Checker extends CraftingAnswerChecker {

@@ -6,10 +6,10 @@ import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.utils.Symbol;
-import indi.wenyan.judou.utils.WenyanDataParser;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanDataParser;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.utils.language.Symbol;
 
 /**
  * Visitor for handling candy statements in the Wenyan language.

@@ -5,7 +5,7 @@ import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.IRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.utils.LoggerManager;
+import indi.wenyan.judou.utils.UtilManager;
 import org.slf4j.Logger;
 
 public interface IWenyanRunner extends IRunner {
@@ -19,7 +19,7 @@ public interface IWenyanRunner extends IRunner {
     }
 
     static void dieWithException(IWenyanRunner runner, WenyanException e) {
-        Logger logger = LoggerManager.getLogger();
+        Logger logger = UtilManager.getLogger();
         WenyanFrame frame = runner.getFrameManager().getNullableCurrentRuntime();
         WenyanException.ErrorContext errorContext;
         if (frame != null)

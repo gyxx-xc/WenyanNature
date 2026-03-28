@@ -12,7 +12,7 @@ import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
-import indi.wenyan.judou.utils.ChineseUtils;
+import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.BlockRunnerCodePacket;

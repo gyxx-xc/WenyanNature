@@ -4,7 +4,7 @@ import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.checker.checker.test_utils.MockRandomSource;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import net.minecraft.util.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,33 +14,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link StartlightPaperChecker}.
- *
+ * <p>
  * The checker's random call order in init():
  *   1. nextInt(20)  → rowOffset  → row = rowOffset + 1
  *   2. nextInt(20)  → colOffset  → col = colOffset + 1
  *   3. row*col calls of nextInt(99) → cell values (val = raw + 1)
- *
+ * <p>
  * The answer is [maxRow, maxCol] (0-indexed) of the maximum value in the grid.
- *
+ * <p>
  * MockRandomSource.nextInt(bound) ignores the bound and returns the next raw value.
  * So addSeq values map 1-to-1 to the raw values consumed by nextInt calls.
- *
+ * <p>
  * Test case derivations (rowOffset, colOffset, ...cells):
- *
+ * <p>
  *  Case A: 1×1 grid
  *    seq: 0, 0, 5  → row=1, col=1, cell[0][0]=6
  *    max at (0, 0)
- *
+ * <p>
  *  Case B: 2×2 grid, max at bottom-right
  *    seq: 1, 1, 3, 7, 10, 50  → row=2, col=2
  *    cells: [0][0]=4, [0][1]=8, [1][0]=11, [1][1]=51
  *    max=51 at (1, 1)
- *
+ * <p>
  *  Case C: 2×3 grid, max in first row middle
  *    seq: 1, 2, 5, 80, 10, 1, 2, 3  → row=2, col=3
  *    cells: [0][0]=6, [0][1]=81, [0][2]=11, [1][0]=2, [1][1]=3, [1][2]=4
  *    max=81 at (0, 1)
- *
+ * <p>
  *  Case D: 3×1 grid, max in last row
  *    seq: 2, 0, 10, 20, 60  → row=3, col=1
  *    cells: [0][0]=11, [1][0]=21, [2][0]=61

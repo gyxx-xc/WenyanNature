@@ -1,6 +1,6 @@
 package indi.wenyan.client.gui.float_note;
 
-import indi.wenyan.judou.utils.ChineseUtils;
+import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.language.GuiText;
 import indi.wenyan.setup.network.server.FloatNotePacket;

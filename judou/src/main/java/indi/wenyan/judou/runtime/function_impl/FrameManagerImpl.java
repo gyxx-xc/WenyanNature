@@ -3,12 +3,13 @@ package indi.wenyan.judou.runtime.function_impl;
 import indi.wenyan.judou.runtime.IFrameManager;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
+import indi.wenyan.judou.utils.UtilManager;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FrameManagerImpl implements IFrameManager<WenyanFrame> {
-    public final int maxRecursionDepth = 3000;
+    public final int maxRecursionDepth = UtilManager.getConfig().getMaxRecursionDepth();
     @Nullable WenyanFrame currentRuntime;
     int recursionDepth = 0;
 

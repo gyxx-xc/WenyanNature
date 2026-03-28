@@ -3,8 +3,7 @@ package indi.wenyan.judou.runtime.function_impl;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.utils.ConfigManager;
-import indi.wenyan.judou.utils.WenyanThreading;
+import indi.wenyan.judou.utils.UtilManager;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 import java.util.ArrayDeque;
@@ -15,13 +14,12 @@ import java.util.LinkedList;
  * A specialized stack implementation for Wenyan values with a size limit.
  * Null values are not pushed to the stack.
  */
-@WenyanThreading
 public class WenyanResultStack {
     /** Underlying data structure for the stack */
     private final Deque<IWenyanValue> stack = new ArrayDeque<>();
 
     /** Maximum allowed size for the stack */
-    private final int maxSize = ConfigManager.getConfig().getResultMaxSize();
+    private final int maxSize = UtilManager.getConfig().getResultMaxSize();
 
     /**
      * Pushes an item onto the stack if it's not null.

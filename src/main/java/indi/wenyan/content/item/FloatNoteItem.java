@@ -3,7 +3,7 @@ package indi.wenyan.content.item;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.judou.utils.ChineseUtils;
+import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.server.DeviceRenamePacket;
 import indi.wenyan.setup.network.server.PlatformRenamePacket;

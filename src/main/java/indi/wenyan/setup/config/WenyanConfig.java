@@ -1,8 +1,8 @@
 package indi.wenyan.setup.config;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.judou.utils.ConfigManager;
-import indi.wenyan.judou.utils.IConfigProvider;
+import indi.wenyan.judou.utils.UtilManager;
+import indi.wenyan.judou.utils.config.IConfigProvider;
 import indi.wenyan.setup.language.ConfigText;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
@@ -41,7 +41,7 @@ public final class WenyanConfig {
             throw new IllegalArgumentException();
         }
         instance = new WenyanConfig(container);
-        ConfigManager.registerConfigProvider(judouConfigProvider);
+        UtilManager.setConfig(judouConfigProvider);
     }
 
     public static WenyanConfig instance() {
@@ -94,6 +94,16 @@ public final class WenyanConfig {
         public int getResultMaxSize() {
             return instance().common.resultMaxSize.get();
         }
+
+        @Override
+        public int getMaxRecursionDepth() {
+            return instance().common.maxRecursionDepth.get();
+        }
+
+        @Override
+        public boolean useLegancyRunner() {
+            return instance().common.useLegancyRunner.get();
+        }
     };
 
     private static class ClientConfig {
@@ -112,6 +122,8 @@ public final class WenyanConfig {
         public final IntValue maxThread;
         public final DoubleValue watchdogTimeoutAdjust;
         public final IntValue resultMaxSize;
+        public final IntValue maxRecursionDepth;
+        public final BooleanValue useLegancyRunner;
 
         public final IntValue formationRange;
         public final IntValue pedestalRange;
@@ -125,10 +137,13 @@ public final class WenyanConfig {
             var builder = new ModConfigSpec.Builder();
 
             builder.push(ConfigText.Judou.getName());
-            sliceStep = define(builder, ConfigText.SliceStep.getName(), 10, 5, 20, ConfigText.SliceInstructUnit.string());
+            sliceStep = define(builder, ConfigText.SliceStep.getName(), 10, 5, 20,
+                    ConfigText.SliceInstructUnit.string());
             maxThread = define(builder, ConfigText.MaxThread.getName(), 10, 5, 20);
             watchdogTimeoutAdjust = define(builder, ConfigText.WatchdogTimeout.getName(), 1.0, 0.5, 5.0);
             resultMaxSize = define(builder, ConfigText.ResultMaxSize.getName(), 64, 32, 256);
+            maxRecursionDepth = define(builder, ConfigText.MaxRecursionDepth.getName(), 3000, 100, 5000);
+            useLegancyRunner = define(builder, ConfigText.UseLegancyRunner.getName(), false);
             builder.pop();
 
             builder.push(ConfigText.InGame.getName());

@@ -1,7 +1,6 @@
 package indi.wenyan.judou.exec_interface.structure;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.utils.WenyanThreading;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +21,6 @@ public class ExecQueue {
      *
      * @param request the JavacallContext request to be added to the queue
      */
-    @WenyanThreading
     public void receive(IHandleableRequest request) {
         queue.add(request);
     }

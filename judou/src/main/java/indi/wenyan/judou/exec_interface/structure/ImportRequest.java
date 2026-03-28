@@ -6,7 +6,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.Either;
+import indi.wenyan.judou.utils.function.Either;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.AccessLevel;
 import lombok.Getter;

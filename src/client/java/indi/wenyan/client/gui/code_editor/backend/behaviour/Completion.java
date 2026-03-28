@@ -1,6 +1,6 @@
 package indi.wenyan.client.gui.code_editor.backend.behaviour;
 
-import indi.wenyan.judou.utils.ChineseUtils;
+import indi.wenyan.judou.utils.function.ChineseUtils;
 
 import java.math.BigInteger;
 import java.util.Collection;

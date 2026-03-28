@@ -6,7 +6,7 @@ import indi.wenyan.annotation_processor.annotation.WenyanMethod;
 import indi.wenyan.annotation_processor.annotation.WenyanObjectValue;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.utils.WenyanValues;
+import indi.wenyan.judou.utils.function.WenyanValues;
 
 import java.util.List;
 

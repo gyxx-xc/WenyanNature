@@ -6,8 +6,7 @@ import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.IWenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.utils.ConfigManager;
-import indi.wenyan.judou.utils.LoggerManager;
+import indi.wenyan.judou.utils.UtilManager;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import lombok.Data;
 import lombok.Getter;
@@ -18,9 +17,9 @@ import java.util.Collection;
 import java.util.concurrent.*;
 
 public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> {
-    private final int sliceStep = ConfigManager.getConfig().getMaxSlice();
-    private final int maxThread = ConfigManager.getConfig().getMaxThread();
-    private final int watchdogTimeout = ConfigManager.getConfig().getWatchdogTimeout();
+    private final int sliceStep = UtilManager.getConfig().getMaxSlice();
+    private final int maxThread = UtilManager.getConfig().getMaxThread();
+    private final int watchdogTimeout = UtilManager.getConfig().getWatchdogTimeout();
 
     /**
      * Semaphore controlling execution steps across threads.
@@ -66,7 +65,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         if (executor.isShutdown()) return;
         if (accumulatedSteps > 0) {
             if (!isIdle)
-                LoggerManager.getLogger().warn(
+                UtilManager.getLogger().warn(
                         "program running too slow, step {} but {} accumulated",
                         step, accumulatedSteps);
         }
@@ -199,7 +198,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     private void startWatchdog(PCB thread) {
         var f = WATCHDOG.schedule(() -> {
             try {
-                Logger logger = LoggerManager.getLogger();
+                Logger logger = UtilManager.getLogger();
                 logger.error("program running too slow for given step, program stop");
                 logger.debug("program: {}", thread.getRunner());
             } catch (IllegalStateException ignore) {

@@ -12,7 +12,6 @@ import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.utils.WenyanThreading;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,6 @@ import java.util.*;
  * Stores variables, execution state, and handles the program flow.
  */
 // TODO: to interface
-@WenyanThreading
 public class WenyanFrame {
     /**
      * -- GETTER --
