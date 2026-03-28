@@ -3,8 +3,8 @@ package indi.wenyan.judou.runtime.executor;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,64 +12,39 @@ import java.util.List;
 /**
  * Handles operations related to the result stack in the Wenyan interpreter.
  */
-public class AnsStackCode extends WenyanCode {
-    private final Operation operation;
+public enum AnsStackCode {
+    ;
 
-    /**
-     * Creates a new AnsStackCode with the specified operation.
-     *
-     * @param o The operation to perform on the result stack
-     */
-    public AnsStackCode(Operation o) {
-        super(opName(o));
-        operation = o;
+    static void flush(IWenyanRunner thread) throws WenyanUnreachedException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        runtime.getResultStack().clear();
     }
 
-    @Override
-    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+    static void peekAnsN(int arg, IWenyanRunner thread) throws WenyanException {
         WenyanFrame runtime = thread.getCurrentRuntime();
-        switch (operation) {
-            case PUSH -> runtime.getResultStack().push(runtime.getProcessStack().pop());
-            case POP -> runtime.pushReturnValue(runtime.getResultStack().pop());
-            case PEEK -> runtime.pushReturnValue(runtime.getResultStack().peek());
-            case PEEK_N -> {
-                List<IWenyanValue> list = new ArrayList<>(arg);
-                for (int i = 0; i < arg; i++) {
-                    list.add(runtime.getResultStack().pop());
-                    runtime.pushReturnValue(list.getLast());
-                }
-                for (var i : list) {
-                    runtime.getResultStack().push(i);
-                }
-            }
-            case FLUSH -> runtime.getResultStack().clear();
+        // TODO: costy, consider ArrayCopy
+        List<IWenyanValue> list = new ArrayList<>(arg);
+        for (int i = 0; i < arg; i++) {
+            list.add(runtime.getResultStack().pop());
+            runtime.pushReturnValue(list.getLast());
+        }
+        for (var i : list) {
+            runtime.getResultStack().push(i);
         }
     }
 
-    /**
-     * Operations that can be performed on the result stack.
-     */
-    public enum Operation {
-        PUSH,
-        POP,
-        PEEK,
-        PEEK_N,
-        FLUSH
+    static void peekAns(IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        runtime.pushReturnValue(runtime.getResultStack().peek());
     }
 
-    /**
-     * Generates the name of the code based on the operation.
-     *
-     * @param op The operation
-     * @return The name of the code
-     */
-    private static String opName(Operation op) {
-        return switch (op) {
-            case PUSH -> "PUSH_ANS";
-            case POP -> "POP_ANS";
-            case PEEK -> "PEEK_ANS";
-            case PEEK_N -> "PEEK_ANS_N";
-            case FLUSH -> "FLUSH_ANS";
-        };
+    static void popAns(IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        runtime.pushReturnValue(runtime.getResultStack().pop());
+    }
+
+    static void pushAns(IWenyanRunner thread) throws WenyanUnreachedException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        runtime.getResultStack().push(runtime.getProcessStack().pop());
     }
 }

@@ -1,18 +1,13 @@
 package indi.wenyan.judou.runtime.executor;
 
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import org.jetbrains.annotations.UnknownNullability;
 
-public class CreateListCode extends WenyanCode {
+public enum CreateListCode {
+    ;
 
-    protected CreateListCode() {
-        super("CREATE_LIST");
-    }
-
-    @Override
-    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+    static void createList(IWenyanRunner thread) throws WenyanUnreachedException {
         thread.getCurrentRuntime().pushReturnValue(new WenyanList());
     }
 }

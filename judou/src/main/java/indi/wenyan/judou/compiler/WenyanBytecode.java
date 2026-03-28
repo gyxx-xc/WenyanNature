@@ -35,14 +35,15 @@ public class WenyanBytecode {
     public record Code(WenyanCodes code, int arg) {
         @Override
         public @NotNull String toString() {
-            return code.getCode()+" "+arg;
+            return code + " " + arg;
         }
     }
 
     /**
      * Adds a new bytecode instruction.
+     *
      * @param code The operation code
-     * @param arg The argument value
+     * @param arg  The argument value
      */
     public void add(WenyanCodes code, int arg) {
         bytecode.add(new Code(code, arg));
@@ -50,6 +51,7 @@ public class WenyanBytecode {
 
     /**
      * Retrieves the bytecode instruction at the specified index.
+     *
      * @param index The instruction index
      * @return The bytecode instruction
      */
@@ -59,6 +61,7 @@ public class WenyanBytecode {
 
     /**
      * Retrieves a constant value from the constant table.
+     *
      * @param index The constant index
      * @return The constant value
      */
@@ -68,6 +71,7 @@ public class WenyanBytecode {
 
     /**
      * Adds a value to the constant table.
+     *
      * @param value The value to add
      * @return The index of the added constant
      */
@@ -78,6 +82,7 @@ public class WenyanBytecode {
 
     /**
      * Retrieves an identifier from the identifier table.
+     *
      * @param index The identifier index
      * @return The identifier string
      */
@@ -87,6 +92,7 @@ public class WenyanBytecode {
 
     /**
      * Adds an identifier to the identifier table.
+     *
      * @param identifier The identifier to add
      * @return The index of the added identifier
      */
@@ -97,6 +103,7 @@ public class WenyanBytecode {
 
     /**
      * Creates a new label in the label table.
+     *
      * @return The index of the new label
      */
     public int getNewLabel() {
@@ -120,6 +127,7 @@ public class WenyanBytecode {
 
     /**
      * Retrieves debug context information for a given index.
+     *
      * @param index The code index
      * @return The context information, or null if not found
      */
@@ -135,6 +143,7 @@ public class WenyanBytecode {
 
     /**
      * Gets the label value at the specified index.
+     *
      * @param index The label index
      * @return The label value
      */
@@ -144,6 +153,7 @@ public class WenyanBytecode {
 
     /**
      * Sets a label value at the specified index.
+     *
      * @param index The label index
      * @param label The label value
      */
@@ -158,6 +168,7 @@ public class WenyanBytecode {
 
     /**
      * Returns the size of the bytecode.
+     *
      * @return Number of bytecode instructions
      */
     public int size() {
@@ -186,7 +197,9 @@ public class WenyanBytecode {
      */
     public record Context(int line, int column,
                           int bytecodeStart, int bytecodeEnd,
-                          int contentStart, int contentEnd){}
+                          int contentStart, int contentEnd) {
+    }
 
-    public record CapturedValue(int index, boolean fromLocal) {}
+    public record CapturedValue(int index, boolean fromLocal) {
+    }
 }

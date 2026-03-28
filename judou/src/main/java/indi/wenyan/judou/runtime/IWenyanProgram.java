@@ -5,6 +5,7 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 
 public interface IWenyanProgram<T extends IWenyanThread> {
+    /// return false if no longer able to accepts/run thread
     boolean isAvailable();
 
     /**

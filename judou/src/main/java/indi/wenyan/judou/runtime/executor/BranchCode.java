@@ -3,88 +3,50 @@ package indi.wenyan.judou.runtime.executor;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
-import org.jetbrains.annotations.UnknownNullability;
 
 /**
  * Handles conditional branching operations in the Wenyan interpreter.
  */
-public class BranchCode extends WenyanCode {
-    private final Condition condition;
+public enum BranchCode {
+    ;
 
-    /**
-     * Creates a new BranchCode with the specified condition and operation.
-     *
-     * @param c The condition for branching
-     */
-    public BranchCode(Condition c) {
-        super(opName(c));
-        condition = c;
-    }
-
-    @Override
-    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+    static void branchTrue(int arg, IWenyanRunner thread) throws WenyanException {
         WenyanFrame runtime = thread.getCurrentRuntime();
-        switch (condition) {
-            case NONE -> {
-                runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
-                runtime.setPCFlag(true);
-            }
-            case POP_FALSE -> {
-                boolean value = runtime.getProcessStack().pop()
-                        .as(WenyanBoolean.TYPE).value();
-                if (!value) {
-                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
-                    runtime.setPCFlag(true);
-                }
-            }
-            case FALSE -> {
-                assert runtime.getProcessStack().peek() != null;
-                boolean value = runtime.getProcessStack().peek()
-                        .as(WenyanBoolean.TYPE).value();
-                if (!value) {
-                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
-                    runtime.setPCFlag(true);
-                }
-            }
-            case TRUE -> {
-                assert runtime.getProcessStack().peek() != null;
-                boolean value = runtime.getProcessStack().peek()
-                        .as(WenyanBoolean.TYPE).value();
-                if (value) {
-                    runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
-                    runtime.setPCFlag(true);
-                }
-            }
+        assert runtime.getProcessStack().peek() != null;
+        boolean value = runtime.getProcessStack().peek()
+                .as(WenyanBoolean.TYPE).value();
+        if (value) {
+            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setPCFlag(true);
         }
     }
 
-    /**
-     * Generates the name of the code based on the condition and operation.
-     *
-     * @param c The condition
-     * @return The name of the code
-     */
-    private static String opName(Condition c) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("BRANCH");
-        switch (c) {
-            case POP_FALSE -> sb.append("_POP_FALSE");
-            case FALSE -> sb.append("_FALSE");
-            case TRUE -> sb.append("_TRUE");
-            case NONE -> {
-            }
+    static void branchFalse(int arg, IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        assert runtime.getProcessStack().peek() != null;
+        boolean value = runtime.getProcessStack().peek()
+                .as(WenyanBoolean.TYPE).value();
+        if (!value) {
+            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setPCFlag(true);
         }
-        return sb.toString();
     }
 
-    /**
-     * Conditions for branch execution.
-     */
-    public enum Condition {
-        POP_FALSE,
-        FALSE,
-        TRUE,
-        NONE
+    static void branchPopFalse(int arg, IWenyanRunner thread) throws WenyanException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        boolean value = runtime.getProcessStack().pop()
+                .as(WenyanBoolean.TYPE).value();
+        if (!value) {
+            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setPCFlag(true);
+        }
+    }
+
+    static void branch(int arg, IWenyanRunner thread) throws WenyanUnreachedException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+        runtime.setPCFlag(true);
     }
 }

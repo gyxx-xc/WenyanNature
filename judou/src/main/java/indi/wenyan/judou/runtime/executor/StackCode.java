@@ -3,51 +3,20 @@ package indi.wenyan.judou.runtime.executor;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
-import org.jetbrains.annotations.UnknownNullability;
 
 /**
  * Handles stack operations in the Wenyan interpreter.
  */
-public class StackCode extends WenyanCode {
-    private final Operation operation;
+public enum StackCode {
+    ;
 
-    /**
-     * Creates a new StackCode with the specified operation.
-     *
-     * @param o The operation to perform on the stack
-     */
-    public StackCode(Operation o) {
-        super(opName(o));
-        operation = o;
-    }
-
-    @Override
-    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanUnreachedException {
+    static void popStack(IWenyanRunner thread) throws WenyanUnreachedException {
         WenyanFrame runtime = thread.getCurrentRuntime();
-        switch (operation) {
-            case PUSH -> runtime.pushReturnValue(runtime.getBytecode().getConst(arg));
-            case POP -> runtime.getProcessStack().pop();
-        }
+        runtime.getProcessStack().pop();
     }
 
-    /**
-     * Types of stack operations.
-     */
-    public enum Operation {
-        PUSH,
-        POP
-    }
-
-    /**
-     * Generates the name of the code based on the operation.
-     *
-     * @param op The operation
-     * @return The name of the code
-     */
-    private static String opName(Operation op) {
-        return switch (op) {
-            case PUSH -> "PUSH";
-            case POP -> "POP";
-        };
+    static void pushStack(int arg, IWenyanRunner thread) throws WenyanUnreachedException {
+        WenyanFrame runtime = thread.getCurrentRuntime();
+        runtime.pushReturnValue(runtime.getBytecode().getConst(arg));
     }
 }

@@ -3,48 +3,54 @@ package indi.wenyan.judou.runtime.executor;
 import lombok.Getter;
 
 public enum WenyanCodes {
-    BRANCH_POP_FALSE(new BranchCode(BranchCode.Condition.POP_FALSE)),
-    BRANCH_FALSE(new BranchCode(BranchCode.Condition.FALSE)),
-    BRANCH_TRUE(new BranchCode(BranchCode.Condition.TRUE)),
-    JMP(new BranchCode(BranchCode.Condition.NONE)),
+    BRANCH_POP_FALSE(BranchCode::branchPopFalse),
+    BRANCH_FALSE(BranchCode::branchFalse),
+    BRANCH_TRUE(BranchCode::branchTrue),
+    JMP(BranchCode::branch),
 
-    CALL(new FunctionCode(FunctionCode.Operation.CALL)),
-    CALL_ATTR(new FunctionCode(FunctionCode.Operation.CALL_ATTR)),
-    CREATE_FNCTION(new CreateFunctionCode()),
-    RET(new ReturnCode()),
+    CALL((arg, thread) -> FunctionCode.callFunction(arg, thread, false)),
+    CALL_ATTR((arg, thread) -> FunctionCode.callFunction(arg, thread, true)),
+    CREATE_FNCTION(CreateFunctionCode::createFunction),
+    RET((_, t) -> ReturnCode.ret(t)),
 
-    CREATE_LIST(new CreateListCode()),
+    CREATE_LIST((_, t) -> CreateListCode.createList(t)),
 
-    PUSH(new StackCode(StackCode.Operation.PUSH)),
-    POP(new StackCode(StackCode.Operation.POP)),
+    PUSH(StackCode::pushStack),
+    POP((_, t) -> StackCode.popStack(t)),
 
-    PEEK_ANS(new AnsStackCode(AnsStackCode.Operation.PEEK)),
-    PEEK_ANS_N(new AnsStackCode(AnsStackCode.Operation.PEEK_N)),
-    POP_ANS(new AnsStackCode(AnsStackCode.Operation.POP)),
-    PUSH_ANS(new AnsStackCode(AnsStackCode.Operation.PUSH)),
-    FLUSH(new AnsStackCode(AnsStackCode.Operation.FLUSH)),
+    PEEK_ANS((_, t) -> AnsStackCode.peekAns(t)),
+    PEEK_ANS_N(AnsStackCode::peekAnsN),
+    POP_ANS((_, t) -> AnsStackCode.popAns(t)),
+    PUSH_ANS((_, t) -> AnsStackCode.pushAns(t)),
+    FLUSH((_, t) -> AnsStackCode.flush(t)),
 
-    LOAD(new VariableCode(VariableCode.Operation.LOAD)),
-    LOAD_REF(new VariableCode(VariableCode.Operation.LOAD_REF)),
-    LOAD_GLOBAL(new VariableCode(VariableCode.Operation.LOAD_GLOBAL)),
-    STORE(new VariableCode(VariableCode.Operation.STORE)),
-    SET_VAR(new VariableCode(VariableCode.Operation.SET_VALUE)),
-    CAST(new VariableCode(VariableCode.Operation.CAST)),
+    LOAD(VariableCode::load),
+    LOAD_REF(VariableCode::loadRef),
+    LOAD_GLOBAL(VariableCode::loadGlobal),
+    STORE(VariableCode::store),
+    SET_VAR((_, t) -> VariableCode.setValue(t)),
+    CAST(VariableCode::cast),
 
-    LOAD_ATTR(new ObjectCode(ObjectCode.Operation.ATTR)),
-    LOAD_ATTR_REMAIN(new ObjectCode(ObjectCode.Operation.ATTR_REMAIN)),
-    STORE_ATTR(new ObjectCode(ObjectCode.Operation.STORE_ATTR)),
-    STORE_STATIC_ATTR(new ObjectCode(ObjectCode.Operation.STORE_STATIC_ATTR)),
-    STORE_FUNCTION_ATTR(new ObjectCode(ObjectCode.Operation.STORE_FUNCTION_ATTR)),
-    CREATE_TYPE(new ObjectCode(ObjectCode.Operation.CREATE_TYPE)),
+    LOAD_ATTR(((arg, thread) -> ObjectCode.loadAttr(arg, thread, true))),
+    LOAD_ATTR_REMAIN((arg, thread) -> ObjectCode.loadAttr(arg, thread, false)),
+    // currently only used at define (mzy SELF ZHI STRING)
+    STORE_ATTR(ObjectCode::storeAttr),
+    STORE_STATIC_ATTR(ObjectCode::storeStaticAttr),
+    STORE_FUNCTION_ATTR(ObjectCode::storeFunctionAttr),
+    CREATE_TYPE((_, t) -> ObjectCode.createType(t)),
 
-    FOR_ITER(new ForCode(ForCode.Operation.FOR_ITER)),
-    FOR_NUM(new ForCode(ForCode.Operation.FOR_NUM));
+    FOR_ITER(ForCode::forIter),
+    FOR_NUM(ForCode::forNum);
 
     @Getter
     private final WenyanCode code;
 
     WenyanCodes(WenyanCode code) {
         this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return name();
     }
 }

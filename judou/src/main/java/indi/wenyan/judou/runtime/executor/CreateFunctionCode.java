@@ -3,18 +3,15 @@ package indi.wenyan.judou.runtime.executor;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 
-public class CreateFunctionCode extends WenyanCode {
-    protected CreateFunctionCode() {
-        super("CREATE_FUNCTION");
-    }
+public enum CreateFunctionCode {
+    ;
 
-    @Override
-    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+    static void createFunction(int arg, IWenyanRunner thread) throws WenyanUnreachedException, WenyanException.WenyanTypeException {
         WenyanFrame runtime = thread.getCurrentRuntime();
         WenyanBuiltinFunction func = runtime.getProcessStack().pop().as(WenyanBuiltinFunction.TYPE);
         var newFunc = new WenyanBuiltinFunction(func.bytecode(), func.args(), new ArrayList<>());

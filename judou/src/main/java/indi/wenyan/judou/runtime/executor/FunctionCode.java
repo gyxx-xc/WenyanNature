@@ -7,7 +7,6 @@ import indi.wenyan.judou.structure.values.IWenyanFunction;
 import indi.wenyan.judou.structure.values.IWenyanObject;
 import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +14,8 @@ import java.util.List;
 /**
  * Handles function calls in the Wenyan interpreter.
  */
-public class FunctionCode extends WenyanCode {
-    private final Operation operation;
-
-    /**
-     * Creates a new FunctionCode with the specified operation.
-     *
-     * @param o The operation to perform
-     */
-    public FunctionCode(Operation o) {
-        super(opName(o));
-        operation = o;
-    }
+public enum FunctionCode {
+    ;
 
     // func / create_obj
     // -> ori_func / javacall
@@ -39,14 +28,12 @@ public class FunctionCode extends WenyanCode {
     //   A.B() a.B() B() -> make self, call, capture return
     //   A.b() b() -> call
     //   a.b() -> set self, call
-
-    @Override
-    public void exec(int arg, @UnknownNullability IWenyanRunner thread) throws WenyanException {
+    static void callFunction(int arg, IWenyanRunner thread, boolean isAttr) throws WenyanException {
         WenyanFrame runtime = thread.getCurrentRuntime();
         IWenyanValue func = runtime.getProcessStack().pop();
         IWenyanValue self = null;
         IWenyanFunction callable;
-        if (operation == Operation.CALL_ATTR)
+        if (isAttr)
             self = runtime.getProcessStack().pop();
 
         // object_type
@@ -54,7 +41,7 @@ public class FunctionCode extends WenyanCode {
             callable = func.as(IWenyanObjectType.TYPE);
         } else { // function
             // handleWarper self first
-            if (operation == Operation.CALL_ATTR) {
+            if (isAttr) {
                 // try casting to object (might be list)
                 // if not, static method
                 if (!self.is(IWenyanObject.TYPE)) {
@@ -72,26 +59,5 @@ public class FunctionCode extends WenyanCode {
         //   which is a fake block, it will still run the rest command before blocked
         //   it will only block the next WenyanCode being executed
         callable.call(self, thread, argsList);
-    }
-
-    /**
-     * Types of function call operations.
-     */
-    public enum Operation {
-        CALL,
-        CALL_ATTR
-    }
-
-    /**
-     * Generates the name of the code based on the operation.
-     *
-     * @param op The operation
-     * @return The name of the code
-     */
-    private static String opName(Operation op) {
-        return switch (op) {
-            case CALL -> "CALL";
-            case CALL_ATTR -> "CALL_ATTR";
-        };
     }
 }
