@@ -1,4 +1,4 @@
-package indi.wenyan.judou.runtime.test_utils;
+package indi.wenyan.judou.test_utils;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;

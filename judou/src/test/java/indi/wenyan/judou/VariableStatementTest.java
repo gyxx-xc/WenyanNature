@@ -1,4 +1,4 @@
-package indi.wenyan.judou.runtime;
+package indi.wenyan.judou;
 
 import indi.wenyan.judou.structure.WenyanException;
 import org.junit.jupiter.params.ParameterizedTest;
