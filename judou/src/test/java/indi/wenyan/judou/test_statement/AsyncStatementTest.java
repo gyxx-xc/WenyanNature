@@ -1,4 +1,4 @@
-package indi.wenyan.judou;
+package indi.wenyan.judou.test_statement;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.IWenyanProgram;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class AsyncStatementTest extends WenyanProgramTestHelper {
+class AsyncStatementTest extends WenyanProgramTestHelper {
     private static Stream<Arguments> testData() {
         return Stream.of(
                 timedArgs("""

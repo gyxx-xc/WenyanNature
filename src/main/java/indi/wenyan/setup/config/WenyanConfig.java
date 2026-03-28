@@ -138,11 +138,12 @@ public final class WenyanConfig {
 
             builder.push(ConfigText.Judou.getName());
             sliceStep = define(builder, ConfigText.SliceStep.getName(), 10, 5, 20,
-                    ConfigText.SliceInstructUnit.string());
+                    "x100");
             maxThread = define(builder, ConfigText.MaxThread.getName(), 10, 5, 20);
             watchdogTimeoutAdjust = define(builder, ConfigText.WatchdogTimeout.getName(), 1.0, 0.5, 5.0);
             resultMaxSize = define(builder, ConfigText.ResultMaxSize.getName(), 64, 32, 256);
-            maxRecursionDepth = define(builder, ConfigText.MaxRecursionDepth.getName(), 3000, 100, 5000);
+            maxRecursionDepth = define(builder, ConfigText.MaxRecursionDepth.getName(), 30, 1, 50,
+                    "x100");
             useLegancyRunner = define(builder, ConfigText.UseLegancyRunner.getName(), false);
             builder.pop();
 

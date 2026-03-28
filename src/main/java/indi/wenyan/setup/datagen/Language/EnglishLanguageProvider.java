@@ -182,7 +182,6 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(RunnerRange.getTranslationKey(), "符範圍");
         add(Duration.getTranslationKey(), "算核消散游戏刻");
         add(Lifetime.getTranslationKey(), "投符持續時間");
-        add(SliceInstructUnit.getTranslationKey(), "百指令每片");
         add(MaxRecursionDepth.getTranslationKey(), "最大递归深度");
         add(UseLegancyRunner.getTranslationKey(), "使用旧式符");
 

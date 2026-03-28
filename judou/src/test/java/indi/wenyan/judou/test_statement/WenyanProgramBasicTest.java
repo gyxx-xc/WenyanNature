@@ -1,4 +1,4 @@
-package indi.wenyan.judou;
+package indi.wenyan.judou.test_statement;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.IWenyanProgram;

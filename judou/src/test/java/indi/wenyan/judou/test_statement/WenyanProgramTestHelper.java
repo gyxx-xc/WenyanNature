@@ -1,4 +1,4 @@
-package indi.wenyan.judou;
+package indi.wenyan.judou.test_statement;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
@@ -19,8 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class WenyanProgramTestHelper {
-
+class WenyanProgramTestHelper {
     protected static Arguments resultArgs(String code, Object... output) {
         return Arguments.of(code, output);
     }

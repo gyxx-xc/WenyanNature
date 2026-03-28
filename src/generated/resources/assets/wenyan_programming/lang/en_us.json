@@ -168,10 +168,12 @@
   "wenyan_programming.configuration.InGame": "游戏（物品与世界）",
   "wenyan_programming.configuration.Judou": "句读（程序运行）",
   "wenyan_programming.configuration.Lifetime": "投符持續時間",
+  "wenyan_programming.configuration.MaxRecursionDepth": "最大递归深度",
   "wenyan_programming.configuration.MaxThread": "最大线程数",
   "wenyan_programming.configuration.PedestalRange": "基石范围",
   "wenyan_programming.configuration.ResultMaxSize": "结果堆栈最大长度",
   "wenyan_programming.configuration.RunnerRange": "符範圍",
   "wenyan_programming.configuration.SliceStep": "线程切换长度",
+  "wenyan_programming.configuration.UseLegancyRunner": "使用旧式符",
   "wenyan_programming.configuration.WatchdogTimeout": "超时倍率"
 }
