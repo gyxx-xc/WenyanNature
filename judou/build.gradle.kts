@@ -53,7 +53,7 @@ dependencies {
     testImplementation("com.google.guava:guava-testlib:21.0")
 
     // in case you need to profile
-    implementation("tools.profiler:async-profiler:4.3")
+//    implementation("tools.profiler:async-profiler:4.3")
 }
 
 tasks.test {
