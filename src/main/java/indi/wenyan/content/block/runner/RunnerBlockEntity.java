@@ -9,8 +9,8 @@ import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
 import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
+import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
@@ -46,7 +46,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
@@ -192,21 +191,21 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         components.set(DataComponents.CUSTOM_NAME, Component.literal(titleCodeOutput.getPlatformName()));
     }
 
-    public Optional<IWenyanRunner> newThread(String pages) {
-        IWenyanRunner runner;
+    public boolean newThread(String pages) {
+        IThreadHolder<WenyanProgramImpl.PCB> runner;
         try {
             runner = RunnerCreater.newRunner(WenyanFrame.ofCode(pages), this.initEnvironment());
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
-            return Optional.empty();
+            return false;
         }
         try {
             lazyProgram.create().create(runner);
         } catch (WenyanException e) {
             handleError(e.getMessage());
-            return Optional.empty();
+            return false;
         }
-        return Optional.of(runner);
+        return true;
     }
 
     public boolean isRunning() {

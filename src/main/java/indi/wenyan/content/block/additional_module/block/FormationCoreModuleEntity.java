@@ -62,8 +62,8 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                     if (block == null) throw new WenyanException(NotFindFu.string());
                     if (level instanceof ServerLevel serverLevel)
                         ICommunicateHolder.blockAddCommunicateServer(serverLevel, getBlockPos(), block.getBlockPos().subtract(getBlockPos()));
-                    block.newThread(block.getCode())
-                            .orElseThrow(() -> new WenyanException(CantStart.string(platformName)));
+                    if (!block.newThread(block.getCode()))
+                        throw new WenyanException(CantStart.string(platformName));
                 }
                 return WenyanNull.NULL;
             })

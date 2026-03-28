@@ -26,7 +26,7 @@ public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements 
         newRuntime.setReturnBehavior(future::onRunnerReturn);
         IThreadHolder<WenyanProgramImpl.PCB> newThread =
                 RunnerCreater.newRunner(newRuntime, thread.getGlobalResolver());
-        thread.program().create(newThread);
+        thread.create(newThread);
         thread.getCurrentRuntime().pushReturnValue(future);
     }
 

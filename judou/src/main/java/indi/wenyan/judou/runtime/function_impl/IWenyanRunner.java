@@ -2,13 +2,13 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.runtime.IFrameManager;
 import indi.wenyan.judou.runtime.IGlobalResolver;
-import indi.wenyan.judou.runtime.IThreadHolder;
+import indi.wenyan.judou.runtime.IRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.LoggerManager;
 import org.slf4j.Logger;
 
-public interface IWenyanRunner extends IThreadHolder<WenyanProgramImpl.PCB> {
+public interface IWenyanRunner extends IRunner {
     IGlobalResolver getGlobalResolver();
 
     IFrameManager<WenyanFrame> getFrameManager();

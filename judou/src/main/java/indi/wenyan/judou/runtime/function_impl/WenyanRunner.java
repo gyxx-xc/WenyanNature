@@ -2,6 +2,8 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.runtime.IGlobalResolver;
+import indi.wenyan.judou.runtime.IThreadHolder;
+import indi.wenyan.judou.runtime.IWenyanThread;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.WenyanThreading;
@@ -14,10 +16,10 @@ import org.jetbrains.annotations.NotNull;
  * Manages its execution state and runtime stack.
  */
 @WenyanThreading
-public class WenyanRunner implements IWenyanRunner {
+public class WenyanRunner<T extends IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter
-    private WenyanProgramImpl.PCB thread;
+    private T thread;
 
     @Getter private final IGlobalResolver globalResolver;
     @Getter private final FrameManagerImpl frameManager;

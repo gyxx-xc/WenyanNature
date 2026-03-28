@@ -6,8 +6,7 @@ import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.IHandleableRequest;
-import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.IRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.setup.definitions.WenyanBlocks;
@@ -27,8 +26,8 @@ public class LockModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.SemaphoreModule;
 
-    private IThreadHolder<WenyanProgramImpl.PCB> lockHolder;
-    private final Queue<IThreadHolder<WenyanProgramImpl.PCB>> waitingThreads = new ArrayDeque<>();
+    private IRunner lockHolder;
+    private final Queue<IRunner> waitingThreads = new ArrayDeque<>();
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
