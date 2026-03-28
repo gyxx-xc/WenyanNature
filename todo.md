@@ -22,13 +22,14 @@
   - [x] complete JUnit test
 - [x] annotation wenyan value processor
   - need source level annotation processing
-- [ ] running state save and load
+- [x] variable symbol unify
+  - variable symbol in runtime need to separate to wenyan grammar
+  - at least able to change the whole pre-defined variable symbol set
+- [ ] add a simpler crafting (e.g. just call function)
 - [ ] some more function
   - rearrange libs
+- [ ] asm jit compiler
 - [ ] docker block
 - [ ] docs
   - ponder
-- [ ] asm jit compiler
-- [ ] variable symbol unify
-  - variable symbol in runtime need to separate to wenyan grammar
-  - at least able to change the whole pre-defined variable symbol set
+- [ ] running state save and load

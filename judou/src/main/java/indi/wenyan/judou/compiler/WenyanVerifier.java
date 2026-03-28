@@ -9,6 +9,7 @@ import indi.wenyan.judou.utils.language.JudouExceptionText;
 /**
  * Verifier for WenyanBytecode to ensure execution safety.
  */
+// PLAN: https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.10
 public class WenyanVerifier {
 
     /**

@@ -52,7 +52,8 @@ dependencies {
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.google.guava:guava-testlib:21.0")
 
-    implementation("tools.profiler:async-profiler:4.3")
+    // in case you need to profile
+//    implementation("tools.profiler:async-profiler:4.3")
 }
 
 tasks.test {

@@ -1,5 +1,3 @@
-// TODO: rewrite all of these sometime
-
 plugins {
     id 'java'
     id 'idea' // for JUnit
@@ -52,6 +50,8 @@ neoForge {
         enabledSourceSets = sourceSets // All source sets use Minecraft code
     }
 
+    addModdingDependenciesTo sourceSets.client
+
     mods {
         wenyan_programming {
             sourceSet(sourceSets.main)
@@ -74,14 +74,21 @@ neoForge {
         client {
             client()
 
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            sourceSet = sourceSets.client
+        }
+
+        directWorld {
+            client()
+            programArguments = [
+                    // create this world by your self
+                    '--username', 'WenyanDev', '--quickPlaySingleplayer', 'GametestWorld'
+            ]
+            sourceSet = sourceSets.client
         }
 
         server {
             server()
             programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
         gameTestServer {
@@ -98,7 +105,13 @@ neoForge {
 
         clientData {
             clientData()
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+//            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+            programArguments = [
+                    '--mod', project.mod_id,
+                    '--all',
+                    '--output', file('src/generated/resources/').absolutePath,
+                    '--existing', file('src/main/resources').absolutePath
+            ]
         }
 
         serverData {
@@ -126,7 +139,7 @@ dependencies {
     implementation project(":judou")
     jarJar implementation(project(":judou"))
     clientImplementation(project(":judou"))
-    jarJar clientImplementation(project(":judou"))
+    jarJar clientImplementation(project(":judou")) // for code highlight
 
     // for annotation processor
     compileOnly project(":language_processor")
