@@ -9,13 +9,14 @@ import indi.wenyan.judou.utils.WenyanPackages;
 import indi.wenyan.judou.utils.language.ILanguageProvider;
 import indi.wenyan.judou.utils.language.LanguageManager;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Arrays;
 
-public class RunnerBenchmark {
+public class RunnerBenchmarkTest {
 
     @BeforeAll
     static void init() {
@@ -57,14 +58,25 @@ public class RunnerBenchmark {
         }
     }
 
-    @Test
-    public void test() {
+    @RepeatedTest(10)
+    public void test() throws IOException {
         String code = """
-                恆為是云云
+                吾有一術。名之曰「a 」。
+                欲行是術。必先得一數。曰「b 」。乃行是術曰。
+                若「b 」大於一千者乃歸空無云云
+                為是四遍
+                加「b 」以一
+                施「a 」以其云云
+                是謂「a 」之術也
+                
+                施「a 」以零
                 """;
-        IThreadHolder<NoScheProgram.SimpleThread> runner = RunnerCreater.newRunner(WenyanFrame.ofCode(code), WenyanPackages.WENYAN_BASIC_PACKAGES);
+        IThreadHolder<NoScheProgram.SimpleThread> runner = new WenyanRunner<>(WenyanFrame.ofCode(code), WenyanPackages.WENYAN_BASIC_PACKAGES);
         var prog = new NoScheProgram();
         runner.setThread(prog.getThread());
+//        AsyncProfiler profiler = AsyncProfiler.getInstance();
+//        profiler.execute("start,jfr,event=cpu,file=%p.jfr");
         runner.run(1_000_000_000);
+//        profiler.execute("stop");
     }
 }

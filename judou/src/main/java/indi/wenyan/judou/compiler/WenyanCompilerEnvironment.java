@@ -310,7 +310,7 @@ public class WenyanCompilerEnvironment {
     }
 
     // if from local null, means it's local
-    private record ScopedValue(int index, WenyanBytecode from) {
+    private record ScopedValue(int index, IWenyanBytecode from) {
     }
 
     private record ScopedValueHelper(ScopedValue scopedValue,

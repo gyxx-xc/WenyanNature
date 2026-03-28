@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FrameManagerImpl implements IFrameManager<WenyanFrame> {
+    public final int maxRecursionDepth = 3000;
     @Nullable WenyanFrame currentRuntime;
     int recursionDepth = 0;
 
@@ -30,7 +31,7 @@ public class FrameManagerImpl implements IFrameManager<WenyanFrame> {
     @Override
     public void call(WenyanFrame runtime) throws WenyanException {
         recursionDepth++;
-        if (recursionDepth > 3000) {
+        if (recursionDepth > maxRecursionDepth) {
             throw new WenyanException(JudouExceptionText.RecursionDepthTooDeep.string());
         }
         currentRuntime = runtime;

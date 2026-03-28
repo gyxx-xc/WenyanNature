@@ -1,5 +1,6 @@
 package indi.wenyan.judou.runtime.function_impl;
 
+import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.compiler.WenyanVerifier;
@@ -33,7 +34,7 @@ public class WenyanFrame {
      */
     @Getter
     @NotNull
-    private final WenyanBytecode bytecode;
+    private final IWenyanBytecode bytecode;
 
     /**
      * -- GETTER --
@@ -80,13 +81,13 @@ public class WenyanFrame {
      *
      * @param bytecode The bytecode to execute (can be null)
      */
-    public WenyanFrame(@NotNull WenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanFrame returnRuntime) {
+    public WenyanFrame(@NotNull IWenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanFrame returnRuntime) {
         this.bytecode = bytecode;
         this.references = refs;
         this.returnRuntime = returnRuntime;
     }
 
-    private WenyanFrame(@NotNull WenyanBytecode bytecode) {
+    private WenyanFrame(@NotNull IWenyanBytecode bytecode) {
         this(bytecode, Collections.emptyList(), null);
     }
 
@@ -117,7 +118,7 @@ public class WenyanFrame {
         return getRuntime(returnRuntime, bytecode, environment);
     }
 
-    private static @NotNull WenyanFrame getRuntime(WenyanFrame returnRuntime, WenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
+    private static @NotNull WenyanFrame getRuntime(WenyanFrame returnRuntime, IWenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
         WenyanFrame wenyanRuntime = new WenyanFrame(bytecode, Collections.emptyList(), returnRuntime);
         var exportedIdentifier = environment.getExportedValues();
         int exportSize = exportedIdentifier.size();

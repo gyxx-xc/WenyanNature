@@ -14,7 +14,7 @@ import java.util.List;
  * Represents the bytecode structure for the Wenyan interpreter.
  * Manages code instructions, constant values, identifiers, labels, and debug information.
  */
-public class WenyanBytecode {
+public class WenyanBytecode implements IWenyanBytecode {
     private final List<Code> bytecode = new ArrayList<>();
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
@@ -30,16 +30,6 @@ public class WenyanBytecode {
     }
 
     /**
-     * Represents a bytecode instruction with its operation code and argument.
-     */
-    public record Code(WenyanCodes code, int arg) {
-        @Override
-        public @NotNull String toString() {
-            return code + " " + arg;
-        }
-    }
-
-    /**
      * Adds a new bytecode instruction.
      *
      * @param code The operation code
@@ -49,22 +39,12 @@ public class WenyanBytecode {
         bytecode.add(new Code(code, arg));
     }
 
-    /**
-     * Retrieves the bytecode instruction at the specified index.
-     *
-     * @param index The instruction index
-     * @return The bytecode instruction
-     */
+    @Override
     public Code get(int index) {
         return bytecode.get(index);
     }
 
-    /**
-     * Retrieves a constant value from the constant table.
-     *
-     * @param index The constant index
-     * @return The constant value
-     */
+    @Override
     public IWenyanValue getConst(int index) {
         return constTable.get(index);
     }
@@ -80,12 +60,7 @@ public class WenyanBytecode {
         return constTable.size() - 1;
     }
 
-    /**
-     * Retrieves an identifier from the identifier table.
-     *
-     * @param index The identifier index
-     * @return The identifier string
-     */
+    @Override
     public String getIdentifier(int index) {
         return identifierTable.get(index);
     }
@@ -101,11 +76,7 @@ public class WenyanBytecode {
         return identifierTable.size() - 1;
     }
 
-    /**
-     * Creates a new label in the label table.
-     *
-     * @return The index of the new label
-     */
+    @Override
     public int getNewLabel() {
         labelTable.add(0);
         return labelTable.size() - 1;
@@ -125,12 +96,7 @@ public class WenyanBytecode {
         debugTable.add(new Context(line, column, start, end, contentStart, contentEnd));
     }
 
-    /**
-     * Retrieves debug context information for a given index.
-     *
-     * @param index The code index
-     * @return The context information, or null if not found
-     */
+    @Override
     public Context getContext(int index) throws WenyanException.WenyanVarException {
         // change to binary search
         for (Context context : debugTable) {
@@ -141,12 +107,7 @@ public class WenyanBytecode {
         throw new WenyanException.WenyanVarException(JudouExceptionText.DebugInfoNotFound.string(index));
     }
 
-    /**
-     * Gets the label value at the specified index.
-     *
-     * @param index The label index
-     * @return The label value
-     */
+    @Override
     public int getLabel(int index) {
         return labelTable.get(index);
     }
@@ -166,11 +127,7 @@ public class WenyanBytecode {
         return capturedValues.size() - 1;
     }
 
-    /**
-     * Returns the size of the bytecode.
-     *
-     * @return Number of bytecode instructions
-     */
+    @Override
     public int size() {
         return bytecode.size();
     }
@@ -190,6 +147,16 @@ public class WenyanBytecode {
             sb.append(i).append(": ").append(bytecode.get(i)).append("\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * Represents a bytecode instruction with its operation code and argument.
+     */
+    public record Code(WenyanCodes code, int arg) {
+        @Override
+        public @NotNull String toString() {
+            return code + " " + arg;
+        }
     }
 
     /**

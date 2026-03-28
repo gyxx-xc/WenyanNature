@@ -1,6 +1,6 @@
 package indi.wenyan.judou.structure.values.builtin;
 
-import indi.wenyan.judou.compiler.WenyanBytecode;
+import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.ParsableType;
@@ -22,7 +22,7 @@ import java.util.List;
  * Represents a function created in Wenyan code.
  */
 public record WenyanBuiltinFunction(
-        WenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args, @Nullable List<IWenyanValue> refs) implements IWenyanFunction {
+        IWenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args, @Nullable List<IWenyanValue> refs) implements IWenyanFunction {
     public static final WenyanType<WenyanBuiltinFunction> TYPE = new WenyanType<>(JudouTypeText.BuiltinFunction.string(), WenyanBuiltinFunction.class);
 
     @Override
@@ -36,7 +36,7 @@ public record WenyanBuiltinFunction(
     public @NotNull WenyanFrame getNewRuntime(IWenyanValue self, List<IWenyanValue> argsList, @Nullable WenyanFrame returnRuntime) throws WenyanException {
         if (args().size() != argsList.size())
             throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(args().size(), argsList.size()));
-        if (refs == null)
+        if (refs() == null)
             throw new WenyanException(JudouExceptionText.FunctionDoesNotHaveReferences.string());
 
         WenyanFrame newRuntime = new WenyanFrame(bytecode(), refs(), returnRuntime);

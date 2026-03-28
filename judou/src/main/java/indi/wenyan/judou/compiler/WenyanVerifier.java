@@ -14,7 +14,7 @@ public class WenyanVerifier {
      * @param bytecode The bytecode to verify
      * @throws WenyanCompileException if verification fails
      */
-    public static void verify(WenyanBytecode bytecode) throws WenyanCompileException {
+    public static void verify(IWenyanBytecode bytecode) throws WenyanCompileException {
 //        int codeSize = bytecode.size();
 //
 //        for (int i = 0; i < codeSize; i++) {
