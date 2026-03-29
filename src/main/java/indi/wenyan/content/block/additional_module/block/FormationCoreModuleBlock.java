@@ -25,7 +25,7 @@ public class FormationCoreModuleBlock extends Block implements IModuleBlock {
     );
 
     public FormationCoreModuleBlock(Properties properties) {
-        super(properties);
+        super(properties.destroyTime(0.3F));
     }
 
     @Override

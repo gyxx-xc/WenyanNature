@@ -29,7 +29,7 @@ public class WritingBlock extends Block implements EntityBlock {
     public static final String ID = "writing_block";
 
     public WritingBlock(Properties properties) {
-        super(properties);
+        super(properties.destroyTime(0.3F));
     }
 
     @Override

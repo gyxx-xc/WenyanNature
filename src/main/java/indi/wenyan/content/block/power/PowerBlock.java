@@ -19,7 +19,7 @@ public class PowerBlock extends Block implements IModuleBlock {
     public static final VoxelShape SHAPE = box(1, 1, 1, 15, 15, 15);
 
     public PowerBlock(Properties properties) {
-        super(properties);
+        super(properties.destroyTime(0.2F));
     }
 
     @Override

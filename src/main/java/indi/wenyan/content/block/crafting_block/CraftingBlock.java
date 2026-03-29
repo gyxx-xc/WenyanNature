@@ -19,7 +19,7 @@ public class CraftingBlock extends Block implements IModuleBlock {
     public static final VoxelShape SHAPE = Block.box(1, 0, 3, 15, 13.5, 15);
 
     public CraftingBlock(Properties properties) {
-        super(properties);
+        super(properties.destroyTime(0.3F));
     }
 
     @Override

@@ -14,6 +14,12 @@
           "name": "wenyan_programming:hand_runner_1"
         }
       ],
+      "functions": [
+        {
+          "function": "minecraft:copy_components",
+          "source": "block_entity"
+        }
+      ],
       "rolls": 1.0
     }
   ],

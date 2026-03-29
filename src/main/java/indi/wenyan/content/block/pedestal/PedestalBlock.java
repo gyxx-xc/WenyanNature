@@ -32,7 +32,7 @@ public class PedestalBlock extends Block implements EntityBlock {
     public static final VoxelShape SHAPE = Shapes.or(Block.box(2, 11, 2, 14, 13, 14), Block.box(7, 0, 7, 9, 11, 9));
 
     public PedestalBlock(Properties properties) {
-        super(properties);
+        super(properties.destroyTime(0.25F));
     }
 
     @Override

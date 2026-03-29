@@ -33,7 +33,7 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
     public static final VoxelShape EAST_AABB;
 
     protected AbstractFuluBlock(Properties properties) {
-        super(properties.noCollision());
+        super(properties.noCollision().instabreak());
         registerDefaultState(getStateDefinition().any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(FACE, AttachFace.FLOOR)

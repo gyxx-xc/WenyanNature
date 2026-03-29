@@ -28,7 +28,7 @@ public class LockModuleBlock extends Block implements IModuleBlock {
     public static final VoxelShape UNLOCKED_AABB;
 
     public LockModuleBlock(Properties properties) {
-        super(properties);
+        super(properties.destroyTime(0.3F));
         registerDefaultState(getStateDefinition().any()
                 .setValue(LOCK_STATE, false));
     }
