@@ -2,6 +2,7 @@ package indi.wenyan.setup.datagen;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.setup.datagen.Language.WenyanLanguageProviderFactory;
+import indi.wenyan.setup.datagen.loot.WenyanLootTableProvider;
 import indi.wenyan.setup.datagen.model.ModBlockStateProvider;
 import indi.wenyan.setup.datagen.model.ModItemModelProvider;
 import indi.wenyan.setup.datagen.model.SubedModelProvider;
@@ -37,6 +38,7 @@ public enum ModDataGeneratorHandler {
         generator.addProvider(ModParticleDescriptionProvider::new);
         generator.addProvider(output -> new CheckerRecipeProvider.Runner(output, registries));
         generator.addProvider(packOutput -> new WyItemTagProvider(packOutput, registries));
+        generator.addProvider(p -> new WenyanLootTableProvider(p, registries));
     }
 
     @SubscribeEvent
