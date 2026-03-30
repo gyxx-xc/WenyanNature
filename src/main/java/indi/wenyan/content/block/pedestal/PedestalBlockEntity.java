@@ -2,39 +2,48 @@ package indi.wenyan.content.block.pedestal;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.content.block.InplaceItemstackResource;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class PedestalBlockEntity extends DataBlockEntity {
-    private final InplaceItemstackResource item = new InplaceItemstackResource(this::updateBlock);
+    @Getter
+    private final ItemStacksResourceHandler itemHandler = new ItemStacksResourceHandler(1) {
+        @Override
+        protected void onContentsChanged(int index, ItemStack previousContents) {
+            super.onContentsChanged(index, previousContents);
+            updateBlock();
+        }
+
+        @Override
+        protected int getCapacity(int index, ItemResource resource) {
+            return 1;
+        }
+    };
+
 
     public PedestalBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.PEDESTAL_ENTITY.get(), pos, blockState);
     }
 
-    public ResourceHandler<ItemResource> getItemHandler() {
-        return item.handler();
-    }
-
     @Override
     protected void saveData(ValueOutput output) {
-        output.store("item", ItemStack.OPTIONAL_CODEC, item.item());
+        itemHandler.serialize(output);
     }
 
     @Override
     protected void loadData(ValueInput input) {
-        input.read("item", ItemStack.OPTIONAL_CODEC).ifPresent(item::replaceItem);
+        itemHandler.deserialize(input);
     }
 
     private void updateBlock() {

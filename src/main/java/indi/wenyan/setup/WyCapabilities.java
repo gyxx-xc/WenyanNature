@@ -48,7 +48,7 @@ public enum WyCapabilities {
                 Capabilities.Item.BLOCK,
                 WenyanBlocks.LOGIC_FURNACE_ENTITY.get(),
                 (be, direction) -> direction == Direction.DOWN ?
-                        be.getOutputHandler() : be.getInputHandler());
+                        be.getOutput() : be.getInput());
         event.registerItem(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY,
                 (item, _) -> ItemCodeHolder.getCodeCapability(item),
                 WenyanItems.HAND_RUNNER.getItems().toArray(ItemLike[]::new));

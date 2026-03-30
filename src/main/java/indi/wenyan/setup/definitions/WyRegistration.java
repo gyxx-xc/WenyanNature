@@ -3,6 +3,7 @@ package indi.wenyan.setup.definitions;
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
+import indi.wenyan.content.block.furnace.LogicFurnaceMenu;
 import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.gui_impl.CraftingBlockContainer;
 import indi.wenyan.content.item.ink.BambooInk;
@@ -18,6 +19,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
@@ -64,6 +66,7 @@ public enum WyRegistration {
 
     public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER = MENU_TYPE.register(CraftingBlock.ID,
             () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
+    public static final Supplier<MenuType<LogicFurnaceMenu>> LOGIC_FURNACE_MENU = MENU_TYPE.register("logic_furnace_menu", () -> new MenuType<>(LogicFurnaceMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA = DATA.register("program_code_data",
             () -> DataComponentType.<String>builder()
