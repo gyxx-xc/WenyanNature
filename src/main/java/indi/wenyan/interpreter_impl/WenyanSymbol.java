@@ -153,4 +153,10 @@ public enum WenyanSymbol {;
     public static final String BlockingQueueModule$peek = "「窺」";
     public static final String BlockingQueueModule$size = "「長」";
     public static final String BlockingQueueModule$clear = "「清空」";
+
+    public static final String LOGIC_FURNACE = "「炉」";
+    public static final String FURNACE_BURN = "「熔」";
+    public static final String FURNACE_DOUBLE_BURN = "「倍熔」";
+    public static final String FURNACE_GET_PROGRESS = "「取熔」";
+    public static final String FURNACE_GET_MAX_PROGRESS = "「取熔最大」";
 }

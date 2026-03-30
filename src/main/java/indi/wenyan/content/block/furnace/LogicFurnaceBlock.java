@@ -39,7 +39,7 @@ public class LogicFurnaceBlock extends Block implements EntityBlock {
             return InteractionResult.FAIL;
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             serverPlayer.openMenu(new SimpleMenuProvider(
-                    (containerId, inventory, p) ->
+                    (containerId, inventory, _) ->
                             new LogicFurnaceMenu(containerId, inventory,
                                     ContainerLevelAccess.create(level, pos),
                                     entity.getData(),

@@ -1,10 +1,12 @@
 package indi.wenyan.client;
 
+import indi.wenyan.client.gui.LogicFurnaceScreen;
 import indi.wenyan.client.gui.ScreenOpenerFactroy;
 import indi.wenyan.client.renderer.block.*;
 import indi.wenyan.client.renderer.entity.ThrowRunnerRender;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanEntities;
+import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.client.*;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -45,6 +47,7 @@ public enum ClientSetup {;
     @SubscribeEvent
     public static void registerScreen(RegisterMenuScreensEvent event) {
 //        event.register(WyRegistration.CRAFTING_CONTAINER.get(), CraftingBlockScreen::new);
+        event.register(WyRegistration.LOGIC_FURNACE_MENU.get(), LogicFurnaceScreen::new);
     }
 
     /**
