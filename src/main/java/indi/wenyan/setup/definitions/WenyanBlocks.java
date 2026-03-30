@@ -9,6 +9,8 @@ import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBloc
 import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleEntity;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
+import indi.wenyan.content.block.furnace.LogicFurnaceBlock;
+import indi.wenyan.content.block.furnace.LogicFurnaceBlockEntity;
 import indi.wenyan.content.block.pedestal.PedestalBlock;
 import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.power.PowerBlock;
@@ -57,6 +59,9 @@ public enum WenyanBlocks {
 
     public static final DeferredBlock<WritingBlock> WRITING_BLOCK = WenyanBlocks.DR.registerBlock(WritingBlock.ID, WritingBlock::new);
     public static final Supplier<BlockEntityType<WritingBlockEntity>> WRITING_BLOCK_ENTITY = WenyanBlocks.registerEntity(WritingBlock.ID, WritingBlockEntity::new, WenyanBlocks.WRITING_BLOCK);
+
+    public static final DeferredBlock<LogicFurnaceBlock> LOGIC_FURNACE_BLOCK = WenyanBlocks.DR.registerBlock(LogicFurnaceBlock.ID, LogicFurnaceBlock::new);
+    public static final Supplier<BlockEntityType<LogicFurnaceBlockEntity>> LOGIC_FURNACE_ENTITY = WenyanBlocks.registerEntity(LogicFurnaceBlock.ID, LogicFurnaceBlockEntity::new, WenyanBlocks.LOGIC_FURNACE_BLOCK);
 
     public static final DeferredBlock<PowerBlock> POWER_BLOCK = WenyanBlocks.DR.registerBlock(PowerBlock.ID, PowerBlock::new);
     public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY = WenyanBlocks.registerEntity(PowerBlock.ID, PowerBlockEntity::new, WenyanBlocks.POWER_BLOCK);

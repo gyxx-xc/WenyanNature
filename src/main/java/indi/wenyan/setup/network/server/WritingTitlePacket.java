@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jetbrains.annotations.NotNull;
 
 public record WritingTitlePacket(BlockPos pos, String name) implements IServerboundPacket {
@@ -41,7 +42,7 @@ public record WritingTitlePacket(BlockPos pos, String name) implements IServerbo
     public void handleOnServer(ServerPlayer player) {
         var entity = player.level().getBlockEntity(pos());
         if (entity instanceof WritingBlockEntity runner) {
-            var stack = runner.getItemStack();
+            var stack = ItemUtil.getStack(runner.getItemHandler(), 1);
             if (!stack.isEmpty()) {
                 stack.set(DataComponents.CUSTOM_NAME, Component.literal(name()));
             }

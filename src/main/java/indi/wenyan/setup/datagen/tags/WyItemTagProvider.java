@@ -17,11 +17,7 @@ public class WyItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NonNull Provider provider) {
-        tag(WyRegistration.MODULE_ITEM).add(
-                WenyanItems.CRAFTING_BLOCK_ITEM.get(),
-                WenyanItems.PEDESTAL_BLOCK_ITEM.get(),
-                WenyanItems.WRITING_BLOCK_ITEM.get(),
-                WenyanItems.POWER_BLOCK_ITEM.get(),
+        tag(WyRegistration.PAPER_MODULE_ITEM).add(
                 WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.MATH_MODULE_BLOCK_ITEM.get(),
@@ -34,10 +30,6 @@ public class WyItemTagProvider extends ItemTagsProvider {
                 WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.STRING_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get(),
-                WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(),
-                WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(),
-                WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get(),
-                WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.PISTON_MODULE_BLOCK_ITEM.get()
         );
     }

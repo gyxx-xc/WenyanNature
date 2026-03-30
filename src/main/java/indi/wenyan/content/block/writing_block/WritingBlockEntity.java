@@ -27,10 +27,6 @@ public class WritingBlockEntity extends DataBlockEntity {
         return item.handler();
     }
 
-    public ItemStack getItemStack() {
-        return item.item();
-    }
-
     @Override
     protected void saveData(ValueOutput output) {
         output.store("item", ItemStack.OPTIONAL_CODEC, item.item());

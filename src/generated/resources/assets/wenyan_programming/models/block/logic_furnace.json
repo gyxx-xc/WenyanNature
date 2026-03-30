@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "wenyan_programming:block/logic_furnace_bottom",
+    "side": "wenyan_programming:block/logic_furnace_side",
+    "top": "wenyan_programming:block/logic_furnace_top"
+  }
+}

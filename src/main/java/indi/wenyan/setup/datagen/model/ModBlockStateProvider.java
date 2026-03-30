@@ -42,6 +42,7 @@ public class ModBlockStateProvider extends ModelSubProvider {
         modeledBlock(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
 
         writingBlock();
+        logicFurnace();
         lockModuleBlock();
         decorativePistonHeads();
 
@@ -94,6 +95,15 @@ public class ModBlockStateProvider extends ModelSubProvider {
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(WenyanBlocks.WRITING_BLOCK.get(), "_side"));
         blockModels.blockStateOutput
                 .accept(createSimpleBlock(WenyanBlocks.WRITING_BLOCK.get(), plainVariant(ModelTemplates.CUBE_TOP.create(WenyanBlocks.WRITING_BLOCK.get(), mapping, blockModels.modelOutput))));
+    }
+
+    public void logicFurnace() {
+        TextureMapping mapping = (new TextureMapping())
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(WenyanBlocks.LOGIC_FURNACE_BLOCK.get(), "_side"))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(WenyanBlocks.LOGIC_FURNACE_BLOCK.get(), "_top"))
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(WenyanBlocks.LOGIC_FURNACE_BLOCK.get(), "_bottom"));
+        blockModels.blockStateOutput
+                .accept(createSimpleBlock(WenyanBlocks.LOGIC_FURNACE_BLOCK.get(), plainVariant(ModelTemplates.CUBE_BOTTOM_TOP.create(WenyanBlocks.LOGIC_FURNACE_BLOCK.get(), mapping, blockModels.modelOutput))));
     }
 
     private void lockModuleBlock() {

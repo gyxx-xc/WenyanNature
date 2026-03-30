@@ -106,9 +106,9 @@ public enum WyRegistration {
             Identifier.fromNamespaceAndPath(MODID, "wenyan_item_device"),
             IWenyanDevice.class);
 
-    public static final TagKey<Item> MODULE_ITEM = TagKey.create(
+    public static final TagKey<Item> PAPER_MODULE_ITEM = TagKey.create(
             Registries.ITEM,
-            Identifier.fromNamespaceAndPath(MODID, "module_item")
+            Identifier.fromNamespaceAndPath(MODID, "paper_module_item")
     );
 
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BambooInk.NoFireEffect>> NO_FIRE_EFFECT = CONSUME_EFFECT.register("no_fire_effect",

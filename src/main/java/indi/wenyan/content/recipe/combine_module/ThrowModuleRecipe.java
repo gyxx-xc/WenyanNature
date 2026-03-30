@@ -54,7 +54,7 @@ public class ThrowModuleRecipe extends CustomRecipe {
 
                     hasTarget = true;
                 } else {
-                    if (!itemStack.is(WyRegistration.MODULE_ITEM))
+                    if (!itemStack.is(WyRegistration.PAPER_MODULE_ITEM))
                         return false;
                 }
             }

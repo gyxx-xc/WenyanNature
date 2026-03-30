@@ -9,6 +9,7 @@ import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.ItemLike;
@@ -43,6 +44,11 @@ public enum WyCapabilities {
                 Capabilities.Item.BLOCK,
                 WenyanBlocks.WRITING_BLOCK_ENTITY.get(),
                 (be, _) -> be.getItemHandler());
+        event.registerBlockEntity(
+                Capabilities.Item.BLOCK,
+                WenyanBlocks.LOGIC_FURNACE_ENTITY.get(),
+                (be, direction) -> direction == Direction.DOWN ?
+                        be.getOutputHandler() : be.getInputHandler());
         event.registerItem(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY,
                 (item, _) -> ItemCodeHolder.getCodeCapability(item),
                 WenyanItems.HAND_RUNNER.getItems().toArray(ItemLike[]::new));
