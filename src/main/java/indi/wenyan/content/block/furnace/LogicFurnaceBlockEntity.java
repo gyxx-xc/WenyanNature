@@ -15,10 +15,10 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -163,24 +163,22 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
         super(WenyanBlocks.LOGIC_FURNACE_ENTITY.get(), pos, blockState);
     }
 
-    @Override
-    public void tick(Level level, BlockPos pos, BlockState state) {
+    public void tick(ServerLevel level, BlockPos pos, BlockState state, RandomSource random) {
         super.tick(level, pos, state);
-        if (!level.isClientSide()) {
-            if (!resetProgress)
-                return;
-            SingleRecipeInput input = new SingleRecipeInput(getInput().getResource(0).toStack());
-            RecipeHolder<? extends AbstractCookingRecipe> recipe = getRecipeFor(input, (ServerLevel) level).orElse(null);
-            if (recipe != null) {
-                int cookingTotalTime = recipe.value().cookingTime();
-                int count = getInput().getAmountAsInt(0);
-                double reduceTime = 1 - Math.max(count / 64, 1) * 0.5;
-                maxProgress = level.getRandom().nextInt((int) (cookingTotalTime * count * reduceTime), cookingTotalTime * count);
-                progress = 1;
-            } else {
-                maxProgress = 0;
-                progress = 0;
-            }
+        if (!resetProgress)
+            return;
+        resetProgress = false;
+        SingleRecipeInput input = new SingleRecipeInput(getInput().getResource(0).toStack());
+        RecipeHolder<? extends AbstractCookingRecipe> recipe = getRecipeFor(input, level).orElse(null);
+        if (recipe != null) {
+            int cookingTotalTime = recipe.value().cookingTime();
+            int count = getInput().getAmountAsInt(0);
+            double reduceTime = 1 - Math.max(count / 64, 1) * 0.5;
+            maxProgress = random.nextInt((int) (cookingTotalTime * count * reduceTime), cookingTotalTime * count);
+            progress = 1;
+        } else {
+            maxProgress = 0;
+            progress = 0;
         }
     }
 
@@ -196,7 +194,7 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
         this.output.deserialize(input);
     }
 
-    public void updateBlock() {
+    private void updateBlock() {
         assert getLevel() != null;
         getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
         setChanged();

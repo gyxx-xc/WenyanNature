@@ -1,8 +1,10 @@
 package indi.wenyan.content.block.furnace;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.GuiText;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,8 +16,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jspecify.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -49,5 +54,22 @@ public class LogicFurnaceBlock extends Block implements EntityBlock {
             ));
         }
         return InteractionResult.SUCCESS;
+    }
+//
+//    @Override
+//    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+//        super.tick(state, level, pos, random);
+//        if (level.getBlockEntity(pos) instanceof LogicFurnaceBlockEntity entity) {
+//            entity.tick(level, pos, state, random);
+//        }
+//    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type) {
+        return (level1, blockPos, blockState1, t) -> {
+            if (type == WenyanBlocks.LOGIC_FURNACE_ENTITY.get() && t instanceof LogicFurnaceBlockEntity entity && level1 instanceof ServerLevel sl) {
+                entity.tick(sl, blockPos, blockState1, level.getRandom());
+            }
+        };
     }
 }

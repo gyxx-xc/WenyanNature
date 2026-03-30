@@ -96,6 +96,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(NoConnectDirection.getTranslationKey(), "謬：無連向");
         add(AlreadyRun.getTranslationKey(), "已在運行");
         add(PackageAlreadtRegistered.getTranslationKey(), "謬：已有此包名%s");
+        add(NoRecipeFound.getTranslationKey(), "謬：未尋配方");
 
         add(ArgsNumWrong.getTranslationKey(), "謬：參數數需%d得%d");
         add(ArgsNumWrongRange.getTranslationKey(), "謬：參數數需%d至%d得%d");
