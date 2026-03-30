@@ -1,6 +1,6 @@
 package indi.wenyan.setup.network.client;
 
-import indi.wenyan.content.gui_api.ScreenEnum;
+import indi.wenyan.content.gui_impl.ScreenEnum;
 import indi.wenyan.setup.network.IClientboundPacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;

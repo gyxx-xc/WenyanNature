@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.writing_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.content.gui_api.ScreenEnum;
+import indi.wenyan.content.gui_impl.ScreenEnum;
 import indi.wenyan.setup.network.client.BlockSetScreenPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

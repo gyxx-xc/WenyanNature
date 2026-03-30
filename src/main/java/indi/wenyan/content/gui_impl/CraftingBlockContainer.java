@@ -1,4 +1,4 @@
-package indi.wenyan.content.gui_api;
+package indi.wenyan.content.gui_impl;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.setup.definitions.WenyanBlocks;

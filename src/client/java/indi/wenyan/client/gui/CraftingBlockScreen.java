@@ -1,7 +1,7 @@
 package indi.wenyan.client.gui;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.gui_api.CraftingBlockContainer;
+import indi.wenyan.content.gui_impl.CraftingBlockContainer;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
