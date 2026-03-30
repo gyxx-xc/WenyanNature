@@ -15,7 +15,8 @@ public enum ExceptionText implements ILocalizationEnum {
     ImportNotFound,        // 謬：未尋之籍%s
     NoConnectDirection,    // 謬：無連向
     AlreadyRun,            // 謬：已運行
-    PackageAlreadtRegistered//Warning: package %s is already registered
+    PackageAlreadtRegistered,//Warning: package %s is already registered
+    NoRecipeFound          // No valid recipe found for the current pedestal items.
     ;
 
     @Override

@@ -180,6 +180,10 @@ public enum WyCapabilities {
                 WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
                 WenyanBlocks.PISTON_MODULE_ENTITY.get(),
                 (be, _) -> be.getBlockDeviceCapability());
+        event.registerBlockEntity(
+                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
+                WenyanBlocks.LOGIC_FURNACE_ENTITY.get(),
+                (be, _) -> be.getBlockDeviceCapability());
     }
 
     @Contract(pure = true)

@@ -19,6 +19,7 @@ import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.language.ExceptionText;
 import indi.wenyan.setup.network.client.CraftClearParticlePacket;
 import indi.wenyan.setup.network.client.CraftingParticlePacket;
 import lombok.Getter;
@@ -171,7 +172,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                 new AnsweringRecipeInput(pedestalItems), sl, this.recipeHolder); // set last recipe as hint
         if (optionalRecipeHolder.isEmpty()) {
             resetCrafting();
-            throw new WenyanException("No valid recipe found for the current pedestal items.");
+            throw new WenyanException(ExceptionText.NoRecipeFound.string());
         }
 
         if (this.recipeHolder != null && this.recipeHolder.equals(optionalRecipeHolder.get()) &&
