@@ -1,38 +1,38 @@
 package indi.wenyan.setup.network.server;
 
-import indi.wenyan.content.block.writing_block.WritingBlockEntity;
+import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.setup.network.IServerboundPacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jetbrains.annotations.NotNull;
 
-public record WritingTitlePacket(BlockPos pos, String name) implements IServerboundPacket {
+/**
+ * Packet for sending code to a runner block
+ */
+public record BlockCodePacket(BlockPos pos, String code) implements IServerboundPacket {
     /**
      * Packet type identifier
      */
-    public static final Type<WritingTitlePacket> TYPE =
-            IWenyanPacketPayload.createType("writing_title_packet");
+    public static final Type<BlockCodePacket> TYPE =
+            IWenyanPacketPayload.createType("block_code");
 
     /**
      * Codec for serializing and deserializing the packet
      */
-    public static final StreamCodec<RegistryFriendlyByteBuf, WritingTitlePacket> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockCodePacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
-                        buffer.writeUtf(packet.name, 64);
+                        buffer.writeUtf(packet.code, 16384);
                     },
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
-                        String name1 = buffer.readUtf(64);
-                        return new WritingTitlePacket(pos1, name1);
+                        String output = buffer.readUtf(16384);
+                        return new BlockCodePacket(pos1, output);
                     });
 
     /**
@@ -41,11 +41,8 @@ public record WritingTitlePacket(BlockPos pos, String name) implements IServerbo
     @Override
     public void handleOnServer(ServerPlayer player) {
         var entity = player.level().getBlockEntity(pos());
-        if (entity instanceof WritingBlockEntity runner) {
-            var stack = ItemUtil.getStack(runner.getItemHandler(), 1);
-            if (!stack.isEmpty()) {
-                stack.set(DataComponents.CUSTOM_NAME, Component.literal(name()));
-            }
+        if (entity instanceof ICodeHolder runner) {
+            runner.setCode(code());
         }
     }
 
@@ -53,5 +50,4 @@ public record WritingTitlePacket(BlockPos pos, String name) implements IServerbo
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
-
 }

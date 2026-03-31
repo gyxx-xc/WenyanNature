@@ -1,6 +1,5 @@
 package indi.wenyan.content.block.runner;
 
-import indi.wenyan.setup.network.client.PlatformOutputPacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.ChatFormatting;
@@ -31,10 +30,10 @@ public class TitleCodeOutput implements ICodeOutputHolder {
     }
 
     @Override
-    public void addOutput(String output, PlatformOutputPacket.OutputStyle style) {
-        if (style == PlatformOutputPacket.OutputStyle.ERROR)
+    public void addOutput(String output, IOutputAccepter.OutputStyle style) {
+        if (style == IOutputAccepter.OutputStyle.ERROR)
             outputQueue.addLast(Component.literal(output).withStyle(ChatFormatting.RED));
-        else if (style == PlatformOutputPacket.OutputStyle.NORMAL)
+        else if (style == IOutputAccepter.OutputStyle.NORMAL)
             outputQueue.addLast(Component.literal(output));
         while (outputQueue.size() > MAX_OUTPUT_SHOWING_SIZE) {
             outputQueue.removeFirst();

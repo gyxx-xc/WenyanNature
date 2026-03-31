@@ -15,8 +15,8 @@ import indi.wenyan.judou.structure.values.IWenyanObjectType;
 import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.server.BlockRunnerCodePacket;
-import indi.wenyan.setup.network.server.PlatformRenamePacket;
+import indi.wenyan.setup.network.server.BlockCodePacket;
+import indi.wenyan.setup.network.server.BlockRenamePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -74,7 +74,7 @@ public enum RunnerBlockBehaviour {
             @Override
             public void sendContent(String content) {
                 runner.setCode(content);
-                ClientPacketDistributor.sendToServer(new BlockRunnerCodePacket(pos, content));
+                ClientPacketDistributor.sendToServer(new BlockCodePacket(pos, content));
             }
 
 
@@ -87,7 +87,7 @@ public enum RunnerBlockBehaviour {
             public void sendTitle(String title) {
                 String warppedTitle = ChineseUtils.bracketOf(title);
                 runner.setPlatformName(warppedTitle);
-                ClientPacketDistributor.sendToServer(new PlatformRenamePacket(pos, warppedTitle));
+                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, warppedTitle));
             }
 
             @Override

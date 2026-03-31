@@ -5,8 +5,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.server.DeviceRenamePacket;
-import indi.wenyan.setup.network.server.PlatformRenamePacket;
+import indi.wenyan.setup.network.server.BlockRenamePacket;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -103,12 +102,12 @@ public class FloatNoteItem extends Item {
 
     private static void setRunnerBlockName(RunnerBlockEntity entity, Component component) {
         entity.setPlatformName(component.getString());
-        ClientPacketDistributor.sendToServer(new PlatformRenamePacket(entity.getBlockPos(), component.getString()));
+        ClientPacketDistributor.sendToServer(new BlockRenamePacket(entity.getBlockPos(), component.getString()));
     }
 
     private static void setDeviceName(AbstractModuleEntity entity, Component component) {
         entity.setPackageName(component.getString());
-        ClientPacketDistributor.sendToServer(new DeviceRenamePacket(entity.getBlockPos(), component.getString()));
+        ClientPacketDistributor.sendToServer(new BlockRenamePacket(entity.getBlockPos(), component.getString()));
     }
 
     @Override

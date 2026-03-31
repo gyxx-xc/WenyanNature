@@ -2,9 +2,12 @@ package indi.wenyan.content.block.writing_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;
+import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.definitions.WyRegistration;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,18 +15,25 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class WritingBlockEntity extends DataBlockEntity {
+public class WritingBlockEntity extends DataBlockEntity implements ICodeHolder {
     @Getter
     private final ItemStacksResourceHandler itemHandler = new ItemStacksResourceHandler(1) {
         @Override
         protected void onContentsChanged(int index, ItemStack previousContents) {
             super.onContentsChanged(index, previousContents);
             updateBlock();
+
+            if (getResource(index).isEmpty()) {
+                codeHolder = DummyCodeHolder.INSTANCE;
+            } else {
+                codeHolder = ItemUtil.getStack(this, index).getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
+            }
         }
 
         @Override
@@ -41,6 +51,9 @@ public class WritingBlockEntity extends DataBlockEntity {
 
         }
     };
+
+    @Delegate(types = ICodeHolder.class)
+    private ICodeHolder codeHolder = DummyCodeHolder.INSTANCE;
 
 
     public WritingBlockEntity(BlockPos pos, BlockState blockState) {

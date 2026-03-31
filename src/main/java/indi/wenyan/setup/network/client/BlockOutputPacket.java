@@ -1,5 +1,6 @@
 package indi.wenyan.setup.network.client;
 
+import indi.wenyan.content.block.runner.IOutputAccepter;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -9,14 +10,15 @@ import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Packet for sending output text to a block entity
+ * Packet for sending output from a platform to the client
  */
-public record BlockOutputPacket(BlockPos pos, String output) implements CustomPacketPayload {
+public record BlockOutputPacket(BlockPos pos, String output, IOutputAccepter.OutputStyle style) implements CustomPacketPayload {
+
     /**
      * Packet type identifier
      */
     public static final Type<BlockOutputPacket> TYPE =
-            IWenyanPacketPayload.createType("output_text");
+            IWenyanPacketPayload.createType("platform_output");
 
     /**
      * Codec for serializing and deserializing the packet
@@ -25,13 +27,15 @@ public record BlockOutputPacket(BlockPos pos, String output) implements CustomPa
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
-                        buffer.writeUtf(packet.output, 16384);
+                        buffer.writeUtf(packet.output, 512);
+                        buffer.writeEnum(packet.style);
                     },
-                    buffer -> {
-                        BlockPos pos1 = buffer.readBlockPos();
-                        String output1 = buffer.readUtf(16384);
-                        return new BlockOutputPacket(pos1, output1);
-                    });
+                    buffer ->
+                        new BlockOutputPacket(
+                                buffer.readBlockPos(),
+                                buffer.readUtf(512),
+                                buffer.readEnum(IOutputAccepter.OutputStyle.class))
+            );
 
     /**
      * Handler for processing the packet
@@ -39,8 +43,9 @@ public record BlockOutputPacket(BlockPos pos, String output) implements CustomPa
     public static final IPayloadHandler<BlockOutputPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
-            if (entity instanceof IDisplayable module) {
-                module.addOutput(packet.output());
+            if (entity instanceof IOutputAccepter runner) {
+                // Process the output on the client side
+                runner.addOutput(packet.output(), packet.style());
             }
         }
     };
@@ -48,9 +53,5 @@ public record BlockOutputPacket(BlockPos pos, String output) implements CustomPa
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
-    }
-
-    public interface IDisplayable {
-        void addOutput(String text);
     }
 }

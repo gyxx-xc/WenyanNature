@@ -2,6 +2,7 @@ package indi.wenyan.content.block.additional_module;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;
+import indi.wenyan.content.block.runner.IRenamable;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.utils.function.ChineseUtils;
@@ -26,7 +27,7 @@ import java.util.Objects;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AbstractModuleEntity extends DataBlockEntity {
+public abstract class AbstractModuleEntity extends DataBlockEntity implements IRenamable {
     public static final String PACKAGE_NAME_ID = "packageName";
 
     @Getter
@@ -58,6 +59,11 @@ public abstract class AbstractModuleEntity extends DataBlockEntity {
     public void setPackageName(@Nullable String packageName) {
         this.packageName = packageName;
         setChanged();
+    }
+
+    @Override
+    public void setName(String name) {
+        setPackageName(name);
     }
 
     @Override

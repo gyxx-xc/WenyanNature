@@ -1,6 +1,6 @@
 package indi.wenyan.setup.network.server;
 
-import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
+import indi.wenyan.content.block.runner.IRenamable;
 import indi.wenyan.setup.network.IServerboundPacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
@@ -11,19 +11,19 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Packet for setting name of a device block entity
+ * Packet for setting name of a block entity
  */
-public record DeviceRenamePacket(BlockPos pos, String name) implements IServerboundPacket {
+public record BlockRenamePacket(BlockPos pos, String name) implements IServerboundPacket {
     /**
      * Packet type identifier
      */
-    public static final Type<DeviceRenamePacket> TYPE =
-            IWenyanPacketPayload.createType("device_rename");
+    public static final Type<BlockRenamePacket> TYPE =
+            IWenyanPacketPayload.createType("set_name");
 
     /**
      * Codec for serializing and deserializing the packet
      */
-    public static final StreamCodec<RegistryFriendlyByteBuf, DeviceRenamePacket> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockRenamePacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
                         buffer.writeBlockPos(packet.pos);
@@ -32,7 +32,7 @@ public record DeviceRenamePacket(BlockPos pos, String name) implements IServerbo
                     buffer -> {
                         BlockPos pos1 = buffer.readBlockPos();
                         String name1 = buffer.readUtf(64);
-                        return new DeviceRenamePacket(pos1, name1);
+                        return new BlockRenamePacket(pos1, name1);
                     });
 
     /**
@@ -41,8 +41,8 @@ public record DeviceRenamePacket(BlockPos pos, String name) implements IServerbo
     @Override
     public void handleOnServer(ServerPlayer player) {
         var entity = player.level().getBlockEntity(pos());
-        if (entity instanceof AbstractModuleEntity device) {
-            device.setPackageName(name());
+        if (entity instanceof IRenamable runner) {
+            runner.setName(name());
         }
     }
 

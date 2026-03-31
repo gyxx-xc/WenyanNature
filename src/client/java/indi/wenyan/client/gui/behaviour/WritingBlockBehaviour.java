@@ -7,8 +7,8 @@ import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.block.writing_block.WritingBlockEntity;
 import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.server.WritingCodePacket;
-import indi.wenyan.setup.network.server.WritingTitlePacket;
+import indi.wenyan.setup.network.server.BlockCodePacket;
+import indi.wenyan.setup.network.server.BlockRenamePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,7 @@ public enum WritingBlockBehaviour {
             @Override
             public void sendContent(String content) {
                 code.setCode(content);
-                ClientPacketDistributor.sendToServer(new WritingCodePacket(pos, content));
+                ClientPacketDistributor.sendToServer(new BlockCodePacket(pos, content));
             }
 
             @Override
@@ -46,7 +46,7 @@ public enum WritingBlockBehaviour {
             public void sendTitle(String title) {
                 var warppedTitle = ChineseUtils.bracketOf(title);
                 code.setPlatformName(warppedTitle);
-                ClientPacketDistributor.sendToServer(new WritingTitlePacket(pos, warppedTitle));
+                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, warppedTitle));
             }
 
             @Override

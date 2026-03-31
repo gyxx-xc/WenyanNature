@@ -1,7 +1,9 @@
 package indi.wenyan.setup.network;
 
 import indi.wenyan.setup.network.client.*;
-import indi.wenyan.setup.network.server.*;
+import indi.wenyan.setup.network.server.BlockCodePacket;
+import indi.wenyan.setup.network.server.BlockRenamePacket;
+import indi.wenyan.setup.network.server.FloatNotePacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -23,21 +25,15 @@ public enum NetworkRegister {
     public static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MODID);
 
-        serverbound(registrar, RunnerCodePacket.TYPE, RunnerCodePacket.STREAM_CODEC);
         serverbound(registrar, FloatNotePacket.TYPE, FloatNotePacket.STREAM_CODEC);
-        serverbound(registrar, BlockRunnerCodePacket.TYPE, BlockRunnerCodePacket.STREAM_CODEC);
-        serverbound(registrar, RunnerTitlePacket.TYPE, RunnerTitlePacket.STREAM_CODEC);
-        serverbound(registrar, PlatformRenamePacket.TYPE, PlatformRenamePacket.STREAM_CODEC);
-        serverbound(registrar, DeviceRenamePacket.TYPE, DeviceRenamePacket.STREAM_CODEC);
-        serverbound(registrar, WritingCodePacket.TYPE, WritingCodePacket.STREAM_CODEC);
-        serverbound(registrar, WritingTitlePacket.TYPE, WritingTitlePacket.STREAM_CODEC);
+        serverbound(registrar, BlockCodePacket.TYPE, BlockCodePacket.STREAM_CODEC);
+        serverbound(registrar, BlockRenamePacket.TYPE, BlockRenamePacket.STREAM_CODEC);
 
-        registrar.playToClient(BlockOutputPacket.TYPE, BlockOutputPacket.STREAM_CODEC);
         registrar.playToClient(CommunicationLocationPacket.TYPE, CommunicationLocationPacket.STREAM_CODEC);
         registrar.playToClient(CraftClearParticlePacket.TYPE, CraftClearParticlePacket.STREAM_CODEC);
         registrar.playToClient(BlockPosRangePacket.TYPE, BlockPosRangePacket.STREAM_CODEC);
         registrar.playToClient(CraftingParticlePacket.TYPE, CraftingParticlePacket.STREAM_CODEC);
-        registrar.playToClient(PlatformOutputPacket.TYPE, PlatformOutputPacket.STREAM_CODEC);
+        registrar.playToClient(BlockOutputPacket.TYPE, BlockOutputPacket.STREAM_CODEC);
         registrar.playToClient(PistonMovePacket.TYPE, PistonMovePacket.STREAM_CODEC);
         registrar.playToClient(BlockSetScreenPacket.TYPE, BlockSetScreenPacket.STREAM_CODEC);
     }

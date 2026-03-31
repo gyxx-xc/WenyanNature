@@ -60,12 +60,11 @@ public enum ClientSetup {;
 
     @SubscribeEvent
     public static void onClientHandler(RegisterClientPayloadHandlersEvent event) {
-        event.register(BlockOutputPacket.TYPE, BlockOutputPacket.HANDLER);
         event.register(CommunicationLocationPacket.TYPE, CommunicationLocationPacket.HANDLER);
         event.register(CraftClearParticlePacket.TYPE, CraftClearParticlePacket.HANDLER);
         event.register(BlockPosRangePacket.TYPE, BlockPosRangePacket.HANDLER);
         event.register(CraftingParticlePacket.TYPE, CraftingParticlePacket.HANDLER);
-        event.register(PlatformOutputPacket.TYPE, PlatformOutputPacket.HANDLER);
+        event.register(BlockOutputPacket.TYPE, BlockOutputPacket.HANDLER);
         event.register(PistonMovePacket.TYPE, PistonMovePacket.HANDLER);
         event.register(BlockSetScreenPacket.TYPE, ScreenOpenerFactroy.BLOCK_HANDLER);
     }

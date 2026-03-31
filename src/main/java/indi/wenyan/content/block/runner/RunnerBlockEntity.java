@@ -24,7 +24,7 @@ import indi.wenyan.judou.utils.language.Symbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.language.ExceptionText;
-import indi.wenyan.setup.network.client.PlatformOutputPacket;
+import indi.wenyan.setup.network.client.BlockOutputPacket;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import net.minecraft.core.BlockPos;
@@ -87,7 +87,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 for (String error : errors) {
                     level.setBlock(getBlockPos(), getBlockState()
                             .setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
-                    addOutputBothSide(error, PlatformOutputPacket.OutputStyle.ERROR);
+                    addOutputBothSide(error, IOutputAccepter.OutputStyle.ERROR);
                 }
                 errors.clear();
             }
@@ -141,7 +141,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             String s = args.getFirst().as(WenyanString.TYPE).value();
-                            addOutputBothSide(s, PlatformOutputPacket.OutputStyle.NORMAL);
+                            addOutputBothSide(s, IOutputAccepter.OutputStyle.NORMAL);
                             return WenyanNull.NULL;
                         }));
 
@@ -222,11 +222,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         newThread(titleCodeOutput.getCode());
     }
 
-    private void addOutputBothSide(String error, PlatformOutputPacket.OutputStyle style) {
+    private void addOutputBothSide(String error, IOutputAccepter.OutputStyle style) {
         error = StringUtils.left(error, 512);
         if (getLevel() instanceof ServerLevel sl)
             PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
-                    new PlatformOutputPacket(getBlockPos(), error, style));
+                    new BlockOutputPacket(getBlockPos(), error, style));
         addOutput(error, style);
     }
 
