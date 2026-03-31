@@ -36,7 +36,7 @@
   "error.wenyan_programming.FailedToMoveBlock": "謬：移方塊敗",
   "error.wenyan_programming.FailedToPlacePiston": "謬：置活塞敗",
   "error.wenyan_programming.ImportNotFound": "謬：未尋之籍%s",
-  "error.wenyan_programming.InvaildDirection": "謬：無效之方塊向",
+  "error.wenyan_programming.InvalidDirection": "謬：無效之方塊向",
   "error.wenyan_programming.LockHoldAlready": "謬：線程已持鎖",
   "error.wenyan_programming.LockNotHold": "謬：線程未持鎖",
   "error.wenyan_programming.NeedBlockItem": "謬：參數需方塊物",
@@ -44,7 +44,7 @@
   "error.wenyan_programming.NoConnectDirection": "謬：無連向",
   "error.wenyan_programming.NoRecipeFound": "謬：未尋配方",
   "error.wenyan_programming.NotFindFu": "謬：不識此符",
-  "error.wenyan_programming.PackageAlreadtRegistered": "謬：已有此包名%s",
+  "error.wenyan_programming.PackageAlreadyRegistered": "謬：已有此包名%s",
   "error.wenyan_programming.judou.ArgsNumWrong": "謬：參數數需%d得%d",
   "error.wenyan_programming.judou.ArgsNumWrongRange": "謬：參數數需%d至%d得%d",
   "error.wenyan_programming.judou.CannotCast": "謬：不可轉%s為%s",
@@ -178,6 +178,8 @@
   "wenyan_programming.configuration.ResultMaxSize": "结果堆栈最大长度",
   "wenyan_programming.configuration.RunnerRange": "符範圍",
   "wenyan_programming.configuration.SliceStep": "线程切换长度",
-  "wenyan_programming.configuration.UseLegancyRunner": "使用旧式符",
+  "wenyan_programming.configuration.SymbolConvertion": "变量名转换",
+  "wenyan_programming.configuration.UseLegacyRunner": "使用旧式符",
+  "wenyan_programming.configuration.UseTraditionalConvertion": "使用繁體轉換",
   "wenyan_programming.configuration.WatchdogTimeout": "超时倍率"
 }

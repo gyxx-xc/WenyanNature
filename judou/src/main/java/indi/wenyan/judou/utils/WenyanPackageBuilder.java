@@ -22,11 +22,14 @@ import java.util.Map;
  * Builder for creating WenyanPackage values
  */
 public final class WenyanPackageBuilder {
-    /** Map of variables to include in the package */
+    /**
+     * Map of variables to include in the package
+     */
     private final Map<String, IWenyanValue> variables = new HashMap<>();
 
     /**
      * Creates a new package builder
+     *
      * @return A new package builder instance
      */
     public static WenyanPackageBuilder create() {
@@ -35,6 +38,7 @@ public final class WenyanPackageBuilder {
 
     /**
      * Adds all variables from an existing environment
+     *
      * @param environment Environment to include
      * @return This builder
      */
@@ -45,27 +49,40 @@ public final class WenyanPackageBuilder {
 
     /**
      * Builds the package
+     *
      * @return The built package
      */
     public WenyanPackage build() {
         return new WenyanPackage(Map.copyOf(variables));
     }
 
+    private void putConvertedValue(String name, IWenyanValue value) {
+        switch (UtilManager.getConfig().symbolConvertion()) {
+            case ChineseUtils.SymbolFormat.TRADITIONAL -> variables.put(name, value);
+            case ChineseUtils.SymbolFormat.SIMPLIFIED -> variables.put(ChineseUtils.toSimplifiedVar(name), value);
+            case ChineseUtils.SymbolFormat.BOTH -> {
+                variables.put(name, value);
+                variables.put(ChineseUtils.toSimplifiedVar(name), value);
+            }
+        }
+    }
+
     /**
      * Adds a constant to the package
-     * @param name Name of the constant
+     *
+     * @param name  Name of the constant
      * @param value Value of the constant
      * @return This builder
      */
     public WenyanPackageBuilder constant(String name, IWenyanValue value) {
-        variables.put(name, value);
-        variables.put(ChineseUtils.toSimplifiedVar(name), value);
+        putConvertedValue(name, value);
         return this;
     }
 
     /**
      * Adds a function that operates on doubles
-     * @param name Function name
+     *
+     * @param name     Function name
      * @param function The function implementation
      * @return This builder
      */
@@ -82,7 +99,8 @@ public final class WenyanPackageBuilder {
 
     /**
      * Adds a function that operates on integers
-     * @param name Function name
+     *
+     * @param name     Function name
      * @param function The function implementation
      * @return This builder
      */
@@ -99,7 +117,8 @@ public final class WenyanPackageBuilder {
 
     /**
      * Adds a builtin function to the package
-     * @param name Function name
+     *
+     * @param name     Function name
      * @param function The function implementation
      * @return This builder
      */
@@ -109,7 +128,8 @@ public final class WenyanPackageBuilder {
 
     /**
      * Adds the same function under multiple names
-     * @param name Array of function names
+     *
+     * @param name     Array of function names
      * @param function The function implementation
      * @return This builder
      */
@@ -122,30 +142,31 @@ public final class WenyanPackageBuilder {
 
     /**
      * Adds a Java-implemented function with argument type constraints
-     * @param name Function name
+     *
+     * @param name     Function name
      * @param javacall The handler implementation
      * @return This builder
      */
     public WenyanPackageBuilder function(String name, IJavacallHandler javacall) {
-        variables.put(name, javacall);
-        variables.put(ChineseUtils.toSimplifiedVar(name), javacall);
+        putConvertedValue(name, javacall);
         return this;
     }
 
     /**
      * Adds an object type to the package
-     * @param name Object name
+     *
+     * @param name       Object name
      * @param objectType The object type implementation
      * @return This builder
      */
     public WenyanPackageBuilder object(String name, IWenyanObjectType objectType) {
-        variables.put(name, objectType);
-        variables.put(ChineseUtils.toSimplifiedVar(name), objectType);
+        putConvertedValue(name, objectType);
         return this;
     }
 
     /**
      * Creates a function that reduces a list of arguments using a binary operation
+     *
      * @param function The binary operation to apply
      * @return A builtin function that reduces arguments
      */
@@ -163,6 +184,7 @@ public final class WenyanPackageBuilder {
 
     /**
      * Creates a function that applies a binary boolean operation
+     *
      * @param function The binary boolean operation
      * @return A builtin function that applies the operation
      */
@@ -177,6 +199,7 @@ public final class WenyanPackageBuilder {
 
     /**
      * Creates a function that compares two values
+     *
      * @param function The comparison function
      * @return A builtin function that compares values
      */

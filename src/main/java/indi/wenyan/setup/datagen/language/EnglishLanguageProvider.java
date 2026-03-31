@@ -187,6 +187,8 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(Lifetime.getTranslationKey(), "投符持續時間");
         add(MaxRecursionDepth.getTranslationKey(), "最大递归深度");
         add(UseLegacyRunner.getTranslationKey(), "使用旧式符");
+        add(UseTraditionalConvertion.getTranslationKey(), "使用繁體轉換");
+        add(SymbolConvertion.getTranslationKey(), "变量名转换");
 
         add("book.wenyan_programming.shuo_wen.name", "說文");
         add("book.wenyan_programming.shuo_wen.landing_text", "编程者，制机之令也。机铁无知，唯识原语。乃作典言，上合人意，下译机识，若算经然。");

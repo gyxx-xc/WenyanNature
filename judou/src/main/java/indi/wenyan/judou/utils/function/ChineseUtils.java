@@ -2,6 +2,7 @@ package indi.wenyan.judou.utils.function;
 
 import cn.hutool.core.convert.Convert;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
+import indi.wenyan.judou.utils.UtilManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
@@ -56,7 +57,10 @@ public enum ChineseUtils {
     }
 
     private final static Pattern PATTERN = Pattern.compile("「「.*?」」|「.*?」");
-    public static @NotNull String toTraditionalCode(String s) {
+    public static @NotNull String convertedCode(String s) {
+        if (!UtilManager.getConfig().convertCode())
+            return s;
+
         Matcher matcher = PATTERN.matcher(s);
         StringBuilder result = new StringBuilder();
         int lastEnd = 0;
@@ -86,5 +90,11 @@ public enum ChineseUtils {
 
     public static String bracketOf(String string) {
         return "「" + string + "」";
+    }
+
+    public enum SymbolFormat {
+        TRADITIONAL,
+        SIMPLIFIED,
+        BOTH
     }
 }

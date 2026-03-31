@@ -15,12 +15,12 @@ public interface IWenyanRunner extends IRunner {
 
     default WenyanFrame getCurrentRuntime() throws WenyanUnreachedException {
         // since this one using too much, do a delegate to it.
-        return getFrameManager().getCurrentRuntime();
+        return getFrameManager().getCurrentRuntimeException();
     }
 
     static void dieWithException(IWenyanRunner runner, WenyanException e) {
         Logger logger = UtilManager.getLogger();
-        WenyanFrame frame = runner.getFrameManager().getNullableCurrentRuntime();
+        WenyanFrame frame = runner.getFrameManager().getCurrentRuntime();
         WenyanException.ErrorContext errorContext;
         if (frame != null)
             errorContext = frame.getErrorContext(e, logger);

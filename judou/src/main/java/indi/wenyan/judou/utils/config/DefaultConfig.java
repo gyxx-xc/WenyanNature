@@ -1,5 +1,7 @@
 package indi.wenyan.judou.utils.config;
 
+import indi.wenyan.judou.utils.function.ChineseUtils;
+
 public class DefaultConfig implements IConfigProvider {
     @Override
     public int getMaxThread() {
@@ -29,5 +31,15 @@ public class DefaultConfig implements IConfigProvider {
     @Override
     public boolean useLegacyRunner() {
         return false;
+    }
+
+    @Override
+    public boolean convertCode() {
+        return true;
+    }
+
+    @Override
+    public ChineseUtils.SymbolFormat symbolConvertion() {
+        return ChineseUtils.SymbolFormat.TRADITIONAL;
     }
 }

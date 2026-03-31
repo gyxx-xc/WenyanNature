@@ -34,7 +34,7 @@ public class WenyanRunner<T extends IWenyanThread> implements IWenyanRunner, ITh
         int i = 0;
         try {
             for (; i < step; i++) {
-                WenyanFrame runtime = getFrameManager().getNullableCurrentRuntime();
+                WenyanFrame runtime = getFrameManager().getCurrentRuntime();
                 if (runtime == null) { // reach return of main
                     die();
                     return i;

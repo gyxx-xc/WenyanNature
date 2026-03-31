@@ -18,7 +18,7 @@ public interface IFrameManager<T> {
     void ret() throws WenyanUnreachedException;
 
     // TODO: rename these two function
-    T getCurrentRuntime() throws WenyanUnreachedException;
+    T getCurrentRuntimeException() throws WenyanUnreachedException;
 
-    @Nullable T getNullableCurrentRuntime();
+    @Nullable T getCurrentRuntime();
 }

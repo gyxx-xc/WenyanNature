@@ -3,7 +3,9 @@ package indi.wenyan.setup.config;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.judou.utils.UtilManager;
 import indi.wenyan.judou.utils.config.IConfigProvider;
+import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.language.ConfigText;
+import lombok.Getter;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -73,6 +75,7 @@ public final class WenyanConfig {
         return instance().common.throwEntityLifetime.get() * 20;
     }
 
+    @Getter
     private static final IConfigProvider judouConfigProvider = new IConfigProvider() {
         @Override
         public int getMaxThread() {
@@ -104,6 +107,18 @@ public final class WenyanConfig {
         public boolean useLegacyRunner() {
             return instance().common.useLegacyRunner.get();
         }
+
+        @Override
+        public boolean convertCode() {
+            return instance().common.useTraditionalConvertion.get();
+        }
+
+        @Override
+        public ChineseUtils.SymbolFormat symbolConvertion() {
+            return ChineseUtils.SymbolFormat.TRADITIONAL;
+            // FIXME: has static vars depends on this (before config loaded).
+//            return instance().common.symbolConvertion.get();
+        }
     };
 
     private static class ClientConfig {
@@ -124,6 +139,8 @@ public final class WenyanConfig {
         public final IntValue resultMaxSize;
         public final IntValue maxRecursionDepth;
         public final BooleanValue useLegacyRunner;
+        public final BooleanValue useTraditionalConvertion;
+        public final EnumValue<ChineseUtils.SymbolFormat> symbolConvertion;
 
         public final IntValue formationRange;
         public final IntValue pedestalRange;
@@ -145,6 +162,10 @@ public final class WenyanConfig {
             maxRecursionDepth = define(builder, ConfigText.MaxRecursionDepth.getName(), 30, 1, 50,
                     "x100");
             useLegacyRunner = define(builder, ConfigText.UseLegacyRunner.getName(), false);
+            useTraditionalConvertion = define(builder, ConfigText.UseTraditionalConvertion.getName(), false);
+            builder.gameRestart();
+            symbolConvertion = defineEnum(builder, ConfigText.SymbolConvertion.getName(), ChineseUtils.SymbolFormat.TRADITIONAL,
+                    "symbol inside 「」");
             builder.pop();
 
             builder.push(ConfigText.InGame.getName());

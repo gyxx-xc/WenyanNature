@@ -187,6 +187,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(Lifetime.getTranslationKey(), "投符持續時間");
         add(MaxRecursionDepth.getTranslationKey(), "最大递归深度");
         add(UseLegacyRunner.getTranslationKey(), "使用旧式符");
+        add(UseTraditionalConvertion.getTranslationKey(), "使用繁體轉換");
+        add(SymbolConvertion.getTranslationKey(), "变量名转换");
 
 
         add("book.wenyan_programming.shuo_wen.name", "說文");

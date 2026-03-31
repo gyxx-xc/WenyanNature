@@ -67,8 +67,14 @@ public final class HandlerPackageBuilder {
     }
 
     public HandlerPackageBuilder handler(String name, Supplier<BaseHandleableRequest.IRawRequest> function) {
-        functions.put(name, function);
-        functions.put(ChineseUtils.toSimplifiedVar(name), function);
+        switch (WenyanConfig.getJudouConfigProvider().symbolConvertion()) {
+            case TRADITIONAL -> functions.put(name, function);
+            case SIMPLIFIED -> functions.put(ChineseUtils.toSimplifiedVar(name), function);
+            case BOTH -> {
+                functions.put(name, function);
+                functions.put(ChineseUtils.toSimplifiedVar(name), function);
+            }
+        }
         return this;
     }
 
