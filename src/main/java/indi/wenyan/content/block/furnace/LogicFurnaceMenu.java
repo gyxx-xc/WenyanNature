@@ -39,7 +39,7 @@ public class LogicFurnaceMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.addSlot(new ResourceHandlerSlot(input, (_, resource, amount) -> input.set(0, resource, amount), 0, 54, 34));
-        this.addSlot(new ResourceHandlerSlot(output, (_, resource, amount) -> output.set(0, resource, amount), 0, 104, 34));
+        this.addSlot(new ResourceHandlerSlot(output, (_, resource, amount) -> output.set(0, resource, amount), 0, 114, 34));
 
         addDataSlots(data);
     }
@@ -53,7 +53,7 @@ public class LogicFurnaceMenu extends AbstractContainerMenu {
         int maxProgress = this.data.get(1);
         int arrowPixelSize = 24;
 
-        return maxProgress != 0 && progress != 0 ? progress * arrowPixelSize / maxProgress : 0;
+        return maxProgress != 0 && progress != 0 ? Math.min(arrowPixelSize * progress / maxProgress, arrowPixelSize) : 0;
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

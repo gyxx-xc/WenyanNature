@@ -5,6 +5,7 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.function.WenyanValues;
@@ -112,49 +113,33 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .handler(WenyanSymbol.FURNACE_BURN, request -> {
-                if (!request.args().isEmpty())
-                    throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
-                if (progress == 0) {
-                    throw new WenyanException(ExceptionText.NoRecipeFound.string());
-                }
-                if (++progress >= maxProgress) {
+                checkArgsAndRecipe(request);
+                progress = Math.min(progress + 1, maxProgress);
+                if (progress == maxProgress)
                     processOutput();
-                }
                 return WenyanNull.NULL;
             })
             .handler(WenyanSymbol.FURNACE_DOUBLE_BURN, request -> {
-                if (!request.args().isEmpty())
-                    throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
-                if (progress == 0) {
-                    throw new WenyanException(ExceptionText.NoRecipeFound.string());
+                checkArgsAndRecipe(request);
+                // check int overflow
+                if (progress >= Integer.MAX_VALUE / 2) {
+                    throw new WenyanException(JudouExceptionText.IntegerOverflow.string());
                 }
+                progress *= 2;
+
                 if (progress == maxProgress) {
                     processOutput();
                 } else if (progress > maxProgress) {
                     ResourceHandlerUtil.extractFirst(input, _ -> true, Integer.MAX_VALUE, null);
-                } else {
-                    // check int overflow
-                    if (progress >= Integer.MAX_VALUE / 2) {
-                        throw new WenyanException(JudouExceptionText.IntegerOverflow.string());
-                    }
-                    progress *= 2;
                 }
                 return WenyanNull.NULL;
             })
             .handler(WenyanSymbol.FURNACE_GET_PROGRESS, request -> {
-                if (!request.args().isEmpty())
-                    throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
-                if (progress == 0) {
-                    throw new WenyanException(ExceptionText.NoRecipeFound.string());
-                }
+                checkArgsAndRecipe(request);
                 return WenyanValues.of(progress);
             })
             .handler(WenyanSymbol.FURNACE_GET_MAX_PROGRESS, request -> {
-                if (!request.args().isEmpty())
-                    throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
-                if (maxProgress == 0) {
-                    throw new WenyanException(ExceptionText.NoRecipeFound.string());
-                }
+                checkArgsAndRecipe(request);
                 return WenyanValues.of(maxProgress);
             })
             .build();
@@ -163,7 +148,8 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
         super(WenyanBlocks.LOGIC_FURNACE_ENTITY.get(), pos, blockState);
     }
 
-    public void tick(ServerLevel level, BlockPos pos, BlockState state, RandomSource random) {
+    public void tick(ServerLevel level, BlockPos pos, BlockState state, RandomSource
+            random) {
         super.tick(level, pos, state);
         if (!resetProgress)
             return;
@@ -175,29 +161,41 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
             int count = getInput().getAmountAsInt(0);
             double reduceTime = 1 - Math.max(count / 64, 1) * 0.5;
             maxProgress = random.nextInt((int) (cookingTotalTime * count * reduceTime), cookingTotalTime * count);
-            progress = 1;
-        } else {
-            maxProgress = 0;
             progress = 0;
+        } else {
+            maxProgress = -1;
+            progress = -1;
         }
     }
 
     @Override
     protected void saveData(ValueOutput output) {
-        input.serialize(output);
-        this.output.serialize(output);
+        var inputChild = output.child("input");
+        this.input.serialize(inputChild);
+        var outputChild = output.child("output");
+        this.output.serialize(outputChild);
     }
 
     @Override
     protected void loadData(ValueInput input) {
-        this.input.deserialize(input);
-        this.output.deserialize(input);
+        var inputChild = input.childOrEmpty("input");
+        this.input.deserialize(inputChild);
+        var outputChild = input.childOrEmpty("output");
+        this.output.deserialize(outputChild);
     }
 
     private void updateBlock() {
         assert getLevel() != null;
         getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
         setChanged();
+    }
+
+    private void checkArgsAndRecipe(IArgsRequest request) throws WenyanException {
+        if (!request.args().isEmpty())
+            throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
+        if (progress < 0) {
+            throw new WenyanException(ExceptionText.NoRecipeFound.string());
+        }
     }
 
     private void processOutput() {
