@@ -151,7 +151,10 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                                     }
                                     return runtime.getReferences().get(v.index());
                                 })
-                                .forEach(i1 -> newFunc.refs().add(i1));
+                                .forEach(i1 -> {
+                                    assert newFunc.refs() != null;
+                                    newFunc.refs().add(i1);
+                                });
                         runtime.pushReturnValue(newFunc);
                     }
                     case 7 -> {

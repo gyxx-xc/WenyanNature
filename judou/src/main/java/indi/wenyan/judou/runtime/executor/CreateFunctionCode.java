@@ -23,7 +23,10 @@ public enum CreateFunctionCode {
                     }
                     return runtime.getReferences().get(v.index());
                 })
-                .forEach(i -> newFunc.refs().add(i));
+                .forEach(i -> {
+                    assert newFunc.refs() != null;
+                    newFunc.refs().add(i);
+                });
         runtime.pushReturnValue(newFunc);
     }
 }

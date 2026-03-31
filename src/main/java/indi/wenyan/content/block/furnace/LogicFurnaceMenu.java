@@ -11,8 +11,6 @@ import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jspecify.annotations.NonNull;
 
 public class LogicFurnaceMenu extends AbstractContainerMenu {
-    //    public final LogicFurnaceBlockEntity blockEntity;
-//    private final Level level;
     private final ContainerData data;
     private final ContainerLevelAccess access;
 

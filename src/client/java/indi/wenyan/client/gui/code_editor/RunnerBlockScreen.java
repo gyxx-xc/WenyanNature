@@ -139,14 +139,6 @@ public class RunnerBlockScreen extends Screen {
         extractTransparentBackground(guiGraphics);
     }
 
-//    @Override
-//    public void setFocused(@Nullable GuiEventListener listener) {
-//        if (listener == snippetWidget || listener == packageWidget || listener == outputWindow)
-//            super.setFocused(textFieldWidget);
-//        else
-//            super.setFocused(listener);
-//    }
-
     @Override
     public void tick() {
         super.tick();

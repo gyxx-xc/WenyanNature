@@ -16,10 +16,4 @@ public class WenyanLootTableProvider extends LootTableProvider {
     public WenyanLootTableProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider) {
         super(packOutput, Set.of(), SUB_PROVIDERS, provider);
     }
-
-//    @Override
-//    protected void validate(WritableRegistry<LootTable> tables, ValidationContextSource validationContext,
-//                            ProblemReporter.Collector problems) {
-//        // Do not validate against all registered loot tables
-//    }
 }

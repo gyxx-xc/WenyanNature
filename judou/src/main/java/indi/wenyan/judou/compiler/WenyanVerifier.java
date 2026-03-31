@@ -6,6 +6,7 @@ import indi.wenyan.judou.structure.WenyanCompileException;
  * Verifier for WenyanBytecode to ensure execution safety.
  */
 // PLAN: https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.10
+@SuppressWarnings("ALL")
 public class WenyanVerifier {
 
     /**

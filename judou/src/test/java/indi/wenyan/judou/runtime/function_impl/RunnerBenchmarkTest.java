@@ -6,10 +6,11 @@ import indi.wenyan.judou.utils.function.WenyanPackages;
 
 import java.io.IOException;
 
+@SuppressWarnings("unused")
 public class RunnerBenchmarkTest {
 
 //    @Test
-    @SuppressWarnings({"unused", "RedundantThrows"})
+    @SuppressWarnings({"unused", "RedundantThrows", "CommentedOutCode"})
     public void benchmark() throws IOException {
         String code = """
                 吾有一術。名之曰「a 」。

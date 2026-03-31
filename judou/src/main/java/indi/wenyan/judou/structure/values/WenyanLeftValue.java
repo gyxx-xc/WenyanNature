@@ -61,6 +61,7 @@ public class WenyanLeftValue implements IWenyanValue {
         return value.tryAs(type);
     }
 
+    @SuppressWarnings("EqualsDoesntCheckParameterClass")
     @Override
     public boolean equals(Object obj) {
         return value.equals(obj);

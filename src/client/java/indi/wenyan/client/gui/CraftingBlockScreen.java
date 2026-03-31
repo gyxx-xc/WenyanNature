@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 @Deprecated
+@SuppressWarnings("ALL")
 public class CraftingBlockScreen extends AbstractContainerScreen<CraftingBlockContainer> {
 
     private static final Identifier GUI = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,

@@ -55,14 +55,6 @@ public class LogicFurnaceBlock extends Block implements EntityBlock {
         }
         return InteractionResult.SUCCESS;
     }
-//
-//    @Override
-//    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-//        super.tick(state, level, pos, random);
-//        if (level.getBlockEntity(pos) instanceof LogicFurnaceBlockEntity entity) {
-//            entity.tick(level, pos, state, random);
-//        }
-//    }
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type) {

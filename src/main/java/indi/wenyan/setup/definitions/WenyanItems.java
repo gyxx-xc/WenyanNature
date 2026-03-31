@@ -128,7 +128,6 @@ public enum WenyanItems {
                 output.accept(CELESTIAL_INK.get());
                 output.accept(ARCANE_INK.get());
 
-                output.accept(EQUIPABLE_RUNNER_ITEM.get());
                 output.accept(PRINT_INVENTORY_MODULE.get());
 
                 output.accept(FLOAT_NOTE.get());
