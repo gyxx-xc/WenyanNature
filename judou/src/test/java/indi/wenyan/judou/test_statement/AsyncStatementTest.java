@@ -2,7 +2,7 @@ package indi.wenyan.judou.test_statement;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.structure.WenyanException;
@@ -70,7 +70,7 @@ class AsyncStatementTest extends WenyanProgramTestHelper {
 
         TestPlatform testPlatform = new TestPlatform();
         IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform, 1000);
-        wenyanProgram.create(RunnerCreater.newRunner(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
+        wenyanProgram.create(RunnerCreator.newRunner(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
         int cnt = 0;
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step();

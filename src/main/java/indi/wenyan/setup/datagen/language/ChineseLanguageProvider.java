@@ -1,4 +1,4 @@
-package indi.wenyan.setup.datagen.Language;
+package indi.wenyan.setup.datagen.language;
 
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.data.PackOutput;
@@ -15,20 +15,19 @@ import static indi.wenyan.setup.language.GuiText.*;
 import static indi.wenyan.setup.language.TypeText.*;
 
 /**
- * Provider for generating English language translations during data generation.
- * Contains all English translations used in the mod, keeping transliteration
- * for item names.
+ * Provider for generating Chinese language translations during data generation.
+ * Contains all Chinese translations used in the mod.
  */
-public class EnglishLanguageProvider extends LanguageProvider {
+public class ChineseLanguageProvider extends LanguageProvider {
 
     /**
-     * Constructs a new English language provider.
+     * Constructs a new Chinese language provider.
      *
      * @param output The pack output for language file generation
      * @param modid  The mod ID
-     * @param locale The locale code (en_us)
+     * @param locale The locale code (zh_cn)
      */
-    public EnglishLanguageProvider(PackOutput output, String modid, String locale) {
+    public ChineseLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
     }
 
@@ -74,6 +73,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.CRAFTING_BLOCK_ITEM.get(), "創石");
         addBlockAndItem(WenyanItems.PEDESTAL_BLOCK_ITEM.get(), "基石");
         addBlockAndItem(WenyanItems.WRITING_BLOCK_ITEM.get(), "刻印台");
+        // FIXME: rename
         addBlockAndItem(WenyanItems.LOGIC_FURNACE_BLOCK_ITEM.get(), "炉烘有天");
         addBlockAndItem(WenyanItems.POWER_BLOCK_ITEM.get(), "算核");
         addBlockAndItem(WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get(), "阵眼");
@@ -88,14 +88,14 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(NeedBlockItem.getTranslationKey(), "謬：參數需方塊物");
         add(NeedItemCapability.getTranslationKey(), "謬：需持物");
         add(ArgsNeedWeather.getTranslationKey(), "謬：參數須為「「晴」」「「雨」」「「雷」」");
-        add(InvaildDirection.getTranslationKey(), "謬：無效之方塊向");
+        add(InvalidDirection.getTranslationKey(), "謬：無效之方塊向");
         add(FailedToPlacePiston.getTranslationKey(), "謬：置活塞敗");
         add(FailedToMoveBlock.getTranslationKey(), "謬：移方塊敗");
         add(DeviceRemoved.getTranslationKey(), "謬：器已除");
         add(ImportNotFound.getTranslationKey(), "謬：未尋之籍%s");
         add(NoConnectDirection.getTranslationKey(), "謬：無連向");
         add(AlreadyRun.getTranslationKey(), "已在運行");
-        add(PackageAlreadtRegistered.getTranslationKey(), "謬：已有此包名%s");
+        add(PackageAlreadyRegistered.getTranslationKey(), "謬：已有此包名%s");
         add(NoRecipeFound.getTranslationKey(), "謬：未尋配方");
 
         add(ArgsNumWrong.getTranslationKey(), "謬：參數數需%d得%d");
@@ -186,21 +186,22 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(Duration.getTranslationKey(), "算核消散游戏刻");
         add(Lifetime.getTranslationKey(), "投符持續時間");
         add(MaxRecursionDepth.getTranslationKey(), "最大递归深度");
-        add(UseLegancyRunner.getTranslationKey(), "使用旧式符");
+        add(UseLegacyRunner.getTranslationKey(), "使用旧式符");
+
 
         add("book.wenyan_programming.shuo_wen.name", "說文");
         add("book.wenyan_programming.shuo_wen.landing_text", "编程者，制机之令也。机铁无知，唯识原语。乃作典言，上合人意，下译机识，若算经然。");
+    }
+
+    private void addBlockAndItem(BlockItem blockItem, String name) {
+        add(blockItem.getDescriptionId(), name);
+        add(blockItem.getBlock(), name);
     }
 
     private <T> void forTiered(NamingFunction<T> function, List<T> items, String... names) {
         for (int i = 0; i < items.size(); i++) {
             function.register(items.get(i), names[i]);
         }
-    }
-
-    private void addBlockAndItem(BlockItem blockItem, String name) {
-        add(blockItem.getDescriptionId(), name);
-        add(blockItem.getBlock(), name);
     }
 
     @FunctionalInterface

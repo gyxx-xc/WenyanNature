@@ -1,7 +1,7 @@
 package indi.wenyan.client;
 
 import indi.wenyan.client.gui.LogicFurnaceScreen;
-import indi.wenyan.client.gui.ScreenOpenerFactroy;
+import indi.wenyan.client.gui.ScreenOpenerFactory;
 import indi.wenyan.client.renderer.block.*;
 import indi.wenyan.client.renderer.entity.ThrowRunnerRender;
 import indi.wenyan.setup.definitions.WenyanBlocks;
@@ -66,6 +66,6 @@ public enum ClientSetup {;
         event.register(CraftingParticlePacket.TYPE, CraftingParticlePacket.HANDLER);
         event.register(BlockOutputPacket.TYPE, BlockOutputPacket.HANDLER);
         event.register(PistonMovePacket.TYPE, PistonMovePacket.HANDLER);
-        event.register(BlockSetScreenPacket.TYPE, ScreenOpenerFactroy.BLOCK_HANDLER);
+        event.register(BlockSetScreenPacket.TYPE, ScreenOpenerFactory.BLOCK_HANDLER);
     }
 }

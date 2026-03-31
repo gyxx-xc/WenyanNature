@@ -11,7 +11,6 @@ import java.util.List;
  * Wrapper for builtin functions in the Wenyan interpreter.
  * Manages function execution and result handling.
  */
-@SuppressWarnings("ClassCanBeRecord") // No it can't
 public class WenyanInlineJavacall implements IJavacallHandler {
     private final BuiltinFunction function;
 

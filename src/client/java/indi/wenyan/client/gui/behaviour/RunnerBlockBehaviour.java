@@ -85,9 +85,9 @@ public enum RunnerBlockBehaviour {
 
             @Override
             public void sendTitle(String title) {
-                String warppedTitle = ChineseUtils.bracketOf(title);
-                runner.setPlatformName(warppedTitle);
-                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, warppedTitle));
+                String wrappedTitle = ChineseUtils.bracketOf(title);
+                runner.setPlatformName(wrappedTitle);
+                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, wrappedTitle));
             }
 
             @Override

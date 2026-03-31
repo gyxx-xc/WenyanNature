@@ -1,7 +1,7 @@
 package indi.wenyan.setup.datagen;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.setup.datagen.Language.WenyanLanguageProviderFactory;
+import indi.wenyan.setup.datagen.language.WenyanLanguageProviderFactory;
 import indi.wenyan.setup.datagen.loot.WenyanLootTableProvider;
 import indi.wenyan.setup.datagen.model.ModBlockStateProvider;
 import indi.wenyan.setup.datagen.model.ModItemModelProvider;

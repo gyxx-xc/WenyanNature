@@ -15,7 +15,7 @@ import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.structure.WenyanCompileException;
@@ -124,7 +124,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private void startProgram(@NonNull ItemStack itemStack, ICodeHolder code) {
         setRemainingFireTicks(1);
         try {
-            lazyProgram.create().create(RunnerCreater.newRunner(WenyanFrame.ofCode(code.getCode()), this.initEnvironment()));
+            lazyProgram.create().create(RunnerCreator.newRunner(WenyanFrame.ofCode(code.getCode()), this.initEnvironment()));
         } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
             // add will show this message and kill itself at tick
@@ -137,7 +137,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
                 if (!packages.containsKey(packageName))
                     packages.put(packageName, device);
                 else
-                    handleError(ExceptionText.PackageAlreadtRegistered.string(packageName));
+                    handleError(ExceptionText.PackageAlreadyRegistered.string(packageName));
             }
         }
     }
@@ -231,7 +231,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     @Override
     public void setRemainingFireTicks(int ignore) {
-        // HACK: make it contious on fire
+        // HACK: make it continuous on fire
         super.setRemainingFireTicks(1);
     }
 

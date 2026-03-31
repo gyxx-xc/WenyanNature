@@ -105,7 +105,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
 
     @Override
     public PlacementInfo placementInfo() {
-        // recomand from https://docs.neoforged.net/docs/resources/server/recipes/custom
+        // recommend from https://docs.neoforged.net/docs/resources/server/recipes/custom
         if (info == null) {
             this.info = PlacementInfo.create(input);
         }

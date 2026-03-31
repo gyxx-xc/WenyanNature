@@ -1,6 +1,6 @@
 ## feature
 
-### apperance
+### appearance
 
 paper
 
@@ -28,11 +28,11 @@ note that all request is in single thread.
 3. put inside the queue
 4. get one consumer, currently consumer is blocked from take
 5. do consumer's take
-   but no need do unblock producer, cause currently producer should be empty
+   but no need to unblock producer, cause currently producer should be empty
 6. unblock
 
 for producer should be empty assume. any operation that decrease
-the size of array deque will filled from the producer queue first, so that, since array deque not
+the size of array deque will fill from the producer queue first, so that, since array deque not
 full,
 indicated that all producer queue is already filled in and producer queue is empty.
 

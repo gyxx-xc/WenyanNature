@@ -149,7 +149,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
         int index = bytecode.getStoreIndex(ctx.IDENTIFIER(0).getText());
         visitFunction_define_body(ctx.function_define_body(), false);
-        bytecode.add(WenyanCodes.CREATE_FNCTION, index);
+        bytecode.add(WenyanCodes.CREATE_FUNCTION, index);
         if (ctx.t.getType() == WenyanRParser.ASYNC_DECLARE_OP) {
             bytecode.addLoadCode(Symbol.CREATE_ASYNC_ID);
             bytecode.add(WenyanCodes.CALL, 1);
@@ -314,7 +314,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
         for (WenyanRParser.Object_method_defineContext func : ctx.object_method_define()) {
             visit(func);
-            bytecode.add(WenyanCodes.CREATE_FNCTION, -1);
+            bytecode.add(WenyanCodes.CREATE_FUNCTION, -1);
             if (func.IDENTIFIER().isEmpty())
                 bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.CREATE_OBJECT(0).getText());
             else

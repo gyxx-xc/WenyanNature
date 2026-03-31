@@ -1,11 +1,11 @@
-package indi.wenyan.setup.datagen.Language;
+package indi.wenyan.setup.datagen.language;
 
 import indi.wenyan.WenyanProgramming;
 import net.minecraft.data.DataProvider;
 
 public enum WenyanLanguageProviderFactory {;
     public static DataProvider.Factory<?> create(String locale) {
-        // going to have more language (at least tranditional chinese)
+        // going to have more language (at least traditional chinese)
         //noinspection SwitchStatementWithTooFewBranches
         return switch (locale) {
             case "zh_cn" -> output -> new ChineseLanguageProvider(output, WenyanProgramming.MODID, "zh_cn");

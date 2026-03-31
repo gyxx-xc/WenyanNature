@@ -12,7 +12,6 @@ import indi.wenyan.judou.structure.values.primitive.WenyanString;
  *
  * @param <T> The Java class corresponding to this Wenyan type
  */
-@SuppressWarnings("ClassCanBeRecord") // no it can't
 public class WenyanType<T extends IWenyanValue> {
 
     /**

@@ -32,7 +32,7 @@ public record PistonMovePacket(BlockPos pos, Direction direction,
 
     public static final IPayloadHandler<PistonMovePacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
-            PistonModuleEntity.triggleMoveBlock(context.player().level(), packet.extending(), packet.direction(), packet.pos());
+            PistonModuleEntity.triggerMoveBlock(context.player().level(), packet.extending(), packet.direction(), packet.pos());
         }
     };
 

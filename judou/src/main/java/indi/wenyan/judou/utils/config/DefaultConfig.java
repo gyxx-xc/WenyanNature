@@ -27,7 +27,7 @@ public class DefaultConfig implements IConfigProvider {
     }
 
     @Override
-    public boolean useLegancyRunner() {
+    public boolean useLegacyRunner() {
         return false;
     }
 }

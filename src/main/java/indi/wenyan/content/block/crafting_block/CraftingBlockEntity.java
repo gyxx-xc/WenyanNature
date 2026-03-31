@@ -161,7 +161,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     // logic: if cached, if check recipe consistence -> return cached
     // else: recreate the checker
-    // called by handler, only runned in server side
+    // called by handler, only run in server side
     private IAnsweringChecker getChecker() throws WenyanException {
         if (!(getLevel() instanceof ServerLevel sl))
             throw new WenyanUnreachedException();

@@ -5,7 +5,7 @@
 a block used for controlling large amount of fu.
 should has difference/easier to the originally calling function (i.e. import)
 
-### apperance
+### appearance
 
 modeling, but still need some rendering effect in game, showing this block is powerful.
 showing the range of captured fu.
@@ -14,7 +14,7 @@ showing the range of captured fu.
 
 function provided by a set of wenyan function.
 
-1. void start(string... fu_name): start a set of fu, this reach range should be a litte bit futher
+1. void start(string... fu_name): start a set of fu, this reach range should be a little bit further
    then the fu (r = 10)
 2. status status(string fu_name): return the status of a fu which started by this module, return status should be one of:
    not-running, running, error

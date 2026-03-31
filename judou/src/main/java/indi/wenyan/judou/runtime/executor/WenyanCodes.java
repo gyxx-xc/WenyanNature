@@ -10,7 +10,7 @@ public enum WenyanCodes {
 
     CALL((arg, thread) -> FunctionCode.callFunction(arg, thread, false)),
     CALL_ATTR((arg, thread) -> FunctionCode.callFunction(arg, thread, true)),
-    CREATE_FNCTION(CreateFunctionCode::createFunction),
+    CREATE_FUNCTION(CreateFunctionCode::createFunction),
     RET((_, t) -> ReturnCode.ret(t)),
 
     CREATE_LIST((_, t) -> CreateListCode.createList(t)),

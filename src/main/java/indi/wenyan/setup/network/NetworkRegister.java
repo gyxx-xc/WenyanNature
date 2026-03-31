@@ -25,9 +25,9 @@ public enum NetworkRegister {
     public static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MODID);
 
-        serverbound(registrar, FloatNotePacket.TYPE, FloatNotePacket.STREAM_CODEC);
-        serverbound(registrar, BlockCodePacket.TYPE, BlockCodePacket.STREAM_CODEC);
-        serverbound(registrar, BlockRenamePacket.TYPE, BlockRenamePacket.STREAM_CODEC);
+        serverside(registrar, FloatNotePacket.TYPE, FloatNotePacket.STREAM_CODEC);
+        serverside(registrar, BlockCodePacket.TYPE, BlockCodePacket.STREAM_CODEC);
+        serverside(registrar, BlockRenamePacket.TYPE, BlockRenamePacket.STREAM_CODEC);
 
         registrar.playToClient(CommunicationLocationPacket.TYPE, CommunicationLocationPacket.STREAM_CODEC);
         registrar.playToClient(CraftClearParticlePacket.TYPE, CraftClearParticlePacket.STREAM_CODEC);
@@ -38,9 +38,9 @@ public enum NetworkRegister {
         registrar.playToClient(BlockSetScreenPacket.TYPE, BlockSetScreenPacket.STREAM_CODEC);
     }
 
-    private static <T extends IServerboundPacket> void serverbound(PayloadRegistrar registrar,
-                                                                   CustomPacketPayload.Type<T> type,
-                                                                   StreamCodec<RegistryFriendlyByteBuf, T> codec) {
-        registrar.playToServer(type, codec, IServerboundPacket::handleOnServer);
+    private static <T extends IServersidePacket> void serverside(PayloadRegistrar registrar,
+                                                                 CustomPacketPayload.Type<T> type,
+                                                                 StreamCodec<RegistryFriendlyByteBuf, T> codec) {
+        registrar.playToServer(type, codec, IServersidePacket::handleOnServer);
     }
 }

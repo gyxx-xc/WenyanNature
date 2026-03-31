@@ -9,7 +9,7 @@ import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.structure.WenyanCompileException;
@@ -85,7 +85,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 for (String error : errors) {
                     level.setBlock(getBlockPos(), getBlockState()
                             .setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
-                    addOutputBothSide(error, IOutputAccepter.OutputStyle.ERROR);
+                    addOutputBothSide(error, IOutputAcceptor.OutputStyle.ERROR);
                 }
                 errors.clear();
             }
@@ -139,7 +139,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             String s = args.getFirst().as(WenyanString.TYPE).value();
-                            addOutputBothSide(s, IOutputAccepter.OutputStyle.NORMAL);
+                            addOutputBothSide(s, IOutputAcceptor.OutputStyle.NORMAL);
                             return WenyanNull.NULL;
                         }));
 
@@ -192,7 +192,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public boolean newThread(String pages) {
         IThreadHolder<WenyanProgramImpl.PCB> runner;
         try {
-            runner = RunnerCreater.newRunner(WenyanFrame.ofCode(pages), this.initEnvironment());
+            runner = RunnerCreator.newRunner(WenyanFrame.ofCode(pages), this.initEnvironment());
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return false;
@@ -220,7 +220,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         newThread(titleCodeOutput.getCode());
     }
 
-    private void addOutputBothSide(String error, IOutputAccepter.OutputStyle style) {
+    private void addOutputBothSide(String error, IOutputAcceptor.OutputStyle style) {
         error = StringUtils.left(error, 512);
         if (getLevel() instanceof ServerLevel sl)
             PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),

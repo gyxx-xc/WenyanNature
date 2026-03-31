@@ -2,7 +2,7 @@ package indi.wenyan.judou.test_statement;
 
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.structure.WenyanException;
@@ -38,7 +38,7 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 
         while (true) {
             WenyanFrame mainRuntime = WenyanFrame.ofCode(code);
-            wenyanProgram.create(RunnerCreater.newRunner(mainRuntime, globalResolver));
+            wenyanProgram.create(RunnerCreator.newRunner(mainRuntime, globalResolver));
             while (wenyanProgram.isRunning()) {
                 wenyanProgram.step();
                 testPlatform.handle(IHandleContext.NONE);

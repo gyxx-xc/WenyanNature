@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network.client;
 
 import indi.wenyan.content.gui_impl.ScreenEnum;
-import indi.wenyan.setup.network.IClientboundPacket;
+import indi.wenyan.setup.network.IClientsidePacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -9,7 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jspecify.annotations.NonNull;
 
-public record BlockSetScreenPacket(BlockPos pos, ScreenEnum screenId) implements IClientboundPacket {
+public record BlockSetScreenPacket(BlockPos pos, ScreenEnum screenId) implements IClientsidePacket {
     public static final Type<BlockSetScreenPacket> TYPE =
             IWenyanPacketPayload.createType("set_screen");
 

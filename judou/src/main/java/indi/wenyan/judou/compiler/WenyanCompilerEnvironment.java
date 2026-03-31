@@ -297,15 +297,15 @@ public class WenyanCompilerEnvironment {
     }
 
     public void exitScope() {
-        localVariableCounter = scopeStack.remove().varibleBase;
+        localVariableCounter = scopeStack.remove().variableBase;
     }
 
     private static class Scope {
-        private final int varibleBase;
+        private final int variableBase;
         private final Map<String, Integer> variables = new HashMap<>();
 
-        public Scope(int varibleBase) {
-            this.varibleBase = varibleBase;
+        public Scope(int variableBase) {
+            this.variableBase = variableBase;
         }
     }
 

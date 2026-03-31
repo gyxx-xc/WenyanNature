@@ -103,7 +103,7 @@ class WenyanProgramImplTest {
     @Nested
     class TestStep {
         @Test
-        void step_singleThread_succcess() throws WenyanException, InterruptedException {
+        void step_singleThread_success() throws WenyanException, InterruptedException {
             program = new WenyanProgramImpl(platform, 1000);
             program.create(new TestRunner(10) {
             });
@@ -123,7 +123,7 @@ class WenyanProgramImplTest {
         }
 
         @Test
-        void step_mutiThread_succcess() throws WenyanException, InterruptedException {
+        void step_mutiThread_success() throws WenyanException, InterruptedException {
             program = new WenyanProgramImpl(platform, 15000);
             // test multi-thread
             program.create(new TestRunner(5000) {
@@ -286,7 +286,7 @@ class WenyanProgramImplTest {
         }
 
         @Test
-        void block_redundentCall_fail() throws WenyanException, InterruptedException {
+        void block_redundantCall_fail() throws WenyanException, InterruptedException {
             program = new WenyanProgramImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
@@ -375,7 +375,7 @@ class WenyanProgramImplTest {
         }
 
         @Test
-        void yield_mutiThreaad_success() throws WenyanException, InterruptedException {
+        void yield_mutiThread_success() throws WenyanException, InterruptedException {
             program = new WenyanProgramImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
@@ -432,7 +432,7 @@ class WenyanProgramImplTest {
         }
 
         @Test
-        void die_dyingThreaad_error() throws InterruptedException, WenyanException {
+        void die_dyingThread_error() throws InterruptedException, WenyanException {
             program = new WenyanProgramImpl(platform, 2);
             var runner = new TestRunner(10) {
                 @Override

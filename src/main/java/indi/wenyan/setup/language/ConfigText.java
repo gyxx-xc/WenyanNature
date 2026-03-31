@@ -13,7 +13,7 @@ public enum ConfigText implements ILocalizationEnum {
     Duration,         // 算核消散游戏刻
     Lifetime,         // 投符持續時間
     MaxRecursionDepth,
-    UseLegancyRunner;
+    UseLegacyRunner;
 
     public String getName() {
         return name();

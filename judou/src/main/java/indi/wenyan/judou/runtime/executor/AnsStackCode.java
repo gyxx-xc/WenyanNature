@@ -22,7 +22,7 @@ public enum AnsStackCode {
 
     static void peekAnsN(int arg, IWenyanRunner thread) throws WenyanException {
         WenyanFrame runtime = thread.getCurrentRuntime();
-        // TODO: costy, consider ArrayCopy
+        // TODO: costly, consider ArrayCopy
         List<IWenyanValue> list = new ArrayList<>(arg);
         for (int i = 0; i < arg; i++) {
             list.add(runtime.getResultStack().pop());

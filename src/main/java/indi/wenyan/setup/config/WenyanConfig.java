@@ -101,8 +101,8 @@ public final class WenyanConfig {
         }
 
         @Override
-        public boolean useLegancyRunner() {
-            return instance().common.useLegancyRunner.get();
+        public boolean useLegacyRunner() {
+            return instance().common.useLegacyRunner.get();
         }
     };
 
@@ -123,7 +123,7 @@ public final class WenyanConfig {
         public final DoubleValue watchdogTimeoutAdjust;
         public final IntValue resultMaxSize;
         public final IntValue maxRecursionDepth;
-        public final BooleanValue useLegancyRunner;
+        public final BooleanValue useLegacyRunner;
 
         public final IntValue formationRange;
         public final IntValue pedestalRange;
@@ -144,7 +144,7 @@ public final class WenyanConfig {
             resultMaxSize = define(builder, ConfigText.ResultMaxSize.getName(), 64, 32, 256);
             maxRecursionDepth = define(builder, ConfigText.MaxRecursionDepth.getName(), 30, 1, 50,
                     "x100");
-            useLegancyRunner = define(builder, ConfigText.UseLegancyRunner.getName(), false);
+            useLegacyRunner = define(builder, ConfigText.UseLegacyRunner.getName(), false);
             builder.pop();
 
             builder.push(ConfigText.InGame.getName());

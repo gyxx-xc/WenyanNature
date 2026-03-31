@@ -28,7 +28,7 @@ public interface IWenyanValue {
      *
      * @param type Target type
      * @param <T>  Type parameter
-     * @return Casted value or null if casting is not supported
+     * @return Cast value or null if casting is not supported
      */
     @Nullable
     default <T extends IWenyanValue> T casting(WenyanType<T> type) {

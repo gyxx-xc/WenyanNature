@@ -2,7 +2,7 @@ package indi.wenyan.judou.structure.values.builtin;
 
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.RunnerCreater;
+import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
 import indi.wenyan.judou.structure.WenyanException;
@@ -25,7 +25,7 @@ public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements 
         WenyanFrame newRuntime = func.getNewRuntime(self, argsList, null);
         newRuntime.setReturnBehavior(future::onRunnerReturn);
         IThreadHolder<WenyanProgramImpl.PCB> newThread =
-                RunnerCreater.newRunner(newRuntime, thread.getGlobalResolver());
+                RunnerCreator.newRunner(newRuntime, thread.getGlobalResolver());
         thread.create(newThread);
         thread.getCurrentRuntime().pushReturnValue(future);
     }

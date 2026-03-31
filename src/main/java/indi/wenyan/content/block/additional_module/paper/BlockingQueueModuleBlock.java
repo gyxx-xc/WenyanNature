@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Block for the blocking queue module.
- * Provides synchronization capabilities for multi-threaded execution.
+ * Provides synchronization capabilities for multithreaded execution.
  */
 public class BlockingQueueModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "blocking_queue_module_block";

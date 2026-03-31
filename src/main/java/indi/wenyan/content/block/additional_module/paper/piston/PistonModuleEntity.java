@@ -52,7 +52,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
         super(WenyanBlocks.PISTON_MODULE_ENTITY.get(), pos, blockState);
     }
 
-    public static boolean triggleMoveBlock(@NonNull Level level, boolean extending, Direction direction, BlockPos armPos) {
+    public static boolean triggerMoveBlock(@NonNull Level level, boolean extending, Direction direction, BlockPos armPos) {
         if (!extending) {
             Direction opposite = direction.getOpposite();
             BlockState state1 = WenyanBlocks.DECORATIVE_PISTON_HEAD_BLOCK.get().defaultBlockState()
@@ -181,7 +181,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
                 var direction = request.args().get(1).as(WenyanVec3.TYPE).value();
                 Direction nearest = Direction.getNearest((int) direction.x, (int) direction.y, (int) direction.z, null);
                 if (nearest == null) {
-                    throw new WenyanException(ExceptionText.InvaildDirection.string());
+                    throw new WenyanException(ExceptionText.InvalidDirection.string());
                 }
                 assert level != null;
                 BlockPos blockPos = getBlockPos().offset((int) pos.x, (int) pos.y, (int) pos.z);
@@ -193,7 +193,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
                     throw new WenyanException(ExceptionText.FailedToPlacePiston.string());
                 }
 
-                boolean success = triggleMoveBlock(level, extending, nearest, blockPos);
+                boolean success = triggerMoveBlock(level, extending, nearest, blockPos);
                 if (!success) {
                     throw new WenyanException(ExceptionText.FailedToMoveBlock.string());
                 }

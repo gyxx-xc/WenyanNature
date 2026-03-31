@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network.server;
 
 import indi.wenyan.content.block.IRenamable;
-import indi.wenyan.setup.network.IServerboundPacket;
+import indi.wenyan.setup.network.IServersidePacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Packet for setting name of a block entity
  */
-public record BlockRenamePacket(BlockPos pos, String name) implements IServerboundPacket {
+public record BlockRenamePacket(BlockPos pos, String name) implements IServersidePacket {
     /**
      * Packet type identifier
      */

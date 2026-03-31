@@ -7,5 +7,5 @@ public interface IConfigProvider {
     int getResultMaxSize();
     int getMaxRecursionDepth();
 
-    boolean useLegancyRunner();
+    boolean useLegacyRunner();
 }

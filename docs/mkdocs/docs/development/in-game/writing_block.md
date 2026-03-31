@@ -6,10 +6,10 @@ optimize fu's using.
 
 currently, fu's using quite complex: it has right click, shift right click.
 if a player want to run, needs 1. shift 2.rmb 3. release shift 4. rmb.
-to resove this, change the fu item's behavior to right-click only, while fu block
-remain shift operation, since since it is not used too much and match the usual behavior.
+to resolve this, change the fu item's behavior to right-click only, while fu block
+remain shift operation, since it is not used too much and match the usual behavior.
 
-mean while, edit the fu with large amount having problem now, due to del the function of the origin
+meanwhile, edit the fu with large amount having problem now, due to del the function of the origin
 fu, so introduce a new block of writing use to write fu.
 
 ### behavior

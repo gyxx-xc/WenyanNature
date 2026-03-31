@@ -1,6 +1,6 @@
 package indi.wenyan.content.block.additional_module.block;
 
-import indi.wenyan.content.block.IOutputAccepter;
+import indi.wenyan.content.block.IOutputAcceptor;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class ScreenModuleBlockEntity extends AbstractModuleEntity implements IOutputAccepter {
+public class ScreenModuleBlockEntity extends AbstractModuleEntity implements IOutputAcceptor {
     public static final int OUTPUT_MAX_LENGTH = 30;
     public static final int MAX_OUTPUT_SIZE = 10;
 
@@ -54,10 +54,10 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements IOu
             })
             .build();
 
-    public void addOutput(String output, IOutputAccepter.OutputStyle style) {
-        if (style == IOutputAccepter.OutputStyle.ERROR)
+    public void addOutput(String output, IOutputAcceptor.OutputStyle style) {
+        if (style == IOutputAcceptor.OutputStyle.ERROR)
             outputQueue.addLast(Component.literal(output).withStyle(ChatFormatting.RED));
-        else if (style == IOutputAccepter.OutputStyle.NORMAL)
+        else if (style == IOutputAcceptor.OutputStyle.NORMAL)
             outputQueue.addLast(Component.literal(output));
         while (outputQueue.size() > MAX_OUTPUT_SIZE) {
             outputQueue.removeFirst();

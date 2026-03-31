@@ -163,7 +163,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                     case 10 -> runtime.getProcessStack().pop();
                     case 11 -> runtime.pushReturnValue(runtime.getResultStack().peek());
                     case 12 -> {
-                        // TODO: costy, consider ArrayCopy
+                        // TODO: costly, consider ArrayCopy
                         List<IWenyanValue> list = new ArrayList<>(args);
                         for (int i1 = 0; i1 < args; i1++) {
                             list.add(runtime.getResultStack().pop());

@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network.server;
 
 import indi.wenyan.content.block.ICodeHolder;
-import indi.wenyan.setup.network.IServerboundPacket;
+import indi.wenyan.setup.network.IServersidePacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Packet for sending code to a runner block
  */
-public record BlockCodePacket(BlockPos pos, String code) implements IServerboundPacket {
+public record BlockCodePacket(BlockPos pos, String code) implements IServersidePacket {
     /**
      * Packet type identifier
      */

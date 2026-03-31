@@ -51,7 +51,7 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity,
         if (blockEntity.getContinueCount() > 0) {
             state.shouldRender = true;
             var aabb = new AABB(blockEntity.getRenderRange().start(), blockEntity.getRenderRange().end());
-            state.aabb = aabb.inflate(0.1); // avoid z confliect
+            state.aabb = aabb.inflate(0.1); // avoid z conflict
             if (blockEntity.getRenderRange().found()) {
                 state.color = new Color(0xCCFFCC);
             } else {

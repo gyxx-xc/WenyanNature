@@ -5,7 +5,7 @@ import indi.wenyan.client.gui.behaviour.WritingBlockBehaviour;
 import indi.wenyan.setup.network.client.BlockSetScreenPacket;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-public enum ScreenOpenerFactroy {;
+public enum ScreenOpenerFactory {;
     public static final IPayloadHandler<BlockSetScreenPacket> BLOCK_HANDLER = (packet, context) -> {
         if (context.flow().isClientbound())
             switch (packet.screenId()) {

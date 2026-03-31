@@ -1,6 +1,6 @@
 package indi.wenyan.setup.network.client;
 
-import indi.wenyan.content.block.IOutputAccepter;
+import indi.wenyan.content.block.IOutputAcceptor;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Packet for sending output from a platform to the client
  */
-public record BlockOutputPacket(BlockPos pos, String output, IOutputAccepter.OutputStyle style) implements CustomPacketPayload {
+public record BlockOutputPacket(BlockPos pos, String output, IOutputAcceptor.OutputStyle style) implements CustomPacketPayload {
 
     /**
      * Packet type identifier
@@ -34,7 +34,7 @@ public record BlockOutputPacket(BlockPos pos, String output, IOutputAccepter.Out
                         new BlockOutputPacket(
                                 buffer.readBlockPos(),
                                 buffer.readUtf(512),
-                                buffer.readEnum(IOutputAccepter.OutputStyle.class))
+                                buffer.readEnum(IOutputAcceptor.OutputStyle.class))
             );
 
     /**
@@ -43,7 +43,7 @@ public record BlockOutputPacket(BlockPos pos, String output, IOutputAccepter.Out
     public static final IPayloadHandler<BlockOutputPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());
-            if (entity instanceof IOutputAccepter runner) {
+            if (entity instanceof IOutputAcceptor runner) {
                 // Process the output on the client side
                 runner.addOutput(packet.output(), packet.style());
             }

@@ -1,7 +1,7 @@
 package indi.wenyan.setup.network.server;
 
 import indi.wenyan.setup.definitions.WyRegistration;
-import indi.wenyan.setup.network.IServerboundPacket;
+import indi.wenyan.setup.network.IServersidePacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -14,7 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public record FloatNotePacket(String name, boolean locked) implements IServerboundPacket {
+public record FloatNotePacket(String name, boolean locked) implements IServersidePacket {
     public static final Type<FloatNotePacket> TYPE =
             IWenyanPacketPayload.createType("float_note_rename");
 

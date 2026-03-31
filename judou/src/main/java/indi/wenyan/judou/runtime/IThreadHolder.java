@@ -9,12 +9,12 @@ public interface IThreadHolder<T extends IWenyanThread> extends IRunner {
 
     T getThread();
 
-    /// run for given step and return the actual step runned
+    /// run for given step and return the actual step run
     int run(int step);
 
     void pause(); // for switch
 
-    // Warpper functions for convenience
+    // Wrapper functions for convenience
     default IWenyanProgram<T> program() {
         return getThread().getProgram();
     }

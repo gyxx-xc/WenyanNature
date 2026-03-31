@@ -6,8 +6,8 @@ import indi.wenyan.judou.utils.function.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 
-public class StartlightPaperChecker extends ValueAnswerChecker {
-    public StartlightPaperChecker(RandomSource random) {
+public class StarlightPaperChecker extends ValueAnswerChecker {
+    public StarlightPaperChecker(RandomSource random) {
         super(random);
     }
 

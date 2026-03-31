@@ -41,7 +41,7 @@ import static indi.wenyan.setup.language.ExceptionText.NotFindFu;
 public class FormationCoreModuleEntity extends AbstractModuleEntity implements ICommunicateHolder {
 
     private final Map<String, RunnerBlockEntity> startedPlatforms = new HashMap<>();
-    private final Map<String, BlockPos> findedPlatforms = new HashMap<>();
+    private final Map<String, BlockPos> foundPlatforms = new HashMap<>();
     @Getter
     private final List<ICommunicateHolder.CommunicationEffect> communicates = new ArrayList<>();
     private final int formationRange = WenyanConfig.getFormationRange();
@@ -112,8 +112,8 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
             return cachedPlatform;
         }
 
-        if (findedPlatforms.containsKey(runnerName)) {
-            var pos = findedPlatforms.get(runnerName);
+        if (foundPlatforms.containsKey(runnerName)) {
+            var pos = foundPlatforms.get(runnerName);
             assert level != null;
             if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform) {
                 String platformName = platform.getPlatformName();
@@ -121,12 +121,12 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                     startedPlatforms.put(runnerName, platform);
                     return platform;
                 } else {
-                    findedPlatforms.remove(runnerName);
-                    findedPlatforms.put(platformName, pos);
+                    foundPlatforms.remove(runnerName);
+                    foundPlatforms.put(platformName, pos);
                     // fall through
                 }
             } else {
-                findedPlatforms.remove(runnerName);
+                foundPlatforms.remove(runnerName);
                 // fall through
             }
         }
@@ -137,7 +137,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
         for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(formationRange, -formationRange, formationRange), getBlockPos().offset(-formationRange, formationRange, -formationRange))) {
             if (level.getBlockEntity(pos) instanceof RunnerBlockEntity platform) {
                 String platformName = platform.getPlatformName();
-                findedPlatforms.put(platformName, pos);
+                foundPlatforms.put(platformName, pos);
                 if (runnerName.equals(platformName)) {
                     startedPlatforms.put(runnerName, platform);
                     return platform;

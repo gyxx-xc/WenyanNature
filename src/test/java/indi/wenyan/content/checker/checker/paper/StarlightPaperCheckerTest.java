@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Tests for {@link StartlightPaperChecker}.
+ * Tests for {@link StarlightPaperChecker}.
  * <p>
  * The checker's random call order in init():
  *   1. nextInt(20)  → rowOffset  → row = rowOffset + 1
@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *    cells: [0][0]=11, [1][0]=21, [2][0]=61
  *    max=61 at (2, 0)
  */
-class StartlightPaperCheckerTest {
+class StarlightPaperCheckerTest {
 
     // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -67,7 +67,7 @@ class StartlightPaperCheckerTest {
     void testCorrectAnswer_1x1(int expectedRow, int expectedCol) throws WenyanException {
         // row=1, col=1, single cell value raw=5 → 6
         RandomSource random = buildRandom(0, 0, 5);
-        StartlightPaperChecker checker = new StartlightPaperChecker(random);
+        StarlightPaperChecker checker = new StarlightPaperChecker(random);
         checker.init();
 
         checker.accept(listOf(expectedRow, expectedCol));
@@ -81,7 +81,7 @@ class StartlightPaperCheckerTest {
         // row=2, col=2
         // cells: [0][0]=4, [0][1]=8, [1][0]=11, [1][1]=51
         RandomSource random = buildRandom(1, 1, 3, 7, 10, 50);
-        StartlightPaperChecker checker = new StartlightPaperChecker(random);
+        StarlightPaperChecker checker = new StarlightPaperChecker(random);
         checker.init();
 
         checker.accept(listOf(expectedRow, expectedCol));
@@ -95,7 +95,7 @@ class StartlightPaperCheckerTest {
         // row=2, col=3
         // cells: [0][0]=6, [0][1]=81, [0][2]=11, [1][0]=2, [1][1]=3, [1][2]=4
         RandomSource random = buildRandom(1, 2, 5, 80, 10, 1, 2, 3);
-        StartlightPaperChecker checker = new StartlightPaperChecker(random);
+        StarlightPaperChecker checker = new StarlightPaperChecker(random);
         checker.init();
 
         checker.accept(listOf(expectedRow, expectedCol));
@@ -109,7 +109,7 @@ class StartlightPaperCheckerTest {
         // row=3, col=1
         // cells: [0][0]=11, [1][0]=21, [2][0]=61
         RandomSource random = buildRandom(2, 0, 10, 20, 60);
-        StartlightPaperChecker checker = new StartlightPaperChecker(random);
+        StarlightPaperChecker checker = new StarlightPaperChecker(random);
         checker.init();
 
         checker.accept(listOf(expectedRow, expectedCol));
@@ -131,7 +131,7 @@ class StartlightPaperCheckerTest {
     void testWrongAnswer(int wrongRow, int wrongCol) throws WenyanException {
         // row=2, col=2; cells: [0][0]=4, [0][1]=8, [1][0]=11, [1][1]=51  → correct=(1,1)
         RandomSource random = buildRandom(1, 1, 3, 7, 10, 50);
-        StartlightPaperChecker checker = new StartlightPaperChecker(random);
+        StarlightPaperChecker checker = new StarlightPaperChecker(random);
         checker.init();
 
         checker.accept(listOf(wrongRow, wrongCol));
@@ -151,7 +151,7 @@ class StartlightPaperCheckerTest {
     })
     void testWrongType_scalar(int wrongValue) throws WenyanException {
         RandomSource random = buildRandom(1, 1, 3, 7, 10, 50);
-        StartlightPaperChecker checker = new StartlightPaperChecker(random);
+        StarlightPaperChecker checker = new StarlightPaperChecker(random);
         checker.init();
 
         checker.accept(WenyanValues.of(wrongValue));

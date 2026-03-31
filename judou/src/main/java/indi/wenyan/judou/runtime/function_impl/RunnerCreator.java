@@ -7,12 +7,12 @@ import indi.wenyan.judou.utils.UtilManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public enum RunnerCreater {
+public enum RunnerCreator {
     ;
 
     @Contract("_, _ -> new")
     public static @NotNull <T extends IWenyanThread> IThreadHolder<T> newRunner(WenyanFrame mainRuntime, IGlobalResolver globalResolver) {
-        if (UtilManager.getConfig().useLegancyRunner()) {
+        if (UtilManager.getConfig().useLegacyRunner()) {
             return new WenyanRunner<>(mainRuntime, globalResolver);
         } else {
             return new WenyanSwitchInlineRunner<>(mainRuntime, globalResolver);

@@ -44,9 +44,9 @@ public enum WritingBlockBehaviour {
 
             @Override
             public void sendTitle(String title) {
-                var warppedTitle = ChineseUtils.bracketOf(title);
-                code.setPlatformName(warppedTitle);
-                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, warppedTitle));
+                var wrappedTitle = ChineseUtils.bracketOf(title);
+                code.setPlatformName(wrappedTitle);
+                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, wrappedTitle));
             }
 
             @Override

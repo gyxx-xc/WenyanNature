@@ -68,7 +68,7 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             return InteractionResult.FAIL;
         }
         if (!level.isClientSide()) {
-            if (player.isShiftKeyDown() && player instanceof ServerPlayer sp) { // serverplayer always true
+            if (player.isShiftKeyDown() && player instanceof ServerPlayer sp) { // server player always true
                 PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.RUNNER_BLOCK));
             } else {
                 runner.playerRun();
