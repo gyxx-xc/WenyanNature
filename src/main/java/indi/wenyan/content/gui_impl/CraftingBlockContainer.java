@@ -18,6 +18,7 @@ import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
+@SuppressWarnings("ALL")
 public class CraftingBlockContainer extends AbstractContainerMenu {
     private final BlockEntity blockEntity;
     private final ContainerData data;

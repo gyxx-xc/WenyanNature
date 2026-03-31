@@ -2,13 +2,12 @@ package indi.wenyan.annotation_processor;
 
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskListener;
-import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeTranslator;
 
 public class PackageProviderTaskListener implements TaskListener {
 
-    public PackageProviderTaskListener(BasicJavacTask task) {
+    public PackageProviderTaskListener() {
     }
 
     @Override

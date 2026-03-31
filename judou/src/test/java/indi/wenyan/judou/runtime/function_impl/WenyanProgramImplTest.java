@@ -28,7 +28,7 @@ class WenyanProgramImplTest {
         @Setter
         WenyanProgramImpl.PCB thread;
         int pc = 0;
-        int totalPc;
+        final int totalPc;
 
         TestRunner(int totalPc) {
             this.totalPc = totalPc;

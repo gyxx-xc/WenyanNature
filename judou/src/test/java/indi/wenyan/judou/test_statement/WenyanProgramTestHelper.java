@@ -46,7 +46,7 @@ class WenyanProgramTestHelper {
         assertEquals(output.length, testPlatform.output.size(), Arrays.toString(output) + testPlatform.output);
         for (int i = 0; i < output.length; i++) {
             assertTrue(IWenyanValue.equals(WenyanProgramTestHelper.wenyanValueFromObject(output[i]), testPlatform.output.get(i)),
-                    Arrays.toString(output) + " and " + testPlatform.output.toString() + " differ at " + i + "\n" +
+                    Arrays.toString(output) + " and " + testPlatform.output + " differ at " + i + "\n" +
                             output[i] + " and " + testPlatform.output.get(i));
         }
     }

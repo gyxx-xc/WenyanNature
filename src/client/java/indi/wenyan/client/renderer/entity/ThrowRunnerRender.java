@@ -52,7 +52,7 @@ public class ThrowRunnerRender extends EntityRenderer<ThrowRunnerEntity, ThrowRu
     }
 
     public static class RenderState extends EntityRenderState {
-        ItemStackRenderState item = new ItemStackRenderState();
+        final ItemStackRenderState item = new ItemStackRenderState();
         Quaternionf rotation = new Quaternionf();
     }
 }

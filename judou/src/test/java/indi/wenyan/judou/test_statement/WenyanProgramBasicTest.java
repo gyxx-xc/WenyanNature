@@ -57,7 +57,7 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
         assertEquals(testData.output().size(), testPlatform.output.size(), testData.output() + testPlatform.output.toString());
         for (int i = 0; i < testData.output().size(); i++) {
             assertTrue(IWenyanValue.equals(testData.output().get(i), testPlatform.output.get(i)),
-                    testData.output() + " and " + testPlatform.output.toString() + " differ at " + i + "\n" +
+                    testData.output() + " and " + testPlatform.output + " differ at " + i + "\n" +
                             testData.output().get(i) + " and " + testPlatform.output.get(i));
         }
     }

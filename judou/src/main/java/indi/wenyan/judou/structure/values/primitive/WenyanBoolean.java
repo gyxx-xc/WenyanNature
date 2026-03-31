@@ -1,6 +1,5 @@
 package indi.wenyan.judou.structure.values.primitive;
 
-import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.function.WenyanValues;
@@ -47,7 +46,7 @@ public enum WenyanBoolean implements IWenyanValue {
         return value ? "陽" : "陰";
     }
 
-    public boolean value() throws WenyanException {
+    public boolean value() {
         return value;
     }
 }

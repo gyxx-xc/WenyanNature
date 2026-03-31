@@ -4,8 +4,6 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanProgram;
 import indi.wenyan.judou.runtime.IWenyanThread;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
 import lombok.Getter;
 
 public class NoScheProgram implements IWenyanProgram<NoScheProgram.SimpleThread> {
@@ -32,28 +30,28 @@ public class NoScheProgram implements IWenyanProgram<NoScheProgram.SimpleThread>
     }
 
     @Override
-    public void unblock(IThreadHolder<SimpleThread> runner) throws WenyanUnreachedException {
+    public void unblock(IThreadHolder<SimpleThread> runner) {
 
     }
 
 
     @Override
-    public void create(IThreadHolder<SimpleThread> runner) throws WenyanException {
+    public void create(IThreadHolder<SimpleThread> runner) {
 
     }
 
     @Override
-    public void block(IThreadHolder<SimpleThread> runner) throws WenyanUnreachedException {
+    public void block(IThreadHolder<SimpleThread> runner) {
 
     }
 
     @Override
-    public void yield(IThreadHolder<SimpleThread> runner) throws WenyanUnreachedException {
+    public void yield(IThreadHolder<SimpleThread> runner) {
 
     }
 
     @Override
-    public void die(IThreadHolder<SimpleThread> runner) throws WenyanUnreachedException {
+    public void die(IThreadHolder<SimpleThread> runner) {
 
     }
 

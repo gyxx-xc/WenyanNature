@@ -60,6 +60,6 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
     }
 
     public static class PedestalBlockEntityRenderState extends BlockEntityRenderState {
-        public ItemStackRenderState itemState = new ItemStackRenderState();
+        public final ItemStackRenderState itemState = new ItemStackRenderState();
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class TestPlatform implements IWenyanPlatform {
     private final ExecQueue execQueue = new ExecQueue(this);
     public String error = null;
-    public List<IWenyanValue> output = new ArrayList<>();
+    public final List<IWenyanValue> output = new ArrayList<>();
 
     @Override
     public String getPlatformName() {
