@@ -2,7 +2,7 @@ package indi.wenyan.content.block.writing_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.content.block.runner.ICodeHolder;
+import indi.wenyan.content.block.ICodeHolder;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;

@@ -6,7 +6,7 @@ import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditorBackendSynchronizer;
 import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.block.runner.ICodeOutputHolder;
+import indi.wenyan.content.block.ICodeOutputHolder;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;

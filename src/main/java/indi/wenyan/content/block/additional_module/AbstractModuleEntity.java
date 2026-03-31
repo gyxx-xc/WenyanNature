@@ -2,7 +2,7 @@ package indi.wenyan.content.block.additional_module;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.content.block.runner.IRenamable;
+import indi.wenyan.content.block.IRenamable;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.utils.function.ChineseUtils;

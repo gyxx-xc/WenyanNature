@@ -1,6 +1,6 @@
 package indi.wenyan.setup.network.client;
 
-import indi.wenyan.content.block.runner.IOutputAccepter;
+import indi.wenyan.content.block.IOutputAccepter;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

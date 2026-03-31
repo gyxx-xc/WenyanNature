@@ -1,6 +1,6 @@
 package indi.wenyan.setup.network.server;
 
-import indi.wenyan.content.block.runner.IRenamable;
+import indi.wenyan.content.block.IRenamable;
 import indi.wenyan.setup.network.IServerboundPacket;
 import indi.wenyan.setup.network.IWenyanPacketPayload;
 import net.minecraft.core.BlockPos;

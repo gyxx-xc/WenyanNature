@@ -9,10 +9,10 @@ import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBloc
 import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleEntity;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
+import indi.wenyan.content.block.crafting_block.PedestalBlock;
+import indi.wenyan.content.block.crafting_block.PedestalBlockEntity;
 import indi.wenyan.content.block.furnace.LogicFurnaceBlock;
 import indi.wenyan.content.block.furnace.LogicFurnaceBlockEntity;
-import indi.wenyan.content.block.pedestal.PedestalBlock;
-import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;

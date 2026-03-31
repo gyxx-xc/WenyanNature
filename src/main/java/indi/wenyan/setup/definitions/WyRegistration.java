@@ -2,9 +2,9 @@ package indi.wenyan.setup.definitions;
 
 import com.mojang.serialization.Codec;
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.block.ICodeHolder;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.furnace.LogicFurnaceMenu;
-import indi.wenyan.content.block.runner.ICodeHolder;
 import indi.wenyan.content.gui_impl.CraftingBlockContainer;
 import indi.wenyan.content.item.ink.BambooInk;
 import indi.wenyan.content.item.throw_runner.FuContainerComponent;

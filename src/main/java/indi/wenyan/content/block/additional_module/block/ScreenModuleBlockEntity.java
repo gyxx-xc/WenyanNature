@@ -1,7 +1,7 @@
 package indi.wenyan.content.block.additional_module.block;
 
+import indi.wenyan.content.block.IOutputAccepter;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.content.block.runner.IOutputAccepter;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;

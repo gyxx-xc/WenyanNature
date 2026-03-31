@@ -1,4 +1,4 @@
-package indi.wenyan.content.block.runner;
+package indi.wenyan.content.block;
 
 import net.minecraft.network.chat.Component;
 

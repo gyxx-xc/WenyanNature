@@ -1,4 +1,4 @@
-package indi.wenyan.content.block.runner;
+package indi.wenyan.content.block;
 
 public interface ICodeHolder extends IRenamable {
     void setCode(String code);

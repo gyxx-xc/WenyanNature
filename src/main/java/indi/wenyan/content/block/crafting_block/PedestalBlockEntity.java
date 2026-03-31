@@ -1,4 +1,4 @@
-package indi.wenyan.content.block.pedestal;
+package indi.wenyan.content.block.crafting_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.DataBlockEntity;

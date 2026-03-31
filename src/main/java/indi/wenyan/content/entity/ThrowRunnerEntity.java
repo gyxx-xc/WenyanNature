@@ -1,9 +1,9 @@
 package indi.wenyan.content.entity;
 
+import indi.wenyan.content.block.ICodeHolder;
 import indi.wenyan.content.block.ICommunicateHolder;
+import indi.wenyan.content.block.LazyProgram;
 import indi.wenyan.content.block.runner.BlockPackageGetter;
-import indi.wenyan.content.block.runner.ICodeHolder;
-import indi.wenyan.content.block.runner.LazyProgram;
 import indi.wenyan.content.item.throw_runner.FuContainerComponent;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.IWenyanDevice;

@@ -1,6 +1,6 @@
 package indi.wenyan.content.item;
 
-import indi.wenyan.content.block.runner.ICodeHolder;
+import indi.wenyan.content.block.ICodeHolder;
 import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.component.DataComponents;

@@ -1,6 +1,6 @@
 package indi.wenyan.content.block.writing_block;
 
-import indi.wenyan.content.block.runner.ICodeHolder;
+import indi.wenyan.content.block.ICodeHolder;
 
 public enum DummyCodeHolder implements ICodeHolder {
     INSTANCE;

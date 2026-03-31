@@ -1,9 +1,7 @@
 package indi.wenyan.content.block.runner;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.content.block.AbstractFuluBlock;
-import indi.wenyan.content.block.DataBlockEntity;
-import indi.wenyan.content.block.ICommunicateHolder;
+import indi.wenyan.content.block.*;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
@@ -61,7 +59,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
 
     @Delegate(types = ICodeOutputHolder.class)
-    private final TitleCodeOutput titleCodeOutput;
+    private final TitleCodeOutputData titleCodeOutput;
 
     private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
@@ -70,7 +68,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
-        titleCodeOutput = new TitleCodeOutput("",
+        titleCodeOutput = new TitleCodeOutputData("",
                 ChineseUtils.bracketOf(blockState.getBlock().getName().getString()));
         titleCodeOutput.setOnChanged(this::setChanged);
         int steps;

@@ -2,7 +2,6 @@ package indi.wenyan.content.block.crafting_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.content.block.pedestal.PedestalBlockEntity;
 import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui_impl.CraftingBlockContainer;

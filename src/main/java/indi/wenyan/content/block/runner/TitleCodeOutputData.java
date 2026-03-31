@@ -1,5 +1,7 @@
 package indi.wenyan.content.block.runner;
 
+import indi.wenyan.content.block.ICodeOutputHolder;
+import indi.wenyan.content.block.IOutputAccepter;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.ChatFormatting;
@@ -9,7 +11,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class TitleCodeOutput implements ICodeOutputHolder {
+public class TitleCodeOutputData implements ICodeOutputHolder {
     public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
     @Getter private String code;
     @Getter private String platformName;
@@ -17,7 +19,7 @@ public class TitleCodeOutput implements ICodeOutputHolder {
     private boolean outputChanged = false;
     @Setter @Nullable private Runnable onChanged = null;
 
-    public TitleCodeOutput(String code, String platformName) {
+    public TitleCodeOutputData(String code, String platformName) {
         this.code = code;
         this.platformName = platformName;
     }
