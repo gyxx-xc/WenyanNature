@@ -3,6 +3,7 @@ package indi.wenyan.judou.compiler;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -59,9 +60,16 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
     }
 
     @Override
-    public WenyanBytecode.Context getContext(int index) {
-        return debugTable.get(index);
+    public WenyanBytecode.@Nullable Context getContext(int index) {
+        // change to binary search
+        for (WenyanBytecode.Context context : debugTable) {
+            if (context.bytecodeStart() <= index && index < context.bytecodeEnd()) {
+                return context;
+            }
+        }
+        return null;
     }
+
 
     @Override
     public int getLabel(int index) {

@@ -23,7 +23,6 @@ statements                  : statement* ;
 statement                   : candy_statement // make the candy first
                             | expr_statement
                             | control_statement
-                            | import_statement
                             ;
 
 candy_statement             : declare_write_candy_statement
@@ -42,6 +41,8 @@ expr_statement              : declare_statement
                             | function_call_statement
 
                             | object_statement
+
+                            | import_statement
                             ;
 
 control_statement           : if_statement

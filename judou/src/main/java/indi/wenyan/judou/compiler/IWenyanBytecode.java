@@ -2,6 +2,7 @@ package indi.wenyan.judou.compiler;
 
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import org.jetbrains.annotations.Nullable;
 
 public interface IWenyanBytecode {
     WenyanCodes getCode(int index);
@@ -33,7 +34,7 @@ public interface IWenyanBytecode {
      * @return The context information, or null if not found
      * @throws IndexOutOfBoundsException If the identifier is not found
      */
-    WenyanBytecode.Context getContext(int index);
+    WenyanBytecode.@Nullable Context getContext(int index);
 
     /**
      * Gets the label value at the specified index.

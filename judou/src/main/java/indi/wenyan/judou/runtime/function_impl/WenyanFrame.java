@@ -36,7 +36,7 @@ public class WenyanFrame {
 
     /**
      * -- GETTER --
-     *  Current instruction pointer
+     * Current instruction pointer
      */
     @Setter
     @Getter
@@ -99,6 +99,7 @@ public class WenyanFrame {
         environment.add(WenyanCodes.RET);
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
+        System.out.println(bytecode);
         return new WenyanFrame(bytecode.toImmutable());
     }
 
@@ -154,9 +155,10 @@ public class WenyanFrame {
         WenyanException.ErrorContext errorContext = null;
         try {
             WenyanBytecode.Context context = bytecode.getContext(getProgramCounter() - 1);
-            errorContext = new WenyanException.ErrorContext(
-                    context.line(), context.column(),
-                    bytecode.getSourceCode().substring(context.contentStart(), context.contentEnd()));
+            if (context != null)
+                errorContext = new WenyanException.ErrorContext(
+                        context.line(), context.column(),
+                        bytecode.getSourceCode().substring(context.contentStart(), context.contentEnd()));
         } catch (IndexOutOfBoundsException ignore) {// cause error context be null, handled below
         }
         if (errorContext == null)

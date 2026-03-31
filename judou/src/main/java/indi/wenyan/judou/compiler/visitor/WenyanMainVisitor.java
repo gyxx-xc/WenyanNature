@@ -2,10 +2,6 @@ package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.utils.function.WenyanValues;
-import indi.wenyan.judou.utils.language.Symbol;
-import org.antlr.v4.runtime.Token;
 
 /**
  * Main visitor for Wenyan language that orchestrates other specialized visitors.
@@ -34,23 +30,5 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public Boolean visitControl_statement(WenyanRParser.Control_statementContext ctx) {
         return new WenyanControlVisitor(bytecode).visit(ctx);
-    }
-
-    @Override
-    public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
-        bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
-        bytecode.addLoadCode(Symbol.IMPORT_ID);
-        bytecode.add(WenyanCodes.CALL, 1);
-        if (ctx.prop.isEmpty()) {
-            bytecode.addStoreCode(ctx.name.getText());
-            return true;
-        }
-        // stack: id1, id2, ..., package, import
-        for (Token id : ctx.prop) {
-            bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, id.getText());
-            bytecode.addStoreCode(id.getText());
-        }
-        bytecode.add(WenyanCodes.POP);
-        return true;
     }
 }

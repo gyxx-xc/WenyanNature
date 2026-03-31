@@ -11,8 +11,10 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.utils.function.WenyanDataParser;
+import indi.wenyan.judou.utils.function.WenyanValues;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 import indi.wenyan.judou.utils.language.Symbol;
+import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -336,6 +338,23 @@ public class WenyanExprVisitor extends WenyanVisitor {
         return true;
     }
 
+    @Override
+    public Boolean visitImport_statement(WenyanRParser.Import_statementContext ctx) {
+        bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
+        bytecode.addLoadCode(Symbol.IMPORT_ID);
+        bytecode.add(WenyanCodes.CALL, 1);
+        if (ctx.prop.isEmpty()) {
+            bytecode.addStoreCode(ctx.name.getText());
+            return true;
+        }
+        // stack: id1, id2, ..., package, import
+        for (Token id : ctx.prop) {
+            bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, id.getText());
+            bytecode.addStoreCode(id.getText());
+        }
+        bytecode.add(WenyanCodes.POP);
+        return true;
+    }
 
     @Override
     public Boolean visitData_child(WenyanRParser.Data_childContext ctx) {
