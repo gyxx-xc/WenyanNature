@@ -70,7 +70,6 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
         return null;
     }
 
-
     @Override
     public int getLabel(int index) {
         return labelTable[index];

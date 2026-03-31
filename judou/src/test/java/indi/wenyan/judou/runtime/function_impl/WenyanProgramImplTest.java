@@ -239,7 +239,7 @@ class WenyanProgramImplTest {
             program.step();
             Thread.sleep(20);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdle());
+            assertTrue(program.remainSteps());
             program.unblock(runner);
             program.step(); // assert no logger output
             Thread.sleep(20);
@@ -270,7 +270,7 @@ class WenyanProgramImplTest {
             assertEquals(1, runner1.pc);
             assertEquals(1, runner2.pc);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdle());
+            assertTrue(program.remainSteps());
             program.unblock(runner1);
             program.step();
             Thread.sleep(20);
@@ -320,13 +320,13 @@ class WenyanProgramImplTest {
             program.step();
             Thread.sleep(20);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdle());
+            assertTrue(program.remainSteps());
             assertEquals(1, runner.pc);
             program.unblock(runner);
             program.step();
             Thread.sleep(20);
             assertTrue(program.isRunning());
-            assertTrue(program.isIdle());
+            assertTrue(program.remainSteps());
             assertEquals(2, runner.pc);
             program.unblock(runner);
             program.step();

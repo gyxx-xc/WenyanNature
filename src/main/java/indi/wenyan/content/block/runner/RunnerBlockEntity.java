@@ -83,8 +83,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (!level.isClientSide()) {
             if (!errors.isEmpty()) {
                 for (String error : errors) {
-                    level.setBlock(getBlockPos(), getBlockState()
-                            .setValue(RUNNING_STATE, RunnerBlock.RunningState.ERROR), Block.UPDATE_CLIENTS);
+                    runningState = RunnerBlock.RunningState.ERROR;
+                    level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
                     addOutputBothSide(error, IOutputAcceptor.OutputStyle.ERROR);
                 }
                 errors.clear();
@@ -93,10 +93,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             RunnerBlock.RunningState newState = lazyProgram.ifCreated()
                     .filter(IWenyanProgram::isRunning)
                     .map(program -> {
+                        boolean remainSteps = program instanceof WenyanProgramImpl impl && impl.remainSteps();
+
                         program.step();
                         handle(new BlockRequest.BlockContext(level, pos, state));
 
-                        if (program instanceof WenyanProgramImpl impl && impl.isIdle()) {
+                        if (remainSteps) {
                             return RunnerBlock.RunningState.IDLE;
                         } else {
                             return RunnerBlock.RunningState.RUNNING;

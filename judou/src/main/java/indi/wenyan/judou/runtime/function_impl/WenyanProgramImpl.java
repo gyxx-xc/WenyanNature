@@ -34,8 +34,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
      * will monitor if there's idle (empty thread in pool or has thread but blocked)
      * and remain the value until next step() is called
      **/
-    @Getter
-    private boolean isIdle = false;
+    private boolean hasIdle = false;
 
     // NOTE: all thread = current running thread + ready queue threads + blocked threads (hold by ExecQueue)
     public final Collection<PCB> allThreads = ConcurrentHashMap.newKeySet(maxThread);
@@ -64,13 +63,19 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     public void step() {
         if (executor.isShutdown()) return;
         if (accumulatedSteps > 0) {
-            if (!isIdle)
+            if (!hasIdle)
                 UtilManager.getLogger().warn(
                         "program running too slow, step {} but {} accumulated",
                         step, accumulatedSteps);
         }
         if (stepLock.availablePermits() == 0)
             stepLock.release(); // is fine if permits > 0 here
+
+        hasIdle = false;
+    }
+
+    public boolean remainSteps() {
+        return accumulatedSteps > 0 && hasIdle;
     }
 
     @Override
@@ -161,7 +166,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
      * only intend to be called when thread is ended (i.e. die, block)
      */
     private void updateIdle() {
-        if (executor.getQueue().isEmpty()) isIdle = true;
+        if (executor.getQueue().isEmpty()) hasIdle = true;
     }
 
     private void submitThread(@NotNull IThreadHolder<PCB> runner) {
@@ -169,11 +174,9 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         executor.execute(() -> {
             try {
                 if (accumulatedSteps <= 0) {
-                    isIdle = true; // although we might encounter non-blocking acquire here, never mind
                     stepLock.acquire();
                     stepLock.drainPermits(); // if permits > 1
                     accumulatedSteps = step;
-                    isIdle = false;
                 } else {
                     if (stepLock.tryAcquire()) {
                         stepLock.drainPermits();
