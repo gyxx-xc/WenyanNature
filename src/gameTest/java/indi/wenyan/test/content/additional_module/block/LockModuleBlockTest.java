@@ -37,7 +37,7 @@ public class LockModuleBlockTest {
                     .thenWaitUntil(() -> {
                         helper.assertBlockProperty(lockPos,
                                 LockModuleBlock.LOCK_STATE, false);
-                        helper.assertOutput(runner1, "output",
+                        helper.assertOutputBlock(runner1, "output",
                                 "一", "一", "一", "一", "一", "二", "二", "二", "二", "二");
                     })
                     .thenSucceed();

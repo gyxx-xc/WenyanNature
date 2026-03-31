@@ -71,7 +71,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         if (stepLock.availablePermits() == 0)
             stepLock.release(); // is fine if permits > 0 here
 
-        hasIdle = false;
+        hasIdle = executor.getActiveCount() == 0;
     }
 
     public boolean remainSteps() {

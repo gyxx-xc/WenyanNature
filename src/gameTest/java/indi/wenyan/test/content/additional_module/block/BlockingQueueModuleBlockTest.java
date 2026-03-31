@@ -39,7 +39,7 @@ public class BlockingQueueModuleBlockTest {
             helper.startSequence()
                     .thenExecute(() -> runner.newThread(importCommand+"施「入」以一施「取」書之"))
                     .thenIdle(10)
-                    .thenWaitUntil(() -> helper.assertOutput(runner, "output", "一"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "一"))
                     .thenSucceed();
         });
     }
@@ -61,7 +61,7 @@ public class BlockingQueueModuleBlockTest {
                         runner.newThread(importCommand+"施「試入」以一書之施「試取」書之夫「「null」」施「試取」書之");
                     })
                     .thenIdle(10)
-                    .thenWaitUntil(() -> helper.assertOutput(runner, "output", "陽", "一", "null"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "陽", "一", "null"))
                     .thenSucceed();
         });
     }
@@ -83,7 +83,7 @@ public class BlockingQueueModuleBlockTest {
                         runner.newThread(importCommand+"施「入」以一施「窺」書之噫施「窺」書之噫施「取」夫「「null」」施「窺」書之");
                     })
                     .thenIdle(10)
-                    .thenWaitUntil(() -> helper.assertOutput(runner, "output", "一", "一", "null"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "一", "一", "null"))
                     .thenSucceed();
         });
     }
@@ -105,7 +105,7 @@ public class BlockingQueueModuleBlockTest {
                         runner.newThread(importCommand+"施「長」書之施「入」以一施「入」以二噫施「長」書之施「取」噫施「長」書之");
                     })
                     .thenIdle(10)
-                    .thenWaitUntil(() -> helper.assertOutput(runner, "output", "零", "二", "一"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "零", "二", "一"))
                     .thenSucceed();
         });
     }
@@ -127,7 +127,7 @@ public class BlockingQueueModuleBlockTest {
                         runner.newThread(importCommand+"施「入」以一施「入」以二施「長」書之施「清空」施「長」書之");
                     })
                     .thenIdle(10)
-                    .thenWaitUntil(() -> helper.assertOutput(runner, "output", "二", "零"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "二", "零"))
                     .thenSucceed();
         });
     }
@@ -154,7 +154,7 @@ public class BlockingQueueModuleBlockTest {
                     .thenIdle(20)
                     .thenWaitUntil(() -> {
                         // Both threads should complete
-                        helper.assertOutput(runner1, "output", "一", "二", "三");
+                        helper.assertOutputBlock(runner1, "output", "一", "二", "三");
                     })
                     .thenSucceed();
         });
@@ -181,7 +181,7 @@ public class BlockingQueueModuleBlockTest {
                     .thenIdle(20)
                     .thenWaitUntil(() -> {
                         // Both threads should complete
-                        helper.assertOutput(runner1, "output", "一", "二");
+                        helper.assertOutputBlock(runner1, "output", "一", "二");
                     })
                     .thenSucceed();
         });
@@ -209,7 +209,7 @@ public class BlockingQueueModuleBlockTest {
                         producer1.newThread(importCommand+"為是一十遍施「取」云云書一");
                     })
                     .thenIdle(30)
-                    .thenWaitUntil(() -> helper.assertOutput(producer1, "output", "一", "一", "一"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(producer1, "output", "一", "一", "一"))
                     .thenSucceed();
         });
     }
@@ -231,7 +231,7 @@ public class BlockingQueueModuleBlockTest {
                         runner.newThread(importCommand+"施「入」以一施「入」以二施「入」以三施「取」書之施「取」書之施「取」書之");
                     })
                     .thenIdle(10)
-                    .thenWaitUntil(() -> helper.assertOutput(runner, "output", "一", "二", "三"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "一", "二", "三"))
                     .thenSucceed();
         });
     }
@@ -253,7 +253,7 @@ public class BlockingQueueModuleBlockTest {
                         runner.newThread(importCommand+"為是一十遍施「入」以一云云施「試入」書之");
                     })
                     .thenIdle(10)
-                    .thenWaitUntil(() -> helper.assertOutput(runner, "output", "陰"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "陰"))
                     .thenSucceed();
         });
     }

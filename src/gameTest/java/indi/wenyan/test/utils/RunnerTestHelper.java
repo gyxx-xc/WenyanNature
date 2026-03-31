@@ -13,17 +13,22 @@ public class RunnerTestHelper extends ExtendedGameTestHelper {
         super(info);
     }
 
-    public void assertOutput(RunnerBlockEntity runner, String valueName, String... output) {
-        if (runner.getOutputQueue().size() != output.length) {
+    public void assertOutputBlock(RunnerBlockEntity runner, String valueName, String... output) {
+        Deque<Component> outputQueue = runner.getOutputQueue();
+        assertOutput(outputQueue, valueName, output);
+    }
+
+    public void assertOutput(Deque<Component> outputQueue, String valueName, String... output) {
+        if (outputQueue.size() != output.length) {
             throw assertionException(Component.literal("Expected " + valueName + " to be size=" + output.length +
-                    ", but was " + stringFromOutputQueue(runner.getOutputQueue())));
+                    ", but was " + stringFromOutputQueue(outputQueue)));
         }
         int i = 0;
-        for (Component c : runner.getOutputQueue()) {
+        for (Component c : outputQueue) {
             assertFalse(c.getStyle().getColor() != null, "has error:" + c.getString());
             if (!c.getString().equals(output[i++]))
                 throw assertionException(Component.literal("Expected " + valueName + " to be " + Arrays.toString(output) +
-                        ", but was " + stringFromOutputQueue(runner.getOutputQueue())));
+                        ", but was " + stringFromOutputQueue(outputQueue)));
         }
     }
 

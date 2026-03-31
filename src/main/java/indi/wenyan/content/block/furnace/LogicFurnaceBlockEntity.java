@@ -81,7 +81,7 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
     private boolean resetProgress = false;
     private ResourceKey<Recipe<?>> lastRecipe;
 
-    public Optional<RecipeHolder<? extends AbstractCookingRecipe>> getRecipeFor(SingleRecipeInput input, ServerLevel level) {
+    private Optional<RecipeHolder<? extends AbstractCookingRecipe>> getRecipeFor(SingleRecipeInput input, ServerLevel level) {
         RecipeManager recipeManager = level.recipeAccess();
         var smeltResult = recipeManager.getRecipeFor(RecipeType.SMELTING, input, level, this.lastRecipe);
         if (smeltResult.isPresent()) {
@@ -107,8 +107,8 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
         return Optional.empty();
     }
 
-    private int progress;
-    private int maxProgress;
+    private int progress = -1;
+    private int maxProgress = -1;
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
@@ -148,8 +148,7 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
         super(WenyanBlocks.LOGIC_FURNACE_ENTITY.get(), pos, blockState);
     }
 
-    public void tick(ServerLevel level, BlockPos pos, BlockState state, RandomSource
-            random) {
+    public void tick(ServerLevel level, BlockPos pos, BlockState state, RandomSource random) {
         super.tick(level, pos, state);
         if (!resetProgress)
             return;
@@ -159,8 +158,8 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
         if (recipe != null) {
             int cookingTotalTime = recipe.value().cookingTime();
             int count = getInput().getAmountAsInt(0);
-            double reduceTime = 1 - Math.max(count / 64, 1) * 0.5;
-            maxProgress = random.nextInt((int) (cookingTotalTime * count * reduceTime), cookingTotalTime * count);
+            double reduceTime = Math.min(count / 64, 1) * 0.5;
+            maxProgress = cookingTotalTime * count - random.nextInt((int) (cookingTotalTime * count * reduceTime) + 1);
             progress = 0;
         } else {
             maxProgress = -1;

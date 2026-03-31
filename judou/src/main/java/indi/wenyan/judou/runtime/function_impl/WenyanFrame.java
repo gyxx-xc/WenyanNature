@@ -99,7 +99,6 @@ public class WenyanFrame {
         environment.add(WenyanCodes.RET);
         environment.exitContext();
         WenyanVerifier.verify(bytecode);
-        System.out.println(bytecode);
         return new WenyanFrame(bytecode.toImmutable());
     }
 
