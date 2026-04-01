@@ -22,7 +22,7 @@ public enum WritingBlockBehaviour {
 
     public static void openGui(BlockPos pos, Player player) {
         if (!(player.level().getBlockEntity(pos) instanceof WritingBlockEntity entity)) return;
-        ItemStack runners = ItemUtil.getStack(entity.getItemHandler(), 1);
+        ItemStack runners = ItemUtil.getStack(entity.getItemHandler(), 0);
         ICodeHolder code = runners.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
         if (code != null) {
             Minecraft.getInstance().setScreen(getWritingEditorScreen(pos, code));

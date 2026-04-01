@@ -13,9 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemUtil;
+import net.neoforged.neoforge.transfer.item.ItemStackResourceHandler;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -23,38 +23,48 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class WritingBlockEntity extends DataBlockEntity implements ICodeHolder {
     @Getter
-    private final ItemStacksResourceHandler itemHandler = new ItemStacksResourceHandler(1) {
-        @Override
-        protected void onContentsChanged(int index, ItemStack previousContents) {
-            super.onContentsChanged(index, previousContents);
-            updateBlock();
+    private final ResourceHandler<ItemResource> itemHandler = createItemHandler();
+    @Getter
+    private ItemStack itemStack = ItemStack.EMPTY;
 
-            if (getResource(index).isEmpty()) {
-                codeHolder = DummyCodeHolder.INSTANCE;
-            } else {
-                codeHolder = ItemUtil.getStack(this, index).getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
+    private ResourceHandler<ItemResource> createItemHandler() {
+        return new ItemStackResourceHandler() {
+            @Override
+            protected ItemStack getStack() {
+                return itemStack;
             }
-        }
 
-        @Override
-        public boolean isValid(int index, ItemResource resource) {
-            if (!super.isValid(index, resource)) return false;
-            for (var i : WenyanItems.HAND_RUNNER.getItems()) {
-                if (resource.is(i))
-                    return true;
+            @Override
+            protected void setStack(ItemStack stack) {
+                itemStack = stack;
+                var cap = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
+//                codeHolder = Objects.requireNonNullElse(cap, DummyCodeHolder.INSTANCE);
+                codeHolder = cap;
+                updateBlock();
             }
-            for (var i : WenyanItems.THROW_RUNNER.getItems()) {
-                if (resource.is(i))
-                    return true;
-            }
-            return false;
 
-        }
-    };
+            @Override
+            protected int getCapacity(ItemResource resource) {
+                return 64; // Stack of fu items
+            }
+
+            @Override
+            protected boolean isValid(ItemResource resource) {
+                for (var i : WenyanItems.HAND_RUNNER.getItems()) {
+                    if (resource.is(i))
+                        return true;
+                }
+                for (var i : WenyanItems.THROW_RUNNER.getItems()) {
+                    if (resource.is(i))
+                        return true;
+                }
+                return false;
+            }
+        };
+    }
 
     @Delegate(types = ICodeHolder.class)
-    private ICodeHolder codeHolder = DummyCodeHolder.INSTANCE;
-
+    private ICodeHolder codeHolder = null;
 
     public WritingBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.WRITING_BLOCK_ENTITY.get(), pos, blockState);
@@ -62,12 +72,13 @@ public class WritingBlockEntity extends DataBlockEntity implements ICodeHolder {
 
     @Override
     protected void saveData(ValueOutput output) {
-        itemHandler.serialize(output);
+        output.store("item", ItemStack.OPTIONAL_CODEC, itemStack);
     }
 
     @Override
     protected void loadData(ValueInput input) {
-        itemHandler.deserialize(input);
+        input.read("item", ItemStack.OPTIONAL_CODEC)
+                .ifPresent(itemStack -> this.itemStack = itemStack);
     }
 
     private void updateBlock() {

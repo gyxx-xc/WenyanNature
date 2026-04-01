@@ -70,7 +70,7 @@ public class WritingEditorScreen extends Screen {
 
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics,
-                       int mouseX, int mouseY, float partialTick) {
+                                   int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
