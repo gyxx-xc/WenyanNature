@@ -4,6 +4,7 @@ import indi.wenyan.content.block.furnace.LogicFurnaceBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.ExceptionText;
 import indi.wenyan.test.utils.RunnerTestHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -161,9 +162,9 @@ public class LogicFurnaceBlockTest {
                         setFurnaceProgress(helper, BlockPos.containing(1, 1, 0), 4, 5);
                         runner.newThread(importCommand+"施「取熔」書之施「熔」施「取熔」書之");
                     })
-                    .thenIdle(10)
-                    // FIXME: change to error checker helper function.
-//                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "四", "1:40 施「取熔」: 謬：未尋配方"))
+                    .thenWaitUntil(() -> helper.assertOutputBlock(runner, "output", "四"))
+                    .thenIdle(3)
+                    .thenWaitUntil(() -> helper.assertErrorDisplay(runner.getOutputQueue(), ExceptionText.NoRecipeFound.string()))
                     .thenSucceed();
         });
     }

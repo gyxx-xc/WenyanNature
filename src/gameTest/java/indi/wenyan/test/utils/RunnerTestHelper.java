@@ -32,6 +32,16 @@ public class RunnerTestHelper extends ExtendedGameTestHelper {
         }
     }
 
+    public void assertErrorDisplay(Deque<Component> outputQueue, String string) {
+        if (outputQueue.isEmpty())
+            throw assertionException(Component.literal("empty output"));
+        Component last = outputQueue.getLast();
+        assertTrue(last.getStyle().getColor() != null, "no error:" + last.getString());
+        if (!last.getString().contains(string))
+            throw assertionException(Component.literal("Expected error message to contain " + string +
+                    ", but was " + stringFromOutputQueue(outputQueue)));
+    }
+
     private static String stringFromOutputQueue(Deque<Component> q) {
         var sb = new StringBuilder("[");
         for (var t : q) {
