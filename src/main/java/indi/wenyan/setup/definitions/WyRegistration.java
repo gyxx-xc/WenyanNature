@@ -54,12 +54,13 @@ public enum WyRegistration {
         RECIPE_SERIALIZER.register(modEventBus);
         PARTICLE_TYPES.register(modEventBus);
         RECIPE_BOOK_CATEGORIES.register(modEventBus);
+        CONSUME_EFFECT.register(modEventBus);
     }
 
-    public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(Registries.MENU, MODID);
-    public static final DeferredRegister<DataComponentType<?>> DATA = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, MODID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(BuiltInRegistries.MENU, MODID);
+    public static final DeferredRegister<DataComponentType<?>> DATA = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
-    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
     public static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = DeferredRegister.create(BuiltInRegistries.RECIPE_BOOK_CATEGORY, MODID);
     public static final DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECT = DeferredRegister.create(BuiltInRegistries.CONSUME_EFFECT_TYPE, MODID);

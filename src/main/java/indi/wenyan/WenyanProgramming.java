@@ -4,10 +4,7 @@ import com.mojang.logging.LogUtils;
 import indi.wenyan.interpreter_impl.MinecraftLanguageProvider;
 import indi.wenyan.judou.utils.UtilManager;
 import indi.wenyan.setup.config.WenyanConfig;
-import indi.wenyan.setup.definitions.WenyanBlocks;
-import indi.wenyan.setup.definitions.WenyanEntities;
-import indi.wenyan.setup.definitions.WenyanItems;
-import indi.wenyan.setup.definitions.WyRegistration;
+import indi.wenyan.setup.definitions.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -43,7 +40,9 @@ public class WenyanProgramming {
             dr.register(modEventBus);
         WenyanItems.DR.register(modEventBus);
         WenyanEntities.DR.register(modEventBus);
+        WenyanVillageTrade.register(modEventBus);
         WenyanItems.CREATIVE_MODE_TABS.register(modEventBus);
+
         WyRegistration.register(modEventBus);
     }
 }
