@@ -16,20 +16,16 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:26.0.2")
-    implementation("org.slf4j:slf4j-api:2.0.7")
-
-    implementation("com.github.houbb:opencc4j:1.14.0")
-
-    // STUB: for chinese convertor only, might change in future
-    implementation("cn.hutool:hutool-core:5.8.43")
-
     // for annotation processor
     compileOnly(project(":language_processor"))
     annotationProcessor(project(":language_processor"))
 
+    implementation("org.slf4j:slf4j-api:2.0.7") // align to minecraft
+
+    implementation("com.github.houbb:opencc4j:1.14.0")
     antlr("org.antlr:antlr4:4.13.1")
 
+    compileOnly("org.jetbrains:annotations:26.0.2")
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 

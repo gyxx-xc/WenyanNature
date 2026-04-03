@@ -1,6 +1,5 @@
 package indi.wenyan.judou.utils.function;
 
-import cn.hutool.core.convert.Convert;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import indi.wenyan.judou.utils.UtilManager;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +18,7 @@ public enum ChineseUtils {
     public static @NotNull String toChinese(BigInteger i) {
         if (!DIRECT_NUMBER_CONVERT) {
             try {
-                return ZhConverterUtil.toTraditional(
-                        Convert.numberToChinese(i.intValueExact(), false));
+                return numberToChinese(i.intValueExact());
             } catch (ArithmeticException ignored) { // go outward
             }
         }
@@ -28,13 +26,17 @@ public enum ChineseUtils {
         var number = i;
         while (number.compareTo(BigInteger.ZERO) > 0) {
             int digit = number.mod(BigInteger.valueOf(10)).intValue();
-            chinese.insert(0, WENYAN_NUMBERS[digit]);
+            chinese.insert(0, NumberChineseFormatter.DIGITS[digit]);
             number = number.divide(BigInteger.valueOf(10));
         }
         if (i.compareTo(BigInteger.ZERO) < 0) {
             chinese.insert(0, "負");
         }
         return chinese.toString();
+    }
+
+    private static String numberToChinese(int i) {
+        return NumberChineseFormatter.format(i);
     }
 
     public static final List<String> WENYAN_FRACTIONS = List.of("分", "釐", "毫", "絲", "忽", "微", "纖", "沙", "塵");
@@ -91,6 +93,8 @@ public enum ChineseUtils {
     public static String bracketOf(String string) {
         return "「" + string + "」";
     }
+
+
 
     public enum SymbolFormat {
         TRADITIONAL,
