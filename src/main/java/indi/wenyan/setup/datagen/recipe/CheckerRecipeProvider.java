@@ -184,7 +184,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .create(WenyanItems.DRAGON_PAPER.get(), 4)
                 .addInput(Items.DRAGON_BREATH, 1)
                 .addInput(Items.PAPER, 1)
-                .question(CheckerEnum.DRAGON_PAPER)
+                .question(CheckerEnum.DRAGON_PAPER_CHECKER)
                 .save(output, "dragon_paper");
         AnsweringRecipeBuilder
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6), 2)

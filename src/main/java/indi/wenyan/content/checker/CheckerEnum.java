@@ -5,6 +5,7 @@ import indi.wenyan.content.checker.checker.challenge.Ex1Checker;
 import indi.wenyan.content.checker.checker.handrunner.*;
 import indi.wenyan.content.checker.checker.ink.*;
 import indi.wenyan.content.checker.checker.paper.*;
+import indi.wenyan.setup.language.ILocalizationEnum;
 import net.minecraft.util.RandomSource;
 
 import java.util.function.Function;
@@ -13,7 +14,7 @@ import java.util.function.Function;
  * Factory for creating different types of crafting answer checkers.
  * Contains constants for available checker types.
  */
-public enum CheckerEnum {
+public enum CheckerEnum implements ILocalizationEnum {
     PLUS_CHECKER(BambooPaperChecker::new),
     ECHO_CHECKER(EchoChecker::new),
     LABYRINTH_CHECKER(HandRunner7Checker::new),
@@ -32,7 +33,7 @@ public enum CheckerEnum {
     PHOENIX_PAPER_CHECKER(PhoenixPaperChecker::new),
     HAND_RUNNER_5_CHECKER(HandRunner5Checker::new),
     CELESTIAL_INK_CHECKER(CelestialInkChecker::new),
-    DRAGON_PAPER(DragonPaperChecker::new),
+    DRAGON_PAPER_CHECKER(DragonPaperChecker::new),
     HAND_RUNNER_6_CHECKER(HandRunner6Checker::new);
 
     private final Function<RandomSource, CraftingAnswerChecker> checkerProducer;
@@ -43,5 +44,10 @@ public enum CheckerEnum {
 
     public CraftingAnswerChecker produce(RandomSource random) {
         return checkerProducer.apply(random);
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return "question.wenyan_programming." + name().toLowerCase();
     }
 }

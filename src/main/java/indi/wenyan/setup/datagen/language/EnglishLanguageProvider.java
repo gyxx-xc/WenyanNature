@@ -7,6 +7,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.util.List;
 
+import static indi.wenyan.content.checker.CheckerEnum.*;
 import static indi.wenyan.judou.utils.language.JudouExceptionText.*;
 import static indi.wenyan.judou.utils.language.JudouTypeText.*;
 import static indi.wenyan.setup.language.ConfigText.*;
@@ -174,6 +175,27 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(FuNamePrompt.getTranslationKey(), "符名：");
         add(FurnaceTitle.getTranslationKey(), "熔炉");
         add(JeiAnswerTitle.getTranslationKey(), "解题");
+
+        add(PLUS_CHECKER.getTranslationKey(), "已知「甲」「乙」求「甲」加「乙」");
+        add(ECHO_CHECKER.getTranslationKey(), "已知「甲」输出「甲」");
+        add(LABYRINTH_CHECKER.getTranslationKey(), "走出提供的迷宫");
+        add(PRINT_CHECKER.getTranslationKey(), "输出「「吾有一術」」");
+        add(HAND_RUNNER_1_CHECKER.getTranslationKey(), "這是HAND_RUNNER_1的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(CINNABAR_INK_CHECKER.getTranslationKey(), "這是CINNABAR INK的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(CLOUD_PAPER_CHECKER.getTranslationKey(), "這是CLOUD PAPER的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(HAND_RUNNER_2_CHECKER.getTranslationKey(), "這是HAND_RUNNER_2的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(STARLIGHT_INK_CHECKER.getTranslationKey(), "這是STARLIGHT INK的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(STARLIGHT_PAPER_CHECKER.getTranslationKey(), "這是STARLIGHT PAPER的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(HAND_RUNNER_3_CHECKER.getTranslationKey(), "這是HAND_RUNNER_3的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(LUNAR_INK_CHECKER.getTranslationKey(), "這是LUNAR INK的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(FROST_PAPER_CHECKER.getTranslationKey(), "這是FROST PAPER的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(HAND_RUNNER_4_CHECKER.getTranslationKey(), "這是HAND_RUNNER_4的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(ARCANE_INK_CHECKER.getTranslationKey(), "這是ARCANE INK的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(PHOENIX_PAPER_CHECKER.getTranslationKey(), "這是PHOENIX PAPER的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(HAND_RUNNER_5_CHECKER.getTranslationKey(), "這是HAND_RUNNER_5的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(CELESTIAL_INK_CHECKER.getTranslationKey(), "這是CELESTIAL INK的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(HAND_RUNNER_6_CHECKER.getTranslationKey(), "這是HAND_RUNNER_6的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+        add(DRAGON_PAPER_CHECKER.getTranslationKey(), "這是DRAGON_PAPER的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
 
         add(Judou.getTranslationKey(), "句读（程序运行）");
         add(SliceStep.getTranslationKey(), "线程切换长度");

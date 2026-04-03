@@ -14,8 +14,11 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -72,8 +75,15 @@ public class AnsweringCategory implements IRecipeCategory<RecipeHolder<Answering
     public void draw(RecipeHolder<AnsweringRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
         background.draw(guiGraphics);
-        craftingBlock.draw(guiGraphics, 56, 60);
+        craftingBlock.draw(guiGraphics, 56, 75);
+        Font font = Minecraft.getInstance().font;
+        Component text = recipe.value().question().text();
+        var split = font.getSplitter().splitLines(text, width - 30, Style.EMPTY);
+        for (int i = 0; i < split.size(); i++) {
+            guiGraphics.text(font, split.get(i).getString(), 15, 40 + font.lineHeight * i, -1);
+        }
     }
 
-    private record Coord(int x, int y) { }
+    private record Coord(int x, int y) {
+    }
 }
