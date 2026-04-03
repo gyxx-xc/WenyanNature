@@ -11,8 +11,8 @@ public enum TypeText implements ILocalizationEnum {
     Player,
     Vec3,
     Vec3ObjectType,
-    Entity
-    ;
+    Entity,
+    Edge;
 
     @Override
     public String getTranslationKey() {
