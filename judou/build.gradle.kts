@@ -16,7 +16,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:26.0.2")
     implementation("org.slf4j:slf4j-api:2.0.7")
 
     implementation("com.github.houbb:opencc4j:1.14.0")
@@ -30,6 +29,7 @@ dependencies {
 
     antlr("org.antlr:antlr4:4.13.1")
 
+    compileOnly("org.jetbrains:annotations:26.0.2")
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 

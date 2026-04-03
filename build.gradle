@@ -145,10 +145,14 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation project(":judou")
     jarJar implementation(project(":judou"))
-    clientImplementation(project(":judou"))
-    jarJar clientImplementation(project(":judou")) // for code highlight
+    implementation project(":judou")
+    clientImplementation(project(":judou")) // for code highlight
+
+    jarJar implementation("org.antlr:antlr4:4.13.1")
+    jarJar implementation("org.antlr:antlr4-runtime:4.13.1")
+    jarJar implementation("com.github.houbb:opencc4j:1.14.0")
+    jarJar implementation("cn.hutool:hutool-core:5.8.43")
 
     // for annotation processor
     compileOnly project(":language_processor")
@@ -211,6 +215,10 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 neoForge.ideSyncTask generateModMetadata
+
+tasks.named('jar', Jar) {
+    from(sourceSets.client.output)
+}
 
 // Example configuration to allow publishing using the maven-publish plugin
 publishing {
