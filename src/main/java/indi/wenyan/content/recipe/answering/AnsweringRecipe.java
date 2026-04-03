@@ -4,6 +4,7 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import indi.wenyan.content.checker.CheckerEnum;
 import indi.wenyan.setup.definitions.WyRegistration;
 import lombok.AccessLevel;
 import lombok.Value;
@@ -31,7 +32,7 @@ import java.util.List;
 @Value
 public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
     List<Ingredient> input;
-    String question;
+    CheckerEnum question;
     ItemStackTemplate output;
     int round;
 
@@ -39,7 +40,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
     PlacementInfo info = null;
 
     @SuppressWarnings("unused") // need implicit in lombok
-    public AnsweringRecipe(List<Ingredient> input, String question, ItemStackTemplate output, int round, PlacementInfo info) {
+    public AnsweringRecipe(List<Ingredient> input, CheckerEnum question, ItemStackTemplate output, int round, PlacementInfo info) {
         this.input = input;
         this.question = question;
         this.output = output;
@@ -47,7 +48,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
         this.info = info;
     }
 
-    public AnsweringRecipe(List<Ingredient> input, String question, ItemStackTemplate output, int round) {
+    public AnsweringRecipe(List<Ingredient> input, CheckerEnum question, ItemStackTemplate output, int round) {
         this.input = input;
         this.question = question;
         this.output = output;
@@ -125,7 +126,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
     public static class SerializerProvider {
         public static final MapCodec<AnsweringRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC.listOf().fieldOf("input").forGetter(AnsweringRecipe::input),
-                Codec.STRING.fieldOf("question").forGetter(AnsweringRecipe::question),
+                Codec.STRING.xmap(CheckerEnum::valueOf, CheckerEnum::name).fieldOf("question").forGetter(AnsweringRecipe::question),
                 ItemStackTemplate.CODEC.fieldOf("output").forGetter(AnsweringRecipe::output),
                 Codec.INT.fieldOf("round").forGetter(AnsweringRecipe::round)
         ).apply(inst, AnsweringRecipe::new));
@@ -133,7 +134,7 @@ public class AnsweringRecipe implements Recipe<AnsweringRecipeInput> {
         public static final StreamCodec<RegistryFriendlyByteBuf, AnsweringRecipe> STREAM_CODEC =
                 StreamCodec.composite(
                         INGREDIENT_LIST_STREAM, AnsweringRecipe::input,
-                        ByteBufCodecs.STRING_UTF8, AnsweringRecipe::question,
+                        ByteBufCodecs.STRING_UTF8.map(CheckerEnum::valueOf, CheckerEnum::name), AnsweringRecipe::question,
                         ItemStackTemplate.STREAM_CODEC, AnsweringRecipe::output,
                         ByteBufCodecs.INT, AnsweringRecipe::round,
                         AnsweringRecipe::new);

@@ -2,7 +2,7 @@ package indi.wenyan.setup.datagen.recipe;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.checker.CheckerFactory;
+import indi.wenyan.content.checker.CheckerEnum;
 import indi.wenyan.content.recipe.combine_module.ThrowModuleRecipe;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
@@ -52,13 +52,13 @@ public class CheckerRecipeProvider extends RecipeProvider {
         AnsweringRecipeBuilder
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0))
                 .addInput(Items.PAPER)
-                .question(CheckerFactory.PLUS_CHECKER)
+                .question(CheckerEnum.PLUS_CHECKER)
                 .round(8)
                 .save(output, "hand_runner");
         AnsweringRecipeBuilder
                 .create(Items.DIAMOND)
-                .addInput(Items.COAL, 2)
-                .question(CheckerFactory.LABYRINTH_CHECKER)
+                .addInput(Items.COAL, 4)
+                .question(CheckerEnum.LABYRINTH_CHECKER)
                 .save(output, "diamond_labyrinth_checker");
         ShapelessRecipeBuilder
                 .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.FLOAT_NOTE.get())
@@ -80,19 +80,19 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .create(WenyanItems.BAMBOO_INK.get(), 4)
                 .addInput(Items.POTION, 1)
                 .addInput(Items.BLACK_DYE, 1)
-                .question(CheckerFactory.PRINT_CHECKER)
+                .question(CheckerEnum.PRINT_CHECKER)
                 .save(output, "bamboo_ink");
         AnsweringRecipeBuilder // bamboo paper
                 .create(WenyanItems.BAMBOO_PAPER.get(), 4)
                 .addInput(Items.PAPER, 1)
                 .addInput(Items.BAMBOO, 1)
-                .question(CheckerFactory.PLUS_CHECKER)
+                .question(CheckerEnum.PLUS_CHECKER)
                 .save(output, "bamboo_paper");
         AnsweringRecipeBuilder // Hand Runner 1
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_1), 2)
                 .addInput(WenyanItems.BAMBOO_INK.get(), 1)
                 .addInput(WenyanItems.BAMBOO_PAPER.get(), 1)
-                .question(CheckerFactory.HAND_RUNNER_1_CHECKER)
+                .question(CheckerEnum.HAND_RUNNER_1_CHECKER)
                 .save(output, "hand_runner_1");
 
         AnsweringRecipeBuilder // Cinnabar Ink
@@ -100,19 +100,19 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .addInput(Items.POTION, 1)
                 .addInput(Items.BLACK_DYE, 1)
                 .addInput(Items.REDSTONE, 1)
-                .question(CheckerFactory.CINNABAR_INK_CHECKER)
+                .question(CheckerEnum.CINNABAR_INK_CHECKER)
                 .save(output, "cinnabar_ink");
         AnsweringRecipeBuilder // Cloud Paper
                 .create(WenyanItems.CLOUD_PAPER.get(), 4)
                 .addInput(Items.FEATHER, 1)
                 .addInput(Items.PAPER, 1)
-                .question(CheckerFactory.CLOUD_PAPER_CHECKER)
+                .question(CheckerEnum.CLOUD_PAPER_CHECKER)
                 .save(output, "cloud_paper");
         AnsweringRecipeBuilder // Hand Runner 2
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_2), 2)
                 .addInput(WenyanItems.CINNABAR_INK.get(), 1)
                 .addInput(WenyanItems.CLOUD_PAPER.get(), 1)
-                .question(CheckerFactory.HAND_RUNNER_2_CHECKER)
+                .question(CheckerEnum.HAND_RUNNER_2_CHECKER)
                 .save(output, "hand_runner_2");
 
         AnsweringRecipeBuilder
@@ -120,77 +120,77 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .addInput(Items.POTION, 1)
                 .addInput(Items.BLACK_DYE, 1)
                 .addInput(Items.GLOWSTONE_DUST, 1)
-                .question(CheckerFactory.STARLIGHT_INK_CHECKER)
+                .question(CheckerEnum.STARLIGHT_INK_CHECKER)
                 .save(output, "starlight_ink");
         AnsweringRecipeBuilder
                 .create(WenyanItems.STARLIGHT_PAPER.get(), 4)
                 .addInput(Items.PAPER, 1)
                 .addInput(Items.GLOWSTONE_DUST, 1)
-                .question(CheckerFactory.STARLIGHT_PAPER_CHECKER) // Need change
+                .question(CheckerEnum.STARLIGHT_PAPER_CHECKER) // Need change
                 .save(output, "star_paper");
         AnsweringRecipeBuilder // Hand Runner 3
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_3), 2)
                 .addInput(WenyanItems.STARLIGHT_INK.get(), 1)
                 .addInput(WenyanItems.STARLIGHT_PAPER.get(), 1)
-                .question(CheckerFactory.HAND_RUNNER_3_CHECKER) // Need change
+                .question(CheckerEnum.HAND_RUNNER_3_CHECKER) // Need change
                 .save(output, "hand_runner_3");
 
         AnsweringRecipeBuilder // Lunar ink
                 .create(WenyanItems.LUNAR_INK.get(), 4)
                 .addInput(WenyanItems.STARLIGHT_INK.get(), 1)
                 .addInput(Items.BLACK_DYE, 1)
-                .question(CheckerFactory.LUNAR_INK_CHECKER)
+                .question(CheckerEnum.LUNAR_INK_CHECKER)
                 .save(output, "lunar_ink");
         AnsweringRecipeBuilder // frost_paper
                 .create(WenyanItems.FROST_PAPER.get(), 4)
                 .addInput(Items.SNOWBALL, 1)
                 .addInput(Items.GOLD_NUGGET, 1)
                 .addInput(Items.PAPER, 1)
-                .question(CheckerFactory.FROST_PAPER_CHECKER)
+                .question(CheckerEnum.FROST_PAPER_CHECKER)
                 .save(output, "frost_paper");
         AnsweringRecipeBuilder
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_4), 2)
                 .addInput(WenyanItems.LUNAR_INK.get(), 1)
                 .addInput(WenyanItems.FROST_PAPER.get(), 1)
-                .question(CheckerFactory.HAND_RUNNER_4_CHECKER)
+                .question(CheckerEnum.HAND_RUNNER_4_CHECKER)
                 .save(output, "hand_runner_4");
 
         AnsweringRecipeBuilder
                 .create(WenyanItems.ARCANE_INK.get(), 4)
                 .addInput(Items.ENCHANTED_BOOK, 1)
                 .addInput(WenyanItems.LUNAR_INK.get(), 1)
-                .question(CheckerFactory.ARCANE_INK_CHECKER)
+                .question(CheckerEnum.ARCANE_INK_CHECKER)
                 .save(output, "arcane_ink");
         AnsweringRecipeBuilder
                 .create(WenyanItems.PHOENIX_PAPER.get(), 4)
                 .addInput(Items.BLAZE_POWDER, 1)
                 .addInput(Items.FEATHER, 1)
                 .addInput(Items.PAPER, 1)
-                .question(CheckerFactory.PHOENIX_PAPER_CHECKER)
+                .question(CheckerEnum.PHOENIX_PAPER_CHECKER)
                 .save(output, "phoenix_paper");
         AnsweringRecipeBuilder
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_5), 2)
                 .addInput(WenyanItems.ARCANE_INK.get(), 1)
                 .addInput(WenyanItems.PHOENIX_PAPER.get(), 1)
-                .question(CheckerFactory.HAND_RUNNER_5_CHECKER)
+                .question(CheckerEnum.HAND_RUNNER_5_CHECKER)
                 .save(output, "hand_runner_5");
         AnsweringRecipeBuilder
                 .create(WenyanItems.CELESTIAL_INK.get(), 4)
                 .addInput(Items.NETHERITE_SCRAP, 1)
                 .addInput(WenyanItems.ARCANE_INK.get(), 1)
-                .question(CheckerFactory.CELESTIAL_INK_CHECKER)
+                .question(CheckerEnum.CELESTIAL_INK_CHECKER)
                 .save(output, "celestial_ink");
         AnsweringRecipeBuilder
                 .create(WenyanItems.DRAGON_PAPER.get(), 4)
                 .addInput(Items.DRAGON_BREATH, 1)
                 .addInput(Items.PAPER, 1)
-                .question(CheckerFactory.DRAGON_PAPER)
+                .question(CheckerEnum.DRAGON_PAPER)
                 .save(output, "dragon_paper");
         AnsweringRecipeBuilder
                 .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6), 2)
                 .addInput(WenyanItems.CELESTIAL_INK.get(), 1)
                 .addInput(WenyanItems.DRAGON_PAPER.get(), 1)
-                .question(CheckerFactory.HAND_RUNNER_6_CHECKER)
+                .question(CheckerEnum.HAND_RUNNER_6_CHECKER)
                 .save(output, "hand_runner_6");
     }
 

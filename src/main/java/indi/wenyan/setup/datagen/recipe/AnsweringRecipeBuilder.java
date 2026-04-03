@@ -1,6 +1,7 @@
 package indi.wenyan.setup.datagen.recipe;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.content.checker.CheckerEnum;
 import indi.wenyan.content.recipe.answering.AnsweringRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -21,7 +22,7 @@ import java.util.List;
 public final class AnsweringRecipeBuilder {
     private final List<Ingredient> input = new ArrayList<>();
     private final ItemStackTemplate output;
-    private String question;
+    private CheckerEnum question;
     private int round = 1;
 
     /**
@@ -55,6 +56,9 @@ public final class AnsweringRecipeBuilder {
      */
     public AnsweringRecipeBuilder addInput(Ingredient ingredient) {
         input.add(ingredient);
+        if (input.size() > 4) {
+            throw new IllegalArgumentException("Answering recipes can only have up to 4 inputs.");
+        }
         return this;
     }
 
@@ -101,7 +105,7 @@ public final class AnsweringRecipeBuilder {
      * @param question The question string
      * @return This builder for chaining
      */
-    public AnsweringRecipeBuilder question(String question) {
+    public AnsweringRecipeBuilder question(CheckerEnum question) {
         this.question = question;
         return this;
     }

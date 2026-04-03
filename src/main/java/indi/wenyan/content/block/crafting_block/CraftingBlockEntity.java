@@ -2,7 +2,6 @@ package indi.wenyan.content.block.crafting_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.content.checker.CheckerFactory;
 import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui_impl.CraftingBlockContainer;
 import indi.wenyan.content.recipe.answering.AnsweringRecipe;
@@ -180,7 +179,7 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
         } else resetCrafting();
         this.recipeHolder = optionalRecipeHolder.get();
         var question = optionalRecipeHolder.get().value().question();
-        var recipeChecker = CheckerFactory.produce(question, sl.getRandom());
+        var recipeChecker = question.produce(sl.getRandom());
         checker = recipeChecker;
         checker.init(); // recreated, reset the checker state
         return recipeChecker;

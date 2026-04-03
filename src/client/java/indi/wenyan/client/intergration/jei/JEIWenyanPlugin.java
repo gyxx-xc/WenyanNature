@@ -7,7 +7,6 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.resources.Identifier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -33,10 +32,5 @@ public class JEIWenyanPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         IModPlugin.super.registerRecipes(registration);
         registration.addRecipes(AnsweringCategory.TYPE, WenyanProgrammingClient.ALL_ANSWERING_RECIPES);
-    }
-
-    @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        IModPlugin.super.registerRecipeTransferHandlers(registration);
     }
 }
