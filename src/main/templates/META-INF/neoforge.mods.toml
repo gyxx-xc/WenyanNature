@@ -2,29 +2,29 @@
 # There are several mandatory fields (#mandatory), and many more that are optional (#optional).
 # The overall format is standard TOML format, v0.5.0.
 
-modLoader="javafml" #mandatory
-loaderVersion="${loader_version_range}" #mandatory
-license="${mod_license}"
-issueTrackerURL="https://github.com/gyxx-xc/WenyanNature/issues"
+modLoader = "javafml" #mandatory
+loaderVersion = "${loader_version_range}" #mandatory
+license = "${mod_license}"
+issueTrackerURL = "https://github.com/gyxx-xc/WenyanNature/issues"
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
-modId="${mod_id}" #mandatory
-version="${mod_version}" #mandatory
-displayName="${mod_name}" #mandatory
+modId = "${mod_id}" #mandatory
+version = "${mod_version}" #mandatory
+displayName = "${mod_name}" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="https://gyxx-xc.github.io/WenyanNature/"
-logoFile="title.png" #optional
+displayURL = "https://gyxx-xc.github.io/WenyanNature/"
+logoFile = "title.png" #optional
 
 # A text field displayed in the mod UI
 #credits="" #optional
 
-authors="gyxx_xc, ugnjhjf"
-description='''A Minecraft mod that inspired by the Wenyan language. \nUsing Wenyan language to create wonderful magic by handling complex logic of the magic.'''
+authors = "gyxx_xc, ugnjhjf"
+description = '''A Minecraft mod that inspired by the Wenyan language. \nUsing Wenyan language to create wonderful magic by handling complex logic of the magic.'''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
 #[[mixins]]
@@ -38,40 +38,47 @@ description='''A Minecraft mod that inspired by the Wenyan language. \nUsing Wen
 # The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.${mod_id}]] #optional
-    # the modid of the dependency
-    modId="neoforge" #mandatory
-    # The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
-    # 'required' requires the mod to exist, 'optional' does not
-    # 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
-    type="required" #mandatory
-    # Optional field describing why the dependency is required or why it is incompatible
-    # reason="..."
-    # The version range of the dependency
-    versionRange="${neo_version_range}" #mandatory
-    # An ordering relationship for the dependency.
-    # BEFORE - This mod is loaded BEFORE the dependency
-    # AFTER - This mod is loaded AFTER the dependency
-    ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT, or SERVER
-    side="BOTH"
+[[dependencies.${ mod_id }]] #optional
+# the modid of the dependency
+modId = "neoforge" #mandatory
+# The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
+# 'required' requires the mod to exist, 'optional' does not
+# 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
+type = "required" #mandatory
+# Optional field describing why the dependency is required or why it is incompatible
+# reason="..."
+# The version range of the dependency
+versionRange = "${neo_version_range}" #mandatory
+# An ordering relationship for the dependency.
+# BEFORE - This mod is loaded BEFORE the dependency
+# AFTER - This mod is loaded AFTER the dependency
+ordering = "NONE"
+# Side this dependency is applied on - BOTH, CLIENT, or SERVER
+side = "BOTH"
 
 # Here'pages another dependency
-[[dependencies.${mod_id}]]
-    modId="minecraft"
-    type="required"
-    # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="${minecraft_version_range}"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.${ mod_id }]]
+modId = "minecraft"
+type = "required"
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
 
-[[dependencies.${mod_id}]]
-    modId="cloth_config"
-    type="optional"
-    reason="Provides a GUI for mod configuration"
-    versionRange="[15.0.0,)"
-    ordering="BEFORE"
-    side="CLIENT"
+[[dependencies.${ mod_id }]]
+modId = "cloth_config"
+type = "optional"
+reason = "Provides a GUI for mod configuration"
+versionRange = "[15.0.0,)"
+ordering = "BEFORE"
+side = "CLIENT"
+
+[[dependencies.${ mod_id }]]
+modId = "jei"
+type = "optional"
+versionRange = "[28.0.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't

@@ -11,9 +11,7 @@ import indi.wenyan.setup.network.client.*;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 
 import static indi.wenyan.WenyanProgramming.MODID;
@@ -65,5 +63,18 @@ public enum ClientSetup {;
         event.register(BlockOutputPacket.TYPE, BlockOutputPacket.HANDLER);
         event.register(PistonMovePacket.TYPE, PistonMovePacket.HANDLER);
         event.register(BlockSetScreenPacket.TYPE, ScreenOpenerFactory.BLOCK_HANDLER);
+    }
+
+    @SubscribeEvent
+    public static void updateRecipes(RecipesReceivedEvent event) {
+        WenyanProgrammingClient.ALL_ANSWERING_RECIPES.clear();
+        WenyanProgrammingClient.ALL_ANSWERING_RECIPES.addAll(event.getRecipeMap().byType(WyRegistration.ANSWERING_RECIPE_TYPE.get()));
+    }
+
+
+    @SubscribeEvent // on the game event bus only on the physical client
+    public static void clientLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
+        // Clear the stored recipes on world log out
+        WenyanProgrammingClient.ALL_ANSWERING_RECIPES.clear();
     }
 }

@@ -173,6 +173,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(EnterToInput.getTranslationKey(), "按Enter以输入");
         add(FuNamePrompt.getTranslationKey(), "符名：");
         add(FurnaceTitle.getTranslationKey(), "熔炉");
+        add(JeiAnswerTitle.getTranslationKey(), "解题");
 
         add(Judou.getTranslationKey(), "句读（程序运行）");
         add(SliceStep.getTranslationKey(), "线程切换长度");

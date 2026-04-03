@@ -10,6 +10,14 @@ repositories {
     mavenCentral()
     maven { url = "https://maven.shedaniel.me/" }
     maven { url = 'https://maven.blamejared.com' }
+    maven { url = "https://api.modrinth.com/maven" }
+    maven {
+        url "https://maven2.bai.lol"
+        content {
+            includeGroup "lol.bai"
+            includeGroup "mcp.mobius.waila"
+        }
+    }
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
@@ -128,6 +136,7 @@ neoForge {
 }
 
 configurations {
+    localRuntimeOnly
     runtimeClasspath.extendsFrom localRuntime
 }
 
@@ -151,6 +160,13 @@ dependencies {
 //    implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
 //    compileOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE:api"
 //    runtimeOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE"
+
+    clientCompileOnly "mezz.jei:jei-${project.jei_minecraft_version}-neoforge-api:${project.jei_version}"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${project.rei_version}"
+//    clientCompileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${project.rei_version}"
+
+//    compileOnly "mcp.mobius.waila:wthit-api:neo-${project.wthit_version}"
+//    compileOnly "maven.modrinth:jade:${project.jade_version}+neoforge"
 
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")

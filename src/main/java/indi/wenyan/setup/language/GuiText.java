@@ -10,7 +10,8 @@ public enum GuiText implements ILocalizationEnum {
     CreativeTabTitle,
     EnterToInput, // Enter to input (able to show small)
     FuNamePrompt,
-    FurnaceTitle;
+    FurnaceTitle,
+    JeiAnswerTitle;
 
     @Override
     public String getTranslationKey() {
