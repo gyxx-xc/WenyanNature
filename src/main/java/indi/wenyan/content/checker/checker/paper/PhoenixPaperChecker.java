@@ -29,7 +29,7 @@ public class PhoenixPaperChecker extends ValueAnswerChecker {
     public void init() {
         super.init();
 
-        int n = random.nextInt(7) + 4;
+        int n = random.nextInt(5) + 4;
         setVariable(0, WenyanValues.of(n));
 
         solutionCount = 0;

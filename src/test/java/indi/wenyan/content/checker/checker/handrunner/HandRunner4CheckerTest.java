@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-class CyberHackerCheckerTest {
+class HandRunner4CheckerTest {
 
     // 提供正确的随机序列与期望的布尔值
     static Stream<Arguments> correctAnswersProvider() {
