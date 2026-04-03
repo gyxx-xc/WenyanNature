@@ -109,18 +109,19 @@ public enum WenyanItems {
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.getItem(RunnerTier.RUNNER_0).getDefaultInstance())
             .displayItems((parameters, output) -> {
+                //Fuzhou
                 for (var runner : HAND_RUNNER.getItemsSorted())
                     output.accept(runner);
                 for (var throwRunner : THROW_RUNNER.getItemsSorted())
                     output.accept(throwRunner);
-
+                //Papers
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());
                 output.accept(STARLIGHT_PAPER.get());
                 output.accept(FROST_PAPER.get());
                 output.accept(PHOENIX_PAPER.get());
                 output.accept(DRAGON_PAPER.get());
-
+                //Inks
                 output.accept(BAMBOO_INK.get());
                 output.accept(CINNABAR_INK.get());
                 output.accept(STARLIGHT_INK.get());
@@ -128,35 +129,34 @@ public enum WenyanItems {
                 output.accept(CELESTIAL_INK.get());
                 output.accept(ARCANE_INK.get());
 
-                output.accept(PRINT_INVENTORY_MODULE.get());
-
+                //User items
                 output.accept(FLOAT_NOTE.get());
                 output.accept(CRAFTING_BLOCK_ITEM.get());
                 output.accept(PEDESTAL_BLOCK_ITEM.get());
                 output.accept(WRITING_BLOCK_ITEM.get());
                 output.accept(LOGIC_FURNACE_BLOCK_ITEM.get());
 
+                //Blocks
+                output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
+                output.accept(LOCK_MODULE_BLOCK_ITEM.get());
+                output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
+                output.accept(POWER_BLOCK_ITEM.get());
+
+                //Modules
+                output.accept(PRINT_INVENTORY_MODULE.get());
                 output.accept(BIT_MODULE_BLOCK_ITEM.get());
                 output.accept(MATH_MODULE_BLOCK_ITEM.get());
                 output.accept(VEC3_MODULE_BLOCK_ITEM.get());
                 output.accept(RANDOM_MODULE_BLOCK_ITEM.get());
                 output.accept(STRING_MODULE_BLOCK_ITEM.get());
                 output.accept(COLLECTION_MODULE_BLOCK_ITEM.get());
-
                 output.accept(ITEM_MODULE_BLOCK_ITEM.get());
                 output.accept(BLOCK_MODULE_BLOCK_ITEM.get());
                 output.accept(ENTITY_MODULE_BLOCK_ITEM.get());
                 output.accept(INFORMATION_MODULE_BLOCK_ITEM.get());
-
                 output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
                 output.accept(BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
                 output.accept(PISTON_MODULE_BLOCK_ITEM.get());
-
-                output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
                 output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
-                output.accept(LOCK_MODULE_BLOCK_ITEM.get());
-                output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
-
-                output.accept(POWER_BLOCK_ITEM.get());
             }).build());
 }
