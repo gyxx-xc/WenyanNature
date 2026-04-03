@@ -149,10 +149,11 @@ dependencies {
     implementation project(":judou")
     clientImplementation(project(":judou")) // for code highlight
 
-    jarJar implementation("org.antlr:antlr4:4.13.1")
+    // lib from judou
     jarJar implementation("org.antlr:antlr4-runtime:4.13.1")
     jarJar implementation("com.github.houbb:opencc4j:1.14.0")
-    jarJar implementation("cn.hutool:hutool-core:5.8.43")
+    jarJar implementation("com.github.houbb:nlp-common:0.0.5")
+    jarJar implementation("com.github.houbb:heaven:0.13.0")
 
     // for annotation processor
     compileOnly project(":language_processor")
