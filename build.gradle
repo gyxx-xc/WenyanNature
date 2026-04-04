@@ -167,7 +167,7 @@ dependencies {
 //    runtimeOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE"
 
     clientCompileOnly "mezz.jei:jei-${project.jei_minecraft_version}-neoforge-api:${project.jei_version}"
-    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${project.rei_version}"
+//    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${project.rei_version}"
 //    clientCompileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${project.rei_version}"
 
 //    compileOnly "mcp.mobius.waila:wthit-api:neo-${project.wthit_version}"
