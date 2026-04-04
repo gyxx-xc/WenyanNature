@@ -83,183 +83,164 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 ShapelessRecipeBuilder
                                 .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.PRINT_INVENTORY_MODULE, 2)
-                                .requires(Items.PAPER).requires(Items.COAL).requires(Items.FEATHER)
+                                .requires(Items.PAPER)
+                                .requires(Ingredient.of(Items.COAL, Items.CHARCOAL))
+                                .requires(Items.FEATHER)
                                 .unlockedBy("has_paper", has(Items.PAPER)).save(output);
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
-                                                WenyanItems.PRINT_INVENTORY_MODULE, 2)
-                                .requires(Items.PAPER).requires(Items.CHARCOAL).requires(Items.FEATHER)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
-                // 位元符 (bit_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+
+                // 位元符 (bit_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.BIT_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.REDSTONE)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.BAMBOO_PAPER.get())
+                                .define('i', Items.REDSTONE)
+                                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
 
-                // 数符 (math_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 数符 (math_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.MATH_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.COPPER_INGOT)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.BAMBOO_PAPER.get())
+                                .define('i', Items.COPPER_INGOT)
+                                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
 
-                // 向量符 (vec3_module_block) - 有序 L 型
+                // 向量符 (vec3_module_block)
                 ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.VEC3_MODULE_BLOCK_ITEM,
-                                                2)
-                                .pattern("   ")
-                                .pattern("IP ")
-                                .pattern("II ")
-                                .define('P', Items.PAPER).define('I', Items.IRON_INGOT)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                                                WenyanItems.VEC3_MODULE_BLOCK_ITEM, 2)
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.BAMBOO_PAPER.get())
+                                .define('i', Items.IRON_INGOT)
+                                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
 
-                // 熵符 (random_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 熵符 (random_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.RANDOM_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.RABBIT_FOOT)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.BAMBOO_PAPER.get())
+                                .define('i', Items.ROTTEN_FLESH)
+                                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
 
-                // 字符串符 (string_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 字串符 (string_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.STRING_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.STRING)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.BAMBOO_PAPER.get())
+                                .define('i', Items.STRING)
+                                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
 
-                // 集符 (collection_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 集符 (collection_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.COLLECTION_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.BOWL)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.BAMBOO_PAPER.get())
+                                .define('i', Items.BOWL)
+                                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
 
-                // 物品符 (item_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 物品符 (item_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.ITEM_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.CHEST)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.CLOUD_PAPER.get())
+                                .define('i', Items.CHEST)
+                                .unlockedBy("has_paper", has(WenyanItems.CLOUD_PAPER.get())).save(output);
 
-                // 方块符 (block_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 方块符 (block_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.BLOCK_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.SMOOTH_STONE)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.CLOUD_PAPER.get())
+                                .define('i', Items.SMOOTH_STONE)
+                                .unlockedBy("has_paper", has(WenyanItems.CLOUD_PAPER.get())).save(output);
 
-                // 实体符 (entity_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 实体符 (entity_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.ENTITY_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.EGG)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.STARLIGHT_PAPER.get())
+                                .define('i', Items.EGG)
+                                .unlockedBy("has_paper", has(WenyanItems.STARLIGHT_PAPER.get())).save(output);
 
-                // 天下情报符 (information_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 天下情报符 (information_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.INFORMATION_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.COMPASS)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.FROST_PAPER.get())
+                                .define('i', Items.COMPASS)
+                                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get())).save(output);
 
-                // 爆裂符 (explosion_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 爆裂符 (explosion_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.GUNPOWDER)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.FROST_PAPER.get())
+                                .define('i', Items.GUNPOWDER)
+                                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get())).save(output);
 
-                // 阻塞队列符 (blocking_queue_module_block) - 无序
-                ShapelessRecipeBuilder
-                                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                // 阻塞队列符 (blocking_queue_module_block)
+                ShapedRecipeBuilder
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
                                                 WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM, 2)
-                                .requires(Items.PAPER).requires(Items.HOPPER)
-                                .unlockedBy("has_paper", has(Items.PAPER)).save(output);
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.STARLIGHT_PAPER.get())
+                                .define('i', Items.HOPPER)
+                                .unlockedBy("has_paper", has(WenyanItems.STARLIGHT_PAPER.get())).save(output);
 
-                // === 功能方块 ===
-
-                // 创石 (Crafting)
+                // 活塞符 (piston_module_block)
                 ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.BUILDING_BLOCKS,
-                                                WenyanItems.CRAFTING_BLOCK_ITEM)
-                                .pattern(" C ")
-                                .pattern("SWS")
-                                .pattern(" S ")
-                                .define('C', Items.COBBLESTONE).define('W', Items.CRAFTING_TABLE)
-                                .define('S', Items.STONE_BRICKS)
-                                .unlockedBy("has_crafting_table", has(Items.CRAFTING_TABLE)).save(output);
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                                                WenyanItems.PISTON_MODULE_BLOCK_ITEM, 2)
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.FROST_PAPER.get())
+                                .define('i', Items.STICKY_PISTON)
+                                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get())).save(output);
 
-                // 基石 (Base/Power Block 假设)
+                // 通讯符 (communicate_module_block)
                 ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.BUILDING_BLOCKS,
-                                                WenyanItems.POWER_BLOCK_ITEM)
-                                .pattern("CCC")
-                                .pattern("CIC")
-                                .pattern("CCC")
-                                .define('C', Items.COBBLED_DEEPSLATE).define('I', Items.IRON_INGOT)
-                                .unlockedBy("has_iron", has(Items.IRON_INGOT)).save(output);
-
-                // 刻印台 (Writing Block)
-                ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.BUILDING_BLOCKS,
-                                                WenyanItems.WRITING_BLOCK_ITEM)
-                                .pattern("SSS")
-                                .pattern(" A ")
-                                .pattern("P P")
-                                .define('S', Items.STONE_SLAB).define('A', Items.ANVIL).define('P', Items.SMOOTH_STONE)
-                                .unlockedBy("has_anvil", has(Items.ANVIL)).save(output);
-
-                // 炉供有天 (Logic Furnace)
-                ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.BUILDING_BLOCKS,
-                                                WenyanItems.LOGIC_FURNACE_BLOCK_ITEM)
-                                .pattern("IQI")
-                                .pattern(" F ")
-                                .pattern(" Q ")
-                                .define('I', Items.IRON_INGOT).define('Q', Items.QUARTZ).define('F', Items.FURNACE)
-                                .unlockedBy("has_furnace", has(Items.FURNACE)).save(output);
-
-                // 阵眼 (Pedestal)
-                ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.BUILDING_BLOCKS,
-                                                WenyanItems.PEDESTAL_BLOCK_ITEM)
-                                .pattern(" B ")
-                                .pattern(" C ")
-                                .pattern("BCB")
-                                .define('B', Items.CHISELED_STONE_BRICKS).define('C', Items.CRYING_OBSIDIAN)
-                                .unlockedBy("has_crying_obsidian", has(Items.CRYING_OBSIDIAN)).save(output);
-
-                // 信号量石 (假设为 Lock/Signal Module)
-                ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.REDSTONE,
-                                                WenyanItems.LOCK_MODULE_BLOCK_ITEM)
-                                .pattern(" R ")
-                                .pattern(" S ")
-                                .pattern("SGS")
-                                .define('R', Items.REDSTONE_TORCH).define('S', Items.SMOOTH_STONE)
-                                .define('G', Items.GOLD_INGOT)
-                                .unlockedBy("has_redstone", has(Items.REDSTONE)).save(output);
-
-                // 荧幕石 (Screen)
-                ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.BUILDING_BLOCKS,
-                                                WenyanItems.SCREEN_MODULE_BLOCK_ITEM)
-                                .pattern("GGG")
-                                .pattern("GDG")
-                                .pattern(" L ")
-                                .define('G', Items.GLASS_PANE).define('D', Items.BLACK_DYE).define('L', Items.GLOWSTONE)
-                                .unlockedBy("has_glowstone", has(Items.GLOWSTONE)).save(output);
-
-                // 算核 (Formation Core Module)
-                ShapedRecipeBuilder
-                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.BUILDING_BLOCKS,
-                                                WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM)
-                                .pattern(" Q ")
-                                .pattern("QDQ")
-                                .pattern(" I ")
-                                .define('Q', Items.QUARTZ).define('D', Items.DIAMOND).define('I', Items.IRON_BLOCK)
-                                .unlockedBy("has_diamond", has(Items.DIAMOND)).save(output);
+                                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                                                WenyanItems.COMMUNICATE_MODULE_BLOCK_ITEM, 2)
+                                .pattern(" p ")
+                                .pattern(" i ")
+                                .pattern(" p ")
+                                .define('p', WenyanItems.STARLIGHT_PAPER.get())
+                                .define('i', Items.FIREWORK_ROCKET)
+                                .unlockedBy("has_paper", has(WenyanItems.STARLIGHT_PAPER.get())).save(output);
 
                 AnsweringRecipeBuilder // bamboo ink
                                 .create(WenyanItems.BAMBOO_INK.get(), 4)
