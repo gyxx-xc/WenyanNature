@@ -51,9 +51,9 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
 
         forTiered(this::addBlockAndItem, WenyanItems.HAND_RUNNER.getItemsSorted(),
-                "一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符", "七阶符");
+                "基础符", "一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符");
         forTiered(this::add, WenyanItems.THROW_RUNNER.getItemsSorted(),
-                "一阶投符", "二阶投符", "三阶投符", "四阶投符", "五阶投符", "六阶投符", "七阶投符");
+                "基础投符", "一阶投符", "二阶投符", "三阶投符", "四阶投符", "五阶投符", "六阶投符");
 
         addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
         addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");
