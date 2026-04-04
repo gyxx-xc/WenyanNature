@@ -60,7 +60,7 @@
   "error.wenyan_programming.judou.InvalidDataType": "謬：無效資料類",
   "error.wenyan_programming.judou.InvalidFloatNumber": "謬：無效分數",
   "error.wenyan_programming.judou.InvalidNumber": "謬：無效數",
-  "error.wenyan_programming.judou.LineError": "謬：行%d:%d %s\n伴%s",
+  "error.wenyan_programming.judou.LineError": "謬：行%d:%d %s",
   "error.wenyan_programming.judou.NoAttribute": "謬：無屬性%s",
   "error.wenyan_programming.judou.OperationNotSupported": "謬：操作未支",
   "error.wenyan_programming.judou.RecursionDepthTooDeep": "謬：遞歸深度過深",

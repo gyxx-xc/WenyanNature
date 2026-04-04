@@ -114,7 +114,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(OperationNotSupported.getTranslationKey(), "謬：操作未支");
         add(IntegerOverflow.getTranslationKey(), "謬：整數溢");
         add(DivisionByZero.getTranslationKey(), "謬：除零");
-        add(LineError.getTranslationKey(), "謬：行%d:%d %s\n伴%s");
+        add(LineError.getTranslationKey(), "謬：行%d:%d %s");
         add(DebugInfoNotFound.getTranslationKey(), "謬：無除錯資訊於索引%d");
         add(VariableNameDuplicate.getTranslationKey(), "謬：變量名稱重複");
         add(UnknownOperator.getTranslationKey(), "謬：未知算子");

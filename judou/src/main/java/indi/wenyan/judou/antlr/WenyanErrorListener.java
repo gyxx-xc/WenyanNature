@@ -15,6 +15,6 @@ public class WenyanErrorListener extends BaseErrorListener {
             int charPositionInLine,
             String msg,
             RecognitionException e) {
-        throw new WenyanCompileException(JudouExceptionText.LineError.string(line, charPositionInLine, msg, e));
+        throw new WenyanCompileException(JudouExceptionText.LineError.string(line, charPositionInLine, msg));
     }
 }
