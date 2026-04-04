@@ -25,11 +25,11 @@
 - [x] variable symbol unify
   - variable symbol in runtime need to separate to wenyan grammar
   - at least able to change the whole pre-defined variable symbol set
+- [ ] running state save and load
+- [ ] asm jit compiler
 - [ ] add a simpler crafting (e.g. just call function)
 - [ ] some more function
   - rearrange libs
-- [ ] asm jit compiler
 - [ ] docker block
 - [ ] docs
   - ponder
-- [ ] running state save and load

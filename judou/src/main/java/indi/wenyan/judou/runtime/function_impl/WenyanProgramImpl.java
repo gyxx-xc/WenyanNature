@@ -214,7 +214,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     }
 
     @Data
-    public static class PCB implements IWenyanThread { // i.e. PCB
+    public static class PCB implements IWenyanThread {
         final IThreadHolder<PCB> runner;
         final IWenyanProgram<PCB> program;
         State state = State.BLOCKED;
