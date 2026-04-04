@@ -15,4 +15,6 @@ can call the function with specific logic to speed up the crafting.
 
 we can got many blocks for different crafting. each block has different ways to speedup.
 
-so we can get
+this set is including:
+1. furnace: math division
+2. ore generator: dfs
