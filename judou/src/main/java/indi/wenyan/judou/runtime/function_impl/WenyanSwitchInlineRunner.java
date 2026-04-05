@@ -200,10 +200,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenya
                         IWenyanValue value = runtime.getProcessStack().pop();
                         IWenyanValue variable = runtime.getProcessStack().pop();
                         if (variable instanceof WenyanLeftValue lv) {
-                            if (value == WenyanNull.NULL)
-                                lv.setValue(WenyanNull.NULL);
-                            else
-                                lv.setValue(value.as(lv.type()));
+                            lv.setValue(value);
                         } else
                             throw new WenyanException(JudouExceptionText.SetValueToNonLeftValue.string());
                     }

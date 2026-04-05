@@ -7,7 +7,6 @@ import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanLeftValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 /**
@@ -27,10 +26,7 @@ public enum VariableCode {
         IWenyanValue value = runtime.getProcessStack().pop();
         IWenyanValue variable = runtime.getProcessStack().pop();
         if (variable instanceof WenyanLeftValue lv) {
-            if (value == WenyanNull.NULL)
-                lv.setValue(WenyanNull.NULL);
-            else
-                lv.setValue(value.as(lv.type()));
+                lv.setValue(value);
         } else
             throw new WenyanException(JudouExceptionText.SetValueToNonLeftValue.string());
     }
