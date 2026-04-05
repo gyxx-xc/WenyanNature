@@ -18,6 +18,7 @@ import indi.wenyan.content.item.RunnerItem;
 import indi.wenyan.content.item.additional_module.PrintInventoryModule;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
+import indi.wenyan.content.item.throw_runner.ThrowModule;
 import indi.wenyan.content.item.throw_runner.ThrowRunnerItem;
 import indi.wenyan.setup.language.GuiText;
 import net.minecraft.core.registries.Registries;
@@ -43,7 +44,10 @@ public enum WenyanItems {
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
             (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
     public static final DeferredItem<Item> PRINT_INVENTORY_MODULE = DR.registerItem(PrintInventoryModule.ID, PrintInventoryModule::new);
+    // Items and Tools
     public static final DeferredItem<Item> FLOAT_NOTE = DR.registerItem(FloatNoteItem.ID, FloatNoteItem::new);
+    public static final DeferredItem<Item> THROW_MODULE = DR.registerItem(ThrowModule.ID, ThrowModule::new);
+
     // Paper items
     public static final DeferredItem<Item> BAMBOO_PAPER = DR.registerItem(BambooPaper.ID, BambooPaper::new);
     public static final DeferredItem<Item> CLOUD_PAPER = DR.registerItem(CloudPaper.ID, CloudPaper::new);
@@ -114,6 +118,8 @@ public enum WenyanItems {
                     output.accept(runner);
                 for (var throwRunner : THROW_RUNNER.getItemsSorted())
                     output.accept(throwRunner);
+                //Modules
+                output.accept(THROW_MODULE.get());
                 //Papers
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());
