@@ -12,7 +12,7 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Collections;
+import java.util.stream.Stream;
 
 public class CommunicateModuleEntity extends AbstractModuleEntity {
     @Getter
@@ -21,8 +21,8 @@ public class CommunicateModuleEntity extends AbstractModuleEntity {
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .constant(WenyanSymbol.CommunicateModule$self, new WenyanList(Collections.nCopies(8,
-                    WenyanLeftValue.varOf(WenyanNull.NULL)))))
+                    .constant(WenyanSymbol.CommunicateModule$self, new WenyanList(Stream.generate(() -> WenyanLeftValue.varOf(WenyanNull.NULL))
+                            .limit(8).toList())))
             .build();
 
     public CommunicateModuleEntity(BlockPos pos, BlockState blockState) {
