@@ -14,6 +14,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -208,7 +209,8 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 WenyanItems.FROST_PAPER.get(),
                 WenyanItems.PHOENIX_PAPER.get(),
                 WenyanItems.STARLIGHT_PAPER.get(),
-                WenyanItems.DRAGON_PAPER.get());
+                WenyanItems.DRAGON_PAPER.get()
+        );
 
         ShapedRecipeBuilder
                 .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
@@ -222,7 +224,8 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         for (RunnerTier tier : RunnerTier.values()) {
             ShapelessRecipeBuilder
-                    .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC, THROW_RUNNER.getItem(tier))
+                    .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                            THROW_RUNNER.getItem(tier))
                     .requires(WenyanItems.HAND_RUNNER.getItem(tier))
                     .requires(WenyanItems.THROW_MODULE)
                     .unlockedBy("has_hand_runner_" + tier.name().toLowerCase(),
@@ -395,11 +398,44 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // === Items ===
         // float_note
-        ShapelessRecipeBuilder
-                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.FLOAT_NOTE.get())
-                .requires(Items.NAME_TAG)
-                .requires(Items.PAPER, 5)
-                .unlockedBy("has_name_tag", has(Items.NAME_TAG))
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.FLOAT_NOTE.get())
+                .pattern("PG")
+                .define('P', Items.PAPER)
+                .define('G', Items.GLOWSTONE_DUST)
+                .unlockedBy("has_paper", has(Items.PAPER))
+                .save(output);
+
+        // === Blocks ===
+        Ingredient cobblestoneIngredient = Ingredient.of(
+                Items.COBBLESTONE,
+                Items.ANDESITE,
+                Items.DIORITE,
+                Items.GRANITE,
+                Items.BLACKSTONE,
+                Items.COBBLED_DEEPSLATE
+        );
+
+        // crafting_block_item
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.CRAFTING_BLOCK_ITEM.get())
+                .pattern(" C ")
+                .pattern(" T ")
+                .pattern(" B ")
+                .define('C', cobblestoneIngredient)
+                .define('T', Items.CRAFTING_TABLE)
+                .define('B', Items.STONE_BRICKS)
+                .unlockedBy("has_crafting_table", has(Items.CRAFTING_TABLE))
+                .save(output);
+
+        // pedestal_block
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.PEDESTAL_BLOCK_ITEM.get())
+                .pattern(" C ")
+                .pattern(" I ")
+                .define('C', cobblestoneIngredient)
+                .define('I', Items.IRON_BLOCK)
+                .unlockedBy("has_iron_block", has(Items.IRON_BLOCK))
                 .save(output);
     }
 
@@ -412,7 +448,8 @@ public class CheckerRecipeProvider extends RecipeProvider {
                         Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
                                 // FIXME
                                 item.getDescriptionId()
-                                        .substring(item.getDescriptionId().lastIndexOf(".") + 1)
+                                        .substring(item.getDescriptionId()
+                                                .lastIndexOf(".") + 1)
                                         + "_clean")));
     }
 
@@ -422,7 +459,8 @@ public class CheckerRecipeProvider extends RecipeProvider {
                         Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
                                 // FIXME
                                 item.getDescriptionId()
-                                        .substring(item.getDescriptionId().lastIndexOf(".") + 1)
+                                        .substring(item.getDescriptionId()
+                                                .lastIndexOf(".") + 1)
                                         + "_module")));
     }
 

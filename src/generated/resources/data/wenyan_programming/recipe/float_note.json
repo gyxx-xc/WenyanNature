@@ -1,13 +1,12 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "minecraft:name_tag",
-    "minecraft:paper",
-    "minecraft:paper",
-    "minecraft:paper",
-    "minecraft:paper",
-    "minecraft:paper"
+  "key": {
+    "G": "minecraft:glowstone_dust",
+    "P": "minecraft:paper"
+  },
+  "pattern": [
+    "PG"
   ],
   "result": {
     "id": "wenyan_programming:float_note"
