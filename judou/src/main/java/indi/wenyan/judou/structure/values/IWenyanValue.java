@@ -53,7 +53,7 @@ public interface IWenyanValue {
         } else if (type == WenyanString.TYPE) {
             return (T) WenyanValues.of(toString());
         }
-        throw new WenyanException.WenyanTypeException(JudouExceptionText.CannotCast.string(type(), type));
+        throw new WenyanException.WenyanTypeException(JudouExceptionText.CannotCast.string(type().toString(), type.toString()));
     }
 
     /**

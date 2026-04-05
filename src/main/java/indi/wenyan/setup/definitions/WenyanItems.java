@@ -135,12 +135,12 @@ public enum WenyanItems {
                 output.accept(PEDESTAL_BLOCK_ITEM.get());
                 output.accept(WRITING_BLOCK_ITEM.get());
                 output.accept(LOGIC_FURNACE_BLOCK_ITEM.get());
+                output.accept(POWER_BLOCK_ITEM.get());
 
                 //Blocks
                 output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
                 output.accept(LOCK_MODULE_BLOCK_ITEM.get());
                 output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
-                output.accept(POWER_BLOCK_ITEM.get());
 
                 //Modules
                 output.accept(BIT_MODULE_BLOCK_ITEM.get());
