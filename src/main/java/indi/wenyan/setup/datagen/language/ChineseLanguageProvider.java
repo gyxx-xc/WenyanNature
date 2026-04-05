@@ -54,6 +54,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         forTiered(this::add, WenyanItems.THROW_RUNNER.getItemsSorted(),
                 "基础投符", "一阶投符", "二阶投符", "三阶投符", "四阶投符", "五阶投符", "六阶投符");
 
+        add(WenyanItems.THROW_MODULE.get(), "投符令");
+
         addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
         addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");
         addBlockAndItem(WenyanItems.MATH_MODULE_BLOCK_ITEM.get(), "數符");

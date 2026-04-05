@@ -44,6 +44,7 @@ public class ModItemModelProvider extends ModelSubProvider {
 
         basicItem(WenyanItems.FLOAT_NOTE.get());
         basicItem(WenyanItems.PRINT_INVENTORY_MODULE.get());
+        basicItem(WenyanItems.THROW_MODULE.get());
 
         basicItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.BLOCK_MODULE_BLOCK_ITEM.get());
