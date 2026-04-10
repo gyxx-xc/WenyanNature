@@ -63,6 +63,7 @@ public enum ClientSetup {;
         event.register(BlockOutputPacket.TYPE, BlockOutputPacket.HANDLER);
         event.register(PistonMovePacket.TYPE, PistonMovePacket.HANDLER);
         event.register(BlockSetScreenPacket.TYPE, ScreenOpenerFactory.BLOCK_HANDLER);
+        event.register(FloatNoteSetScreenPacket.TYPE, ScreenOpenerFactory.FLOAT_NOTE_HANDLER);
     }
 
     @SubscribeEvent

@@ -36,6 +36,7 @@ public enum NetworkRegister {
         registrar.playToClient(BlockOutputPacket.TYPE, BlockOutputPacket.STREAM_CODEC);
         registrar.playToClient(PistonMovePacket.TYPE, PistonMovePacket.STREAM_CODEC);
         registrar.playToClient(BlockSetScreenPacket.TYPE, BlockSetScreenPacket.STREAM_CODEC);
+        registrar.playToClient(FloatNoteSetScreenPacket.TYPE, FloatNoteSetScreenPacket.STREAM_CODEC);
     }
 
     private static <T extends IServersidePacket> void serverside(PayloadRegistrar registrar,

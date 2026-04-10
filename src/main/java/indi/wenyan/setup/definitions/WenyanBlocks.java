@@ -79,9 +79,6 @@ public enum WenyanBlocks {
     public static final DeferredBlock<ItemModuleBlock> ITEM_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(ItemModuleBlock.ID, ItemModuleBlock::new);
     public static final Supplier<BlockEntityType<ItemModuleEntity>> ITEM_MODULE_ENTITY = WenyanBlocks.registerEntity(ItemModuleBlock.ID, ItemModuleEntity::new, WenyanBlocks.ITEM_MODULE_BLOCK);
 
-    public static final DeferredBlock<CommunicateModuleBlock> COMMUNICATE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(CommunicateModuleBlock.ID, CommunicateModuleBlock::new);
-    public static final Supplier<BlockEntityType<CommunicateModuleEntity>> COMMUNICATE_MODULE_ENTITY = WenyanBlocks.registerEntity(CommunicateModuleBlock.ID, CommunicateModuleEntity::new, WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
-
     public static final DeferredBlock<EntityModuleBlock> ENTITY_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(EntityModuleBlock.ID, EntityModuleBlock::new);
     public static final Supplier<BlockEntityType<EntityModuleEntity>> ENTITY_MODULE_ENTITY = WenyanBlocks.registerEntity(EntityModuleBlock.ID, EntityModuleEntity::new, WenyanBlocks.ENTITY_MODULE_BLOCK);
 
@@ -100,6 +97,11 @@ public enum WenyanBlocks {
     public static final DeferredBlock<PistonModuleBlock> PISTON_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(PistonModuleBlock.ID, PistonModuleBlock::new);
     public static final Supplier<BlockEntityType<PistonModuleEntity>> PISTON_MODULE_ENTITY = WenyanBlocks.registerEntity(PistonModuleBlock.ID, PistonModuleEntity::new, WenyanBlocks.PISTON_MODULE_BLOCK);
     public static final DeferredBlock<DecorativePistonHead> DECORATIVE_PISTON_HEAD_BLOCK = WenyanBlocks.DR.registerBlock(DecorativePistonHead.ID, DecorativePistonHead::new);
+
+    @Deprecated
+    public static final DeferredBlock<CommunicateModuleBlock> COMMUNICATE_MODULE_BLOCK = WenyanBlocks.DR.registerBlock(CommunicateModuleBlock.ID, CommunicateModuleBlock::new);
+    @Deprecated
+    public static final Supplier<BlockEntityType<CommunicateModuleEntity>> COMMUNICATE_MODULE_ENTITY = WenyanBlocks.registerEntity(CommunicateModuleBlock.ID, CommunicateModuleEntity::new, WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
 
     private static <BE extends BlockEntity> Supplier<BlockEntityType<BE>>
     registerEntity(final String name, final BlockEntityType.BlockEntitySupplier<BE> supplier,

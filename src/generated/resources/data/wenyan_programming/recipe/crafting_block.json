@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:stone_bricks",
+    "C": [
+      "minecraft:cobblestone",
+      "minecraft:andesite",
+      "minecraft:diorite",
+      "minecraft:granite",
+      "minecraft:blackstone",
+      "minecraft:cobbled_deepslate"
+    ],
+    "T": "minecraft:crafting_table"
+  },
+  "pattern": [
+    " C ",
+    " T ",
+    " B "
+  ],
+  "result": {
+    "id": "wenyan_programming:crafting_block"
+  }
+}

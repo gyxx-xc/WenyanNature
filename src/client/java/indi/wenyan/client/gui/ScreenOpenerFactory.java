@@ -1,8 +1,10 @@
 package indi.wenyan.client.gui;
 
+import indi.wenyan.client.gui.behaviour.FloatNoteBehaviour;
 import indi.wenyan.client.gui.behaviour.RunnerBlockBehaviour;
 import indi.wenyan.client.gui.behaviour.WritingBlockBehaviour;
 import indi.wenyan.setup.network.client.BlockSetScreenPacket;
+import indi.wenyan.setup.network.client.FloatNoteSetScreenPacket;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
 public enum ScreenOpenerFactory {;
@@ -13,5 +15,9 @@ public enum ScreenOpenerFactory {;
                 case WRITING_BLOCK -> WritingBlockBehaviour.openGui(packet.pos(), context.player());
                 default -> throw new IllegalStateException();
             }
+    };
+    public static final IPayloadHandler<FloatNoteSetScreenPacket> FLOAT_NOTE_HANDLER = (packet, context) -> {
+        if (context.flow().isClientbound())
+            FloatNoteBehaviour.openGui(packet.pos(), packet.hand(), context.player());
     };
 }

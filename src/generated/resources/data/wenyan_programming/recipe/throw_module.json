@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "minecraft:gunpowder",
+    "p": [
+      "wenyan_programming:bamboo_paper",
+      "wenyan_programming:cloud_paper",
+      "wenyan_programming:frost_paper",
+      "wenyan_programming:phoenix_paper",
+      "wenyan_programming:starlight_paper",
+      "wenyan_programming:dragon_paper"
+    ]
+  },
+  "pattern": [
+    " p ",
+    " i ",
+    " p "
+  ],
+  "result": {
+    "id": "wenyan_programming:throw_module"
+  }
+}

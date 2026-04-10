@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "minecraft:copper_ingot",
+    "p": "wenyan_programming:bamboo_paper"
+  },
+  "pattern": [
+    " p ",
+    " i ",
+    " p "
+  ],
+  "result": {
+    "count": 2,
+    "id": "wenyan_programming:math_module_block"
+  }
+}

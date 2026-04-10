@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "minecraft:fire_charge",
+    "p": "wenyan_programming:frost_paper"
+  },
+  "pattern": [
+    " p ",
+    " i ",
+    " p "
+  ],
+  "result": {
+    "count": 2,
+    "id": "wenyan_programming:explosion_module_block"
+  }
+}

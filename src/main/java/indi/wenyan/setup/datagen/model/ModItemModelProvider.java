@@ -49,7 +49,6 @@ public class ModItemModelProvider extends ModelSubProvider {
         basicItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.BLOCK_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get());
-        basicItem(WenyanItems.COMMUNICATE_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get());

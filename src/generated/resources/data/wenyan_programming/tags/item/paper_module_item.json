@@ -8,7 +8,6 @@
     "wenyan_programming:random_module_block",
     "wenyan_programming:item_module_block",
     "wenyan_programming:vec3_module_block",
-    "wenyan_programming:communicate_module_block",
     "wenyan_programming:collection_module_block",
     "wenyan_programming:string_module_block",
     "wenyan_programming:entity_module_block",

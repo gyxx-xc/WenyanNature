@@ -7,6 +7,7 @@ import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class CommunicateModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "communicate_module_block";
     

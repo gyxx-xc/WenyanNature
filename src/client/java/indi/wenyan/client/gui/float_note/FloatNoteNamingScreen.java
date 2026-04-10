@@ -23,9 +23,9 @@ public class FloatNoteNamingScreen extends Screen {
     private static final Identifier TEXT_FIELD_SPRITE = Identifier.withDefaultNamespace("container/anvil/text_field");
     private EditBox name;
     private final ItemStack item;
-    private final Consumer<Component> save;
+    private final Consumer<String> save;
 
-    public FloatNoteNamingScreen(Consumer<Component> save, ItemStack item) {
+    public FloatNoteNamingScreen(Consumer<String> save, ItemStack item) {
         super(Component.empty());
         this.save = save;
         this.item = item;
@@ -74,7 +74,7 @@ public class FloatNoteNamingScreen extends Screen {
 
     @Override
     public void onClose() {
-        save.accept(Component.literal(ChineseUtils.bracketOf(name.getValue())));
+        save.accept(ChineseUtils.bracketOf(name.getValue()));
         super.onClose();
     }
 }

@@ -53,7 +53,6 @@ public class WyItemTagProvider extends ItemTagsProvider {
                 WenyanItems.RANDOM_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.VEC3_MODULE_BLOCK_ITEM.get(),
-                WenyanItems.COMMUNICATE_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.STRING_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get(),

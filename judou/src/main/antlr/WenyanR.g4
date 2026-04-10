@@ -238,9 +238,8 @@ SELF                     : '己' ;
 PARENT                   : '父' ;
 LONG                     : '長';
 
-
-STRING_LITERAL           : '「「' ( ~('」') )* '」」' ;
-IDENTIFIER               : '「' ( ~('」') )* '」' ;
+STRING_LITERAL           : '「「' .*? '」」' ;
+IDENTIFIER               : '「' .*? '」' ;
 
 FLOAT_NUM                : INT_NUM FLOAT_NUM_DIVISION (INT_NUM FLOAT_NUM_KEYWORDS)+ ;
 fragment

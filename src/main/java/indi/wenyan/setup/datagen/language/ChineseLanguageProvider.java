@@ -63,7 +63,6 @@ public class ChineseLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.STRING_MODULE_BLOCK_ITEM.get(), "字串符");
         addBlockAndItem(WenyanItems.VEC3_MODULE_BLOCK_ITEM.get(), "向量符");
         addBlockAndItem(WenyanItems.BLOCK_MODULE_BLOCK_ITEM.get(), "方塊符");
-        addBlockAndItem(WenyanItems.COMMUNICATE_MODULE_BLOCK_ITEM.get(), "通訊符");
         addBlockAndItem(WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get(), "實體符");
         addBlockAndItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(), "爆裂符");
         addBlockAndItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(), "物品符");
@@ -83,7 +82,6 @@ public class ChineseLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get(), "阵眼");
 
         add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
-        add(WenyanItems.EQUIPABLE_RUNNER_ITEM.get(), "可戴符");
 
         add(NotFindFu.getTranslationKey(), "謬：不識此符");
         add(CantStart.getTranslationKey(), "謬：不可始%s");

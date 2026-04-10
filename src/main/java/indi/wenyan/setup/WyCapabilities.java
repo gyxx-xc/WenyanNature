@@ -158,10 +158,6 @@ public enum WyCapabilities {
                 (be, _) -> be.getBlockDeviceCapability());
         event.registerBlockEntity(
                 WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
-                WenyanBlocks.COMMUNICATE_MODULE_ENTITY.get(),
-                (be, _) -> be.getBlockDeviceCapability());
-        event.registerBlockEntity(
-                WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
                 WenyanBlocks.ENTITY_MODULE_ENTITY.get(),
                 (be, _) -> be.getBlockDeviceCapability());
         event.registerBlockEntity(

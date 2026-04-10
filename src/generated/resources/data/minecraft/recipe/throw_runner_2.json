@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "wenyan_programming:hand_runner_2",
+    "wenyan_programming:throw_module"
+  ],
+  "result": {
+    "id": "wenyan_programming:throw_runner_2"
+  }
+}

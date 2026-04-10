@@ -41,6 +41,7 @@ public enum WenyanItems {
     public static final RunnerTier.TieredItemRegistrator<Item> THROW_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(ThrowRunnerItem.ID,
             ThrowRunnerItem::new);
 
+    @Deprecated
     public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
             (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
     public static final DeferredItem<Item> PRINT_INVENTORY_MODULE = DR.registerItem(PrintInventoryModule.ID, PrintInventoryModule::new);
@@ -88,8 +89,6 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.ITEM_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> VEC3_MODULE_BLOCK_ITEM = DR.registerItem(Vec3ModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.VEC3_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM = DR.registerItem(CommunicateModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.COMMUNICATE_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> COLLECTION_MODULE_BLOCK_ITEM = DR.registerItem(CollectionModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.COLLECTION_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> STRING_MODULE_BLOCK_ITEM = DR.registerItem(StringModuleBlock.ID,
@@ -106,6 +105,10 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> PISTON_MODULE_BLOCK_ITEM = DR.registerItem(PistonModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.PISTON_MODULE_BLOCK.get(), properties));
+
+    @Deprecated
+    public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM = DR.registerItem(CommunicateModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.COMMUNICATE_MODULE_BLOCK.get(), properties));
 
     @SuppressWarnings("unused")
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
@@ -162,6 +165,5 @@ public enum WenyanItems {
                 output.accept(EXPLOSION_MODULE_BLOCK_ITEM.get());
                 output.accept(BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
                 output.accept(PISTON_MODULE_BLOCK_ITEM.get());
-                output.accept(COMMUNICATE_MODULE_BLOCK_ITEM.get());
             }).build());
 }

@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.stream.Stream;
 
+@Deprecated
 public class CommunicateModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.CommunicateModule;
