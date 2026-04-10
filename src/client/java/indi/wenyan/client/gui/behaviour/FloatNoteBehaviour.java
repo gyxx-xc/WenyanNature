@@ -18,7 +18,8 @@ public enum FloatNoteBehaviour {
     public static void openGui(BlockPos pos, InteractionHand hand, Player player) {
         ItemStack item = player.getItemInHand(hand);
         Consumer<String> setNameFunc = name -> {
-            if (player.level().getBlockEntity(pos) instanceof IRenamable renamable) renamable.setName(name);
+            if (player.level().getBlockEntity(pos) instanceof IRenamable renamable)
+                renamable.setName(name);
             ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, name));
         };
         Minecraft.getInstance().setScreen(new FloatNoteNamingScreen(setNameFunc, item));

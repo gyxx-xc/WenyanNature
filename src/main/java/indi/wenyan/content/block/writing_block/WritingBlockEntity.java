@@ -18,6 +18,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStackResourceHandler;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -38,8 +39,7 @@ public class WritingBlockEntity extends DataBlockEntity implements ICodeHolder {
             protected void setStack(ItemStack stack) {
                 itemStack = stack;
                 var cap = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
-//                codeHolder = Objects.requireNonNullElse(cap, DummyCodeHolder.INSTANCE);
-                codeHolder = cap;
+                codeHolder = Objects.requireNonNullElse(cap, DummyCodeHolder.INSTANCE);
                 updateBlock();
             }
 

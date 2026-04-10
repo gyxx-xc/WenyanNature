@@ -112,7 +112,7 @@
         },
         {
           "name": "吾有一術。必先得",
-          "content": "吾有一術。名之曰{ID}。\n欲行是術必先得{INT_L} {TYPE} {DATA}。\n乃行是術曰\n  {STMT}\n是謂{ID}之術也。{NONE}"
+          "content": "吾有一術。名之曰{ID}。\n欲行是術必先得{INT_L} {TYPE}曰{ID}。\n乃行是術曰\n  {STMT}\n是謂{ID}之術也。{NONE}"
         },
         {
           "name": "乃得",

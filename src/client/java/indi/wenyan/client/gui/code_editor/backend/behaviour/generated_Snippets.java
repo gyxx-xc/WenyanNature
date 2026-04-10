@@ -104,11 +104,11 @@ public enum generated_Snippets {;
                 new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
                 new SnippetSet.SnippetPlaceholder(Context.ID, 2, 2),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 6))),
-        new SnippetSet.Snippet("吾有一術。必先得", List.of("吾有一術。名之曰。","欲行是術必先得  。","乃行是術曰","  ","是謂之術也。"), List.of(
+        new SnippetSet.Snippet("吾有一術。必先得", List.of("吾有一術。名之曰。","欲行是術必先得 曰。","乃行是術曰","  ","是謂之術也。"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.ID, 0, 8),
                 new SnippetSet.SnippetPlaceholder(Context.INT_L, 1, 7),
                 new SnippetSet.SnippetPlaceholder(Context.TYPE, 1, 8),
-                new SnippetSet.SnippetPlaceholder(Context.DATA, 1, 9),
+                new SnippetSet.SnippetPlaceholder(Context.ID, 1, 9),
                 new SnippetSet.SnippetPlaceholder(Context.STMT, 3, 2),
                 new SnippetSet.SnippetPlaceholder(Context.ID, 4, 2),
                 new SnippetSet.SnippetPlaceholder(Context.NONE, 4, 6))),

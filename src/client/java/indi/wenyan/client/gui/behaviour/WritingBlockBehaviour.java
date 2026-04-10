@@ -12,9 +12,7 @@ import indi.wenyan.setup.network.server.BlockRenamePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jspecify.annotations.NonNull;
 
 public enum WritingBlockBehaviour {
@@ -22,8 +20,7 @@ public enum WritingBlockBehaviour {
 
     public static void openGui(BlockPos pos, Player player) {
         if (!(player.level().getBlockEntity(pos) instanceof WritingBlockEntity entity)) return;
-        ItemStack runners = ItemUtil.getStack(entity.getItemHandler(), 0);
-        ICodeHolder code = runners.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
+        ICodeHolder code = entity.getItemStack().getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
         if (code != null) {
             Minecraft.getInstance().setScreen(getWritingEditorScreen(pos, code));
         }
