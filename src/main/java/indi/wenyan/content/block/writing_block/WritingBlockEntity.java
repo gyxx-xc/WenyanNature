@@ -64,7 +64,7 @@ public class WritingBlockEntity extends DataBlockEntity implements ICodeHolder {
     }
 
     @Delegate(types = ICodeHolder.class)
-    private ICodeHolder codeHolder = null;
+    private ICodeHolder codeHolder = DummyCodeHolder.INSTANCE;
 
     public WritingBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.WRITING_BLOCK_ENTITY.get(), pos, blockState);
@@ -78,7 +78,11 @@ public class WritingBlockEntity extends DataBlockEntity implements ICodeHolder {
     @Override
     protected void loadData(ValueInput input) {
         input.read("item", ItemStack.OPTIONAL_CODEC)
-                .ifPresent(itemStack -> this.itemStack = itemStack);
+                .ifPresent(itemStack -> {
+                    var cap = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
+                    codeHolder = Objects.requireNonNullElse(cap, DummyCodeHolder.INSTANCE);
+                    this.itemStack = itemStack;
+                });
     }
 
     private void updateBlock() {

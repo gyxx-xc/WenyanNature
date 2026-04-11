@@ -10,8 +10,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.util.Mth;
+import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -281,7 +281,7 @@ public class CodeField {
         int lineWidth = 0;
         var lexer = new WenyanRLexer(CharStreams.fromString(backend.getContent()));
         lexer.removeErrorListeners();
-        var tokens = new CommonTokenStream(lexer);
+        var tokens = new BufferedTokenStream(lexer);
         StyledStringView currentToken = updateToken(tokens, 0);
         List<StyledStringView> currentStyles = new ArrayList<>();
         for (int i = 0; i < backend.getContent().length(); i++) {
@@ -327,7 +327,7 @@ public class CodeField {
         }
     }
 
-    private static @NotNull StyledStringView updateToken(CommonTokenStream tokens, int i) {
+    private static @NotNull StyledStringView updateToken(BufferedTokenStream tokens, int i) {
         StyledStringView currentToken;
         var token = tokens.LT(1);
         if (i >= token.getStartIndex()) {
