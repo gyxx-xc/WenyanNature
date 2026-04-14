@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": "minecraft:glowstone",
+    "p": "wenyan_programming:cloud_paper"
+  },
+  "pattern": [
+    " p ",
+    "pgp",
+    " p "
+  ],
+  "result": {
+    "id": "wenyan_programming:screen_block_module_block"
+  }
+}

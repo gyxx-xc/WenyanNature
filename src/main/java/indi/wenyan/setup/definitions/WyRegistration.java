@@ -44,6 +44,9 @@ public enum WyRegistration {
     ;
 
 
+    public static final TagKey<Item> RUNNER_PAPER_ITEM = TagKey.create(
+            Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "runner_paper_item"));
+
     /**
      * Registers all content with the mod event bus
      */

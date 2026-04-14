@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": "wenyan_programming:phoenix_paper",
+    "t": "minecraft:target"
+  },
+  "pattern": [
+    " p ",
+    "ptp",
+    " p "
+  ],
+  "result": {
+    "id": "wenyan_programming:formation_core_module_block"
+  }
+}

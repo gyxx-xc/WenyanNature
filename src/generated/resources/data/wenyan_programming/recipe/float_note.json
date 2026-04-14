@@ -2,11 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "minecraft:glowstone_dust",
-    "P": "minecraft:paper"
+    "i": "minecraft:iron_ingot",
+    "s": "minecraft:stick"
   },
   "pattern": [
-    "PG"
+    "is ",
+    "is "
   ],
   "result": {
     "id": "wenyan_programming:float_note"

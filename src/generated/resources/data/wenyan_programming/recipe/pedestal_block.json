@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": [
+    "c": [
       "minecraft:cobblestone",
       "minecraft:andesite",
       "minecraft:diorite",
@@ -10,11 +10,11 @@
       "minecraft:blackstone",
       "minecraft:cobbled_deepslate"
     ],
-    "I": "minecraft:iron_block"
+    "i": "minecraft:iron_block"
   },
   "pattern": [
-    " C ",
-    " I "
+    " c ",
+    " i "
   ],
   "result": {
     "id": "wenyan_programming:pedestal_block"

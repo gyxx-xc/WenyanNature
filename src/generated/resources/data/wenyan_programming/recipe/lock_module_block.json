@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": "wenyan_programming:frost_paper",
+    "r": "minecraft:comparator"
+  },
+  "pattern": [
+    " p ",
+    "prp",
+    " p "
+  ],
+  "result": {
+    "id": "wenyan_programming:lock_module_block"
+  }
+}
