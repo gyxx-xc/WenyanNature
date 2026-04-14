@@ -22,6 +22,8 @@ eclipse
 run
 runs
 run-data
+.ds_store
+.vscode
 
 repo
 /src/generated/resources/.cache/
