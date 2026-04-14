@@ -1,5 +1,6 @@
-package indi.wenyan.setup.datagen.recipe;
+package indi.wenyan.setup.datagen.recipe.craft;
 
+import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.HolderGetter;

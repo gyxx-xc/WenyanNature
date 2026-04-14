@@ -1,11 +1,12 @@
-package indi.wenyan.setup.datagen.recipe;
+package indi.wenyan.setup.datagen.recipe.craft;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.checker.CheckerEnum;
 import indi.wenyan.content.recipe.combine_module.ThrowModuleRecipe;
+import indi.wenyan.setup.datagen.recipe.AnsweringRecipeBuilder;
+import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
