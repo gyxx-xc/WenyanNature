@@ -3,19 +3,15 @@ package indi.wenyan.setup.datagen.recipe;
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.checker.CheckerEnum;
-import indi.wenyan.content.item.throw_runner.ThrowRunnerItem;
 import indi.wenyan.content.recipe.combine_module.ThrowModuleRecipe;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
-import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -70,7 +66,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .save(output, "diamond_labyrinth_checker");
 
         ShapedRecipeBuilder // Hand Runner 0
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0))
                 .pattern("III")
                 .pattern("I I")
@@ -213,7 +209,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 WenyanItems.DRAGON_PAPER.get());
 
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.THROW_MODULE)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -224,7 +220,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         for (RunnerTier tier : RunnerTier.values()) {
             ShapelessRecipeBuilder
-                    .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                    .shapeless(this.items, RecipeCategory.MISC,
                             THROW_RUNNER.getItem(tier))
                     .requires(WenyanItems.HAND_RUNNER.getItem(tier))
                     .requires(WenyanItems.THROW_MODULE)
@@ -235,7 +231,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
         // === Tool and Module ===
         // 印符 (print_inventory_module) - 无序
         ShapelessRecipeBuilder
-                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shapeless(this.items, RecipeCategory.MISC,
                         WenyanItems.PRINT_INVENTORY_MODULE, 2)
                 .requires(Items.PAPER)
                 .requires(Ingredient.of(Items.COAL, Items.CHARCOAL))
@@ -244,7 +240,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 位元符 (bit_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.BIT_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -255,7 +251,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 数符 (math_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.MATH_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -266,7 +262,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 向量符 (vec3_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.VEC3_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -277,7 +273,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 熵符 (random_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.RANDOM_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -288,7 +284,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 字串符 (string_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.STRING_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -299,7 +295,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 集符 (collection_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.COLLECTION_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -310,7 +306,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 物品符 (item_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.ITEM_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -321,7 +317,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 方块符 (block_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.BLOCK_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -332,7 +328,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 实体符 (entity_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.ENTITY_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -343,7 +339,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 天下情报符 (information_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.INFORMATION_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -354,7 +350,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 爆裂符 (explosion_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -365,7 +361,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 阻塞队列符 (blocking_queue_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -376,7 +372,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 活塞符 (piston_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.PISTON_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -387,7 +383,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // 通讯符 (communicate_module_block)
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
+                .shaped(this.items, RecipeCategory.MISC,
                         WenyanItems.COMMUNICATE_MODULE_BLOCK_ITEM, 2)
                 .pattern(" p ")
                 .pattern(" i ")
@@ -399,7 +395,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
         // === Items ===
         // float_note
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.FLOAT_NOTE.get())
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.FLOAT_NOTE.get())
                 .pattern("is ")
                 .pattern("is ")
                 .define('i', Items.IRON_INGOT)
@@ -422,7 +418,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // crafting_block_item
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.CRAFTING_BLOCK_ITEM.get())
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.CRAFTING_BLOCK_ITEM.get())
                 .pattern(" c ")
                 .pattern(" t ")
                 .pattern(" b ")
@@ -434,7 +430,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // pedestal_block
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.PEDESTAL_BLOCK_ITEM.get())
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.PEDESTAL_BLOCK_ITEM.get())
                 .pattern(" c ")
                 .pattern(" i ")
                 .define('c', cobblestoneIngredient)
@@ -444,7 +440,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // writing_block_item
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.WRITING_BLOCK_ITEM.get())
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.WRITING_BLOCK_ITEM.get())
                 .pattern(" p ")
                 .pattern(" m ")
                 .define('p', Items.WRITABLE_BOOK)
@@ -464,7 +460,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6));
 
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.LOGIC_FURNACE_BLOCK_ITEM.get())
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.LOGIC_FURNACE_BLOCK_ITEM.get())
                 .pattern(" r ")
                 .pattern("zfz")
                 .pattern(" z ")
@@ -476,52 +472,52 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         // power_block_item
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.POWER_BLOCK_ITEM.get())
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.POWER_BLOCK_ITEM.get())
                 .pattern(" p ")
                 .pattern("psp")
                 .pattern(" p ")
-                .define('p',WenyanItems.DRAGON_PAPER)
-                .define('s',Items.NETHER_STAR)
-                .unlockedBy("has_dragon_paper",has(WenyanItems.DRAGON_PAPER))
+                .define('p', WenyanItems.DRAGON_PAPER)
+                .define('s', Items.NETHER_STAR)
+                .unlockedBy("has_dragon_paper", has(WenyanItems.DRAGON_PAPER))
                 .save(output);
 
         // formation_core_module_block_item
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get())
-                        .pattern(" p ")
-                        .pattern("ptp")
-                        .pattern(" p ")
-                        .define('p',WenyanItems.PHOENIX_PAPER)
-                        .define('t',Items.TARGET)
-                        .unlockedBy("has_target",has(Items.TARGET))
-                        .unlockedBy("has_phoenix_paper",has(WenyanItems.PHOENIX_PAPER))
-                        .save(output);
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get())
+                .pattern(" p ")
+                .pattern("ptp")
+                .pattern(" p ")
+                .define('p', WenyanItems.PHOENIX_PAPER)
+                .define('t', Items.TARGET)
+                .unlockedBy("has_target", has(Items.TARGET))
+                .unlockedBy("has_phoenix_paper", has(WenyanItems.PHOENIX_PAPER))
+                .save(output);
         // screen_module_block_item
         ShapedRecipeBuilder
-                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get())
-                    .pattern(" p ")
-                    .pattern("pgp")
-                    .pattern(" p ")
-                    .define('p',WenyanItems.CLOUD_PAPER)
-                    .define('g',Items.GLOWSTONE)
-                    .unlockedBy("has_cloud_paper",has(WenyanItems.CLOUD_PAPER))
-                    .save(output);
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get())
+                .pattern(" p ")
+                .pattern("pgp")
+                .pattern(" p ")
+                .define('p', WenyanItems.CLOUD_PAPER)
+                .define('g', Items.GLOWSTONE)
+                .unlockedBy("has_cloud_paper", has(WenyanItems.CLOUD_PAPER))
+                .save(output);
         // lock_module_block_item
         ShapedRecipeBuilder
-            .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.LOCK_MODULE_BLOCK_ITEM.get())
+                .shaped(this.items, RecipeCategory.MISC, WenyanItems.LOCK_MODULE_BLOCK_ITEM.get())
                 .pattern(" p ")
                 .pattern("prp")
                 .pattern(" p ")
-                .define('p',WenyanItems.FROST_PAPER)
-                .define('r',Items.COMPARATOR)
-                .unlockedBy("has_frost_paper",has(WenyanItems.FROST_PAPER))
-                .unlockedBy("has_comparator",has(Items.COMPARATOR))
+                .define('p', WenyanItems.FROST_PAPER)
+                .define('r', Items.COMPARATOR)
+                .unlockedBy("has_frost_paper", has(WenyanItems.FROST_PAPER))
+                .unlockedBy("has_comparator", has(Items.COMPARATOR))
                 .save(output);
     }
 
     private void clearDataRecipe(Item item) {
         ShapelessRecipeBuilder
-                .shapeless(BuiltInRegistries.ITEM, RecipeCategory.MISC, item)
+                .shapeless(this.items, RecipeCategory.MISC, item)
                 .requires(item)
                 .unlockedBy("has_hand_runner", has(item))
                 .save(output, ResourceKey.create(Registries.RECIPE,
@@ -552,7 +548,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
         @Override
         protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider,
-                RecipeOutput recipeOutput) {
+                                                      RecipeOutput recipeOutput) {
             return new CheckerRecipeProvider(provider, recipeOutput);
         }
 
