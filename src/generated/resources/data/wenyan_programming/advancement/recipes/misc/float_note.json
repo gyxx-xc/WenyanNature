@@ -11,6 +11,16 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "has_string": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:string"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "wenyan_programming:float_note"
@@ -21,6 +31,7 @@
   "requirements": [
     [
       "has_the_recipe",
+      "has_string",
       "has_stick"
     ]
   ],

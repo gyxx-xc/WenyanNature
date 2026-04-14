@@ -219,7 +219,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', paperIngredient)
                 .define('i', Items.GUNPOWDER)
-                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get()))
+                .unlockedBy("has_gunpowder", has(Items.GUNPOWDER))
+                .save(output);
 
         for (RunnerTier tier : RunnerTier.values()) {
             ShapelessRecipeBuilder
@@ -250,7 +252,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.BAMBOO_PAPER.get())
                 .define('i', Items.REDSTONE)
-                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get()))
+                .unlockedBy("has_redstone", has(Items.REDSTONE))
+                .save(output);
 
         // 数符 (math_module_block)
         ShapedRecipeBuilder
@@ -261,7 +265,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.BAMBOO_PAPER.get())
                 .define('i', Items.COPPER_INGOT)
-                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get()))
+                .unlockedBy("has_copper_ingot", has(Items.COPPER_INGOT))
+                .save(output);
 
         // 向量符 (vec3_module_block)
         ShapedRecipeBuilder
@@ -272,7 +278,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.BAMBOO_PAPER.get())
                 .define('i', Items.IRON_INGOT)
-                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get()))
+                .unlockedBy("has_iron_ingot", has(Items.IRON_INGOT))
+                .save(output);
 
         // 熵符 (random_module_block)
         ShapedRecipeBuilder
@@ -283,7 +291,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.BAMBOO_PAPER.get())
                 .define('i', Items.ROTTEN_FLESH)
-                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get()))
+                .unlockedBy("has_rotten_flesh", has(Items.ROTTEN_FLESH))
+                .save(output);
 
         // 字串符 (string_module_block)
         ShapedRecipeBuilder
@@ -294,7 +304,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.BAMBOO_PAPER.get())
                 .define('i', Items.STRING)
-                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get()))
+                .unlockedBy("has_string", has(Items.STRING))
+                .save(output);
 
         // 集符 (collection_module_block)
         ShapedRecipeBuilder
@@ -305,7 +317,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.BAMBOO_PAPER.get())
                 .define('i', Items.BOWL)
-                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.BAMBOO_PAPER.get()))
+                .unlockedBy("has_bowl", has(Items.BOWL))
+                .save(output);
 
         // 物品符 (item_module_block)
         ShapedRecipeBuilder
@@ -316,7 +330,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.CLOUD_PAPER.get())
                 .define('i', Items.CHEST)
-                .unlockedBy("has_paper", has(WenyanItems.CLOUD_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.CLOUD_PAPER.get()))
+                .unlockedBy("has_chest", has(Items.CHEST))
+                .save(output);
 
         // 方块符 (block_module_block)
         ShapedRecipeBuilder
@@ -327,7 +343,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.CLOUD_PAPER.get())
                 .define('i', Items.SMOOTH_STONE)
-                .unlockedBy("has_paper", has(WenyanItems.CLOUD_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.CLOUD_PAPER.get()))
+                .unlockedBy("has_smooth_stone", has(Items.SMOOTH_STONE))
+                .save(output);
 
         // 实体符 (entity_module_block)
         ShapedRecipeBuilder
@@ -338,7 +356,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.STARLIGHT_PAPER.get())
                 .define('i', Items.EGG)
-                .unlockedBy("has_paper", has(WenyanItems.STARLIGHT_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.STARLIGHT_PAPER.get()))
+                .unlockedBy("has_egg", has(Items.EGG))
+                .save(output);
 
         // 天下情报符 (information_module_block)
         ShapedRecipeBuilder
@@ -349,7 +369,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.FROST_PAPER.get())
                 .define('i', Items.COMPASS)
-                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get()))
+                .unlockedBy("has_compass", has(Items.COMPASS))
+                .save(output);
 
         // 爆裂符 (explosion_module_block)
         ShapedRecipeBuilder
@@ -360,7 +382,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.FROST_PAPER.get())
                 .define('i', Items.FIRE_CHARGE)
-                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get()))
+                .unlockedBy("has_fire_charge", has(Items.FIRE_CHARGE))
+                .save(output);
 
         // 阻塞队列符 (blocking_queue_module_block)
         ShapedRecipeBuilder
@@ -371,7 +395,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.STARLIGHT_PAPER.get())
                 .define('i', Items.HOPPER)
-                .unlockedBy("has_paper", has(WenyanItems.STARLIGHT_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.STARLIGHT_PAPER.get()))
+                .unlockedBy("has_hopper", has(Items.HOPPER))
+                .save(output);
 
         // 活塞符 (piston_module_block)
         ShapedRecipeBuilder
@@ -382,7 +408,9 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern(" p ")
                 .define('p', WenyanItems.FROST_PAPER.get())
                 .define('i', Items.STICKY_PISTON)
-                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get())).save(output);
+                .unlockedBy("has_paper", has(WenyanItems.FROST_PAPER.get()))
+                .unlockedBy("has_sticky_piston", has(Items.STICKY_PISTON))
+                .save(output);
 
         // 通讯符 (communicate_module_block)
 
@@ -394,6 +422,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern("is ")
                 .define('i', Items.STRING)
                 .define('s', Items.STICK)
+                .unlockedBy("has_string", has(Items.STRING))
                 .unlockedBy("has_stick", has(Items.STICK))
                 .save(output);
 
@@ -408,6 +437,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .define('c', Items.CRAFTING_TABLE)
                 .define('s', Items.SMOOTH_STONE_SLAB)
                 .unlockedBy("has_crafting_table", has(Items.CRAFTING_TABLE))
+                .unlockedBy("has_smooth_stone_slab", has(Items.SMOOTH_STONE_SLAB))
                 .save(output);
 
         // pedestal_block
@@ -419,7 +449,8 @@ public class CheckerRecipeProvider extends RecipeProvider {
 
                 .define('b', ItemTags.WOODEN_SLABS)
                 .define('s', Items.STICK)
-                .unlockedBy("has_cobblestone", has(Tags.Items.STONES))
+                .unlockedBy("has_wooden_slabs", has(ItemTags.WOODEN_SLABS))
+                .unlockedBy("has_stick", has(Items.STICK))
                 .save(output);
 
         // writing_block_item
@@ -430,28 +461,21 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .pattern("m")
                 .define('p', Items.WRITABLE_BOOK)
                 .define('m', Items.SMITHING_TABLE)
-                .unlockedBy("has_book", has(Items.BOOK))
+                .unlockedBy("has_writable_book", has(Items.WRITABLE_BOOK))
+                .unlockedBy("has_smithing_table", has(Items.SMITHING_TABLE))
                 .save(output);
 
         // logic_furnace_block_item
-        // FIXME: HAND_RUNNER getItem problem, cannot create
-        Ingredient fuzhou = Ingredient.of(
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0),
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_1),
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_2),
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_3),
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_4),
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_5),
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6));
-
         ShapedRecipeBuilder
                 .shaped(this.items, RecipeCategory.MISC, WenyanItems.LOGIC_FURNACE_BLOCK_ITEM.get())
                 .pattern(" r ")
                 .pattern("zfz")
                 .pattern(" z ")
                 .define('r', ItemTags.LIGHTNING_RODS)
-                .define('z', fuzhou)
+                .define('z', WyRegistration.HAND_RUNNER_ITEM)
                 .define('f', Items.FURNACE)
+                .unlockedBy("has_lightning_rods", has(ItemTags.LIGHTNING_RODS))
+                .unlockedBy("has_hand_runner", has(WyRegistration.HAND_RUNNER_ITEM))
                 .unlockedBy("has_furnace", has(Items.FURNACE))
                 .save(output);
 
@@ -464,11 +488,13 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .define('p', WenyanItems.DRAGON_PAPER)
                 .define('s', Items.NETHER_STAR)
                 .unlockedBy("has_dragon_paper", has(WenyanItems.DRAGON_PAPER))
+                .unlockedBy("has_nether_star", has(Items.NETHER_STAR))
                 .save(output);
 
         // formation_core_module_block_item
         ShapedRecipeBuilder
-                .shaped(this.items, RecipeCategory.MISC, WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get())
+                .shaped(this.items, RecipeCategory.MISC,
+                        WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get())
                 .pattern(" p ")
                 .pattern("ptp")
                 .pattern(" p ")
@@ -486,6 +512,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 .define('p', WenyanItems.CLOUD_PAPER)
                 .define('g', Items.GLOWSTONE)
                 .unlockedBy("has_cloud_paper", has(WenyanItems.CLOUD_PAPER))
+                .unlockedBy("has_glowstone", has(Items.GLOWSTONE))
                 .save(output);
         // lock_module_block_item
         ShapedRecipeBuilder

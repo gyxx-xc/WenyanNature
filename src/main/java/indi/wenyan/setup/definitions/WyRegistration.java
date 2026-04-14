@@ -43,15 +43,11 @@ import static indi.wenyan.WenyanProgramming.MODID;
 public enum WyRegistration {
     ;
 
-
     public static final TagKey<Item> RUNNER_PAPER_ITEM = TagKey.create(
             Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "runner_paper_item"));
 
-    public static final TagKey<Item> COBBLESTONES_ITEM = TagKey.create(
-            Registries.ITEM, Identifier.fromNamespaceAndPath("c", "cobblestones"));
-
-    public static final TagKey<Item> STONE_BRICKS_ITEM = TagKey.create(
-            Registries.ITEM, Identifier.fromNamespaceAndPath("c", "stone_bricks"));
+    public static final TagKey<Item> HAND_RUNNER_ITEM = TagKey.create(
+            Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "hand_runner_item"));
 
     /**
      * Registers all content with the mod event bus
@@ -66,52 +62,68 @@ public enum WyRegistration {
         CONSUME_EFFECT.register(modEventBus);
     }
 
-    public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(BuiltInRegistries.MENU, MODID);
-    public static final DeferredRegister<DataComponentType<?>> DATA = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, MODID);
-    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
-    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, MODID);
-    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
-    public static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = DeferredRegister.create(BuiltInRegistries.RECIPE_BOOK_CATEGORY, MODID);
-    public static final DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECT = DeferredRegister.create(BuiltInRegistries.CONSUME_EFFECT_TYPE, MODID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPE = DeferredRegister.create(BuiltInRegistries.MENU,
+            MODID);
+    public static final DeferredRegister<DataComponentType<?>> DATA = DeferredRegister
+            .create(BuiltInRegistries.DATA_COMPONENT_TYPE, MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister
+            .create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister
+            .create(BuiltInRegistries.RECIPE_TYPE, MODID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister
+            .create(BuiltInRegistries.PARTICLE_TYPE, WenyanProgramming.MODID);
+    public static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = DeferredRegister
+            .create(BuiltInRegistries.RECIPE_BOOK_CATEGORY, MODID);
+    public static final DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECT = DeferredRegister
+            .create(BuiltInRegistries.CONSUME_EFFECT_TYPE, MODID);
 
-    public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER = MENU_TYPE.register(CraftingBlock.ID,
+    public static final Supplier<MenuType<CraftingBlockContainer>> CRAFTING_CONTAINER = MENU_TYPE.register(
+            CraftingBlock.ID,
             () -> IMenuTypeExtension.create(CraftingBlockContainer::new));
-    public static final Supplier<MenuType<LogicFurnaceMenu>> LOGIC_FURNACE_MENU = MENU_TYPE.register("logic_furnace_menu", () -> new MenuType<>(LogicFurnaceMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final Supplier<MenuType<LogicFurnaceMenu>> LOGIC_FURNACE_MENU = MENU_TYPE
+            .register("logic_furnace_menu", () -> new MenuType<>(LogicFurnaceMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA = DATA.register("program_code_data",
-            () -> DataComponentType.<String>builder()
-                    .persistent(Codec.STRING)
-                    .networkSynchronized(ByteBufCodecs.STRING_UTF8)
-                    .build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> NOTE_LOCK_DATA = DATA.register("note_lock_data",
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PROGRAM_CODE_DATA = DATA
+            .register("program_code_data",
+                    () -> DataComponentType.<String>builder()
+                            .persistent(Codec.STRING)
+                            .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                            .build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> NOTE_LOCK_DATA = DATA.register(
+            "note_lock_data",
             () -> DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FuContainerComponent>> FU_DATA = DATA.register(FuContainerComponent.ID,
-            () -> DataComponentType.<FuContainerComponent>builder()
-                    .persistent(FuContainerComponent.CODEC)
-                    .networkSynchronized(FuContainerComponent.STREAM_CODEC)
-                    .build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FuContainerComponent>> FU_DATA = DATA
+            .register(FuContainerComponent.ID,
+                    () -> DataComponentType.<FuContainerComponent>builder()
+                            .persistent(FuContainerComponent.CODEC)
+                            .networkSynchronized(FuContainerComponent.STREAM_CODEC)
+                            .build());
 
     public static final Supplier<RecipeBookCategory> CALCULATION_BLOCK_CATEGORY = RECIPE_BOOK_CATEGORIES.register(
             "calculation_block", RecipeBookCategory::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER = RECIPE_SERIALIZER.register(AnsweringRecipe.ID,
-            AnsweringRecipe.SerializerProvider::create);
-    public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE = RECIPE_TYPE.register(AnsweringRecipe.ID,
-            () -> new RecipeType<>() {
-                @Override
-                public String toString() {
-                    return AnsweringRecipe.ID;
-                }
-            });
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AnsweringRecipe>> ANSWERING_RECIPE_SERIALIZER = RECIPE_SERIALIZER
+            .register(AnsweringRecipe.ID,
+                    AnsweringRecipe.SerializerProvider::create);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AnsweringRecipe>> ANSWERING_RECIPE_TYPE = RECIPE_TYPE
+            .register(AnsweringRecipe.ID,
+                    () -> new RecipeType<>() {
+                        @Override
+                        public String toString() {
+                            return AnsweringRecipe.ID;
+                        }
+                    });
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ThrowModuleRecipe>> THROW_MODULE_RECIPE_SERIALIZER = RECIPE_SERIALIZER.register(ThrowModuleRecipe.ID,
-            () -> ThrowModuleRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ThrowModuleRecipe>> THROW_MODULE_RECIPE_SERIALIZER = RECIPE_SERIALIZER
+            .register(ThrowModuleRecipe.ID,
+                    () -> ThrowModuleRecipe.SERIALIZER);
 
-    public static final BlockCapability<IWenyanBlockDevice, Void> WENYAN_BLOCK_DEVICE_CAPABILITY = BlockCapability.createVoid(
-            Identifier.fromNamespaceAndPath(MODID, "wenyan_block_device"),
-            IWenyanBlockDevice.class);
+    public static final BlockCapability<IWenyanBlockDevice, Void> WENYAN_BLOCK_DEVICE_CAPABILITY = BlockCapability
+            .createVoid(
+                    Identifier.fromNamespaceAndPath(MODID, "wenyan_block_device"),
+                    IWenyanBlockDevice.class);
     public static final ItemCapability<ICodeHolder, Void> ITEM_CODE_HOLDER_CAPABILITY = ItemCapability.createVoid(
             Identifier.fromNamespaceAndPath(MODID, "item_code_holder"),
             ICodeHolder.class);
@@ -121,9 +133,9 @@ public enum WyRegistration {
 
     public static final TagKey<Item> PAPER_MODULE_ITEM = TagKey.create(
             Registries.ITEM,
-            Identifier.fromNamespaceAndPath(MODID, "paper_module_item")
-    );
+            Identifier.fromNamespaceAndPath(MODID, "paper_module_item"));
 
-    public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BambooInk.NoFireEffect>> NO_FIRE_EFFECT = CONSUME_EFFECT.register("no_fire_effect",
-            () -> new ConsumeEffect.Type<>(BambooInk.NoFireEffect.CODEC, BambooInk.NoFireEffect.STREAM_CODEC));
+    public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BambooInk.NoFireEffect>> NO_FIRE_EFFECT = CONSUME_EFFECT
+            .register("no_fire_effect",
+                    () -> new ConsumeEffect.Type<>(BambooInk.NoFireEffect.CODEC, BambooInk.NoFireEffect.STREAM_CODEC));
 }

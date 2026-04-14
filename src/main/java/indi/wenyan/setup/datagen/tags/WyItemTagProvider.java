@@ -1,6 +1,7 @@
 package indi.wenyan.setup.datagen.tags;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.HolderLookup;
@@ -10,6 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
 import org.jspecify.annotations.NonNull;
 
@@ -31,18 +33,6 @@ public class WyItemTagProvider extends ItemTagsProvider {
                 WenyanItems.STARLIGHT_PAPER.get(),
                 WenyanItems.DRAGON_PAPER.get());
 
-        tag(WyRegistration.COBBLESTONES_ITEM).add(
-                Items.COBBLESTONE,
-                Items.ANDESITE,
-                Items.DIORITE,
-                Items.GRANITE,
-                Items.BLACKSTONE,
-                Items.COBBLED_DEEPSLATE);
-
-        tag(WyRegistration.STONE_BRICKS_ITEM).add(
-                Items.STONE_BRICKS,
-                Items.DEEPSLATE_BRICKS);
-
         tag(WyRegistration.PAPER_MODULE_ITEM).add(
                 WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(),
@@ -56,5 +46,14 @@ public class WyItemTagProvider extends ItemTagsProvider {
                 WenyanItems.STRING_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.PISTON_MODULE_BLOCK_ITEM.get());
+
+        tag(WyRegistration.HAND_RUNNER_ITEM).add(
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_1),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_2),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_3),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_4),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_5),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6));
     }
 }

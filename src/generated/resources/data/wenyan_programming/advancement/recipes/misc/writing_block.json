@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_book": {
+    "has_smithing_table": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:book"
+            "items": "minecraft:smithing_table"
           }
         ]
       },
@@ -16,12 +16,23 @@
         "recipe": "wenyan_programming:writing_block"
       },
       "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_writable_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:writable_book"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "has_book"
+      "has_writable_book",
+      "has_smithing_table"
     ]
   ],
   "rewards": {

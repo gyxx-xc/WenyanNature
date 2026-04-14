@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_cobblestone": {
+    "has_stick": {
       "conditions": {
         "items": [
           {
-            "items": "#c:stones"
+            "items": "minecraft:stick"
           }
         ]
       },
@@ -16,12 +16,23 @@
         "recipe": "wenyan_programming:pedestal_block"
       },
       "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wooden_slabs": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:wooden_slabs"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "has_cobblestone"
+      "has_wooden_slabs",
+      "has_stick"
     ]
   ],
   "rewards": {

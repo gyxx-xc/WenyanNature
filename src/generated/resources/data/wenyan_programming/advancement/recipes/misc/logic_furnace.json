@@ -11,6 +11,26 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "has_hand_runner": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#wenyan_programming:hand_runner_item"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_lightning_rods": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:lightning_rods"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "wenyan_programming:logic_furnace"
@@ -21,6 +41,8 @@
   "requirements": [
     [
       "has_the_recipe",
+      "has_lightning_rods",
+      "has_hand_runner",
       "has_furnace"
     ]
   ],
