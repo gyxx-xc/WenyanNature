@@ -31,6 +31,18 @@ public class WyItemTagProvider extends ItemTagsProvider {
                 WenyanItems.STARLIGHT_PAPER.get(),
                 WenyanItems.DRAGON_PAPER.get());
 
+        tag(WyRegistration.COBBLESTONES_ITEM).add(
+                Items.COBBLESTONE,
+                Items.ANDESITE,
+                Items.DIORITE,
+                Items.GRANITE,
+                Items.BLACKSTONE,
+                Items.COBBLED_DEEPSLATE);
+
+        tag(WyRegistration.STONE_BRICKS_ITEM).add(
+                Items.STONE_BRICKS,
+                Items.DEEPSLATE_BRICKS);
+
         tag(WyRegistration.PAPER_MODULE_ITEM).add(
                 WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(),

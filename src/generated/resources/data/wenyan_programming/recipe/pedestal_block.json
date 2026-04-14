@@ -2,19 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "c": [
-      "minecraft:cobblestone",
-      "minecraft:andesite",
-      "minecraft:diorite",
-      "minecraft:granite",
-      "minecraft:blackstone",
-      "minecraft:cobbled_deepslate"
-    ],
-    "i": "minecraft:iron_block"
+    "b": "#minecraft:wooden_slabs",
+    "s": "minecraft:stick"
   },
   "pattern": [
-    " c ",
-    " i "
+    "bbb",
+    " s ",
+    "sss"
   ],
   "result": {
     "id": "wenyan_programming:pedestal_block"

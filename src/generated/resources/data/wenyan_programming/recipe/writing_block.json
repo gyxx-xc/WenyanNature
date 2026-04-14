@@ -6,8 +6,9 @@
     "p": "minecraft:writable_book"
   },
   "pattern": [
-    " p ",
-    " m "
+    " ",
+    "p",
+    "m"
   ],
   "result": {
     "id": "wenyan_programming:writing_block"

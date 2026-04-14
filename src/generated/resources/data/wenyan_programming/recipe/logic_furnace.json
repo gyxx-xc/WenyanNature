@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "f": "minecraft:furnace",
-    "r": "minecraft:lightning_rod",
+    "r": "#minecraft:lightning_rods",
     "z": [
       "wenyan_programming:hand_runner_0",
       "wenyan_programming:hand_runner_1",

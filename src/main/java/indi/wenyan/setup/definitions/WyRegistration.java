@@ -47,6 +47,12 @@ public enum WyRegistration {
     public static final TagKey<Item> RUNNER_PAPER_ITEM = TagKey.create(
             Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "runner_paper_item"));
 
+    public static final TagKey<Item> COBBLESTONES_ITEM = TagKey.create(
+            Registries.ITEM, Identifier.fromNamespaceAndPath("c", "cobblestones"));
+
+    public static final TagKey<Item> STONE_BRICKS_ITEM = TagKey.create(
+            Registries.ITEM, Identifier.fromNamespaceAndPath("c", "stone_bricks"));
+
     /**
      * Registers all content with the mod event bus
      */
