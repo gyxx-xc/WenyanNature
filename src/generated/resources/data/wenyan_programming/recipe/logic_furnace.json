@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": "minecraft:furnace",
+    "r": "minecraft:lightning_rod",
+    "z": [
+      "wenyan_programming:hand_runner_0",
+      "wenyan_programming:hand_runner_1",
+      "wenyan_programming:hand_runner_2",
+      "wenyan_programming:hand_runner_3",
+      "wenyan_programming:hand_runner_4",
+      "wenyan_programming:hand_runner_5",
+      "wenyan_programming:hand_runner_6"
+    ]
+  },
+  "pattern": [
+    " r ",
+    "zfz",
+    " z "
+  ],
+  "result": {
+    "id": "wenyan_programming:logic_furnace"
+  }
+}

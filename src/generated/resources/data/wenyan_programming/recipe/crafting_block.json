@@ -2,8 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "minecraft:stone_bricks",
-    "C": [
+    "b": [
+      "minecraft:stone_bricks",
+      "minecraft:deepslate_bricks"
+    ],
+    "c": [
       "minecraft:cobblestone",
       "minecraft:andesite",
       "minecraft:diorite",
@@ -11,12 +14,12 @@
       "minecraft:blackstone",
       "minecraft:cobbled_deepslate"
     ],
-    "T": "minecraft:crafting_table"
+    "t": "minecraft:crafting_table"
   },
   "pattern": [
-    " C ",
-    " T ",
-    " B "
+    " c ",
+    " t ",
+    " b "
   ],
   "result": {
     "id": "wenyan_programming:crafting_block"

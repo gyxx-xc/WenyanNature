@@ -7,6 +7,7 @@ import indi.wenyan.content.item.throw_runner.ThrowRunnerItem;
 import indi.wenyan.content.recipe.combine_module.ThrowModuleRecipe;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -209,8 +210,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 WenyanItems.FROST_PAPER.get(),
                 WenyanItems.PHOENIX_PAPER.get(),
                 WenyanItems.STARLIGHT_PAPER.get(),
-                WenyanItems.DRAGON_PAPER.get()
-        );
+                WenyanItems.DRAGON_PAPER.get());
 
         ShapedRecipeBuilder
                 .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC,
@@ -400,10 +400,11 @@ public class CheckerRecipeProvider extends RecipeProvider {
         // float_note
         ShapedRecipeBuilder
                 .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.FLOAT_NOTE.get())
-                .pattern("PG")
-                .define('P', Items.PAPER)
-                .define('G', Items.GLOWSTONE_DUST)
-                .unlockedBy("has_paper", has(Items.PAPER))
+                .pattern("is ")
+                .pattern("is ")
+                .define('i', Items.IRON_INGOT)
+                .define('s', Items.STICK)
+                .unlockedBy("has_stick", has(Items.STICK))
                 .save(output);
 
         // === Blocks ===
@@ -413,29 +414,108 @@ public class CheckerRecipeProvider extends RecipeProvider {
                 Items.DIORITE,
                 Items.GRANITE,
                 Items.BLACKSTONE,
-                Items.COBBLED_DEEPSLATE
-        );
+                Items.COBBLED_DEEPSLATE);
+
+        Ingredient stoneBrickIngredient = Ingredient.of(
+                Items.STONE_BRICKS,
+                Items.DEEPSLATE_BRICKS);
 
         // crafting_block_item
         ShapedRecipeBuilder
                 .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.CRAFTING_BLOCK_ITEM.get())
-                .pattern(" C ")
-                .pattern(" T ")
-                .pattern(" B ")
-                .define('C', cobblestoneIngredient)
-                .define('T', Items.CRAFTING_TABLE)
-                .define('B', Items.STONE_BRICKS)
+                .pattern(" c ")
+                .pattern(" t ")
+                .pattern(" b ")
+                .define('c', cobblestoneIngredient)
+                .define('t', Items.CRAFTING_TABLE)
+                .define('b', stoneBrickIngredient)
                 .unlockedBy("has_crafting_table", has(Items.CRAFTING_TABLE))
                 .save(output);
 
         // pedestal_block
         ShapedRecipeBuilder
                 .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.PEDESTAL_BLOCK_ITEM.get())
-                .pattern(" C ")
-                .pattern(" I ")
-                .define('C', cobblestoneIngredient)
-                .define('I', Items.IRON_BLOCK)
-                .unlockedBy("has_iron_block", has(Items.IRON_BLOCK))
+                .pattern(" c ")
+                .pattern(" i ")
+                .define('c', cobblestoneIngredient)
+                .define('i', Items.IRON_BLOCK)
+                .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
+                .save(output);
+
+        // writing_block_item
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.WRITING_BLOCK_ITEM.get())
+                .pattern(" p ")
+                .pattern(" m ")
+                .define('p', Items.WRITABLE_BOOK)
+                .define('m', Items.SMITHING_TABLE)
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
+
+        // logic_furnace_block_item
+        //FIXME: HAND_RUNNER getItem problem, cannot create
+        Ingredient fuzhou = Ingredient.of(
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_1),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_2),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_3),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_4),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_5),
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6));
+
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.LOGIC_FURNACE_BLOCK_ITEM.get())
+                .pattern(" r ")
+                .pattern("zfz")
+                .pattern(" z ")
+                .define('r', Items.LIGHTNING_ROD)
+                .define('z', fuzhou)
+                .define('f', Items.FURNACE)
+                .unlockedBy("has_furnace", has(Items.FURNACE))
+                .save(output);
+
+        // power_block_item
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.POWER_BLOCK_ITEM.get())
+                .pattern(" p ")
+                .pattern("psp")
+                .pattern(" p ")
+                .define('p',WenyanItems.DRAGON_PAPER)
+                .define('s',Items.NETHER_STAR)
+                .unlockedBy("has_dragon_paper",has(WenyanItems.DRAGON_PAPER))
+                .save(output);
+
+        // formation_core_module_block_item
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get())
+                        .pattern(" p ")
+                        .pattern("ptp")
+                        .pattern(" p ")
+                        .define('p',WenyanItems.PHOENIX_PAPER)
+                        .define('t',Items.TARGET)
+                        .unlockedBy("has_target",has(Items.TARGET))
+                        .unlockedBy("has_phoenix_paper",has(WenyanItems.PHOENIX_PAPER))
+                        .save(output);
+        // screen_module_block_item
+        ShapedRecipeBuilder
+                .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get())
+                    .pattern(" p ")
+                    .pattern("pgp")
+                    .pattern(" p ")
+                    .define('p',WenyanItems.CLOUD_PAPER)
+                    .define('g',Items.GLOWSTONE)
+                    .unlockedBy("has_cloud_paper",has(WenyanItems.CLOUD_PAPER))
+                    .save(output);
+        // lock_module_block_item
+        ShapedRecipeBuilder
+            .shaped(BuiltInRegistries.ITEM, RecipeCategory.MISC, WenyanItems.LOCK_MODULE_BLOCK_ITEM.get())
+                .pattern(" p ")
+                .pattern("prp")
+                .pattern(" p ")
+                .define('p',WenyanItems.FROST_PAPER)
+                .define('r',Items.COMPARATOR)
+                .unlockedBy("has_frost_paper",has(WenyanItems.FROST_PAPER))
+                .unlockedBy("has_comparator",has(Items.COMPARATOR))
                 .save(output);
     }
 

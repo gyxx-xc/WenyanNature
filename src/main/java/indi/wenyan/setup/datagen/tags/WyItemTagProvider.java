@@ -16,8 +16,6 @@ import org.jspecify.annotations.NonNull;
 import java.util.concurrent.CompletableFuture;
 
 public class WyItemTagProvider extends ItemTagsProvider {
-    public static final TagKey<Item> RUNNER_PAPER_ITEM = TagKey.create(
-            Registries.ITEM, Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "runner_paper_item"));
 
     public WyItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider, WenyanProgramming.MODID);
@@ -25,24 +23,13 @@ public class WyItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NonNull Provider provider) {
-        tag(RUNNER_PAPER_ITEM).add(
+        tag(WyRegistration.RUNNER_PAPER_ITEM).add(
                 WenyanItems.BAMBOO_PAPER.get(),
                 WenyanItems.CLOUD_PAPER.get(),
                 WenyanItems.FROST_PAPER.get(),
                 WenyanItems.PHOENIX_PAPER.get(),
                 WenyanItems.STARLIGHT_PAPER.get(),
-                WenyanItems.DRAGON_PAPER.get()
-        );
-
-        TagKey<Item> cobblestones = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "cobblestones"));
-        tag(cobblestones).add(
-                Items.COBBLESTONE,
-                Items.ANDESITE,
-                Items.DIORITE,
-                Items.GRANITE,
-                Items.BLACKSTONE,
-                Items.COBBLED_DEEPSLATE
-        );
+                WenyanItems.DRAGON_PAPER.get());
 
         tag(WyRegistration.PAPER_MODULE_ITEM).add(
                 WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(),
@@ -56,7 +43,6 @@ public class WyItemTagProvider extends ItemTagsProvider {
                 WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.STRING_MODULE_BLOCK_ITEM.get(),
                 WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get(),
-                WenyanItems.PISTON_MODULE_BLOCK_ITEM.get()
-        );
+                WenyanItems.PISTON_MODULE_BLOCK_ITEM.get());
     }
 }

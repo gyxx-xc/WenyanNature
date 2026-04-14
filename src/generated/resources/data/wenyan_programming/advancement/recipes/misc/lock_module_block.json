@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_comparator": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:comparator"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_frost_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:frost_paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "wenyan_programming:lock_module_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_frost_paper",
+      "has_comparator"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "wenyan_programming:lock_module_block"
+    ]
+  }
+}

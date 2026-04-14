@@ -33,36 +33,37 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public enum WenyanItems {
     ;
     public static final DeferredRegister.Items DR = DeferredRegister.createItems(WenyanProgramming.MODID);
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, WenyanProgramming.MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
+            .create(Registries.CREATIVE_MODE_TAB, WenyanProgramming.MODID);
 
     // Hand Runner items
-    public static final RunnerTier.TieredItemRegistrator<BlockItem> HAND_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(RunnerItem.ID,
-            RunnerItem::new);
-    public static final RunnerTier.TieredItemRegistrator<Item> THROW_RUNNER = RunnerTier.TieredItemRegistrator.registerTieredItem(ThrowRunnerItem.ID,
-            ThrowRunnerItem::new);
+    public static final RunnerTier.TieredItemRegistrator<BlockItem> HAND_RUNNER = RunnerTier.TieredItemRegistrator
+            .registerTieredItem(RunnerItem.ID,
+                    RunnerItem::new);
+    public static final RunnerTier.TieredItemRegistrator<Item> THROW_RUNNER = RunnerTier.TieredItemRegistrator
+            .registerTieredItem(ThrowRunnerItem.ID,
+                    ThrowRunnerItem::new);
 
-    @Deprecated
-    public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
-            (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
-    public static final DeferredItem<Item> PRINT_INVENTORY_MODULE = DR.registerItem(PrintInventoryModule.ID, PrintInventoryModule::new);
     // Items and Tools
-    public static final DeferredItem<Item> FLOAT_NOTE = DR.registerItem(FloatNoteItem.ID, FloatNoteItem::new);
     public static final DeferredItem<Item> THROW_MODULE = DR.registerItem(ThrowModule.ID, ThrowModule::new);
 
     // Paper items
     public static final DeferredItem<Item> BAMBOO_PAPER = DR.registerItem(BambooPaper.ID, BambooPaper::new);
     public static final DeferredItem<Item> CLOUD_PAPER = DR.registerItem(CloudPaper.ID, CloudPaper::new);
+    public static final DeferredItem<Item> STARLIGHT_PAPER = DR.registerItem(StarlightPaper.ID, StarlightPaper::new);
     public static final DeferredItem<Item> FROST_PAPER = DR.registerItem(FrostPaper.ID, FrostPaper::new);
     public static final DeferredItem<Item> PHOENIX_PAPER = DR.registerItem(PhoenixPaper.ID, PhoenixPaper::new);
-    public static final DeferredItem<Item> STARLIGHT_PAPER = DR.registerItem(StarlightPaper.ID, StarlightPaper::new);
     public static final DeferredItem<Item> DRAGON_PAPER = DR.registerItem(DragonPaper.ID, DragonPaper::new);
     // Ink items
-    public static final DeferredItem<Item> ARCANE_INK = DR.registerItem(ArcaneInk.ID, ArcaneInk::new);
     public static final DeferredItem<Item> BAMBOO_INK = DR.registerItem(BambooInk.ID, BambooInk::new);
-    public static final DeferredItem<Item> CELESTIAL_INK = DR.registerItem(CelestialInk.ID, CelestialInk::new);
     public static final DeferredItem<Item> CINNABAR_INK = DR.registerItem(CinnabarInk.ID, CinnabarInk::new);
-    public static final DeferredItem<Item> LUNAR_INK = DR.registerItem(LunarInk.ID, LunarInk::new);
     public static final DeferredItem<Item> STARLIGHT_INK = DR.registerItem(StarlightInk.ID, StarlightInk::new);
+    public static final DeferredItem<Item> LUNAR_INK = DR.registerItem(LunarInk.ID, LunarInk::new);
+    public static final DeferredItem<Item> CELESTIAL_INK = DR.registerItem(CelestialInk.ID, CelestialInk::new);
+    public static final DeferredItem<Item> ARCANE_INK = DR.registerItem(ArcaneInk.ID, ArcaneInk::new);
+
+    // User items
+    public static final DeferredItem<Item> FLOAT_NOTE = DR.registerItem(FloatNoteItem.ID, FloatNoteItem::new);
     public static final DeferredItem<BlockItem> CRAFTING_BLOCK_ITEM = DR.registerItem(CraftingBlock.ID,
             properties -> new BlockItem(WenyanBlocks.CRAFTING_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> PEDESTAL_BLOCK_ITEM = DR.registerItem(PedestalBlock.ID,
@@ -73,64 +74,78 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.LOGIC_FURNACE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> POWER_BLOCK_ITEM = DR.registerItem(PowerBlock.ID,
             properties -> new BlockItem(WenyanBlocks.POWER_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> EXPLOSION_MODULE_BLOCK_ITEM = DR.registerItem(ExplosionModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.EXPLOSION_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> INFORMATION_MODULE_BLOCK_ITEM = DR.registerItem(WorldModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.INFORMATION_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> MATH_MODULE_BLOCK_ITEM = DR.registerItem(MathModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.MATH_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> BIT_MODULE_BLOCK_ITEM = DR.registerItem(BitModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.BIT_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> BLOCK_MODULE_BLOCK_ITEM = DR.registerItem(BlockModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.BLOCK_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> RANDOM_MODULE_BLOCK_ITEM = DR.registerItem(RandomModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.RANDOM_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> ITEM_MODULE_BLOCK_ITEM = DR.registerItem(ItemModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.ITEM_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> VEC3_MODULE_BLOCK_ITEM = DR.registerItem(Vec3ModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.VEC3_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> COLLECTION_MODULE_BLOCK_ITEM = DR.registerItem(CollectionModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.COLLECTION_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> STRING_MODULE_BLOCK_ITEM = DR.registerItem(StringModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.STRING_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> ENTITY_MODULE_BLOCK_ITEM = DR.registerItem(EntityModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.ENTITY_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM = DR.registerItem(ScreenModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.SCREEN_MODULE_BLOCK.get(), properties));
+
+    // Blocks
+    public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM = DR.registerItem(
+            FormationCoreModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> LOCK_MODULE_BLOCK_ITEM = DR.registerItem(LockModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.LOCK_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM = DR.registerItem(FormationCoreModuleBlock.ID,
-            properties -> new BlockItem(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK.get(), properties));
-    public static final DeferredItem<BlockItem> BLOCKING_QUEUE_MODULE_BLOCK_ITEM = DR.registerItem(BlockingQueueModuleBlock.ID,
+    public static final DeferredItem<BlockItem> SCREEN_MODULE_BLOCK_ITEM = DR.registerItem(ScreenModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.SCREEN_MODULE_BLOCK.get(), properties));
+
+    // Modules
+    public static final DeferredItem<BlockItem> BIT_MODULE_BLOCK_ITEM = DR.registerItem(BitModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.BIT_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> MATH_MODULE_BLOCK_ITEM = DR.registerItem(MathModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.MATH_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> VEC3_MODULE_BLOCK_ITEM = DR.registerItem(Vec3ModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.VEC3_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> RANDOM_MODULE_BLOCK_ITEM = DR.registerItem(RandomModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.RANDOM_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> STRING_MODULE_BLOCK_ITEM = DR.registerItem(StringModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.STRING_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> COLLECTION_MODULE_BLOCK_ITEM = DR.registerItem(CollectionModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.COLLECTION_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> ITEM_MODULE_BLOCK_ITEM = DR.registerItem(ItemModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.ITEM_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> BLOCK_MODULE_BLOCK_ITEM = DR.registerItem(BlockModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.BLOCK_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> ENTITY_MODULE_BLOCK_ITEM = DR.registerItem(EntityModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.ENTITY_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> INFORMATION_MODULE_BLOCK_ITEM = DR.registerItem(WorldModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.INFORMATION_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> EXPLOSION_MODULE_BLOCK_ITEM = DR.registerItem(ExplosionModuleBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.EXPLOSION_MODULE_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> BLOCKING_QUEUE_MODULE_BLOCK_ITEM = DR.registerItem(
+            BlockingQueueModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> PISTON_MODULE_BLOCK_ITEM = DR.registerItem(PistonModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.PISTON_MODULE_BLOCK.get(), properties));
 
     @Deprecated
-    public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM = DR.registerItem(CommunicateModuleBlock.ID,
+    public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
+            (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
+    public static final DeferredItem<Item> PRINT_INVENTORY_MODULE = DR.registerItem(PrintInventoryModule.ID,
+            PrintInventoryModule::new);
+
+    @Deprecated
+    public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM = DR.registerItem(
+            CommunicateModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.COMMUNICATE_MODULE_BLOCK.get(), properties));
 
     @SuppressWarnings("unused")
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("wenyan_programming", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS
+            .register("wenyan_programming", () -> CreativeModeTab.builder()
             .title(GuiText.CreativeTabTitle.text())
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> HAND_RUNNER.getItem(RunnerTier.RUNNER_0).getDefaultInstance())
             .displayItems((parameters, output) -> {
-                //Fuzhou
+                // Fuzhou
                 for (var runner : HAND_RUNNER.getItemsSorted())
                     output.accept(runner);
                 for (var throwRunner : THROW_RUNNER.getItemsSorted())
                     output.accept(throwRunner);
-                //Modules
+                // Modules
                 output.accept(THROW_MODULE.get());
-                //Papers
+                // Papers
                 output.accept(BAMBOO_PAPER.get());
                 output.accept(CLOUD_PAPER.get());
                 output.accept(STARLIGHT_PAPER.get());
                 output.accept(FROST_PAPER.get());
                 output.accept(PHOENIX_PAPER.get());
                 output.accept(DRAGON_PAPER.get());
-                //Inks
+                // Inks
                 output.accept(BAMBOO_INK.get());
                 output.accept(CINNABAR_INK.get());
                 output.accept(STARLIGHT_INK.get());
@@ -138,7 +153,7 @@ public enum WenyanItems {
                 output.accept(CELESTIAL_INK.get());
                 output.accept(ARCANE_INK.get());
 
-                //User items
+                // User items
                 output.accept(FLOAT_NOTE.get());
                 output.accept(CRAFTING_BLOCK_ITEM.get());
                 output.accept(PEDESTAL_BLOCK_ITEM.get());
@@ -146,12 +161,12 @@ public enum WenyanItems {
                 output.accept(LOGIC_FURNACE_BLOCK_ITEM.get());
                 output.accept(POWER_BLOCK_ITEM.get());
 
-                //Blocks
+                // Blocks
                 output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
                 output.accept(LOCK_MODULE_BLOCK_ITEM.get());
                 output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
 
-                //Modules
+                // Modules
                 output.accept(BIT_MODULE_BLOCK_ITEM.get());
                 output.accept(MATH_MODULE_BLOCK_ITEM.get());
                 output.accept(VEC3_MODULE_BLOCK_ITEM.get());

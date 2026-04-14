@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": "wenyan_programming:dragon_paper",
+    "s": "minecraft:nether_star"
+  },
+  "pattern": [
+    " p ",
+    "psp",
+    " p "
+  ],
+  "result": {
+    "id": "wenyan_programming:power_block"
+  }
+}
