@@ -35,7 +35,6 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add(WenyanItems.FLOAT_NOTE.get(), "浮签");
         add(WenyanItems.BAMBOO_PAPER.get(), "松竹纸 (Lv.1)");
         add(WenyanItems.CLOUD_PAPER.get(), "云篆纸 (Lv.2)");
         add(WenyanItems.STARLIGHT_PAPER.get(), "星辉纸 (Lv.3)");
@@ -57,22 +56,22 @@ public class EnglishLanguageProvider extends LanguageProvider {
 
         add(WenyanItems.THROW_MODULE.get(), "投符令");
 
+        add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
         addBlockAndItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get(), "位元符");
-        addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");
         addBlockAndItem(WenyanItems.MATH_MODULE_BLOCK_ITEM.get(), "數符");
+        addBlockAndItem(WenyanItems.VEC3_MODULE_BLOCK_ITEM.get(), "向量符");
         addBlockAndItem(WenyanItems.RANDOM_MODULE_BLOCK_ITEM.get(), "熵符");
         addBlockAndItem(WenyanItems.STRING_MODULE_BLOCK_ITEM.get(), "字串符");
-        addBlockAndItem(WenyanItems.VEC3_MODULE_BLOCK_ITEM.get(), "向量符");
+        addBlockAndItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get(), "集符");
+        addBlockAndItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(), "物品符");
         addBlockAndItem(WenyanItems.BLOCK_MODULE_BLOCK_ITEM.get(), "方塊符");
         addBlockAndItem(WenyanItems.ENTITY_MODULE_BLOCK_ITEM.get(), "實體符");
-        addBlockAndItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(), "爆裂符");
-        addBlockAndItem(WenyanItems.ITEM_MODULE_BLOCK_ITEM.get(), "物品符");
         addBlockAndItem(WenyanItems.INFORMATION_MODULE_BLOCK_ITEM.get(), "天下情報符");
+        addBlockAndItem(WenyanItems.EXPLOSION_MODULE_BLOCK_ITEM.get(), "爆裂符");
         addBlockAndItem(WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get(), "阻塞隊列符");
         addBlockAndItem(WenyanItems.PISTON_MODULE_BLOCK_ITEM.get(), "推動符");
 
-        addBlockAndItem(WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(), "螢幕石");
-        addBlockAndItem(WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(), "信號量石");
+        add(WenyanItems.FLOAT_NOTE.get(), "浮签");
 
         addBlockAndItem(WenyanItems.CRAFTING_BLOCK_ITEM.get(), "創石");
         addBlockAndItem(WenyanItems.PEDESTAL_BLOCK_ITEM.get(), "基石");
@@ -80,8 +79,8 @@ public class EnglishLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.LOGIC_FURNACE_BLOCK_ITEM.get(), "炉烘有天");
         addBlockAndItem(WenyanItems.POWER_BLOCK_ITEM.get(), "算核");
         addBlockAndItem(WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get(), "阵眼");
-
-        add(WenyanItems.PRINT_INVENTORY_MODULE.get(), "印符");
+        addBlockAndItem(WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(), "螢幕石");
+        addBlockAndItem(WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(), "信號量石");
 
         add(NotFindFu.getTranslationKey(), "謬：不識此符");
         add(CantStart.getTranslationKey(), "謬：不可始%s");
