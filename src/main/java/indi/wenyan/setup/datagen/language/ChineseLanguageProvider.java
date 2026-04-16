@@ -45,8 +45,9 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(WenyanItems.CINNABAR_INK.get(), "朱砂墨 (Lv.2)");
         add(WenyanItems.STARLIGHT_INK.get(), "星光墨 (Lv.3)");
         add(WenyanItems.LUNAR_INK.get(), "月华墨 (Lv.4)");
-        add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.5)");
-        add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.6)");
+        add(WenyanItems.ARCANE_INK.get(), "玄武墨 (Lv.5)");
+        add(WenyanItems.CELESTIAL_INK.get(), "冥土墨 (Lv.6)");
+
 
         forTiered(this::addBlockAndItem, WenyanItems.HAND_RUNNER.getItemsSorted(),
                 "基础符", "一阶符", "二阶符", "三阶符", "四阶符", "五阶符", "六阶符");
