@@ -3,15 +3,15 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:throw_runner_6"
+        "recipe": "minecraft:throw_runner_4_clean"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_throw_runner_6": {
+    "has_throw_runner_4": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:throw_runner_6"
+            "items": "wenyan_programming:throw_runner_4"
           }
         ]
       },
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_throw_runner_6"
+      "has_throw_runner_4"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:throw_runner_6"
+      "minecraft:throw_runner_4_clean"
     ]
   }
 }

@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_paper": {
+    "has_cloud_paper": {
       "conditions": {
         "items": [
           {
@@ -31,7 +31,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_paper",
+      "has_cloud_paper",
       "has_smooth_stone"
     ]
   ],

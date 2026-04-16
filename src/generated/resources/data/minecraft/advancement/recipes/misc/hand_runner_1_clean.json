@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hand_runner": {
+    "has_hand_runner_1": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:throw_runner_5"
+            "items": "wenyan_programming:hand_runner_1"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "wenyan_programming:throw_runner_5_clean"
+        "recipe": "minecraft:hand_runner_1_clean"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_hand_runner"
+      "has_hand_runner_1"
     ]
   ],
   "rewards": {
     "recipes": [
-      "wenyan_programming:throw_runner_5_clean"
+      "minecraft:hand_runner_1_clean"
     ]
   }
 }

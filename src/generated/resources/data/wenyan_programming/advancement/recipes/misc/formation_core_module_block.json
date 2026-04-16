@@ -31,8 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_target",
-      "has_phoenix_paper"
+      "has_phoenix_paper",
+      "has_target"
     ]
   ],
   "rewards": {

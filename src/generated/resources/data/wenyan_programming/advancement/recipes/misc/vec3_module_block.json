@@ -1,21 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_iron_ingot": {
+    "has_bamboo_paper": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:iron_ingot"
+            "items": "wenyan_programming:bamboo_paper"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_paper": {
+    "has_iron_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:bamboo_paper"
+            "items": "minecraft:iron_ingot"
           }
         ]
       },
@@ -31,7 +31,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_paper",
+      "has_bamboo_paper",
       "has_iron_ingot"
     ]
   ],

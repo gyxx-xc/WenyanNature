@@ -11,7 +11,7 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_hand_runner": {
+    "has_hand_runner_item": {
       "conditions": {
         "items": [
           {
@@ -42,7 +42,7 @@
     [
       "has_the_recipe",
       "has_lightning_rods",
-      "has_hand_runner",
+      "has_hand_runner_item",
       "has_furnace"
     ]
   ],

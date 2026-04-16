@@ -7,6 +7,7 @@ import indi.wenyan.setup.datagen.recipe.AnsweringRecipeBuilder;
 import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
+import indi.wenyan.setup.datagen.recipe.RecipeUtilities;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
@@ -31,151 +32,119 @@ public class HandrunnerRecipes {
             throwAddModuleRecipe(output, item);
         }
         // === Hand Runner ===
-        AnsweringRecipeBuilder
-                .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0))
-                .addInput(Items.PAPER)
-                .question(CheckerEnum.PLUS_CHECKER)
-                .round(8)
-                .save(output, "hand_runner");
-        AnsweringRecipeBuilder
-                .create(Items.DIAMOND)
-                .addInput(Items.COAL, 4)
-                .question(CheckerEnum.LABYRINTH_CHECKER)
-                .save(output, "diamond_labyrinth_checker");
+        RecipeUtilities.newAnsweringRecipe(output, "hand_runner",
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0), 1,
+                CheckerEnum.PLUS_CHECKER, 8,
+                Items.PAPER);
 
-        ShapedRecipeBuilder // Hand Runner 0
-                .shaped(items, RecipeCategory.MISC,
-                        WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0))
-                .pattern("III")
-                .pattern("I I")
-                .pattern("III")
-                .define('I', Items.PAPER)
-                .unlockedBy("has_paper", provider.publicHas(Items.PAPER))
-                .save(output);
+        RecipeUtilities.newAnsweringRecipe(output, "diamond_labyrinth_checker",
+                Items.DIAMOND, 1,
+                CheckerEnum.LABYRINTH_CHECKER, 1,
+                Items.COAL, Items.COAL, Items.COAL, Items.COAL);
+
+        // Hand Runner 0
+        RecipeUtilities.newShapedRecipe(provider, output, items, RecipeCategory.MISC,
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0), 1,
+                "III",
+                "I I",
+                "III",
+                'I', Items.PAPER);
 
         // Hand Runner 1
-        AnsweringRecipeBuilder // bamboo ink
-                .create(WenyanItems.BAMBOO_INK.get(), 4)
-                .addInput(Items.POTION, 1)
-                .addInput(Items.BLACK_DYE, 1)
-                .question(CheckerEnum.PRINT_CHECKER)
-                .save(output, "bamboo_ink");
-        AnsweringRecipeBuilder // bamboo paper
-                .create(WenyanItems.BAMBOO_PAPER.get(), 4)
-                .addInput(Items.PAPER, 1)
-                .addInput(Items.BAMBOO, 1)
-                .question(CheckerEnum.PLUS_CHECKER)
-                .save(output, "bamboo_paper");
-        AnsweringRecipeBuilder // Hand Runner 1
-                .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_1), 2)
-                .addInput(WenyanItems.BAMBOO_INK.get(), 1)
-                .addInput(WenyanItems.BAMBOO_PAPER.get(), 1)
-                .question(CheckerEnum.HAND_RUNNER_1_CHECKER)
-                .save(output, "hand_runner_1");
+        RecipeUtilities.newAnsweringRecipe(output, "bamboo_ink",
+                WenyanItems.BAMBOO_INK.get(), 4,
+                CheckerEnum.PRINT_CHECKER, 1,
+                Items.POTION, Items.BLACK_DYE);
+
+        RecipeUtilities.newAnsweringRecipe(output, "bamboo_paper",
+                WenyanItems.BAMBOO_PAPER.get(), 4,
+                CheckerEnum.PLUS_CHECKER, 1,
+                Items.PAPER, Items.BAMBOO);
+
+        RecipeUtilities.newAnsweringRecipe(output, "hand_runner_1",
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_1), 2,
+                CheckerEnum.HAND_RUNNER_1_CHECKER, 1,
+                WenyanItems.BAMBOO_INK.get(), WenyanItems.BAMBOO_PAPER.get());
 
         // Hand Runner 2
-        AnsweringRecipeBuilder // Cinnabar Ink
-                .create(WenyanItems.CINNABAR_INK.get(), 4)
-                .addInput(Items.POTION, 1)
-                .addInput(Items.BLACK_DYE, 1)
-                .addInput(Items.REDSTONE, 1)
-                .question(CheckerEnum.CINNABAR_INK_CHECKER)
-                .save(output, "cinnabar_ink");
-        AnsweringRecipeBuilder // Cloud Paper
-                .create(WenyanItems.CLOUD_PAPER.get(), 4)
-                .addInput(Items.FEATHER, 1)
-                .addInput(Items.PAPER, 1)
-                .question(CheckerEnum.CLOUD_PAPER_CHECKER)
-                .save(output, "cloud_paper");
-        AnsweringRecipeBuilder // Hand Runner 2
-                .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_2), 2)
-                .addInput(WenyanItems.CINNABAR_INK.get(), 1)
-                .addInput(WenyanItems.CLOUD_PAPER.get(), 1)
-                .question(CheckerEnum.HAND_RUNNER_2_CHECKER)
-                .save(output, "hand_runner_2");
+        RecipeUtilities.newAnsweringRecipe(output, "cinnabar_ink",
+                WenyanItems.CINNABAR_INK.get(), 4,
+                CheckerEnum.CINNABAR_INK_CHECKER, 1,
+                Items.POTION, Items.BLACK_DYE, Items.REDSTONE);
+
+        RecipeUtilities.newAnsweringRecipe(output, "cloud_paper",
+                WenyanItems.CLOUD_PAPER.get(), 4,
+                CheckerEnum.CLOUD_PAPER_CHECKER, 1,
+                Items.FEATHER, Items.PAPER);
+
+        RecipeUtilities.newAnsweringRecipe(output, "hand_runner_2",
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_2), 2,
+                CheckerEnum.HAND_RUNNER_2_CHECKER, 1,
+                WenyanItems.CINNABAR_INK.get(), WenyanItems.CLOUD_PAPER.get());
 
         // Hand Runner 3
-        AnsweringRecipeBuilder
-                .create(WenyanItems.STARLIGHT_INK.get(), 4)
-                .addInput(Items.POTION, 1)
-                .addInput(Items.BLACK_DYE, 1)
-                .addInput(Items.GLOWSTONE_DUST, 1)
-                .question(CheckerEnum.STARLIGHT_INK_CHECKER)
-                .save(output, "starlight_ink");
-        AnsweringRecipeBuilder
-                .create(WenyanItems.STARLIGHT_PAPER.get(), 4)
-                .addInput(Items.PAPER, 1)
-                .addInput(Items.GLOWSTONE_DUST, 1)
-                .question(CheckerEnum.STARLIGHT_PAPER_CHECKER) // Need change
-                .save(output, "star_paper");
-        AnsweringRecipeBuilder // Hand Runner 3
-                .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_3), 2)
-                .addInput(WenyanItems.STARLIGHT_INK.get(), 1)
-                .addInput(WenyanItems.STARLIGHT_PAPER.get(), 1)
-                .question(CheckerEnum.HAND_RUNNER_3_CHECKER) // Need change
-                .save(output, "hand_runner_3");
+        RecipeUtilities.newAnsweringRecipe(output, "starlight_ink",
+                WenyanItems.STARLIGHT_INK.get(), 4,
+                CheckerEnum.STARLIGHT_INK_CHECKER, 1,
+                Items.POTION, Items.BLACK_DYE, Items.GLOWSTONE_DUST);
+
+        RecipeUtilities.newAnsweringRecipe(output, "star_paper",
+                WenyanItems.STARLIGHT_PAPER.get(), 4,
+                CheckerEnum.STARLIGHT_PAPER_CHECKER, 1,
+                Items.PAPER, Items.GLOWSTONE_DUST);
+
+        RecipeUtilities.newAnsweringRecipe(output, "hand_runner_3",
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_3), 2,
+                CheckerEnum.HAND_RUNNER_3_CHECKER, 1,
+                WenyanItems.STARLIGHT_INK.get(), WenyanItems.STARLIGHT_PAPER.get());
 
         // Hand Runner 4
-        AnsweringRecipeBuilder // Lunar ink
-                .create(WenyanItems.LUNAR_INK.get(), 4)
-                .addInput(WenyanItems.STARLIGHT_INK.get(), 1)
-                .addInput(Items.BLACK_DYE, 1)
-                .question(CheckerEnum.LUNAR_INK_CHECKER)
-                .save(output, "lunar_ink");
-        AnsweringRecipeBuilder // frost_paper
-                .create(WenyanItems.FROST_PAPER.get(), 4)
-                .addInput(Items.SNOWBALL, 1)
-                .addInput(Items.GOLD_NUGGET, 1)
-                .addInput(Items.PAPER, 1)
-                .question(CheckerEnum.FROST_PAPER_CHECKER)
-                .save(output, "frost_paper");
-        AnsweringRecipeBuilder
-                .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_4), 2)
-                .addInput(WenyanItems.LUNAR_INK.get(), 1)
-                .addInput(WenyanItems.FROST_PAPER.get(), 1)
-                .question(CheckerEnum.HAND_RUNNER_4_CHECKER)
-                .save(output, "hand_runner_4");
+        RecipeUtilities.newAnsweringRecipe(output, "lunar_ink",
+                WenyanItems.LUNAR_INK.get(), 4,
+                CheckerEnum.LUNAR_INK_CHECKER, 1,
+                WenyanItems.STARLIGHT_INK.get(), Items.BLACK_DYE);
+
+        RecipeUtilities.newAnsweringRecipe(output, "frost_paper",
+                WenyanItems.FROST_PAPER.get(), 4,
+                CheckerEnum.FROST_PAPER_CHECKER, 1,
+                Items.SNOWBALL, Items.GOLD_NUGGET, Items.PAPER);
+
+        RecipeUtilities.newAnsweringRecipe(output, "hand_runner_4",
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_4), 2,
+                CheckerEnum.HAND_RUNNER_4_CHECKER, 1,
+                WenyanItems.LUNAR_INK.get(), WenyanItems.FROST_PAPER.get());
 
         // Hand Runner 5
-        AnsweringRecipeBuilder
-                .create(WenyanItems.ARCANE_INK.get(), 4)
-                .addInput(Items.ENCHANTED_BOOK, 1)
-                .addInput(WenyanItems.LUNAR_INK.get(), 1)
-                .question(CheckerEnum.ARCANE_INK_CHECKER)
-                .save(output, "arcane_ink");
-        AnsweringRecipeBuilder
-                .create(WenyanItems.PHOENIX_PAPER.get(), 4)
-                .addInput(Items.BLAZE_POWDER, 1)
-                .addInput(Items.FEATHER, 1)
-                .addInput(Items.PAPER, 1)
-                .question(CheckerEnum.PHOENIX_PAPER_CHECKER)
-                .save(output, "phoenix_paper");
-        AnsweringRecipeBuilder
-                .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_5), 2)
-                .addInput(WenyanItems.ARCANE_INK.get(), 1)
-                .addInput(WenyanItems.PHOENIX_PAPER.get(), 1)
-                .question(CheckerEnum.HAND_RUNNER_5_CHECKER)
-                .save(output, "hand_runner_5");
+        RecipeUtilities.newAnsweringRecipe(output, "arcane_ink",
+                WenyanItems.ARCANE_INK.get(), 4,
+                CheckerEnum.ARCANE_INK_CHECKER, 1,
+                Items.ENCHANTED_BOOK, WenyanItems.LUNAR_INK.get());
+
+        RecipeUtilities.newAnsweringRecipe(output, "phoenix_paper",
+                WenyanItems.PHOENIX_PAPER.get(), 4,
+                CheckerEnum.PHOENIX_PAPER_CHECKER, 1,
+                Items.BLAZE_POWDER, Items.FEATHER, Items.PAPER);
+
+        RecipeUtilities.newAnsweringRecipe(output, "hand_runner_5",
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_5), 2,
+                CheckerEnum.HAND_RUNNER_5_CHECKER, 1,
+                WenyanItems.ARCANE_INK.get(), WenyanItems.PHOENIX_PAPER.get());
 
         // Hand Runner 6
-        AnsweringRecipeBuilder
-                .create(WenyanItems.CELESTIAL_INK.get(), 4)
-                .addInput(Items.NETHERITE_SCRAP, 1)
-                .addInput(WenyanItems.ARCANE_INK.get(), 1)
-                .question(CheckerEnum.CELESTIAL_INK_CHECKER)
-                .save(output, "celestial_ink");
-        AnsweringRecipeBuilder
-                .create(WenyanItems.DRAGON_PAPER.get(), 4)
-                .addInput(Items.DRAGON_BREATH, 1)
-                .addInput(Items.PAPER, 1)
-                .question(CheckerEnum.DRAGON_PAPER_CHECKER)
-                .save(output, "dragon_paper");
-        AnsweringRecipeBuilder
-                .create(WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6), 2)
-                .addInput(WenyanItems.CELESTIAL_INK.get(), 1)
-                .addInput(WenyanItems.DRAGON_PAPER.get(), 1)
-                .question(CheckerEnum.HAND_RUNNER_6_CHECKER)
-                .save(output, "hand_runner_6");
+        RecipeUtilities.newAnsweringRecipe(output, "celestial_ink",
+                WenyanItems.CELESTIAL_INK.get(), 4,
+                CheckerEnum.CELESTIAL_INK_CHECKER, 1,
+                Items.NETHERITE_SCRAP, WenyanItems.ARCANE_INK.get());
+
+        RecipeUtilities.newAnsweringRecipe(output, "dragon_paper",
+                WenyanItems.DRAGON_PAPER.get(), 4,
+                CheckerEnum.DRAGON_PAPER_CHECKER, 1,
+                Items.DRAGON_BREATH, Items.PAPER);
+
+        RecipeUtilities.newAnsweringRecipe(output, "hand_runner_6",
+                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_6), 2,
+                CheckerEnum.HAND_RUNNER_6_CHECKER, 1,
+                WenyanItems.CELESTIAL_INK.get(), WenyanItems.DRAGON_PAPER.get());
 
         // == Throwable Runner ===
         Ingredient paperIngredient = Ingredient.of(
@@ -186,42 +155,27 @@ public class HandrunnerRecipes {
                 WenyanItems.STARLIGHT_PAPER.get(),
                 WenyanItems.DRAGON_PAPER.get());
 
-        ShapedRecipeBuilder
-                .shaped(items, RecipeCategory.MISC,
-                        WenyanItems.THROW_MODULE)
-                .pattern(" p ")
-                .pattern(" i ")
-                .pattern(" p ")
-                .define('p', paperIngredient)
-                .define('i', Items.GUNPOWDER)
-                .unlockedBy("has_paper", provider.publicHas(WenyanItems.BAMBOO_PAPER.get()))
-                .unlockedBy("has_gunpowder", provider.publicHas(Items.GUNPOWDER))
-                .save(output);
+        RecipeUtilities.newShapedRecipe(provider, output, items, RecipeCategory.MISC,
+                WenyanItems.THROW_MODULE, 1,
+                " p ",
+                " i ",
+                " p ",
+                'p', paperIngredient, WenyanItems.BAMBOO_PAPER.get(), "has_paper",
+                'i', Items.GUNPOWDER);
 
         for (RunnerTier tier : RunnerTier.values()) {
-            ShapelessRecipeBuilder
-                    .shapeless(items, RecipeCategory.MISC,
-                            THROW_RUNNER.getItem(tier))
-                    .requires(WenyanItems.HAND_RUNNER.getItem(tier))
-                    .requires(WenyanItems.THROW_MODULE)
-                    .unlockedBy("has_hand_runner_" + tier.name().toLowerCase(),
-                            provider.publicHas(WenyanItems.HAND_RUNNER.getItem(tier)))
-                    .save(output, "throw_" + tier.name().toLowerCase());
+            RecipeUtilities.newShapelessRecipe(provider, items, output, RecipeCategory.MISC,
+                    "throw_" + tier.name().toLowerCase(),
+                    THROW_RUNNER.getItem(tier), 1,
+                    WenyanItems.HAND_RUNNER.getItem(tier), WenyanItems.THROW_MODULE);
         }
     }
 
     public static void clearDataRecipe(HolderGetter<Item> items, RecipeOutput output, Item item, CheckerRecipeProvider provider) {
-        ShapelessRecipeBuilder
-                .shapeless(items, RecipeCategory.MISC, item)
-                .requires(item)
-                .unlockedBy("has_hand_runner", provider.publicHas(item))
-                .save(output, ResourceKey.create(Registries.RECIPE,
-                        Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                                // FIXME
-                                item.getDescriptionId()
-                                        .substring(item.getDescriptionId()
-                                                .lastIndexOf(".") + 1)
-                                        + "_clean")));
+        RecipeUtilities.newShapelessRecipe(provider, items, output, RecipeCategory.MISC,
+                item.getDescriptionId().substring(item.getDescriptionId().lastIndexOf(".") + 1) + "_clean",
+                item, 1,
+                item);
     }
 
     public static void throwAddModuleRecipe(RecipeOutput output, Item item) {
