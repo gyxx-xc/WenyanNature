@@ -1,5 +1,26 @@
 {
   "snippet_sets": {
+    "common_stmt": {
+      "title": "語句",
+      "snippets": [
+        {
+          "name": "若...者",
+          "content": "若{BOOL}者。\n  {STMT}\n也。{NONE}"
+        },
+        {
+          "name": "為是...遍",
+          "content": "為是{INT}遍。\n  {STMT}\n云云。{NONE}"
+        },
+        {
+          "name": "書...",
+          "content": "書{DATA}。{NONE}"
+        },
+        {
+          "name": "施...",
+          "content": "施{ID}。於{DATA}。{NONE}"
+        }
+      ]
+    },
     "variable_stmt": {
       "title": "變數",
       "snippets": [
@@ -478,10 +499,11 @@
     {
       "context": "STMT",
       "contain": [
+        "common_stmt",
         "variable_stmt",
-        "calc_stmt",
         "control_stmt",
         "function_stmt",
+        "calc_stmt",
         "object_stmt"
       ],
       "color": "0xFFFFFFFF"

@@ -7,9 +7,11 @@ import indi.wenyan.setup.datagen.recipe.craft.ItemRecipes;
 import indi.wenyan.setup.datagen.recipe.craft.ModuleRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
-import net.minecraft.world.item.Item;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.CompletableFuture;
@@ -32,7 +34,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
         super(provider, output);
     }
 
-    public <T> T publicHas(net.minecraft.world.level.ItemLike item) {
+    public <T> T publicHas(ItemLike item) {
         return (T) this.has(item);
     }
 

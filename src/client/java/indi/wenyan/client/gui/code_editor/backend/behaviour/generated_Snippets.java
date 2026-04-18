@@ -8,6 +8,24 @@ import java.util.List;
 
 public enum generated_Snippets {;
     
+    public static final SnippetSet COMMON_STMT = new SnippetSet("語句",
+        new SnippetSet.Snippet("若...者", List.of("若者。","  ","也。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.BOOL, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 2))),
+        new SnippetSet.Snippet("為是...遍", List.of("為是遍。","  ","云云。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.INT, 0, 2),
+                new SnippetSet.SnippetPlaceholder(Context.STMT, 1, 2),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 2, 3))),
+        new SnippetSet.Snippet("書...", List.of("書。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 2))),
+        new SnippetSet.Snippet("施...", List.of("施。於。"), List.of(
+                new SnippetSet.SnippetPlaceholder(Context.ID, 0, 1),
+                new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 3),
+                new SnippetSet.SnippetPlaceholder(Context.NONE, 0, 4)))
+    );
+
     public static final SnippetSet VARIABLE_STMT = new SnippetSet("變數",
         new SnippetSet.Snippet("夫...", List.of("夫。"), List.of(
                 new SnippetSet.SnippetPlaceholder(Context.DATA, 0, 1),
@@ -286,7 +304,7 @@ public enum generated_Snippets {;
     public static final List<SnippetSet> BOOL_CONTEXT = List.of(BOOL_LITERAL, IDENTIFIER, VARIABLE);
     public static final List<SnippetSet> INT_CONTEXT = List.of(INT_LITERAL, IDENTIFIER, VARIABLE);
     public static final List<SnippetSet> INT_L_CONTEXT = List.of(INT_LITERAL);
-    public static final List<SnippetSet> STMT_CONTEXT = List.of(VARIABLE_STMT, CALC_STMT, CONTROL_STMT, FUNCTION_STMT, OBJECT_STMT);
+    public static final List<SnippetSet> STMT_CONTEXT = List.of(COMMON_STMT, VARIABLE_STMT, CONTROL_STMT, FUNCTION_STMT, CALC_STMT, OBJECT_STMT);
     public static final List<SnippetSet> NONE_CONTEXT = List.of(NEW_LINE);
     public static final List<SnippetSet> ASSIGN_RIGHT_CONTEXT = List.of(ASSIGN_RIGHT);
     public static final List<SnippetSet> ELSE_CONTROL_CONTEXT = List.of(ELSE_CONTROL);

@@ -13,6 +13,7 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.Set;
 
@@ -146,7 +147,7 @@ public class WenyanValueProcessor extends AbstractProcessor {
         }
 
         var parameters = executableElement.getParameters();
-        if (parameters.size() != 1 || !typeUtils.isSameType(parameters.getFirst().asType(),
+        if (parameters.size() != 1 || !typeUtils.isSameType(parameters.get(0).asType(),
                 typeUtils.getDeclaredType(elementUtils.getTypeElement("java.util.List"), IWenyanValueType))) {
             throw new IllegalArgumentException("WenyanConstructor can only be applied to method that takes List<IWenyanValue>");
         }
@@ -171,6 +172,6 @@ public class WenyanValueProcessor extends AbstractProcessor {
     }
 
     private void error(Element e, String msg, Object... args) {
-        messager.printError(String.format(msg, args), e);
+        messager.printMessage(Diagnostic.Kind.ERROR, String.format(msg, args), e);
     }
 }
