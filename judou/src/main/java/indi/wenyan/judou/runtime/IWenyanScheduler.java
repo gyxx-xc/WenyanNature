@@ -4,7 +4,7 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 
-public interface IWenyanProgram<T extends IWenyanThread> {
+public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> {
     /// return false if no longer able to accepts/run thread
     boolean isAvailable();
 
@@ -18,11 +18,11 @@ public interface IWenyanProgram<T extends IWenyanThread> {
 
     boolean isRunning();
 
-    void unblock(IThreadHolder<T> runner) throws WenyanUnreachedException;
-
     void stop();
 
     void create(IThreadHolder<T> runner) throws WenyanException;
+
+    void unblock(IThreadHolder<T> runner) throws WenyanUnreachedException;
 
     // NOTE: not intend to call anywhere outside run(steps)
     void block(IThreadHolder<T> runner) throws WenyanUnreachedException;
@@ -30,4 +30,8 @@ public interface IWenyanProgram<T extends IWenyanThread> {
     void yield(IThreadHolder<T> runner) throws WenyanUnreachedException;
 
     void die(IThreadHolder<T> runner) throws WenyanUnreachedException;
+
+    interface IWenyanThread {
+        <T extends IWenyanThread> IWenyanScheduler<T> getProgram();
+    }
 }

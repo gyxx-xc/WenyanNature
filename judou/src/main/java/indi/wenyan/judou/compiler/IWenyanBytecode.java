@@ -4,6 +4,8 @@ import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public interface IWenyanBytecode {
     WenyanCodes getCode(int index);
 
@@ -51,7 +53,7 @@ public interface IWenyanBytecode {
      */
     int size();
 
-    java.util.List<WenyanBytecode.CapturedValue> getCapturedValues();
+    List<WenyanBytecode.CapturedValue> getCapturedValues();
 
     String getSourceCode();
 }

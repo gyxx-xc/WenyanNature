@@ -6,6 +6,7 @@ import indi.wenyan.content.block.LazyProgram;
 import indi.wenyan.content.block.runner.BlockPackageGetter;
 import indi.wenyan.content.item.throw_runner.FuContainerComponent;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
+import indi.wenyan.judou.compiler.WenyanCompiler;
 import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
@@ -14,10 +15,10 @@ import indi.wenyan.judou.exec_interface.structure.ExecQueue;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
 import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
-import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
-import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -67,7 +68,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     @Nullable
     private final Player player;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
-    private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram;
+    private final LazyProgram<IWenyanScheduler<WenyanSchedularImpl.PCB>> lazyProgram;
     private final Map<String, IWenyanDevice> packages = new HashMap<>();
     private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(_ -> {
     });
@@ -76,14 +77,14 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     public ThrowRunnerEntity(EntityType<ThrowRunnerEntity> entityType, Level level) {
         super(entityType, level);
-        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, 1));
+        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, 1));
         player = null;
     }
 
     public ThrowRunnerEntity(Level level, Position pos, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
         super(WenyanEntities.THROW_RUNNER_ENTITY.get(), pos.x(), pos.y(), pos.z(), level, itemStack);
         player = null;
-        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, tier.getStepSpeed()));
+        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, tier.getStepSpeed()));
         if (!level.isClientSide()) {
             var code = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
             if (code != null) {
@@ -100,7 +101,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     public ThrowRunnerEntity(Level level, LivingEntity owner, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
         super(WenyanEntities.THROW_RUNNER_ENTITY.get(), owner, level, itemStack);
-        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, tier.getStepSpeed()));
+        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, tier.getStepSpeed()));
         if (!level.isClientSide()) {
             if (owner instanceof Player p)
                 this.player = p;
@@ -124,7 +125,8 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private void startProgram(@NonNull ItemStack itemStack, ICodeHolder code) {
         setRemainingFireTicks(1);
         try {
-            lazyProgram.create().create(RunnerCreator.newRunner(WenyanFrame.ofCode(code.getCode()), this.initEnvironment()));
+            lazyProgram.createOrGet().create(RunnerCreator.newRunner(WenyanFrame
+                    .ofCode(WenyanCompiler.compile(code.getCode()).bytecode()), this.initEnvironment()));
         } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
             // add will show this message and kill itself at tick
@@ -147,9 +149,8 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
         errors.add(error);
     }
 
-    @Override
-    public WenyanPackage initEnvironment() {
-        var basePackage = IWenyanPlatform.super.initEnvironment();
+    private WenyanPackage initEnvironment() {
+        var basePackage = IWenyanPlatform.initEnvironment();
         basePackage.put(Symbol.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
                 new ImportRequest(t, this::getPackage, a));
         basePackage.put(WenyanSymbol.PRINT, (RequestCallHandler) (thread, self, argsList) ->
@@ -177,7 +178,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
             }
 
             lazyProgram.ifCreated()
-                    .filter(IWenyanProgram::isRunning)
+                    .filter(IWenyanScheduler::isRunning)
                     .ifPresentOrElse(program -> {
                         program.step();
                         handle(getContext());
@@ -225,7 +226,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     @Override
     public void remove(@NotNull RemovalReason reason) {
-        lazyProgram.ifCreated().ifPresent(IWenyanProgram::stop);
+        lazyProgram.ifCreated().ifPresent(IWenyanScheduler::stop);
         super.remove(reason);
     }
 

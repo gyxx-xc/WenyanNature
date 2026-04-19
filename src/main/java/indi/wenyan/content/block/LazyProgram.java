@@ -1,11 +1,11 @@
 package indi.wenyan.content.block;
 
-import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class LazyProgram<T extends IWenyanProgram<?>> {
+public class LazyProgram<T extends IWenyanScheduler<?>> {
     private T optionalProgram;
     private final Supplier<T> programSupplier;
 
@@ -13,7 +13,7 @@ public class LazyProgram<T extends IWenyanProgram<?>> {
         this.programSupplier = programSupplier;
     }
 
-    public T create() {
+    public T createOrGet() {
         if (optionalProgram == null || !optionalProgram.isAvailable())
             optionalProgram = programSupplier.get();
         return optionalProgram;

@@ -45,27 +45,12 @@ public class WenyanCompilerEnvironment {
         return result;
     }
 
-
-    /**
-     * Represents a for-loop environment with its end labels.
-     */
-    private record ForEnvironment(int forEndLabel, int progEndLabel) {
-    }
-
-    /**
-     * Represents a debug context with source location information.
-     */
-    private record Context(int line, int column, int contentStart, int contentEnd) {
-    }
-
     /**
      * Creates a new compiler environment with the specified bytecode.
-     *
-     * @param bytecode The bytecode to use
      */
-    public WenyanCompilerEnvironment(WenyanBytecode bytecode, @Nullable WenyanCompilerEnvironment parent, List<String> argv) {
+    public WenyanCompilerEnvironment(String code, @Nullable WenyanCompilerEnvironment parent, List<String> argv) {
         this.parent = parent;
-        this.bytecode = bytecode;
+        this.bytecode = new WenyanBytecode(code);
         var scope = new Scope(0);
         scopeStack.push(scope);
         for (String arg : argv) {
@@ -218,16 +203,6 @@ public class WenyanCompilerEnvironment {
     }
 
     /**
-     * Gets the constant index for a value, adding it if not present.
-     *
-     * @param value The value to look up
-     * @return The index of the constant
-     */
-    private int getConstIndex(IWenyanValue value) {
-        return constTable.computeIfAbsent(value, bytecode::addConst);
-    }
-
-    /**
      * Gets the identifier index for a string, adding it if not present.
      *
      * @param identifier The identifier to look up
@@ -237,24 +212,6 @@ public class WenyanCompilerEnvironment {
         return identifierTable.computeIfAbsent(identifier, bytecode::addIdentifier);
     }
 
-    private @Nullable ScopedValueHelper getScopedValue(String identifier) {
-        for (Scope locals : scopeStack) {
-            if (locals.variables.containsKey(identifier)) {
-                int index = locals.variables.get(identifier);
-                return new ScopedValueHelper(new ScopedValue(index, this.bytecode),
-                        new WenyanBytecode.CapturedValue(index, true));
-            }
-        }
-        // reach global, not found, stop
-        if (parent == null) return null;
-        // recursive
-        var scoped = parent.getScopedValue(identifier);
-        // not found, i.e. global
-        if (scoped == null) return null;
-        int index = capturedValueTable.computeIfAbsent(scoped.scopedValue(), ignore -> bytecode.addCapturedValue(scoped.capturedValue));
-        return new ScopedValueHelper(scoped.scopedValue,
-                new WenyanBytecode.CapturedValue(index, false));
-    }
 
     public String getSourceCode() {
         return bytecode.getSourceCode();
@@ -300,6 +257,39 @@ public class WenyanCompilerEnvironment {
         localVariableCounter = scopeStack.remove().variableBase;
     }
 
+    public IWenyanBytecode produceBytecode() {
+        return bytecode.toImmutable();
+    }
+
+    /**
+     * Gets the constant index for a value, adding it if not present.
+     *
+     * @param value The value to look up
+     * @return The index of the constant
+     */
+    private int getConstIndex(IWenyanValue value) {
+        return constTable.computeIfAbsent(value, bytecode::addConst);
+    }
+
+    private @Nullable ScopedValueHelper getScopedValue(String identifier) {
+        for (Scope locals : scopeStack) {
+            if (locals.variables.containsKey(identifier)) {
+                int index = locals.variables.get(identifier);
+                return new ScopedValueHelper(new ScopedValue(index, this.bytecode),
+                        new WenyanBytecode.CapturedValue(index, true));
+            }
+        }
+        // reach global, not found, stop
+        if (parent == null) return null;
+        // recursive
+        var scoped = parent.getScopedValue(identifier);
+        // not found, i.e. global
+        if (scoped == null) return null;
+        int index = capturedValueTable.computeIfAbsent(scoped.scopedValue(), ignore -> bytecode.addCapturedValue(scoped.capturedValue));
+        return new ScopedValueHelper(scoped.scopedValue,
+                new WenyanBytecode.CapturedValue(index, false));
+    }
+
     private static class Scope {
         private final int variableBase;
         private final Map<String, Integer> variables = new HashMap<>();
@@ -307,6 +297,18 @@ public class WenyanCompilerEnvironment {
         public Scope(int variableBase) {
             this.variableBase = variableBase;
         }
+    }
+
+    /**
+     * Represents a for-loop environment with its end labels.
+     */
+    private record ForEnvironment(int forEndLabel, int progEndLabel) {
+    }
+
+    /**
+     * Represents a debug context with source location information.
+     */
+    private record Context(int line, int column, int contentStart, int contentEnd) {
     }
 
     // if from local null, means it's local

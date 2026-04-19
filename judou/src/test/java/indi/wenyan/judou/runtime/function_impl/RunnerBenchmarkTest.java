@@ -1,5 +1,7 @@
 package indi.wenyan.judou.runtime.function_impl;
 
+import indi.wenyan.judou.compiler.IWenyanBytecode;
+import indi.wenyan.judou.compiler.WenyanCompiler;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.test_utils.NoScheProgram;
 import indi.wenyan.judou.utils.function.WenyanPackages;
@@ -23,7 +25,8 @@ public class RunnerBenchmarkTest {
                 
                 施「a 」以零
                 """;
-        IThreadHolder<NoScheProgram.SimpleThread> runner = new WenyanSwitchInlineRunner<>(WenyanFrame.ofCode(code), WenyanPackages.WENYAN_BASIC_PACKAGES);
+        IWenyanBytecode bytecode = WenyanCompiler.compile(code).bytecode();
+        IThreadHolder<NoScheProgram.SimpleThread> runner = new WenyanSwitchInlineRunner<>(WenyanFrame.ofCode(bytecode), WenyanPackages.WENYAN_BASIC_PACKAGES);
         var prog = new NoScheProgram();
         runner.setThread(prog.getThread());
 

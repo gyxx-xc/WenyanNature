@@ -2,7 +2,7 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.IWenyanThread;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.utils.UtilManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +11,7 @@ public enum RunnerCreator {
     ;
 
     @Contract("_, _ -> new")
-    public static @NotNull <T extends IWenyanThread> IThreadHolder<T> newRunner(WenyanFrame mainRuntime, IGlobalResolver globalResolver) {
+    public static @NotNull <T extends IWenyanScheduler.IWenyanThread> IThreadHolder<T> newRunner(WenyanFrame mainRuntime, IGlobalResolver globalResolver) {
         if (UtilManager.getConfig().useLegacyRunner()) {
             return new WenyanRunner<>(mainRuntime, globalResolver);
         } else {

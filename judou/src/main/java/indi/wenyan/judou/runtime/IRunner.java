@@ -15,5 +15,5 @@ public interface IRunner {
 
     void die() throws WenyanUnreachedException;
 
-    <T extends IWenyanThread> void create(IThreadHolder<T> newThread) throws WenyanException;
+    <T extends IWenyanScheduler.IWenyanThread> void create(IThreadHolder<T> newThread) throws WenyanException;
 }

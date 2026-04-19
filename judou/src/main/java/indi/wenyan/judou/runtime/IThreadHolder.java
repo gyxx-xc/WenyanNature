@@ -4,7 +4,7 @@ import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 
-public interface IThreadHolder<T extends IWenyanThread> extends IRunner {
+public interface IThreadHolder<T extends IWenyanScheduler.IWenyanThread> extends IRunner {
     void setThread(T thread);
 
     T getThread();
@@ -15,7 +15,7 @@ public interface IThreadHolder<T extends IWenyanThread> extends IRunner {
     void pause(); // for switch
 
     // Wrapper functions for convenience
-    default IWenyanProgram<T> program() {
+    default IWenyanScheduler<T> program() {
         return getThread().getProgram();
     }
 
@@ -45,7 +45,7 @@ public interface IThreadHolder<T extends IWenyanThread> extends IRunner {
     }
 
     @Override
-    default <A extends IWenyanThread> void create(IThreadHolder<A> newThread) throws WenyanException {
+    default <A extends IWenyanScheduler.IWenyanThread> void create(IThreadHolder<A> newThread) throws WenyanException {
         // NOTE: need check when refactor.
         //noinspection unchecked
         program().create((IThreadHolder<T>) newThread);

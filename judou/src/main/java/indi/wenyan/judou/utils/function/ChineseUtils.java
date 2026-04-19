@@ -1,13 +1,10 @@
 package indi.wenyan.judou.utils.function;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import indi.wenyan.judou.utils.UtilManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public enum ChineseUtils {
     ;
@@ -56,31 +53,6 @@ public enum ChineseUtils {
         }
 
         return number.toString();
-    }
-
-    private final static Pattern PATTERN = Pattern.compile("「「.*?」」|「.*?」");
-    public static @NotNull String convertedCode(String s) {
-        if (!UtilManager.getConfig().convertCode())
-            return s;
-
-        Matcher matcher = PATTERN.matcher(s);
-        StringBuilder result = new StringBuilder();
-        int lastEnd = 0;
-
-        while (matcher.find()) {
-            // Convert text before the current bracket
-            String beforeBracket = s.substring(lastEnd, matcher.start());
-            result.append(ZhConverterUtil.toTraditional(beforeBracket));
-            // Preserve text inside the bracket
-            result.append(matcher.group());
-            lastEnd = matcher.end();
-        }
-
-        // Convert remaining text after the last bracket
-        String remaining = s.substring(lastEnd);
-        result.append(ZhConverterUtil.toTraditional(remaining));
-
-        return result.toString();
     }
 
     public static @NotNull String toSimplifiedVar(String s) {

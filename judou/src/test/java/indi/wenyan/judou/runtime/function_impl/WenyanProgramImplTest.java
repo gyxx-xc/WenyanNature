@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class WenyanProgramImplTest {
 
     private TestPlatform platform;
-    private WenyanProgramImpl program;
+    private WenyanSchedularImpl program;
 
-    private static abstract class TestRunner implements IThreadHolder<WenyanProgramImpl.PCB> {
+    private static abstract class TestRunner implements IThreadHolder<WenyanSchedularImpl.PCB> {
         @Getter
         @Setter
-        WenyanProgramImpl.PCB thread;
+        WenyanSchedularImpl.PCB thread;
         int pc = 0;
         final int totalPc;
 
@@ -93,7 +93,7 @@ class WenyanProgramImplTest {
 
     @Test
     void run() throws WenyanException, InterruptedException {
-        program = new WenyanProgramImpl(platform, 10);
+        program = new WenyanSchedularImpl(platform, 10);
         program.create(new TestRunner(100) {
         });
         assertEquals(10, runUntilDone());
@@ -104,7 +104,7 @@ class WenyanProgramImplTest {
     class TestStep {
         @Test
         void step_singleThread_success() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 1000);
+            program = new WenyanSchedularImpl(platform, 1000);
             program.create(new TestRunner(10) {
             });
             assertEquals(1, runUntilDone());
@@ -113,7 +113,7 @@ class WenyanProgramImplTest {
 
         @Test
         void step_largeThread_success() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 5000);
+            program = new WenyanSchedularImpl(platform, 5000);
             program.create(new TestRunner(5000) {
             });
             program.step();
@@ -124,7 +124,7 @@ class WenyanProgramImplTest {
 
         @Test
         void step_mutiThread_success() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 15000);
+            program = new WenyanSchedularImpl(platform, 15000);
             // test multi-thread
             program.create(new TestRunner(5000) {
             });
@@ -140,7 +140,7 @@ class WenyanProgramImplTest {
 
         @Test
         void step_emptyThread_noBehavior() {
-            program = new WenyanProgramImpl(platform, 1);
+            program = new WenyanSchedularImpl(platform, 1);
             // test step with empty program
             for (int i = 0; i < 100; i++)
                 program.step();
@@ -149,7 +149,7 @@ class WenyanProgramImplTest {
 
         @Test
         void step_slowLongThread_warningAndStop() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 1000);
+            program = new WenyanSchedularImpl(platform, 1000);
             program.create(new TestRunner(5000) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -167,7 +167,7 @@ class WenyanProgramImplTest {
 
         @Test
         void step_slowShortThread_warningAndStop() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 1000);
+            program = new WenyanSchedularImpl(platform, 1000);
             program.create(new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -185,7 +185,7 @@ class WenyanProgramImplTest {
 
         @Test
         void step_fastTick_warning() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 1000);
+            program = new WenyanSchedularImpl(platform, 1000);
             program.create(new TestRunner(2) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -208,7 +208,7 @@ class WenyanProgramImplTest {
 
     @Test
     void isRunning() throws WenyanException, InterruptedException {
-        program = new WenyanProgramImpl(platform, 1000);
+        program = new WenyanSchedularImpl(platform, 1000);
         assertFalse(program.isRunning());
         program.create(new TestRunner(10) {
         });
@@ -227,7 +227,7 @@ class WenyanProgramImplTest {
     class TestBlock {
         @Test
         void block_singleThread_success() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 10);
+            program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -248,7 +248,7 @@ class WenyanProgramImplTest {
 
         @Test
         void block_multiThread_success() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 10);
+            program = new WenyanSchedularImpl(platform, 10);
             var runner1 = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -287,7 +287,7 @@ class WenyanProgramImplTest {
 
         @Test
         void block_redundantCall_fail() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 10);
+            program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -308,7 +308,7 @@ class WenyanProgramImplTest {
     class TestUnblock {
         @Test
         void unblock_normal_success() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 10);
+            program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(2) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -336,7 +336,7 @@ class WenyanProgramImplTest {
 
         @Test
         void unblock_runningThread_fail() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 10);
+            program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
                 protected void bytecodeRun() throws WenyanException {
@@ -355,7 +355,7 @@ class WenyanProgramImplTest {
     class TestYield {
         @Test
         void yield_normal_success() throws InterruptedException, WenyanException {
-            program = new WenyanProgramImpl(platform, 5);
+            program = new WenyanSchedularImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -376,7 +376,7 @@ class WenyanProgramImplTest {
 
         @Test
         void yield_mutiThread_success() throws WenyanException, InterruptedException {
-            program = new WenyanProgramImpl(platform, 5);
+            program = new WenyanSchedularImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -396,7 +396,7 @@ class WenyanProgramImplTest {
 
         @Test
         void yield_blocked_fail() throws InterruptedException, WenyanException {
-            program = new WenyanProgramImpl(platform, 5);
+            program = new WenyanSchedularImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -416,7 +416,7 @@ class WenyanProgramImplTest {
     class TestDie {
         @Test
         void die_normal_success() throws InterruptedException, WenyanException {
-            program = new WenyanProgramImpl(platform, 2);
+            program = new WenyanSchedularImpl(platform, 2);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -433,7 +433,7 @@ class WenyanProgramImplTest {
 
         @Test
         void die_dyingThread_error() throws InterruptedException, WenyanException {
-            program = new WenyanProgramImpl(platform, 2);
+            program = new WenyanSchedularImpl(platform, 2);
             var runner = new TestRunner(10) {
                 @Override
                 protected void bytecodeRun() throws WenyanException, ReturnException {
@@ -451,14 +451,14 @@ class WenyanProgramImplTest {
 
     @Test
     void stop() throws WenyanException, InterruptedException, NoSuchFieldException, IllegalAccessException {
-        program = new WenyanProgramImpl(platform, 5);
+        program = new WenyanSchedularImpl(platform, 5);
         program.create(new TestRunner(10) {
         });
         program.step();
         Thread.sleep(20);
         program.stop();
 
-        Class<? extends WenyanProgramImpl> obj = program.getClass();
+        Class<? extends WenyanSchedularImpl> obj = program.getClass();
         Field execField = obj.getDeclaredField("executor");
         execField.setAccessible(true);
         ExecutorService exec = (ExecutorService) execField.get(program);
@@ -469,13 +469,13 @@ class WenyanProgramImplTest {
     void testPCBEquals() {
         var runner = new TestRunner(0) {
         };
-        var pcb1 = new WenyanProgramImpl.PCB(runner, program);
-        var pcb2 = new WenyanProgramImpl.PCB(runner, program);
+        var pcb1 = new WenyanSchedularImpl.PCB(runner, program);
+        var pcb2 = new WenyanSchedularImpl.PCB(runner, program);
         assertEquals(pcb1.hashCode(), pcb1.hashCode());
         assertNotEquals(pcb1, pcb2);
         assertNotEquals(pcb1.hashCode(), pcb2.hashCode());
-        pcb1 = new WenyanProgramImpl.PCB(null, null);
-        pcb2 = new WenyanProgramImpl.PCB(null, null);
+        pcb1 = new WenyanSchedularImpl.PCB(null, null);
+        pcb2 = new WenyanSchedularImpl.PCB(null, null);
         pcb1.setWatchdog(null);
         pcb2.setWatchdog(null);
         assertNotEquals(pcb1, pcb2);
@@ -483,7 +483,7 @@ class WenyanProgramImplTest {
         pcb2 = pcb1;
         assertEquals(pcb1, pcb2);
         assertEquals(pcb1.hashCode(), pcb2.hashCode());
-        pcb1 = new WenyanProgramImpl.PCB(null, null);
+        pcb1 = new WenyanSchedularImpl.PCB(null, null);
         assertNotEquals(pcb1, pcb2);
         assertNotEquals(pcb1.hashCode(), pcb2.hashCode());
     }

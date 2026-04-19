@@ -1,7 +1,6 @@
 package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanRParser;
-import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.ParsableType;
@@ -176,24 +175,23 @@ public class WenyanExprVisitor extends WenyanVisitor {
             }
         }
 
-        WenyanBytecode functionBytecode = new WenyanBytecode(bytecode.getSourceCode());
         List<String> argv = new ArrayList<>();
         if (isObject) {
             argv.add(Symbol.SELF_ID);
             argv.add(Symbol.PARENT_ID);
         }
         for (var arg : argsType) argv.add(arg.id());
-        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(functionBytecode, bytecode, argv);
-        new WenyanMainVisitor(environment).visit(ctx.statements());
+        WenyanCompilerEnvironment functionEnvironment = new WenyanCompilerEnvironment(bytecode.getSourceCode(), bytecode, argv);
+        new WenyanMainVisitor(functionEnvironment).visit(ctx.statements());
 
-        bytecode.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
+        functionEnvironment.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
                 ctx.getStop().getStartIndex(), ctx.getStop().getStopIndex() + 1);
         // STUB: add a return null at end in case no return
-        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-        environment.add(WenyanCodes.RET);
-        bytecode.exitContext();
+        functionEnvironment.add(WenyanCodes.PUSH, WenyanNull.NULL);
+        functionEnvironment.add(WenyanCodes.RET);
+        functionEnvironment.exitContext();
 
-        bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(functionBytecode.toImmutable(), argsType, null));
+        bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(functionEnvironment.produceBytecode(), argsType, null));
     }
 
     @Override

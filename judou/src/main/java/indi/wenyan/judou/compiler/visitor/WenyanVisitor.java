@@ -5,7 +5,6 @@ import indi.wenyan.judou.antlr.WenyanRBaseVisitor;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.judou.utils.function.ChineseUtils;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -76,20 +75,16 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
         return result;
     }
 
-    /**
-     * Parses a Wenyan program string into an AST
-     *
-     * @param program The Wenyan program as a string
-     * @return The parsed program context
-     */
-    public static WenyanRParser.ProgramContext program(String program) {
+    public static void generateTo(String code, WenyanCompilerEnvironment environment) {
         WenyanRLexer lexer = new WenyanRLexer(
-                CharStreams.fromString(ChineseUtils.convertedCode(program)));
+                CharStreams.fromString(code));
         lexer.removeErrorListeners();
         lexer.addErrorListener(new WenyanErrorListener());
+
         WenyanRParser parser = new WenyanRParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(new WenyanErrorListener());
-        return parser.program();
+
+        new WenyanMainVisitor(environment).visit(parser.program());
     }
 }

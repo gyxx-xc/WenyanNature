@@ -1,10 +1,12 @@
 package indi.wenyan.judou.test_statement;
 
+import indi.wenyan.judou.compiler.IWenyanBytecode;
+import indi.wenyan.judou.compiler.WenyanCompiler;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
-import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.test_utils.TestPlatform;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -69,8 +71,9 @@ class AsyncStatementTest extends WenyanProgramTestHelper {
     void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
 
         TestPlatform testPlatform = new TestPlatform();
-        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform, 1000);
-        wenyanProgram.create(RunnerCreator.newRunner(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
+        IWenyanScheduler<WenyanSchedularImpl.PCB> wenyanProgram = new WenyanSchedularImpl(testPlatform, 1000);
+        IWenyanBytecode bytecode = WenyanCompiler.compile(code).bytecode();
+        wenyanProgram.create(RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), testPlatform.initEnvironment()));
         int cnt = 0;
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step();

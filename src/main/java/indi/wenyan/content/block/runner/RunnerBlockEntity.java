@@ -2,16 +2,18 @@ package indi.wenyan.content.block.runner;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.*;
+import indi.wenyan.judou.compiler.IWenyanBytecode;
+import indi.wenyan.judou.compiler.WenyanCompiler;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.ExecQueue;
 import indi.wenyan.judou.exec_interface.structure.ImportRequest;
 import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
 import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
-import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.WenyanNull;
@@ -61,7 +63,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     @Delegate(types = ICodeOutputHolder.class)
     private final TitleCodeOutputData titleCodeOutput;
 
-    private final LazyProgram<IWenyanProgram<WenyanProgramImpl.PCB>> lazyProgram;
+    private final LazyProgram<IWenyanScheduler<WenyanSchedularImpl.PCB>> lazyProgram;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
     private RunnerBlock.RunningState runningState;
     private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(this::safeAddCommunicate);
@@ -75,7 +77,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (blockState.getBlock() instanceof RunnerBlock block)
             steps = block.getTier().getStepSpeed();
         else steps = 1;
-        lazyProgram = new LazyProgram<>(() -> new WenyanProgramImpl(this, steps));
+        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, steps));
         runningState = blockState.getValue(RUNNING_STATE);
     }
 
@@ -91,9 +93,9 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             }
 
             RunnerBlock.RunningState newState = lazyProgram.ifCreated()
-                    .filter(IWenyanProgram::isRunning)
+                    .filter(IWenyanScheduler::isRunning)
                     .map(program -> {
-                        boolean remainSteps = program instanceof WenyanProgramImpl impl && impl.remainSteps();
+                        boolean remainSteps = program instanceof WenyanSchedularImpl impl && impl.remainSteps();
 
                         program.step();
                         handle(new BlockRequest.BlockContext(level, pos, state));
@@ -126,9 +128,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
     }
 
-    @Override
-    public WenyanPackage initEnvironment() {
-        var baseEnvironment = IWenyanPlatform.super.initEnvironment();
+    private WenyanPackage initEnvironment() {
+        var baseEnvironment = IWenyanPlatform.initEnvironment();
 
         baseEnvironment.put(Symbol.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
                 new ImportRequest(t, (_, name) -> {
@@ -161,7 +162,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     public void setRemoved() {
-        lazyProgram.ifCreated().ifPresent(IWenyanProgram::stop);
+        lazyProgram.ifCreated().ifPresent(IWenyanScheduler::stop);
         super.setRemoved();
     }
 
@@ -192,15 +193,17 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     }
 
     public boolean newThread(String pages) {
-        IThreadHolder<WenyanProgramImpl.PCB> runner;
+        IWenyanBytecode bytecode;
         try {
-            runner = RunnerCreator.newRunner(WenyanFrame.ofCode(pages), this.initEnvironment());
+            bytecode = WenyanCompiler.compile(pages).bytecode();
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return false;
         }
         try {
-            lazyProgram.create().create(runner);
+            IThreadHolder<WenyanSchedularImpl.PCB> runner =
+                    RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), this.initEnvironment());
+            lazyProgram.createOrGet().create(runner);
         } catch (WenyanException e) {
             handleError(e.getMessage());
             return false;
@@ -210,12 +213,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     public boolean isRunning() {
         return lazyProgram.ifCreated()
-                .map(IWenyanProgram::isRunning)
+                .map(IWenyanScheduler::isRunning)
                 .orElse(false);
     }
 
     public void playerRun() {
-        if (lazyProgram.create().isRunning()) {
+        if (lazyProgram.createOrGet().isRunning()) {
             handleError(ExceptionText.AlreadyRun.string());
             return;
         }

@@ -13,7 +13,7 @@ public interface IWenyanPlatform extends IExecReceiver {
     /**
      * Initializes the platform environment for the Wenyan runtime
      */
-    default WenyanPackage initEnvironment() {
+    static WenyanPackage initEnvironment() {
         var environment = new WenyanPackage(new HashMap<>());
         environment.combine(WenyanPackages.WENYAN_BASIC_PACKAGES);
         return environment;

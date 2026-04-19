@@ -34,9 +34,8 @@ public class TestPlatform implements IWenyanPlatform {
         return execQueue;
     }
 
-    @Override
     public WenyanPackage initEnvironment() {
-        var baseRuntime = IWenyanPlatform.super.initEnvironment();
+        var baseRuntime = IWenyanPlatform.initEnvironment();
         baseRuntime.put("書", new WenyanInlineJavacall((_, args) -> {
             output.addAll(args.stream().map(v -> {
                 if (v instanceof WenyanLeftValue) return ((WenyanLeftValue) v).getValue();

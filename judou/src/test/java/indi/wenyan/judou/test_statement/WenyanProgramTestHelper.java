@@ -1,11 +1,12 @@
 package indi.wenyan.judou.test_statement;
 
-import indi.wenyan.judou.exec_interface.IWenyanPlatform;
+import indi.wenyan.judou.compiler.IWenyanBytecode;
+import indi.wenyan.judou.compiler.WenyanCompiler;
 import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
-import indi.wenyan.judou.runtime.function_impl.WenyanProgramImpl;
+import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -62,9 +63,10 @@ class WenyanProgramTestHelper {
         assertNotNull(testPlatform.error, code);
     }
 
-    protected void createAndRun(String code, IWenyanPlatform testPlatform) throws WenyanException, InterruptedException {
-        IWenyanProgram<WenyanProgramImpl.PCB> wenyanProgram = new WenyanProgramImpl(testPlatform, 8000);
-        wenyanProgram.create(RunnerCreator.newRunner(WenyanFrame.ofCode(code), testPlatform.initEnvironment()));
+    protected void createAndRun(String code, TestPlatform testPlatform) throws WenyanException, InterruptedException {
+        IWenyanScheduler<WenyanSchedularImpl.PCB> wenyanProgram = new WenyanSchedularImpl(testPlatform, 8000);
+        IWenyanBytecode bytecode = WenyanCompiler.compile(code).bytecode();
+        wenyanProgram.create(RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step();
             testPlatform.handle(IHandleContext.NONE);

@@ -3,7 +3,7 @@ package indi.wenyan.judou.runtime.function_impl;
 import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.IWenyanThread;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
@@ -28,7 +28,7 @@ import java.util.List;
  * Represents a thread of execution in a Wenyan program.
  * Manages its execution state and runtime stack.
  */
-public class WenyanSwitchInlineRunner<T extends IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
+public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter
     private T thread;

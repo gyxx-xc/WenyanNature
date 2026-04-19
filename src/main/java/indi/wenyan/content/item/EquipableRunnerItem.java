@@ -5,14 +5,13 @@ import indi.wenyan.judou.exec_interface.IWenyanDevice;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
 import indi.wenyan.judou.exec_interface.structure.*;
-import indi.wenyan.judou.runtime.IWenyanProgram;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.judou.utils.function.Either;
-import indi.wenyan.judou.utils.language.Symbol;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.language.ILocalizationEnum;
 import lombok.Getter;
@@ -39,7 +38,7 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
 
     // STUB: may need to find a better way to do it,
     //   maybe after the program storage is done?
-    private static final Map<Integer, IWenyanProgram> PROGRAMS = new HashMap<>();
+    private static final Map<Integer, IWenyanScheduler> PROGRAMS = new HashMap<>();
     public final int runningLevel;
 
     @Getter
@@ -101,12 +100,11 @@ public class EquipableRunnerItem extends Item implements IWenyanPlatform {
 //        super.inventoryTick(stack, level, entity, slotId, isSelected);
 //    }
 
-    @Override
-    public WenyanPackage initEnvironment() {
-        var baseEnvironment = IWenyanPlatform.super.initEnvironment();
-        baseEnvironment.put(Symbol.IMPORT_ID, importFunction);
-        return baseEnvironment;
-    }
+//    private WenyanPackage initEnvironment() {
+//        var baseEnvironment = IWenyanPlatform.initEnvironment();
+//        baseEnvironment.put(Symbol.IMPORT_ID, importFunction);
+//        return baseEnvironment;
+//    }
 
     @Override
     public void handleError(String error) {

@@ -2,8 +2,7 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.IWenyanThread;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.utils.UtilManager;
@@ -16,7 +15,7 @@ import org.slf4j.Logger;
 import java.util.Collection;
 import java.util.concurrent.*;
 
-public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> {
+public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl.PCB> {
     private final int sliceStep = UtilManager.getConfig().getMaxSlice();
     private final int maxThread = UtilManager.getConfig().getMaxThread();
     private final int watchdogTimeout = UtilManager.getConfig().getWatchdogTimeout();
@@ -54,7 +53,7 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
         return thread;
     });
 
-    public WenyanProgramImpl(IWenyanPlatform platform, int step) {
+    public WenyanSchedularImpl(IWenyanPlatform platform, int step) {
         this.platform = platform;
         this.step = step;
     }
@@ -216,11 +215,11 @@ public class WenyanProgramImpl implements IWenyanProgram<WenyanProgramImpl.PCB> 
     @Data
     public static class PCB implements IWenyanThread {
         final IThreadHolder<PCB> runner;
-        final IWenyanProgram<PCB> program;
+        final IWenyanScheduler<PCB> program;
         State state = State.BLOCKED;
         ScheduledFuture<?> watchdog;
 
-        public PCB(IThreadHolder<PCB> runner, IWenyanProgram<PCB> program) {
+        public PCB(IThreadHolder<PCB> runner, IWenyanScheduler<PCB> program) {
             this.runner = runner;
             this.program = program;
         }

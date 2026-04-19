@@ -2,11 +2,10 @@ package indi.wenyan.judou.test_utils;
 
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.IWenyanProgram;
-import indi.wenyan.judou.runtime.IWenyanThread;
+import indi.wenyan.judou.runtime.IWenyanScheduler;
 import lombok.Getter;
 
-public class NoScheProgram implements IWenyanProgram<NoScheProgram.SimpleThread> {
+public class NoScheProgram implements IWenyanScheduler<NoScheProgram.SimpleThread> {
 
     @Getter
     private final IWenyanPlatform platform = new TestPlatform();
@@ -61,9 +60,9 @@ public class NoScheProgram implements IWenyanProgram<NoScheProgram.SimpleThread>
 
     public class SimpleThread implements IWenyanThread {
         @Override
-        public <T extends IWenyanThread> IWenyanProgram<T> getProgram() {
+        public <T extends IWenyanThread> IWenyanScheduler<T> getProgram() {
             //noinspection unchecked
-            return (IWenyanProgram<T>) NoScheProgram.this;
+            return (IWenyanScheduler<T>) NoScheProgram.this;
         }
     }
 }

@@ -2,6 +2,8 @@ package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
+import indi.wenyan.judou.structure.values.WenyanNull;
 
 /**
  * Main visitor for Wenyan language that orchestrates other specialized visitors.
@@ -30,5 +32,16 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public Boolean visitControl_statement(WenyanRParser.Control_statementContext ctx) {
         return new WenyanControlVisitor(bytecode).visit(ctx);
+    }
+
+    @Override
+    public Boolean visitProgram(WenyanRParser.ProgramContext ctx) {
+        visit(ctx.statements());
+        bytecode.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
+                ctx.getStop().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+        bytecode.add(WenyanCodes.PUSH, WenyanNull.NULL);
+        bytecode.add(WenyanCodes.RET);
+        bytecode.exitContext();
+        return true;
     }
 }

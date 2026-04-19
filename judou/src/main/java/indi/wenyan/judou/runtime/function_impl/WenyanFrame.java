@@ -2,15 +2,9 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanBytecode;
-import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.judou.compiler.WenyanVerifier;
-import indi.wenyan.judou.compiler.visitor.WenyanMainVisitor;
-import indi.wenyan.judou.compiler.visitor.WenyanVisitor;
-import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import lombok.Getter;
 import lombok.Setter;
@@ -89,38 +83,14 @@ public class WenyanFrame {
         this(bytecode, Collections.emptyList(), null);
     }
 
-    public static @NotNull WenyanFrame ofCode(String code) {
-        var bytecode = new WenyanBytecode(code);
-        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
-        WenyanVisitor visitor = new WenyanMainVisitor(environment);
-        visitor.visit(WenyanVisitor.program(code));
-        environment.enterContext(0, 0, 0, 0);
-        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-        environment.add(WenyanCodes.RET);
-        environment.exitContext();
-        WenyanVerifier.verify(bytecode);
-        return new WenyanFrame(bytecode.toImmutable());
+    public static @NotNull WenyanFrame ofCode(IWenyanBytecode code) {
+        return new WenyanFrame(code);
     }
 
-    public static @NotNull WenyanFrame ofImportCode(String code, WenyanFrame returnRuntime) {
-        // FIXME: reduce code redundancy
-        var bytecode = new WenyanBytecode(code);
-        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(bytecode, null, Collections.emptyList());
-        WenyanVisitor visitor = new WenyanMainVisitor(environment);
-        visitor.visit(WenyanVisitor.program(code));
-        environment.enterContext(0, 0, 0, 0);
-        environment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-        environment.add(WenyanCodes.RET);
-        environment.exitContext();
-        WenyanVerifier.verify(bytecode);
-        return getRuntime(returnRuntime, bytecode.toImmutable(), environment);
-    }
-
-    private static @NotNull WenyanFrame getRuntime(WenyanFrame returnRuntime, IWenyanBytecode bytecode, WenyanCompilerEnvironment environment) {
+    public static @NotNull WenyanFrame ofImportCode(IWenyanBytecode bytecode, List<String> exportedIdentifier, WenyanFrame returnRuntime) {
         WenyanFrame wenyanRuntime = new WenyanFrame(bytecode, Collections.emptyList(), returnRuntime);
-        var exportedIdentifier = environment.getExportedValues();
-        int exportSize = exportedIdentifier.size();
         wenyanRuntime.returnBehavior = (runner, _) -> {
+            int exportSize = exportedIdentifier.size();
             Map<String, IWenyanValue> result = new HashMap<>(exportSize);
             WenyanFrame currentRuntime = runner.getCurrentRuntime();
             for (int i = 0; i < exportSize; i++) {
