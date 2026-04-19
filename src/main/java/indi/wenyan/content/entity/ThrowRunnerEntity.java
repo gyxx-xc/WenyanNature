@@ -126,7 +126,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
         setRemainingFireTicks(1);
         try {
             lazyProgram.createOrGet().create(RunnerCreator.newRunner(WenyanFrame
-                    .ofCode(WenyanCompiler.compile(code.getCode()).bytecode()), this.initEnvironment()));
+                    .ofCode(new WenyanCompiler().compile(code.getCode()).bytecode()), this.initEnvironment()));
         } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
             // add will show this message and kill itself at tick

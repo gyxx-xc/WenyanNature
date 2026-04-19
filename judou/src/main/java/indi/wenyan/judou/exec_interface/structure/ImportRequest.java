@@ -39,7 +39,7 @@ public final class ImportRequest implements BaseHandleableRequest {
         if (packageOrCode.left().isPresent())
             thread().getCurrentRuntime().pushReturnValue(packageOrCode.left().get());
         if (packageOrCode.right().isPresent()) {
-            var bytecode = WenyanCompiler.compile(packageOrCode.right().get());
+            var bytecode = new WenyanCompiler().compile(packageOrCode.right().get());
             thread().getFrameManager().call(WenyanFrame.ofImportCode(bytecode.bytecode(), bytecode.exportedValues(), thread.getCurrentRuntime()));
         }
         thread().unblock();

@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -67,9 +68,12 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
             WenyanProgramming.LOGGER.error("RunnerBlock: entity is not a RunnerBlockEntity");
             return InteractionResult.FAIL;
         }
-        if (!level.isClientSide()) {
-            if (player.isShiftKeyDown() && player instanceof ServerPlayer sp) { // server player always true
+        if (!level.isClientSide() && player instanceof ServerPlayer sp) { // server player always true
+            if (player.isShiftKeyDown()) {
                 PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.RUNNER_BLOCK));
+            }else if (stack.is(Items.RAW_GOLD)) {
+                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.RUNNER_BLOCK_DEBUG));
+                runner.playerDebugRun();
             } else {
                 runner.playerRun();
             }

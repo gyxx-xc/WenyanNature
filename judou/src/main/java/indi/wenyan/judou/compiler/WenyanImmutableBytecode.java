@@ -5,6 +5,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class WenyanImmutableBytecode implements IWenyanBytecode {
@@ -78,5 +79,22 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("constTable=").append(Arrays.toString(constTable)).append("\n");
+        sb.append("identifierTable=").append(Arrays.toString(identifierTable)).append("\n");
+        sb.append("labelTable=").append(Arrays.toString(labelTable)).append("\n");
+        int j = 0;
+        for (int i = 0; i < size(); i++) {
+            if (j < debugTable.size() && i >= debugTable.get(j).bytecodeStart()) {
+                sb.append("Context: ").append(debugTable.get(j)).append("\n");
+                j++;
+            }
+            sb.append(i).append(": ").append(getCode(i)).append("\n");
+        }
+        return sb.toString();
     }
 }

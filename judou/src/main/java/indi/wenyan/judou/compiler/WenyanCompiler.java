@@ -5,9 +5,19 @@ import indi.wenyan.judou.compiler.visitor.WenyanVisitor;
 import java.util.Collections;
 import java.util.List;
 
-public enum WenyanCompiler {;
-    public static BytecodeWithExportedValues compile(String sourceCode) {
-        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(sourceCode, null, Collections.emptyList());
+public class WenyanCompiler {
+    private final boolean debug;
+
+    public WenyanCompiler(boolean debug) {
+        this.debug = debug;
+    }
+
+    public WenyanCompiler() {
+        this(false);
+    }
+
+    public BytecodeWithExportedValues compile(String sourceCode) {
+        WenyanCompilerEnvironment environment = new WenyanCompilerEnvironment(sourceCode, null, Collections.emptyList(), debug);
 
         // preprocess
         var preprocessedCode = WenyanPreprocessor.preprocess(sourceCode);
@@ -25,6 +35,7 @@ public enum WenyanCompiler {;
         return new BytecodeWithExportedValues(bytecode, exportedIdentifier);
     }
 
-    public record BytecodeWithExportedValues(IWenyanBytecode bytecode, List<String> exportedValues) {
+    public record BytecodeWithExportedValues(IWenyanBytecode bytecode,
+                                             List<String> exportedValues) {
     }
 }

@@ -40,7 +40,10 @@ public enum WenyanCodes {
     CREATE_TYPE((_, t) -> ObjectCode.createType(t)),
 
     FOR_ITER(ForCode::forIter),
-    FOR_NUM(ForCode::forNum);
+    FOR_NUM(ForCode::forNum),
+
+    BREAKPOINT(BreakpointCode::breakpoint)
+    ;
 
     @Getter
     private final WenyanCode code;

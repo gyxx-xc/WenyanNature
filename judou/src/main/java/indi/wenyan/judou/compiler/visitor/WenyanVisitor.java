@@ -5,6 +5,7 @@ import indi.wenyan.judou.antlr.WenyanRBaseVisitor;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import indi.wenyan.judou.antlr.WenyanRParser;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
+import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -37,6 +38,9 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
         if (tree instanceof ParserRuleContext ctx) {
             bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
                     ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+            if (bytecode.isDebug() && ctx instanceof WenyanRParser.StatementContext) {
+                bytecode.add(WenyanCodes.BREAKPOINT);
+            }
             result = super.visit(tree);
             bytecode.exitContext();
         } else {
@@ -61,6 +65,9 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
                 if (ctx.getStop() != null) {
                     bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
                             ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    if (bytecode.isDebug() && ctx instanceof WenyanRParser.StatementContext) {
+                        bytecode.add(WenyanCodes.BREAKPOINT);
+                    }
                     childResult = c.accept(this);
                     bytecode.exitContext();
                 } else {

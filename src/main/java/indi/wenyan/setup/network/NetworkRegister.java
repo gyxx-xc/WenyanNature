@@ -34,6 +34,7 @@ public enum NetworkRegister {
         registrar.playToClient(BlockPosRangePacket.TYPE, BlockPosRangePacket.STREAM_CODEC);
         registrar.playToClient(CraftingParticlePacket.TYPE, CraftingParticlePacket.STREAM_CODEC);
         registrar.playToClient(BlockOutputPacket.TYPE, BlockOutputPacket.STREAM_CODEC);
+        registrar.playToClient(BlockDebugContextPacket.TYPE, BlockDebugContextPacket.STREAM_CODEC);
         registrar.playToClient(PistonMovePacket.TYPE, PistonMovePacket.STREAM_CODEC);
         registrar.playToClient(BlockSetScreenPacket.TYPE, BlockSetScreenPacket.STREAM_CODEC);
         registrar.playToClient(FloatNoteSetScreenPacket.TYPE, FloatNoteSetScreenPacket.STREAM_CODEC);

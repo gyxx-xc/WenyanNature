@@ -35,7 +35,7 @@ class AwaitStatementTest extends WenyanProgramTestHelper {
     void testNormal(String code, int ticks) throws WenyanException, InterruptedException {
         TestPlatform testPlatform = new TestPlatform();
         IWenyanScheduler<WenyanSchedularImpl.PCB> wenyanProgram = new WenyanSchedularImpl(testPlatform, 1000);
-        IWenyanBytecode bytecode = WenyanCompiler.compile(code).bytecode();
+        IWenyanBytecode bytecode = new WenyanCompiler().compile(code).bytecode();
         wenyanProgram.create(RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), testPlatform.initEnvironment()));
         int cnt = 0;
         while (wenyanProgram.isRunning()) {

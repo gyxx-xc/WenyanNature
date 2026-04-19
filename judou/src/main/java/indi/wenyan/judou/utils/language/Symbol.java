@@ -18,6 +18,7 @@ public enum Symbol {
     public static final String OR_ID = "或";
     public static final String MOD_ID = "模";
     public static final String IMPORT_ID = "觀";
+    public static final String DEBUG_ID = "\u0000";
     public static final String CREATE_ASYNC_ID = "同";
     public static final String PLUS_ID = "加";
     public static final String SUB_ID = "減";

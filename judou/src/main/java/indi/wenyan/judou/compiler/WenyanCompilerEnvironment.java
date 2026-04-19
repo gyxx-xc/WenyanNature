@@ -4,6 +4,7 @@ import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -25,6 +26,7 @@ public class WenyanCompilerEnvironment {
     private final Deque<Scope> scopeStack = new ArrayDeque<>();
     private int lastContextStart = 0;
     private int localVariableCounter = 0;
+    @Getter private final boolean debug;
 
     /**
      * Gets exported values from the largest scope.
@@ -48,9 +50,10 @@ public class WenyanCompilerEnvironment {
     /**
      * Creates a new compiler environment with the specified bytecode.
      */
-    public WenyanCompilerEnvironment(String code, @Nullable WenyanCompilerEnvironment parent, List<String> argv) {
+    public WenyanCompilerEnvironment(String code, @Nullable WenyanCompilerEnvironment parent, List<String> argv, boolean debug) {
         this.parent = parent;
         this.bytecode = new WenyanBytecode(code);
+        this.debug = debug;
         var scope = new Scope(0);
         scopeStack.push(scope);
         for (String arg : argv) {

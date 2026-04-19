@@ -181,7 +181,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             argv.add(Symbol.PARENT_ID);
         }
         for (var arg : argsType) argv.add(arg.id());
-        WenyanCompilerEnvironment functionEnvironment = new WenyanCompilerEnvironment(bytecode.getSourceCode(), bytecode, argv);
+        WenyanCompilerEnvironment functionEnvironment = new WenyanCompilerEnvironment(bytecode.getSourceCode(), bytecode, argv, bytecode.isDebug());
         new WenyanMainVisitor(functionEnvironment).visit(ctx.statements());
 
         functionEnvironment.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),

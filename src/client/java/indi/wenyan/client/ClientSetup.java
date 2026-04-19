@@ -61,6 +61,7 @@ public enum ClientSetup {;
         event.register(BlockPosRangePacket.TYPE, BlockPosRangePacket.HANDLER);
         event.register(CraftingParticlePacket.TYPE, CraftingParticlePacket.HANDLER);
         event.register(BlockOutputPacket.TYPE, BlockOutputPacket.HANDLER);
+        event.register(BlockDebugContextPacket.TYPE, BlockDebugContextPacket.HANDLER);
         event.register(PistonMovePacket.TYPE, PistonMovePacket.HANDLER);
         event.register(BlockSetScreenPacket.TYPE, ScreenOpenerFactory.BLOCK_HANDLER);
         event.register(FloatNoteSetScreenPacket.TYPE, ScreenOpenerFactory.FLOAT_NOTE_HANDLER);

@@ -1,9 +1,12 @@
 package indi.wenyan.client.gui.behaviour;
 
 import indi.wenyan.client.gui.code_editor.RunnerBlockScreen;
+import indi.wenyan.client.gui.code_editor.RunnerDebugScreen;
 import indi.wenyan.client.gui.code_editor.backend.PackageSnippet;
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.backend.RunnerDebugBackend;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditorBackendSynchronizer;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.RunnerDebugSynchronizer;
 import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.ICodeOutputHolder;
@@ -127,5 +130,35 @@ public enum RunnerBlockBehaviour {
         execPackage.functions().forEach((k, _) ->
                 members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD)));
         return new PackageSnippet(itemStack, name, members);
+    }
+
+    public static void openDebugGui(BlockPos pos, Player player) {
+        var level = player.level();
+        if (!(level.getBlockEntity(pos) instanceof RunnerBlockEntity runner)) return;
+        Minecraft.getInstance().setScreen(new RunnerDebugScreen(new RunnerDebugBackend(
+                new RunnerDebugSynchronizer() {
+                    @Override
+                    public int getContextStart() {
+                        return runner.getDebugContext().start();
+                    }
+
+                    @Override
+                    public int getContextEnd() {
+                        return runner.getDebugContext().end();
+                    }
+
+                    @Override
+                    public Deque<Component> getOutput() {
+                        return runner.getOutputQueue();
+                    }
+
+                    @Override
+                    public boolean isOutputChanged() {
+                        return runner.isOutputChanged();
+                    }
+                },
+                runner.getCode(),
+                runner.getOutputQueue()
+        )));
     }
 }

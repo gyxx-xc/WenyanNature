@@ -6,26 +6,27 @@ import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanCompiler;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.exec_interface.structure.ExecQueue;
-import indi.wenyan.judou.exec_interface.structure.ImportRequest;
-import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
+import indi.wenyan.judou.exec_interface.structure.*;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanScheduler;
+import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanNull;
 import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.function.ChineseUtils;
 import indi.wenyan.judou.utils.language.Symbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.setup.network.client.BlockDebugContextPacket;
 import indi.wenyan.setup.network.client.BlockOutputPacket;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Delegate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
@@ -62,6 +63,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Delegate(types = ICodeOutputHolder.class)
     private final TitleCodeOutputData titleCodeOutput;
+
+    @Setter @Getter private DebugContext debugContext = new DebugContext(0, 0);
 
     private final LazyProgram<IWenyanScheduler<WenyanSchedularImpl.PCB>> lazyProgram;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
@@ -141,10 +144,36 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         baseEnvironment.put("書", (RequestCallHandler) (thread, self, argsList) ->
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
-                            String s = args.getFirst().as(WenyanString.TYPE).value();
-                            addOutputBothSide(s, IOutputAcceptor.OutputStyle.NORMAL);
+                            StringBuilder sb = new StringBuilder();
+                            for (IWenyanValue arg : args) {
+                                sb.append(" ");
+                                sb.append(arg.toString());
+                            }
+                            addOutputBothSide(sb.toString(), IOutputAcceptor.OutputStyle.NORMAL);
                             return WenyanNull.NULL;
                         }));
+        baseEnvironment.put(Symbol.DEBUG_ID, (RequestCallHandler) (thread, _, _) ->
+                new BaseHandleableRequest() {
+                    private int i = 0;
+
+                    @Override
+                    public IWenyanRunner thread() {
+                        return thread;
+                    }
+
+                    @Override
+                    public boolean handle(IHandleContext context) throws WenyanException {
+                        if (i == 0) {
+                            var runtimeContext = thread.getCurrentRuntime().getBytecode().getContext(
+                                    thread.getCurrentRuntime().getProgramCounter() - 1);
+                            changeContextBothSide(runtimeContext == null ? new DebugContext(0, 0) :
+                                    new DebugContext(runtimeContext.contentStart(), runtimeContext.contentEnd()));
+                        }
+                        if (++i < 2) return false;
+                        thread.unblock();
+                        return true;
+                    }
+                });
 
         assert getLevel() != null;
         BlockPos attached = getBlockPos().relative(
@@ -195,7 +224,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public boolean newThread(String pages) {
         IWenyanBytecode bytecode;
         try {
-            bytecode = WenyanCompiler.compile(pages).bytecode();
+            bytecode = new WenyanCompiler().compile(pages).bytecode();
         } catch (WenyanCompileException e) {
             handleError(e.getMessage());
             return false;
@@ -225,6 +254,27 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         newThread(titleCodeOutput.getCode());
     }
 
+    public void playerDebugRun() {
+        if (lazyProgram.createOrGet().isRunning()) {
+            handleError(ExceptionText.AlreadyRun.string());
+            return;
+        }
+        IWenyanBytecode bytecode;
+        try {
+            bytecode = new WenyanCompiler(true).compile(titleCodeOutput.getCode()).bytecode();
+        } catch (WenyanCompileException e) {
+            handleError(e.getMessage());
+            return;
+        }
+        try {
+            IThreadHolder<WenyanSchedularImpl.PCB> runner =
+                    RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), this.initEnvironment());
+            lazyProgram.createOrGet().create(runner);
+        } catch (WenyanException e) {
+            handleError(e.getMessage());
+        }
+    }
+
     private void addOutputBothSide(String error, IOutputAcceptor.OutputStyle style) {
         error = StringUtils.left(error, 512);
         if (getLevel() instanceof ServerLevel sl)
@@ -233,8 +283,18 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         addOutput(error, style);
     }
 
+    private void changeContextBothSide(DebugContext context) {
+        if (getLevel() instanceof ServerLevel sl)
+            PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
+                    new BlockDebugContextPacket(getBlockPos(), context));
+        setDebugContext(context);
+    }
+
     private void safeAddCommunicate(BlockPos blockPos) {
         if (getLevel() instanceof ServerLevel sl)
             ICommunicateHolder.blockAddCommunicateServer(sl, getBlockPos(), blockPos.subtract(getBlockPos()));
+    }
+
+    public record DebugContext(int start, int end) {
     }
 }

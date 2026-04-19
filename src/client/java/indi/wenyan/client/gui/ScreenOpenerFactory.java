@@ -13,6 +13,7 @@ public enum ScreenOpenerFactory {;
             switch (packet.screenId()) {
                 case RUNNER_BLOCK -> RunnerBlockBehaviour.openGui(packet.pos(), context.player());
                 case WRITING_BLOCK -> WritingBlockBehaviour.openGui(packet.pos(), context.player());
+                case RUNNER_BLOCK_DEBUG -> RunnerBlockBehaviour.openDebugGui(packet.pos(), context.player());
                 default -> throw new IllegalStateException();
             }
     };

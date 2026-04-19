@@ -12,6 +12,7 @@ import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.WenyanPackage;
 import indi.wenyan.judou.test_utils.TestPlatform;
 import indi.wenyan.judou.test_utils.generated_WenyanProgramTestData;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.FieldSource;
 
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class WenyanProgramBasicTest extends WenyanProgramTestHelper {
 
     @SuppressWarnings("ALL")
-//    @Test
+    @Test
     void testNormal() throws WenyanException, InterruptedException, IOException {
         String code = """
                         同有一術名之曰「a」。是術曰。
@@ -39,7 +40,7 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
         WenyanPackage globalResolver = testPlatform.initEnvironment();
 
         while (true) {
-            IWenyanBytecode bytecode = WenyanCompiler.compile(code).bytecode();
+            IWenyanBytecode bytecode = new WenyanCompiler().compile(code).bytecode();
             WenyanFrame mainRuntime = WenyanFrame.ofCode(bytecode);
             wenyanProgram.create(RunnerCreator.newRunner(mainRuntime, globalResolver));
             while (wenyanProgram.isRunning()) {
@@ -49,6 +50,18 @@ class WenyanProgramBasicTest extends WenyanProgramTestHelper {
                 Thread.sleep(5);
             }
         }
+    }
+
+    static void main() {
+        String code = """
+                        同有一術名之曰「a」。是術曰。
+                        待一
+                        是謂「a」之術也。
+                        施「a」名之曰「a1」施「a」名之曰「a2」
+                        待「a1」待「a2」
+                """;
+        IWenyanBytecode bytecode = new WenyanCompiler(true).compile(code).bytecode();
+        System.out.println(bytecode);
     }
 
     @ParameterizedTest

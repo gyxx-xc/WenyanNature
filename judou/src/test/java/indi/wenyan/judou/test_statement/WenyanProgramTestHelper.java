@@ -65,7 +65,7 @@ class WenyanProgramTestHelper {
 
     protected void createAndRun(String code, TestPlatform testPlatform) throws WenyanException, InterruptedException {
         IWenyanScheduler<WenyanSchedularImpl.PCB> wenyanProgram = new WenyanSchedularImpl(testPlatform, 8000);
-        IWenyanBytecode bytecode = WenyanCompiler.compile(code).bytecode();
+        IWenyanBytecode bytecode = new WenyanCompiler().compile(code).bytecode();
         wenyanProgram.create(RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), testPlatform.initEnvironment()));
         while (wenyanProgram.isRunning()) {
             wenyanProgram.step();

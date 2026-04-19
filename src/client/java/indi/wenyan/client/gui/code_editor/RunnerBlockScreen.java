@@ -47,10 +47,11 @@ public class RunnerBlockScreen extends Screen {
 
     @Override
     protected void init() {
+        int titleBarHeight = 15;
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
         int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
         textFieldWidget = new CodeEditorWidget(font, backend,
-                (width - textFieldWidth) / 2, 15,
+                (width - textFieldWidth) / 2, titleBarHeight,
                 textFieldWidth, textFileHeight);
         addRenderableWidget(textFieldWidget);
 
@@ -69,7 +70,6 @@ public class RunnerBlockScreen extends Screen {
         packageWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(packageWidget);
 
-        int titleBarHeight = 15;
         titleBar = new FuzhouNameWidget(font, snippetWidth + 4, 2,
                 width - (snippetWidth + 4) - (packageSnippetWidth + 4), titleBarHeight,
                 Component.literal(""), backend);

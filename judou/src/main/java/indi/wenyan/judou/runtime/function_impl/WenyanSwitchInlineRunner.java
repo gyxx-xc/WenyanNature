@@ -4,6 +4,7 @@ import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanScheduler;
+import indi.wenyan.judou.runtime.executor.BreakpointCode;
 import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
@@ -288,6 +289,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                             pcFlag = true;
                         }
                     }
+                    case 30 -> BreakpointCode.breakpoint(0, this);
                 }
 
                 if (!pcFlag)
