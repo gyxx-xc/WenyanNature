@@ -2,6 +2,8 @@ package indi.wenyan.client.gui.code_editor;
 
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
+import indi.wenyan.client.gui.code_editor.llm.LlmConfig;
+import indi.wenyan.client.gui.code_editor.llm.LlmSession;
 import indi.wenyan.client.gui.code_editor.widget.*;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
@@ -48,6 +50,8 @@ public class RunnerBlockScreen extends Screen {
     private Button btnOutputPanel;
     @SuppressWarnings("FieldCanBeLocal")
     private Button btnLlmPanel;
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button btnSwitchModel;
 
     public RunnerBlockScreen(RunnerBlockBackend backend) {
         super(Component.empty());
@@ -56,7 +60,7 @@ public class RunnerBlockScreen extends Screen {
 
     @Override
     protected void init() {
-        AiConfig.createTemplateIfAbsent();
+        LlmConfig.createTemplateIfAbsent();
 
         int titleBarHeight = 15;
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
@@ -132,8 +136,19 @@ public class RunnerBlockScreen extends Screen {
                     .bounds(startX + btnW + 4, btnY, btnW, btnH)
                     .build();
 
+            btnSwitchModel = Button.builder(
+                            Component.literal("模型: " + llmGenerateScreen.getSession().getProvider().getDisplayName()),
+                            btn -> {
+                                LlmSession session = llmGenerateScreen.getSession();
+                                session.setProvider(session.getProvider().next());
+                                btn.setMessage(Component.literal("模型: " + session.getProvider().getDisplayName()));
+                            })
+                    .bounds(startX + btnW + 4, btnY + btnH + 4, btnW, btnH)
+                    .build();
+
             addRenderableWidget(btnOutputPanel);
             addRenderableWidget(btnLlmPanel);
+            addRenderableWidget(btnSwitchModel);
 
             // visually update state
             updatePanelButtons();

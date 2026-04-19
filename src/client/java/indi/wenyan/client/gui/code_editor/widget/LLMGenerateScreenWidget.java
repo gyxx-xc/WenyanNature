@@ -1,8 +1,7 @@
 package indi.wenyan.client.gui.code_editor.widget;
 
-import indi.wenyan.client.gui.code_editor.AiConfig;
-import indi.wenyan.client.gui.code_editor.DeepSeekClient;
-import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
+import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.llm.LlmSession;
 import indi.wenyan.setup.language.GuiText;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -10,11 +9,8 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
+import lombok.Getter;
 
-import net.minecraft.client.renderer.RenderPipelines;
-
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -45,9 +41,14 @@ public class LLMGenerateScreenWidget {
     private int panelX, panelY, panelW;
     private Font font;
 
+    @Getter
+    private final LlmSession session = new LlmSession();
+
     // ── Child widgets ──
     private EditBox promptBox;
     private Button  generateButton;
+    private Button  newMemoryButton;
+    private Button  fixButton;
 
     // ── State (survives screen resize because this object is reused) ──
     private boolean generating    = false;
@@ -65,14 +66,14 @@ public class LLMGenerateScreenWidget {
      * {@link #statusMessage} state are preserved.
      *
      * @param font      Font renderer
-     * @param backend   Code-editor backend (used by the generate action)
+     * @param backend   The full runner backend (for code overwriting and console output access)
      * @param x         Left edge of the panel (same as CodeOutputWidget)
      * @param y         Top edge
      * @param width     Panel width
      * @param height    Panel height
      * @param addWidget Consumer that registers a widget into the owning screen
      */
-    public void init(Font font, CodeEditBackend backend,
+    public void init(Font font, RunnerBlockBackend backend,
                      int x, int y, int width, int height,
                      Consumer<AbstractWidget> addWidget) {
         this.font   = font;
@@ -96,10 +97,28 @@ public class LLMGenerateScreenWidget {
         // ── Generate button ──
         generateButton = Button.builder(
                         Component.translatable(GuiText.AiGenerateButton.getTranslationKey()),
-                        btn -> triggerGenerate(backend))
+                        btn -> triggerGenerate(backend, false))
                 .bounds(x + availableW + 4, y, buttonW, INPUT_H)
                 .build();
         addWidget.accept(generateButton);
+
+        // ── Additional Action Buttons ──
+        int actionBtnY = y + INPUT_H + 4;
+        int actionBtnW = 60;
+
+        newMemoryButton = Button.builder(
+                        Component.literal("新记忆"),
+                        btn -> session.clearHistory())
+                .bounds(editBoxX, actionBtnY, actionBtnW, INPUT_H)
+                .build();
+        addWidget.accept(newMemoryButton);
+
+        fixButton = Button.builder(
+                        Component.literal("修复"),
+                        btn -> triggerGenerate(backend, true))
+                .bounds(editBoxX + actionBtnW + 4, actionBtnY, actionBtnW, INPUT_H)
+                .build();
+        addWidget.accept(fixButton);
 
         // Restore visibility for post-resize state
         applyVisibility();
@@ -109,37 +128,49 @@ public class LLMGenerateScreenWidget {
     // AI logic
     // -----------------------------------------------------------------------
 
-    private void triggerGenerate(CodeEditBackend backend) {
-        if (generating || promptBox == null) return;
-
-        String prompt = promptBox.getValue().strip();
-        if (prompt.isEmpty()) return;
-
-        Optional<String> key = AiConfig.loadApiKey();
-        if (key.isEmpty()) {
-            statusMessage = "[AI] " + AiConfig.getEnvPath() + " 中未設 DEEPSEEK_API_KEY";
-            return;
-        }
+    private void triggerGenerate(RunnerBlockBackend backend, boolean isFix) {
+        if (generating) return;
 
         generating            = true;
         generateButton.active = false;
+        fixButton.active      = false;
         statusMessage         = GuiText.AiGenerating.string();
 
-        DeepSeekClient.generate(key.get(), prompt,
-                code -> {
-                    // Overwrite editor: select-all then insert
-                    backend.setSelectCursor(0);
-                    backend.setCursor(backend.getContent().length());
-                    backend.insertText(code);
-                    statusMessage         = null;
-                    generating            = false;
-                    generateButton.active = true;
-                },
-                err -> {
-                    statusMessage         = GuiText.AiError.string() + ": " + err;
-                    generating            = false;
-                    generateButton.active = true;
-                });
+        Consumer<String> onSuccess = code -> {
+            backend.setSelectCursor(0);
+            backend.setCursor(backend.getContent().length());
+            backend.insertText(code);
+            statusMessage         = null;
+            generating            = false;
+            generateButton.active = true;
+            fixButton.active      = true;
+        };
+
+        Consumer<String> onError = err -> {
+            statusMessage         = GuiText.AiError.string() + ": " + err;
+            generating            = false;
+            generateButton.active = true;
+            fixButton.active      = true;
+        };
+
+        if (isFix) {
+            StringBuilder sb = new StringBuilder();
+            for (Component c : backend.getOutput()) {
+                sb.append(c.getString()).append("\n");
+            }
+            session.generateFix(sb.toString(), onSuccess, onError);
+        } else {
+            if (promptBox == null || promptBox.getValue().strip().isEmpty()) {
+                // Do not proceed with an empty prompt box on standard generate
+                generating = false;
+                generateButton.active = true;
+                fixButton.active = true;
+                statusMessage = null;
+                return;
+            }
+            String prompt = promptBox.getValue().strip();
+            session.generateCode(prompt, onSuccess, onError);
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -162,8 +193,10 @@ public class LLMGenerateScreenWidget {
     }
 
     private void applyVisibility() {
-        if (promptBox      != null) promptBox.visible      = visible;
-        if (generateButton != null) generateButton.visible = visible;
+        if (promptBox       != null) promptBox.visible       = visible;
+        if (generateButton  != null) generateButton.visible  = visible;
+        if (newMemoryButton != null) newMemoryButton.visible = visible;
+        if (fixButton       != null) fixButton.visible       = visible;
     }
 
     // -----------------------------------------------------------------------

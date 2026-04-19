@@ -1,4 +1,4 @@
-package indi.wenyan.client.gui.code_editor;
+package indi.wenyan.client.gui.code_editor.llm;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -13,28 +13,20 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-/**
- * Async client for the DeepSeek Chat Completions API.
- * Generates WenyanNature code from a natural-language prompt using
- * an embedded system prompt describing the language syntax.
- */
-public class DeepSeekClient {
+public class LlmSession {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeepSeekClient.class);
-    private static final String API_URL = "https://api.deepseek.com/chat/completions";
-    private static final String MODEL = "deepseek-chat";
+    private static final Logger LOGGER = LoggerFactory.getLogger(LlmSession.class);
 
-    /** Shared HttpClient – safe to reuse across requests. */
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(15))
             .build();
 
-    // -----------------------------------------------------------------------
-    // System prompt describing the WenyanNature language syntax
-    // -----------------------------------------------------------------------
     private static final String SYSTEM_PROMPT = """
             你是一個文言文程式語言（WenyanNature）的代碼生成助手。
             請嚴格按照以下語法規則輸出純代碼，不要包含任何說明文字、Markdown標記或代碼塊。
@@ -130,65 +122,103 @@ public class DeepSeekClient {
             請記住：只輸出純代碼，行尾用。結束，不要有任何額外文字。
             """;
 
+    private final List<JsonObject> history = new ArrayList<>();
+    private LlmProvider currentProvider = LlmProvider.DEEPSEEK;
+
+    public LlmSession() {
+        clearHistory();
+    }
+
+    public void setProvider(LlmProvider provider) {
+        this.currentProvider = provider;
+    }
+
+    public LlmProvider getProvider() {
+        return currentProvider;
+    }
+
+    public void clearHistory() {
+        history.clear();
+        JsonObject sys = new JsonObject();
+        sys.addProperty("role", "system");
+        sys.addProperty("content", SYSTEM_PROMPT);
+        history.add(sys);
+    }
+
     /**
-     * Calls DeepSeek asynchronously.
-     *
-     * @param apiKey      DeepSeek API key
-     * @param userPrompt  Natural-language requirement in any language
-     * @param onSuccess   Callback invoked on the Minecraft main thread with the generated code
-     * @param onError     Callback invoked on the Minecraft main thread with an error message
+     * Sends a prompt, appending it to the history array.
      */
-    public static void generate(String apiKey,
-                                String userPrompt,
-                                Consumer<String> onSuccess,
-                                Consumer<String> onError) {
+    public void generateCode(String userPrompt, Consumer<String> onSuccess, Consumer<String> onError) {
+        processRequest(userPrompt, onSuccess, onError);
+    }
+
+    /**
+     * Fixes an error based on the output. Appends a pre-prompted message to history.
+     */
+    public void generateFix(String consoleOutput, Consumer<String> onSuccess, Consumer<String> onError) {
+        String prompt = "運行以上代碼後得到以下輸出/報錯，請修復代碼並僅輸出修復後的完整代碼：\n" + consoleOutput;
+        processRequest(prompt, onSuccess, onError);
+    }
+
+    private void processRequest(String newPrompt, Consumer<String> onSuccess, Consumer<String> onError) {
+        Optional<String> apiKeyOpt = LlmConfig.getOptional(currentProvider.getApiKeyEnvVar());
+
+        if (apiKeyOpt.isEmpty()) {
+            onError.accept("[AI] " + LlmConfig.getEnvPath() + " 中未設 " + currentProvider.getApiKeyEnvVar());
+            return;
+        }
+
+        String apiKey = apiKeyOpt.get();
+        String url = LlmConfig.getOptional(currentProvider.getUrlEnvVar()).orElse(currentProvider.getDefaultUrl());
+        String model = LlmConfig.getOptional(currentProvider.getModelEnvVar()).orElse(currentProvider.getDefaultModel());
+
+        // Append user prompt to memory
+        JsonObject userMsg = new JsonObject();
+        userMsg.addProperty("role", "user");
+        userMsg.addProperty("content", newPrompt);
+        history.add(userMsg);
+
         CompletableFuture.supplyAsync(() -> {
             try {
-                return callApi(apiKey, userPrompt);
+                return callApi(url, model, apiKey, history);
             } catch (Exception e) {
+                // Formatting might fail, so we pop the user message off if it completely fails to send
+                history.remove(history.size() - 1);
                 throw new RuntimeException(e.getMessage(), e);
             }
         }).whenComplete((result, ex) -> {
-            // Always dispatch back to the Minecraft main thread
             Minecraft.getInstance().execute(() -> {
                 if (ex != null) {
-                    LOGGER.error("DeepSeek API error", ex);
+                    LOGGER.error("LLM API error", ex);
                     onError.accept(ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage());
                 } else {
+                    // Append assistant response to memory
+                    JsonObject asstMsg = new JsonObject();
+                    asstMsg.addProperty("role", "assistant");
+                    asstMsg.addProperty("content", result);
+                    history.add(asstMsg);
+
                     onSuccess.accept(result);
                 }
             });
         });
     }
 
-    // -----------------------------------------------------------------------
-    // Private helpers
-    // -----------------------------------------------------------------------
-
-    private static String callApi(String apiKey, String userPrompt) throws IOException, InterruptedException {
-        // Build JSON body
+    private static String callApi(String apiUrl, String model, String apiKey, List<JsonObject> messagesList) throws IOException, InterruptedException {
         JsonObject body = new JsonObject();
-        body.addProperty("model", MODEL);
+        body.addProperty("model", model);
         body.addProperty("stream", false);
 
         JsonArray messages = new JsonArray();
-
-        JsonObject system = new JsonObject();
-        system.addProperty("role", "system");
-        system.addProperty("content", SYSTEM_PROMPT);
-        messages.add(system);
-
-        JsonObject user = new JsonObject();
-        user.addProperty("role", "user");
-        user.addProperty("content", userPrompt);
-        messages.add(user);
-
+        for (JsonObject msg : messagesList) {
+            messages.add(msg.deepCopy());
+        }
         body.add("messages", messages);
 
         String bodyJson = body.toString();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL))
+                .uri(URI.create(apiUrl))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + apiKey)
                 .timeout(Duration.ofSeconds(60))
@@ -198,33 +228,30 @@ public class DeepSeekClient {
         HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
-            throw new IOException("DeepSeek HTTP " + response.statusCode() + ": " + response.body());
+            throw new IOException("HTTP " + response.statusCode() + ": " + response.body());
         }
 
         return extractContent(response.body());
     }
 
-    /**
-     * Extracts the assistant message content from the DeepSeek JSON response.
-     * Response format: {@code {"choices":[{"message":{"content":"..."}}]}}
-     */
     private static String extractContent(String responseBody) throws IOException {
         try {
             JsonObject root = JsonParser.parseString(responseBody).getAsJsonObject();
             JsonArray choices = root.getAsJsonArray("choices");
             if (choices == null || choices.isEmpty()) {
-                throw new IOException("DeepSeek returned no choices");
+                throw new IOException("API returned no choices");
             }
             String content = choices.get(0)
                     .getAsJsonObject()
                     .getAsJsonObject("message")
                     .get("content")
                     .getAsString();
-            // Strip any accidental markdown fences (```...```)
+            
+            // Strip markdown fences
             content = content.replaceAll("(?s)^```[a-zA-Z]*\\n?", "").replaceAll("(?s)```\\s*$", "").strip();
             return content;
         } catch (Exception e) {
-            throw new IOException("Failed to parse DeepSeek response: " + e.getMessage(), e);
+            throw new IOException("Failed to parse response: " + e.getMessage(), e);
         }
     }
 }
