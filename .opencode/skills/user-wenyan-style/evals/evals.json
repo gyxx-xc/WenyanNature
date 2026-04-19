@@ -1,0 +1,95 @@
+{
+  "name": "wenyan-style-evals",
+  "description": "WenyanNature编码风格模仿Skill验证用例",
+  "evals": [
+    {
+      "id": "eval-01-style-extraction",
+      "type": "style_extraction",
+      "description": "给定WenyanNature代码样本，能否正确提炼高置信度编码习惯",
+      "input": {
+        "samples": [
+          {
+            "language": "java",
+            "path": "judou/src/main/java/indi/wenyan/judou/structure/values/IWenyanValue.java",
+            "content": "public interface IWenyanValue {\n    WenyanType<?> type();\n    default boolean is(WenyanType<?> type) {\n        return type().equals(type);\n    }\n}"
+          },
+          {
+            "language": "java", 
+            "path": "judou/src/main/java/indi/wenyan/judou/structure/values/primitive/WenyanString.java",
+            "content": "public record WenyanString(String value)\n        implements IWenyanComparable, IWenyanComputable {\n    @Override\n    public WenyanType<?> type() {\n        return TYPE;\n    }\n}"
+          }
+        ]
+      },
+      "expected_output": {
+        "high_confidence_rules": [
+          "接口使用I前缀（如IWenyanValue）",
+          "值对象使用record而非class",
+          "类名使用领域前缀（Wenyan）"
+        ]
+      }
+    },
+    {
+      "id": "eval-02-java-imitation",
+      "type": "code_generation",
+      "description": "给定风格报告，能否按Java风格实现新的值类型",
+      "input": {
+        "task": "实现一个WenyanRational（有理数）值类型，包含分子分母，支持基本算术运算",
+        "language": "java",
+        "constraints": [
+          "使用record",
+          "实现IWenyanValue接口",
+          "包含自定义异常处理",
+          "使用JetBrains注解"
+        ]
+      },
+      "expected_characteristics": [
+        "类名应为WenyanRational",
+        "使用record定义",
+        "可能实现IWenyanComputable等接口",
+        "包含@NotNull/@Nullable注解",
+        "方法声明throws WenyanException"
+      ]
+    },
+    {
+      "id": "eval-03-boundary-handling",
+      "type": "boundary_handling", 
+      "description": "面对样本不足的Python代码，能否正确执行保守补全",
+      "input": {
+        "task": "为WenyanRational添加一个Python序列化工具函数",
+        "language": "python",
+        "context": "Python样本不足，只有生成脚本"
+      },
+      "expected_behavior": "使用Python社区常规写法，不强行应用Java风格习惯，保持脚本式风格"
+    },
+    {
+      "id": "eval-04-naming-consistency",
+      "type": "naming_consistency",
+      "description": "验证命名习惯一致性",
+      "input": {
+        "task": "为编译器添加一个新的中间代码优化器",
+        "language": "java",
+        "hint": "应该与WenyanCompiler、WenyanOptimizer等现有类命名一致"
+      },
+      "expected_output": {
+        "class_name_pattern": "Wenyan[A-Z][a-zA-Z]*",
+        "interface_name_pattern": "I[A-Z][a-zA-Z]*",
+        "no_pinyin_chinese": true
+      }
+    },
+    {
+      "id": "eval-05-test-style",
+      "type": "test_generation",
+      "description": "为WenyanRational生成测试类，验证测试习惯",
+      "input": {
+        "task": "为WenyanRational生成JUnit 5测试",
+        "language": "java"
+      },
+      "expected_characteristics": [
+        "类名以Test结尾",
+        "使用@ParameterizedTest",
+        "可能继承测试助手类",
+        "测试方法以test前缀命名"
+      ]
+    }
+  ]
+}
