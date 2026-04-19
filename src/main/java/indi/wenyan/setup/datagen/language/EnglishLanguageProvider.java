@@ -175,6 +175,10 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(FuNamePrompt.getTranslationKey(), "符名：");
         add(FurnaceTitle.getTranslationKey(), "熔炉");
         add(JeiAnswerTitle.getTranslationKey(), "解题");
+        add(AiPromptLabel.getTranslationKey(), "AI需求：");
+        add(AiGenerateButton.getTranslationKey(), "✨生成");
+        add(AiGenerating.getTranslationKey(), "AI生成中...");
+        add(AiError.getTranslationKey(), "AI錯誤");
 
         add(PLUS_CHECKER.getTranslationKey(), "已知「甲」「乙」求「甲」加「乙」");
         add(ECHO_CHECKER.getTranslationKey(), "已知「甲」输出「甲」");

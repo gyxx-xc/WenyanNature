@@ -8,6 +8,7 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RunnerBlockScreen extends Screen {
 
@@ -40,6 +42,14 @@ public class RunnerBlockScreen extends Screen {
     @SuppressWarnings("FieldCanBeLocal")
     private CodeOutputWidget outputWindow;
 
+    // ── AI bar ──
+    private EditBox aiPromptBox;
+    private Button aiGenerateButton;
+    /** True while a DeepSeek request is in-flight. */
+    private boolean aiGenerating = false;
+    /** Shown in output area while generating / on error. */
+    private String aiStatusMessage = null;
+
     public RunnerBlockScreen(RunnerBlockBackend backend) {
         super(Component.empty());
         this.backend = backend;
@@ -47,29 +57,32 @@ public class RunnerBlockScreen extends Screen {
 
     @Override
     protected void init() {
+        // Ensure the .env template exists so players know where to put the key
+        AiConfig.createTemplateIfAbsent();
+
+        int titleBarHeight = 15;
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
         int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
         textFieldWidget = new CodeEditorWidget(font, backend,
-                (width - textFieldWidth) / 2, 15,
+                (width - textFieldWidth) / 2, titleBarHeight,
                 textFieldWidth, textFileHeight);
         addRenderableWidget(textFieldWidget);
 
         // -4 is spacing
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
         snippetWidget = new SnippetWidget(font, backend,
-                0, 15,
+                0, titleBarHeight,
                 snippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         snippetWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(snippetWidget);
 
         int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 280);
         packageWidget = new PackageSnippetWidget(font, backend,
-                width - packageSnippetWidth, 15,
+                width - packageSnippetWidth, titleBarHeight,
                 packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
         packageWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(packageWidget);
 
-        int titleBarHeight = 15;
         titleBar = new FuzhouNameWidget(font, snippetWidth + 4, 2,
                 width - (snippetWidth + 4) - (packageSnippetWidth + 4), titleBarHeight,
                 Component.literal(""), backend);
@@ -78,12 +91,88 @@ public class RunnerBlockScreen extends Screen {
         titleBar.setMaxLength(18);
         addRenderableWidget(titleBar);
 
-        int outputWindowHeight = height - titleBarHeight - textFileHeight - 4;
+        // ── AI bar layout ──────────────────────────────────────────────────
+        // The AI bar sits below the output window; we shrink outputWindowHeight
+        // to make room for it.
+        int aiBarHeight = font.lineHeight + 8;  // 4 px padding top + bottom
+        int outputAreaY = textFileHeight + titleBarHeight + 4;
+        int outputWindowHeight = height - outputAreaY - aiBarHeight - 2;
+
         outputWindow = new CodeOutputWidget(
-                snippetWidth + 4, textFileHeight + titleBarHeight + 4,
-                textFieldWidth, outputWindowHeight,
+                snippetWidth + 4, outputAreaY,
+                textFieldWidth, Math.max(outputWindowHeight, 0),
                 Component.literal(""), font, backend);
         addRenderableWidget(outputWindow);
+
+        // ── AI input bar ───────────────────────────────────────────────────
+        int aiBarY = outputAreaY + Math.max(outputWindowHeight, 0) + 2;
+        int aiBarX = snippetWidth + 4;
+
+        int buttonWidth = 50;
+        int promptBoxWidth = textFieldWidth - buttonWidth - 2;
+        int promptBoxHeight = aiBarHeight;
+
+        // Prompt EditBox (styled like FuzhouNameWidget: black bg, white text, no border)
+        aiPromptBox = new EditBox(font,
+                aiBarX, aiBarY,
+                promptBoxWidth, promptBoxHeight,
+                Component.translatable(GuiText.AiPromptLabel.getTranslationKey()));
+        aiPromptBox.setBordered(true);
+        aiPromptBox.setTextColor(0xFFFFFFFF);
+        aiPromptBox.setMaxLength(512);
+        aiPromptBox.setHint(Component.translatable(GuiText.AiPromptLabel.getTranslationKey())
+                .withStyle(Style.EMPTY.withColor(0xFF888888)));
+        addRenderableWidget(aiPromptBox);
+
+        // Generate button
+        aiGenerateButton = Button.builder(
+                        Component.translatable(GuiText.AiGenerateButton.getTranslationKey()),
+                        btn -> onAiGenerate())
+                .bounds(aiBarX + promptBoxWidth + 2, aiBarY, buttonWidth, promptBoxHeight)
+                .build();
+        addRenderableWidget(aiGenerateButton);
+    }
+
+    // ── AI generation logic ────────────────────────────────────────────────
+
+    private void onAiGenerate() {
+        if (aiGenerating) return;
+
+        String prompt = aiPromptBox.getValue().strip();
+        if (prompt.isEmpty()) return;
+
+        Optional<String> apiKeyOpt = AiConfig.loadApiKey();
+        if (apiKeyOpt.isEmpty()) {
+            aiStatusMessage = "[WenyanNature AI] "
+                    + AiConfig.getEnvPath()
+                    + " not found or DEEPSEEK_API_KEY is empty";
+            return;
+        }
+
+        aiGenerating = true;
+        aiGenerateButton.active = false;
+        aiStatusMessage = GuiText.AiGenerating.string();
+
+        String apiKey = apiKeyOpt.get();
+        DeepSeekClient.generate(
+                apiKey,
+                prompt,
+                generatedCode -> {
+                    // Overwrite editor: select all then insert
+                    int len = backend.getContent().length();
+                    backend.setSelectCursor(0);
+                    backend.setCursor(len);
+                    backend.insertText(generatedCode);
+                    aiStatusMessage = null;
+                    aiGenerating = false;
+                    aiGenerateButton.active = true;
+                },
+                errorMsg -> {
+                    aiStatusMessage = GuiText.AiError.string() + ": " + errorMsg;
+                    aiGenerating = false;
+                    aiGenerateButton.active = true;
+                }
+        );
     }
 
     @Override
