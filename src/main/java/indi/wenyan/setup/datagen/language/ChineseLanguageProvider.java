@@ -180,6 +180,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(AiGenerateButton.getTranslationKey(), "✨制符");
         add(AiGenerating.getTranslationKey(), "大儒制符中");
         add(AiError.getTranslationKey(), "大儒曰謬");
+        add(LlmPanelToggle.getTranslationKey(), "✨大儒");
+        add(LlmPanelBack.getTranslationKey(), "◄输出");
 
         add(PLUS_CHECKER.getTranslationKey(), "已知「甲」「乙」求「甲」加「乙」");
         add(ECHO_CHECKER.getTranslationKey(), "已知「甲」输出「甲」");

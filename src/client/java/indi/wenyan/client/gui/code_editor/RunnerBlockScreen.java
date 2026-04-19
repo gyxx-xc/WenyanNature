@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class RunnerBlockScreen extends Screen {
 
@@ -42,13 +41,13 @@ public class RunnerBlockScreen extends Screen {
     @SuppressWarnings("FieldCanBeLocal")
     private CodeOutputWidget outputWindow;
 
-    // ── AI bar ──
-    private EditBox aiPromptBox;
-    private Button aiGenerateButton;
-    /** True while a DeepSeek request is in-flight. */
-    private boolean aiGenerating = false;
-    /** Shown in output area while generating / on error. */
-    private String aiStatusMessage = null;
+    // ── AI panel ──
+    /** Toggleable AI code-generation panel; occupies the same area as outputWindow. */
+    private final LLMGenerateScreenWidget llmGenerateScreen = new LLMGenerateScreenWidget();
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button btnOutputPanel;
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button btnLlmPanel;
 
     public RunnerBlockScreen(RunnerBlockBackend backend) {
         super(Component.empty());
@@ -57,7 +56,6 @@ public class RunnerBlockScreen extends Screen {
 
     @Override
     protected void init() {
-        // Ensure the .env template exists so players know where to put the key
         AiConfig.createTemplateIfAbsent();
 
         int titleBarHeight = 15;
@@ -91,94 +89,80 @@ public class RunnerBlockScreen extends Screen {
         titleBar.setMaxLength(18);
         addRenderableWidget(titleBar);
 
-        // ── AI bar layout ──────────────────────────────────────────────────
-        // The AI bar sits below the output window; we shrink outputWindowHeight
-        // to make room for it.
-        int aiBarHeight = font.lineHeight + 8;  // 4 px padding top + bottom
-        int outputAreaY = textFileHeight + titleBarHeight + 4;
-        int outputWindowHeight = height - outputAreaY - aiBarHeight - 2;
+        // ── Output window (restored to full bottom-half height) ──────────────────
+        int outputAreaY  = textFileHeight + titleBarHeight + 4;
+        int outputHeight = Math.max(height - outputAreaY, 0);
+        int outputX      = snippetWidth + 4;
 
         outputWindow = new CodeOutputWidget(
-                snippetWidth + 4, outputAreaY,
-                textFieldWidth, Math.max(outputWindowHeight, 0),
+                outputX, outputAreaY,
+                textFieldWidth, outputHeight,
                 Component.literal(""), font, backend);
         addRenderableWidget(outputWindow);
 
-        // ── AI input bar ───────────────────────────────────────────────────
-        int aiBarY = outputAreaY + Math.max(outputWindowHeight, 0) + 2;
-        int aiBarX = snippetWidth + 4;
+        // ── LLM panel (same area, initially hidden) ────────────────────────────
+        llmGenerateScreen.init(font, backend,
+                outputX, outputAreaY,
+                textFieldWidth, outputHeight,
+                this::addRenderableWidget);
 
-        int buttonWidth = 50;
-        int promptBoxWidth = textFieldWidth - buttonWidth - 2;
-        int promptBoxHeight = aiBarHeight;
-
-        // Prompt EditBox (styled like FuzhouNameWidget: black bg, white text, no border)
-        aiPromptBox = new EditBox(font,
-                aiBarX, aiBarY,
-                promptBoxWidth, promptBoxHeight,
-                Component.translatable(GuiText.AiPromptLabel.getTranslationKey()));
-        aiPromptBox.setBordered(true);
-        aiPromptBox.setTextColor(0xFFFFFFFF);
-        aiPromptBox.setMaxLength(512);
-        aiPromptBox.setHint(Component.translatable(GuiText.AiPromptLabel.getTranslationKey())
-                .withStyle(Style.EMPTY.withColor(0xFF888888)));
-        addRenderableWidget(aiPromptBox);
-
-        // Generate button
-        aiGenerateButton = Button.builder(
-                        Component.translatable(GuiText.AiGenerateButton.getTranslationKey()),
-                        btn -> onAiGenerate())
-                .bounds(aiBarX + promptBoxWidth + 2, aiBarY, buttonWidth, promptBoxHeight)
-                .build();
-        addRenderableWidget(aiGenerateButton);
-    }
-
-    // ── AI generation logic ────────────────────────────────────────────────
-
-    private void onAiGenerate() {
-        if (aiGenerating) return;
-
-        String prompt = aiPromptBox.getValue().strip();
-        if (prompt.isEmpty()) return;
-
-        Optional<String> apiKeyOpt = AiConfig.loadApiKey();
-        if (apiKeyOpt.isEmpty()) {
-            aiStatusMessage = "[WenyanNature AI] "
-                    + AiConfig.getEnvPath()
-                    + " not found or DEEPSEEK_API_KEY is empty";
-            return;
+        // Restore visibility state across screen resizes
+        if (llmGenerateScreen.isVisible()) {
+            outputWindow.visible = false;
+        } else {
+            llmGenerateScreen.setVisible(false);
         }
 
-        aiGenerating = true;
-        aiGenerateButton.active = false;
-        aiStatusMessage = GuiText.AiGenerating.string();
+        // ── Mode selection buttons: right column, just below packageSnippetWidget ────────
+        if (packageSnippetWidth > 0) {
+            int btnY = titleBarHeight + textFileHeight + 4;
+            int btnH = font.lineHeight + 6;
+            int btnW = (packageSnippetWidth - 4) / 2;
+            int startX = width - packageSnippetWidth;
 
-        String apiKey = apiKeyOpt.get();
-        DeepSeekClient.generate(
-                apiKey,
-                prompt,
-                generatedCode -> {
-                    // Overwrite editor: select all then insert
-                    int len = backend.getContent().length();
-                    backend.setSelectCursor(0);
-                    backend.setCursor(len);
-                    backend.insertText(generatedCode);
-                    aiStatusMessage = null;
-                    aiGenerating = false;
-                    aiGenerateButton.active = true;
-                },
-                errorMsg -> {
-                    aiStatusMessage = GuiText.AiError.string() + ": " + errorMsg;
-                    aiGenerating = false;
-                    aiGenerateButton.active = true;
-                }
-        );
+            btnOutputPanel = Button.builder(
+                            Component.translatable(GuiText.LlmPanelBack.getTranslationKey()),
+                            btn -> setPanelMode(false))
+                    .bounds(startX, btnY, btnW, btnH)
+                    .build();
+
+            btnLlmPanel = Button.builder(
+                            Component.translatable(GuiText.LlmPanelToggle.getTranslationKey()),
+                            btn -> setPanelMode(true))
+                    .bounds(startX + btnW + 4, btnY, btnW, btnH)
+                    .build();
+
+            addRenderableWidget(btnOutputPanel);
+            addRenderableWidget(btnLlmPanel);
+
+            // visually update state
+            updatePanelButtons();
+        }
+    }
+
+    // ── Panel Switch Logic ───────────────────────────────────────────
+
+    private void setPanelMode(boolean showLlm) {
+        llmGenerateScreen.setVisible(showLlm);
+        outputWindow.visible = !showLlm;
+        updatePanelButtons();
+    }
+
+    private void updatePanelButtons() {
+        if (btnLlmPanel != null && btnOutputPanel != null) {
+            boolean isLlm = llmGenerateScreen.isVisible();
+            btnLlmPanel.active = !isLlm;
+            btnOutputPanel.active = isLlm;
+        }
     }
 
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics,
                        int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+
+        // LLM panel background + status (rendered before widget layer)
+        llmGenerateScreen.render(guiGraphics);
 
         // tooltips
         snippetWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
