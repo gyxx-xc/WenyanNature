@@ -49,6 +49,7 @@ public class LLMGenerateScreenWidget {
     private Button  generateButton;
     private Button  newMemoryButton;
     private Button  fixButton;
+    private Button  switchModelButton;
 
     // ── State (survives screen resize because this object is reused) ──
     private boolean generating    = false;
@@ -75,11 +76,24 @@ public class LLMGenerateScreenWidget {
      */
     public void init(Font font, RunnerBlockBackend backend,
                      int x, int y, int width, int height,
+                     int btnX, int btnY, int btnW, int btnH,
                      Consumer<AbstractWidget> addWidget) {
         this.font   = font;
         this.panelX = x;
         this.panelY = y;
         this.panelW = width;
+
+        if (btnW > 0) {
+            switchModelButton = Button.builder(
+                            Component.literal("模型: " + session.getProvider().getDisplayName()),
+                            btn -> {
+                                session.setProvider(session.getProvider().next());
+                                btn.setMessage(Component.literal("模型: " + session.getProvider().getDisplayName()));
+                            })
+                    .bounds(btnX, btnY, btnW, btnH)
+                    .build();
+            addWidget.accept(switchModelButton);
+        }
 
         int buttonW = 60;
         int availableW = width - buttonW - 4;
@@ -194,8 +208,9 @@ public class LLMGenerateScreenWidget {
 
     private void applyVisibility() {
         if (promptBox       != null) promptBox.visible       = visible;
-        if (generateButton  != null) generateButton.visible  = visible;
-        if (newMemoryButton != null) newMemoryButton.visible = visible;
+        if (generateButton != null)   generateButton.visible = visible;
+        if (newMemoryButton != null)  newMemoryButton.visible = visible;
+        if (switchModelButton != null) switchModelButton.visible = visible;
         if (fixButton       != null) fixButton.visible       = visible;
     }
 

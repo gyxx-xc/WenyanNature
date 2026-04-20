@@ -21,12 +21,32 @@ import java.util.Deque;
 public class CodeOutputWidget extends AbstractTextAreaWidget {
     private final MultiLineTextWidget multilineWidget;
 
-    public CodeOutputWidget(int x, int y, int width, int height, Component message, Font font, OutputBackend backend) {
+    private net.minecraft.client.gui.components.Button clearButton;
+
+    public CodeOutputWidget(int x, int y, int width, int height, Component message, Font font, OutputBackend backend,
+                            int clearX, int clearY, int clearW, int clearH,
+                            java.util.function.Consumer<net.minecraft.client.gui.components.AbstractWidget> addWidget) {
         super(x, y, width, height, message, AbstractScrollArea.defaultSettings(9));
         this.multilineWidget = (new MultiLineTextWidget(message, font)).setMaxWidth(this.getWidth() - this.totalInnerPadding());
         setOutput(backend.getOutput());
         backend.setOutputListener(this::setOutput);
 
+        if (clearW > 0) {
+            clearButton = net.minecraft.client.gui.components.Button.builder(
+                            Component.literal("清空"),
+                            btn -> backend.clearOutput())
+                    .bounds(clearX, clearY, clearW, clearH)
+                    .build();
+            clearButton.visible = this.visible;
+            addWidget.accept(clearButton);
+        }
+    }
+    
+    public void setVisibility(boolean visible) {
+        this.visible = visible;
+        if (clearButton != null) {
+            clearButton.visible = visible;
+        }
     }
 
     public static final WidgetSprites ENTRY_SPRITES = new WidgetSprites(

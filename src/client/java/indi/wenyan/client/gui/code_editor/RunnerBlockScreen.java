@@ -50,10 +50,6 @@ public class RunnerBlockScreen extends Screen {
     private Button btnOutputPanel;
     @SuppressWarnings("FieldCanBeLocal")
     private Button btnLlmPanel;
-    @SuppressWarnings("FieldCanBeLocal")
-    private Button btnSwitchModel;
-    @SuppressWarnings("FieldCanBeLocal")
-    private Button btnClearOutput;
 
     public RunnerBlockScreen(RunnerBlockBackend backend) {
         super(Component.empty());
@@ -100,32 +96,38 @@ public class RunnerBlockScreen extends Screen {
         int outputHeight = Math.max(height - outputAreaY, 0);
         int outputX      = snippetWidth + 4;
 
+        int btnY = titleBarHeight + textFileHeight + 4;
+        int btnH = font.lineHeight + 6;
+        int btnW = (packageSnippetWidth - 4) / 2;
+        int startX = width - packageSnippetWidth;
+
+        int extraBtnW = packageSnippetWidth > 0 ? (packageSnippetWidth - 4) : 0;
+        int extraBtnY = btnY + btnH + 4;
+
         outputWindow = new CodeOutputWidget(
                 outputX, outputAreaY,
                 textFieldWidth, outputHeight,
-                Component.literal(""), font, backend);
+                Component.literal(""), font, backend,
+                startX, extraBtnY, extraBtnW, btnH,
+                this::addRenderableWidget);
         addRenderableWidget(outputWindow);
 
         // ── LLM panel (same area, initially hidden) ────────────────────────────
         llmGenerateScreen.init(font, backend,
                 outputX, outputAreaY,
                 textFieldWidth, outputHeight,
+                startX, extraBtnY, extraBtnW, btnH,
                 this::addRenderableWidget);
 
         // Restore visibility state across screen resizes
         if (llmGenerateScreen.isVisible()) {
-            outputWindow.visible = false;
+            outputWindow.setVisibility(false);
         } else {
             llmGenerateScreen.setVisible(false);
         }
 
         // ── Mode selection buttons: right column, just below packageSnippetWidget ────────
         if (packageSnippetWidth > 0) {
-            int btnY = titleBarHeight + textFileHeight + 4;
-            int btnH = font.lineHeight + 6;
-            int btnW = (packageSnippetWidth - 4) / 2;
-            int startX = width - packageSnippetWidth;
-
             btnOutputPanel = Button.builder(
                             Component.translatable(GuiText.LlmPanelBack.getTranslationKey()),
                             btn -> setPanelMode(false))
@@ -138,26 +140,8 @@ public class RunnerBlockScreen extends Screen {
                     .bounds(startX + btnW + 4, btnY, btnW - 4 , btnH)
                     .build();
 
-            btnSwitchModel = Button.builder(
-                            Component.literal("模型: " + llmGenerateScreen.getSession().getProvider().getDisplayName()),
-                            btn -> {
-                                LlmSession session = llmGenerateScreen.getSession();
-                                session.setProvider(session.getProvider().next());
-                                btn.setMessage(Component.literal("模型: " + session.getProvider().getDisplayName()));
-                            })
-                    .bounds(startX, btnY + btnH + 4, packageSnippetWidth - 4, btnH)
-                    .build();
-
-            btnClearOutput = Button.builder(
-                            Component.literal("清空"),
-                            btn -> backend.clearOutput())
-                    .bounds(startX, btnY + btnH + 4, packageSnippetWidth - 4, btnH)
-                    .build();
-
             addRenderableWidget(btnOutputPanel);
             addRenderableWidget(btnLlmPanel);
-            addRenderableWidget(btnSwitchModel);
-            addRenderableWidget(btnClearOutput);
 
             // visually update state
             updatePanelButtons();
@@ -168,20 +152,15 @@ public class RunnerBlockScreen extends Screen {
 
     private void setPanelMode(boolean showLlm) {
         llmGenerateScreen.setVisible(showLlm);
-        outputWindow.visible = !showLlm;
-        updatePanelButtons(showLlm);
+        outputWindow.setVisibility(!showLlm);
+        updatePanelButtons();
     }
 
     private void updatePanelButtons() {
-        updatePanelButtons(llmGenerateScreen.isVisible());
-    }
-
-    private void updatePanelButtons(boolean isLlm) {
+        boolean isLlm = llmGenerateScreen.isVisible();
         if (btnLlmPanel == null) return;
         btnLlmPanel.active = !isLlm;
         btnOutputPanel.active = isLlm;
-        if (btnSwitchModel != null) btnSwitchModel.visible = isLlm;
-        if (btnClearOutput != null) btnClearOutput.visible = !isLlm;
     }
 
     @Override
