@@ -104,7 +104,7 @@ public class LLMGenerateScreenWidget {
 
         // ── Additional Action Buttons ──
         int actionBtnY = y + INPUT_H + 4;
-        int actionBtnW = 60;
+        int actionBtnW = editBoxW / 2 - 2;
 
         newMemoryButton = Button.builder(
                         Component.literal("新记忆"),

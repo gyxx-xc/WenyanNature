@@ -164,7 +164,7 @@ public class LlmSession {
         Optional<String> apiKeyOpt = LlmConfig.getOptional(currentProvider.getApiKeyEnvVar());
 
         if (apiKeyOpt.isEmpty()) {
-            onError.accept("[AI] " + LlmConfig.getEnvPath() + " 中未設 " + currentProvider.getApiKeyEnvVar());
+            onError.accept( LlmConfig.getEnvPath() + " 中未設 " + currentProvider.getApiKeyEnvVar());
             return;
         }
 

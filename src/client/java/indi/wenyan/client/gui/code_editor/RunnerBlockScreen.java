@@ -52,6 +52,8 @@ public class RunnerBlockScreen extends Screen {
     private Button btnLlmPanel;
     @SuppressWarnings("FieldCanBeLocal")
     private Button btnSwitchModel;
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button btnClearOutput;
 
     public RunnerBlockScreen(RunnerBlockBackend backend) {
         super(Component.empty());
@@ -133,7 +135,7 @@ public class RunnerBlockScreen extends Screen {
             btnLlmPanel = Button.builder(
                             Component.translatable(GuiText.LlmPanelToggle.getTranslationKey()),
                             btn -> setPanelMode(true))
-                    .bounds(startX + btnW + 4, btnY, btnW, btnH)
+                    .bounds(startX + btnW + 4, btnY, btnW - 4 , btnH)
                     .build();
 
             btnSwitchModel = Button.builder(
@@ -143,12 +145,19 @@ public class RunnerBlockScreen extends Screen {
                                 session.setProvider(session.getProvider().next());
                                 btn.setMessage(Component.literal("模型: " + session.getProvider().getDisplayName()));
                             })
-                    .bounds(startX + btnW + 4, btnY + btnH + 4, btnW, btnH)
+                    .bounds(startX, btnY + btnH + 4, packageSnippetWidth - 4, btnH)
+                    .build();
+
+            btnClearOutput = Button.builder(
+                            Component.literal("清空"),
+                            btn -> backend.clearOutput())
+                    .bounds(startX, btnY + btnH + 4, packageSnippetWidth - 4, btnH)
                     .build();
 
             addRenderableWidget(btnOutputPanel);
             addRenderableWidget(btnLlmPanel);
             addRenderableWidget(btnSwitchModel);
+            addRenderableWidget(btnClearOutput);
 
             // visually update state
             updatePanelButtons();
@@ -160,15 +169,19 @@ public class RunnerBlockScreen extends Screen {
     private void setPanelMode(boolean showLlm) {
         llmGenerateScreen.setVisible(showLlm);
         outputWindow.visible = !showLlm;
-        updatePanelButtons();
+        updatePanelButtons(showLlm);
     }
 
     private void updatePanelButtons() {
-        if (btnLlmPanel != null && btnOutputPanel != null) {
-            boolean isLlm = llmGenerateScreen.isVisible();
-            btnLlmPanel.active = !isLlm;
-            btnOutputPanel.active = isLlm;
-        }
+        updatePanelButtons(llmGenerateScreen.isVisible());
+    }
+
+    private void updatePanelButtons(boolean isLlm) {
+        if (btnLlmPanel == null) return;
+        btnLlmPanel.active = !isLlm;
+        btnOutputPanel.active = isLlm;
+        if (btnSwitchModel != null) btnSwitchModel.visible = isLlm;
+        if (btnClearOutput != null) btnClearOutput.visible = !isLlm;
     }
 
     @Override
