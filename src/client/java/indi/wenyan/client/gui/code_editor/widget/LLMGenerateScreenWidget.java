@@ -128,7 +128,7 @@ public class LLMGenerateScreenWidget {
         addWidget.accept(newMemoryButton);
 
         fixButton = Button.builder(
-                        Component.literal("修复"),
+                        Component.literal("修复").withStyle(net.minecraft.network.chat.Style.EMPTY.withColor(0xFFB347)),
                         btn -> triggerGenerate(backend, true))
                 .bounds(editBoxX + actionBtnW + 4, actionBtnY, actionBtnW, INPUT_H)
                 .build();
