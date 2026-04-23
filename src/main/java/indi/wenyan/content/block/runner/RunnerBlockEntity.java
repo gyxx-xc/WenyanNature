@@ -145,8 +145,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             StringBuilder sb = new StringBuilder();
+                            boolean firstFlag = true;
                             for (IWenyanValue arg : args) {
-                                sb.append(" ");
+                                if (!firstFlag) sb.append(" ");
+                                else firstFlag = false;
                                 sb.append(arg.toString());
                             }
                             addOutputBothSide(sb.toString(), IOutputAcceptor.OutputStyle.NORMAL);

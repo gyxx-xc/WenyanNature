@@ -24,7 +24,7 @@ class VariableStatementTest extends WenyanProgramTestHelper {
                 resultArgs("夫一名之曰「a」昔之「a」者今二是矣書之\n", 1),
                 resultArgs("夫一名之曰「a」昔之「a」者今二是矣書「a」\n", 2),
                 resultArgs("夫一名之曰「a」夫二予之以「a」書「a」\n", 2),
-                resultArgs("夫「「a」」名之曰「a」昔之「a」者今二是矣書「a」\n", "二"),
+                resultArgs("夫「「a」」名之曰「a」昔之「a」者今二是矣書「a」\n", 2),
                 resultArgs("夫一名之曰「a」名之曰「b」書「b」\n", 1),
                 resultArgs("夫一名之曰「a」名之曰「b」昔之「a」者今二是矣書「b」\n", 1),
                 resultArgs("夫一名之曰「a」夫二名之曰「a」書「a」\n", 2),

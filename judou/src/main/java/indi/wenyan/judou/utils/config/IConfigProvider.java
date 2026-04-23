@@ -9,9 +9,12 @@ public interface IConfigProvider {
     int getResultMaxSize();
     int getMaxRecursionDepth();
 
+    int getMaxQueueSize();
+    int getMaxQueueSizePerTick();
+
     boolean useLegacyRunner();
 
     boolean convertCode();
 
-    ChineseUtils.SymbolFormat symbolConvertion();
+    ChineseUtils.SymbolFormat symbolConversion();
 }

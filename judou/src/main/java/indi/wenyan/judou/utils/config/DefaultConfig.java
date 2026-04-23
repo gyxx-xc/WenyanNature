@@ -29,6 +29,16 @@ public class DefaultConfig implements IConfigProvider {
     }
 
     @Override
+    public int getMaxQueueSize() {
+        return 50;
+    }
+
+    @Override
+    public int getMaxQueueSizePerTick() {
+        return 20;
+    }
+
+    @Override
     public boolean useLegacyRunner() {
         return false;
     }
@@ -39,7 +49,7 @@ public class DefaultConfig implements IConfigProvider {
     }
 
     @Override
-    public ChineseUtils.SymbolFormat symbolConvertion() {
+    public ChineseUtils.SymbolFormat symbolConversion() {
         return ChineseUtils.SymbolFormat.TRADITIONAL;
     }
 }

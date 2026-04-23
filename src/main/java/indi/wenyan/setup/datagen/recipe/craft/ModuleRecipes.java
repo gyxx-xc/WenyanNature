@@ -4,23 +4,14 @@ import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
 import indi.wenyan.setup.datagen.recipe.RecipeUtilities;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 
 public class ModuleRecipes {
     public static void build(HolderGetter<Item> items, RecipeOutput output, CheckerRecipeProvider provider) {
         // === Tool and Module ===
-        // 印符 (print_inventory_module) - 无序
-        ShapelessRecipeBuilder
-                .shapeless(items, RecipeCategory.MISC,
-                        WenyanItems.PRINT_INVENTORY_MODULE, 2)
-                .requires(Items.PAPER)
-                .requires(Ingredient.of(Items.COAL, Items.CHARCOAL))
-                .requires(Items.FEATHER)
-                .unlockedBy("has_paper", provider.publicHas(Items.PAPER)).save(output);
-
         // 位元符 (bit_module_block)
         RecipeUtilities.newShapedRecipe(provider, output, items, RecipeCategory.MISC,
                 WenyanItems.BIT_MODULE_BLOCK_ITEM, 2,

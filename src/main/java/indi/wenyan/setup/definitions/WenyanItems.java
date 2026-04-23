@@ -12,10 +12,8 @@ import indi.wenyan.content.block.crafting_block.PedestalBlock;
 import indi.wenyan.content.block.furnace.LogicFurnaceBlock;
 import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.content.block.writing_block.WritingBlock;
-import indi.wenyan.content.item.EquipableRunnerItem;
 import indi.wenyan.content.item.FloatNoteItem;
 import indi.wenyan.content.item.RunnerItem;
-import indi.wenyan.content.item.additional_module.PrintInventoryModule;
 import indi.wenyan.content.item.ink.*;
 import indi.wenyan.content.item.paper.*;
 import indi.wenyan.content.item.throw_runner.ThrowModule;
@@ -112,12 +110,6 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.BLOCKING_QUEUE_MODULE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> PISTON_MODULE_BLOCK_ITEM = DR.registerItem(PistonModuleBlock.ID,
             properties -> new BlockItem(WenyanBlocks.PISTON_MODULE_BLOCK.get(), properties));
-
-    @Deprecated
-    public static final DeferredItem<Item> EQUIPABLE_RUNNER_ITEM = DR.registerItem(EquipableRunnerItem.ID_1,
-            (Item.Properties properties) -> new EquipableRunnerItem(properties, 1));
-    public static final DeferredItem<Item> PRINT_INVENTORY_MODULE = DR.registerItem(PrintInventoryModule.ID,
-            PrintInventoryModule::new);
 
     @Deprecated
     public static final DeferredItem<BlockItem> COMMUNICATE_MODULE_BLOCK_ITEM = DR.registerItem(

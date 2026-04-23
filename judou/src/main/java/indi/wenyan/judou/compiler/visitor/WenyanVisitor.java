@@ -61,18 +61,13 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
             ParseTree c = node.getChild(i);
             Boolean childResult;
             if (c instanceof ParserRuleContext ctx) {
-                // STUB: not sure why getStop will return null if empty (should be start)
-                if (ctx.getStop() != null) {
-                    bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
-                            ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-                    if (bytecode.isDebug() && ctx instanceof WenyanRParser.StatementContext) {
-                        bytecode.add(WenyanCodes.BREAKPOINT);
-                    }
-                    childResult = c.accept(this);
-                    bytecode.exitContext();
-                } else {
-                    childResult = c.accept(this);
+                bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
+                        ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                if (bytecode.isDebug() && ctx instanceof WenyanRParser.StatementContext) {
+                    bytecode.add(WenyanCodes.BREAKPOINT);
                 }
+                childResult = c.accept(this);
+                bytecode.exitContext();
             } else {
                 childResult = c.accept(this);
             }

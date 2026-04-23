@@ -92,20 +92,30 @@ public final class WenyanConfig {
         }
 
         @Override
+        public int getMaxQueueSize() {
+            return instance().common.maxQueueSize.get();
+        }
+
+        @Override
+        public int getMaxQueueSizePerTick() {
+            return instance().common.maxQueueSizePerTick.get();
+        }
+
+        @Override
         public boolean useLegacyRunner() {
             return instance().common.useLegacyRunner.get();
         }
 
         @Override
         public boolean convertCode() {
-            return instance().common.useTraditionalConvertion.get();
+            return instance().common.useTraditionalConversion.get();
         }
 
         @Override
-        public ChineseUtils.SymbolFormat symbolConvertion() {
+        public ChineseUtils.SymbolFormat symbolConversion() {
             return ChineseUtils.SymbolFormat.TRADITIONAL;
             // FIXME: has static vars depends on this (before config loaded).
-//            return instance().common.symbolConvertion.get();
+//            return instance().common.symbolConversion.get();
         }
     };
 
@@ -127,8 +137,10 @@ public final class WenyanConfig {
         public final IntValue resultMaxSize;
         public final IntValue maxRecursionDepth;
         public final BooleanValue useLegacyRunner;
-        public final BooleanValue useTraditionalConvertion;
-        public final EnumValue<ChineseUtils.SymbolFormat> symbolConvertion;
+        public final BooleanValue useTraditionalConversion;
+        public final EnumValue<ChineseUtils.SymbolFormat> symbolConversion;
+        public final IntValue maxQueueSize;
+        public final IntValue maxQueueSizePerTick;
 
         public final IntValue formationRange;
         public final IntValue pedestalRange;
@@ -150,10 +162,12 @@ public final class WenyanConfig {
             maxRecursionDepth = define(builder, ConfigText.MaxRecursionDepth.getName(), 30, 1, 50,
                     "x100");
             useLegacyRunner = define(builder, ConfigText.UseLegacyRunner.getName(), false);
-            useTraditionalConvertion = define(builder, ConfigText.UseTraditionalConvertion.getName(), false);
+            useTraditionalConversion = define(builder, ConfigText.UseTraditionalConversion.getName(), false);
             builder.gameRestart();
-            symbolConvertion = defineEnum(builder, ConfigText.SymbolConvertion.getName(), ChineseUtils.SymbolFormat.TRADITIONAL,
+            symbolConversion = defineEnum(builder, ConfigText.SymbolConversion.getName(), ChineseUtils.SymbolFormat.TRADITIONAL,
                     "symbol inside 「」");
+            maxQueueSize = define(builder, ConfigText.MaxQueueSize.getName(), 50, 30, 100);
+            maxQueueSizePerTick = define(builder, ConfigText.MaxQueueSizePerTick.getName(), 20, 10, 50);
             builder.pop();
 
             builder.push(ConfigText.InGame.getName());

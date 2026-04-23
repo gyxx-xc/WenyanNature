@@ -14,8 +14,8 @@ public enum ConfigText implements ILocalizationEnum {
     Lifetime,         // 投符持續時間
     MaxRecursionDepth,
     UseLegacyRunner,
-    UseTraditionalConvertion,
-    SymbolConvertion;
+    UseTraditionalConversion,
+    SymbolConversion, MaxQueueSize, MaxQueueSizePerTick;
 
     public String getName() {
         return name();

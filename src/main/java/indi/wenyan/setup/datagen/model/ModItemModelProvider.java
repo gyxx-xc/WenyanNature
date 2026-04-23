@@ -43,7 +43,6 @@ public class ModItemModelProvider extends ModelSubProvider {
         basicItem(WenyanItems.STARLIGHT_INK.get());
 
         basicItem(WenyanItems.FLOAT_NOTE.get());
-        basicItem(WenyanItems.PRINT_INVENTORY_MODULE.get());
         basicItem(WenyanItems.THROW_MODULE.get());
 
         basicItem(WenyanItems.BIT_MODULE_BLOCK_ITEM.get());
@@ -59,8 +58,6 @@ public class ModItemModelProvider extends ModelSubProvider {
         basicItem(WenyanItems.COLLECTION_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.BLOCKING_QUEUE_MODULE_BLOCK_ITEM.get());
         basicItem(WenyanItems.PISTON_MODULE_BLOCK_ITEM.get());
-
-        basicItem(WenyanItems.EQUIPABLE_RUNNER_ITEM.get());
     }
 
     private void basicItem(Item item) {

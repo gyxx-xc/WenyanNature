@@ -57,7 +57,7 @@ public final class WenyanPackageBuilder {
     }
 
     private void putConvertedValue(String name, IWenyanValue value) {
-        switch (UtilManager.getConfig().symbolConvertion()) {
+        switch (UtilManager.getConfig().symbolConversion()) {
             case ChineseUtils.SymbolFormat.TRADITIONAL -> variables.put(name, value);
             case ChineseUtils.SymbolFormat.SIMPLIFIED -> variables.put(ChineseUtils.toSimplifiedVar(name), value);
             case ChineseUtils.SymbolFormat.BOTH -> {

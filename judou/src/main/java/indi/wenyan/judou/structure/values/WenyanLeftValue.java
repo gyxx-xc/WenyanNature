@@ -3,7 +3,6 @@ package indi.wenyan.judou.structure.values;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ public class WenyanLeftValue implements IWenyanValue {
     /**
      * The actual value stored in this variable
      */
-    @Setter @Getter
+    @Getter
     private IWenyanValue value;
 
     /**
@@ -37,6 +36,14 @@ public class WenyanLeftValue implements IWenyanValue {
             return new WenyanLeftValue(leftValue.value);
         } else {
             return new WenyanLeftValue(value);
+        }
+    }
+
+    public void setValue(IWenyanValue value) {
+        if (value instanceof WenyanLeftValue leftValue) {
+            this.value = leftValue.value;
+        } else {
+            this.value = value;
         }
     }
 

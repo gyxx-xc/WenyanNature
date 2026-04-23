@@ -2,6 +2,7 @@ package indi.wenyan.judou.compiler;
 
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.structure.values.WenyanNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -56,4 +57,56 @@ public interface IWenyanBytecode {
     List<WenyanBytecode.CapturedValue> getCapturedValues();
 
     String getSourceCode();
+
+    IWenyanBytecode EMPTY = new IWenyanBytecode() {
+        @Override
+        public WenyanCodes getCode(int index) {
+            return WenyanCodes.BREAKPOINT;
+        }
+
+        @Override
+        public int getCodeOrdinal(int index) {
+            return 0;
+        }
+
+        @Override
+        public int getArg(int index) {
+            return 0;
+        }
+
+        @Override
+        public IWenyanValue getConst(int index) {
+            return WenyanNull.NULL;
+        }
+
+        @Override
+        public String getIdentifier(int index) {
+            return "";
+        }
+
+        @Override
+        public WenyanBytecode.@Nullable Context getContext(int index) {
+            return null;
+        }
+
+        @Override
+        public int getLabel(int index) {
+            return 0;
+        }
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public List<WenyanBytecode.CapturedValue> getCapturedValues() {
+            return List.of();
+        }
+
+        @Override
+        public String getSourceCode() {
+            return "";
+        }
+    };
 }

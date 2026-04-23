@@ -34,7 +34,7 @@ public enum JudouExceptionText implements JudouLocalizationEnum {
     TooManyThreads,                     // 謬：線程過多
     RunningTooSlow,                     // 謬：運行過慢
     Unreached,                          // 未知错误，请提交issue
-    ;
+    QueueFull;
 
     @Override
     public String getTranslationKey() {
