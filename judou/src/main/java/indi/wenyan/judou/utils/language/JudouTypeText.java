@@ -20,7 +20,7 @@ public enum JudouTypeText implements JudouLocalizationEnum {
     List,
     Iterator,
     String,
-    ;
+    Computable;
 
     @Override
     public String getTranslationKey() {

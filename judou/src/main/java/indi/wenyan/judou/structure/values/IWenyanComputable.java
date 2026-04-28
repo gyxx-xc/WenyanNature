@@ -1,11 +1,15 @@
 package indi.wenyan.judou.structure.values;
 
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.utils.language.JudouTypeText;
 
 /**
  * Interface for Wenyan values that support basic arithmetic operations.
  */
 public interface IWenyanComputable extends IWenyanValue {
+    WenyanType<IWenyanComputable> TYPE = new WenyanType<>(JudouTypeText.Computable.string(), IWenyanComputable.class);
+
     /**
      * Adds this value to another value.
      *

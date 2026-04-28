@@ -5,10 +5,7 @@ import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanObject;
-import indi.wenyan.judou.structure.values.IWenyanObjectType;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.IWenyanWarperValue;
+import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 import indi.wenyan.judou.utils.function.WenyanValues;
@@ -20,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenyanObject {
+public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenyanObject, IWenyanComputable {
     public static final IWenyanObjectType OBJECT_TYPE = new Vec3ObjectType();
     public static final WenyanType<WenyanVec3> TYPE = new WenyanType<>(TypeText.Vec3.string(), WenyanVec3.class);
 
@@ -62,6 +59,32 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
             );
             default -> throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
         };
+    }
+
+    @Override
+    public IWenyanValue add(IWenyanValue other) throws WenyanException {
+        return new WenyanVec3(value.add(other.as(TYPE).value));
+    }
+
+    @Override
+    public IWenyanValue subtract(IWenyanValue other) throws WenyanException {
+        return new WenyanVec3(value.subtract(other.as(TYPE).value));
+    }
+
+    @Override
+    public IWenyanValue multiply(IWenyanValue other) throws WenyanException {
+        return WenyanValues.of(value.dot(other.as(TYPE).value));
+    }
+
+    @Override
+    public IWenyanValue divide(IWenyanValue other) throws WenyanException {
+        throw new WenyanException(JudouExceptionText.OperationNotSupported.string());
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "(" + WenyanValues.of(value().x()) + ", " +
+                WenyanValues.of(value().y()) + ", " + WenyanValues.of(value().z()) + ")";
     }
 
     // store all static information
@@ -119,11 +142,5 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         public WenyanType<?> type() {
             return TYPE;
         }
-    }
-
-    @Override
-    public @NotNull String toString() {
-        return "(" + WenyanValues.of(value().x()) + ", " +
-                WenyanValues.of(value().y()) + ", " + WenyanValues.of(value().z()) + ")";
     }
 }

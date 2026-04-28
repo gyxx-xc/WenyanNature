@@ -4,7 +4,6 @@ import indi.wenyan.judou.structure.values.IWenyanComparable;
 import indi.wenyan.judou.structure.values.IWenyanComputable;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
 import indi.wenyan.judou.structure.values.primitive.WenyanString;
 
 /**
@@ -49,7 +48,7 @@ public class WenyanType<T extends IWenyanValue> {
         if (type1 == WenyanDouble.TYPE || type2 == WenyanDouble.TYPE) {
             return WenyanDouble.TYPE;
         }
-        return WenyanInteger.TYPE;
+        return IWenyanComputable.TYPE;
     }
 
     /**
@@ -63,7 +62,7 @@ public class WenyanType<T extends IWenyanValue> {
         if (type1 == WenyanDouble.TYPE || type2 == WenyanDouble.TYPE) {
             return WenyanDouble.TYPE;
         }
-        return WenyanInteger.TYPE;
+        return IWenyanComparable.TYPE;
     }
 
     @Override
