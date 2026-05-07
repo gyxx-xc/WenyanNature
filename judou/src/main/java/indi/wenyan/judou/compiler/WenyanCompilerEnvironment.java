@@ -4,7 +4,9 @@ import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.WenyanCompileException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.utils.language.JudouExceptionText;
+import lombok.Data;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -24,6 +26,7 @@ public class WenyanCompilerEnvironment {
     private final Deque<ForEnvironment> forStack = new ArrayDeque<>();
     private final Deque<Context> debugContextStack = new ArrayDeque<>();
     private final Deque<Scope> scopeStack = new ArrayDeque<>();
+    private final Deque<TryContext> tryContextStack = new ArrayDeque<>();
     private int lastContextStart = 0;
     private int localVariableCounter = 0;
     @Getter private final boolean debug;
@@ -205,6 +208,27 @@ public class WenyanCompilerEnvironment {
         forStack.pop();
     }
 
+    public void enterTry() {
+        tryContextStack.push(new TryContext());
+        assert tryContextStack.peek() != null;
+        tryContextStack.peek().start(bytecode.size());
+    }
+
+    public void exitTry() {
+        assert tryContextStack.peek() != null;
+        tryContextStack.peek().end(bytecode.size()-1);
+    }
+
+    public void setHandler() {
+        TryContext peek = tryContextStack.peek();
+        assert peek != null;
+        bytecode.addErrorHandlingContext(peek.start(), peek.end(), bytecode.size());
+    }
+
+    public void exitCatch() {
+        tryContextStack.pop();
+    }
+
     /**
      * Gets the identifier index for a string, adding it if not present.
      *
@@ -312,6 +336,13 @@ public class WenyanCompilerEnvironment {
      * Represents a debug context with source location information.
      */
     private record Context(int line, int column, int contentStart, int contentEnd) {
+    }
+
+    @Accessors(fluent = true)
+    @Data
+    private static class TryContext {
+        int start;
+        int end;
     }
 
     // if from local null, means it's local

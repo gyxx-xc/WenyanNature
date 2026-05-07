@@ -7,7 +7,7 @@ import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.runtime.executor.BreakpointCode;
 import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
+import indi.wenyan.judou.structure.WenyanUnexceptedException;
 import indi.wenyan.judou.structure.values.*;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
 import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinObject;
@@ -301,10 +301,14 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
             this.yield();
             return step;
         } catch (WenyanException e) {
-            IWenyanRunner.dieWithException(this, e);
+            boolean succuss = IWenyanRunner.handleException(this);
+            if (succuss)
+                this.yield();
+            else
+                IWenyanRunner.dieWithException(this, e);
             return i + 1; // might i here, but it's not a big deal
         } catch (RuntimeException e) { // for any other missing exceptions
-            IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
+            IWenyanRunner.dieWithException(this, new WenyanUnexceptedException(e));
             return i + 1;
         }
     }

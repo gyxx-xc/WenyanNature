@@ -4,6 +4,7 @@ import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.IThreadHolder;
 import indi.wenyan.judou.runtime.IWenyanScheduler;
 import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.structure.WenyanUnexceptedException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,10 +52,14 @@ public class WenyanRunner<T extends IWenyanScheduler.IWenyanThread> implements I
             this.yield();
             return step;
         } catch (WenyanException e) {
-            IWenyanRunner.dieWithException(this, e);
+            boolean succuss = IWenyanRunner.handleException(this);
+            if (succuss)
+                this.yield();
+            else
+                IWenyanRunner.dieWithException(this, e);
             return i + 1; // might i here, but it's not a big deal
         } catch (RuntimeException e) { // for any other missing exceptions
-            IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
+            IWenyanRunner.dieWithException(this, new WenyanUnexceptedException(e));
             return i + 1;
         }
     }

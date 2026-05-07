@@ -6,7 +6,6 @@ import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanComparable;
 import indi.wenyan.judou.structure.values.IWenyanValue;
 import indi.wenyan.judou.structure.values.primitive.WenyanList;
@@ -69,7 +68,7 @@ public class CollectionModuleBlock extends AbstractFuluBlock {
                                 } catch (RuntimeException e) {
                                     if (e.getCause() instanceof WenyanException we)
                                         throw we;
-                                    throw new WenyanUnreachedException.WenyanUnexceptedException(e);
+                                    throw e;
                                 }
                                 return WenyanValues.of(new ArrayList<>(sorted));
                             })

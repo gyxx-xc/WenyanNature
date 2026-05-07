@@ -17,11 +17,12 @@ public class WenyanBytecode {
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
-    @Getter
-    private final List<CapturedValue> capturedValues = new ArrayList<>();
     private final List<Context> debugTable = new ArrayList<>();
-    @Getter
-    private final String sourceCode;
+    /// need to fulfill end is ordered in ascending order
+    private final List<ErrorHandlingContext> errorHandlingContext = new ArrayList<>();
+
+    @Getter private final List<CapturedValue> capturedValues = new ArrayList<>();
+    @Getter private final String sourceCode;
 
     public WenyanBytecode(String sourceCode) {
         this.sourceCode = sourceCode;
@@ -78,6 +79,10 @@ public class WenyanBytecode {
         debugTable.add(new Context(line, column, start, end, contentStart, contentEnd));
     }
 
+    public void addErrorHandlingContext(int start, int end, int pc) {
+        errorHandlingContext.add(new ErrorHandlingContext(start, end, pc));
+    }
+
     /**
      * Sets a label value at the specified index.
      *
@@ -107,6 +112,7 @@ public class WenyanBytecode {
                 labelTable.stream().mapToInt(Integer::intValue).toArray(),
                 capturedValues,
                 debugTable,
+                errorHandlingContext,
                 sourceCode
         );
     }
@@ -147,5 +153,8 @@ public class WenyanBytecode {
     }
 
     public record CapturedValue(int index, boolean fromLocal) {
+    }
+
+    public record ErrorHandlingContext(int start, int end, int pc) {
     }
 }

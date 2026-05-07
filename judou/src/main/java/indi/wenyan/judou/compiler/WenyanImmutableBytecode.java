@@ -19,11 +19,12 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
     @Getter
     private final List<WenyanBytecode.CapturedValue> capturedValues;
     private final List<WenyanBytecode.Context> debugTable;
+    private final List<WenyanBytecode.ErrorHandlingContext> errorHandlingContexts;
 
     @Getter
     private final String sourceCode;
 
-    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, int[] labelTable, List<WenyanBytecode.CapturedValue> capturedValues, List<WenyanBytecode.Context> debugTable, String sourceCode) {
+    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, int[] labelTable, List<WenyanBytecode.CapturedValue> capturedValues, List<WenyanBytecode.Context> debugTable, List<WenyanBytecode.ErrorHandlingContext> errorHandlingContexts, String sourceCode) {
         this.size = size;
         this.codes = codes;
         this.args = args;
@@ -33,6 +34,7 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
         this.capturedValues = capturedValues;
         this.debugTable = debugTable;
         this.sourceCode = sourceCode;
+        this.errorHandlingContexts = errorHandlingContexts;
     }
 
     @Override
@@ -69,6 +71,16 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
             }
         }
         return null;
+    }
+
+    @Override
+    public int getErrorHandler(int index) {
+        for (var context : errorHandlingContexts) {
+            if (context.start() <= index && index < context.end()) {
+                return context.pc();
+            }
+        }
+        return -1;
     }
 
     @Override

@@ -88,7 +88,7 @@ public final class WenyanConfig {
 
         @Override
         public int getMaxRecursionDepth() {
-            return instance().common.maxRecursionDepth.get();
+            return instance().common.maxRecursionDepth.get() * 100;
         }
 
         @Override

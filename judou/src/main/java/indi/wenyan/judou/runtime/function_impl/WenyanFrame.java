@@ -2,6 +2,7 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.compiler.IWenyanBytecode;
 import indi.wenyan.judou.compiler.WenyanBytecode;
+import indi.wenyan.judou.structure.IHandleableException;
 import indi.wenyan.judou.structure.WenyanException;
 import indi.wenyan.judou.structure.WenyanUnreachedException;
 import indi.wenyan.judou.structure.values.IWenyanValue;
@@ -10,7 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -79,12 +79,8 @@ public class WenyanFrame {
         this.returnRuntime = returnRuntime;
     }
 
-    private WenyanFrame(@NotNull IWenyanBytecode bytecode) {
-        this(bytecode, Collections.emptyList(), null);
-    }
-
     public static @NotNull WenyanFrame ofCode(IWenyanBytecode code) {
-        return new WenyanFrame(code);
+        return new WenyanFrame(code, Collections.emptyList(), null);
     }
 
     public static @NotNull WenyanFrame ofImportCode(IWenyanBytecode bytecode, List<String> exportedIdentifier, WenyanFrame returnRuntime) {
@@ -120,18 +116,16 @@ public class WenyanFrame {
         processStack.push(value);
     }
 
-    public WenyanException.@Nullable ErrorContext getErrorContext(WenyanException e, Logger logger) {
-        WenyanException.ErrorContext errorContext = null;
+    public IHandleableException.@Nullable ErrorContext getErrorContext() {
+        IHandleableException.ErrorContext errorContext = null;
         try {
             WenyanBytecode.Context context = bytecode.getContext(getProgramCounter() - 1);
             if (context != null)
-                errorContext = new WenyanException.ErrorContext(
+                errorContext = new IHandleableException.ErrorContext(
                         context.line(), context.column(),
                         bytecode.getSourceCode().substring(context.contentStart(), context.contentEnd()));
         } catch (IndexOutOfBoundsException ignore) {// cause error context be null, handled below
         }
-        if (errorContext == null)
-            logger.error("Unexpected, failed to get code context during handling an exception", e);
         return errorContext;
     }
 

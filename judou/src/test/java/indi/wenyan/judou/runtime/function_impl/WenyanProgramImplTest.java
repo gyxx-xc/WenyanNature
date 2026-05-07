@@ -52,11 +52,8 @@ class WenyanProgramImplTest {
                 program().yield(this);
                 return i;
             } catch (WenyanException e) {
-                try {
-                    program().getPlatform().handleError(e.getMessage());
-                    program().die(this);
-                } catch (WenyanException _) {
-                }
+                program().getPlatform().handleError(e.getMessage());
+                program().die(this);
                 return i;
             } catch (ReturnException ignore) {
                 return i + 1;
@@ -230,7 +227,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().block(this);
                     throw new ReturnException();
                 }
@@ -251,14 +248,14 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 10);
             var runner1 = new TestRunner(1) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().block(this);
                     throw new ReturnException();
                 }
             };
             var runner2 = new TestRunner(1) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().block(this);
                     throw new ReturnException();
                 }
@@ -290,7 +287,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().block(this);
                     program().block(this);
                     throw new ReturnException();
@@ -311,7 +308,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(2) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().block(this);
                     throw new ReturnException();
                 }
@@ -339,7 +336,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 10);
             var runner = new TestRunner(1) {
                 @Override
-                protected void bytecodeRun() throws WenyanException {
+                protected void bytecodeRun() {
                     program().unblock(this);
                 }
             };
@@ -358,7 +355,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().yield(this);
                     throw new ReturnException();
                 }
@@ -379,7 +376,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().yield(this);
                     throw new ReturnException();
                 }
@@ -399,7 +396,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 5);
             var runner = new TestRunner(10) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     program().block(this);
                     throw new ReturnException();
                 }
@@ -419,7 +416,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 2);
             var runner = new TestRunner(10) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     if (pc > 6) {
                         program().die(this);
                         throw new ReturnException();
@@ -436,7 +433,7 @@ class WenyanProgramImplTest {
             program = new WenyanSchedularImpl(platform, 2);
             var runner = new TestRunner(10) {
                 @Override
-                protected void bytecodeRun() throws WenyanException, ReturnException {
+                protected void bytecodeRun() throws ReturnException {
                     if (pc > 6) {
                         program().die(this);
                         throw new ReturnException();

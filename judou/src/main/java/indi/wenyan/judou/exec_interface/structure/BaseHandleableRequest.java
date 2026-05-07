@@ -3,7 +3,7 @@ package indi.wenyan.judou.exec_interface.structure;
 import indi.wenyan.judou.exec_interface.IWenyanPlatform;
 import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
 import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
+import indi.wenyan.judou.structure.WenyanUnexceptedException;
 
 public interface BaseHandleableRequest extends IHandleableRequest {
     boolean handle(IHandleContext context) throws WenyanException;
@@ -13,10 +13,14 @@ public interface BaseHandleableRequest extends IHandleableRequest {
         try {
             return handle(context);
         } catch (WenyanException e) {
-            IWenyanRunner.dieWithException(thread(), e);
+            boolean success = IWenyanRunner.handleException(thread());
+            if (success)
+                thread().unblock();
+            else
+                IWenyanRunner.dieWithException(thread(), e);
             return true;
         } catch (RuntimeException e) {
-            IWenyanRunner.dieWithException(thread(), new WenyanUnreachedException.WenyanUnexceptedException(e));
+            IWenyanRunner.dieWithException(thread(), new WenyanUnexceptedException(e));
             return true;
         }
     }

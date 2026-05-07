@@ -49,6 +49,7 @@ control_statement           : if_statement
                             | for_statement
                             | flush_statement
                             | return_statement
+                            | try_catch_statement
                             | break_
                             | continue_
                             ;
@@ -107,6 +108,12 @@ return_statement            : RETURN data                     # return_data_stat
                             | RETURN_LAST                     # return_last_statement
                             | RETURN_NULL                     # return_void_statement
                             ;
+
+try_catch_statement         : TRY_START content=statements CATCH_BEGIN
+//                              (CATCH_EXCEPTION_START IDENTIFIER CATCH_EXCEPTION_END handle+=statements)*
+                              (CATCH_ANY catch_any=statements)?
+                              TRY_CATCH_END
+                              ;
 
 object_statement            : LOCAL_DECLARE_OP INT_NUM OBJECT_TYPE (EXTENDS data)? NAMING YUE IDENTIFIER
                               OBJECT_BODY_START (object_property_define | object_method_define)*
@@ -190,6 +197,13 @@ IMPORT_START             : '吾嘗觀' ;
 IMPORT_PACKAGE           : '之書' ;
 FROM_IMPORT              : '方悟' ;
 FROM_IMPORT_END          : '之義' ;
+
+TRY_START                : '姑妄行此' ;
+CATCH_BEGIN              : '如事不諧' ;
+CATCH_EXCEPTION_START    : '豈' ;
+CATCH_EXCEPTION_END      : '之禍歟' ;
+CATCH_ANY                : '不知何禍歟' ;
+TRY_CATCH_END            : '乃作罷' ;
 
 LOCAL_DECLARE_OP         : '吾有' ;
 GLOBAL_DECLARE_OP        : '今有' ;

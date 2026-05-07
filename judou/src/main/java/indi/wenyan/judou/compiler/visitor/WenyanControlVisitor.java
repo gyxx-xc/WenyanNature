@@ -181,4 +181,26 @@ public class WenyanControlVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.RET);
         return true;
     }
+
+    @Override
+    public Boolean visitTry_catch_statement(WenyanRParser.Try_catch_statementContext ctx) {
+        bytecode.enterTry();
+        bytecode.enterScope();
+
+        bodyVisitor.visit(ctx.content);
+        int catchEnd = bytecode.getNewLabel();
+        bytecode.add(WenyanCodes.JMP, catchEnd);
+
+        bytecode.exitScope();
+        bytecode.exitTry();
+
+        bytecode.setHandler();
+        bytecode.enterScope();
+        bodyVisitor.visit(ctx.catch_any);
+        bytecode.exitScope();
+        bytecode.setLabel(catchEnd);
+
+        bytecode.exitCatch();
+        return true;
+    }
 }

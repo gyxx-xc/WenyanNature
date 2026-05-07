@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * Base exception class for Wenyan interpreter errors
  */
-public class WenyanException extends Exception {
+public class WenyanException extends Exception implements IHandleableException {
     public WenyanException(String message) {
         super(message);
     }
@@ -68,6 +68,7 @@ public class WenyanException extends Exception {
     }
 
     // STUB: should use a abstract class
+    @Override
     public void handle(Consumer<String> output, Logger logger, @Nullable ErrorContext context) {
         if (context == null) {
             output.accept(getMessage());
@@ -77,6 +78,4 @@ public class WenyanException extends Exception {
         }
     }
 
-    public record ErrorContext(int line, int column, String segment) {
-    }
 }

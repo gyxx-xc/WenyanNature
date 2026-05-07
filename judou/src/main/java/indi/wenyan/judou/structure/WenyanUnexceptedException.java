@@ -5,13 +5,13 @@ import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 
-public class WenyanUnreachedException extends RuntimeException implements IHandleableException {
-    public WenyanUnreachedException() {
-        super("unreached");
-    }
+/// should not be used as throwable
+public class WenyanUnexceptedException extends Throwable implements IHandleableException {
+    public final Throwable cause;
 
-    public WenyanUnreachedException(String message) {
-        super(message);
+    public WenyanUnexceptedException(Throwable e) {
+        super();
+        cause = e;
     }
 
     @Override
@@ -19,6 +19,7 @@ public class WenyanUnreachedException extends RuntimeException implements IHandl
         if (context != null)
             logger.error("At {}:{} {}", context.line(), context.column(), context.segment());
         logger.error("WenyanThread died with an unexpected exception", this);
+        logger.error("caused by: ", cause);
         output.accept(JudouExceptionText.Unreached.string());
     }
 }

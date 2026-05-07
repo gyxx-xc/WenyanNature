@@ -18,7 +18,7 @@ public class FrameManagerImpl implements IFrameManager<WenyanFrame> {
     }
 
     @Override
-    public @NotNull WenyanFrame getCurrentRuntimeException() throws WenyanUnreachedException {
+    public @NotNull WenyanFrame getCurrentRuntimeException() {
         if (currentRuntime == null)
             throw new WenyanUnreachedException();
         return currentRuntime;
@@ -39,7 +39,7 @@ public class FrameManagerImpl implements IFrameManager<WenyanFrame> {
     }
 
     @Override
-    public void ret() throws WenyanUnreachedException {
+    public void ret() {
         recursionDepth--;
         currentRuntime = getCurrentRuntimeException().getReturnRuntime();
     }

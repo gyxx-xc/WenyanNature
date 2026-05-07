@@ -10,6 +10,8 @@ import java.util.List;
 public interface IWenyanBytecode {
     WenyanCodes getCode(int index);
 
+    /// behave like getCode(index).ordinal(), but faster
+    /// @return the ordinal of the code
     int getCodeOrdinal(int index);
 
     int getArg(int index);
@@ -38,6 +40,9 @@ public interface IWenyanBytecode {
      * @throws IndexOutOfBoundsException If the identifier is not found
      */
     WenyanBytecode.@Nullable Context getContext(int index);
+
+    // TODO: add type
+    int getErrorHandler(int index);
 
     /**
      * Gets the label value at the specified index.
@@ -87,6 +92,12 @@ public interface IWenyanBytecode {
         @Override
         public WenyanBytecode.@Nullable Context getContext(int index) {
             return null;
+        }
+
+        @Override
+        public int
+        getErrorHandler(int index) {
+            return 0;
         }
 
         @Override
