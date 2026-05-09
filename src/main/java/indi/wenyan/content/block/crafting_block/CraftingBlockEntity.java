@@ -2,10 +2,10 @@ package indi.wenyan.content.block.crafting_block;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
-import indi.wenyan.content.checker.IAnsweringChecker;
 import indi.wenyan.content.gui_impl.CraftingBlockContainer;
 import indi.wenyan.content.recipe.answering.AnsweringRecipe;
 import indi.wenyan.content.recipe.answering.AnsweringRecipeInput;
+import indi.wenyan.content.recipe.answering.checker.IAnsweringChecker;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.exec_interface.RawHandlerPackage;

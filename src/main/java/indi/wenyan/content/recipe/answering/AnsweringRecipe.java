@@ -4,7 +4,7 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import indi.wenyan.content.checker.CheckerEnum;
+import indi.wenyan.content.recipe.answering.checker.CheckerEnum;
 import indi.wenyan.setup.definitions.WyRegistration;
 import lombok.AccessLevel;
 import lombok.Value;

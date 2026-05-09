@@ -7,7 +7,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.util.List;
 
-import static indi.wenyan.content.checker.CheckerEnum.*;
+import static indi.wenyan.content.recipe.answering.checker.CheckerEnum.*;
 import static indi.wenyan.judou.utils.language.JudouExceptionText.*;
 import static indi.wenyan.judou.utils.language.JudouTypeText.*;
 import static indi.wenyan.setup.language.ConfigText.*;

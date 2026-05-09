@@ -1,8 +1,8 @@
 package indi.wenyan.setup.datagen.recipe;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.content.checker.CheckerEnum;
 import indi.wenyan.content.recipe.answering.AnsweringRecipe;
+import indi.wenyan.content.recipe.answering.checker.CheckerEnum;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
