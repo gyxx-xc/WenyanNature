@@ -1,11 +1,11 @@
 package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
+import indi.wenyan.client.antlr.WenyanLexer;
 import indi.wenyan.client.gui.Utils;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.Completion;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
-import indi.wenyan.judou.antlr.WenyanRLexer;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
@@ -136,34 +136,34 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     private static Style styleFromTokenType(int tokenType) {
         return switch (tokenType) {
             // control
-            case WenyanRLexer.RETURN_NULL, WenyanRLexer.RETURN, WenyanRLexer.RETURN_LAST,
-                 WenyanRLexer.BREAK_, WenyanRLexer.CONTINUE_, WenyanRLexer.IF_, WenyanRLexer.ELSE_,
-                 WenyanRLexer.FOR_WHILE_SART, WenyanRLexer.FOR_ARR_BELONG,
-                 WenyanRLexer.FOR_ENUM_START,
-                 WenyanRLexer.FOR_ARR_START, WenyanRLexer.FOR_ENUM_TIMES, WenyanRLexer.FOR_IF_END,
-                 WenyanRLexer.ZHE -> CONTROL_STYLE;
+            case WenyanLexer.RETURN_NULL, WenyanLexer.RETURN, WenyanLexer.RETURN_LAST,
+                 WenyanLexer.BREAK_, WenyanLexer.CONTINUE_, WenyanLexer.IF_, WenyanLexer.ELSE_,
+                 WenyanLexer.FOR_WHILE_SART, WenyanLexer.FOR_ARR_BELONG,
+                 WenyanLexer.FOR_ENUM_START,
+                 WenyanLexer.FOR_ARR_START, WenyanLexer.FOR_ENUM_TIMES, WenyanLexer.FOR_IF_END,
+                 WenyanLexer.ZHE -> CONTROL_STYLE;
             // string
-            case WenyanRLexer.STRING_LITERAL -> STRING_STYLE;
+            case WenyanLexer.STRING_LITERAL -> STRING_STYLE;
             // data
-            case WenyanRLexer.FLOAT_NUM, WenyanRLexer.INT_NUM, WenyanRLexer.BOOL_VALUE ->
+            case WenyanLexer.FLOAT_NUM, WenyanLexer.INT_NUM, WenyanLexer.BOOL_VALUE ->
                     DATA_STYLE;
             // comment
-            case WenyanRLexer.COMMENT -> COMMENT_STYLE;
+            case WenyanLexer.COMMENT -> COMMENT_STYLE;
             // identifier
-            case WenyanRLexer.IDENTIFIER, WenyanRLexer.LONG, WenyanRLexer.SELF, WenyanRLexer.PARENT,
-                 WenyanRLexer.DATA_ID_LAST, WenyanRLexer.ZHI -> IDENTIFIER_STYLE;
+            case WenyanLexer.IDENTIFIER, WenyanLexer.LONG, WenyanLexer.SELF, WenyanLexer.PARENT,
+                 WenyanLexer.DATA_ID_LAST, WenyanLexer.ZHI -> IDENTIFIER_STYLE;
             // operator
-            case WenyanRLexer.ADD, WenyanRLexer.SUB, WenyanRLexer.MUL,
-                 WenyanRLexer.DIV, WenyanRLexer.UNARY_OP, WenyanRLexer.ARRAY_COMBINE_OP,
-                 WenyanRLexer.ARRAY_ADD_OP, WenyanRLexer.WRITE_KEY_FUNCTION,
-                 WenyanRLexer.POST_MOD_MATH_OP,
-                 WenyanRLexer.AND, WenyanRLexer.OR, WenyanRLexer.NEQ, WenyanRLexer.LTE,
-                 WenyanRLexer.GTE, WenyanRLexer.EQ, WenyanRLexer.GT, WenyanRLexer.LT ->
+            case WenyanLexer.ADD, WenyanLexer.SUB, WenyanLexer.MUL,
+                 WenyanLexer.DIV, WenyanLexer.UNARY_OP, WenyanLexer.ARRAY_COMBINE_OP,
+                 WenyanLexer.ARRAY_ADD_OP, WenyanLexer.WRITE_KEY_FUNCTION,
+                 WenyanLexer.POST_MOD_MATH_OP,
+                 WenyanLexer.AND, WenyanLexer.OR, WenyanLexer.NEQ, WenyanLexer.LTE,
+                 WenyanLexer.GTE, WenyanLexer.EQ, WenyanLexer.GT, WenyanLexer.LT ->
                     OPERATOR_STYLE;
             // type
-            case WenyanRLexer.BOOL_TYPE, WenyanRLexer.STRING_TYPE, WenyanRLexer.LIST_TYPE,
-                 WenyanRLexer.OBJECT_TYPE,
-                 WenyanRLexer.FUNCTION_TYPE, WenyanRLexer.NUM_TYPE -> TYPE_STYLE;
+            case WenyanLexer.BOOL_TYPE, WenyanLexer.STRING_TYPE, WenyanLexer.LIST_TYPE,
+                 WenyanLexer.OBJECT_TYPE,
+                 WenyanLexer.FUNCTION_TYPE, WenyanLexer.NUM_TYPE -> TYPE_STYLE;
             default -> DEFAULT_STYLE;
         };
     }

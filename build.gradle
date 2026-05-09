@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'antlr' // for client lexer only
     id 'idea' // for JUnit
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.140'
@@ -145,15 +146,18 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    // jarJar
     jarJar implementation(project(":judou"))
-    implementation project(":judou")
-    clientImplementation(project(":judou")) // for code highlight
-
     // lib from judou
     jarJar implementation("org.antlr:antlr4-runtime:4.13.1")
     jarJar implementation("com.github.houbb:opencc4j:1.14.0")
     jarJar implementation("com.github.houbb:nlp-common:0.0.5")
     jarJar implementation("com.github.houbb:heaven:0.13.0")
+
+    // judou
+    implementation project(":judou")
+    clientImplementation(project(":judou")) // for code highlight
+    antlr("org.antlr:antlr4:4.13.1") // for grammar lexer version
 
     // for annotation processor
     compileOnly project(":language_processor")
@@ -251,4 +255,15 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+
+generateClientGrammarSource {
+    arguments += [
+            "-encoding", "UTF-8",
+            "-package", "indi.wenyan.client.antlr"
+    ]
+    outputDirectory = layout.buildDirectory
+            .dir("generated-src/antlr/client/indi/wenyan/client/antlr")
+            .get()
+            .asFile
 }

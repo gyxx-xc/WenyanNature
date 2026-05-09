@@ -1,6 +1,6 @@
 package indi.wenyan.judou.compiler.visitor;
 
-import indi.wenyan.judou.antlr.WenyanRParser;
+import indi.wenyan.judou.antlr.WenyanParser;
 import indi.wenyan.judou.api.WenyanCompileException;
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
@@ -26,13 +26,13 @@ public class WenyanDataVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitData_primary(WenyanRParser.Data_primaryContext ctx) {
+    public Boolean visitData_primary(WenyanParser.Data_primaryContext ctx) {
         try {
             IWenyanValue value = switch (ctx.data_type.getType()) {
-                case WenyanRParser.BOOL_VALUE -> WenyanValues.of(WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()));
-                case WenyanRParser.INT_NUM -> WenyanDataParser.parseWyInt(ctx.INT_NUM().getText());
-                case WenyanRParser.FLOAT_NUM -> WenyanValues.of(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));
-                case WenyanRParser.STRING_LITERAL -> WenyanValues.of(WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()));
+                case WenyanParser.BOOL_VALUE -> WenyanValues.of(WenyanDataParser.parseBool(ctx.BOOL_VALUE().getText()));
+                case WenyanParser.INT_NUM -> WenyanDataParser.parseWyInt(ctx.INT_NUM().getText());
+                case WenyanParser.FLOAT_NUM -> WenyanValues.of(WenyanDataParser.parseFloat(ctx.FLOAT_NUM().getText()));
+                case WenyanParser.STRING_LITERAL -> WenyanValues.of(WenyanDataParser.parseString(ctx.STRING_LITERAL().getText()));
                 default -> throw new WenyanCompileException(JudouExceptionText.InvalidDataType.string(), ctx);
             };
             bytecode.add(WenyanCodes.PUSH, value);
@@ -43,31 +43,31 @@ public class WenyanDataVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitId_last(WenyanRParser.Id_lastContext ctx) {
+    public Boolean visitId_last(WenyanParser.Id_lastContext ctx) {
         bytecode.add(WenyanCodes.POP_ANS);
         return true;
     }
 
     @Override
-    public Boolean visitId_last_remain(WenyanRParser.Id_last_remainContext ctx) {
+    public Boolean visitId_last_remain(WenyanParser.Id_last_remainContext ctx) {
         bytecode.add(WenyanCodes.PEEK_ANS);
         return true;
     }
 
     @Override
-    public Boolean visitId(WenyanRParser.IdContext ctx) {
+    public Boolean visitId(WenyanParser.IdContext ctx) {
         bytecode.addLoadCode(ctx.IDENTIFIER().getText());
         return true;
     }
 
     @Override
-    public Boolean visitSelf(WenyanRParser.SelfContext ctx) {
+    public Boolean visitSelf(WenyanParser.SelfContext ctx) {
         bytecode.addLoadCode(ctx.SELF().getText());
         return true;
     }
 
     @Override
-    public Boolean visitLogic_data(WenyanRParser.Logic_dataContext ctx) {
+    public Boolean visitLogic_data(WenyanParser.Logic_dataContext ctx) {
         visit(ctx.data(1));
         visit(ctx.data(0));
         bytecode.addLoadCode(ctx.if_logic_op().op.getText());
@@ -76,15 +76,15 @@ public class WenyanDataVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitParent(WenyanRParser.ParentContext ctx) {
+    public Boolean visitParent(WenyanParser.ParentContext ctx) {
         bytecode.addLoadCode(ctx.PARENT().getText());
         return true;
     }
 
     @Override
-    public Boolean visitArray_index(WenyanRParser.Array_indexContext ctx) {
+    public Boolean visitArray_index(WenyanParser.Array_indexContext ctx) {
         switch (ctx.p.getType()) {
-            case WenyanRParser.INT_NUM -> {
+            case WenyanParser.INT_NUM -> {
                 try {
                     bytecode.add(WenyanCodes.PUSH, WenyanValues.of(
                             WenyanDataParser.parseInt(ctx.INT_NUM().getText())));
@@ -92,7 +92,7 @@ public class WenyanDataVisitor extends WenyanVisitor {
                     throw new WenyanCompileException(JudouExceptionText.InvalidNumber.string(), ctx);
                 }
             }
-            case WenyanRParser.DATA_ID_LAST ->
+            case WenyanParser.DATA_ID_LAST ->
                     bytecode.add(WenyanCodes.POP_ANS);
             default -> throw new WenyanCompileException(JudouExceptionText.InvalidDataType.string(), ctx);
         }
@@ -103,11 +103,11 @@ public class WenyanDataVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitData_child(WenyanRParser.Data_childContext ctx) {
+    public Boolean visitData_child(WenyanParser.Data_childContext ctx) {
         visit(ctx.data());
         switch (ctx.p.getType()) {
-            case WenyanRParser.LONG -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.LONG().getText());
-            case WenyanRParser.IDENTIFIER -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.IDENTIFIER().getText());
+            case WenyanParser.LONG -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.LONG().getText());
+            case WenyanParser.IDENTIFIER -> bytecode.add(WenyanCodes.LOAD_ATTR, ctx.IDENTIFIER().getText());
             default -> throw new WenyanCompileException(JudouExceptionText.InvalidDataType.string(), ctx);
         }
         return true;

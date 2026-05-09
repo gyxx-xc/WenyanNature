@@ -1,6 +1,6 @@
 package indi.wenyan.judou.compiler.visitor;
 
-import indi.wenyan.judou.antlr.WenyanRParser;
+import indi.wenyan.judou.antlr.WenyanParser;
 import indi.wenyan.judou.api.WenyanCompileException;
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
@@ -33,7 +33,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitDeclare_write_candy_statement(WenyanRParser.Declare_write_candy_statementContext ctx) {
+    public Boolean visitDeclare_write_candy_statement(WenyanParser.Declare_write_candy_statementContext ctx) {
         exprVisitor.visit(ctx.declare_statement());
         int n;
         try {
@@ -49,15 +49,15 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitBoolean_algebra_statement(WenyanRParser.Boolean_algebra_statementContext ctx) {
+    public Boolean visitBoolean_algebra_statement(WenyanParser.Boolean_algebra_statementContext ctx) {
         exprVisitor.visit(ctx.data(0));
         bytecode.add(WenyanCodes.CAST, ParsableType.BOOLEAN.ordinal());
         exprVisitor.visit(ctx.data(1));
         bytecode.add(WenyanCodes.CAST, ParsableType.BOOLEAN.ordinal());
 
         switch (ctx.op.getType()) {
-            case WenyanRParser.AND -> bytecode.addLoadCode(Symbol.AND_ID);
-            case WenyanRParser.OR -> bytecode.addLoadCode(Symbol.OR_ID);
+            case WenyanParser.AND -> bytecode.addLoadCode(Symbol.AND_ID);
+            case WenyanParser.OR -> bytecode.addLoadCode(Symbol.OR_ID);
             default ->
                     throw new WenyanCompileException(JudouExceptionText.UnknownOperator.string(), ctx);
         }
@@ -67,13 +67,13 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitMod_math_statement(WenyanRParser.Mod_math_statementContext ctx) {
+    public Boolean visitMod_math_statement(WenyanParser.Mod_math_statementContext ctx) {
         switch (ctx.pp.getType()) {
-            case WenyanRParser.PREPOSITION_RIGHT:
+            case WenyanParser.PREPOSITION_RIGHT:
                 exprVisitor.visit(ctx.data(1));
                 exprVisitor.visit(ctx.data(0));
                 break;
-            case WenyanRParser.PREPOSITION_LEFT:
+            case WenyanParser.PREPOSITION_LEFT:
                 exprVisitor.visit(ctx.data(0));
                 exprVisitor.visit(ctx.data(1));
                 break;
@@ -87,7 +87,7 @@ public class WenyanCandyVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitImport_as_statement(WenyanRParser.Import_as_statementContext ctx) {
+    public Boolean visitImport_as_statement(WenyanParser.Import_as_statementContext ctx) {
         // stack: id1, id2, ..., package, import
         bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.IDENTIFIER().getText()));
         bytecode.addLoadCode(Symbol.IMPORT_ID);

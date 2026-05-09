@@ -1,8 +1,8 @@
 package indi.wenyan.client.gui.code_editor.backend.behaviour;
 
 import com.google.common.collect.Lists;
+import indi.wenyan.client.antlr.WenyanLexer;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
-import indi.wenyan.judou.antlr.WenyanRLexer;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
@@ -279,7 +279,7 @@ public class CodeField {
         // split
         int lineStart = 0;
         int lineWidth = 0;
-        var lexer = new WenyanRLexer(CharStreams.fromString(backend.getContent()));
+        var lexer = new WenyanLexer(CharStreams.fromString(backend.getContent()));
         lexer.removeErrorListeners();
         var tokens = new BufferedTokenStream(lexer);
         StyledStringView currentToken = updateToken(tokens, 0);

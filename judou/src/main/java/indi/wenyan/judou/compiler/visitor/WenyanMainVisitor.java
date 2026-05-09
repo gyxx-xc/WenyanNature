@@ -1,6 +1,6 @@
 package indi.wenyan.judou.compiler.visitor;
 
-import indi.wenyan.judou.antlr.WenyanRParser;
+import indi.wenyan.judou.antlr.WenyanParser;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
@@ -19,23 +19,23 @@ public class WenyanMainVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitExpr_statement(WenyanRParser.Expr_statementContext ctx) {
+    public Boolean visitExpr_statement(WenyanParser.Expr_statementContext ctx) {
         return new WenyanExprVisitor(bytecode).visit(ctx);
     }
 
 
     @Override
-    public Boolean visitCandy_statement(WenyanRParser.Candy_statementContext ctx) {
+    public Boolean visitCandy_statement(WenyanParser.Candy_statementContext ctx) {
         return new WenyanCandyVisitor(bytecode).visit(ctx);
     }
 
     @Override
-    public Boolean visitControl_statement(WenyanRParser.Control_statementContext ctx) {
+    public Boolean visitControl_statement(WenyanParser.Control_statementContext ctx) {
         return new WenyanControlVisitor(bytecode).visit(ctx);
     }
 
     @Override
-    public Boolean visitProgram(WenyanRParser.ProgramContext ctx) {
+    public Boolean visitProgram(WenyanParser.ProgramContext ctx) {
         visit(ctx.statements());
         bytecode.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
                 ctx.getStop().getStartIndex(), ctx.getStop().getStopIndex() + 1);

@@ -1,9 +1,9 @@
 package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanErrorListener;
-import indi.wenyan.judou.antlr.WenyanRBaseVisitor;
-import indi.wenyan.judou.antlr.WenyanRLexer;
-import indi.wenyan.judou.antlr.WenyanRParser;
+import indi.wenyan.judou.antlr.WenyanLexer;
+import indi.wenyan.judou.antlr.WenyanParser;
+import indi.wenyan.judou.antlr.WenyanParserBaseVisitor;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import org.antlr.v4.runtime.CharStreams;
@@ -16,7 +16,7 @@ import org.antlr.v4.runtime.tree.RuleNode;
  * Base visitor for Wenyan language that provides common functionality.
  * Handles context tracking and provides utilities for parsing Wenyan code.
  */
-public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
+public abstract class WenyanVisitor extends WenyanParserBaseVisitor<Boolean> {
     /**
      * The compiler environment used to emit bytecode
      */
@@ -38,7 +38,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
         if (tree instanceof ParserRuleContext ctx) {
             bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
                     ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-            if (bytecode.isDebug() && ctx instanceof WenyanRParser.StatementContext) {
+            if (bytecode.isDebug() && ctx instanceof WenyanParser.StatementContext) {
                 bytecode.add(WenyanCodes.BREAKPOINT);
             }
             result = super.visit(tree);
@@ -63,7 +63,7 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
             if (c instanceof ParserRuleContext ctx) {
                 bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
                         ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-                if (bytecode.isDebug() && ctx instanceof WenyanRParser.StatementContext) {
+                if (bytecode.isDebug() && ctx instanceof WenyanParser.StatementContext) {
                     bytecode.add(WenyanCodes.BREAKPOINT);
                 }
                 childResult = c.accept(this);
@@ -78,12 +78,12 @@ public abstract class WenyanVisitor extends WenyanRBaseVisitor<Boolean> {
     }
 
     public static void generateTo(String code, WenyanCompilerEnvironment environment) {
-        WenyanRLexer lexer = new WenyanRLexer(
+        WenyanLexer lexer = new WenyanLexer(
                 CharStreams.fromString(code));
         lexer.removeErrorListeners();
         lexer.addErrorListener(new WenyanErrorListener());
 
-        WenyanRParser parser = new WenyanRParser(new CommonTokenStream(lexer));
+        WenyanParser parser = new WenyanParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(new WenyanErrorListener());
 

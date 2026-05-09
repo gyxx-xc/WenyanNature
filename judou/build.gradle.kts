@@ -68,3 +68,5 @@ tasks.generateGrammarSource {
             .get()
             .asFile
 }
+
+tasks.generateGrammarSource
