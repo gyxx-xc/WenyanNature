@@ -1,6 +1,6 @@
 package indi.wenyan.content.block;
 
-import indi.wenyan.judou.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.runtime.IWenyanScheduler;
 
 import java.util.Optional;
 import java.util.function.Supplier;

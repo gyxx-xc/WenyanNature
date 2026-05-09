@@ -3,7 +3,7 @@ package indi.wenyan.interpreter_impl;
 import indi.wenyan.interpreter_impl.value.WenyanBlock;
 import indi.wenyan.interpreter_impl.value.WenyanEntity;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;

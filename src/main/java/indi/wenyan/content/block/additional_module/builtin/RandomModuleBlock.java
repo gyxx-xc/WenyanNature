@@ -4,16 +4,16 @@ import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
 
-import static indi.wenyan.judou.utils.language.JudouExceptionText.ArgsNumWrongRange;
+import static indi.wenyan.judou.api.language.JudouExceptionText.ArgsNumWrongRange;
 
 public class RandomModuleBlock extends AbstractFuluBlock {
 

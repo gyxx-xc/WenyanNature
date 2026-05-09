@@ -1,10 +1,10 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.compiler.IWenyanBytecode;
-import indi.wenyan.judou.compiler.WenyanCompiler;
-import indi.wenyan.judou.runtime.IThreadHolder;
+import indi.wenyan.judou.api.compile.IWenyanBytecode;
+import indi.wenyan.judou.api.compile.WenyanCompiler;
+import indi.wenyan.judou.api.runtime.IThreadHolder;
 import indi.wenyan.judou.test_utils.NoScheProgram;
-import indi.wenyan.judou.utils.function.WenyanPackages;
+import indi.wenyan.judou.utils.WenyanPackages;
 
 import java.io.IOException;
 

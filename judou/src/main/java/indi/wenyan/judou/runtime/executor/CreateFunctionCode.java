@@ -1,10 +1,10 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFunction;
+import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFunction;
 
 import java.util.ArrayList;
 

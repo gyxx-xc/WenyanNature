@@ -1,8 +1,8 @@
 package indi.wenyan.content.recipe.answering.checker;
 
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanObject;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.values.IWenyanObject;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import org.jspecify.annotations.NonNull;
 
 /**

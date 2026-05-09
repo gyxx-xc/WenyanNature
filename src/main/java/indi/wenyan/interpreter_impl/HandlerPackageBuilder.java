@@ -2,15 +2,14 @@ package indi.wenyan.interpreter_impl;
 
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.utils.WenyanPackageBuilder;
-import indi.wenyan.judou.utils.function.ChineseUtils;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanPackageBuilder;
+import indi.wenyan.judou.api.exec.request.IArgsRequest;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.utils.ChineseUtils;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.setup.config.WenyanConfig;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
@@ -28,7 +27,7 @@ import java.util.function.UnaryOperator;
 public final class HandlerPackageBuilder {
     // with support of wenyan package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
-    private final Map<String, Supplier<BaseHandleableRequest.IRawRequest>> functions = new HashMap<>();
+    private final Map<String, Supplier<RawHandlerPackage.IRawRequest>> functions = new HashMap<>();
 
     /**
      * Creates a new package builder
@@ -66,7 +65,7 @@ public final class HandlerPackageBuilder {
         return new RawHandlerPackage(variables, functions);
     }
 
-    public HandlerPackageBuilder handler(String name, Supplier<BaseHandleableRequest.IRawRequest> function) {
+    public HandlerPackageBuilder handler(String name, Supplier<RawHandlerPackage.IRawRequest> function) {
         switch (WenyanConfig.getJudouConfigProvider().symbolConversion()) {
             case TRADITIONAL -> functions.put(name, function);
             case SIMPLIFIED -> functions.put(ChineseUtils.toSimplifiedVar(name), function);
@@ -78,12 +77,12 @@ public final class HandlerPackageBuilder {
         return this;
     }
 
-    public HandlerPackageBuilder handler(String name, BaseHandleableRequest.IRawRequest function) {
+    public HandlerPackageBuilder handler(String name, RawHandlerPackage.IRawRequest function) {
         return handler(name, () -> function);
     }
 
     public HandlerPackageBuilder handler(String name, HandlerReturnFunction function) {
-        return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
+        return handler(name, (RawHandlerPackage.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(context, request);
             request.thread().getCurrentRuntime().pushReturnValue(value);
             request.thread().unblock();
@@ -92,7 +91,7 @@ public final class HandlerPackageBuilder {
     }
 
     public HandlerPackageBuilder handler(String name, HandlerSimpleFunction function) {
-        return handler(name, (BaseHandleableRequest.IRawRequest) (context, request) -> {
+        return handler(name, (RawHandlerPackage.IRawRequest) (context, request) -> {
             IWenyanValue value = function.handle(request);
             request.thread().getCurrentRuntime().pushReturnValue(value);
             request.thread().unblock();
@@ -102,7 +101,7 @@ public final class HandlerPackageBuilder {
 
     @Deprecated
     public HandlerPackageBuilder handler(String name, int power, HandlerReturnFunction function) {
-        return handler(name, () -> new BaseHandleableRequest.IRawRequest() {
+        return handler(name, () -> new RawHandlerPackage.IRawRequest() {
             private final int range = WenyanConfig.getRunnerRange();
             int acquired = 0;
 

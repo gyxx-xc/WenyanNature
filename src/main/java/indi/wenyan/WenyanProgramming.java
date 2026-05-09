@@ -2,7 +2,7 @@ package indi.wenyan;
 
 import com.mojang.logging.LogUtils;
 import indi.wenyan.interpreter_impl.MinecraftLanguageProvider;
-import indi.wenyan.judou.utils.UtilManager;
+import indi.wenyan.judou.api.utils.UtilManager;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.*;
 import net.neoforged.bus.api.IEventBus;

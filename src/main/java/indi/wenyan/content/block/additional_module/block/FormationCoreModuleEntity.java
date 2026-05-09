@@ -7,16 +7,15 @@ import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.IWenyanWarperValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.function.ChineseUtils;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanType;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.utils.ChineseUtils;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.IWenyanWarperValue;
+import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.TypeText;
@@ -76,7 +75,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
                 return new WenyanRunningState(state);
             })
-            .handler(WenyanSymbol.CORE_JOIN, (BaseHandleableRequest.IRawRequest) (_, request) -> {
+            .handler(WenyanSymbol.CORE_JOIN, (RawHandlerPackage.IRawRequest) (_, request) -> {
                 boolean running = false;
                 var iter = startedPlatforms.entrySet().iterator();
                 while (iter.hasNext()) {

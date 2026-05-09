@@ -1,7 +1,8 @@
 package indi.wenyan.judou.compiler;
 
+import indi.wenyan.judou.api.compile.IWenyanBytecode;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.structure.values.IWenyanValue;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +20,7 @@ public class WenyanBytecode {
     private final List<Integer> labelTable = new ArrayList<>();
     @Getter
     private final List<CapturedValue> capturedValues = new ArrayList<>();
-    private final List<Context> debugTable = new ArrayList<>();
+    private final List<IWenyanBytecode.Context> debugTable = new ArrayList<>();
     @Getter
     private final String sourceCode;
 
@@ -75,7 +76,7 @@ public class WenyanBytecode {
      * @param contentEnd   End index of source content
      */
     public void addContext(int line, int column, int start, int end, int contentStart, int contentEnd) {
-        debugTable.add(new Context(line, column, start, end, contentStart, contentEnd));
+        debugTable.add(new IWenyanBytecode.Context(line, column, start, end, contentStart, contentEnd));
     }
 
     /**
@@ -119,7 +120,7 @@ public class WenyanBytecode {
         sb.append("labelTable=").append(labelTable).append("\n");
         int j = 0;
         for (int i = 0; i < bytecode.size(); i++) {
-            if (j < debugTable.size() && i >= debugTable.get(j).bytecodeStart) {
+            if (j < debugTable.size() && i >= debugTable.get(j).bytecodeStart()) {
                 sb.append("Context: ").append(debugTable.get(j)).append("\n");
                 j++;
             }
@@ -138,14 +139,7 @@ public class WenyanBytecode {
         }
     }
 
-    /**
-     * Represents debug context information for a segment of bytecode.
-     */
-    public record Context(int line, int column,
-                          int bytecodeStart, int bytecodeEnd,
-                          int contentStart, int contentEnd) {
-    }
-
+    /// For function closure capture only
     public record CapturedValue(int index, boolean fromLocal) {
     }
 }

@@ -16,7 +16,7 @@ import java.util.Set;
 public class WenyanValueData {
     public static final String INTERPRETER_STRUCTURE_PACKET = "indi.wenyan.judou.structure";
     public static final String INTERFACE_HANDLER_PACKET = "indi.wenyan.judou.exec_interface.handler";
-    public static final String WENYAN_VALUE_PACKET = "indi.wenyan.judou.structure.values";
+    public static final String WENYAN_VALUE_PACKET = "indi.wenyan.judou.api.values";
     public static final ClassName WENYAN_TYPE_CLASS = ClassName.get(INTERPRETER_STRUCTURE_PACKET, "WenyanType");
     public static final ClassName WENYAN_THROW_EXCEPTION_CLASS = ClassName.get(INTERPRETER_STRUCTURE_PACKET, "WenyanException");
     public static final ClassName WENYAN_EXCEPTION_CLASS = ClassName.get(INTERPRETER_STRUCTURE_PACKET, "WenyanException");

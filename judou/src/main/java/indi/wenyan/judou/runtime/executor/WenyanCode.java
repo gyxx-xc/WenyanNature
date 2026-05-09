@@ -1,7 +1,7 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.structure.WenyanException;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
 
 /**
  * Base class for all executable code in the Wenyan interpreter.

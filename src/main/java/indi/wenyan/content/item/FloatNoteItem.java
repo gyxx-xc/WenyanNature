@@ -2,7 +2,7 @@ package indi.wenyan.content.item;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.IRenamable;
-import indi.wenyan.judou.utils.function.ChineseUtils;
+import indi.wenyan.judou.api.utils.ChineseUtils;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.network.client.FloatNoteSetScreenPacket;
 import net.minecraft.core.component.DataComponents;

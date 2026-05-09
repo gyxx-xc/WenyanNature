@@ -1,13 +1,13 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanLeftValue;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.ParsableType;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanLeftValue;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
 
 /**
  * Handles variable operations in the Wenyan interpreter.

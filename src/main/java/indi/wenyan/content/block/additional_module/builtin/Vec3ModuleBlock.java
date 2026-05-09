@@ -5,7 +5,7 @@ import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import org.jetbrains.annotations.NotNull;
 
 public class Vec3ModuleBlock extends AbstractFuluBlock {

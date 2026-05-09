@@ -1,12 +1,13 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.IWenyanScheduler;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.utils.UtilManager;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
+import indi.wenyan.judou.api.runtime.IEffectCapability;
+import indi.wenyan.judou.api.runtime.IThreadHolder;
+import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.utils.UtilManager;
+import indi.wenyan.judou.api.language.JudouExceptionText;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import org.slf4j.Logger;
 import java.util.Collection;
 import java.util.concurrent.*;
 
-public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl.PCB> {
+public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl.PCB>, IEffectCapability {
     private final int sliceStep = UtilManager.getConfig().getMaxSlice();
     private final int maxThread = UtilManager.getConfig().getMaxThread();
     private final int watchdogTimeout = UtilManager.getConfig().getWatchdogTimeout();
@@ -73,6 +74,7 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
         hasIdle = executor.getActiveCount() == 0;
     }
 
+    @Override
     public boolean remainSteps() {
         return accumulatedSteps > 0 && hasIdle;
     }

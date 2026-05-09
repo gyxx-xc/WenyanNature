@@ -1,8 +1,8 @@
 package indi.wenyan.content.recipe.answering.checker.checker.handrunner;
 
 import indi.wenyan.content.recipe.answering.checker.IAnsweringChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import net.minecraft.util.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -89,7 +89,7 @@ class HandRunner6CheckerTest {
         List<IWenyanValue> correctPath = new ArrayList<>();
         String currKey = endX + "," + endY;
         while (currKey != null && !currKey.equals("0,0")) {
-            correctPath.add(0, parentStep.get(currKey));
+            correctPath.addFirst(parentStep.get(currKey));
             currKey = parentNode.get(currKey);
         }
 

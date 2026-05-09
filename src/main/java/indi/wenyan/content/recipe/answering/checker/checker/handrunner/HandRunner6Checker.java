@@ -1,16 +1,15 @@
 package indi.wenyan.content.recipe.answering.checker.checker.handrunner;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanObject;
-import indi.wenyan.judou.structure.values.IWenyanObjectType;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.function.WenyanValues;
-import indi.wenyan.judou.utils.language.Symbol;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanType;
+import indi.wenyan.judou.api.language.Symbol;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanObject;
+import indi.wenyan.judou.api.values.IWenyanObjectType;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.util.RandomSource;
 
@@ -38,7 +37,7 @@ public class HandRunner6Checker extends ValueAnswerChecker {
             return switch (name) {
                 case "「上下」" -> WenyanValues.of(x);
                 case "「左右」" -> WenyanValues.of(y);
-                case "「偏移」" -> new WenyanInlineJavacall(((self, args) -> {
+                case "「偏移」" -> WenyanValues.of(((self, args) -> {
                     if (args.size() == 1 && args.getFirst().as(TYPE) instanceof Position(int dx, int dy)) {
                         return new Position(self.as(TYPE).x + dx, self.as(TYPE).y + dy);
                     } else {
@@ -102,7 +101,7 @@ public class HandRunner6Checker extends ValueAnswerChecker {
                 case "「终」" -> new Position(endX + 1, endY + 1);
                 case "「長」" -> WenyanValues.of(MAX_X);
                 case "「寬」" -> WenyanValues.of(MAX_Y);
-                case "「尋路」" -> new WenyanInlineJavacall(((_, args) -> {
+                case "「尋路」" -> WenyanValues.of(((_, args) -> {
                     if (args.size() == 1 && args.getFirst().as(Position.TYPE) instanceof Position(int x, int y)) {
                         return WenyanValues.of(!isWall(x - 1, y - 1));
                     } else {

@@ -1,7 +1,7 @@
 package indi.wenyan.content.recipe.answering.checker;
 
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import net.minecraft.util.RandomSource;
 
 public abstract class ValueAnswerChecker extends CraftingAnswerChecker {

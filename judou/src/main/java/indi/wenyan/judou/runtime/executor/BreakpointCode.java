@@ -1,9 +1,9 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanFunction;
-import indi.wenyan.judou.utils.language.Symbol;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.language.Symbol;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.IWenyanFunction;
 
 import java.util.List;
 

@@ -1,14 +1,14 @@
 package indi.wenyan.judou.exec_interface.handler;
 
-import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.structure.values.builtin.WenyanBuiltinFuture;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.exec.request.IBaseHandleableRequest;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.primitive.WenyanInteger;
+import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFuture;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -36,7 +36,7 @@ public class AwaitCallHandler implements IJavacallHandler {
         }
     }
 
-    public static class AwaitRequest implements BaseHandleableRequest {
+    public static class AwaitRequest implements IBaseHandleableRequest {
         @Accessors(fluent = true)
         @Getter
         private final IWenyanRunner thread;

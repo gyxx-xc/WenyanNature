@@ -1,8 +1,9 @@
 package indi.wenyan.judou.exec_interface.handler;
 
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
@@ -12,36 +13,19 @@ import java.util.List;
  * Manages function execution and result handling.
  */
 public class WenyanInlineJavacall implements IJavacallHandler {
-    private final BuiltinFunction function;
+    private final WenyanValues.BuiltinFunction function;
 
     /**
      * Creates a new builtin function wrapper.
      *
      * @param function the function implementation
      */
-    public WenyanInlineJavacall(BuiltinFunction function) {
+    public WenyanInlineJavacall(WenyanValues.BuiltinFunction function) {
         this.function = function;
     }
 
     @Override
     public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread, List<IWenyanValue> argsList) throws WenyanException {
         thread.getCurrentRuntime().pushReturnValue(function.apply(self, argsList));
-    }
-
-    /**
-     * Functional interface for builtin function implementations.
-     */
-    @FunctionalInterface
-    public interface BuiltinFunction {
-        /**
-         * Applies the function to the given arguments.
-         *
-         * @param self the self value
-         * @param args the function arguments
-         * @return the result value
-         * @throws WenyanException if an error occurs during function execution
-         */
-        IWenyanValue apply(IWenyanValue self, List<IWenyanValue> args)
-                throws WenyanException;
     }
 }

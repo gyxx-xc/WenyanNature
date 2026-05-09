@@ -1,10 +1,10 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.utils.function.Either;
+import indi.wenyan.judou.api.exec.IRequestCallHandler;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.utils.Either;
+import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ public record BlockPackageGetter(Consumer<BlockPos> communicateConsumer) {
     public WenyanPackage processPackage(RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
         var map = new HashMap<>(rawPackage.variables());
         rawPackage.functions().forEach((name, function) ->
-                map.put(name, (RequestCallHandler) (thread, self, argsList) ->
+                map.put(name, (IRequestCallHandler) (thread, self, argsList) ->
                         new BlockRequest(thread, self, argsList, device, function.get(), communicateConsumer)));
         return new WenyanPackage(map);
     }

@@ -2,14 +2,13 @@ package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.interpreter_impl.WenyanMinecraftValues;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.*;
-import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.function.WenyanValues;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanType;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.*;
+import indi.wenyan.judou.api.values.primitive.WenyanDouble;
+import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +42,7 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
             case WenyanSymbol.VECTOR_Z -> WenyanValues.of(value.z);
             case WenyanSymbol.VECTOR_LENGTH -> WenyanValues.of(value.length());
             case WenyanSymbol.VECTOR_LENGTH_SQR -> WenyanValues.of(value.lengthSqr());
-            case WenyanSymbol.VECTOR_OFFSET -> new WenyanInlineJavacall(
+            case WenyanSymbol.VECTOR_OFFSET -> WenyanValues.of(
                     (_, args) -> {
                         if (args.size() == 1) {
                             return WenyanMinecraftValues.of(value.add(args.getFirst().as(TYPE).value));

@@ -1,10 +1,10 @@
 package indi.wenyan.setup;
 
+import indi.wenyan.content.block.IWenyanDevice;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.item.ItemCodeHolder;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
-import indi.wenyan.judou.exec_interface.IWenyanDevice;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;

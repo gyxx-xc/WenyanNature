@@ -2,10 +2,10 @@ package indi.wenyan.content.recipe.answering.checker.checker.handrunner;
 
 import com.google.common.math.IntMath;
 import indi.wenyan.content.recipe.answering.checker.CraftingAnswerChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import net.minecraft.util.RandomSource;
 
 public class HandRunner7Checker extends CraftingAnswerChecker {

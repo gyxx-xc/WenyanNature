@@ -1,0 +1,86 @@
+package indi.wenyan.judou.api.values;
+
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanType;
+import lombok.Getter;
+
+import java.util.Optional;
+
+/**
+ * Represents a variable that can assigned in Wenyan
+ */
+public class WenyanLeftValue implements IWenyanValue {
+    /**
+     * The actual value stored in this variable
+     */
+    @Getter
+    private IWenyanValue value;
+
+    /**
+     * Creates a new left value
+     *
+     * @param value The initial value
+     */
+    private WenyanLeftValue(IWenyanValue value) {
+        this.value = value;
+    }
+
+    /**
+     * Creates a variable from a value if not already a variable
+     *
+     * @param value The value to wrap
+     * @return A variable containing the value
+     */
+    public static IWenyanValue varOf(IWenyanValue value) {
+        if (value instanceof WenyanLeftValue leftValue) {
+            return new WenyanLeftValue(leftValue.value);
+        } else {
+            return new WenyanLeftValue(value);
+        }
+    }
+
+    public void setValue(IWenyanValue value) {
+        if (value instanceof WenyanLeftValue leftValue) {
+            this.value = leftValue.value;
+        } else {
+            this.value = value;
+        }
+    }
+
+    @Override
+    public WenyanType<?> type() {
+        return value.type();
+    }
+
+    @Override
+    public <T extends IWenyanValue> T as(WenyanType<T> type) throws WenyanException.WenyanTypeException {
+        // turn into right if casting
+        return value.as(type);
+    }
+
+    @Override
+    public boolean is(WenyanType<?> type) {
+        return value.is(type);
+    }
+
+    @Override
+    public <T extends IWenyanValue> Optional<T> tryAs(WenyanType<T> type) {
+        return value.tryAs(type);
+    }
+
+    @SuppressWarnings("EqualsDoesntCheckParameterClass")
+    @Override
+    public boolean equals(Object obj) {
+        return value.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
+}

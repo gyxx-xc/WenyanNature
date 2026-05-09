@@ -2,24 +2,25 @@ package indi.wenyan.content.block.runner;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.*;
-import indi.wenyan.judou.compiler.IWenyanBytecode;
-import indi.wenyan.judou.compiler.WenyanCompiler;
-import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.exec_interface.structure.*;
-import indi.wenyan.judou.runtime.IThreadHolder;
-import indi.wenyan.judou.runtime.IWenyanScheduler;
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
+import indi.wenyan.interpreter_impl.ImportRequest;
+import indi.wenyan.interpreter_impl.SimpleRequest;
+import indi.wenyan.judou.api.WenyanCompileException;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.compile.IWenyanBytecode;
+import indi.wenyan.judou.api.compile.WenyanCompiler;
+import indi.wenyan.judou.api.exec.IRequestCallHandler;
+import indi.wenyan.judou.api.exec.request.IBaseHandleableRequest;
+import indi.wenyan.judou.api.exec.structure.IExecQueue;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
+import indi.wenyan.judou.api.language.Symbol;
+import indi.wenyan.judou.api.runtime.*;
+import indi.wenyan.judou.api.utils.ChineseUtils;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
-import indi.wenyan.judou.structure.WenyanCompileException;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.utils.function.ChineseUtils;
-import indi.wenyan.judou.utils.language.Symbol;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.language.ExceptionText;
@@ -58,7 +59,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     public static final String PLATFORM_NAME_ID = "platformName";
     public static final String ID = "runner_block_entity";
 
-    @Getter private final ExecQueue execQueue = new ExecQueue(this);
+    @Getter private final IExecQueue execQueue = IExecQueue.create(this);
     @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
 
     @Delegate(types = ICodeOutputHolder.class)
@@ -80,7 +81,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (blockState.getBlock() instanceof RunnerBlock block)
             steps = block.getTier().getStepSpeed();
         else steps = 1;
-        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, steps));
+        lazyProgram = new LazyProgram<>(() -> IWenyanScheduler.defaultImpl(this, steps));
         runningState = blockState.getValue(RUNNING_STATE);
     }
 
@@ -98,7 +99,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             RunnerBlock.RunningState newState = lazyProgram.ifCreated()
                     .filter(IWenyanScheduler::isRunning)
                     .map(program -> {
-                        boolean remainSteps = program instanceof WenyanSchedularImpl impl && impl.remainSteps();
+                        boolean remainSteps = program instanceof IEffectCapability impl && impl.remainSteps();
 
                         program.step();
                         handle(new BlockRequest.BlockContext(level, pos, state));
@@ -134,14 +135,14 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.initEnvironment();
 
-        baseEnvironment.put(Symbol.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
+        baseEnvironment.put(Symbol.IMPORT_ID, (IRequestCallHandler) (t, _, a) ->
                 new ImportRequest(t, (_, name) -> {
                     var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
                     if (either == null)
                         throw new WenyanException.WenyanVarException(ExceptionText.ImportNotFound.string(name));
                     return either;
                 }, a));
-        baseEnvironment.put("書", (RequestCallHandler) (thread, self, argsList) ->
+        baseEnvironment.put("書", (IRequestCallHandler) (thread, self, argsList) ->
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             StringBuilder sb = new StringBuilder();
@@ -154,8 +155,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                             addOutputBothSide(sb.toString(), IOutputAcceptor.OutputStyle.NORMAL);
                             return WenyanNull.NULL;
                         }));
-        baseEnvironment.put(Symbol.DEBUG_ID, (RequestCallHandler) (thread, _, _) ->
-                new BaseHandleableRequest() {
+        baseEnvironment.put(Symbol.DEBUG_ID, (IRequestCallHandler) (thread, _, _) ->
+                new IBaseHandleableRequest() {
                     private int i = 0;
 
                     @Override

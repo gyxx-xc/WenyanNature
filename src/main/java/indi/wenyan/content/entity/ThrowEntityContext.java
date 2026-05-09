@@ -1,6 +1,6 @@
 package indi.wenyan.content.entity;
 
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
 
 public class ThrowEntityContext implements IHandleContext {
 }

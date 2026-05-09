@@ -1,10 +1,10 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.structure.values.primitive.WenyanBoolean;
 
 /**
  * Handles conditional branching operations in the Wenyan interpreter.

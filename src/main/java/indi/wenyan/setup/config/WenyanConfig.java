@@ -1,9 +1,9 @@
 package indi.wenyan.setup.config;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.judou.utils.UtilManager;
-import indi.wenyan.judou.utils.config.IConfigProvider;
-import indi.wenyan.judou.utils.function.ChineseUtils;
+import indi.wenyan.judou.api.utils.ChineseUtils;
+import indi.wenyan.judou.api.utils.IConfigProvider;
+import indi.wenyan.judou.api.utils.UtilManager;
 import indi.wenyan.setup.language.ConfigText;
 import lombok.Getter;
 import net.neoforged.fml.ModContainer;

@@ -7,11 +7,11 @@
 - 建议上下文：5行
 
 ```java
-package indi.wenyan.judou.structure.values.primitive;
+package indi.wenyan.judou.api.values.primitive;
 
 public record WenyanString(String value)
         implements IWenyanComparable, IWenyanComputable {
-    
+
     @Override
     public WenyanType<?> type() {
         return TYPE;
@@ -26,13 +26,13 @@ public record WenyanString(String value)
 - 建议上下文：6行
 
 ```java
-package indi.wenyan.judou.structure.values;
+package indi.wenyan.judou.api.values;
 
-import indi.wenyan.judou.structure.WenyanType;
+import indi.wenyan.judou.api.WenyanType;
 
 public interface IWenyanValue {
     WenyanType<?> type();
-    
+
     default boolean is(WenyanType<?> type) {
         return type().equals(type);
     }
@@ -151,7 +151,7 @@ public enum WenyanPreprocessor {
 - 建议上下文：6行
 
 ```java
-package indi.wenyan.judou.structure.values.primitive;
+package indi.wenyan.judou.api.values.primitive;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

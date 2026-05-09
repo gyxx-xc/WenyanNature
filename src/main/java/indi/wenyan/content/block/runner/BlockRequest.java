@@ -1,12 +1,13 @@
 package indi.wenyan.content.block.runner;
 
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
-import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.exec.request.IArgsRequest;
+import indi.wenyan.judou.api.exec.request.IBaseHandleableRequest;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.setup.language.ExceptionText;
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -20,7 +21,7 @@ import java.util.function.Consumer;
 
 @Value
 @Accessors(fluent = true)
-public class BlockRequest implements BaseHandleableRequest, IArgsRequest {
+public class BlockRequest implements IBaseHandleableRequest, IArgsRequest {
     IWenyanRunner thread;
     IWenyanValue self;
     List<IWenyanValue> args;
@@ -28,7 +29,7 @@ public class BlockRequest implements BaseHandleableRequest, IArgsRequest {
     Consumer<BlockPos> communicateConsumer;
     IWenyanBlockDevice device;
     BlockPos pos;
-    IRawRequest request;
+    RawHandlerPackage.IRawRequest request;
 
     @NonFinal
     boolean communicationShown = false;
@@ -37,7 +38,7 @@ public class BlockRequest implements BaseHandleableRequest, IArgsRequest {
                         IWenyanValue self,
                         List<IWenyanValue> argsList,
                         IWenyanBlockDevice device,
-                        IRawRequest request,
+                        RawHandlerPackage.IRawRequest request,
                         Consumer<BlockPos> communicateConsumer) {
         this.thread = thread;
         this.self = self;

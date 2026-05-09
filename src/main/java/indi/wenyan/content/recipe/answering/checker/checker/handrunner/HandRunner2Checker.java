@@ -1,10 +1,10 @@
 package indi.wenyan.content.recipe.answering.checker.checker.handrunner;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.primitive.WenyanDouble;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;

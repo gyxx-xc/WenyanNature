@@ -1,7 +1,7 @@
 package indi.wenyan.judou.compiler;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import indi.wenyan.judou.utils.UtilManager;
+import indi.wenyan.judou.api.utils.UtilManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -11,7 +11,7 @@ public enum WenyanPreprocessor {
     ;
     private final static Pattern PATTERN = Pattern.compile("「「.*?」」|「.*?」");
 
-    static @NotNull String preprocess(String sourceCode) {
+    public static @NotNull String preprocess(String sourceCode) {
         if (!UtilManager.getConfig().convertCode())
             return sourceCode;
 

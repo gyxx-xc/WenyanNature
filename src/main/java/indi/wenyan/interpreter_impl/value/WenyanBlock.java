@@ -1,14 +1,13 @@
 package indi.wenyan.interpreter_impl.value;
 
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanObject;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.IWenyanWarperValue;
-import indi.wenyan.judou.utils.function.WenyanValues;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanType;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanObject;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.IWenyanWarperValue;
 import indi.wenyan.setup.language.ExceptionText;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.core.Direction;
@@ -30,13 +29,13 @@ public record WenyanBlock(BlockState value) implements IWenyanWarperValue<BlockS
     public IWenyanValue getAttribute(String name) throws WenyanException {
         return switch (name) {
             case WenyanSymbol.BLOCK_NAME -> WenyanValues.of(value.getBlock().getName().toString());
-            case WenyanSymbol.BLOCK_SAME_ITEM -> new WenyanInlineJavacall((_, args) -> {
+            case WenyanSymbol.BLOCK_SAME_ITEM -> WenyanValues.of((_, args) -> {
                 if (args.getFirst().as(WenyanCapabilitySlot.TYPE).getStack().getItem() instanceof BlockItem blockItem)
                     return WenyanValues.of(value.is(blockItem.getBlock()));
                 else
                     throw new WenyanException(ExceptionText.NeedBlockItem.string());
             });
-            case WenyanSymbol.BLOCK_SAME_BLOCK -> new WenyanInlineJavacall((_, args) ->
+            case WenyanSymbol.BLOCK_SAME_BLOCK -> WenyanValues.of((_, args) ->
                     WenyanValues.of(value.is(args.getFirst().as(WenyanBlock.TYPE).value.getBlock()))
             );
             case WenyanSymbol.BLOCK_HAS_ENTITY -> WenyanValues.of(value.hasBlockEntity());

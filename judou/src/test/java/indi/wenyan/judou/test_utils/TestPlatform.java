@@ -1,18 +1,19 @@
 package indi.wenyan.judou.test_utils;
 
-import indi.wenyan.judou.exec_interface.IWenyanPlatform;
+import indi.wenyan.judou.api.exec.structure.IExecQueue;
+import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanLeftValue;
+import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.WenyanPackage;
+import indi.wenyan.judou.exec_interface.ExecQueue;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
-import indi.wenyan.judou.exec_interface.structure.ExecQueue;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanLeftValue;
-import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.structure.values.WenyanPackage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestPlatform implements IWenyanPlatform {
-    private final ExecQueue execQueue = new ExecQueue(this);
+    private final IExecQueue execQueue = new ExecQueue(this);
     public String error = null;
     public final List<IWenyanValue> output = new ArrayList<>();
 
@@ -30,7 +31,7 @@ public class TestPlatform implements IWenyanPlatform {
     }
 
     @Override
-    public ExecQueue getExecQueue() {
+    public IExecQueue getExecQueue() {
         return execQueue;
     }
 

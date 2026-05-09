@@ -1,11 +1,12 @@
 package indi.wenyan.content.entity;
 
-import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.runtime.function_impl.IWenyanRunner;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.exec.request.IArgsRequest;
+import indi.wenyan.judou.api.exec.request.IBaseHandleableRequest;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.setup.language.ExceptionText;
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -16,17 +17,17 @@ import java.util.function.Supplier;
 
 @Value
 @Accessors(fluent = true)
-public class ThrowEntityRequest implements BaseHandleableRequest, IArgsRequest {
+public class ThrowEntityRequest implements IBaseHandleableRequest, IArgsRequest {
     IWenyanValue self;
     List<IWenyanValue> args;
     IWenyanRunner thread;
-    IRawRequest rawRequest;
+    RawHandlerPackage.IRawRequest rawRequest;
 
     Supplier<Boolean> packageModifier;
     @NonFinal
     boolean firstTime = true;
 
-    public ThrowEntityRequest(IWenyanValue self, List<IWenyanValue> argsList, IWenyanRunner thread, IRawRequest rawRequest, Supplier<Boolean> booleanSupplier) {
+    public ThrowEntityRequest(IWenyanValue self, List<IWenyanValue> argsList, IWenyanRunner thread, RawHandlerPackage.IRawRequest rawRequest, Supplier<Boolean> booleanSupplier) {
         this.self = self;
         this.args = argsList;
         this.thread = thread;

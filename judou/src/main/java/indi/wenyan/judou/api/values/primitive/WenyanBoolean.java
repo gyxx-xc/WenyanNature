@@ -1,0 +1,52 @@
+package indi.wenyan.judou.api.values.primitive;
+
+import indi.wenyan.judou.api.WenyanType;
+import indi.wenyan.judou.api.language.JudouTypeText;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Represents a boolean value in Wenyan language.
+ * Values are represented as "陽" (true) and "陰" (false).
+ */
+public enum WenyanBoolean implements IWenyanValue {
+    TRUE(true),
+    FALSE(false);
+
+    private final boolean value;
+    WenyanBoolean(boolean value) {
+        this.value = value;
+    }
+
+    public static final WenyanType<WenyanBoolean> TYPE = new WenyanType<>(JudouTypeText.Bool.string(), WenyanBoolean.class);
+
+    @Override
+    public WenyanType<?> type() {
+        return TYPE;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends IWenyanValue> @Nullable T casting(WenyanType<T> type) {
+        if (type == WenyanString.TYPE)
+            return (T) WenyanValues.of(toString());
+        if (type == WenyanInteger.TYPE)
+            return (T) WenyanValues.of(value ? 1 : 0);
+        return null;
+    }
+
+    public WenyanBoolean not() {
+        return value ? FALSE : TRUE;
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return value ? "陽" : "陰";
+    }
+
+    public boolean value() {
+        return value;
+    }
+}

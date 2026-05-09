@@ -1,11 +1,11 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.compiler.IWenyanBytecode;
-import indi.wenyan.judou.compiler.WenyanBytecode;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanUnreachedException;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.WenyanPackage;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.compile.IWenyanBytecode;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanPackage;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -123,7 +123,7 @@ public class WenyanFrame {
     public WenyanException.@Nullable ErrorContext getErrorContext(WenyanException e, Logger logger) {
         WenyanException.ErrorContext errorContext = null;
         try {
-            WenyanBytecode.Context context = bytecode.getContext(getProgramCounter() - 1);
+            IWenyanBytecode.Context context = bytecode.getContext(getProgramCounter() - 1);
             if (context != null)
                 errorContext = new WenyanException.ErrorContext(
                         context.line(), context.column(),

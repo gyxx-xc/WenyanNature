@@ -4,11 +4,11 @@ import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.primitive.WenyanInteger;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.primitive.WenyanInteger;
+import indi.wenyan.judou.api.values.primitive.WenyanString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

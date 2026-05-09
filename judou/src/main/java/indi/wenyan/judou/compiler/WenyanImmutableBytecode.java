@@ -1,7 +1,8 @@
 package indi.wenyan.judou.compiler;
 
+import indi.wenyan.judou.api.compile.IWenyanBytecode;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
-import indi.wenyan.judou.structure.values.IWenyanValue;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,12 +19,12 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
 
     @Getter
     private final List<WenyanBytecode.CapturedValue> capturedValues;
-    private final List<WenyanBytecode.Context> debugTable;
+    private final List<Context> debugTable;
 
     @Getter
     private final String sourceCode;
 
-    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, int[] labelTable, List<WenyanBytecode.CapturedValue> capturedValues, List<WenyanBytecode.Context> debugTable, String sourceCode) {
+    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, int[] labelTable, List<WenyanBytecode.CapturedValue> capturedValues, List<Context> debugTable, String sourceCode) {
         this.size = size;
         this.codes = codes;
         this.args = args;
@@ -61,9 +62,9 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
     }
 
     @Override
-    public WenyanBytecode.@Nullable Context getContext(int index) {
+    public @Nullable Context getContext(int index) {
         // change to binary search
-        for (WenyanBytecode.Context context : debugTable) {
+        for (Context context : debugTable) {
             if (context.bytecodeStart() <= index && index < context.bytecodeEnd()) {
                 return context;
             }

@@ -2,30 +2,30 @@ package indi.wenyan.content.entity;
 
 import indi.wenyan.content.block.ICodeHolder;
 import indi.wenyan.content.block.ICommunicateHolder;
+import indi.wenyan.content.block.IWenyanDevice;
 import indi.wenyan.content.block.LazyProgram;
 import indi.wenyan.content.block.runner.BlockPackageGetter;
 import indi.wenyan.content.item.throw_runner.FuContainerComponent;
+import indi.wenyan.interpreter_impl.ImportRequest;
+import indi.wenyan.interpreter_impl.SimpleRequest;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.compiler.WenyanCompiler;
-import indi.wenyan.judou.exec_interface.IWenyanDevice;
-import indi.wenyan.judou.exec_interface.IWenyanPlatform;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.exec_interface.handler.RequestCallHandler;
-import indi.wenyan.judou.exec_interface.structure.ExecQueue;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.exec_interface.structure.ImportRequest;
-import indi.wenyan.judou.exec_interface.structure.SimpleRequest;
-import indi.wenyan.judou.runtime.IWenyanScheduler;
-import indi.wenyan.judou.runtime.function_impl.RunnerCreator;
+import indi.wenyan.judou.api.WenyanCompileException;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.compile.WenyanCompiler;
+import indi.wenyan.judou.api.exec.IRequestCallHandler;
+import indi.wenyan.judou.api.exec.structure.IExecQueue;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.language.Symbol;
+import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.runtime.RunnerCreator;
+import indi.wenyan.judou.api.utils.Either;
+import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.WenyanPackage;
+import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
-import indi.wenyan.judou.structure.WenyanCompileException;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.WenyanNull;
-import indi.wenyan.judou.structure.values.WenyanPackage;
-import indi.wenyan.judou.structure.values.primitive.WenyanString;
-import indi.wenyan.judou.utils.function.Either;
-import indi.wenyan.judou.utils.language.Symbol;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanEntities;
@@ -62,7 +62,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private final int lifetime = WenyanConfig.getThrowEntityLifetime();
 
     @Getter private String platformName;
-    @Getter private final ExecQueue execQueue = new ExecQueue(this);
+    @Getter private final IExecQueue execQueue = IExecQueue.create(this);
     @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
 
     @Nullable
@@ -77,14 +77,14 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     public ThrowRunnerEntity(EntityType<ThrowRunnerEntity> entityType, Level level) {
         super(entityType, level);
-        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, 1));
+        lazyProgram = new LazyProgram<>(() -> IWenyanScheduler.defaultImpl(this, 1));
         player = null;
     }
 
     public ThrowRunnerEntity(Level level, Position pos, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
         super(WenyanEntities.THROW_RUNNER_ENTITY.get(), pos.x(), pos.y(), pos.z(), level, itemStack);
         player = null;
-        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, tier.getStepSpeed()));
+        lazyProgram = new LazyProgram<>(() -> IWenyanScheduler.defaultImpl(this, tier.getStepSpeed()));
         if (!level.isClientSide()) {
             var code = itemStack.getCapability(WyRegistration.ITEM_CODE_HOLDER_CAPABILITY);
             if (code != null) {
@@ -101,7 +101,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     public ThrowRunnerEntity(Level level, LivingEntity owner, @NotNull ItemStack itemStack, @NotNull RunnerTier tier) {
         super(WenyanEntities.THROW_RUNNER_ENTITY.get(), owner, level, itemStack);
-        lazyProgram = new LazyProgram<>(() -> new WenyanSchedularImpl(this, tier.getStepSpeed()));
+        lazyProgram = new LazyProgram<>(() -> IWenyanScheduler.defaultImpl(this, tier.getStepSpeed()));
         if (!level.isClientSide()) {
             if (owner instanceof Player p)
                 this.player = p;
@@ -151,9 +151,9 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     private WenyanPackage initEnvironment() {
         var basePackage = IWenyanPlatform.initEnvironment();
-        basePackage.put(Symbol.IMPORT_ID, (RequestCallHandler) (t, _, a) ->
+        basePackage.put(Symbol.IMPORT_ID, (IRequestCallHandler) (t, _, a) ->
                 new ImportRequest(t, this::getPackage, a));
-        basePackage.put(WenyanSymbol.PRINT, (RequestCallHandler) (thread, self, argsList) ->
+        basePackage.put(WenyanSymbol.PRINT, (IRequestCallHandler) (thread, self, argsList) ->
                 new SimpleRequest(thread, self, argsList,
                         (ignore, args) -> {
                             if (player != null) {
@@ -257,7 +257,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private WenyanPackage processInternalPackage(RawHandlerPackage rawPackage, IWenyanDevice device) {
         var map = new HashMap<>(rawPackage.variables());
         rawPackage.functions().forEach((name, function) ->
-                map.put(name, (RequestCallHandler) (thread, self, argsList) ->
+                map.put(name, (IRequestCallHandler) (thread, self, argsList) ->
                         new ThrowEntityRequest(self, argsList, thread, function.get(),
                                 () -> packages.remove(device.getPackageName()) != null)));
         return new WenyanPackage(map);

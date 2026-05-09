@@ -1,8 +1,8 @@
 package indi.wenyan.content.recipe.answering.checker.checker.paper;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.structure.values.primitive.WenyanList;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.primitive.WenyanList;
 import net.minecraft.util.RandomSource;
 
 

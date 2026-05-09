@@ -1,7 +1,7 @@
 package indi.wenyan.content.recipe.answering.checker.checker.handrunner;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
 import static java.lang.Math.sqrt;

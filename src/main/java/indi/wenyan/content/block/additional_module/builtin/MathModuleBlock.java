@@ -4,8 +4,8 @@ import com.mojang.serialization.MapCodec;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.utils.WenyanValues;
 import org.jetbrains.annotations.NotNull;
 
 public class MathModuleBlock extends AbstractFuluBlock {

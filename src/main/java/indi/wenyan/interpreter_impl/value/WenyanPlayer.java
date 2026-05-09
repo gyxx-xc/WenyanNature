@@ -1,12 +1,12 @@
 package indi.wenyan.interpreter_impl.value;
 
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.WenyanType;
-import indi.wenyan.judou.structure.values.IWenyanObject;
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.structure.values.IWenyanWarperValue;
-import indi.wenyan.judou.utils.function.WenyanValues;
-import indi.wenyan.judou.utils.language.JudouExceptionText;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.WenyanType;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanObject;
+import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.IWenyanWarperValue;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.entity.player.Player;
 

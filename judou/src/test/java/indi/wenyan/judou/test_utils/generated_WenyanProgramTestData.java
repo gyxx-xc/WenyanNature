@@ -2,8 +2,8 @@
 
 package indi.wenyan.judou.test_utils;
 
-import indi.wenyan.judou.structure.values.IWenyanValue;
-import indi.wenyan.judou.utils.function.WenyanValues;
+import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
 import java.util.List;

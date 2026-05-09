@@ -6,12 +6,11 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
-import indi.wenyan.judou.exec_interface.RawHandlerPackage;
-import indi.wenyan.judou.exec_interface.structure.BaseHandleableRequest;
-import indi.wenyan.judou.exec_interface.structure.IArgsRequest;
-import indi.wenyan.judou.exec_interface.structure.IHandleContext;
-import indi.wenyan.judou.structure.WenyanException;
-import indi.wenyan.judou.structure.values.WenyanNull;
+import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.exec.request.IArgsRequest;
+import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.ExceptionText;
 import indi.wenyan.setup.network.client.PistonMovePacket;
@@ -164,7 +163,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
         }
     }
 
-    public class PistonRequest implements BaseHandleableRequest.IRawRequest {
+    public class PistonRequest implements RawHandlerPackage.IRawRequest {
         private int life = 0;
         private final boolean extending;
 
