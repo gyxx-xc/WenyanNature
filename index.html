@@ -534,6 +534,24 @@
   </script>
 
 <!-- Material JS bundle -->
+  <script>
+    var __palette = __md_get("__palette");
+    if (__palette && __palette.color) {
+      if ("(prefers-color-scheme)" === __palette.color.media) {
+        var __media = matchMedia("(prefers-color-scheme: light)");
+        var __input = document.querySelector(__media.matches
+          ? "[data-md-color-media='(prefers-color-scheme: light)']"
+          : "[data-md-color-media='(prefers-color-scheme: dark)']");
+        __palette.color.media  = __input.getAttribute("data-md-color-media");
+        __palette.color.scheme = __input.getAttribute("data-md-color-scheme");
+        __palette.color.primary = __input.getAttribute("data-md-color-primary");
+        __palette.color.accent = __input.getAttribute("data-md-color-accent");
+      }
+      for (var __key in __palette.color) {
+        document.body.setAttribute("data-md-color-" + __key, __palette.color[__key]);
+      }
+    }
+  </script>
   <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
 
 

@@ -120,6 +120,15 @@
 
     + '</nav></header>';
 
+  // ========== Palette (color scheme) HTML ==========
+  // 三个按钮分别对应：自动(系统偏好)、亮色模式、暗色模式
+  // 使用 data-md-color-media 属性区分
+  var PALETTE = {
+    AUTO:  { id: '__palette_0', media: '',              scheme: 'default', nextId: '__palette_1', label: 'Switch to light mode' },
+    LIGHT: { id: '__palette_1', media: '(prefers-color-scheme: light)', scheme: 'default', nextId: '__palette_2', label: 'Switch to dark mode' },
+    DARK:  { id: '__palette_2', media: '(prefers-color-scheme: dark)',  scheme: 'slate',   nextId: '__palette_0', label: 'Switch to system preference' }
+  };
+
   // ========== Tabs ==========
   var tabsHTML = '<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">'
     + '<div class="md-grid"><ul class="md-tabs__list">'
@@ -157,6 +166,95 @@
     document.body.insertBefore(headerDiv.firstElementChild, document.body.firstChild);
   }
 
+  // ========== Palette initialization ==========
+  function initPalette() {
+    var saved = __md_get('__palette');
+    var currentId;
+
+    if (saved && saved.color && saved.color.media !== undefined) {
+      // 从 localStorage 恢复
+      if (saved.color.media === '(prefers-color-scheme: light)') {
+        currentId = PALETTE.LIGHT.id;
+      } else if (saved.color.media === '(prefers-color-scheme: dark)') {
+        currentId = PALETTE.DARK.id;
+      } else {
+        currentId = PALETTE.AUTO.id;
+      }
+    } else {
+      // 默认使用自动模式
+      currentId = PALETTE.AUTO.id;
+    }
+
+    // 找到当前应该激活的 input
+    var activeInput = document.getElementById(currentId);
+    if (activeInput) {
+      activeInput.checked = true;
+      applyScheme(activeInput);
+    }
+
+    // 显示对应用户可见的按钮（隐藏当前模式对应的 label，显示下一个可切换到的 label）
+    updateVisibleButton(currentId);
+  }
+
+  function applyScheme(input) {
+    var scheme = input.getAttribute('data-md-color-scheme');
+    var primary = input.getAttribute('data-md-color-primary');
+    var accent = input.getAttribute('data-md-color-accent');
+    var media = input.getAttribute('data-md-color-media');
+
+    document.body.setAttribute('data-md-color-scheme', scheme);
+    document.body.setAttribute('data-md-color-primary', primary);
+    document.body.setAttribute('data-md-color-accent', accent);
+
+    __md_set('__palette', {
+      color: {
+        media: media,
+        scheme: scheme,
+        primary: primary,
+        accent: accent
+      }
+    });
+  }
+
+  function updateVisibleButton(currentId) {
+    // 找到当前激活的 palette entry
+    var currentEntry = null;
+    for (var key in PALETTE) {
+      if (PALETTE[key].id === currentId) {
+        currentEntry = PALETTE[key];
+        break;
+      }
+    }
+    if (!currentEntry) return;
+
+    var nextId = currentEntry.nextId;
+
+    // 隐藏所有 label
+    var allLabels = document.querySelectorAll('.md-header__option label');
+    for (var i = 0; i < allLabels.length; i++) {
+      allLabels[i].setAttribute('hidden', '');
+    }
+
+    // 显示下一个可切换到的按钮的 label
+    var nextLabel = document.querySelector('label[for="' + nextId + '"]');
+    if (nextLabel) {
+      nextLabel.removeAttribute('hidden');
+    }
+  }
+
+  // 绑定 palette 切换事件
+  function bindPaletteEvents() {
+    var inputs = document.querySelectorAll('.md-header__option input[name="__palette"]');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('change', function() {
+        if (this.checked) {
+          applyScheme(this);
+          updateVisibleButton(this.id);
+        }
+      });
+    }
+  }
+
   // 插入 Tabs（放在 .md-container 最前面）
   var container = document.querySelector('.md-container');
   if (container) {
@@ -165,25 +263,8 @@
     container.insertBefore(tabsDiv.firstElementChild, container.firstChild);
   }
 
-  // ---- 调色板初始化（必须在 header 注入之后执行） ----
-  var palette = __md_get("__palette");
-  if (palette && palette.color) {
-    if ("(prefers-color-scheme)" === palette.color.media) {
-      var media = matchMedia("(prefers-color-scheme: light)");
-      var selector = media.matches
-        ? "[data-md-color-media='(prefers-color-scheme: light)']"
-        : "[data-md-color-media='(prefers-color-scheme: dark)']";
-      var input = document.querySelector(selector);
-      palette.color.media  = input.getAttribute("data-md-color-media");
-      palette.color.scheme = input.getAttribute("data-md-color-scheme");
-      palette.color.primary = input.getAttribute("data-md-color-primary");
-      palette.color.accent = input.getAttribute("data-md-color-accent");
-    }
-    var keys = Object.keys(palette.color);
-    for (var i = 0; i < keys.length; i++) {
-      var key = keys[i];
-      document.body.setAttribute("data-md-color-" + key, palette.color[key]);
-    }
-  }
+  // 初始化 palette 并绑定事件
+  initPalette();
+  bindPaletteEvents();
 
 })();

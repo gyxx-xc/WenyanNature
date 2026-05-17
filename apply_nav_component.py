@@ -10,7 +10,7 @@ def process_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    if re.search(r'<script src="[^"]*components/nav\.js"></script>', content):
+    if '<script src="components/nav.js">' in content:
         return False  # 已处理
 
     # 1. 移除 <header> ... </header>（含内部所有内容）
@@ -70,25 +70,6 @@ def process_file(filepath):
 
     script_tag = f'\n  <script src="{prefix}components/nav.js"></script>\n'
     content = content.replace('</body>', script_tag + '</body>')
-
-    # 8. 清理注释占位符（page_surgery.py 残留下来的空行）
-    content = re.sub(r'\n\s*\n\s*<!-- (Skip to content|Announcement|Header|Container|Tabs navigation|Main content) -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- (Skip to content|Announcement|Header|Container|Tabs navigation|Main content) -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*\n\s*<!-- Sidebar: primary \(navigation\) -->\s*\n', '\n\n', content)
-    content = re.sub(r'\n\s*\n\s*<!-- Nav item:.*?-->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- (Github|In game|Judou|Vibe|Diagrams|Functional analysis|Technical) (nested )?-->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- TOC \(secondary sidebar\) -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- Sidebar: secondary \(table of contents\) -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- Content area -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- Hash anchor fix script -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- Footer -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- Dialog -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- Config script -->\s*\n', '\n', content)
-    content = re.sub(r'\n\s*<!-- Material JS bundle -->\s*\n', '\n', content)
-
-    # 9. 清理多余空行（连续3个以上空行压缩为2个）
-    content = re.sub(r'\n\s*\n\s*\n\s*\n', '\n\n\n', content)
-    content = re.sub(r'\n\s*\n\s*\n\s*\n', '\n\n\n', content)
 
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
