@@ -30,7 +30,7 @@
   --md-text-color: #2C3E4F;                /* Ink black text */
   --md-text-link-color: #C7413B;           /* Cinnabar links */
   --md-typeset-a-color: #C7413B;
-  --md-default-bg-color: #F8F5E9;          /* Rice paper background */
+  --md-default-bg-color: #FFFFFF;          /* White background */
   --md-default-fg-color: #5D4E3C;           /* Bronze for secondary text */
   --md-default-fg-color--light: #8B6B4D;    /* Aged bronze */
   --md-default-fg-color--lighter: #C9B7A2;  /* Faded parchment */
@@ -60,7 +60,7 @@
   --md-text-color: #E8D9C5;                /* Aged paper text */
   --md-text-link-color: #C89F68;           /* Gold links */
   --md-typeset-a-color: #B32D4A !important;
-  --md-default-bg-color: #1E2B36;          /* Indigo night */
+  --md-default-bg-color: #1A242B;          /* Topbar deep night sky blue */
   --md-default-fg-color: #B5A48E;           /* Muted bronze */
   --md-default-fg-color--light: #8B9A9B;    /* Misty jade */
   --md-default-fg-color--lighter: #4A5B66;  /* Deep water */
