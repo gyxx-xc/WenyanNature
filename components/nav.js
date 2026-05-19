@@ -137,16 +137,16 @@
     + '<a href="' + rel + '/" class="md-tabs__link">吾有一术</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'usage' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/usage/" class="md-tabs__link">文言语法</a></li>'
+    + '<a href="' + rel + '/content/usage/" class="md-tabs__link">文言语法</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'in_game' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/in_game/crafting_block/" class="md-tabs__link">游戏内容</a></li>'
+    + '<a href="' + rel + '/content/in_game/crafting_block/" class="md-tabs__link">游戏内容</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'modules' ? ' md-tabs__item--active' : '') + '">'
     + '<a href="' + rel + '/modules/bit/" class="md-tabs__link">模块索引</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'development' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/development/structure/" class="md-tabs__link">参与贡献</a></li>'
+    + '<a href="' + rel + '/content/development/structure/" class="md-tabs__link">参与贡献</a></li>'
 
     + '</ul></div></nav>';
 
