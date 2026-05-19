@@ -172,10 +172,23 @@
     var currentId;
 
     if (saved && saved.color && saved.color.media !== undefined) {
-      // 从 localStorage 恢复
-      if (saved.color.media === '(prefers-color-scheme: light)') {
+      var media = saved.color.media;
+      if (media === '(prefers-color-scheme)') {
+        // 自动模式：根据系统偏好解析为具体的亮色/暗色方案，再保存
+        var sysQuery = matchMedia('(prefers-color-scheme: light)');
+        if (sysQuery.matches) {
+          media = '(prefers-color-scheme: light)';
+        } else {
+          media = '(prefers-color-scheme: dark)';
+        }
+        // 更新保存状态
+        __md_set('__palette', { color: { media: media, scheme: media === '(prefers-color-scheme: light)' ? 'default' : 'slate', primary: 'default', accent: 'default' } });
+        saved = __md_get('__palette');
+      }
+
+      if (media === '(prefers-color-scheme: light)') {
         currentId = PALETTE.LIGHT.id;
-      } else if (saved.color.media === '(prefers-color-scheme: dark)') {
+      } else if (media === '(prefers-color-scheme: dark)') {
         currentId = PALETTE.DARK.id;
       } else {
         currentId = PALETTE.AUTO.id;
