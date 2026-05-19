@@ -2,133 +2,141 @@ import os
 import re
 import posixpath
 
-MOVED_FOLDERS = ["usage", "development", "in_game"]
+ROOT = "."
+ROOT_ABS = os.path.abspath(ROOT)
 
-def get_old_path(new_path):
-    parts = new_path.split("/")
-    if parts[0] == "content" and len(parts) > 1 and parts[1] in MOVED_FOLDERS:
-        return "/".join(parts[1:])
-    return new_path
 
-def get_new_path(old_path):
-    parts = old_path.split("/")
-    if parts[0] in MOVED_FOLDERS:
-        return "content/" + old_path
-    return old_path
+def is_within_project(target_path):
+    """Check if the resolved path stays within the project root directory."""
+    full = os.path.normpath(os.path.abspath(os.path.join(ROOT, target_path)))
+    return full.startswith(ROOT_ABS + os.sep) or full == ROOT_ABS
 
-def resolve_target_old_path(current_old_path, relative_url):
-    hash_idx = relative_url.find("#")
-    query_idx = relative_url.find("?")
-    
-    end_idx = len(relative_url)
-    if hash_idx != -1:
-        end_idx = min(end_idx, hash_idx)
-    if query_idx != -1:
-        end_idx = min(end_idx, query_idx)
-        
-    base_url = relative_url[:end_idx]
-    suffix = relative_url[end_idx:]
-    
-    if not base_url:
-        return current_old_path, suffix
-        
-    current_dir = posixpath.dirname(current_old_path)
-    if base_url.startswith("/"):
-        # Not a relative URL in the strict sense, but if it happens, handle it
-        target_old_path = posixpath.normpath(base_url[1:])
+
+def target_exists(target_path):
+    """Check if a path (relative to ROOT) exists as a file, directory, or directory with index.html."""
+    if not is_within_project(target_path):
+        return False
+    if os.path.exists(os.path.join(ROOT, target_path)):
+        return True
+    if os.path.exists(os.path.join(ROOT, target_path + ".html")):
+        return True
+    if os.path.isdir(os.path.join(ROOT, target_path)):
+        return True
+    if os.path.exists(os.path.join(ROOT, target_path, "index.html")):
+        return True
+    return False
+
+
+def resolve_and_fix(url, file_dir):
+    """
+    Resolve a possibly-broken URL to the correct project path by stripping
+    excess ../ prefixes, then return the correct relative URL from file_dir.
+    """
+    # Resolve relative to file_dir
+    if url.startswith("/"):
+        resolved = url.lstrip("/")
     else:
-        target_old_path = posixpath.normpath(posixpath.join(current_dir, base_url))
-    
-    if base_url.endswith("/") and not target_old_path.endswith("/"):
-        if target_old_path == ".":
-            target_old_path = ""
-        else:
-            target_old_path += "/"
-    elif base_url == "." or base_url == "..":
-        if target_old_path == ".":
-            target_old_path = ""
-        else:
-            target_old_path += "/"
-        
-    return target_old_path, suffix
+        resolved = posixpath.normpath(posixpath.join(file_dir, url)).replace("\\", "/")
 
-def get_relative_path(from_path, to_path):
-    from_dir = posixpath.dirname(from_path)
-    if not to_path:
-        to_path = "."
-    if not from_dir:
-        rel = to_path
+    # Handle trailing slash
+    trailing_slash = url.endswith("/")
+    resolved_clean = resolved.rstrip("/")
+
+    # Try the resolved path first
+    if target_exists(resolved_clean):
+        target = resolved_clean
     else:
-        rel = posixpath.relpath(to_path, from_dir)
-        
-    rel = rel.replace("\\", "/")
-    
-    if to_path.endswith("/") and not rel.endswith("/"):
-        if rel == ".":
-            rel = "./"
+        # The path might be broken (too many ../). Strip leading ../ one at a time.
+        target = resolved_clean
+        while target.startswith(".."):
+            if target.startswith("../"):
+                target = target[3:]
+            elif target == "..":
+                target = ""
+            else:
+                break  # something like "..foo" - don't strip
+            if target_exists(target):
+                break
         else:
-            rel += "/"
-            
-    if to_path == "" and rel == ".":
-        rel = "./"
-        
-    return rel
+            # Could not find target, return original URL unchanged
+            return url
 
-def process_file(filepath):
-    rel_filepath = os.path.relpath(filepath, ".").replace("\\", "/")
-    old_path = get_old_path(rel_filepath)
-    
+    # Calculate correct relative path
+    rel_target = target if target else "."
+    new_url = posixpath.relpath(rel_target, file_dir).replace("\\", "/")
+
+    if trailing_slash:
+        if new_url == ".":
+            new_url = "./"
+        elif not new_url.endswith("/"):
+            new_url += "/"
+
+    return new_url
+
+
+def process_html_file(filepath):
+    rel_filepath = os.path.relpath(filepath, ROOT).replace("\\", "/")
+    file_dir = posixpath.dirname(rel_filepath)
+
     with open(filepath, "r", encoding="utf-8") as f:
         content = f.read()
-        
-    def replacer(match):
-        full_match = match.group(0)
+
+    def fix_url(match):
+        full = match.group(0)
         attr = match.group(1)
         url = match.group(2)
-        
-        if url.startswith(("http:", "https:", "mailto:", "data:", "//", "javascript:")):
-            return full_match
-            
-        target_old, suffix = resolve_target_old_path(old_path, url)
-        target_new = get_new_path(target_old)
-        new_url = get_relative_path(rel_filepath, target_new) + suffix
-        
-        if new_url.startswith("./") and not url.startswith("./"):
-            new_url = new_url[2:]
-            if new_url == "":
-                new_url = "."
-                
+
+        # Skip non-relative URLs and empty URLs
+        if not url or url.startswith(
+            ("http:", "https:", "mailto:", "data:", "//", "javascript:")
+        ):
+            return full
+
+        # Preserve hash and query suffix
+        base_url = url
+        suffix = ""
+        hash_idx = url.find("#")
+        query_idx = url.find("?")
+        cut_idx = len(url)
+        if hash_idx != -1:
+            cut_idx = min(cut_idx, hash_idx)
+        if query_idx != -1:
+            cut_idx = min(cut_idx, query_idx)
+        if cut_idx < len(url):
+            base_url = url[:cut_idx]
+            suffix = url[cut_idx:]
+
+        # Skip pure hash/query refs
+        if not base_url:
+            return full
+
+        new_base = resolve_and_fix(base_url, file_dir)
+        new_url = new_base + suffix
+
         return f'{attr}="{new_url}"'
 
-    def replacer_md_scope(match):
+    def fix_md_scope(match):
         url = match.group(1)
-        if url.startswith(("http:", "https:", "mailto:", "data:", "//", "javascript:")):
+        if not url or url.startswith(("http:", "https:", "//", "javascript:")):
             return match.group(0)
-            
-        target_old, suffix = resolve_target_old_path(old_path, url)
-        target_new = get_new_path(target_old)
-        new_url = get_relative_path(rel_filepath, target_new) + suffix
-        
-        if new_url.startswith("./") and not url.startswith("./"):
-            new_url = new_url[2:]
-            if new_url == "":
-                new_url = "."
-                
+
+        new_url = resolve_and_fix(url, file_dir)
         return f'new URL("{new_url}", location)'
 
-    content = re.sub(r'(href|src)="([^"]+)"', replacer, content)
-    content = re.sub(r'new URL\("([^"]+)",\s*location\)', replacer_md_scope, content)
-    
-    with open(filepath, "w", encoding="utf-8") as f:
+    content = re.sub(r'(href|src)="([^"]*)"', fix_url, content)
+    content = re.sub(r'new URL\("([^"]+)",\s*location\)', fix_md_scope, content)
+
+    with open(filepath, "w", encoding="utf-8", newline="\n") as f:
         f.write(content)
 
+
 count = 0
-for root, dirs, files in os.walk("."):
-    if ".git" in root:
+for root_dir, dirs, files in os.walk(ROOT):
+    if ".git" in root_dir:
         continue
     for file in files:
         if file.endswith(".html"):
-            process_file(os.path.join(root, file))
+            process_html_file(os.path.join(root_dir, file))
             count += 1
 
 print(f"Processed {count} HTML files.")
