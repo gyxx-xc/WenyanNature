@@ -166,9 +166,21 @@
     document.body.insertBefore(headerDiv.firstElementChild, document.body.firstChild);
   }
 
-  // ========== Palette initialization ==========
+  var GLOBAL_PALETTE_KEY = 'WenyanNature_global_palette';
+
   function initPalette() {
-    var saved = __md_get('__palette');
+    var saved;
+    try {
+      saved = JSON.parse(localStorage.getItem(GLOBAL_PALETTE_KEY));
+    } catch (e) {}
+
+    // Fallback to mkdocs palette (for migration)
+    if (!saved) {
+      try {
+        saved = __md_get('__palette');
+      } catch (e) {}
+    }
+
     var currentId;
 
     if (saved && saved.color && saved.color.media !== undefined) {
@@ -182,8 +194,10 @@
           media = '(prefers-color-scheme: dark)';
         }
         // 更新保存状态
-        __md_set('__palette', { color: { media: media, scheme: media === '(prefers-color-scheme: light)' ? 'default' : 'slate', primary: 'default', accent: 'default' } });
-        saved = __md_get('__palette');
+        var newVal = { color: { media: media, scheme: media === '(prefers-color-scheme: light)' ? 'default' : 'slate', primary: 'indigo', accent: 'indigo' } };
+        try { localStorage.setItem(GLOBAL_PALETTE_KEY, JSON.stringify(newVal)); } catch (e) {}
+        try { __md_set('__palette', newVal); } catch (e) {}
+        saved = newVal;
       }
 
       if (media === '(prefers-color-scheme: light)') {
@@ -210,23 +224,25 @@
   }
 
   function applyScheme(input) {
-    var scheme = input.getAttribute('data-md-color-scheme');
-    var primary = input.getAttribute('data-md-color-primary');
-    var accent = input.getAttribute('data-md-color-accent');
-    var media = input.getAttribute('data-md-color-media');
+    var scheme = input.getAttribute('data-md-color-scheme') || 'default';
+    var primary = input.getAttribute('data-md-color-primary') || 'indigo';
+    var accent = input.getAttribute('data-md-color-accent') || 'indigo';
+    var media = input.getAttribute('data-md-color-media') || '';
 
     document.body.setAttribute('data-md-color-scheme', scheme);
     document.body.setAttribute('data-md-color-primary', primary);
     document.body.setAttribute('data-md-color-accent', accent);
 
-    __md_set('__palette', {
+    var val = {
       color: {
         media: media,
         scheme: scheme,
         primary: primary,
         accent: accent
       }
-    });
+    };
+    try { localStorage.setItem(GLOBAL_PALETTE_KEY, JSON.stringify(val)); } catch (e) {}
+    try { __md_set('__palette', val); } catch (e) {}
   }
 
   function updateVisibleButton(currentId) {
