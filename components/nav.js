@@ -12,23 +12,20 @@
  *   <script src="components/nav.js"></script>
  */
 (function () {
-  // ---- 1. 计算当前页面相对于仓库根目录的深度 ----
+  // ---- 0. 防重入：在 MkDocs instant navigation 下脚本可能被多次执行，只运行一次 ----
+  if (window.__wenyan_nav_installed) return;
+  window.__wenyan_nav_installed = true;
+
+  // ---- 1. 计算站点根路径（绝对路径，从域名根开始） ----
   var scope = window.__md_scope;
   var scopePath = scope
-    ? scope.pathname.replace(/\/$/, '')       // 去掉末尾 '/'
+    ? scope.pathname.replace(/\/$/, '')       // 去掉末尾 '/'，如 '/WenyanNature'
     : '/WenyanNature';
-  var pagePath = location.pathname.replace(/\/$/, '');
 
   // 把路径拆成段落，例如 ['WenyanNature', 'usage', 'quick_start']
   var scopeParts = scopePath.split('/').filter(Boolean);
+  var pagePath = location.pathname.replace(/\/$/, '');
   var pageParts = pagePath.split('/').filter(Boolean);
-
-  // 当前页面比 scope 根深几层
-  var relDepth = pageParts.length - scopeParts.length;
-  if (relDepth < 0) relDepth = 0;
-
-  // 生成相对引用前缀：0 层 → '.'，1 层 → '../'，2 层 → '../../'
-  var rel = relDepth === 0 ? '.' : new Array(relDepth + 1).join('../');
 
   // ---- 2. 判断当前处于哪个顶级栏目（用于 Tabs 高亮） ----
   function getActiveTab() {
@@ -53,7 +50,7 @@
     + '<nav class="md-header__inner md-grid" aria-label="Header">'
 
     // Logo
-    + '<a href="' + rel + '/" title="吾有一術" class="md-header__button md-logo" aria-label="吾有一術" data-md-component="logo">'
+    + '<a href="' + scopePath + '/" title="吾有一術" class="md-header__button md-logo" aria-label="吾有一術" data-md-component="logo">'
     + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
     + '<path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/>'
     + '</svg>'
@@ -134,19 +131,19 @@
     + '<div class="md-grid"><ul class="md-tabs__list">'
 
     + '<li class="md-tabs__item' + (activeTab === 'home' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/" class="md-tabs__link">吾有一术</a></li>'
+    + '<a href="' + scopePath + '/" class="md-tabs__link">吾有一术</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'usage' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/content/usage/" class="md-tabs__link">文言语法</a></li>'
+    + '<a href="' + scopePath + '/content/usage/" class="md-tabs__link">文言语法</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'in_game' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/content/in_game/crafting_block/" class="md-tabs__link">游戏内容</a></li>'
+    + '<a href="' + scopePath + '/content/in_game/crafting_block/" class="md-tabs__link">游戏内容</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'modules' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/modules/bit/" class="md-tabs__link">模块索引</a></li>'
+    + '<a href="' + scopePath + '/modules/bit/" class="md-tabs__link">模块索引</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'development' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + rel + '/content/development/structure/" class="md-tabs__link">参与贡献</a></li>'
+    + '<a href="' + scopePath + '/content/development/structure/" class="md-tabs__link">参与贡献</a></li>'
 
     + '</ul></div></nav>';
 
