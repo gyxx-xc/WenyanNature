@@ -33,7 +33,7 @@
     if (full === scopeParts.join('/')) return 'home';
     if (full.indexOf('/usage') >= 0) return 'usage';
     if (full.indexOf('/in_game') >= 0) return 'in_game';
-    if (full.indexOf('/modules') >= 0) return 'modules';
+if (full.indexOf('/content/modules') >= 0) return 'modules';
     if (full.indexOf('/development') >= 0) return 'development';
     return 'home';
   }
@@ -140,7 +140,7 @@
     + '<a href="' + scopePath + '/content/in_game/crafting_block/" class="md-tabs__link">游戏内容</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'modules' ? ' md-tabs__item--active' : '') + '">'
-    + '<a href="' + scopePath + '/modules/bit/" class="md-tabs__link">模块索引</a></li>'
++ '<a href="' + scopePath + '/content/modules/bit/" class="md-tabs__link">模块索引</a></li>'
 
     + '<li class="md-tabs__item' + (activeTab === 'development' ? ' md-tabs__item--active' : '') + '">'
     + '<a href="' + scopePath + '/content/development/structure/" class="md-tabs__link">参与贡献</a></li>'
