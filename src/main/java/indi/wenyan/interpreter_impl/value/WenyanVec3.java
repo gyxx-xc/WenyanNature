@@ -5,6 +5,7 @@ import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.*;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
@@ -15,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenyanObject, IWenyanComputable {
-    public static final IWenyanObjectType OBJECT_TYPE = new Vec3ObjectType();
     public static final WenyanType<WenyanVec3> TYPE = new WenyanType<>(TypeText.Vec3.string(), WenyanVec3.class);
 
     @Override
@@ -87,7 +88,9 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
     }
 
     // store all static information
-    public static class Vec3ObjectType implements IWenyanObjectType {
+    public enum Vec3ObjectType implements IWenyanObjectType {
+        INSTANCE;
+
         public static final WenyanType<Vec3ObjectType> TYPE = new WenyanType<>(TypeText.Vec3ObjectType.string(), Vec3ObjectType.class);
 
         public static final IWenyanValue ZERO;
@@ -97,9 +100,6 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         public static final IWenyanValue WEST;
         public static final IWenyanValue SOUTH;
         public static final IWenyanValue NORTH;
-
-        private Vec3ObjectType() {
-        }
 
         @Override
         public IWenyanValue getAttribute(String name) throws WenyanException {
@@ -116,15 +116,18 @@ public record WenyanVec3(Vec3 value) implements IWenyanWarperValue<Vec3>, IWenya
         }
 
         @Override
-        public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
+        public void callWithReturn(@Nullable IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList,
+                                   Consumer<IWenyanValue> onReturn) throws WenyanException {
+            IWenyanObject result;
             if (argsList.size() == 1) {
-                return argsList.getFirst().as(WenyanVec3.TYPE);
+                result = argsList.getFirst().as(WenyanVec3.TYPE);
             } else {
-                return new WenyanVec3(new Vec3(
+                result = new WenyanVec3(new Vec3(
                         argsList.get(0).as(WenyanDouble.TYPE).value(),
                         argsList.get(1).as(WenyanDouble.TYPE).value(),
                         argsList.get(2).as(WenyanDouble.TYPE).value()));
             }
+            onReturn.accept(result);
         }
 
         static {

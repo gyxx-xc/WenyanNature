@@ -4,11 +4,14 @@ import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.JudouTypeText;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Represents a package (collection of variables/functions) in Wenyan
@@ -43,7 +46,8 @@ public record WenyanPackage(Map<String, IWenyanValue> variables) implements IWen
     }
 
     @Override
-    public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
+    public void callWithReturn(@Nullable IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList,
+                               Consumer<IWenyanValue> onReturn) throws WenyanException {
         throw new WenyanException(JudouExceptionText.CannotCreateObject.string());
     }
 

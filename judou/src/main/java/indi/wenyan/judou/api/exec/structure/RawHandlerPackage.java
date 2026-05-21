@@ -5,6 +5,7 @@ import indi.wenyan.judou.api.exec.request.IArgsRequest;
 import indi.wenyan.judou.api.values.IWenyanValue;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public record RawHandlerPackage
@@ -12,6 +13,6 @@ public record RawHandlerPackage
          Map<String, Supplier<IRawRequest>> functions) {
     @FunctionalInterface
     public interface IRawRequest {
-        boolean handle(IHandleContext context, IArgsRequest request) throws WenyanException;
+        boolean handle(IHandleContext context, IArgsRequest request, Consumer<IWenyanValue> onReturn) throws WenyanException;
     }
 }

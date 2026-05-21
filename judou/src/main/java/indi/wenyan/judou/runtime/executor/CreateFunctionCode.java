@@ -27,6 +27,6 @@ public enum CreateFunctionCode {
                     assert newFunc.refs() != null;
                     newFunc.refs().add(i);
                 });
-        runtime.pushReturnValue(newFunc);
+        runtime.getProcessStack().push(newFunc);
     }
 }

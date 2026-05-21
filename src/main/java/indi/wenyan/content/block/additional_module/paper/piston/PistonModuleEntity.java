@@ -10,6 +10,7 @@ import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.ExceptionText;
@@ -34,6 +35,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static net.minecraft.world.level.block.DirectionalBlock.FACING;
 
@@ -172,7 +174,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
         }
 
         @Override
-        public boolean handle(IHandleContext context, IArgsRequest request) throws WenyanException {
+        public boolean handle(IHandleContext context, IArgsRequest request, Consumer<IWenyanValue> onReturn) throws WenyanException {
             life++;
             if (life == 1) {
                 // TODO: rename vars and redefine error handling
@@ -202,7 +204,7 @@ public class PistonModuleEntity extends AbstractModuleEntity {
                 return false;
             } else {
                 if (life <= 3) return false;
-                request.thread().getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
+                onReturn.accept(WenyanNull.NULL);
                 request.thread().unblock();
                 return true;
             }

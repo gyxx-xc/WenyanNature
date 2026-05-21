@@ -43,8 +43,8 @@ public record BlockPackageGetter(Consumer<BlockPos> communicateConsumer) {
     public WenyanPackage processPackage(RawHandlerPackage rawPackage, IWenyanBlockDevice device) {
         var map = new HashMap<>(rawPackage.variables());
         rawPackage.functions().forEach((name, function) ->
-                map.put(name, (IRequestCallHandler) (thread, self, argsList) ->
-                        new BlockRequest(thread, self, argsList, device, function.get(), communicateConsumer)));
+                map.put(name, (IRequestCallHandler) (thread, self, argsList, onReturn) ->
+                        new BlockRequest(thread, self, argsList, device, function.get(), communicateConsumer, onReturn)));
         return new WenyanPackage(map);
     }
 }

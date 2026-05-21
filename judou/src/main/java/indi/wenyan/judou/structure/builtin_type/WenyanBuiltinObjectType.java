@@ -2,39 +2,40 @@ package indi.wenyan.judou.structure.builtin_type;
 
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
-import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.exec.ICrossFunctionExecutable;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.JudouTypeText;
 import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
-import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Built-in object type implementation for Wenyan language.
  * Represents an object type created in Wenyan code.
  */
-public class WenyanBuiltinObjectType implements IWenyanObjectType {
+public final class WenyanBuiltinObjectType implements IWenyanObjectType, ICrossFunctionExecutable {
+    public static final WenyanType<WenyanBuiltinObjectType> TYPE = new WenyanType<>(JudouTypeText.DictObjectType.string(), WenyanBuiltinObjectType.class);
+
     @Getter
     private final WenyanBuiltinObjectType parent;
     private final HashMap<String, IWenyanValue> staticVariable = new HashMap<>();
     private final HashMap<String, IWenyanValue> functions = new HashMap<>();
-    public static final WenyanType<WenyanBuiltinObjectType> TYPE = new WenyanType<>(JudouTypeText.DictObjectType.string(), WenyanBuiltinObjectType.class);
 
     public WenyanBuiltinObjectType(WenyanBuiltinObjectType parent) {
         this.parent = parent;
     }
 
     @Override
-    public IWenyanValue getAttribute(String name) throws WenyanException {
+    public @NotNull IWenyanValue getAttribute(String name) throws WenyanException {
         var attr = getStaticVariable(name);
         if (attr == null) attr = getFunctionHelper(name);
         if (attr != null) return attr;
@@ -43,7 +44,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Nullable
-    protected IWenyanValue getFunctionHelper(String id) {
+    private IWenyanValue getFunctionHelper(String id) {
         if (functions.containsKey(id)) {
             return functions.get(id);
         } else if (parent != null) {
@@ -53,7 +54,7 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
         }
     }
 
-    public IWenyanValue getFunction(String id) throws WenyanException {
+    public @NotNull IWenyanValue getFunction(String id) throws WenyanException {
         var attr = getFunctionHelper(id);
         if (attr == null) {
             throw new WenyanException(JudouExceptionText.NoAttribute.string(id));
@@ -74,22 +75,19 @@ public class WenyanBuiltinObjectType implements IWenyanObjectType {
     }
 
     @Override
-    public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
-        throw new WenyanUnreachedException();
-    }
-
-    @Override
-    public void call(IWenyanValue self, @UnknownNullability IWenyanRunner thread,
-                     List<IWenyanValue> argsList) throws WenyanException {
+    public void callWithReturn(@Nullable IWenyanValue self, @NotNull IWenyanRunner thread, List<IWenyanValue> argsList,
+                               Consumer<IWenyanValue> onReturn) throws WenyanException {
         // create empty, run constructor, return self
         IWenyanValue selfObj = new WenyanBuiltinObject(this);
-        thread.getCurrentRuntime().pushReturnValue(selfObj);
 
         WenyanBuiltinFunction constructor = getAttribute(Symbol.CONSTRUCTOR_ID)
                 .as(WenyanBuiltinFunction.TYPE);
 
-        WenyanFrame newRuntime = constructor.getNewRuntime(self, argsList, thread.getCurrentRuntime());
-        newRuntime.setReturnBehavior((runner, ignore) -> runner.getFrameManager().ret());
+        WenyanFrame newRuntime = constructor.getNewRuntime(self, argsList, thread.getCurrentRuntime(),
+                (runner, ignore) -> {
+                    runner.getFrameManager().ret();
+                    onReturn.accept(selfObj);
+                });
         thread.getFrameManager().call(newRuntime);
     }
 

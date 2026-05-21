@@ -4,6 +4,7 @@ import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.Symbol;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
@@ -12,10 +13,12 @@ import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.util.RandomSource;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class HandRunner6Checker extends ValueAnswerChecker {
     private record Position(int x, int y) implements IWenyanObject {
@@ -66,11 +69,11 @@ public class HandRunner6Checker extends ValueAnswerChecker {
                 };
             }
 
-
             @Override
-            public IWenyanObject createObject(List<IWenyanValue> argsList) throws WenyanException {
-                return new Position(argsList.get(0).as(WenyanInteger.TYPE).value(),
-                        argsList.get(1).as(WenyanInteger.TYPE).value());
+            public void callWithReturn(@Nullable IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList,
+                                       Consumer<IWenyanValue> onReturn) throws WenyanException {
+                onReturn.accept(new Position(argsList.get(0).as(WenyanInteger.TYPE).value(),
+                        argsList.get(1).as(WenyanInteger.TYPE).value()));
             }
 
             @Override

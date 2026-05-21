@@ -113,7 +113,13 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
                 }
                 return WenyanNull.NULL;
             })
-            // TODO: .const of a builtin function
+//            .nativeVariables(builder -> builder
+//                    .function(CRAFTING_CHECK, ((_, thread, argsList) -> {
+//                        // should args as [function]
+//                        if (argsList.size() != 1)
+//                            throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(1, argsList.size()));
+//                    }))
+//            )
             .build();
 
     @Deprecated

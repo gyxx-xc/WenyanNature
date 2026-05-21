@@ -1,11 +1,9 @@
 package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanValue;
-import indi.wenyan.judou.api.values.WenyanPackage;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -65,41 +63,23 @@ public class WenyanFrame {
     private boolean PCFlag = false;
 
     @Getter
-    @Setter
-    private ReturnBehavior returnBehavior = this::onReturn;
+    final private ReturnBehavior returnBehavior;
 
     /**
      * Creates a new runtime environment with the specified bytecode.
      *
      * @param bytecode The bytecode to execute (can be null)
      */
-    public WenyanFrame(@NotNull IWenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanFrame returnRuntime) {
+    public WenyanFrame(@NotNull IWenyanBytecode bytecode, List<IWenyanValue> refs, @Nullable WenyanFrame returnRuntime, ReturnBehavior onReturn) {
         this.bytecode = bytecode;
         this.references = refs;
         this.returnRuntime = returnRuntime;
-    }
-
-    private WenyanFrame(@NotNull IWenyanBytecode bytecode) {
-        this(bytecode, Collections.emptyList(), null);
+        this.returnBehavior = onReturn;
     }
 
     public static @NotNull WenyanFrame ofCode(IWenyanBytecode code) {
-        return new WenyanFrame(code);
-    }
-
-    public static @NotNull WenyanFrame ofImportCode(IWenyanBytecode bytecode, List<String> exportedIdentifier, WenyanFrame returnRuntime) {
-        WenyanFrame wenyanRuntime = new WenyanFrame(bytecode, Collections.emptyList(), returnRuntime);
-        wenyanRuntime.returnBehavior = (runner, _) -> {
-            int exportSize = exportedIdentifier.size();
-            Map<String, IWenyanValue> result = new HashMap<>(exportSize);
-            WenyanFrame currentRuntime = runner.getCurrentRuntime();
-            for (int i = 0; i < exportSize; i++) {
-                result.put(exportedIdentifier.get(i), currentRuntime.locals.get(i));
-            }
-            runner.getFrameManager().ret();
-            runner.getCurrentRuntime().pushReturnValue(new WenyanPackage(result));
-        };
-        return wenyanRuntime;
+        return new WenyanFrame(code, Collections.emptyList(), null,
+                (runner, _) -> runner.getFrameManager().ret());
     }
 
     public void setLocal(int index, IWenyanValue value) {
@@ -116,10 +96,6 @@ public class WenyanFrame {
         }
     }
 
-    public void pushReturnValue(IWenyanValue value) {
-        processStack.push(value);
-    }
-
     public WenyanException.@Nullable ErrorContext getErrorContext(WenyanException e, Logger logger) {
         WenyanException.ErrorContext errorContext = null;
         try {
@@ -133,12 +109,6 @@ public class WenyanFrame {
         if (errorContext == null)
             logger.error("Unexpected, failed to get code context during handling an exception", e);
         return errorContext;
-    }
-
-    private void onReturn(IWenyanRunner runner, IWenyanValue returnValue) throws WenyanUnreachedException {
-        runner.getFrameManager().ret();
-        if (returnRuntime != null)
-            returnRuntime.pushReturnValue(returnValue);
     }
 
     @FunctionalInterface

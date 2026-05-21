@@ -15,7 +15,7 @@ public class Vec3ModuleBlock extends AbstractFuluBlock {
     public static final String DEVICE_NAME = WenyanSymbol.Vec3Module;
     public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
-                    .object(WenyanSymbol.Vec3Module$object, WenyanVec3.OBJECT_TYPE))
+                    .object(WenyanSymbol.Vec3Module$object, WenyanVec3.Vec3ObjectType.INSTANCE))
             .build();
 
     public Vec3ModuleBlock(Properties properties) {

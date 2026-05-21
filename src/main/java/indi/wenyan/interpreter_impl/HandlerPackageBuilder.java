@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -82,18 +83,18 @@ public final class HandlerPackageBuilder {
     }
 
     public HandlerPackageBuilder handler(String name, HandlerReturnFunction function) {
-        return handler(name, (RawHandlerPackage.IRawRequest) (context, request) -> {
+        return handler(name, (context, request, onReturn) -> {
             IWenyanValue value = function.handle(context, request);
-            request.thread().getCurrentRuntime().pushReturnValue(value);
+            onReturn.accept(value);
             request.thread().unblock();
             return true;
         });
     }
 
     public HandlerPackageBuilder handler(String name, HandlerSimpleFunction function) {
-        return handler(name, (RawHandlerPackage.IRawRequest) (context, request) -> {
+        return handler(name, (context, request, onReturn) -> {
             IWenyanValue value = function.handle(request);
-            request.thread().getCurrentRuntime().pushReturnValue(value);
+            onReturn.accept(value);
             request.thread().unblock();
             return true;
         });
@@ -106,7 +107,7 @@ public final class HandlerPackageBuilder {
             int acquired = 0;
 
             @Override
-            public boolean handle(@NotNull IHandleContext context, @NotNull IArgsRequest request) throws WenyanException {
+            public boolean handle(@NotNull IHandleContext context, @NotNull IArgsRequest request, Consumer<IWenyanValue> onReturn) throws WenyanException {
                 boolean hasDevice = false;
                 if (request.thread().platform() instanceof RunnerBlockEntity entity) {
                     for (BlockPos b : BlockPos.betweenClosed(
@@ -126,7 +127,7 @@ public final class HandlerPackageBuilder {
                     return false;
                 } else {
                     IWenyanValue value = function.handle(context, request);
-                    request.thread().getCurrentRuntime().pushReturnValue(value);
+                    onReturn.accept(value);
                     request.thread().unblock();
                     return true;
                 }

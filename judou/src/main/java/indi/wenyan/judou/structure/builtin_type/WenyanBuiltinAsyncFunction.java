@@ -11,23 +11,22 @@ import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements IWenyanFunction {
     public static final WenyanType<WenyanBuiltinAsyncFunction> TYPE = new WenyanType<>(JudouTypeText.BuiltinAsyncFunction.string(), WenyanBuiltinAsyncFunction.class);
 
     @Override
-    public void call(IWenyanValue self, IWenyanRunner thread,
-                     List<IWenyanValue> argsList)
-            throws WenyanException {
+    public void callWithReturn(@Nullable IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList, Consumer<IWenyanValue> onReturn) throws WenyanException {
         var future = new WenyanBuiltinFuture();
-        WenyanFrame newRuntime = func.getNewRuntime(self, argsList, null);
-        newRuntime.setReturnBehavior(future::onRunnerReturn);
+        WenyanFrame newRuntime = func.getNewRuntime(self, argsList, null, future::onRunnerReturn);
         IThreadHolder<WenyanSchedularImpl.PCB> newThread =
                 RunnerCreator.newRunner(newRuntime, thread.getGlobalResolver());
         thread.create(newThread);
-        thread.getCurrentRuntime().pushReturnValue(future);
+        onReturn.accept(future);
     }
 
     @Override

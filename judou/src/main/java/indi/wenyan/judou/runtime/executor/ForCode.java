@@ -22,7 +22,8 @@ public enum ForCode {
         IWenyanValue value = runtime.getProcessStack().pop();
         int num = value.as(WenyanInteger.TYPE).value();
         if (num > 0) {
-            runtime.pushReturnValue(WenyanValues.of((long) num - 1));
+            IWenyanValue value1 = WenyanValues.of((long) num - 1);
+            runtime.getProcessStack().push(value1);
         } else {
             runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
             runtime.setPCFlag(true);
@@ -35,7 +36,8 @@ public enum ForCode {
         assert runtime.getProcessStack().peek() != null;
         iter = runtime.getProcessStack().peek().as(WenyanList.WenyanIterator.TYPE).value();
         if (iter.hasNext()) {
-            runtime.pushReturnValue((IWenyanValue) iter.next());
+            IWenyanValue value = (IWenyanValue) iter.next();
+            runtime.getProcessStack().push(value);
         } else {
             runtime.getProcessStack().pop();
             runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));

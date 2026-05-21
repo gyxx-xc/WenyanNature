@@ -13,6 +13,7 @@ public enum WenyanSymbol {;
     public static final String PISTON_PULL = "「拉」";
     public static final String CRAFTING = "";
     public static final String CRAFTING_ARGS = "「参」";
+    public static final String CRAFTING_CHECK = "「查」";
     public static final String POWER = "";
     public static final String POWER_BASE = "「天根」";
     public static final String POWER_MOD = "「数极」";

@@ -1,23 +1,23 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.api.compile.IWenyanBytecode;
-import indi.wenyan.judou.api.runtime.IWenyanRunner;
-import indi.wenyan.judou.runtime.IGlobalResolver;
-import indi.wenyan.judou.api.runtime.IThreadHolder;
-import indi.wenyan.judou.api.runtime.IWenyanScheduler;
-import indi.wenyan.judou.runtime.executor.BreakpointCode;
-import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.compile.IWenyanBytecode;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.runtime.IThreadHolder;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.*;
-import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFunction;
-import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinObject;
-import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinObjectType;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.judou.api.values.primitive.WenyanList;
-import indi.wenyan.judou.api.utils.WenyanValues;
-import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.runtime.IGlobalResolver;
+import indi.wenyan.judou.runtime.executor.BreakpointCode;
+import indi.wenyan.judou.structure.ParsableType;
+import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFunction;
+import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinObject;
+import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinObjectType;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -112,24 +112,16 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         // NOTE: must make the callF at end, because it may block thread
                         //   which is a fake block, it will still run the rest command before blocked
                         //   it will only block the next WenyanCode being executed
-                        callable.call(null, (IWenyanRunner) this, argsList);
+                        callable.callWithReturn(null, this, argsList, this.getCurrentRuntime().getProcessStack()::push);
                     }
                     case 5 -> {
                         IWenyanValue func = runtime.getProcessStack().pop();
-                        IWenyanValue self;
                         IWenyanFunction callable;
-                        self = runtime.getProcessStack().pop();
 
                         // object_type
                         if (func.is(IWenyanObjectType.TYPE)) {
                             callable = func.as(IWenyanObjectType.TYPE);
                         } else { // function
-                            // handleWarper self first
-                            // try casting to object (might be list)
-                            // if not, static method
-                            if (!self.is(IWenyanObject.TYPE)) {
-                                self = null;
-                            }
                             callable = func.as(IWenyanFunction.TYPE);
                         }
 
@@ -140,7 +132,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         // NOTE: must make the callF at end, because it may block thread
                         //   which is a fake block, it will still run the rest command before blocked
                         //   it will only block the next WenyanCode being executed
-                        callable.call(self, (IWenyanRunner) this, argsList);
+                        callable.callWithReturn(null, this, argsList, this.getCurrentRuntime().getProcessStack()::push);
                     }
                     case 6 -> {
                         WenyanBuiltinFunction func = runtime.getProcessStack().pop().as(WenyanBuiltinFunction.TYPE);
@@ -157,42 +149,55 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                                     assert newFunc.refs() != null;
                                     newFunc.refs().add(i1);
                                 });
-                        runtime.pushReturnValue(newFunc);
+                        runtime.getProcessStack().push(newFunc);
                     }
                     case 7 -> {
                         WenyanFrame currentRuntime = getCurrentRuntime();
                         currentRuntime.getReturnBehavior().onReturn((IWenyanRunner) this, currentRuntime.getProcessStack().pop());
                     }
-                    case 8 -> getCurrentRuntime().pushReturnValue(new WenyanList());
-                    case 9 -> runtime.pushReturnValue(bytecode.getConst(args));
+                    case 8 -> {
+                        WenyanFrame wenyanFrame = getCurrentRuntime();
+                        IWenyanValue value = new WenyanList();
+                        wenyanFrame.getProcessStack().push(value);
+                    }
+                    case 9 -> {
+                        IWenyanValue value = bytecode.getConst(args);
+                        runtime.getProcessStack().push(value);
+                    }
                     case 10 -> runtime.getProcessStack().pop();
-                    case 11 -> runtime.pushReturnValue(runtime.getResultStack().peek());
+                    case 11 -> {
+                        IWenyanValue value = runtime.getResultStack().peek();
+                        runtime.getProcessStack().push(value);
+                    }
                     case 12 -> {
                         // TODO: costly, consider ArrayCopy
                         List<IWenyanValue> list = new ArrayList<>(args);
                         for (int i1 = 0; i1 < args; i1++) {
                             list.add(runtime.getResultStack().pop());
-                            runtime.pushReturnValue(list.getLast());
+                            runtime.getProcessStack().push(list.getLast());
                         }
                         for (var i1 : list) {
                             runtime.getResultStack().push(i1);
                         }
                     }
-                    case 13 -> runtime.pushReturnValue(runtime.getResultStack().pop());
+                    case 13 -> {
+                        IWenyanValue value = runtime.getResultStack().pop();
+                        runtime.getProcessStack().push(value);
+                    }
                     case 14 -> runtime.getResultStack().push(runtime.getProcessStack().pop());
                     case 15 -> runtime.getResultStack().clear();
                     case 16 -> {
                         IWenyanValue value = runtime.getLocals().get(args);
-                        runtime.pushReturnValue(value);
+                        runtime.getProcessStack().push(value);
                     }
                     case 17 -> {
                         IWenyanValue value = runtime.getReferences().get(args);
-                        runtime.pushReturnValue(value);
+                        runtime.getProcessStack().push(value);
                     }
                     case 18 -> {
                         String id = bytecode.getIdentifier(args);
                         IWenyanValue value = getGlobalResolver().getGlobal(id);
-                        runtime.pushReturnValue(value);
+                        runtime.getProcessStack().push(value);
                     }
                     case 19 -> {
                         IWenyanValue value = runtime.getProcessStack().pop();
@@ -208,7 +213,8 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                     }
                     case 21 -> {
                         IWenyanValue value = runtime.getProcessStack().pop();
-                        runtime.pushReturnValue(value.as(ParsableType.values()[args].getType()));
+                        IWenyanValue value1 = value.as(ParsableType.values()[args].getType());
+                        runtime.getProcessStack().push(value1);
                     }
                     case 22 -> {
                         String id = bytecode.getIdentifier(args);
@@ -222,7 +228,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                             IWenyanObject object = value.as(IWenyanObject.TYPE);
                             attr = object.getAttribute(id);
                         }
-                        runtime.pushReturnValue(attr);
+                        runtime.getProcessStack().push(attr);
                     }
                     case 23 -> {
                         String id = bytecode.getIdentifier(args);
@@ -236,7 +242,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                             IWenyanObject object = value.as(IWenyanObject.TYPE);
                             attr = object.getAttribute(id);
                         }
-                        runtime.pushReturnValue(attr);
+                        runtime.getProcessStack().push(attr);
                     }
                     case 24 -> {
                         String id = bytecode.getIdentifier(args);
@@ -266,14 +272,15 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         else
                             type = new WenyanBuiltinObjectType(parent
                                     .as(WenyanBuiltinObjectType.TYPE));
-                        runtime.pushReturnValue(type);
+                        runtime.getProcessStack().push(type);
                     }
                     case 28 -> {
                         Iterator<?> iter;
                         assert runtime.getProcessStack().peek() != null;
                         iter = runtime.getProcessStack().peek().as(WenyanList.WenyanIterator.TYPE).value();
                         if (iter.hasNext()) {
-                            runtime.pushReturnValue((IWenyanValue) iter.next());
+                            IWenyanValue value = (IWenyanValue) iter.next();
+                            runtime.getProcessStack().push(value);
                         } else {
                             runtime.getProcessStack().pop();
                             runtime.setProgramCounter(bytecode.getLabel(args));
@@ -284,7 +291,8 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         IWenyanValue value = runtime.getProcessStack().pop();
                         int num = value.as(WenyanInteger.TYPE).value();
                         if (num > 0) {
-                            runtime.pushReturnValue(WenyanValues.of((long) num - 1));
+                            IWenyanValue value1 = WenyanValues.of((long) num - 1);
+                            runtime.getProcessStack().push(value1);
                         } else {
                             runtime.setProgramCounter(bytecode.getLabel(args));
                             pcFlag = true;

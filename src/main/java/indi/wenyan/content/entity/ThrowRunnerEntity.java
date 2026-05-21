@@ -151,17 +151,14 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
 
     private WenyanPackage initEnvironment() {
         var basePackage = IWenyanPlatform.initEnvironment();
-        basePackage.put(Symbol.IMPORT_ID, (IRequestCallHandler) (t, _, a) ->
-                new ImportRequest(t, this::getPackage, a));
-        basePackage.put(WenyanSymbol.PRINT, (IRequestCallHandler) (thread, self, argsList) ->
-                new SimpleRequest(thread, self, argsList,
-                        (ignore, args) -> {
-                            if (player != null) {
-                                String s = args.getFirst().as(WenyanString.TYPE).value();
-                                player.sendSystemMessage(Component.literal(s));
-                            }
-                            return WenyanNull.NULL;
-                        }));
+        basePackage.put(Symbol.IMPORT_ID, ImportRequest.handlerOf(this::getPackage));
+        basePackage.put(WenyanSymbol.PRINT, SimpleRequest.handlerOf((ignore, args) -> {
+            if (player != null) {
+                String s = args.getFirst().as(WenyanString.TYPE).value();
+                player.sendSystemMessage(Component.literal(s));
+            }
+            return WenyanNull.NULL;
+        }));
         return basePackage;
     }
 
@@ -257,9 +254,9 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private WenyanPackage processInternalPackage(RawHandlerPackage rawPackage, IWenyanDevice device) {
         var map = new HashMap<>(rawPackage.variables());
         rawPackage.functions().forEach((name, function) ->
-                map.put(name, (IRequestCallHandler) (thread, self, argsList) ->
+                map.put(name, (IRequestCallHandler) (thread, self, argsList, onReturn) ->
                         new ThrowEntityRequest(self, argsList, thread, function.get(),
-                                () -> packages.remove(device.getPackageName()) != null)));
+                                () -> packages.remove(device.getPackageName()) != null, onReturn)));
         return new WenyanPackage(map);
     }
 }

@@ -30,6 +30,7 @@ public class BlockRequest implements IBaseHandleableRequest, IArgsRequest {
     IWenyanBlockDevice device;
     BlockPos pos;
     RawHandlerPackage.IRawRequest request;
+    Consumer<IWenyanValue> onReturn;
 
     @NonFinal
     boolean communicationShown = false;
@@ -39,7 +40,8 @@ public class BlockRequest implements IBaseHandleableRequest, IArgsRequest {
                         List<IWenyanValue> argsList,
                         IWenyanBlockDevice device,
                         RawHandlerPackage.IRawRequest request,
-                        Consumer<BlockPos> communicateConsumer) {
+                        Consumer<BlockPos> communicateConsumer,
+                        Consumer<IWenyanValue> onReturn) {
         this.thread = thread;
         this.self = self;
         this.args = argsList;
@@ -47,6 +49,7 @@ public class BlockRequest implements IBaseHandleableRequest, IArgsRequest {
         this.pos = device.blockPos();
         this.request = request;
         this.communicateConsumer = communicateConsumer;
+        this.onReturn = onReturn;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class BlockRequest implements IBaseHandleableRequest, IArgsRequest {
             communicateConsumer.accept(device.blockPos());
             communicationShown = true;
         }
-        return request.handle(context, this);
+        return request.handle(context, this, onReturn);
     }
 
     public record BlockContext(Level level, BlockPos pos,

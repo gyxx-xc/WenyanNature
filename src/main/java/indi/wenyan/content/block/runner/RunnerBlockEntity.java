@@ -135,27 +135,24 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private WenyanPackage initEnvironment() {
         var baseEnvironment = IWenyanPlatform.initEnvironment();
 
-        baseEnvironment.put(Symbol.IMPORT_ID, (IRequestCallHandler) (t, _, a) ->
-                new ImportRequest(t, (_, name) -> {
-                    var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
-                    if (either == null)
-                        throw new WenyanException.WenyanVarException(ExceptionText.ImportNotFound.string(name));
-                    return either;
-                }, a));
-        baseEnvironment.put("書", (IRequestCallHandler) (thread, self, argsList) ->
-                new SimpleRequest(thread, self, argsList,
-                        (ignore, args) -> {
-                            StringBuilder sb = new StringBuilder();
-                            boolean firstFlag = true;
-                            for (IWenyanValue arg : args) {
-                                if (!firstFlag) sb.append(" ");
-                                else firstFlag = false;
-                                sb.append(arg.toString());
-                            }
-                            addOutputBothSide(sb.toString(), IOutputAcceptor.OutputStyle.NORMAL);
-                            return WenyanNull.NULL;
-                        }));
-        baseEnvironment.put(Symbol.DEBUG_ID, (IRequestCallHandler) (thread, _, _) ->
+        baseEnvironment.put(Symbol.IMPORT_ID, ImportRequest.handlerOf((_, name) -> {
+            var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
+            if (either == null)
+                throw new WenyanException.WenyanVarException(ExceptionText.ImportNotFound.string(name));
+            return either;
+        }));
+        baseEnvironment.put("書", SimpleRequest.handlerOf((ignore, args) -> {
+            StringBuilder sb = new StringBuilder();
+            boolean firstFlag = true;
+            for (IWenyanValue arg : args) {
+                if (!firstFlag) sb.append(" ");
+                else firstFlag = false;
+                sb.append(arg.toString());
+            }
+            addOutputBothSide(sb.toString(), IOutputAcceptor.OutputStyle.NORMAL);
+            return WenyanNull.NULL;
+        }));
+        baseEnvironment.put(Symbol.DEBUG_ID, (IRequestCallHandler) (thread, _, _, _) ->
                 new IBaseHandleableRequest() {
                     private int i = 0;
 

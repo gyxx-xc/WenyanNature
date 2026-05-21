@@ -5,25 +5,27 @@ import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.language.JudouTypeText;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class WenyanBuiltinFuture implements IWenyanValue {
     @Nullable
+    @Getter
     private IWenyanValue returnValue = null;
-    private final List<IWenyanRunner> waitingThreads = new ArrayList<>();
+    private final List<WaitingThread> waitingThreads = new ArrayList<>();
 
     public static final WenyanType<WenyanBuiltinFuture> TYPE = new WenyanType<>(JudouTypeText.BuiltinFuture.string(), WenyanBuiltinFuture.class);
 
-    public boolean addWaitingThread(IWenyanRunner thread) throws WenyanUnreachedException {
+    public void addWaiting(Consumer<IWenyanValue> onReturn) {
         if (returnValue == null) {
-            waitingThreads.add(thread);
-            return true;
-        }
-        thread.getCurrentRuntime().pushReturnValue(returnValue);
-        return false;
+            // FIXME: check for thread safety
+            waitingThreads.add(new WaitingThread(null, onReturn));
+        } else onReturn.accept(returnValue);
     }
 
     @Override
@@ -31,18 +33,24 @@ public class WenyanBuiltinFuture implements IWenyanValue {
         return TYPE;
     }
 
-    public void onRunnerReturn(IWenyanRunner runner, IWenyanValue value) throws WenyanUnreachedException {
+    public void onRunnerReturn(IWenyanRunner runner, @NotNull IWenyanValue value) throws WenyanUnreachedException {
         returnValue = value;
-        for (IWenyanRunner thread : waitingThreads) {
+        for (var thread : waitingThreads) {
+            thread.run(returnValue);
+        }
+        waitingThreads.clear();
+        runner.getFrameManager().ret();
+    }
+
+    private record WaitingThread(@Nullable IWenyanRunner thread, Consumer<IWenyanValue> callback) {
+        void run(IWenyanValue returnValue) {
             try {
-                thread.getCurrentRuntime().pushReturnValue(value);
-                thread.unblock();
+                callback.accept(returnValue);
+                if (thread != null) thread.unblock();
             } catch (WenyanUnreachedException ignore) {
                 // should not happen
                 // or maybe? if the program stopped when waiting, ignore it then.
             }
         }
-        waitingThreads.clear();
-        runner.getFrameManager().ret();
     }
 }

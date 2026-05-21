@@ -7,7 +7,8 @@ import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IHandleableRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
-import indi.wenyan.judou.api.runtime.IRunner;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.function.Consumer;
 
 import static indi.wenyan.setup.language.ExceptionText.LockHoldAlready;
 import static indi.wenyan.setup.language.ExceptionText.LockNotHold;
@@ -26,8 +28,8 @@ public class LockModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.SemaphoreModule;
 
-    private IRunner lockHolder;
-    private final Queue<IRunner> waitingThreads = new ArrayDeque<>();
+    private IWenyanRunner lockHolder;
+    private final Queue<IWenyanRunner> waitingThreads = new ArrayDeque<>();
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
@@ -35,7 +37,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
             .handler(WenyanSymbol.SemaphoreModule$release, this::releaseSemaphore)
             .build();
 
-    private boolean acquireSemaphoreHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
+    private boolean acquireSemaphoreHandler(IHandleContext context, IHandleableRequest request, Consumer<IWenyanValue> onReturn) throws WenyanException {
         boolean locked = getBlockState().getValue(LockModuleBlock.LOCK_STATE);
         if (locked) {
             if (lockHolder == request.thread() || waitingThreads.contains(request.thread()))
@@ -47,7 +49,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
             lockHolder = request.thread();
             request.thread().unblock();
         }
-        request.thread().getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
+        onReturn.accept(WenyanNull.NULL);
         return true;
     }
 

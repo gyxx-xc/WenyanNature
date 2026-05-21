@@ -75,7 +75,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
                 return new WenyanRunningState(state);
             })
-            .handler(WenyanSymbol.CORE_JOIN, (RawHandlerPackage.IRawRequest) (_, request) -> {
+            .handler(WenyanSymbol.CORE_JOIN, (_, request, onReturn) -> {
                 boolean running = false;
                 var iter = startedPlatforms.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -93,7 +93,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                     }
                 }
                 if (!running) {
-                    request.thread().getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
+                    onReturn.accept(WenyanNull.NULL);
                     request.thread().unblock();
                     return true;
                 }

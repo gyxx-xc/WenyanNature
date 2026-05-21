@@ -13,6 +13,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.NonFinal;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Value
@@ -24,15 +25,17 @@ public class ThrowEntityRequest implements IBaseHandleableRequest, IArgsRequest 
     RawHandlerPackage.IRawRequest rawRequest;
 
     Supplier<Boolean> packageModifier;
+    Consumer<IWenyanValue> onReturn;
     @NonFinal
     boolean firstTime = true;
 
-    public ThrowEntityRequest(IWenyanValue self, List<IWenyanValue> argsList, IWenyanRunner thread, RawHandlerPackage.IRawRequest rawRequest, Supplier<Boolean> booleanSupplier) {
+    public ThrowEntityRequest(IWenyanValue self, List<IWenyanValue> argsList, IWenyanRunner thread, RawHandlerPackage.IRawRequest rawRequest, Supplier<Boolean> booleanSupplier, Consumer<IWenyanValue> onReturn) {
         this.self = self;
         this.args = argsList;
         this.thread = thread;
         this.rawRequest = rawRequest;
         this.packageModifier = booleanSupplier;
+        this.onReturn = onReturn;
     }
 
     @Override
@@ -43,6 +46,6 @@ public class ThrowEntityRequest implements IBaseHandleableRequest, IArgsRequest 
             }
             firstTime = false;
         }
-        return rawRequest.handle(context, this);
+        return rawRequest.handle(context, this, onReturn);
     }
 }

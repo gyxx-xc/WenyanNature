@@ -58,6 +58,6 @@ public enum FunctionCode {
         // NOTE: must make the callF at end, because it may block thread
         //   which is a fake block, it will still run the rest command before blocked
         //   it will only block the next WenyanCode being executed
-        callable.call(self, thread, argsList);
+        callable.callWithReturn(self, thread, argsList, thread.getCurrentRuntime().getProcessStack()::push);
     }
 }

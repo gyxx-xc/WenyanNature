@@ -33,6 +33,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static indi.wenyan.judou.api.language.JudouExceptionText.ArgsNumWrong;
@@ -79,16 +80,16 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
             })
             .build();
 
-    private boolean putHandler(IHandleContext context, IArgsRequest request) throws WenyanException {
+    private boolean putHandler(IHandleContext context, IArgsRequest request, Consumer<IWenyanValue> onReturn) throws WenyanException {
         IWenyanValue value = extractSingleValueFromRequest(request);
         if (queue.size() >= capacity) {
             // Queue is full, block the producer thread
             waitingProducers.add(new BlockedThread(request.thread(), value,
-                    context instanceof BlockRequest.BlockContext bc ? bc.pos() : null));
+                    context instanceof BlockRequest.BlockContext bc ? bc.pos() : null, onReturn));
         } else {
             IWenyanRunner thread = request.thread();
             queue.offer(value);
-            thread.getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
+            onReturn.accept(WenyanNull.NULL);
             thread.unblock();
 
             // Wake up a waiting consumer if any
@@ -100,14 +101,14 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
         return true;
     }
 
-    private boolean takeHandler(IHandleContext context, IHandleableRequest request) throws WenyanException {
+    private boolean takeHandler(IHandleContext context, IHandleableRequest request, Consumer<IWenyanValue> onReturn) throws WenyanException {
         if (queue.isEmpty()) {
             waitingConsumers.add(new BlockedThread(request.thread(), null,
-                    context instanceof BlockRequest.BlockContext bc ? bc.pos() : null));
+                    context instanceof BlockRequest.BlockContext bc ? bc.pos() : null, onReturn));
         } else {
             IWenyanRunner thread = request.thread();
             IWenyanValue value = queue.poll();
-            thread.getCurrentRuntime().pushReturnValue(value);
+            onReturn.accept(value);
             thread.unblock();
 
             // Wake up a waiting producer if any
@@ -173,7 +174,7 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
     }
 
     private record BlockedThread(IWenyanRunner thread, @Nullable IWenyanValue value,
-                                 @Nullable BlockPos pos) {
+                                 @Nullable BlockPos pos, Consumer<IWenyanValue> onReturn) {
         @Override
         public boolean equals(Object o) {
             return false;
@@ -191,10 +192,10 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
 
             if (value != null) {
                 queue.offer(value);
-                thread.getCurrentRuntime().pushReturnValue(WenyanNull.NULL);
+                onReturn.accept(WenyanNull.NULL);
             } else {
                 IWenyanValue value1 = queue.poll();
-                thread.getCurrentRuntime().pushReturnValue(value1);
+                onReturn.accept(value1);
             }
 
             thread.unblock();

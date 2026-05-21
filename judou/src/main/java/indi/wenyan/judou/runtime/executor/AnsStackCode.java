@@ -26,7 +26,7 @@ public enum AnsStackCode {
         List<IWenyanValue> list = new ArrayList<>(arg);
         for (int i = 0; i < arg; i++) {
             list.add(runtime.getResultStack().pop());
-            runtime.pushReturnValue(list.getLast());
+            runtime.getProcessStack().push(list.getLast());
         }
         for (var i : list) {
             runtime.getResultStack().push(i);
@@ -35,12 +35,14 @@ public enum AnsStackCode {
 
     static void peekAns(IWenyanRunner thread) throws WenyanException {
         WenyanFrame runtime = thread.getCurrentRuntime();
-        runtime.pushReturnValue(runtime.getResultStack().peek());
+        IWenyanValue value = runtime.getResultStack().peek();
+        runtime.getProcessStack().push(value);
     }
 
     static void popAns(IWenyanRunner thread) throws WenyanException {
         WenyanFrame runtime = thread.getCurrentRuntime();
-        runtime.pushReturnValue(runtime.getResultStack().pop());
+        IWenyanValue value = runtime.getResultStack().pop();
+        runtime.getProcessStack().push(value);
     }
 
     static void pushAns(IWenyanRunner thread) throws WenyanUnreachedException {

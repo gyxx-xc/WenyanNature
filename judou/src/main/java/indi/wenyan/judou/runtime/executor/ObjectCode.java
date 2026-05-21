@@ -27,7 +27,7 @@ public enum ObjectCode {;
             IWenyanObject object = value.as(IWenyanObject.TYPE);
             attr = object.getAttribute(id);
         }
-        runtime.pushReturnValue(attr);
+        runtime.getProcessStack().push(attr);
     }
 
     static void createType(IWenyanRunner thread) throws WenyanUnreachedException, WenyanException.WenyanTypeException {
@@ -39,7 +39,7 @@ public enum ObjectCode {;
         else
             type = new WenyanBuiltinObjectType(parent
                     .as(WenyanBuiltinObjectType.TYPE));
-        runtime.pushReturnValue(type);
+        runtime.getProcessStack().push(type);
     }
 
     static void storeAttr(int arg, IWenyanRunner thread) throws WenyanUnreachedException, WenyanException.WenyanTypeException {

@@ -18,7 +18,8 @@ public enum VariableCode {
     static void cast(int arg, IWenyanRunner thread) throws WenyanUnreachedException, WenyanException.WenyanTypeException {
         WenyanFrame runtime = thread.getCurrentRuntime();
         IWenyanValue value = runtime.getProcessStack().pop();
-        runtime.pushReturnValue(value.as(ParsableType.values()[arg].getType()));
+        IWenyanValue value1 = value.as(ParsableType.values()[arg].getType());
+        runtime.getProcessStack().push(value1);
     }
 
     static void setValue(IWenyanRunner thread) throws WenyanException {
@@ -41,18 +42,18 @@ public enum VariableCode {
         WenyanFrame runtime = thread.getCurrentRuntime();
         String id = runtime.getBytecode().getIdentifier(arg);
         IWenyanValue value = thread.getGlobalResolver().getGlobal(id);
-        runtime.pushReturnValue(value);
+        runtime.getProcessStack().push(value);
     }
 
     static void loadRef(int arg, IWenyanRunner thread) throws WenyanUnreachedException {
         WenyanFrame runtime = thread.getCurrentRuntime();
         IWenyanValue value = runtime.getReferences().get(arg);
-        runtime.pushReturnValue(value);
+        runtime.getProcessStack().push(value);
     }
 
     static void load(int arg, IWenyanRunner thread) throws WenyanUnreachedException {
         WenyanFrame runtime = thread.getCurrentRuntime();
         IWenyanValue value = runtime.getLocals().get(arg);
-        runtime.pushReturnValue(value);
+        runtime.getProcessStack().push(value);
     }
 }
