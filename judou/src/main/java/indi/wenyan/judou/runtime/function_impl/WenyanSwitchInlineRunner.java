@@ -116,12 +116,20 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                     }
                     case 5 -> {
                         IWenyanValue func = runtime.getProcessStack().pop();
+                        IWenyanValue self;
                         IWenyanFunction callable;
+                        self = runtime.getProcessStack().pop();
 
                         // object_type
                         if (func.is(IWenyanObjectType.TYPE)) {
                             callable = func.as(IWenyanObjectType.TYPE);
                         } else { // function
+                            // handleWarper self first
+                            // try casting to object (might be list)
+                            // if not, static method
+                            if (!self.is(IWenyanObject.TYPE)) {
+                                self = null;
+                            }
                             callable = func.as(IWenyanFunction.TYPE);
                         }
 
@@ -132,7 +140,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         // NOTE: must make the callF at end, because it may block thread
                         //   which is a fake block, it will still run the rest command before blocked
                         //   it will only block the next WenyanCode being executed
-                        callable.callWithReturn(null, this, argsList, this.getCurrentRuntime().getProcessStack()::push);
+                        callable.callWithReturn(self, this, argsList, this.getCurrentRuntime().getProcessStack()::push);
                     }
                     case 6 -> {
                         WenyanBuiltinFunction func = runtime.getProcessStack().pop().as(WenyanBuiltinFunction.TYPE);
