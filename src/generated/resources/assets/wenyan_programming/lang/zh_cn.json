@@ -123,7 +123,6 @@
   "item.wenyan_programming.phoenix_paper": "凤羽纸 (Lv.5)",
   "item.wenyan_programming.piston_module_block": "推動符",
   "item.wenyan_programming.power_block": "算核",
-  "item.wenyan_programming.print_inventory_module": "印符",
   "item.wenyan_programming.random_module_block": "熵符",
   "item.wenyan_programming.screen_block_module_block": "螢幕石",
   "item.wenyan_programming.starlight_ink": "星光墨 (Lv.3)",
@@ -199,8 +198,8 @@
   "wenyan_programming.configuration.ResultMaxSize": "结果堆栈最大长度",
   "wenyan_programming.configuration.RunnerRange": "符範圍",
   "wenyan_programming.configuration.SliceStep": "线程切换长度",
-  "wenyan_programming.configuration.SymbolConvertion": "变量名转换",
+  "wenyan_programming.configuration.SymbolConversion": "变量名转换",
   "wenyan_programming.configuration.UseLegacyRunner": "使用旧式符",
-  "wenyan_programming.configuration.UseTraditionalConvertion": "使用繁體轉換",
+  "wenyan_programming.configuration.UseTraditionalConversion": "使用繁體轉換",
   "wenyan_programming.configuration.WatchdogTimeout": "超时倍率"
 }
