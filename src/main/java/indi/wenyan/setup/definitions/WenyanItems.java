@@ -7,6 +7,7 @@ import indi.wenyan.content.block.additional_module.block.ScreenModuleBlock;
 import indi.wenyan.content.block.additional_module.builtin.*;
 import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBlock;
+import indi.wenyan.content.block.cloud_beacon.CloudBeaconBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.PedestalBlock;
 import indi.wenyan.content.block.furnace.LogicFurnaceBlock;
@@ -72,6 +73,8 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.LOGIC_FURNACE_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> POWER_BLOCK_ITEM = DR.registerItem(PowerBlock.ID,
             properties -> new BlockItem(WenyanBlocks.POWER_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> CLOUD_BEACON_BLOCK_ITEM = DR.registerItem(CloudBeaconBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.CLOUD_BEACON_BLOCK.get(), properties));
 
     // Blocks
     public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM = DR.registerItem(

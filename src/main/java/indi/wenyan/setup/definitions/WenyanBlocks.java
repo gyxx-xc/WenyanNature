@@ -7,6 +7,8 @@ import indi.wenyan.content.block.additional_module.paper.*;
 import indi.wenyan.content.block.additional_module.paper.piston.DecorativePistonHead;
 import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleBlock;
 import indi.wenyan.content.block.additional_module.paper.piston.PistonModuleEntity;
+import indi.wenyan.content.block.cloud_beacon.CloudBeaconBlock;
+import indi.wenyan.content.block.cloud_beacon.CloudBeaconBlockEntity;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.block.crafting_block.PedestalBlock;
@@ -72,6 +74,12 @@ public enum WenyanBlocks {
             WritingBlock::new);
     public static final Supplier<BlockEntityType<WritingBlockEntity>> WRITING_BLOCK_ENTITY = WenyanBlocks
             .registerEntity(WritingBlock.ID, WritingBlockEntity::new, WenyanBlocks.WRITING_BLOCK);
+
+    public static final DeferredBlock<CloudBeaconBlock> CLOUD_BEACON_BLOCK = WenyanBlocks.DR
+            .registerBlock(CloudBeaconBlock.ID, CloudBeaconBlock::new);
+    public static final Supplier<BlockEntityType<CloudBeaconBlockEntity>> CLOUD_BEACON_ENTITY = WenyanBlocks
+            .registerEntity(CloudBeaconBlock.ID, CloudBeaconBlockEntity::new,
+                    WenyanBlocks.CLOUD_BEACON_BLOCK);
 
     public static final DeferredBlock<LogicFurnaceBlock> LOGIC_FURNACE_BLOCK = WenyanBlocks.DR
             .registerBlock(LogicFurnaceBlock.ID, LogicFurnaceBlock::new);
