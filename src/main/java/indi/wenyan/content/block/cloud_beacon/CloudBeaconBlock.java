@@ -21,7 +21,9 @@ public class CloudBeaconBlock extends Block implements EntityBlock {
     public static final String ID = "cloud_beacon";
 
     public CloudBeaconBlock(Properties properties) {
-        super(properties);
+        super(properties
+                .lightLevel(_ -> 15)
+                .noOcclusion());
     }
 
     @Override

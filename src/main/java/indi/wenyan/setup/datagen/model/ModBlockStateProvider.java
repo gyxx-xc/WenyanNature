@@ -40,6 +40,7 @@ public class ModBlockStateProvider extends ModelSubProvider {
         modeledBlock(WenyanBlocks.PEDESTAL_BLOCK);
         modeledBlock(WenyanBlocks.POWER_BLOCK);
         modeledBlock(WenyanBlocks.FORMATION_CORE_MODULE_BLOCK);
+        modeledBlock(WenyanBlocks.CLOUD_BEACON_BLOCK);
 
         writingBlock();
         logicFurnace();

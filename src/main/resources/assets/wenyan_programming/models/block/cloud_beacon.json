@@ -1,0 +1,50 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"texture_size": [32, 32],
+	"textures": {
+		"3": "wenyan_programming:block/cloud_beacon"
+	},
+	"elements": [
+		{
+			"name": "Glass shell",
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 8, 8], "texture": "#3"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#3"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#3"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#3"},
+				"up": {"uv": [8, 8, 0, 0], "texture": "#3"},
+				"down": {"uv": [8, 0, 0, 8], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Obsidian base",
+			"from": [2, 0.1, 2],
+			"to": [14, 3, 14],
+			"faces": {
+				"north": {"uv": [6, 10.5, 12, 12], "texture": "#3"},
+				"east": {"uv": [6, 10.5, 12, 12], "texture": "#3"},
+				"south": {"uv": [6, 10.5, 12, 12], "texture": "#3"},
+				"west": {"uv": [6, 10.5, 12, 12], "texture": "#3"},
+				"up": {"uv": [6, 14, 0, 8], "texture": "#3"},
+				"down": {"uv": [0, 8, 6, 14], "texture": "#3"}
+			}
+		},
+		{
+			"name": "Inner beacon texture",
+			"from": [3, 3, 3],
+			"to": [13, 14, 13],
+			"faces": {
+				"north": {"uv": [8, 0, 13, 5.5], "texture": "#3"},
+				"east": {"uv": [8, 0, 13, 5.5], "texture": "#3"},
+				"south": {"uv": [8, 0, 13, 5.5], "texture": "#3"},
+				"west": {"uv": [8, 0, 13, 5.5], "texture": "#3"},
+				"up": {"uv": [13, 5.5, 8, 0.5], "texture": "#3"},
+				"down": {"uv": [13, 0.5, 8, 5.5], "texture": "#3"}
+			}
+		}
+	]
+}

@@ -158,6 +158,7 @@ public enum WenyanItems {
 
                 // Blocks
                 output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
+                output.accept(CLOUD_BEACON_BLOCK_ITEM.get());
                 output.accept(LOCK_MODULE_BLOCK_ITEM.get());
                 output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
 

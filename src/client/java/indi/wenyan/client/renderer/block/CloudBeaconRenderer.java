@@ -72,13 +72,16 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
                 )
         );
 
-        // communicate effect
+        // communicate effect (w/ 绿皮科技)
         double tPos = posTrans(state.signalPos);
         if (0 < tPos && tPos < 1) {
             poseStack.pushPose();
-            float transmitScale = (float) Math.min(1.3, 0.9+beamRadiusScale/10);
-            poseStack.scale(transmitScale, (float) (tPos * tPos * tPos * 64 + tPos * tPos * 16), transmitScale);
-            poseStack.translate(0, tPos * 24 + 0.5, 0);
+            float transmitScale = (float) Math.min(1.3, 0.9 + beamRadiusScale / 10);
+            float scaleRate = (float) (tPos * tPos * tPos * 64 + tPos * tPos * 16);
+            double moveRate = tPos * 24 + 0.5;
+            float endScale = (float) Math.min(1, tPos * 8);
+            poseStack.scale(transmitScale * endScale, scaleRate, transmitScale * endScale);
+            poseStack.translate(0, moveRate, 0);
             float[] rads = new float[]{0.21F, 0.4F, 0.5F, 0.4F, 0.21F};
             for (int i = 0; i < 5; i++) {
                 int pos = i;
@@ -117,7 +120,6 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
     }
 
     private static double posTrans(double p) {
-//        return 10 * Math.tan(p * Math.PI / 2);
         return Math.abs(p / 40);
     }
 
