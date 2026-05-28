@@ -1,6 +1,7 @@
 package indi.wenyan.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.client.renderer.block.utils.ICommunicateRendererState;
 import indi.wenyan.content.block.ICommunicateHolder;
 import indi.wenyan.content.block.additional_module.paper.BlockingQueueModuleEntity;
@@ -18,6 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class BlockingQueueModuleRenderer implements BlockEntityRenderer<BlockingQueueModuleEntity, BlockingQueueModuleRenderer.RenderState> {
 
     public BlockingQueueModuleRenderer(BlockEntityRendererProvider.Context ignoredContext) {

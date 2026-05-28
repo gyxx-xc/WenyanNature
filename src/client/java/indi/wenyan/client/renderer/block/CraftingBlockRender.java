@@ -1,6 +1,7 @@
 package indi.wenyan.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.math.Axis;
 import indi.wenyan.content.block.crafting_block.CraftingBlockEntity;
 import indi.wenyan.content.block.crafting_block.TextEffect;
@@ -14,11 +15,13 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Deque;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEntity, CraftingBlockRender.CraftingBlockRenderState> {
     private final Font font;
 
@@ -32,7 +35,7 @@ public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEnt
     }
 
     @Override
-    public void extractRenderState(CraftingBlockEntity blockEntity, CraftingBlockRenderState state, float partialTicks, @NonNull Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(CraftingBlockEntity blockEntity, CraftingBlockRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         state.partialTick = partialTicks;
         state.particles = blockEntity.getParticles();
@@ -41,8 +44,8 @@ public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEnt
     @Override
     public void submit(CraftingBlockRenderState state,
                        PoseStack poseStack,
-                       @NonNull SubmitNodeCollector collector,
-                       @NonNull CameraRenderState cameraRenderState) {
+                       SubmitNodeCollector collector,
+                       CameraRenderState cameraRenderState) {
         poseStack.pushPose();
         for (var particle : state.particles) {
             poseStack.pushPose();
@@ -62,7 +65,7 @@ public class CraftingBlockRender implements BlockEntityRenderer<CraftingBlockEnt
     }
 
     public static class CraftingBlockRenderState extends BlockEntityRenderState {
-        public Deque<TextEffect> particles;
+        Deque<TextEffect> particles;
         float partialTick;
     }
 }

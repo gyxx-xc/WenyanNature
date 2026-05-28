@@ -1,6 +1,7 @@
 package indi.wenyan.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.crafting_block.PedestalBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -16,9 +17,12 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEntity, PedestalBlockRender.PedestalBlockEntityRenderState> {
     private final ItemModelResolver itemModelResolver;
 
@@ -28,9 +32,9 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
 
     @Override
     public void extractRenderState(
-            @NonNull PedestalBlockEntity blockEntity,
-            @NonNull PedestalBlockEntityRenderState state,
-            float partialTicks, @NonNull Vec3 cameraPosition,
+            PedestalBlockEntity blockEntity,
+            PedestalBlockEntityRenderState state,
+            float partialTicks, Vec3 cameraPosition,
             ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         var itemStack = ItemUtil.getStack(blockEntity.getItemHandler(), 0);
@@ -44,15 +48,15 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
     }
 
     @Override
-    public @NonNull PedestalBlockEntityRenderState createRenderState() {
+    public PedestalBlockEntityRenderState createRenderState() {
         return new PedestalBlockEntityRenderState();
     }
 
     @Override
     public void submit(PedestalBlockEntityRenderState blockEntityRenderState,
                        PoseStack poseStack,
-                       @NonNull SubmitNodeCollector submitNodeCollector,
-                       @NonNull CameraRenderState cameraRenderState) {
+                       SubmitNodeCollector submitNodeCollector,
+                       CameraRenderState cameraRenderState) {
         poseStack.pushPose();
         poseStack.translate(0.5, 1.5, 0.5);
         poseStack.scale(0.5f, 0.5f, 0.5f);
@@ -62,7 +66,7 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
     }
 
     @Override
-    public @NonNull AABB getRenderBoundingBox(PedestalBlockEntity blockEntity) {
+    public AABB getRenderBoundingBox(PedestalBlockEntity blockEntity) {
         BlockPos pos = blockEntity.getBlockPos();
         return new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 2.0, pos.getZ() + 1.0);
     }

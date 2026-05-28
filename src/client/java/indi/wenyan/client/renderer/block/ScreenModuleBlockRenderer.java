@@ -1,6 +1,7 @@
 package indi.wenyan.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.math.Axis;
 import indi.wenyan.content.block.additional_module.block.ScreenModuleBlockEntity;
 import net.minecraft.client.gui.Font;
@@ -14,11 +15,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Deque;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ScreenModuleBlockRenderer implements BlockEntityRenderer<ScreenModuleBlockEntity, ScreenModuleBlockRenderer.ScreenModuleBlockRendererState> {
     private final Font font;
 
@@ -32,13 +35,13 @@ public class ScreenModuleBlockRenderer implements BlockEntityRenderer<ScreenModu
     }
 
     @Override
-    public void extractRenderState(ScreenModuleBlockEntity blockEntity, ScreenModuleBlockRendererState state, float partialTicks, @NonNull Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(ScreenModuleBlockEntity blockEntity, ScreenModuleBlockRendererState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         state.output = blockEntity.getOutputQueue();
     }
 
     @Override
-    public void submit(ScreenModuleBlockRendererState screenModuleBlockRendererState, PoseStack poseStack, @NonNull SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+    public void submit(ScreenModuleBlockRendererState screenModuleBlockRendererState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
         poseStack.pushPose();
         poseStack.translate(0.5, 1.2, 0.5);
         poseStack.mulPose(Axis.YP.rotationDegrees(-cameraRenderState.yRot));
@@ -69,7 +72,7 @@ public class ScreenModuleBlockRenderer implements BlockEntityRenderer<ScreenModu
     }
 
     @Override
-    public @NonNull AABB getRenderBoundingBox(ScreenModuleBlockEntity blockEntity) {
+    public AABB getRenderBoundingBox(ScreenModuleBlockEntity blockEntity) {
         if (blockEntity.getOutputQueue().isEmpty())
             return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity);
         else

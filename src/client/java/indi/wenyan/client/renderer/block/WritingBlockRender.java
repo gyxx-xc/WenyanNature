@@ -1,6 +1,7 @@
 package indi.wenyan.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.writing_block.WritingBlockEntity;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -16,9 +17,12 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.joml.Quaternionf;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class WritingBlockRender implements BlockEntityRenderer<WritingBlockEntity, WritingBlockRender.RenderState> {
     private final ItemModelResolver itemModelResolver;
 
@@ -30,7 +34,7 @@ public class WritingBlockRender implements BlockEntityRenderer<WritingBlockEntit
     public void extractRenderState(
             WritingBlockEntity blockEntity,
             RenderState state,
-            float partialTicks, @NonNull Vec3 cameraPosition,
+            float partialTicks, Vec3 cameraPosition,
             ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         var itemStack = ItemUtil.getStack(blockEntity.getItemHandler(), 0);
@@ -56,8 +60,8 @@ public class WritingBlockRender implements BlockEntityRenderer<WritingBlockEntit
     @Override
     public void submit(RenderState blockEntityRenderState,
                        PoseStack poseStack,
-                       @NonNull SubmitNodeCollector submitNodeCollector,
-                       @NonNull CameraRenderState cameraRenderState) {
+                       SubmitNodeCollector submitNodeCollector,
+                       CameraRenderState cameraRenderState) {
         poseStack.pushPose();
         poseStack.translate(0.5, 1, 0.5);
         poseStack.scale(0.5f, 0.5f, 0.5f);

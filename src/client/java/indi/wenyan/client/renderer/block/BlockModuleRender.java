@@ -5,6 +5,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.renderer.block.utils.RenderUtils;
 import indi.wenyan.content.block.additional_module.paper.BlockModuleEntity;
@@ -19,7 +20,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -28,6 +28,7 @@ import java.awt.*;
 import static net.minecraft.client.renderer.RenderPipelines.LINES_SNIPPET;
 
 @ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity, BlockModuleRender.BlockModuleRenderState> {
     public static final Identifier AABB_WALL = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "textures/block/wall.png");
 
@@ -187,7 +188,7 @@ public class BlockModuleRender implements BlockEntityRenderer<BlockModuleEntity,
     }
 
     @Override
-    public @NotNull AABB getRenderBoundingBox(BlockModuleEntity blockEntity) {
+    public AABB getRenderBoundingBox(BlockModuleEntity blockEntity) {
         return AABB.INFINITE;
     }
 
