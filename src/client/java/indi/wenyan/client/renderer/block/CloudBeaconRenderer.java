@@ -43,15 +43,21 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         state.animationTime = blockEntity.getLevel() != null ? Math.floorMod(blockEntity.getLevel().getGameTime(), 40) + partialTicks : 0.0F;
         state.signalPos = blockEntity.getTransmitAnimationTime() + partialTicks;
+        state.litUpAnimationTime = blockEntity.getLitUpAnimationTime() + partialTicks;
         LocalPlayer player = Minecraft.getInstance().player;
         float distanceToBeacon = (float) cameraPosition.subtract(state.blockPos.getCenter()).horizontalDistance();
         state.beamRadiusScale = player != null && player.isScoping() ? 1.0F : Math.max(1.0F, distanceToBeacon / BEAM_SCALE_THRESHOLD);
     }
 
     public void submit(CloudBeaconRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        if (state.litUpAnimationTime < 0) return;
         float beamRadiusScale = state.beamRadiusScale;
         float animationTime = state.animationTime;
         poseStack.pushPose();
+        if (state.litUpAnimationTime < 20) {
+            float yScale = state.litUpAnimationTime / 20;
+            poseStack.scale(1, yScale * yScale * yScale, 1);
+        }
         poseStack.translate(0.5, 0.0, 0.5);
         poseStack.scale(beamRadiusScale, beamRadiusScale, beamRadiusScale);
         float offset = -Mth.frac(animationTime / 5);
@@ -156,6 +162,7 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
 
     public static class CloudBeaconRenderState extends BlockEntityRenderState {
         private float animationTime;
+        private float litUpAnimationTime;
         private float beamRadiusScale;
         private double signalPos; // in (-1, )]
     }
