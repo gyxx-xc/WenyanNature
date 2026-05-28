@@ -11,6 +11,7 @@ import indi.wenyan.content.block.cloud_beacon.CloudBeaconBlock;
 import indi.wenyan.content.block.crafting_block.CraftingBlock;
 import indi.wenyan.content.block.crafting_block.PedestalBlock;
 import indi.wenyan.content.block.furnace.LogicFurnaceBlock;
+import indi.wenyan.content.block.power.CreativePowerBlock;
 import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.content.block.writing_block.WritingBlock;
 import indi.wenyan.content.item.FloatNoteItem;
@@ -75,6 +76,8 @@ public enum WenyanItems {
             properties -> new BlockItem(WenyanBlocks.POWER_BLOCK.get(), properties));
     public static final DeferredItem<BlockItem> CLOUD_BEACON_BLOCK_ITEM = DR.registerItem(CloudBeaconBlock.ID,
             properties -> new BlockItem(WenyanBlocks.CLOUD_BEACON_BLOCK.get(), properties));
+    public static final DeferredItem<BlockItem> CREATIVE_POWER_BLOCK_ITEM = DR.registerItem(CreativePowerBlock.ID,
+            properties -> new BlockItem(WenyanBlocks.CREATIVE_POWER_BLOCK.get(), properties));
 
     // Blocks
     public static final DeferredItem<BlockItem> FORMATION_CORE_MODULE_BLOCK_ITEM = DR.registerItem(
@@ -155,10 +158,11 @@ public enum WenyanItems {
                 output.accept(WRITING_BLOCK_ITEM.get());
                 output.accept(LOGIC_FURNACE_BLOCK_ITEM.get());
                 output.accept(POWER_BLOCK_ITEM.get());
+                output.accept(CREATIVE_POWER_BLOCK_ITEM.get());
+                output.accept(CLOUD_BEACON_BLOCK_ITEM.get());
 
                 // Blocks
                 output.accept(FORMATION_CORE_MODULE_BLOCK_ITEM.get());
-                output.accept(CLOUD_BEACON_BLOCK_ITEM.get());
                 output.accept(LOCK_MODULE_BLOCK_ITEM.get());
                 output.accept(SCREEN_MODULE_BLOCK_ITEM.get());
 

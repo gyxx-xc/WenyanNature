@@ -15,6 +15,8 @@ import indi.wenyan.content.block.crafting_block.PedestalBlock;
 import indi.wenyan.content.block.crafting_block.PedestalBlockEntity;
 import indi.wenyan.content.block.furnace.LogicFurnaceBlock;
 import indi.wenyan.content.block.furnace.LogicFurnaceBlockEntity;
+import indi.wenyan.content.block.power.CreativePowerBlock;
+import indi.wenyan.content.block.power.CreativePowerBlockEntity;
 import indi.wenyan.content.block.power.PowerBlock;
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlock;
@@ -92,6 +94,11 @@ public enum WenyanBlocks {
     public static final Supplier<BlockEntityType<PowerBlockEntity>> POWER_BLOCK_ENTITY = WenyanBlocks
             .registerEntity(PowerBlock.ID, PowerBlockEntity::new, WenyanBlocks.POWER_BLOCK);
 
+    public static final DeferredBlock<CreativePowerBlock> CREATIVE_POWER_BLOCK = WenyanBlocks.DR
+            .registerBlock(CreativePowerBlock.ID, CreativePowerBlock::new);
+    public static final Supplier<BlockEntityType<CreativePowerBlockEntity>> CREATIVE_POWER_BLOCK_ENTITY = WenyanBlocks
+            .registerEntity(CreativePowerBlock.ID, CreativePowerBlockEntity::new, WenyanBlocks.CREATIVE_POWER_BLOCK);
+
     public static final DeferredBlock<ExplosionModuleBlock> EXPLOSION_MODULE_BLOCK = WenyanBlocks.DR
             .registerBlock(ExplosionModuleBlock.ID, ExplosionModuleBlock::new);
     public static final Supplier<BlockEntityType<ExplosionModuleEntity>> EXPLOSION_MODULE_ENTITY = WenyanBlocks
@@ -160,8 +167,8 @@ public enum WenyanBlocks {
                     WenyanBlocks.COMMUNICATE_MODULE_BLOCK);
 
     private static <BE extends BlockEntity> Supplier<BlockEntityType<BE>> registerEntity(final String name,
-            final BlockEntityType.BlockEntitySupplier<BE> supplier,
-            final Supplier<? extends Block> block) {
+                                                                                         final BlockEntityType.BlockEntitySupplier<BE> supplier,
+                                                                                         final Supplier<? extends Block> block) {
         return WenyanBlocks.DR_ENTITY.register(name, () -> new BlockEntityType<>(supplier, block.get()));
     }
 }

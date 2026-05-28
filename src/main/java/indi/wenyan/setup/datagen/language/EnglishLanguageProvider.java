@@ -77,6 +77,7 @@ public class EnglishLanguageProvider extends LanguageProvider {
         addBlockAndItem(WenyanItems.WRITING_BLOCK_ITEM.get(), "刻印台");
         addBlockAndItem(WenyanItems.LOGIC_FURNACE_BLOCK_ITEM.get(), "炉烘有天");
         addBlockAndItem(WenyanItems.POWER_BLOCK_ITEM.get(), "算核");
+        addBlockAndItem(WenyanItems.CREATIVE_POWER_BLOCK_ITEM.get(), "創核石");
         addBlockAndItem(WenyanItems.FORMATION_CORE_MODULE_BLOCK_ITEM.get(), "阵眼");
         addBlockAndItem(WenyanItems.SCREEN_MODULE_BLOCK_ITEM.get(), "螢幕石");
         addBlockAndItem(WenyanItems.LOCK_MODULE_BLOCK_ITEM.get(), "信號量石");

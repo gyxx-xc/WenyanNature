@@ -46,6 +46,7 @@ public class ModBlockStateProvider extends ModelSubProvider {
         logicFurnace();
         lockModuleBlock();
         decorativePistonHeads();
+        creativePowerBlock();
 
         for (var block : WenyanBlocks.RUNNER_BLOCK.getBlocks()){
             registerFuluBlock(block);
@@ -114,6 +115,14 @@ public class ModBlockStateProvider extends ModelSubProvider {
         blockModels.blockStateOutput.accept(MultiVariantGenerator
                 .dispatch(WenyanBlocks.LOCK_MODULE_BLOCK.get())
                 .with(createBooleanModelDispatch(LockModuleBlock.LOCK_STATE, off, on)));
+    }
+
+    private void creativePowerBlock() {
+        blockModels.blockStateOutput.accept(
+                BlockModelGenerators.createSimpleBlock(WenyanBlocks.CREATIVE_POWER_BLOCK.get(),
+                        plainVariant(Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+                                "block/" + WenyanBlocks.POWER_BLOCK.getKey().identifier().getPath())))
+        );
     }
 
     public void decorativePistonHeads() {

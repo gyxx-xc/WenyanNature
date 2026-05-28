@@ -36,6 +36,7 @@ public enum ClientSetup {;
         event.registerBlockEntityRenderer(WenyanBlocks.FORMATION_CORE_MODULE_ENTITY.get(), FormationCoreModuleBlockRenderer::new);
         event.registerBlockEntityRenderer(WenyanBlocks.BLOCKING_QUEUE_MODULE_ENTITY.get(), BlockingQueueModuleRenderer::new);
         event.registerBlockEntityRenderer(WenyanBlocks.CLOUD_BEACON_ENTITY.get(), CloudBeaconRenderer::new);
+        event.registerBlockEntityRenderer(WenyanBlocks.CREATIVE_POWER_BLOCK_ENTITY.get(), CreativePowerBlockRender::new);
     }
 
     /**
