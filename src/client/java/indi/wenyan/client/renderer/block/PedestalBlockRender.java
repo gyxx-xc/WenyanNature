@@ -11,7 +11,9 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jspecify.annotations.NonNull;
@@ -26,8 +28,8 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
 
     @Override
     public void extractRenderState(
-            PedestalBlockEntity blockEntity,
-            PedestalBlockEntityRenderState state,
+            @NonNull PedestalBlockEntity blockEntity,
+            @NonNull PedestalBlockEntityRenderState state,
             float partialTicks, @NonNull Vec3 cameraPosition,
             ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
@@ -42,7 +44,7 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
     }
 
     @Override
-    public PedestalBlockEntityRenderState createRenderState() {
+    public @NonNull PedestalBlockEntityRenderState createRenderState() {
         return new PedestalBlockEntityRenderState();
     }
 
@@ -57,6 +59,12 @@ public class PedestalBlockRender implements BlockEntityRenderer<PedestalBlockEnt
         blockEntityRenderState.itemState.submit(poseStack, submitNodeCollector,
                 blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
+    }
+
+    @Override
+    public @NonNull AABB getRenderBoundingBox(PedestalBlockEntity blockEntity) {
+        BlockPos pos = blockEntity.getBlockPos();
+        return new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 2.0, pos.getZ() + 1.0);
     }
 
     public static class PedestalBlockEntityRenderState extends BlockEntityRenderState {

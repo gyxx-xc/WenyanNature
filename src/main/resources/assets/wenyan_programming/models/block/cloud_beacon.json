@@ -4,7 +4,8 @@
 	"parent": "block/block",
 	"texture_size": [32, 32],
 	"textures": {
-		"3": "wenyan_programming:block/cloud_beacon"
+		"3": "wenyan_programming:block/cloud_beacon",
+		"particle": "minecraft:block/glass"
 	},
 	"elements": [
 		{

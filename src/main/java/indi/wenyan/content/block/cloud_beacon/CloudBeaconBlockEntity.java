@@ -4,7 +4,7 @@ import indi.wenyan.setup.definitions.WenyanBlocks;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -23,13 +23,40 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
     private int litUpAnimationTime;
 
     private int checkingY;
-    private int levels = 0;
 
     public CloudBeaconBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(WenyanBlocks.CLOUD_BEACON_ENTITY.get(), worldPosition, blockState);
     }
 
     public void tick(ServerLevel sl, BlockPos blockPos, BlockState blockState1, RandomSource random) {
+        int x = blockPos.getX();
+        int y = blockPos.getY();
+        int z = blockPos.getZ();
+        if (checkingY <= y) checkingY = y + 1;
+
+        assert level != null;
+        int maxHeight = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
+
+        for (int i = 0; i < 10 && checkingY < maxHeight; i++) {
+            BlockState state = level.getBlockState(new BlockPos(x, checkingY, z));
+            if (state.getLightDampening() >= 15 && !state.is(Blocks.BEDROCK)) {
+                checkingY = y;
+                litUpAnimationTime = -1;
+                break;
+            }
+            checkingY++;
+        }
+
+        if (checkingY >= maxHeight) {
+            checkingY = y + 1;
+            litUpAnimationTime = 0;
+        }
+
+        if (level.getGameTime() % 80L == 0L) {
+            if (litUpAnimationTime >= 0) {
+                sl.playSound(null, blockPos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+        }
     }
 
     public void tickClient(BlockPos blockPos, BlockState blockState1, RandomSource random) {
@@ -78,9 +105,5 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
     public void setLevel(@NonNull Level level) {
         super.setLevel(level);
         this.checkingY = level.getMinY() - 1;
-    }
-
-    public static void playSound(Level level, BlockPos worldPosition, SoundEvent event) {
-        level.playSound(null, worldPosition, event, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 }
