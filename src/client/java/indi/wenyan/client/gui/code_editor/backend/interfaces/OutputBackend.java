@@ -8,4 +8,6 @@ public interface OutputBackend {
     Deque<Component> getOutput();
 
     void setOutputListener(java.util.function.Consumer<Deque<Component>> outputListener);
+
+    void clearOutput();
 }

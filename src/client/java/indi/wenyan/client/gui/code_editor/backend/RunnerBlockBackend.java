@@ -140,6 +140,12 @@ public class RunnerBlockBackend implements BaseTickBackend, CodeEditBackend, Out
         return sidedData.output;
     }
 
+    @Override
+    public void clearOutput() {
+        sidedData.output.clear();
+        outputListener.accept(sidedData.output);
+    }
+
     @Data
     public static class DoubleSidedData { // these data need to sync
         final StringBuilder content;

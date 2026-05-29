@@ -51,6 +51,10 @@ sourceSets {
         runtimeClasspath += client.output
         compileClasspath += client.output
     }
+    test {
+        runtimeClasspath += client.output
+        compileClasspath += client.output
+    }
 }
 
 neoForge {

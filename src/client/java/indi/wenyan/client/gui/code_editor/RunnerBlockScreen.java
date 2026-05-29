@@ -2,12 +2,14 @@ package indi.wenyan.client.gui.code_editor;
 
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
+import indi.wenyan.client.gui.code_editor.llm.LlmConfig;
 import indi.wenyan.client.gui.code_editor.widget.*;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -40,6 +42,18 @@ public class RunnerBlockScreen extends Screen {
     @SuppressWarnings("FieldCanBeLocal")
     private CodeOutputWidget outputWindow;
 
+    // ── AI panel ──
+    /** Toggleable AI code-generation panel; occupies the same area as outputWindow. */
+    private final LLMGenerateScreenWidget llmGenerateScreen = new LLMGenerateScreenWidget();
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button newMemoryButton;
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button modelTierButton;
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button btnOutputPanel;
+    @SuppressWarnings("FieldCanBeLocal")
+    private Button btnLlmPanel;
+
     public RunnerBlockScreen(RunnerBlockBackend backend) {
         super(Component.empty());
         this.backend = backend;
@@ -47,9 +61,12 @@ public class RunnerBlockScreen extends Screen {
 
     @Override
     protected void init() {
+        LlmConfig.createTemplateIfAbsent();
+
         int titleBarHeight = 15;
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
         int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
+        int btnH = font.lineHeight + 6;
         textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, titleBarHeight,
                 textFieldWidth, textFileHeight);
@@ -58,15 +75,15 @@ public class RunnerBlockScreen extends Screen {
         // -4 is spacing
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
         snippetWidget = new SnippetWidget(font, backend,
-                0, 15,
-                snippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+                0, titleBarHeight,
+                snippetWidth, textFileHeight);
         snippetWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(snippetWidget);
 
         int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 280);
         packageWidget = new PackageSnippetWidget(font, backend,
-                width - packageSnippetWidth, 15,
-                packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+                width - packageSnippetWidth, titleBarHeight,
+                packageSnippetWidth, textFileHeight);
         packageWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(packageWidget);
 
@@ -78,18 +95,119 @@ public class RunnerBlockScreen extends Screen {
         titleBar.setMaxLength(18);
         addRenderableWidget(titleBar);
 
-        int outputWindowHeight = height - titleBarHeight - textFileHeight - 4;
+        // ── Output window (restored to full bottom-half height) ──────────────────
+        int outputAreaY  = textFileHeight + titleBarHeight + 4;
+        int outputHeight = Math.max(height - outputAreaY, 0);
+        int outputX      = snippetWidth + 4;
+
+        int btnY = titleBarHeight + textFileHeight + 4;
+        int btnW = (packageSnippetWidth - 4) / 2;
+        int startX = width - packageSnippetWidth;
+
+        int extraBtnW = packageSnippetWidth > 0 ? (packageSnippetWidth - 4) : 0;
+        int extraBtnY = btnY + btnH + 4;
+
         outputWindow = new CodeOutputWidget(
-                snippetWidth + 4, textFileHeight + titleBarHeight + 4,
-                textFieldWidth, outputWindowHeight,
-                Component.literal(""), font, backend);
+                outputX, outputAreaY,
+                textFieldWidth, outputHeight,
+                Component.literal(""), font, backend,
+                startX, extraBtnY, extraBtnW, btnH,
+                this::addRenderableWidget);
         addRenderableWidget(outputWindow);
+
+        // ── LLM panel (same area, initially hidden) ────────────────────────────
+        llmGenerateScreen.init(font, backend,
+                textFieldWidget,
+                outputX, outputAreaY,
+                textFieldWidth, outputHeight,
+                startX, extraBtnY, extraBtnW, btnH,
+                this::addRenderableWidget);
+
+        if (extraBtnW > 0) {
+            int tierRowY = extraBtnY + btnH + 4;
+            newMemoryButton = Button.builder(
+                            Component.literal("新记忆"),
+                            btn -> llmGenerateScreen.startNewMemory())
+                    .bounds(startX, tierRowY, btnW, btnH)
+                    .build();
+            addRenderableWidget(newMemoryButton);
+
+            modelTierButton = Button.builder(
+                            Component.literal(llmGenerateScreen.getModelTierLabel()),
+                            btn -> {
+                                llmGenerateScreen.toggleModelTier();
+                                updateModelTierButton();
+                            })
+                    .bounds(startX + btnW + 4, tierRowY, btnW - 4, btnH)
+                    .build();
+            addRenderableWidget(modelTierButton);
+        }
+
+        // Restore visibility state across screen resizes
+        if (llmGenerateScreen.isVisible()) {
+            outputWindow.setVisibility(false);
+        } else {
+            llmGenerateScreen.setVisible(false);
+        }
+
+        // ── Mode selection buttons: right column, just below packageSnippetWidget ────────
+        if (packageSnippetWidth > 0) {
+            btnOutputPanel = Button.builder(
+                            Component.translatable(GuiText.LlmPanelBack.getTranslationKey()),
+                            btn -> setPanelMode(false))
+                    .bounds(startX, btnY, btnW, btnH)
+                    .build();
+
+            btnLlmPanel = Button.builder(
+                            Component.translatable(GuiText.LlmPanelToggle.getTranslationKey()),
+                            btn -> setPanelMode(true))
+                    .bounds(startX + btnW + 4, btnY, btnW - 4 , btnH)
+                    .build();
+
+            addRenderableWidget(btnOutputPanel);
+            addRenderableWidget(btnLlmPanel);
+
+            llmGenerateScreen.setStateChangeListener(this::updatePanelButtons);
+            // visually update state
+            updatePanelButtons();
+        }
+    }
+
+    // ── Panel Switch Logic ───────────────────────────────────────────
+
+    private void setPanelMode(boolean showLlm) {
+        llmGenerateScreen.setVisible(showLlm);
+        outputWindow.setVisibility(!showLlm);
+        updatePanelButtons();
+    }
+
+    private void updatePanelButtons() {
+        boolean isLlm = llmGenerateScreen.isVisible();
+        if (btnLlmPanel == null) return;
+        btnLlmPanel.active = !isLlm;
+        btnOutputPanel.active = isLlm;
+        if (newMemoryButton != null) {
+            newMemoryButton.visible = isLlm;
+        }
+        updateModelTierButton();
+    }
+
+    private void updateModelTierButton() {
+        if (modelTierButton != null) {
+            boolean isLlm = llmGenerateScreen.isVisible();
+            modelTierButton.visible = isLlm;
+            modelTierButton.active = llmGenerateScreen.canSwitchModelTier();
+            modelTierButton.setMessage(Component.literal(llmGenerateScreen.getModelTierLabel()));
+        }
     }
 
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics,
                        int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+
+        // LLM panel background + status (rendered before widget layer)
+        llmGenerateScreen.render(guiGraphics);
 
         // tooltips
         snippetWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
@@ -147,6 +265,7 @@ public class RunnerBlockScreen extends Screen {
 
     @Override
     public void onClose() {
+        llmGenerateScreen.dispose();
         backend.save();
         super.onClose();
     }

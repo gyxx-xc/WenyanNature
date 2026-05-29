@@ -60,7 +60,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
 
     public SnippetWidget(Font font, CodeEditBackend backend, int x, int y, int width, int height) {
         int scrollbarWidth = 4;
-        super(x, y, width, height - scrollbarWidth, Component.empty(), new ScrollbarSettings(
+        super(x, y, width, height, Component.empty(), new ScrollbarSettings(
                 // I know it's weird to use entry sprite for scrollbar, but it looks not too bad, and I'm lazy to make a new one...
                 ENTRY_SPRITES.get(false, false),
                 null,
