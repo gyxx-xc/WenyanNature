@@ -59,7 +59,7 @@ public class CreativePowerBlockEntity extends AbstractModuleEntity {
         if (lifetime > nextUpdate) {
             String data = ChineseUtils.toChinese(BigInteger.valueOf(random.nextInt(1000 * power)));
             textEffects.addAll(TextEffect.randomSplash(data, random));
-            nextUpdate = random.nextInt(1, 15);
+            nextUpdate = random.nextInt(1, 5);
             lifetime = 0;
         }
 

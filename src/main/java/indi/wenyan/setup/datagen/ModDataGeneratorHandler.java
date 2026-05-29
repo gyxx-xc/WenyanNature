@@ -7,6 +7,7 @@ import indi.wenyan.setup.datagen.model.ModBlockStateProvider;
 import indi.wenyan.setup.datagen.model.ModItemModelProvider;
 import indi.wenyan.setup.datagen.model.SubedModelProvider;
 import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
+import indi.wenyan.setup.datagen.tags.WyIntergrationTagProvider;
 import indi.wenyan.setup.datagen.tags.WyItemTagProvider;
 import indi.wenyan.setup.datagen.tags.WyPoiTagProvider;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -40,6 +41,7 @@ public enum ModDataGeneratorHandler {
         generator.addProvider(output -> new CheckerRecipeProvider.Runner(output, registries));
         generator.addProvider(packOutput -> new WyItemTagProvider(packOutput, registries));
         generator.addProvider(packOutput -> new WyPoiTagProvider(packOutput, registries));
+        generator.addProvider(packOutput -> new WyIntergrationTagProvider(packOutput, registries));
         generator.addProvider(p -> new WenyanLootTableProvider(p, registries));
     }
 
