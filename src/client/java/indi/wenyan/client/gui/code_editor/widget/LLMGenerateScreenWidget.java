@@ -11,6 +11,8 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -34,8 +36,10 @@ public class LLMGenerateScreenWidget {
 
     private static final int STATUS_COLOR     = 0xFFFFD700; // gold
     private static final int FOREGROUND_COLOR = 0xFFFFFFFF;
+    private static final int PREVIEW_COLOR    = 0xFFD6D6D6;
 
     private static final int INPUT_H = 15;
+    private static final int PREVIEW_LINES = 4;
 
     // ── Layout (set by init) ──
     private int panelX, panelY, panelW;
@@ -50,11 +54,14 @@ public class LLMGenerateScreenWidget {
     private Button  newMemoryButton;
     private Button  fixButton;
     private Button  switchModelButton;
+    private Button  applyButton;
+    private Button  cancelButton;
 
     // ── State (survives screen resize because this object is reused) ──
     private boolean generating    = false;
     private String  statusMessage = null;
     private boolean visible       = false;
+    private String  pendingCode   = null;
 
     // -----------------------------------------------------------------------
     // Lifecycle
@@ -122,7 +129,12 @@ public class LLMGenerateScreenWidget {
 
         newMemoryButton = Button.builder(
                         Component.literal("新记忆"),
-                        btn -> session.clearHistory())
+                        btn -> {
+                            session.clearHistory();
+                            pendingCode = null;
+                            statusMessage = null;
+                            updateButtonState();
+                        })
                 .bounds(editBoxX, actionBtnY, actionBtnW, INPUT_H)
                 .build();
         addWidget.accept(newMemoryButton);
@@ -134,8 +146,28 @@ public class LLMGenerateScreenWidget {
                 .build();
         addWidget.accept(fixButton);
 
+        int candidateBtnY = actionBtnY + INPUT_H + 4;
+        applyButton = Button.builder(
+                        Component.literal("应用"),
+                        btn -> applyPendingCode(backend))
+                .bounds(editBoxX, candidateBtnY, actionBtnW, INPUT_H)
+                .build();
+        addWidget.accept(applyButton);
+
+        cancelButton = Button.builder(
+                        Component.literal("取消"),
+                        btn -> {
+                            pendingCode = null;
+                            statusMessage = null;
+                            updateButtonState();
+                        })
+                .bounds(editBoxX + actionBtnW + 4, candidateBtnY, actionBtnW, INPUT_H)
+                .build();
+        addWidget.accept(cancelButton);
+
         // Restore visibility for post-resize state
         applyVisibility();
+        updateButtonState();
     }
 
     // -----------------------------------------------------------------------
@@ -145,26 +177,22 @@ public class LLMGenerateScreenWidget {
     private void triggerGenerate(RunnerBlockBackend backend, boolean isFix) {
         if (generating) return;
 
-        generating            = true;
-        generateButton.active = false;
-        fixButton.active      = false;
-        statusMessage         = GuiText.AiGenerating.string();
+        generating = true;
+        pendingCode = null;
+        statusMessage = GuiText.AiGenerating.string();
+        updateButtonState();
 
         Consumer<String> onSuccess = code -> {
-            backend.setSelectCursor(0);
-            backend.setCursor(backend.getContent().length());
-            backend.insertText(code);
-            statusMessage         = null;
-            generating            = false;
-            generateButton.active = true;
-            fixButton.active      = true;
+            pendingCode = code;
+            statusMessage = "大儒已成稿，确认后应用";
+            generating = false;
+            updateButtonState();
         };
 
         Consumer<String> onError = err -> {
-            statusMessage         = GuiText.AiError.string() + ": " + err;
-            generating            = false;
-            generateButton.active = true;
-            fixButton.active      = true;
+            statusMessage = GuiText.AiError.string() + ": " + err;
+            generating = false;
+            updateButtonState();
         };
 
         if (isFix) {
@@ -172,19 +200,29 @@ public class LLMGenerateScreenWidget {
             for (Component c : backend.getOutput()) {
                 sb.append(c.getString()).append("\n");
             }
-            session.generateFix(sb.toString(), onSuccess, onError);
+            session.generateFix(backend.getContent(), sb.toString(), onSuccess, onError);
         } else {
             if (promptBox == null || promptBox.getValue().strip().isEmpty()) {
                 // Do not proceed with an empty prompt box on standard generate
                 generating = false;
-                generateButton.active = true;
-                fixButton.active = true;
                 statusMessage = null;
+                updateButtonState();
                 return;
             }
             String prompt = promptBox.getValue().strip();
-            session.generateCode(prompt, onSuccess, onError);
+            session.generateCode(prompt, backend.getContent(), onSuccess, onError);
         }
+    }
+
+    private void applyPendingCode(RunnerBlockBackend backend) {
+        if (pendingCode == null)
+            return;
+        backend.setSelectCursor(0);
+        backend.setCursor(backend.getContent().length());
+        backend.insertText(pendingCode);
+        pendingCode = null;
+        statusMessage = "已应用";
+        updateButtonState();
     }
 
     // -----------------------------------------------------------------------
@@ -212,6 +250,19 @@ public class LLMGenerateScreenWidget {
         if (newMemoryButton != null)  newMemoryButton.visible = visible;
         if (switchModelButton != null) switchModelButton.visible = visible;
         if (fixButton       != null) fixButton.visible       = visible;
+        if (applyButton     != null) applyButton.visible     = visible;
+        if (cancelButton    != null) cancelButton.visible    = visible;
+        updateButtonState();
+    }
+
+    private void updateButtonState() {
+        boolean hasPendingCode = pendingCode != null && !pendingCode.isBlank();
+        if (generateButton != null) generateButton.active = visible && !generating;
+        if (fixButton != null) fixButton.active = visible && !generating;
+        if (newMemoryButton != null) newMemoryButton.active = visible && !generating;
+        if (switchModelButton != null) switchModelButton.active = visible && !generating;
+        if (applyButton != null) applyButton.active = visible && !generating && hasPendingCode;
+        if (cancelButton != null) cancelButton.active = visible && !generating && hasPendingCode;
     }
 
     // -----------------------------------------------------------------------
@@ -237,5 +288,26 @@ public class LLMGenerateScreenWidget {
         if (statusMessage != null) {
             g.text(font, statusMessage, panelX + 4, panelY + INPUT_H + 8, STATUS_COLOR, false);
         }
+
+        if (pendingCode != null && !pendingCode.isBlank()) {
+            int previewY = panelY + INPUT_H * 3 + 16;
+            for (String line : previewLines()) {
+                g.text(font, line, panelX + 4, previewY, PREVIEW_COLOR, false);
+                previewY += font.lineHeight + 1;
+            }
+        }
+    }
+
+    private List<String> previewLines() {
+        List<String> lines = new ArrayList<>();
+        String[] rawLines = pendingCode.split("\\R", PREVIEW_LINES + 1);
+        int maxWidth = Math.max(0, panelW - 8);
+        for (int i = 0; i < Math.min(PREVIEW_LINES, rawLines.length); i++) {
+            lines.add(font.plainSubstrByWidth(rawLines[i], maxWidth));
+        }
+        if (rawLines.length > PREVIEW_LINES) {
+            lines.add("...");
+        }
+        return lines;
     }
 }

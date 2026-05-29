@@ -36,17 +36,7 @@ public final class LlmConfig {
 
         try {
             for (String line : Files.readAllLines(envPath)) {
-                line = line.strip();
-                if (line.startsWith("#") || line.isBlank())
-                    continue;
-                int eq = line.indexOf('=');
-                if (eq < 0)
-                    continue;
-                String k = line.substring(0, eq).strip();
-                String v = line.substring(eq + 1).strip();
-                if (!v.isEmpty()) {
-                    ENV_CACHE.put(k, v);
-                }
+                parseLine(line).ifPresent(entry -> ENV_CACHE.put(entry.key(), entry.value()));
             }
         } catch (IOException e) {
             LOGGER.error("[WenyanNature] Failed to read .env: {}", e.getMessage());
@@ -61,6 +51,36 @@ public final class LlmConfig {
 
     public static Optional<String> getOptional(String key) {
         return Optional.ofNullable(get(key));
+    }
+
+    private static Optional<EnvEntry> parseLine(String line) {
+        line = line.strip();
+        if (line.startsWith("#") || line.isBlank())
+            return Optional.empty();
+        if (line.startsWith("export ")) {
+            line = line.substring("export ".length()).strip();
+        }
+
+        int eq = line.indexOf('=');
+        if (eq < 0)
+            return Optional.empty();
+
+        String key = line.substring(0, eq).strip();
+        String value = stripValue(line.substring(eq + 1).strip());
+        if (key.isEmpty() || value.isEmpty())
+            return Optional.empty();
+        return Optional.of(new EnvEntry(key, value));
+    }
+
+    private static String stripValue(String value) {
+        if (value.length() >= 2) {
+            char first = value.charAt(0);
+            char last = value.charAt(value.length() - 1);
+            if ((first == '"' && last == '"') || (first == '\'' && last == '\'')) {
+                return value.substring(1, value.length() - 1);
+            }
+        }
+        return value;
     }
 
     public static Path getEnvPath() {
@@ -91,5 +111,8 @@ public final class LlmConfig {
         } catch (IOException e) {
             LOGGER.error("[WenyanNature] Failed to create template .env: {}", e.getMessage());
         }
+    }
+
+    private record EnvEntry(String key, String value) {
     }
 }
