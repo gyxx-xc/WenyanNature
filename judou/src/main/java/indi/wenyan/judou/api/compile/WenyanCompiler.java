@@ -24,9 +24,6 @@ public final class WenyanCompiler {
 
         // preprocess
         var preprocessedCode = WenyanPreprocessor.preprocess(sourceCode);
-        if (preprocessedCode.isBlank()) {
-            return new BytecodeWithExportedValues(IWenyanBytecode.EMPTY, Collections.emptyList());
-        }
 
         // Intermediate Code Generation
         WenyanVisitor.generateTo(preprocessedCode, environment);
