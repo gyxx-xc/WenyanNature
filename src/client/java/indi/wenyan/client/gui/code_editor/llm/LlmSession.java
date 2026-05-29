@@ -10,23 +10,47 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class LlmSession {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LlmSession.class);
+    private static final ExecutorService REQUEST_EXECUTOR = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "WenyanNature-LLM");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     private final ILlmClient client;
+    private final ExecutorService requestExecutor;
+    private final Consumer<Runnable> uiExecutor;
+    private final BiFunction<LlmProvider, Consumer<String>, Optional<RequestSettings>> settingsLoader;
     private final List<LlmMessage> history = new ArrayList<>();
     private LlmProvider currentProvider = LlmProvider.DEEPSEEK;
     private int requestId = 0;
+    private CompletableFuture<LlmResponse> activeRequest = null;
+    private Future<?> activeTask = null;
 
     public LlmSession() {
         this(new OpenAiCompatibleLlmClient());
     }
 
     public LlmSession(@NotNull ILlmClient client) {
+        this(client, REQUEST_EXECUTOR, runnable -> Minecraft.getInstance().execute(runnable), LlmSession::loadSettings);
+    }
+
+    LlmSession(@NotNull ILlmClient client,
+               @NotNull ExecutorService requestExecutor,
+               @NotNull Consumer<Runnable> uiExecutor,
+               @NotNull BiFunction<LlmProvider, Consumer<String>, Optional<RequestSettings>> settingsLoader) {
         this.client = client;
+        this.requestExecutor = requestExecutor;
+        this.uiExecutor = uiExecutor;
+        this.settingsLoader = settingsLoader;
         clearHistory();
     }
 
@@ -39,9 +63,21 @@ public class LlmSession {
     }
 
     public synchronized void clearHistory() {
+        cancelActiveRequest();
         history.clear();
         history.add(new LlmMessage("system", LlmPromptBuilder.systemPrompt()));
+    }
+
+    public synchronized void cancelActiveRequest() {
         requestId++;
+        if (activeRequest != null) {
+            activeRequest.cancel(true);
+            activeRequest = null;
+        }
+        if (activeTask != null) {
+            activeTask.cancel(true);
+            activeTask = null;
+        }
     }
 
     /**
@@ -61,18 +97,12 @@ public class LlmSession {
     }
 
     private void processRequest(String newPrompt, Consumer<String> onSuccess, Consumer<String> onError) {
-        LlmConfig.reload();
         LlmProvider provider = currentProvider;
-        Optional<String> apiKeyOpt = LlmConfig.getOptional(provider.getApiKeyEnvVar());
-
-        if (apiKeyOpt.isEmpty()) {
-            onError.accept(LlmConfig.getEnvPath() + " 中未設 " + provider.getApiKeyEnvVar());
+        Optional<RequestSettings> settingsOpt = settingsLoader.apply(provider, onError);
+        if (settingsOpt.isEmpty()) {
             return;
         }
-
-        String apiKey = apiKeyOpt.get();
-        String url = LlmConfig.getOptional(provider.getUrlEnvVar()).orElse(provider.getDefaultUrl());
-        String model = LlmConfig.getOptional(provider.getModelEnvVar()).orElse(provider.getDefaultModel());
+        RequestSettings settings = settingsOpt.get();
         LlmMessage userMessage = new LlmMessage("user", newPrompt);
         List<LlmMessage> requestMessages;
         int currentRequestId;
@@ -83,19 +113,28 @@ public class LlmSession {
             currentRequestId = ++requestId;
         }
 
-        LlmRequest request = new LlmRequest(url, model, apiKey, requestMessages);
+        LlmRequest request = new LlmRequest(settings.url(), settings.model(), settings.apiKey(), requestMessages);
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<LlmResponse> requestFuture = new CompletableFuture<>();
+        Future<?> requestTask = requestExecutor.submit(() -> {
             try {
-                return client.request(request);
+                requestFuture.complete(client.request(request));
             } catch (LlmException e) {
-                throw new CompletionException(e);
+                requestFuture.completeExceptionally(new CompletionException(e));
+            } catch (Exception e) {
+                requestFuture.completeExceptionally(e);
             }
-        }).whenComplete((result, ex) -> {
-            Minecraft.getInstance().execute(() -> {
+        });
+        synchronized (this) {
+            activeRequest = requestFuture;
+            activeTask = requestTask;
+        }
+        requestFuture.whenComplete((result, ex) -> {
+            uiExecutor.accept(() -> {
                 if (isOutdated(currentRequestId)) {
                     return;
                 }
+                clearActiveRequest(requestFuture);
                 if (ex != null) {
                     LOGGER.error("LLM API error", ex);
                     removeLastUserMessage(userMessage);
@@ -118,8 +157,29 @@ public class LlmSession {
         return cause.getMessage() == null ? throwable.getMessage() : cause.getMessage();
     }
 
+    private static Optional<RequestSettings> loadSettings(LlmProvider provider, Consumer<String> onError) {
+        LlmConfig.reload();
+        Optional<String> apiKeyOpt = LlmConfig.getOptional(provider.getApiKeyEnvVar());
+        if (apiKeyOpt.isEmpty()) {
+            onError.accept(LlmConfig.getEnvPath() + " 中未設 " + provider.getApiKeyEnvVar());
+            return Optional.empty();
+        }
+
+        String apiKey = apiKeyOpt.get();
+        String url = LlmConfig.getOptional(provider.getUrlEnvVar()).orElse(provider.getDefaultUrl());
+        String model = LlmConfig.getOptional(provider.getModelEnvVar()).orElse(provider.getDefaultModel());
+        return Optional.of(new RequestSettings(apiKey, url, model));
+    }
+
     private synchronized boolean isOutdated(int checkedRequestId) {
         return checkedRequestId != requestId;
+    }
+
+    private synchronized void clearActiveRequest(CompletableFuture<LlmResponse> requestFuture) {
+        if (activeRequest == requestFuture) {
+            activeRequest = null;
+            activeTask = null;
+        }
     }
 
     private synchronized void removeLastUserMessage(LlmMessage userMessage) {
@@ -129,5 +189,8 @@ public class LlmSession {
                 return;
             }
         }
+    }
+
+    record RequestSettings(@NotNull String apiKey, @NotNull String url, @NotNull String model) {
     }
 }

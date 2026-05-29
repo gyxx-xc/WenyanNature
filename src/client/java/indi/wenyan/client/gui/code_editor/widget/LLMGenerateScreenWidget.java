@@ -13,6 +13,9 @@ import net.minecraft.network.chat.Component;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
@@ -39,6 +42,11 @@ public class LLMGenerateScreenWidget {
 
     private static final int INPUT_H = 15;
     private static final int ROW_GAP = 4;
+    private static final ExecutorService DIFF_EXECUTOR = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "WenyanNature-LLM-Diff");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     // ── Layout (set by init) ──
     private int panelX, panelY, panelW;
@@ -64,6 +72,7 @@ public class LLMGenerateScreenWidget {
     private String  pendingBaseCode = null;
     private List<LlmCodeDiff.Line> pendingDiff = List.of();
     private CodeEditorWidget codeEditorWidget;
+    private int candidateRevision = 0;
 
     // -----------------------------------------------------------------------
     // Lifecycle
@@ -135,6 +144,7 @@ public class LLMGenerateScreenWidget {
                         Component.literal("新记忆"),
                         btn -> {
                             session.clearHistory();
+                            generating = false;
                             clearPendingCode();
                             statusMessage = null;
                             updateButtonState();
@@ -186,16 +196,26 @@ public class LLMGenerateScreenWidget {
         generating = true;
         clearPendingCode();
         pendingBaseCode = backend.getContent();
+        int generationRevision = candidateRevision;
         statusMessage = GuiText.AiGenerating.string();
         updateButtonState();
 
         Consumer<String> onSuccess = code -> {
-            pendingCode = code;
-            pendingDiff = pendingBaseCode == null ? List.of() : LlmCodeDiff.diff(pendingBaseCode, pendingCode);
-            statusMessage = "大儒已成稿，确认后应用";
-            generating = false;
-            showPendingDiff();
-            updateButtonState();
+            String baseCode = pendingBaseCode;
+            CompletableFuture
+                    .supplyAsync(() -> baseCode == null ? List.<LlmCodeDiff.Line>of() : LlmCodeDiff.diff(baseCode, code),
+                            DIFF_EXECUTOR)
+                    .thenAccept(diff -> net.minecraft.client.Minecraft.getInstance().execute(() -> {
+                        if (generationRevision != candidateRevision) {
+                            return;
+                        }
+                        pendingCode = code;
+                        pendingDiff = diff;
+                        statusMessage = "大儒已成稿，确认后应用";
+                        generating = false;
+                        showPendingDiff();
+                        updateButtonState();
+                    }));
         };
 
         Consumer<String> onError = err -> {
@@ -241,6 +261,7 @@ public class LLMGenerateScreenWidget {
     }
 
     private void clearPendingCode() {
+        candidateRevision++;
         clearPreview();
         pendingCode = null;
         pendingBaseCode = null;
@@ -296,7 +317,7 @@ public class LLMGenerateScreenWidget {
         boolean hasPendingCode = hasPendingCode();
         if (generateButton != null) generateButton.active = visible && !generating;
         if (fixButton != null) fixButton.active = visible && !generating;
-        if (newMemoryButton != null) newMemoryButton.active = visible && !generating;
+        if (newMemoryButton != null) newMemoryButton.active = visible;
         if (switchModelButton != null) switchModelButton.active = visible && !generating;
         if (applyButton != null) applyButton.active = visible && !generating && hasPendingCode;
         if (cancelButton != null) cancelButton.active = visible && !generating && hasPendingCode;
