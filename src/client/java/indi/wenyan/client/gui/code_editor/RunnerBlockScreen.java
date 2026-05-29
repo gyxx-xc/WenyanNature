@@ -3,7 +3,6 @@ package indi.wenyan.client.gui.code_editor;
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.llm.LlmConfig;
-import indi.wenyan.client.gui.code_editor.llm.LlmSession;
 import indi.wenyan.client.gui.code_editor.widget.*;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
@@ -47,6 +46,8 @@ public class RunnerBlockScreen extends Screen {
     /** Toggleable AI code-generation panel; occupies the same area as outputWindow. */
     private final LLMGenerateScreenWidget llmGenerateScreen = new LLMGenerateScreenWidget();
     @SuppressWarnings("FieldCanBeLocal")
+    private Button newMemoryButton;
+    @SuppressWarnings("FieldCanBeLocal")
     private Button btnOutputPanel;
     @SuppressWarnings("FieldCanBeLocal")
     private Button btnLlmPanel;
@@ -63,6 +64,7 @@ public class RunnerBlockScreen extends Screen {
         int titleBarHeight = 15;
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
         int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
+        int btnH = font.lineHeight + 6;
         textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, titleBarHeight,
                 textFieldWidth, textFileHeight);
@@ -72,14 +74,14 @@ public class RunnerBlockScreen extends Screen {
         int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
         snippetWidget = new SnippetWidget(font, backend,
                 0, titleBarHeight,
-                snippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+                snippetWidth, textFileHeight);
         snippetWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(snippetWidget);
 
         int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 280);
         packageWidget = new PackageSnippetWidget(font, backend,
                 width - packageSnippetWidth, titleBarHeight,
-                packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+                packageSnippetWidth, textFileHeight);
         packageWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(packageWidget);
 
@@ -97,7 +99,6 @@ public class RunnerBlockScreen extends Screen {
         int outputX      = snippetWidth + 4;
 
         int btnY = titleBarHeight + textFileHeight + 4;
-        int btnH = font.lineHeight + 6;
         int btnW = (packageSnippetWidth - 4) / 2;
         int startX = width - packageSnippetWidth;
 
@@ -119,6 +120,15 @@ public class RunnerBlockScreen extends Screen {
                 textFieldWidth, outputHeight,
                 startX, extraBtnY, extraBtnW, btnH,
                 this::addRenderableWidget);
+
+        if (extraBtnW > 0) {
+            newMemoryButton = Button.builder(
+                            Component.literal("新记忆"),
+                            btn -> llmGenerateScreen.startNewMemory())
+                    .bounds(startX, extraBtnY + btnH + 4, extraBtnW, btnH)
+                    .build();
+            addRenderableWidget(newMemoryButton);
+        }
 
         // Restore visibility state across screen resizes
         if (llmGenerateScreen.isVisible()) {
@@ -162,6 +172,9 @@ public class RunnerBlockScreen extends Screen {
         if (btnLlmPanel == null) return;
         btnLlmPanel.active = !isLlm;
         btnOutputPanel.active = isLlm;
+        if (newMemoryButton != null) {
+            newMemoryButton.visible = isLlm;
+        }
     }
 
     @Override

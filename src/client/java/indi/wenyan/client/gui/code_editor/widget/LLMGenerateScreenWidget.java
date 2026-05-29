@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import lombok.Getter;
+import net.minecraft.network.chat.Style;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -58,8 +59,6 @@ public class LLMGenerateScreenWidget {
     // ── Child widgets ──
     private EditBox promptBox;
     private Button  generateButton;
-    private Button  newMemoryButton;
-    private Button  fixButton;
     private Button  switchModelButton;
     private Button  applyButton;
     private Button  cancelButton;
@@ -131,47 +130,23 @@ public class LLMGenerateScreenWidget {
         // ── Generate button ──
         generateButton = Button.builder(
                         Component.translatable(GuiText.AiGenerateButton.getTranslationKey()),
-                        btn -> triggerGenerate(backend, false))
+                        btn -> triggerGenerate(backend))
                 .bounds(x + availableW + 4, y, buttonW, INPUT_H)
                 .build();
         addWidget.accept(generateButton);
 
-        // ── Additional Action Buttons ──
-        int actionBtnY = y + INPUT_H + ROW_GAP;
-        int actionBtnW = editBoxW / 2 - 2;
-
-        newMemoryButton = Button.builder(
-                        Component.literal("新记忆"),
-                        btn -> {
-                            session.clearHistory();
-                            generating = false;
-                            clearPendingCode();
-                            statusMessage = null;
-                            updateButtonState();
-                        })
-                .bounds(editBoxX, actionBtnY, actionBtnW, INPUT_H)
-                .build();
-        addWidget.accept(newMemoryButton);
-
-        fixButton = Button.builder(
-                        Component.literal("修复").withStyle(net.minecraft.network.chat.Style.EMPTY.withColor(0xFFB347)),
-                        btn -> triggerGenerate(backend, true))
-                .bounds(editBoxX + actionBtnW + 4, actionBtnY, actionBtnW, INPUT_H)
-                .build();
-        addWidget.accept(fixButton);
-
-        int candidateBtnY = actionBtnY + INPUT_H + ROW_GAP;
+        int candidateBtnY = y + INPUT_H + ROW_GAP;
         int candidateBtnW = editBoxW / 2 - 2;
 
         applyButton = Button.builder(
-                        Component.literal("应用"),
+                        Component.literal("应用").withStyle(Style.EMPTY.withColor(0x33C75A)),
                         btn -> applyPendingCode(backend))
                 .bounds(editBoxX, candidateBtnY, candidateBtnW, INPUT_H)
                 .build();
         addWidget.accept(applyButton);
 
         cancelButton = Button.builder(
-                        Component.literal("取消"),
+                        Component.literal("取消").withStyle(Style.EMPTY.withColor(0xFFB347)),
                         btn -> {
                             clearPendingCode();
                             statusMessage = null;
@@ -190,12 +165,22 @@ public class LLMGenerateScreenWidget {
     // AI logic
     // -----------------------------------------------------------------------
 
-    private void triggerGenerate(RunnerBlockBackend backend, boolean isFix) {
+    private void triggerGenerate(RunnerBlockBackend backend) {
         if (generating) return;
+        if (promptBox == null || promptBox.getValue().strip().isEmpty()) {
+            statusMessage = null;
+            updateButtonState();
+            return;
+        }
 
         generating = true;
         clearPendingCode();
-        pendingBaseCode = backend.getContent();
+        String currentCode = backend.getContent();
+        boolean isNewSpell = currentCode.isBlank();
+        if (isNewSpell) {
+            session.clearHistory();
+        }
+        pendingBaseCode = currentCode;
         int generationRevision = candidateRevision;
         statusMessage = GuiText.AiGenerating.string();
         updateButtonState();
@@ -211,7 +196,7 @@ public class LLMGenerateScreenWidget {
                         }
                         pendingCode = code;
                         pendingDiff = diff;
-                        statusMessage = "大儒已成稿，确认后应用";
+                        statusMessage = "大儒已成稿，差异预览中，应用前不会覆盖";
                         generating = false;
                         showPendingDiff();
                         updateButtonState();
@@ -219,28 +204,21 @@ public class LLMGenerateScreenWidget {
         };
 
         Consumer<String> onError = err -> {
-            statusMessage = GuiText.AiError.string() + ": " + err;
+            statusMessage = err;
             generating = false;
             updateButtonState();
         };
 
-        if (isFix) {
-            StringBuilder sb = new StringBuilder();
-            for (Component c : backend.getOutput()) {
-                sb.append(c.getString()).append("\n");
-            }
-            session.generateFix(backend.getContent(), sb.toString(), onSuccess, onError);
-        } else {
-            if (promptBox == null || promptBox.getValue().strip().isEmpty()) {
-                // Do not proceed with an empty prompt box on standard generate
-                generating = false;
-                statusMessage = null;
-                updateButtonState();
-                return;
-            }
-            String prompt = promptBox.getValue().strip();
-            session.generateCode(prompt, backend.getContent(), onSuccess, onError);
-        }
+        String prompt = promptBox.getValue().strip();
+        session.generateCode(prompt, currentCode, onSuccess, onError);
+    }
+
+    public void startNewMemory() {
+        session.clearHistory();
+        generating = false;
+        clearPendingCode();
+        statusMessage = null;
+        updateButtonState();
     }
 
     private void applyPendingCode(RunnerBlockBackend backend) {
@@ -305,9 +283,7 @@ public class LLMGenerateScreenWidget {
     private void applyVisibility() {
         if (promptBox       != null) promptBox.visible       = visible;
         if (generateButton != null)   generateButton.visible = visible;
-        if (newMemoryButton != null)  newMemoryButton.visible = visible;
         if (switchModelButton != null) switchModelButton.visible = visible;
-        if (fixButton       != null) fixButton.visible       = visible;
         if (applyButton     != null) applyButton.visible     = visible;
         if (cancelButton    != null) cancelButton.visible    = visible;
         updateButtonState();
@@ -316,8 +292,6 @@ public class LLMGenerateScreenWidget {
     private void updateButtonState() {
         boolean hasPendingCode = hasPendingCode();
         if (generateButton != null) generateButton.active = visible && !generating;
-        if (fixButton != null) fixButton.active = visible && !generating;
-        if (newMemoryButton != null) newMemoryButton.active = visible;
         if (switchModelButton != null) switchModelButton.active = visible && !generating;
         if (applyButton != null) applyButton.active = visible && !generating && hasPendingCode;
         if (cancelButton != null) cancelButton.active = visible && !generating && hasPendingCode;
@@ -348,7 +322,7 @@ public class LLMGenerateScreenWidget {
 
         // Status message (generating / error) rendered slightly below the box
         if (statusMessage != null) {
-            g.text(font, statusMessage, panelX + 4, panelY + INPUT_H + 8, STATUS_COLOR, false);
+            g.text(font, statusMessage, panelX + 4, panelY + INPUT_H * 2 + ROW_GAP + 8, STATUS_COLOR, false);
         }
 
     }
