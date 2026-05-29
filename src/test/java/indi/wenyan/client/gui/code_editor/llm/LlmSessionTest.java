@@ -61,9 +61,29 @@ class LlmSessionTest {
         executor.shutdownNow();
     }
 
+    @Test
+    void testReasoningTierUsesReasoningModelSettings() throws InterruptedException {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        CapturingClient client = new CapturingClient();
+        LlmSession session = new LlmSession(client, executor, Runnable::run,
+                (provider, modelTier, onError) -> Optional.of(new LlmSession.RequestSettings(
+                        "key",
+                        "https://example.invalid",
+                        modelTier == LlmSession.ModelTier.REASONING ? "reasoning-model" : "normal-model")));
+        CountDownLatch success = new CountDownLatch(1);
+
+        session.toggleModelTier();
+        session.generateCode("生成", "", ignored -> success.countDown(), ignored -> {
+        });
+
+        assertTrue(success.await(2, TimeUnit.SECONDS));
+        assertEquals("reasoning-model", client.model.get());
+        executor.shutdownNow();
+    }
+
     private static LlmSession newTestSession(ILlmClient client, ExecutorService executor) {
         return new LlmSession(client, executor, Runnable::run,
-                (provider, onError) -> Optional.of(new LlmSession.RequestSettings("key", "https://example.invalid", "model")));
+                (provider, modelTier, onError) -> Optional.of(new LlmSession.RequestSettings("key", "https://example.invalid", "model")));
     }
 
     private static class BlockingClient implements ILlmClient {
@@ -119,6 +139,17 @@ class LlmSessionTest {
 
         void release() {
             releaseFirst.countDown();
+        }
+    }
+
+    private static class CapturingClient implements ILlmClient {
+
+        private final AtomicReference<String> model = new AtomicReference<>();
+
+        @Override
+        public LlmResponse request(LlmRequest request) {
+            model.set(request.model());
+            return new LlmResponse("结果");
         }
     }
 }

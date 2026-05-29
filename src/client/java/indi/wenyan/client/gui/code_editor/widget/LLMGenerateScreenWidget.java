@@ -221,6 +221,21 @@ public class LLMGenerateScreenWidget {
         updateButtonState();
     }
 
+    public void toggleModelTier() {
+        if (generating) {
+            return;
+        }
+        session.toggleModelTier();
+    }
+
+    public String getModelTierLabel() {
+        return session.getModelTier().getLabel();
+    }
+
+    public boolean canSwitchModelTier() {
+        return visible && !generating;
+    }
+
     private void applyPendingCode(RunnerBlockBackend backend) {
         if (pendingCode == null)
             return;

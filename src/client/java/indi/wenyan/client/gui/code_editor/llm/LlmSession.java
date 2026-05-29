@@ -13,7 +13,6 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class LlmSession {
@@ -28,9 +27,10 @@ public class LlmSession {
     private final ILlmClient client;
     private final ExecutorService requestExecutor;
     private final Consumer<Runnable> uiExecutor;
-    private final BiFunction<LlmProvider, Consumer<String>, Optional<RequestSettings>> settingsLoader;
+    private final SettingsLoader settingsLoader;
     private final List<LlmMessage> history = new ArrayList<>();
     private LlmProvider currentProvider = LlmProvider.DEEPSEEK;
+    private ModelTier currentModelTier = ModelTier.NORMAL;
     private int requestId = 0;
     private CompletableFuture<LlmResponse> activeRequest = null;
     private Future<?> activeTask = null;
@@ -46,7 +46,7 @@ public class LlmSession {
     LlmSession(@NotNull ILlmClient client,
                @NotNull ExecutorService requestExecutor,
                @NotNull Consumer<Runnable> uiExecutor,
-               @NotNull BiFunction<LlmProvider, Consumer<String>, Optional<RequestSettings>> settingsLoader) {
+               @NotNull SettingsLoader settingsLoader) {
         this.client = client;
         this.requestExecutor = requestExecutor;
         this.uiExecutor = uiExecutor;
@@ -60,6 +60,14 @@ public class LlmSession {
 
     public LlmProvider getProvider() {
         return currentProvider;
+    }
+
+    public ModelTier getModelTier() {
+        return currentModelTier;
+    }
+
+    public void toggleModelTier() {
+        currentModelTier = currentModelTier == ModelTier.NORMAL ? ModelTier.REASONING : ModelTier.NORMAL;
     }
 
     public synchronized void clearHistory() {
@@ -98,7 +106,8 @@ public class LlmSession {
 
     private void processRequest(String newPrompt, Consumer<String> onSuccess, Consumer<String> onError) {
         LlmProvider provider = currentProvider;
-        Optional<RequestSettings> settingsOpt = settingsLoader.apply(provider, onError);
+        ModelTier modelTier = currentModelTier;
+        Optional<RequestSettings> settingsOpt = settingsLoader.load(provider, modelTier, onError);
         if (settingsOpt.isEmpty()) {
             return;
         }
@@ -157,7 +166,7 @@ public class LlmSession {
         return cause.getMessage() == null ? throwable.getMessage() : cause.getMessage();
     }
 
-    private static Optional<RequestSettings> loadSettings(LlmProvider provider, Consumer<String> onError) {
+    private static Optional<RequestSettings> loadSettings(LlmProvider provider, ModelTier modelTier, Consumer<String> onError) {
         LlmConfig.reload();
         Optional<String> apiKeyOpt = LlmConfig.getOptional(provider.getApiKeyEnvVar());
         if (apiKeyOpt.isEmpty()) {
@@ -167,7 +176,17 @@ public class LlmSession {
 
         String apiKey = apiKeyOpt.get();
         String url = LlmConfig.getOptional(provider.getUrlEnvVar()).orElse(provider.getDefaultUrl());
-        String model = LlmConfig.getOptional(provider.getModelEnvVar()).orElse(provider.getDefaultModel());
+        if (url.isBlank()) {
+            onError.accept(LlmConfig.getEnvPath() + " 中未設 " + provider.getUrlEnvVar());
+            return Optional.empty();
+        }
+        String modelEnvVar = modelTier.getModelEnvVar(provider);
+        String defaultModel = modelTier.getDefaultModel(provider);
+        String model = LlmConfig.getOptional(modelEnvVar).orElse(defaultModel);
+        if (model.isBlank()) {
+            onError.accept(LlmConfig.getEnvPath() + " 中未設 " + modelEnvVar);
+            return Optional.empty();
+        }
         return Optional.of(new RequestSettings(apiKey, url, model));
     }
 
@@ -192,5 +211,49 @@ public class LlmSession {
     }
 
     record RequestSettings(@NotNull String apiKey, @NotNull String url, @NotNull String model) {
+    }
+
+    public enum ModelTier {
+        NORMAL("普通模型") {
+            @Override
+            String getModelEnvVar(LlmProvider provider) {
+                return provider.getModelEnvVar();
+            }
+
+            @Override
+            String getDefaultModel(LlmProvider provider) {
+                return provider.getDefaultModel();
+            }
+        },
+        REASONING("推理模型") {
+            @Override
+            String getModelEnvVar(LlmProvider provider) {
+                return provider.getReasoningModelEnvVar();
+            }
+
+            @Override
+            String getDefaultModel(LlmProvider provider) {
+                return provider.getDefaultReasoningModel();
+            }
+        };
+
+        private final String label;
+
+        ModelTier(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        abstract String getModelEnvVar(LlmProvider provider);
+
+        abstract String getDefaultModel(LlmProvider provider);
+    }
+
+    @FunctionalInterface
+    interface SettingsLoader {
+        Optional<RequestSettings> load(LlmProvider provider, ModelTier modelTier, Consumer<String> onError);
     }
 }

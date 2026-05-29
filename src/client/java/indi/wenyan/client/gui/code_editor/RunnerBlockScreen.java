@@ -48,6 +48,8 @@ public class RunnerBlockScreen extends Screen {
     @SuppressWarnings("FieldCanBeLocal")
     private Button newMemoryButton;
     @SuppressWarnings("FieldCanBeLocal")
+    private Button modelTierButton;
+    @SuppressWarnings("FieldCanBeLocal")
     private Button btnOutputPanel;
     @SuppressWarnings("FieldCanBeLocal")
     private Button btnLlmPanel;
@@ -122,12 +124,23 @@ public class RunnerBlockScreen extends Screen {
                 this::addRenderableWidget);
 
         if (extraBtnW > 0) {
+            int tierRowY = extraBtnY + btnH + 4;
             newMemoryButton = Button.builder(
                             Component.literal("新记忆"),
                             btn -> llmGenerateScreen.startNewMemory())
-                    .bounds(startX, extraBtnY + btnH + 4, extraBtnW, btnH)
+                    .bounds(startX, tierRowY, btnW, btnH)
                     .build();
             addRenderableWidget(newMemoryButton);
+
+            modelTierButton = Button.builder(
+                            Component.literal(llmGenerateScreen.getModelTierLabel()),
+                            btn -> {
+                                llmGenerateScreen.toggleModelTier();
+                                updateModelTierButton();
+                            })
+                    .bounds(startX + btnW + 4, tierRowY, btnW - 4, btnH)
+                    .build();
+            addRenderableWidget(modelTierButton);
         }
 
         // Restore visibility state across screen resizes
@@ -174,6 +187,16 @@ public class RunnerBlockScreen extends Screen {
         btnOutputPanel.active = isLlm;
         if (newMemoryButton != null) {
             newMemoryButton.visible = isLlm;
+        }
+        updateModelTierButton();
+    }
+
+    private void updateModelTierButton() {
+        if (modelTierButton != null) {
+            boolean isLlm = llmGenerateScreen.isVisible();
+            modelTierButton.visible = isLlm;
+            modelTierButton.active = llmGenerateScreen.canSwitchModelTier();
+            modelTierButton.setMessage(Component.literal(llmGenerateScreen.getModelTierLabel()));
         }
     }
 
@@ -237,6 +260,7 @@ public class RunnerBlockScreen extends Screen {
     public void tick() {
         super.tick();
         backend.tick();
+        updatePanelButtons();
     }
 
     @Override
