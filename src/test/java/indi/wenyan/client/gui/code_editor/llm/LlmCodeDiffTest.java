@@ -57,6 +57,32 @@ class LlmCodeDiffTest {
     void testTrailingNewlineDoesNotCrash() {
         List<LlmCodeDiff.Line> diff = LlmCodeDiff.diff("夫一。書之。\n", "夫一。書之。");
 
-        assertThat(diff).isNotEmpty();
+        assertThat(diff).containsExactly(
+                new LlmCodeDiff.Line(LlmCodeDiff.Type.UNCHANGED, 1, 1, "夫一。書之。")
+        );
+    }
+
+    @Test
+    void testLargeChangedMiddleFallsBackWithoutLcsExplosion() {
+        String oldCode = "same-start\n" + numberedLines("old", 1500) + "\nsame-end";
+        String newCode = "same-start\n" + numberedLines("new", 1500) + "\nsame-end";
+
+        List<LlmCodeDiff.Line> diff = LlmCodeDiff.diff(oldCode, newCode);
+
+        assertThat(diff.get(0)).isEqualTo(new LlmCodeDiff.Line(LlmCodeDiff.Type.UNCHANGED, 1, 1, "same-start"));
+        assertThat(diff.get(diff.size() - 1)).isEqualTo(new LlmCodeDiff.Line(LlmCodeDiff.Type.UNCHANGED, 1502, 1502, "same-end"));
+        assertThat(diff).filteredOn(line -> line.type() == LlmCodeDiff.Type.REMOVED).hasSize(1500);
+        assertThat(diff).filteredOn(line -> line.type() == LlmCodeDiff.Type.ADDED).hasSize(1500);
+    }
+
+    private static String numberedLines(String prefix, int count) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            if (i > 0) {
+                builder.append('\n');
+            }
+            builder.append(prefix).append('-').append(i);
+        }
+        return builder.toString();
     }
 }

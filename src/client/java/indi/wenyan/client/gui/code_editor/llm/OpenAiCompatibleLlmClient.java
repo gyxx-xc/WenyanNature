@@ -13,6 +13,7 @@ import java.time.Duration;
 
 public class OpenAiCompatibleLlmClient implements ILlmClient {
 
+    private static final int ERROR_BODY_LIMIT = 1000;
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(15))
             .build();
@@ -22,7 +23,7 @@ public class OpenAiCompatibleLlmClient implements ILlmClient {
         try {
             HttpResponse<String> response = HTTP_CLIENT.send(buildRequest(request), HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
-                throw new LlmException("HTTP " + response.statusCode() + ": " + response.body());
+                throw new LlmException("HTTP " + response.statusCode() + ": " + truncateErrorBody(response.body()));
             }
             return new LlmResponse(extractContent(response.body()));
         } catch (IOException e) {
@@ -31,6 +32,13 @@ public class OpenAiCompatibleLlmClient implements ILlmClient {
             Thread.currentThread().interrupt();
             throw new LlmException("LLM request interrupted", e);
         }
+    }
+
+    static String truncateErrorBody(String body) {
+        if (body == null || body.length() <= ERROR_BODY_LIMIT) {
+            return body;
+        }
+        return body.substring(0, ERROR_BODY_LIMIT) + "...";
     }
 
     private static HttpRequest buildRequest(LlmRequest request) {

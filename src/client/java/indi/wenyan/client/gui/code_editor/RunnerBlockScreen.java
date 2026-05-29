@@ -167,6 +167,7 @@ public class RunnerBlockScreen extends Screen {
             addRenderableWidget(btnOutputPanel);
             addRenderableWidget(btnLlmPanel);
 
+            llmGenerateScreen.setStateChangeListener(this::updatePanelButtons);
             // visually update state
             updatePanelButtons();
         }
@@ -260,11 +261,11 @@ public class RunnerBlockScreen extends Screen {
     public void tick() {
         super.tick();
         backend.tick();
-        updatePanelButtons();
     }
 
     @Override
     public void onClose() {
+        llmGenerateScreen.dispose();
         backend.save();
         super.onClose();
     }

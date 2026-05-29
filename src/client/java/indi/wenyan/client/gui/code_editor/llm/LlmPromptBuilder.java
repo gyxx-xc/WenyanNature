@@ -164,21 +164,6 @@ public enum LlmPromptBuilder {
                 """.formatted(userPrompt, wrapCode(currentCode));
     }
 
-    public static @NotNull String buildFixPrompt(@NotNull String currentCode, @NotNull String consoleOutput) {
-        return """
-                運行以下 WenyanNature 符咒代碼後得到輸出或報錯，請修復代碼。
-
-                當前完整代碼：
-                %s
-
-                輸出或報錯：
-                %s
-
-                請僅輸出修復後可直接替換當前編輯器內容的完整 WenyanNature 代碼。
-                優先修正語法：引號、名之曰、昔之...者今...是矣、控制塊閉合、書之、乃得/乃歸。
-                """.formatted(wrapCode(currentCode), consoleOutput.isBlank() ? "（無輸出）" : consoleOutput);
-    }
-
     private static @NotNull String wrapCode(@NotNull String code) {
         return code.isBlank() ? "（空）" : code;
     }

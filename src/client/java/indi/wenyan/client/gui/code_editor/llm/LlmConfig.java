@@ -23,6 +23,7 @@ public final class LlmConfig {
 
     private static final Map<String, String> ENV_CACHE = new HashMap<>();
     private static boolean loaded = false;
+    private static boolean templateChecked = false;
 
     private LlmConfig() {
     }
@@ -90,9 +91,12 @@ public final class LlmConfig {
     }
 
     public static void createTemplateIfAbsent() {
+        if (templateChecked)
+            return;
         Path envPath = getEnvPath();
         if (Files.exists(envPath)) {
             appendMissingReasoningModelEntries(envPath);
+            templateChecked = true;
             return;
         }
         try {
@@ -113,6 +117,7 @@ public final class LlmConfig {
             }
 
             Files.writeString(envPath, sb.toString());
+            templateChecked = true;
             LOGGER.info("[WenyanNature] Created template .env at {}", envPath);
         } catch (IOException e) {
             LOGGER.error("[WenyanNature] Failed to create template .env: {}", e.getMessage());

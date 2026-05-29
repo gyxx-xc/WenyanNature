@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 /**
@@ -72,6 +73,11 @@ public class LLMGenerateScreenWidget {
     private List<LlmCodeDiff.Line> pendingDiff = List.of();
     private CodeEditorWidget codeEditorWidget;
     private int candidateRevision = 0;
+    private CompletableFuture<List<LlmCodeDiff.Line>> activeDiffFuture = null;
+    private Future<?> activeDiffTask = null;
+    private boolean suppressStateNotifications = false;
+    private Runnable stateChangeListener = () -> {
+    };
 
     // -----------------------------------------------------------------------
     // Lifecycle
@@ -101,6 +107,7 @@ public class LLMGenerateScreenWidget {
         this.panelY = y;
         this.panelW = width;
         this.codeEditorWidget = codeEditorWidget;
+        this.suppressStateNotifications = true;
 
         if (btnW > 0) {
             switchModelButton = Button.builder(
@@ -159,6 +166,31 @@ public class LLMGenerateScreenWidget {
         // Restore visibility for post-resize state
         applyVisibility();
         updateButtonState();
+        this.suppressStateNotifications = false;
+    }
+
+    public void setStateChangeListener(Runnable stateChangeListener) {
+        this.stateChangeListener = stateChangeListener == null ? () -> {
+        } : stateChangeListener;
+    }
+
+    public void dispose() {
+        suppressStateNotifications = true;
+        session.dispose();
+        generating = false;
+        clearPendingCode();
+        statusMessage = null;
+        visible = false;
+        stateChangeListener = () -> {
+        };
+        codeEditorWidget = null;
+        font = null;
+        promptBox = null;
+        generateButton = null;
+        switchModelButton = null;
+        applyButton = null;
+        cancelButton = null;
+        suppressStateNotifications = false;
     }
 
     // -----------------------------------------------------------------------
@@ -187,11 +219,25 @@ public class LLMGenerateScreenWidget {
 
         Consumer<String> onSuccess = code -> {
             String baseCode = pendingBaseCode;
-            CompletableFuture
-                    .supplyAsync(() -> baseCode == null ? List.<LlmCodeDiff.Line>of() : LlmCodeDiff.diff(baseCode, code),
-                            DIFF_EXECUTOR)
-                    .thenAccept(diff -> net.minecraft.client.Minecraft.getInstance().execute(() -> {
+            CompletableFuture<List<LlmCodeDiff.Line>> diffFuture = new CompletableFuture<>();
+            activeDiffFuture = diffFuture;
+            activeDiffTask = DIFF_EXECUTOR.submit(() -> {
+                try {
+                    diffFuture.complete(baseCode == null ? List.<LlmCodeDiff.Line>of() : LlmCodeDiff.diff(baseCode, code));
+                } catch (Exception e) {
+                    diffFuture.completeExceptionally(e);
+                }
+            });
+            diffFuture.whenComplete((diff, throwable) -> net.minecraft.client.Minecraft.getInstance().execute(() -> {
                         if (generationRevision != candidateRevision) {
+                            return;
+                        }
+                        clearActiveDiffTask(diffFuture);
+                        if (throwable != null) {
+                            generating = false;
+                            clearPendingCode();
+                            statusMessage = "差异预览生成失败，请重试";
+                            updateButtonState();
                             return;
                         }
                         pendingCode = code;
@@ -226,6 +272,7 @@ public class LLMGenerateScreenWidget {
             return;
         }
         session.toggleModelTier();
+        notifyStateChanged();
     }
 
     public String getModelTierLabel() {
@@ -255,10 +302,29 @@ public class LLMGenerateScreenWidget {
 
     private void clearPendingCode() {
         candidateRevision++;
+        cancelActiveDiffTask();
         clearPreview();
         pendingCode = null;
         pendingBaseCode = null;
         pendingDiff = List.of();
+    }
+
+    private void cancelActiveDiffTask() {
+        if (activeDiffTask != null) {
+            activeDiffTask.cancel(true);
+            activeDiffTask = null;
+        }
+        if (activeDiffFuture != null) {
+            activeDiffFuture.cancel(true);
+            activeDiffFuture = null;
+        }
+    }
+
+    private void clearActiveDiffTask(CompletableFuture<List<LlmCodeDiff.Line>> diffFuture) {
+        if (activeDiffFuture == diffFuture) {
+            activeDiffFuture = null;
+            activeDiffTask = null;
+        }
     }
 
     private void clearPreview() {
@@ -310,10 +376,17 @@ public class LLMGenerateScreenWidget {
         if (switchModelButton != null) switchModelButton.active = visible && !generating;
         if (applyButton != null) applyButton.active = visible && !generating && hasPendingCode;
         if (cancelButton != null) cancelButton.active = visible && !generating && hasPendingCode;
+        notifyStateChanged();
     }
 
     private boolean hasPendingCode() {
         return pendingCode != null && !pendingCode.isBlank();
+    }
+
+    private void notifyStateChanged() {
+        if (!suppressStateNotifications) {
+            stateChangeListener.run();
+        }
     }
 
     // -----------------------------------------------------------------------

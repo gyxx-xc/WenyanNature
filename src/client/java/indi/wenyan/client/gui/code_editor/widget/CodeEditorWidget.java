@@ -551,8 +551,16 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     }
 
     private LlmCodeDiff.Type getPreviewType(int index) {
-        for (PreviewRange range : previewRanges) {
-            if (index >= range.beginIndex() && index <= range.endIndex()) {
+        int low = 0;
+        int high = previewRanges.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            PreviewRange range = previewRanges.get(mid);
+            if (index < range.beginIndex()) {
+                high = mid - 1;
+            } else if (index > range.endIndex()) {
+                low = mid + 1;
+            } else {
                 return range.type();
             }
         }

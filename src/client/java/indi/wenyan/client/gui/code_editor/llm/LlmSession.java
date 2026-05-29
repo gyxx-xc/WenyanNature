@@ -23,6 +23,8 @@ public class LlmSession {
         thread.setDaemon(true);
         return thread;
     });
+    private static final int MAX_HISTORY_MESSAGES = 6;
+    private static final int MAX_HISTORY_CHARS = 12_000;
 
     private final ILlmClient client;
     private final ExecutorService requestExecutor;
@@ -88,20 +90,17 @@ public class LlmSession {
         }
     }
 
+    public synchronized void dispose() {
+        cancelActiveRequest();
+        history.clear();
+    }
+
     /**
      * Sends a prompt, appending it to the history array.
      */
     public void generateCode(String userPrompt, String currentCode,
                              Consumer<String> onSuccess, Consumer<String> onError) {
         processRequest(LlmPromptBuilder.buildGeneratePrompt(userPrompt, currentCode), onSuccess, onError);
-    }
-
-    /**
-     * Fixes an error based on the output. Appends a pre-prompted message to history.
-     */
-    public void generateFix(String currentCode, String consoleOutput,
-                            Consumer<String> onSuccess, Consumer<String> onError) {
-        processRequest(LlmPromptBuilder.buildFixPrompt(currentCode, consoleOutput), onSuccess, onError);
     }
 
     private void processRequest(String newPrompt, Consumer<String> onSuccess, Consumer<String> onError) {
@@ -118,6 +117,7 @@ public class LlmSession {
 
         synchronized (this) {
             history.add(userMessage);
+            trimHistory();
             requestMessages = List.copyOf(history);
             currentRequestId = ++requestId;
         }
@@ -151,6 +151,7 @@ public class LlmSession {
                 } else {
                     synchronized (this) {
                         history.add(new LlmMessage("assistant", result.content()));
+                        trimHistory();
                     }
                     onSuccess.accept(result.content());
                 }
@@ -208,6 +209,27 @@ public class LlmSession {
                 return;
             }
         }
+    }
+
+    private void trimHistory() {
+        while (history.size() > MAX_HISTORY_MESSAGES + 1) {
+            history.remove(1);
+        }
+        while (history.size() > 2 && historyCharCount() > MAX_HISTORY_CHARS) {
+            history.remove(1);
+        }
+    }
+
+    private int historyCharCount() {
+        int total = 0;
+        for (LlmMessage message : history) {
+            total += message.content().length();
+        }
+        return total;
+    }
+
+    synchronized List<LlmMessage> getHistorySnapshotForTesting() {
+        return List.copyOf(history);
     }
 
     record RequestSettings(@NotNull String apiKey, @NotNull String url, @NotNull String model) {

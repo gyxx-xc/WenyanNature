@@ -2,6 +2,7 @@ package indi.wenyan.client.gui.code_editor.llm;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -78,6 +79,45 @@ class LlmSessionTest {
 
         assertTrue(success.await(2, TimeUnit.SECONDS));
         assertEquals("reasoning-model", client.model.get());
+        executor.shutdownNow();
+    }
+
+    @Test
+    void testHistoryIsTrimmed() throws InterruptedException {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        CapturingClient client = new CapturingClient();
+        LlmSession session = newTestSession(client, executor);
+
+        for (int i = 0; i < 10; i++) {
+            CountDownLatch success = new CountDownLatch(1);
+            session.generateCode("request-" + i, "code-" + i, ignored -> success.countDown(), ignored -> {
+            });
+            assertTrue(success.await(2, TimeUnit.SECONDS));
+        }
+
+        List<LlmMessage> history = session.getHistorySnapshotForTesting();
+        assertEquals("system", history.get(0).role());
+        assertTrue(history.size() <= 7);
+        executor.shutdownNow();
+    }
+
+    @Test
+    void testDisposeClearsHistoryAndSuppressesCallback() throws InterruptedException {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        BlockingClient client = new BlockingClient();
+        LlmSession session = newTestSession(client, executor);
+        AtomicInteger successCount = new AtomicInteger();
+
+        session.generateCode("旧请求", "", ignored -> successCount.incrementAndGet(), ignored -> {
+        });
+        assertTrue(client.awaitStarted());
+
+        session.dispose();
+        client.release();
+        Thread.sleep(100);
+
+        assertEquals(0, successCount.get());
+        assertTrue(session.getHistorySnapshotForTesting().isEmpty());
         executor.shutdownNow();
     }
 
