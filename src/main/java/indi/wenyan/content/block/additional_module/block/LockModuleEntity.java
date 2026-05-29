@@ -28,7 +28,7 @@ public class LockModuleEntity extends AbstractModuleEntity {
     @Getter
     private final String basePackageName = WenyanSymbol.SemaphoreModule;
 
-    private IWenyanRunner lockHolder;
+    private IWenyanRunner lockHolder; // FIXME: potential memory leak, change to semaphore
     private final Queue<IWenyanRunner> waitingThreads = new ArrayDeque<>();
 
     @Getter
