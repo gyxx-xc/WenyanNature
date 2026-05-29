@@ -114,6 +114,7 @@ public class RunnerBlockScreen extends Screen {
 
         // ── LLM panel (same area, initially hidden) ────────────────────────────
         llmGenerateScreen.init(font, backend,
+                textFieldWidget,
                 outputX, outputAreaY,
                 textFieldWidth, outputHeight,
                 startX, extraBtnY, extraBtnW, btnH,

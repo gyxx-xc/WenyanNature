@@ -1,6 +1,7 @@
 package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
+import indi.wenyan.client.gui.code_editor.llm.LlmCodeDiff;
 import indi.wenyan.client.gui.code_editor.llm.LlmSession;
 import indi.wenyan.setup.language.GuiText;
 import net.minecraft.client.gui.Font;
@@ -11,7 +12,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -36,10 +36,9 @@ public class LLMGenerateScreenWidget {
 
     private static final int STATUS_COLOR     = 0xFFFFD700; // gold
     private static final int FOREGROUND_COLOR = 0xFFFFFFFF;
-    private static final int PREVIEW_COLOR    = 0xFFD6D6D6;
 
     private static final int INPUT_H = 15;
-    private static final int PREVIEW_LINES = 4;
+    private static final int ROW_GAP = 4;
 
     // ── Layout (set by init) ──
     private int panelX, panelY, panelW;
@@ -62,6 +61,9 @@ public class LLMGenerateScreenWidget {
     private String  statusMessage = null;
     private boolean visible       = false;
     private String  pendingCode   = null;
+    private String  pendingBaseCode = null;
+    private List<LlmCodeDiff.Line> pendingDiff = List.of();
+    private CodeEditorWidget codeEditorWidget;
 
     // -----------------------------------------------------------------------
     // Lifecycle
@@ -82,6 +84,7 @@ public class LLMGenerateScreenWidget {
      * @param addWidget Consumer that registers a widget into the owning screen
      */
     public void init(Font font, RunnerBlockBackend backend,
+                     CodeEditorWidget codeEditorWidget,
                      int x, int y, int width, int height,
                      int btnX, int btnY, int btnW, int btnH,
                      Consumer<AbstractWidget> addWidget) {
@@ -89,6 +92,7 @@ public class LLMGenerateScreenWidget {
         this.panelX = x;
         this.panelY = y;
         this.panelW = width;
+        this.codeEditorWidget = codeEditorWidget;
 
         if (btnW > 0) {
             switchModelButton = Button.builder(
@@ -124,14 +128,14 @@ public class LLMGenerateScreenWidget {
         addWidget.accept(generateButton);
 
         // ── Additional Action Buttons ──
-        int actionBtnY = y + INPUT_H + 4;
+        int actionBtnY = y + INPUT_H + ROW_GAP;
         int actionBtnW = editBoxW / 2 - 2;
 
         newMemoryButton = Button.builder(
                         Component.literal("新记忆"),
                         btn -> {
                             session.clearHistory();
-                            pendingCode = null;
+                            clearPendingCode();
                             statusMessage = null;
                             updateButtonState();
                         })
@@ -146,22 +150,24 @@ public class LLMGenerateScreenWidget {
                 .build();
         addWidget.accept(fixButton);
 
-        int candidateBtnY = actionBtnY + INPUT_H + 4;
+        int candidateBtnY = actionBtnY + INPUT_H + ROW_GAP;
+        int candidateBtnW = editBoxW / 2 - 2;
+
         applyButton = Button.builder(
                         Component.literal("应用"),
                         btn -> applyPendingCode(backend))
-                .bounds(editBoxX, candidateBtnY, actionBtnW, INPUT_H)
+                .bounds(editBoxX, candidateBtnY, candidateBtnW, INPUT_H)
                 .build();
         addWidget.accept(applyButton);
 
         cancelButton = Button.builder(
                         Component.literal("取消"),
                         btn -> {
-                            pendingCode = null;
+                            clearPendingCode();
                             statusMessage = null;
                             updateButtonState();
                         })
-                .bounds(editBoxX + actionBtnW + 4, candidateBtnY, actionBtnW, INPUT_H)
+                .bounds(editBoxX + candidateBtnW + 4, candidateBtnY, candidateBtnW, INPUT_H)
                 .build();
         addWidget.accept(cancelButton);
 
@@ -178,14 +184,17 @@ public class LLMGenerateScreenWidget {
         if (generating) return;
 
         generating = true;
-        pendingCode = null;
+        clearPendingCode();
+        pendingBaseCode = backend.getContent();
         statusMessage = GuiText.AiGenerating.string();
         updateButtonState();
 
         Consumer<String> onSuccess = code -> {
             pendingCode = code;
+            pendingDiff = pendingBaseCode == null ? List.of() : LlmCodeDiff.diff(pendingBaseCode, pendingCode);
             statusMessage = "大儒已成稿，确认后应用";
             generating = false;
+            showPendingDiff();
             updateButtonState();
         };
 
@@ -217,12 +226,37 @@ public class LLMGenerateScreenWidget {
     private void applyPendingCode(RunnerBlockBackend backend) {
         if (pendingCode == null)
             return;
+        if (!backend.getContent().equals(pendingBaseCode)) {
+            statusMessage = "当前代码已变化，请重新生成或取消候选";
+            clearPreview();
+            updateButtonState();
+            return;
+        }
         backend.setSelectCursor(0);
         backend.setCursor(backend.getContent().length());
         backend.insertText(pendingCode);
-        pendingCode = null;
+        clearPendingCode();
         statusMessage = "已应用";
         updateButtonState();
+    }
+
+    private void clearPendingCode() {
+        clearPreview();
+        pendingCode = null;
+        pendingBaseCode = null;
+        pendingDiff = List.of();
+    }
+
+    private void clearPreview() {
+        if (codeEditorWidget != null && codeEditorWidget.isLlmPreviewing()) {
+            codeEditorWidget.clearLlmPreview();
+        }
+    }
+
+    private void showPendingDiff() {
+        if (codeEditorWidget != null && hasPendingCode()) {
+            codeEditorWidget.showLlmPreview(pendingCode, pendingDiff);
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -235,7 +269,10 @@ public class LLMGenerateScreenWidget {
      */
     public void setVisible(boolean v) {
         this.visible = v;
-        if (!v) statusMessage = null;
+        if (!v) {
+            statusMessage = null;
+            clearPreview();
+        }
         applyVisibility();
     }
 
@@ -256,13 +293,17 @@ public class LLMGenerateScreenWidget {
     }
 
     private void updateButtonState() {
-        boolean hasPendingCode = pendingCode != null && !pendingCode.isBlank();
+        boolean hasPendingCode = hasPendingCode();
         if (generateButton != null) generateButton.active = visible && !generating;
         if (fixButton != null) fixButton.active = visible && !generating;
         if (newMemoryButton != null) newMemoryButton.active = visible && !generating;
         if (switchModelButton != null) switchModelButton.active = visible && !generating;
         if (applyButton != null) applyButton.active = visible && !generating && hasPendingCode;
         if (cancelButton != null) cancelButton.active = visible && !generating && hasPendingCode;
+    }
+
+    private boolean hasPendingCode() {
+        return pendingCode != null && !pendingCode.isBlank();
     }
 
     // -----------------------------------------------------------------------
@@ -289,25 +330,5 @@ public class LLMGenerateScreenWidget {
             g.text(font, statusMessage, panelX + 4, panelY + INPUT_H + 8, STATUS_COLOR, false);
         }
 
-        if (pendingCode != null && !pendingCode.isBlank()) {
-            int previewY = panelY + INPUT_H * 3 + 16;
-            for (String line : previewLines()) {
-                g.text(font, line, panelX + 4, previewY, PREVIEW_COLOR, false);
-                previewY += font.lineHeight + 1;
-            }
-        }
-    }
-
-    private List<String> previewLines() {
-        List<String> lines = new ArrayList<>();
-        String[] rawLines = pendingCode.split("\\R", PREVIEW_LINES + 1);
-        int maxWidth = Math.max(0, panelW - 8);
-        for (int i = 0; i < Math.min(PREVIEW_LINES, rawLines.length); i++) {
-            lines.add(font.plainSubstrByWidth(rawLines[i], maxWidth));
-        }
-        if (rawLines.length > PREVIEW_LINES) {
-            lines.add("...");
-        }
-        return lines;
     }
 }

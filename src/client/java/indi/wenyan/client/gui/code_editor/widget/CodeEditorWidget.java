@@ -4,7 +4,10 @@ import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.Utils;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.Completion;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.generated_Snippets;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
+import indi.wenyan.client.gui.code_editor.llm.LlmCodeDiff;
 import indi.wenyan.judou.antlr.WenyanRLexer;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
@@ -29,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
@@ -48,6 +52,10 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     private static final int COMPLETION_SCROLL_BACKGROUND = 0xff000000;
     private static final int COMPLETION_SCROLL_FOREGROUND = 0xffCCCCCC;
     private static final int TOOLTIP_TEXT_COLOR = 0xff999999;
+    private static final int PREVIEW_ADDED_BACKGROUND = 0x5533C75A;
+    private static final int PREVIEW_REMOVED_BACKGROUND = 0x55FF4D4D;
+    private static final int PREVIEW_ADDED_GUTTER = 0xFF238636;
+    private static final int PREVIEW_REMOVED_GUTTER = 0xFFB42323;
 
     private static final Style CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);
     private static final Style STRING_STYLE = Style.EMPTY.withColor(0x008000);
@@ -83,6 +91,10 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
     @Getter
     private final CodeField textField;
+    private final PreviewBackend previewBackend = new PreviewBackend();
+    private final CodeField previewTextField;
+    private final List<PreviewRange> previewRanges = new ArrayList<>();
+    private boolean llmPreviewing = false;
     private List<Completion> completions = Collections.emptyList();
     private int firstCompletionLine = 0;
     private int selectedCompletion = 0;
@@ -104,13 +116,16 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                     selectedCompletion = 0;
                     firstCompletionLine = 0;
                 });
+        previewTextField = new CodeField(font, previewBackend,
+                () -> this.width - totalInnerPadding() - lineNoWidth(),
+                () -> setScrollAmount(0));
     }
 
     private int lineNoWidth() {
         // because the width of number is not same, return width of 0, 00, 000, ...
         // logic here: count of lines, get digit of this number, times width of "0"
         return font.width("0") * (String.valueOf(
-                backend.getContent().chars().filter(c -> c == '\n').count() + 1).length() + 1) // +1 for wider number
+                getRenderedContent().chars().filter(c -> c == '\n').count() + 1).length() + 1) // +1 for wider number
                 + innerPadding();
     }
 
@@ -175,6 +190,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     // input
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (llmPreviewing)
+            return false;
         double mouseX = event.x();
         double mouseY = event.y();
         int button = event.button();
@@ -190,6 +207,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (llmPreviewing)
+            return false;
         double mouseX = event.x();
         double mouseY = event.y();
         int button = event.button();
@@ -205,6 +224,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
     @Override
     public boolean keyPressed(@NonNull KeyEvent event) {
+        if (llmPreviewing)
+            return false;
         if (completions.isEmpty()) return textField.keyPressed(event);
         switch (event.key()) {
             case GLFW.GLFW_KEY_UP -> offsetSelectedCompletion(-1);
@@ -222,6 +243,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
     @Override
     public boolean charTyped(@NonNull CharacterEvent event) {
+        if (llmPreviewing)
+            return false;
         if (visible && isFocused() && StringUtil.isAllowedChatCharacter(event.codepoint())) {
             textField.insertText(Character.toString(event.codepoint()));
             completions = Completion.getCompletions(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
@@ -266,24 +289,30 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     // rendering
     @Override
     protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        CodeField renderedTextField = getRenderedTextField();
+        String renderedContent = getRenderedContent();
         int cursorIndex = backend.getCursor();
         int currentY = getY() + innerPadding();
         int lineNo = 1;
         boolean isContinuedLine = false;
-        var placeholderIter = backend.getPlaceholders().listIterator();
+        var placeholderIter = llmPreviewing ? Collections.<CodeField.Placeholder>emptyList().listIterator() :
+                backend.getPlaceholders().listIterator();
         @Nullable CursorPosition cursorPosition = null; // if null means cursor not within content area
 
-        List<CodeField.StyledLineView> displayLines = textField.getDisplayLines();
+        List<CodeField.StyledLineView> displayLines = renderedTextField.getDisplayLines();
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                renderStyledLine(guiGraphics, stringView, getX() + innerPadding() + lineNoWidth(), currentY);
-                renderPlaceholders(guiGraphics, placeholderIter, stringView, currentY);
+                renderPreviewBackground(guiGraphics, stringView, currentY);
+                renderStyledLine(guiGraphics, renderedContent, stringView, getX() + innerPadding() + lineNoWidth(), currentY);
+                if (!llmPreviewing) {
+                    renderPlaceholders(guiGraphics, placeholderIter, stringView, currentY);
+                }
                 // ----------------------- render cursor -----------------------
-                boolean isCurLine = cursorIndex >= stringView.beginIndex() && cursorIndex <= stringView.endIndex();
+                boolean isCurLine = !llmPreviewing && cursorIndex >= stringView.beginIndex() && cursorIndex <= stringView.endIndex();
                 if (isCurLine) {
                     int cursorX = getX() + innerPadding() + lineNoWidth() +
-                            font.width(backend.getContent().substring(stringView.beginIndex(), cursorIndex)) - 1;
+                            font.width(renderedContent.substring(stringView.beginIndex(), cursorIndex)) - 1;
                     boolean isCursorRender = isFocused() && isBlinkShow();
                     renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
                     cursorPosition = new CursorPosition(cursorX, currentY);
@@ -292,7 +321,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             }
             currentY += font.lineHeight;
             // it will always be (n, n) for the last line
-            if (i != displayLines.size() - 1 && backend.getContent().charAt(stringView.endIndex()) == '\n') {
+            if (i != displayLines.size() - 1 && renderedContent.charAt(stringView.endIndex()) == '\n') {
                 lineNo++;
                 isContinuedLine = false;
             } else {
@@ -300,7 +329,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             }
         }
 
-        if (textField.hasSelection())
+        if (!llmPreviewing && textField.hasSelection())
             renderSelection(guiGraphics);
         // render this as the last, overlap all above, as if it's floating no screen
         if (!completions.isEmpty() && cursorPosition != null)
@@ -329,11 +358,35 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                 LINE_NUM_COLOR, false);
     }
 
-    private void renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, CodeField.StyledLineView stringView, int currentX, int currentY) {
+    private void renderPreviewBackground(@NotNull GuiGraphicsExtractor guiGraphics, CodeField.StyledLineView stringView, int currentY) {
+        if (!llmPreviewing)
+            return;
+        LlmCodeDiff.Type type = getPreviewType(stringView.beginIndex());
+        int color = switch (type) {
+            case ADDED -> PREVIEW_ADDED_BACKGROUND;
+            case REMOVED -> PREVIEW_REMOVED_BACKGROUND;
+            case UNCHANGED -> 0x00000000;
+        };
+        if (color != 0x00000000) {
+            guiGraphics.fill(getX() + innerPadding(), currentY,
+                    getX() + getWidth() - innerPadding(), currentY + font.lineHeight, color);
+        }
+        switch (type) {
+            case ADDED -> guiGraphics.fill(getX() + innerPadding(), currentY,
+                    getX() + innerPadding() + 2, currentY + font.lineHeight, PREVIEW_ADDED_GUTTER);
+            case REMOVED -> guiGraphics.fill(getX() + innerPadding(), currentY,
+                    getX() + innerPadding() + 2, currentY + font.lineHeight, PREVIEW_REMOVED_GUTTER);
+            case UNCHANGED -> {
+            }
+        }
+    }
+
+    private void renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, String content,
+                                  CodeField.StyledLineView stringView, int currentX, int currentY) {
         if (stringView.beginIndex() != stringView.endIndex()) {
             for (var styledView : stringView.styles()) {
                 var style = styleFromTokenType(styledView.token());
-                String tokenText = backend.getContent().substring(styledView.beginIndex(), styledView.endIndex());
+                String tokenText = content.substring(styledView.beginIndex(), styledView.endIndex());
                 guiGraphics.text(font,
                         Component.literal(tokenText).withStyle(style),
                         currentX, currentY,
@@ -455,6 +508,118 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
     // scrolling
     public int getInnerHeight() {
-        return font.lineHeight * textField.getDisplayLines().size();
+        return font.lineHeight * getRenderedTextField().getDisplayLines().size();
+    }
+
+    public void showLlmPreview(String previewCode, List<LlmCodeDiff.Line> diff) {
+        previewRanges.clear();
+        StringBuilder content = new StringBuilder();
+        List<LlmCodeDiff.Line> lines = diff.isEmpty() ? LlmCodeDiff.diff("", previewCode) : diff;
+        for (int i = 0; i < lines.size(); i++) {
+            LlmCodeDiff.Line line = lines.get(i);
+            int beginIndex = content.length();
+            content.append(line.text());
+            int endIndex = content.length();
+            previewRanges.add(new PreviewRange(beginIndex, endIndex, line.type()));
+            if (i != lines.size() - 1) {
+                content.append('\n');
+            }
+        }
+        previewBackend.setContent(content.toString());
+        llmPreviewing = true;
+        completions = Collections.emptyList();
+        setScrollAmount(0);
+    }
+
+    public void clearLlmPreview() {
+        llmPreviewing = false;
+        previewRanges.clear();
+        previewBackend.setContent("");
+        setScrollAmount(0);
+    }
+
+    public boolean isLlmPreviewing() {
+        return llmPreviewing;
+    }
+
+    private CodeField getRenderedTextField() {
+        return llmPreviewing ? previewTextField : textField;
+    }
+
+    private String getRenderedContent() {
+        return llmPreviewing ? previewBackend.getContent() : backend.getContent();
+    }
+
+    private LlmCodeDiff.Type getPreviewType(int index) {
+        for (PreviewRange range : previewRanges) {
+            if (index >= range.beginIndex() && index <= range.endIndex()) {
+                return range.type();
+            }
+        }
+        return LlmCodeDiff.Type.UNCHANGED;
+    }
+
+    private record PreviewRange(int beginIndex, int endIndex, LlmCodeDiff.Type type) {
+    }
+
+    private static class PreviewBackend implements CodeEditBackend {
+        private String content = "";
+        private Runnable valueListener = () -> {
+        };
+
+        public void setContent(String content) {
+            this.content = content;
+            valueListener.run();
+        }
+
+        @Override
+        public String getContent() {
+            return content;
+        }
+
+        @Override
+        public List<CodeField.Placeholder> getPlaceholders() {
+            return List.of();
+        }
+
+        @Override
+        public void insertText(String text) {
+        }
+
+        @Override
+        public void setCursor(int cursor) {
+        }
+
+        @Override
+        public void setSelectCursor(int selectCursor) {
+        }
+
+        @Override
+        public int getCursor() {
+            return 0;
+        }
+
+        @Override
+        public int getSelectCursor() {
+            return 0;
+        }
+
+        @Override
+        public List<SnippetSet> getCurSnippets() {
+            return generated_Snippets.DEFAULT_CONTEXT;
+        }
+
+        @Override
+        public void setCurSnippets(List<SnippetSet> curSnippets) {
+        }
+
+        @Override
+        public void setCursorListener(Runnable cursorListener) {
+        }
+
+        @Override
+        public void setValueListener(Runnable valueListener) {
+            this.valueListener = valueListener;
+        }
     }
 }
