@@ -18,11 +18,10 @@ public class WenyanBytecode {
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
     private final List<Integer> labelTable = new ArrayList<>();
-    @Getter
-    private final List<CapturedValue> capturedValues = new ArrayList<>();
     private final List<IWenyanBytecode.Context> debugTable = new ArrayList<>();
-    @Getter
-    private final String sourceCode;
+
+    @Getter private final List<CapturedValue> capturedValues = new ArrayList<>();
+    @Getter private final String sourceCode;
 
     public WenyanBytecode(String sourceCode) {
         this.sourceCode = sourceCode;

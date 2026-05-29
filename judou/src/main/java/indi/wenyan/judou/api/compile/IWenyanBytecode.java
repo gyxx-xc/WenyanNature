@@ -10,6 +10,8 @@ import java.util.List;
 public interface IWenyanBytecode {
     WenyanCodes getCode(int index);
 
+    /// behave like getCode(index).ordinal(), but faster
+    /// @return the ordinal of the code
     int getCodeOrdinal(int index);
 
     int getArg(int index);
