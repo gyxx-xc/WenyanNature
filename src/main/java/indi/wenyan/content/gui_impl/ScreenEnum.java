@@ -4,4 +4,5 @@ public enum ScreenEnum {
     RUNNER_BLOCK,
     WRITING_BLOCK,
     RUNNER_BLOCK_DEBUG,
+    LLM_BLOCK,
 }

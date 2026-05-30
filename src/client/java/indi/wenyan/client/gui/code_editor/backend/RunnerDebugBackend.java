@@ -85,4 +85,8 @@ public class RunnerDebugBackend implements BaseTickBackend, CodeEditBackend, Out
     public Deque<Component> getOutput() {
         return output;
     }
+
+    @Override
+    public void clearOutput() {
+    }
 }
