@@ -1,8 +1,8 @@
-package indi.wenyan.client.gui.code_editor.widget;
+package indi.wenyan.client.gui.llm.widget;
 
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
-import indi.wenyan.client.gui.code_editor.llm.LlmCodeDiff;
-import indi.wenyan.client.gui.code_editor.llm.LlmSession;
+import indi.wenyan.client.gui.llm.backend.llm.LlmCodeDiff;
+import indi.wenyan.client.gui.llm.backend.llm.LlmSession;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 /**
  * Embedded AI code-generation panel that occupies the same space as
- * {@link indi.wenyan.client.gui.code_editor.widget.CodeOutputWidget}.
+ * {@link CodeOutputWidget}.
  *
  * <p>Not a real Minecraft {@code Screen}; it registers its child widgets into
  * the owning {@link net.minecraft.client.gui.screens.Screen} via a consumer

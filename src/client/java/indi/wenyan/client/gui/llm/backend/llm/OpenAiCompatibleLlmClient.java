@@ -1,4 +1,4 @@
-package indi.wenyan.client.gui.code_editor.llm;
+package indi.wenyan.client.gui.llm.backend.llm;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
