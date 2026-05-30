@@ -65,8 +65,9 @@ public class RunnerBlockScreen extends Screen {
 
         int titleBarHeight = 15;
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
-        int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
         int btnH = font.lineHeight + 6;
+        int rightButtonRowsHeight = btnH * 3 + 12;
+        int textFileHeight = Mth.clamp(height - titleBarHeight - rightButtonRowsHeight, 0, CodeEditorWidget.HEIGH);
         textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, titleBarHeight,
                 textFieldWidth, textFileHeight);
@@ -123,7 +124,7 @@ public class RunnerBlockScreen extends Screen {
                 startX, extraBtnY, extraBtnW, btnH,
                 this::addRenderableWidget);
 
-        if (extraBtnW > 0) {
+        if (extraBtnW > 0 && btnW > 0) {
             int tierRowY = extraBtnY + btnH + 4;
             newMemoryButton = Button.builder(
                             Component.literal("新记忆"),
@@ -151,7 +152,7 @@ public class RunnerBlockScreen extends Screen {
         }
 
         // ── Mode selection buttons: right column, just below packageSnippetWidget ────────
-        if (packageSnippetWidth > 0) {
+        if (packageSnippetWidth > 0 && btnW > 0) {
             btnOutputPanel = Button.builder(
                             Component.translatable(GuiText.LlmPanelBack.getTranslationKey()),
                             btn -> setPanelMode(false))
