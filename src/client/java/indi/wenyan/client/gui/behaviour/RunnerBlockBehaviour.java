@@ -8,6 +8,7 @@ import indi.wenyan.client.gui.code_editor.backend.RunnerDebugBackend;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditorBackendSynchronizer;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.RunnerDebugSynchronizer;
 import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
+import indi.wenyan.client.gui.llm.LLMRunnerBlockScreen;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.ICodeOutputHolder;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
@@ -25,10 +26,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -39,8 +42,13 @@ public enum RunnerBlockBehaviour {
 
     public static void openGui(BlockPos pos, Player player) {
         var level = player.level();
-        BlockState state = level.getBlockState(pos);
         if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
+        List<PackageSnippet> packageSnippets = getPackageSnippets(pos, player, level);
+        Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
+    }
+
+    private static @NonNull List<PackageSnippet> getPackageSnippets(BlockPos pos, Player player, Level level) {
+        BlockState state = level.getBlockState(pos);
         List<PackageSnippet> packageSnippets = new ArrayList<>();
         BlockPos attached = pos.relative(
                 AbstractFuluBlock.getConnectedDirection(state).getOpposite());
@@ -68,7 +76,7 @@ public enum RunnerBlockBehaviour {
                         executor.getPackageName()));
             }
         }
-        Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
+        return packageSnippets;
     }
 
     private static @NotNull RunnerBlockBackend getCodeEditorBackend(ICodeOutputHolder runner, BlockPos pos,
@@ -160,5 +168,12 @@ public enum RunnerBlockBehaviour {
                 runner.getCode(),
                 runner.getOutputQueue()
         )));
+    }
+
+    public static void openLLMGui(BlockPos pos, Player player) {
+        var level = player.level();
+        if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
+        List<PackageSnippet> packageSnippets = getPackageSnippets(pos, player, level);
+        Minecraft.getInstance().setScreen(new LLMRunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
     }
 }
