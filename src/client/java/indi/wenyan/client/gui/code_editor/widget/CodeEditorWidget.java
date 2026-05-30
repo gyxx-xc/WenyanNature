@@ -160,8 +160,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             // string
             case WenyanLexer.STRING_LITERAL -> STRING_STYLE;
             // data
-            case WenyanLexer.FLOAT_NUM, WenyanLexer.INT_NUM, WenyanLexer.BOOL_VALUE ->
-                    DATA_STYLE;
+            case WenyanLexer.FLOAT_NUM, WenyanLexer.INT_NUM, WenyanLexer.BOOL_VALUE -> DATA_STYLE;
             // comment
             case WenyanLexer.COMMENT -> COMMENT_STYLE;
             // identifier
@@ -173,8 +172,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                  WenyanLexer.ARRAY_ADD_OP, WenyanLexer.WRITE_KEY_FUNCTION,
                  WenyanLexer.POST_MOD_MATH_OP,
                  WenyanLexer.AND, WenyanLexer.OR, WenyanLexer.NEQ, WenyanLexer.LTE,
-                 WenyanLexer.GTE, WenyanLexer.EQ, WenyanLexer.GT, WenyanLexer.LT ->
-                    OPERATOR_STYLE;
+                 WenyanLexer.GTE, WenyanLexer.EQ, WenyanLexer.GT, WenyanLexer.LT -> OPERATOR_STYLE;
             // type
             case WenyanLexer.BOOL_TYPE, WenyanLexer.STRING_TYPE, WenyanLexer.LIST_TYPE,
                  WenyanLexer.OBJECT_TYPE,
@@ -304,19 +302,16 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
                 renderPreviewBackground(guiGraphics, stringView, currentY);
-                renderStyledLine(guiGraphics, renderedContent, stringView, getX() + innerPadding() + lineNoWidth(), currentY);
+                CursorPosition renderedCursor = renderStyledLine(guiGraphics, renderedContent, stringView,
+                        getX() + innerPadding() + lineNoWidth(), currentY, cursorIndex);
+                if (renderedCursor != null) {
+                    cursorPosition = renderedCursor;
+                }
                 if (!llmPreviewing) {
                     renderPlaceholders(guiGraphics, placeholderIter, stringView, currentY);
                 }
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = !llmPreviewing && cursorIndex >= stringView.beginIndex() && cursorIndex <= stringView.endIndex();
-                if (isCurLine) {
-                    int cursorX = getX() + innerPadding() + lineNoWidth() +
-                            font.width(renderedContent.substring(stringView.beginIndex(), cursorIndex)) - 1;
-                    boolean isCursorRender = isFocused() && isBlinkShow();
-                    renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
-                    cursorPosition = new CursorPosition(cursorX, currentY);
-                }
                 renderLineNumbers(guiGraphics, isContinuedLine, lineNo, isCurLine, currentY);
             }
             currentY += font.lineHeight;
@@ -381,8 +376,10 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, String content,
-                                  CodeField.StyledLineView stringView, int currentX, int currentY) {
+    private @Nullable CursorPosition renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, String content,
+                                                      CodeField.StyledLineView stringView,
+                                                      int currentX, int currentY, int cursorIndex) {
+        CursorPosition cursorPosition = null;
         if (stringView.beginIndex() != stringView.endIndex()) {
             for (var styledView : stringView.styles()) {
                 var style = styleFromTokenType(styledView.token());
@@ -391,9 +388,19 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                         Component.literal(tokenText).withStyle(style),
                         currentX, currentY,
                         PURE_WHITE, false);
+                // FIXME: the cursor is draw twice here, as it not show anything wrong, so may fix it someday not today.
+                boolean isCurLine = !llmPreviewing && cursorIndex >= styledView.beginIndex() && cursorIndex <= styledView.endIndex();
+                if (isCurLine) {
+                    String stringBeforeCursor = content.substring(styledView.beginIndex(), cursorIndex);
+                    int cursorX = currentX + font.width(Component.literal(stringBeforeCursor).withStyle(style)) - 1;
+                    boolean isCursorRender = isFocused() && isBlinkShow();
+                    renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
+                    cursorPosition = new CursorPosition(cursorX, currentY);
+                }
                 currentX += font.width(Component.literal(tokenText).withStyle(style));
             }
         }
+        return cursorPosition;
     }
 
     private void renderPlaceholders(@NotNull GuiGraphicsExtractor guiGraphics, ListIterator<CodeField.Placeholder> placeholderIter, CodeField.StyledLineView stringView, int currentY) {

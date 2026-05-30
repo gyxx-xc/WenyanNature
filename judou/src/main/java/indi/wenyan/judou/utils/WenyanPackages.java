@@ -33,7 +33,7 @@ public enum WenyanPackages {
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrongRange.string(2, 256, args.size()));
                 WenyanList value = args.getFirst().as(WenyanList.TYPE);
                 for (IWenyanValue v : args.subList(1, args.size())) {
-                    v.as(WenyanList.TYPE).value().stream().map(WenyanLeftValue::varOf).forEach(value::add);
+                    List.copyOf(v.as(WenyanList.TYPE).value()).stream().map(WenyanLeftValue::varOf).forEach(value::add);
                 }
                 return value;
             })

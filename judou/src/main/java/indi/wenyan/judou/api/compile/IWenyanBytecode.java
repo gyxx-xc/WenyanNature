@@ -1,7 +1,6 @@
 package indi.wenyan.judou.api.compile;
 
 import indi.wenyan.judou.api.values.IWenyanValue;
-import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.compiler.WenyanBytecode;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +10,8 @@ import java.util.List;
 public interface IWenyanBytecode {
     WenyanCodes getCode(int index);
 
+    /// behave like getCode(index).ordinal(), but faster
+    /// @return the ordinal of the code
     int getCodeOrdinal(int index);
 
     int getArg(int index);
@@ -58,58 +59,6 @@ public interface IWenyanBytecode {
     List<WenyanBytecode.CapturedValue> getCapturedValues();
 
     String getSourceCode();
-
-    IWenyanBytecode EMPTY = new IWenyanBytecode() {
-        @Override
-        public WenyanCodes getCode(int index) {
-            return WenyanCodes.BREAKPOINT;
-        }
-
-        @Override
-        public int getCodeOrdinal(int index) {
-            return 0;
-        }
-
-        @Override
-        public int getArg(int index) {
-            return 0;
-        }
-
-        @Override
-        public IWenyanValue getConst(int index) {
-            return WenyanNull.NULL;
-        }
-
-        @Override
-        public String getIdentifier(int index) {
-            return "";
-        }
-
-        @Override
-        public @Nullable Context getContext(int index) {
-            return null;
-        }
-
-        @Override
-        public int getLabel(int index) {
-            return 0;
-        }
-
-        @Override
-        public int size() {
-            return 0;
-        }
-
-        @Override
-        public List<WenyanBytecode.CapturedValue> getCapturedValues() {
-            return List.of();
-        }
-
-        @Override
-        public String getSourceCode() {
-            return "";
-        }
-    };
 
     /**
      * Represents debug context information for a segment of bytecode.
