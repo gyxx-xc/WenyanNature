@@ -11,7 +11,13 @@ public enum GuiText implements ILocalizationEnum {
     EnterToInput, // Enter to input (able to show small)
     FuNamePrompt,
     FurnaceTitle,
-    JeiAnswerTitle;
+    JeiAnswerTitle,
+    AiPromptLabel,    // prefix shown before the AI prompt input box
+    AiGenerateButton, // label on the "generate" button
+    AiGenerating,     // shown while waiting for DeepSeek response
+    AiError,          // shown when DeepSeek call fails
+    LlmPanelToggle,   // toggle button label: switch to AI panel
+    LlmPanelBack;     // toggle button label: switch back to output
 
     @Override
     public String getTranslationKey() {
