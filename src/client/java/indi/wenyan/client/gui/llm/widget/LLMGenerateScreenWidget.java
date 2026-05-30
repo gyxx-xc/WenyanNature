@@ -165,6 +165,9 @@ public class LLMGenerateScreenWidget {
 
         // Restore visibility for post-resize state
         applyVisibility();
+        if (visible) {
+            showPendingDiff();
+        }
         updateButtonState();
         this.suppressStateNotifications = false;
     }
@@ -352,6 +355,8 @@ public class LLMGenerateScreenWidget {
         if (!v) {
             statusMessage = null;
             clearPreview();
+        } else {
+            showPendingDiff();
         }
         applyVisibility();
     }

@@ -95,7 +95,7 @@ public final class LlmConfig {
             return;
         Path envPath = getEnvPath();
         if (Files.exists(envPath)) {
-            appendMissingReasoningModelEntries(envPath);
+            appendMissingProviderEntries(envPath);
             templateChecked = true;
             return;
         }
@@ -124,11 +124,15 @@ public final class LlmConfig {
         }
     }
 
-    private static void appendMissingReasoningModelEntries(Path envPath) {
+    private static void appendMissingProviderEntries(Path envPath) {
         try {
             List<String> lines = Files.readAllLines(envPath);
             StringBuilder sb = new StringBuilder();
+            appendMissingCustomEntries(lines, sb);
             for (LlmProvider provider : LlmProvider.values()) {
+                if (provider == LlmProvider.CUSTOM) {
+                    continue;
+                }
                 String key = provider.getReasoningModelEnvVar();
                 if (!containsEnvKey(lines, key)) {
                     if (sb.isEmpty()) {
@@ -146,6 +150,31 @@ public final class LlmConfig {
             }
         } catch (IOException e) {
             LOGGER.error("[WenyanNature] Failed to update template .env: {}", e.getMessage());
+        }
+    }
+
+    private static void appendMissingCustomEntries(List<String> lines, StringBuilder sb) {
+        LlmProvider provider = LlmProvider.CUSTOM;
+        boolean missingApiKey = !containsEnvKey(lines, provider.getApiKeyEnvVar());
+        boolean missingUrl = !containsEnvKey(lines, provider.getUrlEnvVar());
+        boolean missingModel = !containsEnvKey(lines, provider.getModelEnvVar());
+        boolean missingReasoningModel = !containsEnvKey(lines, provider.getReasoningModelEnvVar());
+        if (!missingApiKey && !missingUrl && !missingModel && !missingReasoningModel) {
+            return;
+        }
+
+        sb.append("\n# --- ").append(provider.getDisplayName()).append(" ---\n");
+        if (missingApiKey) {
+            sb.append(provider.getApiKeyEnvVar()).append("=\n");
+        }
+        if (missingUrl) {
+            appendOptionalEntry(sb, provider.getUrlEnvVar(), provider.getDefaultUrl());
+        }
+        if (missingModel) {
+            appendOptionalEntry(sb, provider.getModelEnvVar(), provider.getDefaultModel());
+        }
+        if (missingReasoningModel) {
+            appendOptionalEntry(sb, provider.getReasoningModelEnvVar(), provider.getDefaultReasoningModel());
         }
     }
 
