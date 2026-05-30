@@ -388,8 +388,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                         Component.literal(tokenText).withStyle(style),
                         currentX, currentY,
                         PURE_WHITE, false);
-                // FIXME: the cursor is draw twice here, as it not show anything wrong, so may fix it someday not today.
-                boolean isCurLine = !llmPreviewing && cursorIndex >= styledView.beginIndex() && cursorIndex <= styledView.endIndex();
+                boolean isCurLine = cursorPosition == null && !llmPreviewing
+                        && cursorIndex >= styledView.beginIndex() && cursorIndex <= styledView.endIndex();
                 if (isCurLine) {
                     String stringBeforeCursor = content.substring(styledView.beginIndex(), cursorIndex);
                     int cursorX = currentX + font.width(Component.literal(stringBeforeCursor).withStyle(style)) - 1;
