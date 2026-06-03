@@ -1,10 +1,11 @@
 package indi.wenyan.client.gui.code_editor.widget;
 
 import indi.wenyan.WenyanProgramming;
-import indi.wenyan.client.antlr.WenyanLexer;
 import indi.wenyan.client.gui.Utils;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.Completion;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.FormattedLine;
+import indi.wenyan.client.gui.code_editor.backend.behaviour.IStringView;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
@@ -18,9 +19,11 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.minecraft.util.Util;
@@ -39,28 +42,6 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     public static final int WIDTH = 256;
     public static final int HEIGH = 192;
 
-    private static final int CURSOR_INSERT_COLOR = 0xff000000;
-    private static final int LINE_NUM_COLOR = 0xFF303030;
-    private static final int PURE_WHITE = 0xFFFFFFFF;
-    private static final int COMPLETION_SELECTED = 0xff99CCFF;
-    private static final int COMPLETION_BACKGROUND = 0xFFFFFFFF;
-    private static final int COMPLETION_TEXT_COLOR = 0xff000000;
-    private static final int COMPLETION_SCROLL_BACKGROUND = 0xff000000;
-    private static final int COMPLETION_SCROLL_FOREGROUND = 0xffCCCCCC;
-    private static final int TOOLTIP_TEXT_COLOR = 0xff999999;
-
-    private static final Style CONTROL_STYLE = Style.EMPTY.withColor(0xFFB400);
-    private static final Style STRING_STYLE = Style.EMPTY.withColor(0x008000);
-    private static final Style DATA_STYLE = Style.EMPTY.withColor(0x1C00CF);
-    private static final Style COMMENT_STYLE = Style.EMPTY.withColor(0xAAAAAA);
-    private static final Style IDENTIFIER_STYLE = Style.EMPTY.withColor(0x005CC5);
-    private static final Style OPERATOR_STYLE = Style.EMPTY.withColor(0xD73A49);
-    private static final Style TYPE_STYLE = Style.EMPTY.withColor(0x795E26);
-    private static final Style DEFAULT_STYLE = Style.EMPTY.withColor(0x000000);
-
-    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-            "textures/gui/edit.png");
-
     private static final int MAX_COMPLETION_CHAR = 16;
     private static final int MAX_RENDERED_COMPLETION_SIZE = 5;
     private static final int MAX_COMPLETION_WIDTH = 80;
@@ -74,7 +55,22 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     private static final Utils.BoxInformation completionPadding =
             new Utils.BoxInformation(1, 1, 1, 1);
 
+    private static final int CURSOR_INSERT_COLOR = 0xff000000;
+    private static final int LINE_NUM_COLOR = 0xFF303030;
+    private static final int PURE_WHITE = 0xFFFFFFFF;
+    private static final int COMPLETION_SELECTED = 0xff99CCFF;
+    private static final int COMPLETION_BACKGROUND = 0xFFFFFFFF;
+    private static final int COMPLETION_TEXT_COLOR = 0xff000000;
+    private static final int COMPLETION_SCROLL_BACKGROUND = 0xff000000;
+    private static final int COMPLETION_SCROLL_FOREGROUND = 0xffCCCCCC;
+    private static final int TOOLTIP_TEXT_COLOR = 0xff999999;
+
+    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
+            "textures/gui/edit.png");
+
     private static final String SPLIT_LINE_MARK = ">";
+
+    // ---- const end 8< ----
 
     private final Font font;
     private long blinkStart = Util.getMillis(); // for blink
@@ -106,70 +102,6 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                 });
     }
 
-    private int lineNoWidth() {
-        // because the width of number is not same, return width of 0, 00, 000, ...
-        // logic here: count of lines, get digit of this number, times width of "0"
-        return font.width("0") * (String.valueOf(
-                backend.getContent().chars().filter(c -> c == '\n').count() + 1).length() + 1) // +1 for wider number
-                + innerPadding();
-    }
-
-    private void scrollToCursor() {
-        double scrollAmount = scrollAmount();
-        var displayLines = textField.getDisplayLines();
-
-        int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
-                displayLines.size() - 1);
-        int beginIndex = displayLines.get(lineNo).beginIndex();
-        if (backend.getCursor() <= beginIndex) {
-            scrollAmount = (double) textField.getLineAtCursor() * font.lineHeight;
-        } else if ((int) ((scrollAmount + height) / font.lineHeight) - 1 < displayLines.size()) {
-            int endIndex = displayLines.get((int) ((scrollAmount + height) / font.lineHeight) - 1).endIndex();
-            if (backend.getCursor() > endIndex) {
-                scrollAmount = (double) textField.getLineAtCursor() * font.lineHeight - height + font.lineHeight + totalInnerPadding();
-            }
-        }
-
-        setScrollAmount(scrollAmount);
-    }
-
-    private static Style styleFromTokenType(int tokenType) {
-        return switch (tokenType) {
-            // control
-            case WenyanLexer.RETURN_NULL, WenyanLexer.RETURN, WenyanLexer.RETURN_LAST,
-                 WenyanLexer.BREAK_, WenyanLexer.CONTINUE_, WenyanLexer.IF_, WenyanLexer.ELSE_,
-                 WenyanLexer.FOR_WHILE_SART, WenyanLexer.FOR_ARR_BELONG,
-                 WenyanLexer.FOR_ENUM_START,
-                 WenyanLexer.FOR_ARR_START, WenyanLexer.FOR_ENUM_TIMES, WenyanLexer.FOR_IF_END,
-                 WenyanLexer.ZHE -> CONTROL_STYLE;
-            // string
-            case WenyanLexer.STRING_LITERAL -> STRING_STYLE;
-            // data
-            case WenyanLexer.FLOAT_NUM, WenyanLexer.INT_NUM, WenyanLexer.BOOL_VALUE -> DATA_STYLE;
-            // comment
-            case WenyanLexer.COMMENT -> COMMENT_STYLE;
-            // identifier
-            case WenyanLexer.IDENTIFIER, WenyanLexer.LONG, WenyanLexer.SELF, WenyanLexer.PARENT,
-                 WenyanLexer.DATA_ID_LAST, WenyanLexer.ZHI -> IDENTIFIER_STYLE;
-            // operator
-            case WenyanLexer.ADD, WenyanLexer.SUB, WenyanLexer.MUL,
-                 WenyanLexer.DIV, WenyanLexer.UNARY_OP, WenyanLexer.ARRAY_COMBINE_OP,
-                 WenyanLexer.ARRAY_ADD_OP, WenyanLexer.WRITE_KEY_FUNCTION,
-                 WenyanLexer.POST_MOD_MATH_OP,
-                 WenyanLexer.AND, WenyanLexer.OR, WenyanLexer.NEQ, WenyanLexer.LTE,
-                 WenyanLexer.GTE, WenyanLexer.EQ, WenyanLexer.GT, WenyanLexer.LT -> OPERATOR_STYLE;
-            // type
-            case WenyanLexer.BOOL_TYPE, WenyanLexer.STRING_TYPE, WenyanLexer.LIST_TYPE,
-                 WenyanLexer.OBJECT_TYPE,
-                 WenyanLexer.FUNCTION_TYPE, WenyanLexer.NUM_TYPE -> TYPE_STYLE;
-            default -> DEFAULT_STYLE;
-        };
-    }
-
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE, GuiText.NarrateEditBox.text());
-    }
-
     // input
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
@@ -184,6 +116,14 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             result = true;
         }
         return super.mouseClicked(event, doubleClick) || result;
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+        if (focused) {
+            blinkStart = Util.getMillis();
+        }
     }
 
     @Override
@@ -221,7 +161,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     @Override
     public boolean charTyped(@NonNull CharacterEvent event) {
         if (visible && isFocused() && StringUtil.isAllowedChatCharacter(event.codepoint())) {
-            textField.insertText(Character.toString(event.codepoint()));
+            backend.insertText(Character.toString(event.codepoint()));
             completions = Completion.getCompletions(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
             return true;
         } else {
@@ -250,18 +190,10 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         return completionStart;
     }
 
-    @Override
-    public void setFocused(boolean focused) {
-        super.setFocused(focused);
-        if (focused) {
-            blinkStart = Util.getMillis();
-        }
-    }
-
+    // rendering
     record CursorPosition(int x, int y) {
     }
 
-    // rendering
     @Override
     protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int cursorIndex = backend.getCursor();
@@ -271,15 +203,22 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         var placeholderIter = backend.getPlaceholders().listIterator();
         @Nullable CursorPosition cursorPosition = null; // if null means cursor not within content area
 
-        List<CodeField.StyledLineView> displayLines = textField.getDisplayLines();
+        List<FormattedLine> displayLines = textField.getDisplayLines();
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                cursorPosition = renderStyledLine(guiGraphics, stringView,
-                        getX() + innerPadding() + lineNoWidth(), currentY, cursorIndex);
+                renderStyledLine(guiGraphics, stringView,
+                        getX() + innerPadding() + lineNoWidth(), currentY);
                 renderPlaceholders(guiGraphics, placeholderIter, stringView, currentY);
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = cursorIndex >= stringView.beginIndex() && cursorIndex <= stringView.endIndex();
+                if (isCurLine) {
+                    String stringBeforeCursor = backend.getContent().substring(stringView.beginIndex(), cursorIndex);
+                    int cursorX = getX() + innerPadding() + lineNoWidth() + font.width(Component.literal(stringBeforeCursor)) - 1;
+                    boolean isCursorRender = isFocused() && isBlinkShow();
+                    renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
+                    cursorPosition = new CursorPosition(cursorX, currentY);
+                }
                 renderLineNumbers(guiGraphics, isContinuedLine, lineNo, isCurLine, currentY);
             }
             currentY += font.lineHeight;
@@ -299,8 +238,37 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
             renderCompletion(guiGraphics, cursorPosition);
     }
 
-    private boolean isBlinkShow() {
-        return (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
+    private void renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, FormattedLine stringView,
+                                  int currentX, int currentY) {
+        FormattedCharSequence renderableText = Language.getInstance().getVisualOrder(stringView);
+        guiGraphics.text(font, renderableText, currentX, currentY, PURE_WHITE, false);
+    }
+
+    private void renderSelection(@NotNull GuiGraphicsExtractor guiGraphics) {
+        var selected = textField.getSelected();
+        int k1 = getX() + innerPadding() + lineNoWidth();
+        int currentY = getY() + innerPadding();
+
+        for (var stringView : textField.getDisplayLines()) {
+            if (selected.beginIndex() <= stringView.endIndex()) {
+                if (stringView.beginIndex() > selected.endIndex()) {
+                    break;
+                }
+
+                if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
+                    int i1 = font.width(backend.getContent().substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
+                    int j1;
+                    if (selected.endIndex() > stringView.endIndex()) {
+                        j1 = width - innerPadding();
+                    } else {
+                        j1 = font.width(backend.getContent().substring(stringView.beginIndex(), selected.endIndex()));
+                    }
+                    guiGraphics.textHighlight(
+                            k1 + i1, currentY, k1 + j1, currentY + font.lineHeight, true);
+                }
+            }
+            currentY += font.lineHeight;
+        }
     }
 
     private void renderCursor(@NotNull GuiGraphicsExtractor guiGraphics, int cursorX, int currentY, boolean isCursorRender) {
@@ -321,43 +289,17 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                 LINE_NUM_COLOR, false);
     }
 
-    private @Nullable CursorPosition renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, CodeField.StyledLineView stringView,
-                                                      int currentX, int currentY, int cursorIndex) {
-        CursorPosition cursorPosition = null;
-        if (stringView.beginIndex() != stringView.endIndex()) {
-            for (var styledView : stringView.styles()) {
-                var style = styleFromTokenType(styledView.token());
-                String tokenText = backend.getContent().substring(styledView.beginIndex(), styledView.endIndex());
-                guiGraphics.text(font,
-                        Component.literal(tokenText).withStyle(style),
-                        currentX, currentY,
-                        PURE_WHITE, false);
-                // FIXME: the cursor is draw twice here, as it not show anything wrong, so may fix it someday not today.
-                boolean isCurLine = cursorIndex >= styledView.beginIndex() && cursorIndex <= styledView.endIndex();
-                if (isCurLine) {
-                    String stringBeforeCursor = backend.getContent().substring(styledView.beginIndex(), cursorIndex);
-                    int cursorX = currentX + font.width(Component.literal(stringBeforeCursor).withStyle(style)) - 1;
-                    boolean isCursorRender = isFocused() && isBlinkShow();
-                    renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
-                    cursorPosition = new CursorPosition(cursorX, currentY);
-                }
-                currentX += font.width(Component.literal(tokenText).withStyle(style));
-            }
-        }
-        return cursorPosition;
-    }
-
-    private void renderPlaceholders(@NotNull GuiGraphicsExtractor guiGraphics, ListIterator<CodeField.Placeholder> placeholderIter, CodeField.StyledLineView stringView, int currentY) {
+    private void renderPlaceholders(@NotNull GuiGraphicsExtractor guiGraphics, ListIterator<CodeField.Placeholder> placeholderIter, IStringView IStringView, int currentY) {
         while (placeholderIter.hasNext()) {
             var placeholder = placeholderIter.next();
             int place = placeholder.index();
-            if (place > stringView.endIndex()) {
+            if (place > IStringView.endIndex()) {
                 placeholderIter.previous();
                 break;
             }
-            if (place >= stringView.beginIndex()) {
+            if (place >= IStringView.beginIndex()) {
                 int placeX = getX() + innerPadding() + lineNoWidth() +
-                        font.width(backend.getContent().substring(stringView.beginIndex(), place)) - 1;
+                        font.width(backend.getContent().substring(IStringView.beginIndex(), place)) - 1;
                 guiGraphics.fill(placeX, currentY,
                         placeX + 1, currentY + font.lineHeight,
                         placeholder.context().getColor());
@@ -419,31 +361,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         guiGraphics.pose().popMatrix();
     }
 
-    private void renderSelection(@NotNull GuiGraphicsExtractor guiGraphics) {
-        var selected = textField.getSelected();
-        int k1 = getX() + innerPadding() + lineNoWidth();
-        int currentY = getY() + innerPadding();
-
-        for (var stringView : textField.getDisplayLines()) {
-            if (selected.beginIndex() <= stringView.endIndex()) {
-                if (stringView.beginIndex() > selected.endIndex()) {
-                    break;
-                }
-
-                if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                    int i1 = font.width(backend.getContent().substring(stringView.beginIndex(), Math.max(selected.beginIndex(), stringView.beginIndex())));
-                    int j1;
-                    if (selected.endIndex() > stringView.endIndex()) {
-                        j1 = width - innerPadding();
-                    } else {
-                        j1 = font.width(backend.getContent().substring(stringView.beginIndex(), selected.endIndex()));
-                    }
-                    guiGraphics.textHighlight(
-                            k1 + i1, currentY, k1 + j1, currentY + font.lineHeight, true);
-                }
-            }
-            currentY += font.lineHeight;
-        }
+    private boolean isBlinkShow() {
+        return (Util.getMillis() - blinkStart - 100L) / 500L % 2L == 0L;
     }
 
     @Override
@@ -460,5 +379,36 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
     // scrolling
     public int getInnerHeight() {
         return font.lineHeight * textField.getDisplayLines().size();
+    }
+
+    private int lineNoWidth() {
+        // because the width of number is not same, return width of 0, 00, 000, ...
+        // logic here: count of lines, get digit of this number, times width of "0"
+        return font.width("0") * (String.valueOf(
+                backend.getContent().chars().filter(c -> c == '\n').count() + 1).length() + 1) // +1 for wider number
+                + innerPadding();
+    }
+
+    private void scrollToCursor() {
+        double scrollAmount = scrollAmount();
+        var displayLines = textField.getDisplayLines();
+
+        int lineNo = Mth.clamp((int) (scrollAmount / font.lineHeight), 0,
+                displayLines.size() - 1);
+        int beginIndex = displayLines.get(lineNo).beginIndex();
+        if (backend.getCursor() <= beginIndex) {
+            scrollAmount = (double) textField.getLineAtCursor() * font.lineHeight;
+        } else if ((int) ((scrollAmount + height) / font.lineHeight) - 1 < displayLines.size()) {
+            int endIndex = displayLines.get((int) ((scrollAmount + height) / font.lineHeight) - 1).endIndex();
+            if (backend.getCursor() > endIndex) {
+                scrollAmount = (double) textField.getLineAtCursor() * font.lineHeight - height + font.lineHeight + totalInnerPadding();
+            }
+        }
+
+        setScrollAmount(scrollAmount);
+    }
+
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        narrationElementOutput.add(NarratedElementType.TITLE, GuiText.NarrateEditBox.text());
     }
 }

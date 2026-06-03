@@ -2,11 +2,11 @@ package indi.wenyan.client.gui.llm.widget;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.Utils;
-import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.Completion;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.generated_Snippets;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
+import indi.wenyan.client.gui.llm.backend.CodeField;
 import indi.wenyan.client.gui.llm.backend.llm.LlmCodeDiff;
 import indi.wenyan.judou.antlr.WenyanLexer;
 import indi.wenyan.setup.language.GuiText;
@@ -246,7 +246,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         if (llmPreviewing)
             return false;
         if (visible && isFocused() && StringUtil.isAllowedChatCharacter(event.codepoint())) {
-            textField.insertText(Character.toString(event.codepoint()));
+            backend.insertText(Character.toString(event.codepoint()));
             completions = Completion.getCompletions(backend.getContent().substring(findCompletionStart(), backend.getCursor()));
             return true;
         } else {
@@ -295,7 +295,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         int currentY = getY() + innerPadding();
         int lineNo = 1;
         boolean isContinuedLine = false;
-        var placeholderIter = llmPreviewing ? Collections.<CodeField.Placeholder>emptyList().listIterator() :
+        var placeholderIter = llmPreviewing ? Collections.<indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField.Placeholder>emptyList().listIterator() :
                 backend.getPlaceholders().listIterator();
         @Nullable CursorPosition cursorPosition = null; // if null means cursor not within content area
 
@@ -396,7 +396,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         }
     }
 
-    private void renderPlaceholders(@NotNull GuiGraphicsExtractor guiGraphics, ListIterator<CodeField.Placeholder> placeholderIter, CodeField.StyledLineView stringView, int currentY) {
+    private void renderPlaceholders(@NotNull GuiGraphicsExtractor guiGraphics, ListIterator<indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField.Placeholder> placeholderIter, CodeField.StyledLineView stringView, int currentY) {
         while (placeholderIter.hasNext()) {
             var placeholder = placeholderIter.next();
             int place = placeholder.index();
@@ -582,7 +582,7 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         }
 
         @Override
-        public List<CodeField.Placeholder> getPlaceholders() {
+        public List<indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField.Placeholder> getPlaceholders() {
             return List.of();
         }
 

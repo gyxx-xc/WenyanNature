@@ -1,7 +1,5 @@
 package indi.wenyan.client.gui.code_editor.backend.behaviour;
 
-import com.google.common.collect.Lists;
-import indi.wenyan.client.antlr.WenyanLexer;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +8,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Whence;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.util.Mth;
-import org.antlr.v4.runtime.BufferedTokenStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -27,9 +22,7 @@ public class CodeField {
     private final Font font;
 
     @Getter
-    private final List<StyledLineView> displayLines = Lists.newArrayList();
-    @Getter
-    private final List<StyledStringView> styleMarks = Lists.newArrayList();
+    private List<FormattedLine> displayLines;
 
     @Setter
     boolean selecting = false;
@@ -53,17 +46,17 @@ public class CodeField {
         onValueChange();
     }
 
-    public void insertText(String text) {
-        backend.insertText(text);
+    public boolean hasSelection() {
+        return backend.getSelectCursor() != backend.getCursor();
     }
 
-    public StringView getSelected() {
+    public IStringView getSelected() {
         return new StringView(Math.min(backend.getSelectCursor(), backend.getCursor()), Math.max(backend.getSelectCursor(), backend.getCursor()));
     }
 
     public int getLineAtCursor() {
         for (int i = 0; i < displayLines.size(); ++i) {
-            StyledLineView stringView = displayLines.get(i);
+            var stringView = displayLines.get(i);
             if (backend.getCursor() >= stringView.beginIndex() && backend.getCursor() <= stringView.endIndex()) {
                 return i;
             }
@@ -74,7 +67,7 @@ public class CodeField {
 
     public void seekCursorToPoint(double x, double y) {
         int cursorY = Mth.floor(y / font.lineHeight);
-        StyledLineView stringView = displayLines.get(Mth.clamp(cursorY, 0, displayLines.size() - 1));
+        var stringView = displayLines.get(Mth.clamp(cursorY, 0, displayLines.size() - 1));
         String line = backend.getContent().substring(stringView.beginIndex(), stringView.endIndex());
         int cursorX = font.plainSubstrByWidth(line, Mth.floor(x)).length();
         if (cursorX < line.length()) {
@@ -82,101 +75,6 @@ public class CodeField {
             cursorX += (inChar / font.width(line.substring(cursorX, cursorX + 1))) > 0.5 ? 1 : 0;
         }
         seekCursor(Whence.ABSOLUTE, stringView.beginIndex() + cursorX);
-    }
-
-
-    public boolean hasSelection() {
-        return backend.getSelectCursor() != backend.getCursor();
-    }
-
-    private StringView getPreviousWord() {
-        if (backend.getContent().isEmpty()) {
-            return StringView.EMPTY;
-        } else {
-            int wordStart = Mth.clamp(backend.getCursor(), 0, backend.getContent().length() - 1);
-            while (wordStart > 0 && Character.isWhitespace(backend.getContent().charAt(wordStart - 1))) {
-                wordStart--;
-            }
-            while (wordStart > 0 && !Character.isWhitespace(backend.getContent().charAt(wordStart - 1))) {
-                wordStart--;
-            }
-            return new StringView(wordStart, getWordEndPosition(wordStart));
-        }
-    }
-
-    private StringView getNextWord() {
-        if (backend.getContent().isEmpty()) {
-            return StringView.EMPTY;
-        } else {
-            int wordStart = getWordEndPosition(
-                    Mth.clamp(backend.getCursor(), 0, backend.getContent().length() - 1));
-            while (wordStart < backend.getContent().length() &&
-                    Character.isWhitespace(backend.getContent().charAt(wordStart))) {
-                wordStart++;
-            }
-            return new StringView(wordStart, getWordEndPosition(wordStart));
-        }
-    }
-
-    private int getWordEndPosition(int cursor) {
-        int endCursor = cursor;
-        while (endCursor < backend.getContent().length() &&
-                !Character.isWhitespace(backend.getContent().charAt(endCursor))) {
-            endCursor++;
-        }
-        return endCursor;
-    }
-
-    private StringView getCursorLineView(int offset) {
-        int i = getLineAtCursor();
-        if (i < 0) {
-            int var10002 = backend.getCursor();
-            throw new IllegalStateException("Cursor is not within text (cursor = " + var10002 + ", length = " + backend.getContent().length() + ")");
-        } else {
-            return displayLines.get(Mth.clamp(i + offset, 0, displayLines.size() - 1)).stringView();
-        }
-    }
-
-    private void seekCursor(Whence whence, int position) {
-        int tempCursor = switch (whence) {
-            case ABSOLUTE -> position;
-            case RELATIVE -> backend.getCursor() + position;
-            case END -> backend.getContent().length() + position;
-        };
-
-        backend.setCursor(Mth.clamp(tempCursor, 0, backend.getContent().length()));
-        if (!selecting) {
-            backend.setSelectCursor(backend.getCursor());
-        }
-    }
-
-    private void seekCursorLine(int offset) {
-        if (offset != 0) {
-            int i = font.width(backend.getContent().substring(getCursorLineView(0).beginIndex(), backend.getCursor())) + LINE_SEEK_PIXEL_BIAS;
-            StringView cursorLineView = getCursorLineView(offset);
-            int j = font.plainSubstrByWidth(backend.getContent().substring(cursorLineView.beginIndex(), cursorLineView.endIndex()), i).length();
-            seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex() + j);
-        }
-    }
-
-    private boolean seekCursorNextPlaceholder() {
-        Placeholder next = backend.getPlaceholders().stream()
-                .filter(p -> p.index() > backend.getCursor())
-                .min(Comparator.comparingInt(Placeholder::index))
-                .orElse(null);
-        if (next != null) {
-            selecting = false;
-            seekCursor(Whence.ABSOLUTE, next.index());
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void deleteText(int length) {
-        if (!hasSelection())
-            backend.setSelectCursor(Mth.clamp(backend.getCursor() + length, 0, backend.getContent().length()));
-        insertText("");
     }
 
     public boolean keyPressed(KeyEvent event) {
@@ -215,7 +113,7 @@ public class CodeField {
                 case GLFW.GLFW_KEY_TAB -> {
                     // tab to next placeholder
                     boolean success = seekCursorNextPlaceholder();
-                    if (!success) insertText("    ");
+                    if (!success) backend.insertText("    ");
                 }
                 default -> {
                     return false;
@@ -225,10 +123,101 @@ public class CodeField {
         return true;
     }
 
+
+    private IStringView getPreviousWord() {
+        if (backend.getContent().isEmpty()) {
+            return StringView.EMPTY;
+        } else {
+            int wordStart = Mth.clamp(backend.getCursor(), 0, backend.getContent().length() - 1);
+            while (wordStart > 0 && Character.isWhitespace(backend.getContent().charAt(wordStart - 1))) {
+                wordStart--;
+            }
+            while (wordStart > 0 && !Character.isWhitespace(backend.getContent().charAt(wordStart - 1))) {
+                wordStart--;
+            }
+            return new StringView(wordStart, getWordEndPosition(wordStart));
+        }
+    }
+
+    private IStringView getNextWord() {
+        if (backend.getContent().isEmpty()) {
+            return StringView.EMPTY;
+        } else {
+            int wordStart = getWordEndPosition(
+                    Mth.clamp(backend.getCursor(), 0, backend.getContent().length() - 1));
+            while (wordStart < backend.getContent().length() &&
+                    Character.isWhitespace(backend.getContent().charAt(wordStart))) {
+                wordStart++;
+            }
+            return new StringView(wordStart, getWordEndPosition(wordStart));
+        }
+    }
+
+    private int getWordEndPosition(int cursor) {
+        int endCursor = cursor;
+        while (endCursor < backend.getContent().length() &&
+                !Character.isWhitespace(backend.getContent().charAt(endCursor))) {
+            endCursor++;
+        }
+        return endCursor;
+    }
+
+    private IStringView getCursorLineView(int offset) {
+        int i = getLineAtCursor();
+        if (i < 0) {
+            int var10002 = backend.getCursor();
+            throw new IllegalStateException("Cursor is not within text (cursor = " + var10002 + ", length = " + backend.getContent().length() + ")");
+        } else {
+            return displayLines.get(Mth.clamp(i + offset, 0, displayLines.size() - 1));
+        }
+    }
+
+    private void seekCursor(Whence whence, int position) {
+        int tempCursor = switch (whence) {
+            case ABSOLUTE -> position;
+            case RELATIVE -> backend.getCursor() + position;
+            case END -> backend.getContent().length() + position;
+        };
+
+        backend.setCursor(Mth.clamp(tempCursor, 0, backend.getContent().length()));
+        if (!selecting) {
+            backend.setSelectCursor(backend.getCursor());
+        }
+    }
+
+    private void seekCursorLine(int offset) {
+        if (offset != 0) {
+            int i = font.width(backend.getContent().substring(getCursorLineView(0).beginIndex(), backend.getCursor())) + LINE_SEEK_PIXEL_BIAS;
+            IStringView cursorLineView = getCursorLineView(offset);
+            int j = font.plainSubstrByWidth(backend.getContent().substring(cursorLineView.beginIndex(), cursorLineView.endIndex()), i).length();
+            seekCursor(Whence.ABSOLUTE, cursorLineView.beginIndex() + j);
+        }
+    }
+
+    private boolean seekCursorNextPlaceholder() {
+        Placeholder next = backend.getPlaceholders().stream()
+                .filter(p -> p.index() > backend.getCursor())
+                .min(Comparator.comparingInt(Placeholder::index))
+                .orElse(null);
+        if (next != null) {
+            selecting = false;
+            seekCursor(Whence.ABSOLUTE, next.index());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void deleteText(int length) {
+        if (!hasSelection())
+            backend.setSelectCursor(Mth.clamp(backend.getCursor() + length, 0, backend.getContent().length()));
+        backend.insertText("");
+    }
+
     private boolean handleIgnoreModifiers(int keyCode) {
         switch (keyCode) {
             case GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_KP_ENTER -> {
-                insertText("\n");
+                backend.insertText("\n");
                 return true;
             }
             case GLFW.GLFW_KEY_PAGE_UP -> {
@@ -256,13 +245,13 @@ public class CodeField {
                             .substring(getSelected().beginIndex(), getSelected().endIndex()));
             return true;
         } else if (event.isPaste()) {
-            insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
+            backend.insertText(Minecraft.getInstance().keyboardHandler.getClipboard());
             return true;
         } else if (event.isCut()) {
             Minecraft.getInstance().keyboardHandler.setClipboard(
                     backend.getContent()
                             .substring(getSelected().beginIndex(), getSelected().endIndex()));
-            insertText("");
+            backend.insertText("");
             return true;
         } else {
             return false;
@@ -270,83 +259,16 @@ public class CodeField {
     }
 
     private void onValueChange() {
-        displayLines.clear();
-        int codeWidth = widthUpdater.get();
         if (backend.getContent().isEmpty()) {
-            displayLines.add(StyledLineView.EMPTY);
+            List<FormattedLine> newLines = new ArrayList<>();
+            newLines.add(new FormattedLine(0));
+            displayLines = newLines;
             return;
         }
-        // split
-        int lineStart = 0;
-        int lineWidth = 0;
-        var lexer = new WenyanLexer(CharStreams.fromString(backend.getContent()));
-        lexer.removeErrorListeners();
-        var tokens = new BufferedTokenStream(lexer);
-        StyledStringView currentToken = updateToken(tokens, 0);
-        List<StyledStringView> currentStyles = new ArrayList<>();
-        for (int i = 0; i < backend.getContent().length(); i++) {
-            if (i > currentToken.endIndex()) {
-                currentStyles.add(new StyledStringView(
-                        Math.max(currentToken.beginIndex(), lineStart),
-                        currentToken.endIndex() + 1, currentToken.token()));
-                currentToken = updateToken(tokens, i);
-            }
 
-            char c = backend.getContent().charAt(i);
-            if (c == '\n') {
-                cutToken(i, currentToken, currentStyles, lineStart);
-                displayLines.add(new StyledLineView(lineStart, i, currentStyles));
-                currentStyles = new ArrayList<>();
-                lineStart = i + 1;
-                lineWidth = 0;
-                continue;
-            }
-            int charWidth = font.width(String.valueOf(c));
-            if (lineWidth + charWidth > codeWidth) {
-                cutToken(i, currentToken, currentStyles, lineStart);
-                displayLines.add(new StyledLineView(lineStart, i, currentStyles));
-                currentStyles = new ArrayList<>();
-                lineStart = i;
-                lineWidth = charWidth;
-            } else {
-                lineWidth += charWidth;
-            }
-        }
-
-        // the last line
-        if (lineStart < backend.getContent().length()) {
-            // assert stopIndex >= length - 1 (as i(= length - 2) < stopIndex)
-            // -> min(stopIndex + 1, length) = length
-            currentStyles.add(new StyledStringView(Math.max(currentToken.beginIndex(), lineStart), backend.getContent().length(), currentToken.token()));
-            displayLines.add(new StyledLineView(lineStart, backend.getContent().length(), currentStyles));
-        }
-
-        if (backend.getContent().charAt(backend.getContent().length() - 1) == '\n') {
-            displayLines.add(new StyledLineView(backend.getContent().length(), backend.getContent().length(),
-                    List.of(new StyledStringView(backend.getContent().length(), backend.getContent().length(), -1))));
-        }
-    }
-
-    private static @NotNull StyledStringView updateToken(BufferedTokenStream tokens, int i) {
-        StyledStringView currentToken;
-        var token = tokens.LT(1);
-        if (i >= token.getStartIndex()) {
-            tokens.consume();
-            currentToken = new StyledStringView(token.getStartIndex(), token.getStopIndex(), token.getType());
-        } else {
-            currentToken = new StyledStringView(i, token.getStartIndex() - 1, -1);
-        }
-        return currentToken;
-    }
-
-    private static void cutToken(int breakPoint, StyledStringView token, List<StyledStringView> currentStyle, int lineStart) {
-        // if break inside token -> cut
-        // assert i <= stopIndex
-        if (breakPoint > token.beginIndex() || currentStyle.isEmpty()) { // add an empty style to ensure at least one style
-            currentStyle.add(new StyledStringView(
-                    Math.max(token.beginIndex(), lineStart), breakPoint,
-                    token.token()));
-        }
+        displayLines = CodeFormatter.splitLine(font,
+                CodeFormatter.highlightCode(backend.getContent()),
+                widthUpdater.get());
     }
 
     private void updateCurrentSnippetContext() {
@@ -362,35 +284,11 @@ public class CodeField {
     }
 
 
-    public record StringView(int beginIndex, int endIndex) {
-        static final StringView EMPTY = new StringView(0, 0);
-    }
-
-    public record StyledLineView(List<StyledStringView> styles) {
-        public StyledLineView(int beginIndex, int endIndex, List<StyledStringView> styles) {
-            this(styles);
-            if (endIndex != endIndex() || beginIndex != beginIndex())
-                throw new IllegalArgumentException(beginIndex + " " + endIndex + " " + styles);
-        }
-
-        static final StyledLineView EMPTY = new StyledLineView(0, 0, List.of(new StyledStringView(0, 0, -1)));
-
-        public StringView stringView() {
-            return new StringView(beginIndex(), endIndex());
-        }
-
-        public int beginIndex() {
-            return styles().getFirst().beginIndex();
-        }
-
-        public int endIndex() {
-            return styles().getLast().endIndex();
-        }
-    }
-
-    public record StyledStringView(int beginIndex, int endIndex, int token) {
+    public record StringView(int beginIndex, int endIndex) implements IStringView {
+        public static final IStringView EMPTY = new StringView(0, 0);
     }
 
     public record Placeholder(generated_Snippets.Context context, int index) {
     }
 }
+
