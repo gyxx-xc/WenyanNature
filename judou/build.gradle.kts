@@ -2,7 +2,7 @@ plugins {
     antlr
     java
     idea // for JUnit
-    id("maven-publish")
+    `maven-publish`
 }
 
 group = "indi.wenyan"
@@ -69,4 +69,15 @@ tasks.generateGrammarSource {
             .asFile
 }
 
-tasks.generateGrammarSource
+publishing {
+    publications {
+        register<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            url = uri("file://${project.projectDir}/repo")
+        }
+    }
+}
