@@ -39,9 +39,17 @@ sourceSets {
     main {
         resources {
             srcDir 'src/generated/resources'
+
+            exclude("**/*.bbmodel") // BlockBench project files
+            exclude("src/generated/**/.cache") // datagen cache files
         }
     }
     client {
+        resources {
+            exclude("**/*.bbmodel") // BlockBench project files
+            exclude("src/generated/**/.cache") // datagen cache files
+        }
+
         runtimeClasspath += main.output
         compileClasspath += main.output
     }
