@@ -25,7 +25,7 @@ public class FormattedLine implements FormattedText, IStringView {
     }
 
     /// for both splitter and renderer
-    @Nullable private CachedWidth cachedWidth = null;
+    private CachedWidth cachedWidth = CachedWidth.NO_CACHE;
 
     public int length() {
         return length;
@@ -41,22 +41,27 @@ public class FormattedLine implements FormattedText, IStringView {
         return length == 0 ? indexInCode : indexInCode + length - 1;
     }
 
+    /// return width before index (inclusive)
     public int getWidth(Font font, int index) {
-        int curIndex = 0;
-        int width = 0;
-        for (TokenText token : tokens) {
-            curIndex += token.text.length();
-            if (curIndex > index) {
+        if (index < 0) return 0; // for render, which give -1
+        if (index < cachedWidth.index) cachedWidth = CachedWidth.NO_CACHE;
+        int curIndex = cachedWidth.index;
+        int width = cachedWidth.width;
+        for (int i = cachedWidth.tokenIndex + 1; i < tokens.size(); i++) {
+            TokenText token = tokens.get(i);
+            if (curIndex + token.text.length() > index) {
+                cachedWidth = new CachedWidth(curIndex, i - 1, width);
                 return width + font.width(new TokenText(
-                        token.text.substring(0, index + 1 - curIndex + token.text.length()),
+                        token.text.substring(0, index + 1 - curIndex),
                         token.style,
                         token.tokenType
                 ));
             }
+            curIndex += token.text.length();
             width += font.width(token);
         }
 
-        // unreached
+        cachedWidth = new CachedWidth(curIndex, tokens.size() - 1, width);
         return width;
     }
 
@@ -72,7 +77,7 @@ public class FormattedLine implements FormattedText, IStringView {
 
     public @Nullable FormattedLine cutLine(Font font, int codeWidth) {
         for (int i = 0; i < length(); i++) {
-            if (getWidth(font, i) >= codeWidth) {
+            if (getWidth(font, i) > codeWidth) {
                 return cut(i, token -> needCutToken(font, codeWidth, token));
             }
         }
@@ -104,7 +109,7 @@ public class FormattedLine implements FormattedText, IStringView {
 
         assert token != null;
         if (cutTokenFunction.apply(token)) {
-            result = new FormattedLine(index);
+            result = new FormattedLine(indexInCode + index);
             result.add(new TokenText(
                     token.text.substring(index - currentLength),
                     token.style,
@@ -170,6 +175,7 @@ public class FormattedLine implements FormattedText, IStringView {
 
     /// store token {@param tokenIndex} ended at {@param index}, is with {@param width}
     private record CachedWidth(int index, int tokenIndex, int width) {
+        public static final CachedWidth NO_CACHE = new CachedWidth(0, -1, 0);
     }
 
     private record TokenText(String text, Style style, int tokenType) implements FormattedText {
