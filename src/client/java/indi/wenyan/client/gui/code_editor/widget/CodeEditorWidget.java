@@ -207,8 +207,9 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         for (int i = 0; i < displayLines.size(); i++) {
             var stringView = displayLines.get(i);
             if (withinContentAreaTopBottom(currentY, currentY + font.lineHeight)) {
-                renderStyledLine(guiGraphics, stringView,
-                        getX() + innerPadding() + lineNoWidth(), currentY);
+                int currentX = getX() + innerPadding() + lineNoWidth();
+                FormattedCharSequence renderableText = Language.getInstance().getVisualOrder(stringView);
+                guiGraphics.text(font, renderableText, currentX, currentY, PURE_WHITE, false);
                 renderPlaceholders(guiGraphics, placeholderIter, stringView, currentY);
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = cursorIndex >= stringView.beginIndex() && cursorIndex <= stringView.endIndex();
@@ -236,12 +237,6 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
         // render this as the last, overlap all above, as if it's floating no screen
         if (!completions.isEmpty() && cursorPosition != null)
             renderCompletion(guiGraphics, cursorPosition);
-    }
-
-    private void renderStyledLine(@NotNull GuiGraphicsExtractor guiGraphics, FormattedLine stringView,
-                                  int currentX, int currentY) {
-        FormattedCharSequence renderableText = Language.getInstance().getVisualOrder(stringView);
-        guiGraphics.text(font, renderableText, currentX, currentY, PURE_WHITE, false);
     }
 
     private void renderSelection(@NotNull GuiGraphicsExtractor guiGraphics) {
