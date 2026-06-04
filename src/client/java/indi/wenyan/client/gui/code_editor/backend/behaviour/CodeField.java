@@ -291,4 +291,3 @@ public class CodeField {
     public record Placeholder(generated_Snippets.Context context, int index) {
     }
 }
-

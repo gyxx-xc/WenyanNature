@@ -8,9 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
+import java.util.function.Function;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -69,14 +70,27 @@ public class FormattedLine implements FormattedText, IStringView {
         add(new TokenText(text, tokenType));
     }
 
-    /// remain tokens before {@param index}, return the rest with new FormattedLine
-    public FormattedLine cut(int index) {
+    public @Nullable FormattedLine cutLine(Font font, int codeWidth) {
+        for (int i = 0; i < length(); i++) {
+            if (getWidth(font, i) >= codeWidth) {
+                return cut(i, token -> needCutToken(font, codeWidth, token));
+            }
+        }
+        return null;
+    }
+
+    private boolean needCutToken(Font font, int width, TokenText tokenText) {
+        return font.width(tokenText) >= width * 0.3;
+    }
+
+    /// remain tokens before {@param index} (exclusive), return the rest with new FormattedLine
+    private FormattedLine cut(int index, Function<TokenText, Boolean> cutTokenFunction) {
         int currentLength = 0;
         if (tokens.isEmpty()) {
             return new FormattedLine(indexInCode);
         }
 
-        Iterator<TokenText> iterator = tokens.iterator();
+        ListIterator<TokenText> iterator = tokens.listIterator();
         TokenText token = null;
         while (iterator.hasNext()) {
             token = iterator.next();
@@ -86,12 +100,28 @@ public class FormattedLine implements FormattedText, IStringView {
             currentLength += token.text.length();
         }
 
-        FormattedLine result = new FormattedLine(indexInCode + currentLength);
+        FormattedLine result;
 
         assert token != null;
-        result.add(token);
-        iterator.remove();
-        length -= token.text.length();
+        if (cutTokenFunction.apply(token)) {
+            result = new FormattedLine(index);
+            result.add(new TokenText(
+                    token.text.substring(index - currentLength),
+                    token.style,
+                    token.tokenType
+            ));
+            iterator.set(new TokenText(
+                    token.text.substring(0, index - currentLength),
+                    token.style,
+                    token.tokenType
+            ));
+            length -= token.text.length() - index + currentLength;
+        } else {
+            result = new FormattedLine(indexInCode + currentLength);
+            result.add(token);
+            iterator.remove();
+            length -= token.text.length();
+        }
 
         while (iterator.hasNext()) {
             TokenText next = iterator.next();
@@ -138,6 +168,7 @@ public class FormattedLine implements FormattedText, IStringView {
         return Optional.empty();
     }
 
+    /// store token {@param tokenIndex} ended at {@param index}, is with {@param width}
     private record CachedWidth(int index, int tokenIndex, int width) {
     }
 

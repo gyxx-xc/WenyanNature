@@ -213,8 +213,8 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
                 // ----------------------- render cursor -----------------------
                 boolean isCurLine = cursorIndex >= stringView.beginIndex() && cursorIndex <= stringView.endIndex();
                 if (isCurLine) {
-                    String stringBeforeCursor = backend.getContent().substring(stringView.beginIndex(), cursorIndex);
-                    int cursorX = getX() + innerPadding() + lineNoWidth() + font.width(Component.literal(stringBeforeCursor)) - 1;
+                    int cursorX = getX() + innerPadding() + lineNoWidth() +
+                            stringView.getWidth(font, cursorIndex - stringView.beginIndex()) - 1;
                     boolean isCursorRender = isFocused() && isBlinkShow();
                     renderCursor(guiGraphics, cursorX, currentY, isCursorRender);
                     cursorPosition = new CursorPosition(cursorX, currentY);

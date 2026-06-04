@@ -30,17 +30,14 @@ public enum CodeFormatter {
             } else {
                 var lineCut = line;
                 // logic here, because line.cut, cut self and return line after cutting point:
-                // 1. find the first char that is out of codeWidth
-                // 2. cut the line
-                // 3. set the line to line after cutting point
-                // 4. repeat until no need to cut
+                // 1. cut the line
+                // 2. set the line to line after cutting point
+                // 3. repeat until no need to cut
                 while (font.width(lineCut) >= codeWidth) {
-                    for (int i = 0; i < lineCut.length(); i++) {
-                        if (lineCut.getWidth(font, i) >= codeWidth) {
-                            result.add(lineCut); // changed after add to list
-                            lineCut = lineCut.cut(i);
-                            break;
-                        }
+                    result.add(lineCut); // changed after add to list
+                    lineCut = lineCut.cutLine(font, codeWidth);
+                    if (lineCut == null) { // unreached (font.width(lineCut) < codeWidth)
+                        throw new RuntimeException("line cut error");
                     }
                 }
                 result.add(lineCut);
