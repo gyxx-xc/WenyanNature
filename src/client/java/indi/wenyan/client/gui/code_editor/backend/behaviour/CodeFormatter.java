@@ -33,7 +33,8 @@ public enum CodeFormatter {
                 // 1. cut the line
                 // 2. set the line to line after cutting point
                 // 3. repeat until no need to cut
-                while (font.width(lineCut) >= codeWidth) {
+                // FIXME: in some really rare cases that a char is larger than width, it will goes into dead loop
+                while (font.width(lineCut) > codeWidth) {
                     result.add(lineCut); // changed after add to list
                     lineCut = lineCut.cutLine(font, codeWidth);
                     if (lineCut == null) { // unreached (font.width(lineCut) < codeWidth)
