@@ -16,10 +16,6 @@ repositories {
 }
 
 dependencies {
-    // for annotation processor
-    compileOnly(project(":language_processor"))
-    annotationProcessor(project(":language_processor"))
-
     implementation("org.slf4j:slf4j-api:2.0.7") // align to minecraft
 
     implementation("com.github.houbb:opencc4j:1.14.0")
@@ -28,10 +24,6 @@ dependencies {
     compileOnly("org.jetbrains:annotations:26.0.2")
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
-
-    /********** for test **********/
-    testCompileOnly(project(":language_processor"))
-    testAnnotationProcessor(project(":language_processor"))
 
     // we only need slf4j api in jar, but we need slf4j for test
     testImplementation("org.slf4j:slf4j-simple:2.0.7")
