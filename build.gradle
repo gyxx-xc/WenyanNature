@@ -167,12 +167,6 @@ dependencies {
     clientImplementation(project(":judou")) // for code highlight
     antlr("org.antlr:antlr4:4.13.1") // for grammar lexer version
 
-    // for annotation processor
-    compileOnly project(":language_processor")
-    annotationProcessor project(":language_processor")
-    clientCompileOnly project(":language_processor")
-    clientAnnotationProcessor project(":language_processor")
-
     // mod requirements
 //    implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
 //    compileOnly "vazkii.patchouli:Patchouli:1.21.1-92-NEOFORGE:api"
