@@ -1,11 +1,10 @@
-package indi.wenyan.annotation_processor;
+package indi.wenyan.annotation_processor.object_value;
 
 import com.google.auto.service.AutoService;
-import indi.wenyan.annotation_processor.annotation.WenyanConstructor;
-import indi.wenyan.annotation_processor.annotation.WenyanField;
-import indi.wenyan.annotation_processor.annotation.WenyanMethod;
-import indi.wenyan.annotation_processor.annotation.WenyanObjectValue;
-import indi.wenyan.annotation_processor.utils.WenyanValueData;
+import indi.wenyan.annotation_processor.object_value.annotation.WenyanConstructor;
+import indi.wenyan.annotation_processor.object_value.annotation.WenyanField;
+import indi.wenyan.annotation_processor.object_value.annotation.WenyanMethod;
+import indi.wenyan.annotation_processor.object_value.annotation.WenyanObjectValue;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
