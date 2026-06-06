@@ -1,14 +1,19 @@
 package indi.wenyan.setup.datagen.recipe;
 
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.recipe.answering.checker.CheckerEnum;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -72,6 +77,27 @@ public class RecipeUtilities {
                 .unlockedBy("has_" + itemName(item1), provider.publicHas(item1))
                 .unlockedBy("has_" + itemName(item2), provider.publicHas(item2))
                 .save(output);
+    }
+
+    /**
+     * 适用于 2 物品, 3 行配方 (全为 ItemLike)，指定模组命名空间下的配方名称。
+     */
+    public static void newModShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
+                                          HolderGetter<Item> items, RecipeCategory category, String recipeName,
+                                          ItemLike outputItem, int count,
+                                          String row1, String row2, String row3,
+                                          Character symbol1, ItemLike item1,
+                                          Character symbol2, ItemLike item2) {
+        ShapedRecipeBuilder
+                .shaped(items, category, outputItem, count)
+                .pattern(row1)
+                .pattern(row2)
+                .pattern(row3)
+                .define(symbol1, item1)
+                .define(symbol2, item2)
+                .unlockedBy("has_" + itemName(item1), provider.publicHas(item1))
+                .unlockedBy("has_" + itemName(item2), provider.publicHas(item2))
+                .save(output, modRecipeKey(recipeName));
     }
 
     /**
@@ -281,6 +307,21 @@ public class RecipeUtilities {
     }
 
     /**
+     * 适用于无序配方 (Shapeless)，指定模组命名空间下的配方名称。
+     */
+    public static void newModShapelessRecipe(CheckerRecipeProvider provider, HolderGetter<Item> items, RecipeOutput output,
+                                             RecipeCategory category, String recipeName,
+                                             ItemLike outputItem, int count,
+                                             ItemLike... inputs) {
+        var builder = ShapelessRecipeBuilder.shapeless(items, category, outputItem, count);
+        for (ItemLike input : inputs) {
+            builder.requires(input);
+        }
+        builder.unlockedBy("has_" + itemName(outputItem), provider.publicHas(outputItem))
+                .save(output, modRecipeKey(recipeName));
+    }
+
+    /**
      * 适用于 AnsweringRecipe，自动使用物品名称。
      */
     public static void newAnsweringRecipe(RecipeOutput output, ItemLike outputItem, int count,
@@ -319,5 +360,10 @@ public class RecipeUtilities {
     /** 从 TagKey 的 location 中提取路径部分，用于 unlockedBy 的 has_<tag> 命名。 */
     private static String tagName(TagKey<Item> tag) {
         return tag.location().getPath();
+    }
+
+    private static ResourceKey<Recipe<?>> modRecipeKey(String recipeName) {
+        return ResourceKey.create(Registries.RECIPE,
+                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, recipeName));
     }
 }

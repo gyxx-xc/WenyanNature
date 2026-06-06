@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:blaze_powder",
+    "minecraft:feather",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "wenyan_programming:phoenix_paper"
+  }
+}

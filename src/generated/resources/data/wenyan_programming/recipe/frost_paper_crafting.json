@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:snowball",
+    "minecraft:gold_nugget",
+    "minecraft:packed_ice"
+  ],
+  "result": {
+    "id": "wenyan_programming:frost_paper"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:glowstone_dust",
+    "minecraft:feather",
+    "minecraft:amethyst_shard"
+  ],
+  "result": {
+    "id": "wenyan_programming:starlight_paper"
+  }
+}
