@@ -44,13 +44,6 @@ public class HandrunnerRecipes {
                 CheckerEnum.LABYRINTH_CHECKER, 1,
                 Items.COAL, Items.COAL, Items.COAL, Items.COAL);
 
-        // Hand Runner 0
-        RecipeUtilities.newShapedRecipe(provider, output, items, RecipeCategory.MISC,
-                WenyanItems.HAND_RUNNER.getItem(RunnerTier.RUNNER_0), 1,
-                "III",
-                "I I",
-                "III",
-                'I', Items.PAPER);
 
         // === Paper Group (Lv.1 - Lv.6) ===
         // 松竹纸 (Lv.1)
