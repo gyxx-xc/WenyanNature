@@ -11,4 +11,5 @@ plugins {
 }
 
 rootProject.name = mod_id
+include 'language_processor'
 include 'judou'

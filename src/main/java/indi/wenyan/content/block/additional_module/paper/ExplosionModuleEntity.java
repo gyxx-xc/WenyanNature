@@ -4,6 +4,7 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
+import indi.wenyan.interpreter_impl.args.WenyanArgsResolver;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
@@ -43,11 +44,14 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                 EntityType.LIGHTNING_BOLT.spawn(sl, getBlockPos(), EntitySpawnReason.COMMAND);
                 return WenyanNull.NULL;
             })
-            .handler(WenyanSymbol.ExplosionModule$explode, _ -> {
+            .handler(WenyanSymbol.ExplosionModule$explode, argsRequest -> {
+                var args = WenyanArgsResolver.build()
+                        .int_().rangeThrow(0, 1000).range(0, 10)
+                        .resolve(argsRequest);
                 assert level != null;
                 level.explode(null,
                         getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
-                        3.0f, true, Level.ExplosionInteraction.BLOCK);
+                        args.get(0), true, Level.ExplosionInteraction.BLOCK);
                 return WenyanNull.NULL;
             })
             .handler(WenyanSymbol.ExplosionModule$ignite, request -> {
