@@ -1,7 +1,6 @@
 package indi.wenyan.interpreter_impl.args;
 
 import indi.wenyan.judou.api.WenyanException;
-// # NEED: WenyanBoolean, WenyanDouble, WenyanString classes in indi.wenyan.judou.api.values.primitive
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
@@ -11,6 +10,7 @@ import indi.wenyan.judou.api.values.primitive.WenyanString;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public final class ArgsSpecBuilder {
     List<ArgExtractor<?>> argExtractors = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public final class ArgsSpecBuilder {
         protected abstract ArgExtractor.Extractor<T> extractor();
 
         protected void addToSpec() {
-            argExtractors.add(new ArgExtractor<T>(extractor, processors));
+            argExtractors.add(new ArgExtractor<>(extractor, processors));
         }
 
         public IntStep int_() {
@@ -50,6 +50,7 @@ public final class ArgsSpecBuilder {
         }
 
         public ResolvedArgs resolve(IArgsRequest argsRequest) throws WenyanException {
+            addToSpec();
             return new WenyanArgsResolver(argExtractors, argsRequest).resolve();
         }
     }

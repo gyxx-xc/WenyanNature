@@ -7,7 +7,7 @@ import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,7 +25,8 @@ public class DeviceCapabilityRegisterer {
         this.event = event;
     }
 
-    public void registerToItem(Function<ItemStack, RawHandlerPackage> aPackage, String deviceName, DeferredItem<BlockItem> bitModuleBlockItem) {
+    public void registerToItem(Function<ItemStack, RawHandlerPackage> aPackage,
+                               String deviceName, DeferredItem<? extends Item> moduleItem) {
         event.registerItem(WyRegistration.WENYAN_ITEM_DEVICE_CAPABILITY,
                 (item, _) -> new IWenyanDevice() {
                     @Override
@@ -39,17 +40,18 @@ public class DeviceCapabilityRegisterer {
                         return name == null ? deviceName : name.getString();
                     }
                 },
-                bitModuleBlockItem);
+                moduleItem);
     }
 
-    public void registerToBlock(BiFunction<BlockPos, BlockState, RawHandlerPackage> blockPosBlockStateRawHandlerPackageBiFunction, String deviceName, Block... bitModuleBlock) {
+    public void registerToBlock(BiFunction<BlockPos, BlockState, RawHandlerPackage> packageSupplier,
+                                String deviceName, Block... bitModuleBlock) {
         event.registerBlock(
                 WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY,
                 (_, pos, state, _, _) -> new IWenyanBlockDevice() {
 
                     @Override
                     public RawHandlerPackage getExecPackage() {
-                        return blockPosBlockStateRawHandlerPackageBiFunction.apply(pos, state);
+                        return packageSupplier.apply(pos, state);
                     }
 
                     @Override
