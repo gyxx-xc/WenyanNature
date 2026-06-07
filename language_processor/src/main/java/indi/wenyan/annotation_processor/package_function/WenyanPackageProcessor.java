@@ -1,6 +1,5 @@
 package indi.wenyan.annotation_processor.package_function;
 
-import com.google.auto.service.AutoService;
 import indi.wenyan.annotation_processor.package_function.annotation.ForBlocks;
 import indi.wenyan.annotation_processor.package_function.annotation.WenyanPackage;
 import indi.wenyan.annotation_processor.package_function.annotation.WenyanPackageFunction;
@@ -19,7 +18,7 @@ import java.util.Set;
 import static indi.wenyan.annotation_processor.package_function.WenyanPackageData.FunctionInfo;
 import static indi.wenyan.annotation_processor.package_function.WenyanPackageData.ParamInfo;
 
-@AutoService(javax.annotation.processing.Processor.class)
+//@AutoService(javax.annotation.processing.Processor.class)
 @SupportedAnnotationTypes("indi.wenyan.annotation_processor.package_function.annotation.WenyanPackage")
 public class WenyanPackageProcessor extends AbstractProcessor {
     private Messager messager;
@@ -98,15 +97,15 @@ public class WenyanPackageProcessor extends AbstractProcessor {
     private FunctionInfo buildFunctionInfo(ExecutableElement method,
                                            WenyanPackageFunction annotation) {
         var params = new ArrayList<ParamInfo>();
-        for (var param : method.getParameters()) {
-            var paramType = param.asType();
-            var isContext = CONTEXT_TYPES.contains(paramType.toString());
-            params.add(new ParamInfo(
-                    param.getSimpleName().toString(),
-                    paramType,
-                    isContext
-            ));
-        }
+//        for (var param : method.getParameters()) {
+//            var paramType = param.asType();
+//            var isContext = CONTEXT_TYPES.contains(paramType.toString());
+//            params.add(new ParamInfo(
+//                    param.getSimpleName().toString(),
+//                    paramType,
+//                    isContext
+//            ));
+//        }
 
         return new FunctionInfo(
                 annotation.value(),
