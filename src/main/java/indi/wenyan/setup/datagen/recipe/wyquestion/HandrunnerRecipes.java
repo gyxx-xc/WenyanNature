@@ -8,6 +8,7 @@ import indi.wenyan.setup.datagen.recipe.RecipeUtilities;
 import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import static indi.wenyan.setup.definitions.WenyanItems.THROW_RUNNER;
+import static indi.wenyan.setup.definitions.WyRegistration.PAPER_MODULE_ITEM;
 import static indi.wenyan.setup.definitions.WyRegistration.RUNNER_PAPER_ITEM;
 
 public class HandrunnerRecipes {
@@ -31,7 +33,7 @@ public class HandrunnerRecipes {
         }
 
         for (var item : THROW_RUNNER.getItems()) {
-            throwAddModuleRecipe(output, item);
+            throwAddModuleRecipe(output, item, provider);
         }
         // === Hand Runner 0 & Misc ===
         RecipeUtilities.newAnsweringRecipe(output, "hand_runner",
@@ -180,15 +182,14 @@ public class HandrunnerRecipes {
                 item);
     }
 
-    public static void throwAddModuleRecipe(RecipeOutput output, Item item) {
+    public static void throwAddModuleRecipe(RecipeOutput output, Item item, CheckerRecipeProvider provider) {
+        String itemId = BuiltInRegistries.ITEM.getKey(item).getPath();
         SpecialRecipeBuilder.special(() -> new ThrowModuleRecipe(Ingredient.of(item)))
+                .unlockedBy("has_" + itemId, provider.publicHas(item))
+                .unlockedBy("has_paper_module_item", provider.publicHas(PAPER_MODULE_ITEM))
                 .save(output, ResourceKey.create(Registries.RECIPE,
                         Identifier.fromNamespaceAndPath(WenyanProgramming.MODID,
-                                // FIXME
-                                item.getDescriptionId()
-                                        .substring(item.getDescriptionId()
-                                                .lastIndexOf(".") + 1)
-                                        + "_module")));
+                                itemId + "_module")));
     }
 
 }

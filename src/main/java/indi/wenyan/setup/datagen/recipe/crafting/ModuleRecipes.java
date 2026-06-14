@@ -1,4 +1,4 @@
-package indi.wenyan.setup.datagen.recipe.wyquestion;
+package indi.wenyan.setup.datagen.recipe.crafting;
 
 import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
 import indi.wenyan.setup.datagen.recipe.RecipeUtilities;

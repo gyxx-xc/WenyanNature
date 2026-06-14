@@ -10,7 +10,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-public class CraftingHandrunnerRecipes {
+public class HandrunnerRecipes {
     public static void build(HolderGetter<Item> items, RecipeOutput output, CheckerRecipeProvider provider) {
         buildLevel0(items, output, provider);
         buildLevel1(items, output, provider);
