@@ -1,11 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hand_runner_1": {
+    "has_bamboo_ink": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:hand_runner_1"
+            "items": "wenyan_programming:bamboo_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_bamboo_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:bamboo_paper"
           }
         ]
       },
@@ -21,7 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_hand_runner_1"
+      "has_bamboo_ink",
+      "has_bamboo_paper"
     ]
   ],
   "rewards": {

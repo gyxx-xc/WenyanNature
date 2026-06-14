@@ -1,11 +1,41 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_celestial_ink": {
+    "has_arcane_ink": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:celestial_ink"
+            "items": "wenyan_programming:arcane_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_end_crystal": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:end_crystal"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_netherite_scrap": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:netherite_scrap"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_potion": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:potion"
           }
         ]
       },
@@ -21,7 +51,10 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_celestial_ink"
+      "has_potion",
+      "has_arcane_ink",
+      "has_netherite_scrap",
+      "has_end_crystal"
     ]
   ],
   "rewards": {

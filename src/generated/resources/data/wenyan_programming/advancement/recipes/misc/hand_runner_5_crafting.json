@@ -1,11 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hand_runner_5": {
+    "has_arcane_ink": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:hand_runner_5"
+            "items": "wenyan_programming:arcane_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_phoenix_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:phoenix_paper"
           }
         ]
       },
@@ -21,7 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_hand_runner_5"
+      "has_arcane_ink",
+      "has_phoenix_paper"
     ]
   ],
   "rewards": {

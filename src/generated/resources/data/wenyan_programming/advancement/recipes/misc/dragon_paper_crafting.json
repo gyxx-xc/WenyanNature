@@ -1,11 +1,41 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_dragon_paper": {
+    "has_diamond": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:dragon_paper"
+            "items": "minecraft:diamond"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_dragon_breath": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:dragon_breath"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_phantom_membrane": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:phantom_membrane"
           }
         ]
       },
@@ -21,7 +51,10 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_dragon_paper"
+      "has_paper",
+      "has_phantom_membrane",
+      "has_diamond",
+      "has_dragon_breath"
     ]
   ],
   "rewards": {

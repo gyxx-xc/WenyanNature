@@ -1,11 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_hand_runner_3": {
+    "has_starlight_ink": {
       "conditions": {
         "items": [
           {
-            "items": "wenyan_programming:hand_runner_3"
+            "items": "wenyan_programming:starlight_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_starlight_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:starlight_paper"
           }
         ]
       },
@@ -21,7 +31,8 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_hand_runner_3"
+      "has_starlight_ink",
+      "has_starlight_paper"
     ]
   ],
   "rewards": {
