@@ -12,7 +12,15 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public final class ArgsSpecBuilder {
-    List<ArgExtractor<?>> argExtractors = new ArrayList<>();
+    List<ArgExtractor<?>> argExtractors;
+
+    private ArgsSpecBuilder(List<ArgExtractor<?>> argExtractors) {
+        this.argExtractors = argExtractors;
+    }
+
+    ArgsSpecBuilder() {
+        argExtractors = new ArrayList<>();
+    }
 
     public <T> Step<T> first() {
         return new DummyStep<>();
@@ -27,6 +35,15 @@ public final class ArgsSpecBuilder {
 
         protected void addToSpec() {
             argExtractors.add(new ArgExtractor<>(extractor, processors));
+        }
+
+        public ResolvedArgs resolve(IArgsRequest argsRequest) throws WenyanException {
+            addToSpec();
+            return new WenyanArgsResolver(argExtractors, argsRequest).resolve();
+        }
+
+        public Step<T> copy() {
+            return new ArgsSpecBuilder().first();
         }
 
         public IntStep int_() {
@@ -47,11 +64,6 @@ public final class ArgsSpecBuilder {
         public BooleanStep boolean_() {
             addToSpec();
             return new BooleanStep();
-        }
-
-        public ResolvedArgs resolve(IArgsRequest argsRequest) throws WenyanException {
-            addToSpec();
-            return new WenyanArgsResolver(argExtractors, argsRequest).resolve();
         }
     }
 
