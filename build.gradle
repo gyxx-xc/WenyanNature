@@ -42,6 +42,7 @@ sourceSets {
 
             exclude("**/*.bbmodel") // BlockBench project files
             exclude("src/generated/**/.cache") // datagen cache files
+            exclude("src/main/resources/assets/wenyan_programming/textures/item/legacy") // legacy item textures
         }
     }
     client {
