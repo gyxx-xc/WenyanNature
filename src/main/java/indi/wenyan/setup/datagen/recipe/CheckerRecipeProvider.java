@@ -1,10 +1,10 @@
 package indi.wenyan.setup.datagen.recipe;
 
 import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
-import indi.wenyan.setup.datagen.recipe.craft.BlockRecipes;
-import indi.wenyan.setup.datagen.recipe.craft.HandrunnerRecipes;
-import indi.wenyan.setup.datagen.recipe.craft.ItemRecipes;
-import indi.wenyan.setup.datagen.recipe.craft.ModuleRecipes;
+import indi.wenyan.setup.datagen.recipe.crafting.BlockRecipes;
+import indi.wenyan.setup.datagen.recipe.wyquestion.HandrunnerRecipes;
+import indi.wenyan.setup.datagen.recipe.crafting.ItemRecipes;
+import indi.wenyan.setup.datagen.recipe.crafting.ModuleRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -45,6 +45,7 @@ public class CheckerRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes() {
         HandrunnerRecipes.build(this.items, output, this);
+        indi.wenyan.setup.datagen.recipe.crafting.HandrunnerRecipes.build(this.items, output, this);
         ModuleRecipes.build(this.items, output, this);
         ItemRecipes.build(items, output, this);
         BlockRecipes.build(this.items, output, this);

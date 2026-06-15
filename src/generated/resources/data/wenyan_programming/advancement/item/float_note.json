@@ -1,0 +1,30 @@
+{
+  "parent": "wenyan_programming:root",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:float_note"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": "获得此物品",
+    "icon": {
+      "id": "wenyan_programming:float_note"
+    },
+    "title": {
+      "translate": "item.wenyan_programming.float_note"
+    }
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

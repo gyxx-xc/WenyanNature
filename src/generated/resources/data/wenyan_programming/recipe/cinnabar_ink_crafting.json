@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:potion",
+    "minecraft:redstone",
+    "minecraft:black_dye",
+    "minecraft:gold_ingot"
+  ],
+  "result": {
+    "id": "wenyan_programming:cinnabar_ink"
+  }
+}

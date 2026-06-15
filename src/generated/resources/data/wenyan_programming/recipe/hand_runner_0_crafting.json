@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "minecraft:iron_ingot",
+    "p": "minecraft:paper"
+  },
+  "pattern": [
+    "ppp",
+    "pip",
+    "ppp"
+  ],
+  "result": {
+    "id": "wenyan_programming:hand_runner_0"
+  }
+}

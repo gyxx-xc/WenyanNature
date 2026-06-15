@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:potion",
+    "wenyan_programming:starlight_ink",
+    "minecraft:quartz",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "wenyan_programming:lunar_ink"
+  }
+}

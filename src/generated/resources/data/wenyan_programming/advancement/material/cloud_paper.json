@@ -1,0 +1,30 @@
+{
+  "parent": "wenyan_programming:hand_runner_1",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:cloud_paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": "获得此物品",
+    "icon": {
+      "id": "wenyan_programming:cloud_paper"
+    },
+    "title": {
+      "translate": "item.wenyan_programming.cloud_paper"
+    }
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

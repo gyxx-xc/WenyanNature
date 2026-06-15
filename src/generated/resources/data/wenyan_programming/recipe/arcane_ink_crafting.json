@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:potion",
+    "wenyan_programming:lunar_ink",
+    "minecraft:enchanted_book",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "wenyan_programming:arcane_ink"
+  }
+}

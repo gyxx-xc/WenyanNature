@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:hand_runner_0"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:gui/advancements/backgrounds/stone",
+    "description": "获得初阶符",
+    "icon": {
+      "id": "wenyan_programming:hand_runner_0"
+    },
+    "show_toast": false,
+    "title": "吾有一术"
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

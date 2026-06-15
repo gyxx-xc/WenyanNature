@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:feather",
+    "minecraft:phantom_membrane"
+  ],
+  "result": {
+    "id": "wenyan_programming:cloud_paper"
+  }
+}

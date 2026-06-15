@@ -1,10 +1,10 @@
 package indi.wenyan.content.recipe.answering.checker;
 
-import indi.wenyan.content.recipe.answering.checker.checker.EchoChecker;
-import indi.wenyan.content.recipe.answering.checker.checker.challenge.Ex1Checker;
-import indi.wenyan.content.recipe.answering.checker.checker.handrunner.*;
-import indi.wenyan.content.recipe.answering.checker.checker.ink.*;
-import indi.wenyan.content.recipe.answering.checker.checker.paper.*;
+import indi.wenyan.content.recipe.answering.checker.wyquestion.EchoChecker;
+import indi.wenyan.content.recipe.answering.checker.wyquestion.challenge.Ex1Checker;
+import indi.wenyan.content.recipe.answering.checker.wyquestion.handrunner.*;
+import indi.wenyan.content.recipe.answering.checker.wyquestion.ink.*;
+import indi.wenyan.content.recipe.answering.checker.wyquestion.paper.*;
 import indi.wenyan.setup.language.ILocalizationEnum;
 import net.minecraft.util.RandomSource;
 

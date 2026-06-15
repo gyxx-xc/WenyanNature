@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cinnabar_ink": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:cinnabar_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_cloud_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:cloud_paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "wenyan_programming:hand_runner_2_crafting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cinnabar_ink",
+      "has_cloud_paper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "wenyan_programming:hand_runner_2_crafting"
+    ]
+  }
+}

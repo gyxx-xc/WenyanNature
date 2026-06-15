@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_celestial_ink": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:celestial_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_dragon_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:dragon_paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "wenyan_programming:hand_runner_6_crafting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_celestial_ink",
+      "has_dragon_paper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "wenyan_programming:hand_runner_6_crafting"
+    ]
+  }
+}
