@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:potion",
+    "minecraft:glowstone_dust",
+    "minecraft:amethyst_shard",
+    "minecraft:gold_ingot"
+  ],
+  "result": {
+    "id": "wenyan_programming:starlight_ink"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "wenyan_programming:lunar_ink",
+    "wenyan_programming:frost_paper"
+  ],
+  "result": {
+    "id": "wenyan_programming:hand_runner_4"
+  }
+}

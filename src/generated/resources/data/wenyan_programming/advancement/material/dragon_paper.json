@@ -1,0 +1,30 @@
+{
+  "parent": "wenyan_programming:hand_runner_5",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:dragon_paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": "获得此物品",
+    "icon": {
+      "id": "wenyan_programming:dragon_paper"
+    },
+    "title": {
+      "translate": "item.wenyan_programming.dragon_paper"
+    }
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:phantom_membrane",
+    "minecraft:diamond",
+    "minecraft:dragon_breath"
+  ],
+  "result": {
+    "id": "wenyan_programming:dragon_paper"
+  }
+}

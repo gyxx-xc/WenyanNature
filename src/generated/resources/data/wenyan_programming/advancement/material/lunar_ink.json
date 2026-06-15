@@ -1,0 +1,30 @@
+{
+  "parent": "wenyan_programming:material/frost_paper",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:lunar_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": "获得此物品",
+    "icon": {
+      "id": "wenyan_programming:lunar_ink"
+    },
+    "title": {
+      "translate": "item.wenyan_programming.lunar_ink"
+    }
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

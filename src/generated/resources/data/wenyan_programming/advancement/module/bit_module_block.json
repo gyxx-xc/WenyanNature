@@ -1,0 +1,30 @@
+{
+  "parent": "wenyan_programming:hand_runner_1",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:bit_module_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": "获得此物品",
+    "icon": {
+      "id": "wenyan_programming:bit_module_block"
+    },
+    "title": {
+      "translate": "item.wenyan_programming.bit_module_block"
+    }
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

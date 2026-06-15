@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_frost_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:frost_paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_lunar_ink": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:lunar_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "wenyan_programming:hand_runner_4_crafting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_lunar_ink",
+      "has_frost_paper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "wenyan_programming:hand_runner_4_crafting"
+    ]
+  }
+}

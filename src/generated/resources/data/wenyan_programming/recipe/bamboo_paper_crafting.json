@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:bamboo",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "wenyan_programming:bamboo_paper"
+  }
+}

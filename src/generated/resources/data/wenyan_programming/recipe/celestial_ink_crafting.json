@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:potion",
+    "wenyan_programming:arcane_ink",
+    "minecraft:netherite_scrap",
+    "minecraft:end_crystal"
+  ],
+  "result": {
+    "id": "wenyan_programming:celestial_ink"
+  }
+}
