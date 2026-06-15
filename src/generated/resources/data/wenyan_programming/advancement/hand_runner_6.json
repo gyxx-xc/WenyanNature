@@ -1,0 +1,30 @@
+{
+  "parent": "wenyan_programming:material/celestial_ink",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:hand_runner_6"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": "获得此物品",
+    "icon": {
+      "id": "wenyan_programming:hand_runner_6"
+    },
+    "title": {
+      "translate": "item.wenyan_programming.hand_runner_6"
+    }
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

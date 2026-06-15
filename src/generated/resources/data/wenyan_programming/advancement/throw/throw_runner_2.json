@@ -1,0 +1,30 @@
+{
+  "parent": "wenyan_programming:hand_runner_2",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": "wenyan_programming:throw_runner_2"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": "获得此物品",
+    "icon": {
+      "id": "wenyan_programming:throw_runner_2"
+    },
+    "title": {
+      "translate": "item.wenyan_programming.throw_runner_2"
+    }
+  },
+  "requirements": [
+    [
+      "has_item"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
