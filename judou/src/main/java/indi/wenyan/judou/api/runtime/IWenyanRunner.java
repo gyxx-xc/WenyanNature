@@ -7,6 +7,7 @@ import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import org.slf4j.Logger;
 
+/// Runner interface expose to thread
 public interface IWenyanRunner extends IRunner {
     IGlobalResolver getGlobalResolver();
 

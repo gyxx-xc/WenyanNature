@@ -2,7 +2,6 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanUnreachedException;
-import indi.wenyan.judou.api.runtime.IThreadHolder;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.runtime.IWenyanScheduler;
 import indi.wenyan.judou.runtime.IGlobalResolver;
@@ -10,10 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Represents a thread of execution in a Wenyan program.
- * Manages its execution state and runtime stack.
- */
+/// Represents a thread of execution in a Wenyan program.
+/// Manages its execution state and runtime stack.
+///
+/// remain as legacy use [WenyanSwitchInlineRunner] instead
 public class WenyanRunner<T extends IWenyanScheduler.IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter

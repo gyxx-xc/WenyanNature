@@ -2,7 +2,6 @@ package indi.wenyan.judou.runtime.function_impl;
 
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.compile.WenyanCompiler;
-import indi.wenyan.judou.api.runtime.IThreadHolder;
 import indi.wenyan.judou.test_utils.NoScheProgram;
 import indi.wenyan.judou.utils.WenyanPackages;
 

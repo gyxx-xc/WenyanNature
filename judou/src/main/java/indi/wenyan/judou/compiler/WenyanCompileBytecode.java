@@ -13,7 +13,7 @@ import java.util.List;
  * Represents the bytecode structure for the Wenyan interpreter.
  * Manages code instructions, constant values, identifiers, labels, and debug information.
  */
-public class WenyanBytecode {
+public class WenyanCompileBytecode {
     private final List<Code> bytecode = new ArrayList<>();
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
@@ -23,7 +23,7 @@ public class WenyanBytecode {
     @Getter private final List<CapturedValue> capturedValues = new ArrayList<>();
     @Getter private final String sourceCode;
 
-    public WenyanBytecode(String sourceCode) {
+    public WenyanCompileBytecode(String sourceCode) {
         this.sourceCode = sourceCode;
     }
 

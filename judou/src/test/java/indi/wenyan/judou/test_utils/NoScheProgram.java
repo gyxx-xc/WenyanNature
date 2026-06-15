@@ -1,8 +1,8 @@
 package indi.wenyan.judou.test_utils;
 
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
-import indi.wenyan.judou.api.runtime.IThreadHolder;
 import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.runtime.function_impl.IThreadHolder;
 import lombok.Getter;
 
 public class NoScheProgram implements IWenyanScheduler<NoScheProgram.SimpleThread> {

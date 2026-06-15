@@ -1,7 +1,7 @@
 package indi.wenyan.judou.api.compile;
 
 import indi.wenyan.judou.api.values.IWenyanValue;
-import indi.wenyan.judou.compiler.WenyanBytecode;
+import indi.wenyan.judou.compiler.WenyanCompileBytecode;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +56,7 @@ public interface IWenyanBytecode {
      */
     int size();
 
-    List<WenyanBytecode.CapturedValue> getCapturedValues();
+    List<WenyanCompileBytecode.CapturedValue> getCapturedValues();
 
     String getSourceCode();
 

@@ -4,7 +4,6 @@ import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.language.JudouExceptionText;
-import indi.wenyan.judou.api.runtime.IThreadHolder;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.runtime.IWenyanScheduler;
 import indi.wenyan.judou.api.utils.WenyanValues;

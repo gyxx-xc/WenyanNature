@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class WenyanCompilerEnvironment {
     public static final int FUNCTION_ARGS_MAX = 100;
-    private final WenyanBytecode bytecode;
+    private final WenyanCompileBytecode bytecode;
     @Nullable
     private final WenyanCompilerEnvironment parent;
     private final HashMap<IWenyanValue, Integer> constTable = new HashMap<>();
@@ -53,7 +53,7 @@ public class WenyanCompilerEnvironment {
      */
     public WenyanCompilerEnvironment(String code, @Nullable WenyanCompilerEnvironment parent, List<String> argv, boolean debug) {
         this.parent = parent;
-        this.bytecode = new WenyanBytecode(code);
+        this.bytecode = new WenyanCompileBytecode(code);
         this.debug = debug;
         var scope = new Scope(0);
         scopeStack.push(scope);
@@ -280,7 +280,7 @@ public class WenyanCompilerEnvironment {
             if (locals.variables.containsKey(identifier)) {
                 int index = locals.variables.get(identifier);
                 return new ScopedValueHelper(new ScopedValue(index, this.bytecode),
-                        new WenyanBytecode.CapturedValue(index, true));
+                        new WenyanCompileBytecode.CapturedValue(index, true));
             }
         }
         // reach global, not found, stop
@@ -291,7 +291,7 @@ public class WenyanCompilerEnvironment {
         if (scoped == null) return null;
         int index = capturedValueTable.computeIfAbsent(scoped.scopedValue(), ignore -> bytecode.addCapturedValue(scoped.capturedValue));
         return new ScopedValueHelper(scoped.scopedValue,
-                new WenyanBytecode.CapturedValue(index, false));
+                new WenyanCompileBytecode.CapturedValue(index, false));
     }
 
     private static class Scope {
@@ -316,10 +316,10 @@ public class WenyanCompilerEnvironment {
     }
 
     // if from local null, means it's local
-    private record ScopedValue(int index, WenyanBytecode from) {
+    private record ScopedValue(int index, WenyanCompileBytecode from) {
     }
 
     private record ScopedValueHelper(ScopedValue scopedValue,
-                                     WenyanBytecode.CapturedValue capturedValue) {
+                                     WenyanCompileBytecode.CapturedValue capturedValue) {
     }
 }

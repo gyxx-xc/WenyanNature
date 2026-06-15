@@ -1,13 +1,12 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
-import indi.wenyan.judou.api.runtime.IEffectCapability;
-import indi.wenyan.judou.api.runtime.IThreadHolder;
-import indi.wenyan.judou.api.runtime.IWenyanScheduler;
 import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanUnreachedException;
-import indi.wenyan.judou.api.utils.UtilManager;
+import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.runtime.IEffectCapability;
+import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.utils.UtilManager;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +35,7 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
      **/
     private boolean hasIdle = false;
 
-    // NOTE: all thread = current running thread + ready queue threads + blocked threads (hold by ExecQueue)
+    /// all thread = current running thread + ready queue threads + blocked threads (hold by ExecQueue)
     public final Collection<PCB> allThreads = ConcurrentHashMap.newKeySet(maxThread);
 
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1,

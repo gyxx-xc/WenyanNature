@@ -14,12 +14,14 @@ import indi.wenyan.judou.api.exec.structure.IExecQueue;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.language.Symbol;
-import indi.wenyan.judou.api.runtime.*;
+import indi.wenyan.judou.api.runtime.IEffectCapability;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.runtime.RunnerCreator;
 import indi.wenyan.judou.api.utils.ChineseUtils;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.WenyanPackage;
-import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -225,15 +227,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         IWenyanBytecode bytecode;
         try {
             bytecode = new WenyanCompiler().compile(pages).bytecode();
-        } catch (WenyanCompileException e) {
-            handleError(e.getMessage());
-            return false;
-        }
-        try {
-            IThreadHolder<WenyanSchedularImpl.PCB> runner =
-                    RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), this.initEnvironment());
-            lazyProgram.createOrGet().create(runner);
-        } catch (WenyanException e) {
+            RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
+        } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
             return false;
         }
@@ -262,15 +257,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         IWenyanBytecode bytecode;
         try {
             bytecode = new WenyanCompiler(true).compile(titleCodeOutput.getCode()).bytecode();
-        } catch (WenyanCompileException e) {
-            handleError(e.getMessage());
-            return;
-        }
-        try {
-            IThreadHolder<WenyanSchedularImpl.PCB> runner =
-                    RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), this.initEnvironment());
-            lazyProgram.createOrGet().create(runner);
-        } catch (WenyanException e) {
+            RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
+        } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
         }
     }

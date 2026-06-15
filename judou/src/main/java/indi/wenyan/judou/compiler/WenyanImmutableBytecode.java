@@ -18,13 +18,13 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
     private final IWenyanValue[] constTable;
 
     @Getter
-    private final List<WenyanBytecode.CapturedValue> capturedValues;
+    private final List<WenyanCompileBytecode.CapturedValue> capturedValues;
     private final List<Context> debugTable;
 
     @Getter
     private final String sourceCode;
 
-    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, int[] labelTable, List<WenyanBytecode.CapturedValue> capturedValues, List<Context> debugTable, String sourceCode) {
+    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, int[] labelTable, List<WenyanCompileBytecode.CapturedValue> capturedValues, List<Context> debugTable, String sourceCode) {
         this.size = size;
         this.codes = codes;
         this.args = args;
