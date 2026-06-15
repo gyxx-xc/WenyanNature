@@ -64,9 +64,16 @@ We welcome your contributions! If you'd like to contribute, please follow these 
 
 ---
 
+## Discussion Group (English, 中文)
+
+Discord: **https://discord.gg/5nNxPxkJvp**
+
+---
+
 ## Contributors
 Thanks to the following contributors by their wonderful work in this mod! (Listed in alphabetical order.):
 
 - Filix
 - I_am_lolikong
 - LaFi
+- Sanituna_sleet
