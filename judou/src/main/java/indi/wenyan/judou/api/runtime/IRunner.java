@@ -4,7 +4,9 @@ import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.function_impl.IThreadHolder;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public interface IRunner {
     IWenyanPlatform platform();
 

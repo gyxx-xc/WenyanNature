@@ -53,10 +53,10 @@ public class WenyanRunner<T extends IWenyanScheduler.IWenyanThread> implements I
             this.yield();
             return step;
         } catch (WenyanException e) {
-            IWenyanRunner.dieWithException(this, e);
+            WenyanFrame.dieWithException(this, e);
             return i + 1; // might i here, but it's not a big deal
         } catch (RuntimeException e) { // for any other missing exceptions
-            IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
+            WenyanFrame.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
             return i + 1;
         }
     }
@@ -71,7 +71,7 @@ public class WenyanRunner<T extends IWenyanScheduler.IWenyanThread> implements I
 
     private boolean validateRuntimeState(WenyanFrame runtime) {
         if (runtime.getProgramCounter() < 0 || runtime.getProgramCounter() >= runtime.getBytecode().size()) {
-            IWenyanRunner.dieWithException(this, new WenyanUnreachedException());
+            WenyanFrame.dieWithException(this, new WenyanUnreachedException());
             return true;
         }
         return false;

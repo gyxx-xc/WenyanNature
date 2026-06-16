@@ -1,6 +1,5 @@
 package indi.wenyan.judou.api.utils;
 
-import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.values.IWenyanFunction;
 import indi.wenyan.judou.api.values.IWenyanValue;
@@ -51,28 +50,16 @@ public enum WenyanValues {;
         return new WenyanInlineJavacall(function);
     }
 
-    public static boolean checkArgsType(List<IWenyanValue> args, WenyanType<?>... types) {
-        if (args.size() != types.length) return false;
-        for (int i = 0; i < args.size(); i++) {
-            if (!args.get(i).is(types[i])) return false;
-        }
-        return true;
-    }
-
-    /**
-     * Functional interface for builtin function implementations.
-     * Must be <b>thread safe</b>, use {@link IRequestCallHandler} otherwise
-     */
+    /// Functional interface for builtin function implementations.
+    /// Must be **thread safe**, use [IRequestCallHandler] otherwise
     @FunctionalInterface
     public interface BuiltinFunction {
-        /**
-         * Applies the function to the given arguments.
-         *
-         * @param self the self value
-         * @param args the function arguments
-         * @return the result value
-         * @throws WenyanException if an error occurs during function execution
-         */
+        /// Applies the function to the given arguments.
+        ///
+        /// @param self the self value
+        /// @param args the function arguments
+        /// @return the result value
+        /// @throws WenyanException if an error occurs during function execution
         IWenyanValue apply(IWenyanValue self, List<IWenyanValue> args)
                 throws WenyanException;
     }

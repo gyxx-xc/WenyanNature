@@ -317,10 +317,10 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
             this.yield();
             return step;
         } catch (WenyanException e) {
-            IWenyanRunner.dieWithException(this, e);
+            WenyanFrame.dieWithException(this, e);
             return i + 1; // might i here, but it's not a big deal
         } catch (RuntimeException e) { // for any other missing exceptions
-            IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
+            WenyanFrame.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
             return i + 1;
         }
     }

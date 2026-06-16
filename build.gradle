@@ -201,6 +201,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.google.guava:guava-testlib:21.0")
     testImplementation("net.neoforged:testframework:${neo_version}")
+    testImplementation sourceSets.client.output
 
     // for game test
     gameTestImplementation(project(":judou"))
