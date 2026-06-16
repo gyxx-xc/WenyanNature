@@ -1,6 +1,6 @@
 package indi.wenyan.judou.test_statement;
 
-import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

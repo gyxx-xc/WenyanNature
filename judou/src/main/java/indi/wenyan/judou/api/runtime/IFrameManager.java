@@ -1,7 +1,7 @@
 package indi.wenyan.judou.api.runtime;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import org.jetbrains.annotations.Nullable;
 
 public interface IFrameManager<T> {

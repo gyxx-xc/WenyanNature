@@ -1,9 +1,9 @@
 package indi.wenyan.judou.utils;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.structure.ParsableType;
 
 import java.math.BigInteger;

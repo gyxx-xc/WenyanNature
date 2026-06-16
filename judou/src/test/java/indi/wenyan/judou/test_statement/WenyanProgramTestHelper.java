@@ -1,7 +1,5 @@
 package indi.wenyan.judou.test_statement;
 
-import indi.wenyan.judou.api.WenyanCompileException;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.compile.WenyanCompiler;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
@@ -10,6 +8,8 @@ import indi.wenyan.judou.api.runtime.RunnerCreator;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.judou.test_utils.TestPlatform;

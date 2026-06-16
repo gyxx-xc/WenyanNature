@@ -1,7 +1,7 @@
 package indi.wenyan.judou.api.exec.structure;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IHandleableRequest;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.exec_interface.ExecQueue;
 
 public interface IExecQueue {

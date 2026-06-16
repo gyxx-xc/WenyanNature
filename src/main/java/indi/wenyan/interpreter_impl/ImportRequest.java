@@ -1,6 +1,5 @@
 package indi.wenyan.interpreter_impl;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.compile.WenyanCompiler;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.exec.request.IBaseHandleableRequest;
@@ -11,6 +10,7 @@ import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.utils.Either;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanPackage;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import lombok.AccessLevel;

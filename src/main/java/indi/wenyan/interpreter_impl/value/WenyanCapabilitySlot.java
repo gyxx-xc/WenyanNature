@@ -1,10 +1,10 @@
 package indi.wenyan.interpreter_impl.value;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;

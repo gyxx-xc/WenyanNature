@@ -1,9 +1,9 @@
 package indi.wenyan.content.recipe.answering.checker.wyquestion.handrunner;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import net.minecraft.util.RandomSource;
 

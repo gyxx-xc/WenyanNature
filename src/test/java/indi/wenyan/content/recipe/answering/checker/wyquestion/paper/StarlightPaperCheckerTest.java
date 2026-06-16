@@ -2,8 +2,8 @@ package indi.wenyan.content.recipe.answering.checker.wyquestion.paper;
 
 import indi.wenyan.content.recipe.answering.checker.IAnsweringChecker;
 import indi.wenyan.content.recipe.answering.checker.wyquestion.test_utils.MockRandomSource;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanList;
 import net.minecraft.util.RandomSource;
 import org.junit.jupiter.api.Assertions;

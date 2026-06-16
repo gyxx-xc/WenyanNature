@@ -1,10 +1,10 @@
 package indi.wenyan.judou.compiler;
 
-import indi.wenyan.judou.api.WenyanCompileException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import lombok.Getter;
 import org.antlr.v4.runtime.ParserRuleContext;

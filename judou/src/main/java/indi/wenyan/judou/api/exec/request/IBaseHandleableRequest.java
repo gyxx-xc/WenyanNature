@@ -1,10 +1,10 @@
 package indi.wenyan.judou.api.exec.request;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 
 /// a simplicity impl for IHandleableRequest
 public interface IBaseHandleableRequest extends IHandleableRequest {

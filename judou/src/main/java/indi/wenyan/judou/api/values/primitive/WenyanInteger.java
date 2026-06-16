@@ -1,6 +1,5 @@
 package indi.wenyan.judou.api.values.primitive;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.JudouTypeText;
@@ -10,6 +9,7 @@ import indi.wenyan.judou.api.values.IWenyanComparable;
 import indi.wenyan.judou.api.values.IWenyanComputable;
 import indi.wenyan.judou.api.values.IWenyanNumber;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

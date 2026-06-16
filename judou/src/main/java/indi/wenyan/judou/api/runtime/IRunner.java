@@ -1,8 +1,8 @@
 package indi.wenyan.judou.api.runtime;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.function_impl.IThreadHolder;
 
 public interface IRunner {

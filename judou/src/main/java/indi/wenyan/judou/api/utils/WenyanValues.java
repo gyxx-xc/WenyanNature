@@ -1,11 +1,11 @@
 package indi.wenyan.judou.api.utils;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.values.IWenyanFunction;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.*;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import org.jetbrains.annotations.NotNull;

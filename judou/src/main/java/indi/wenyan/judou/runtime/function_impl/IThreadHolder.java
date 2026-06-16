@@ -1,10 +1,10 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.runtime.IRunner;
 import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 
 /// Runner interface expose to scheduler
 public interface IThreadHolder<T extends IWenyanScheduler.IWenyanThread> extends IRunner {

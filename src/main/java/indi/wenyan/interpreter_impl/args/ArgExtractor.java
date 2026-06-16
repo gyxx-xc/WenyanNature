@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter_impl.args;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 
 import java.util.List;
 

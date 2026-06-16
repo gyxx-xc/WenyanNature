@@ -1,10 +1,10 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.utils.UtilManager;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

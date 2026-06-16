@@ -1,6 +1,6 @@
 package indi.wenyan.judou.api.values;
 
-import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 
 /**
  * Interface for Wenyan values that wrap a Java value.

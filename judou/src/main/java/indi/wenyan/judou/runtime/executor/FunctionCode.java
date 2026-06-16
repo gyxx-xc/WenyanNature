@@ -1,11 +1,11 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanFunction;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
 import java.util.ArrayList;

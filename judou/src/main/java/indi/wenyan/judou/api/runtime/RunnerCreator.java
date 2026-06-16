@@ -1,8 +1,8 @@
 package indi.wenyan.judou.api.runtime;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.utils.UtilManager;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.function_impl.IThreadHolder;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;

@@ -1,10 +1,10 @@
 package indi.wenyan.judou.structure.builtin_type;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouTypeText;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 
 import java.util.HashMap;
 import java.util.Map;

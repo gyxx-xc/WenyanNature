@@ -1,7 +1,7 @@
 package indi.wenyan.judou.compiler;
 
-import indi.wenyan.judou.api.WenyanCompileException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
 
 /**
  * Verifier for WenyanBytecode to ensure execution safety.

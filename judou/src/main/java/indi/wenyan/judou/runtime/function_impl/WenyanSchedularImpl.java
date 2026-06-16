@@ -1,12 +1,12 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.runtime.IEffectCapability;
 import indi.wenyan.judou.api.runtime.IWenyanScheduler;
 import indi.wenyan.judou.api.utils.UtilManager;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

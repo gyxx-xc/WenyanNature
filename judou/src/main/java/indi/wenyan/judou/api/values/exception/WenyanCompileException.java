@@ -1,4 +1,4 @@
-package indi.wenyan.judou.api;
+package indi.wenyan.judou.api.values.exception;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.Nullable;

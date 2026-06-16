@@ -1,7 +1,6 @@
 package indi.wenyan.content.recipe.answering.checker.wyquestion.handrunner;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
@@ -10,6 +9,7 @@ import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.util.RandomSource;

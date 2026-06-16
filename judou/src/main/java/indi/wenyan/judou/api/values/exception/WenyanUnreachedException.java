@@ -1,4 +1,4 @@
-package indi.wenyan.judou.api;
+package indi.wenyan.judou.api.values.exception;
 
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import org.slf4j.Logger;

@@ -1,10 +1,10 @@
 package indi.wenyan.judou.api.values;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.judou.api.values.primitive.WenyanString;

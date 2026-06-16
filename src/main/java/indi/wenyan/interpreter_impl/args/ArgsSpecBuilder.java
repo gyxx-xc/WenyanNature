@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter_impl.args;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
