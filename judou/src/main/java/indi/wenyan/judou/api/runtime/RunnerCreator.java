@@ -19,6 +19,7 @@ public enum RunnerCreator {
     @Contract("_, _ -> new")
     public static @NotNull <T extends IWenyanScheduler.IWenyanThread> IThreadHolder<T> newRunner(WenyanFrame mainRuntime, IGlobalResolver globalResolver) {
         if (UtilManager.getConfig().useLegacyRunner()) {
+            //noinspection deprecation
             return new WenyanRunner<>(mainRuntime, globalResolver);
         } else {
             return new WenyanSwitchInlineRunner<>(mainRuntime, globalResolver);

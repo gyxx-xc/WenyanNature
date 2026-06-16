@@ -98,13 +98,21 @@ public class WenyanCompileBytecode {
     }
 
     public IWenyanBytecode toImmutable() {
+        // const label table
+        for (var iterator = bytecode.listIterator(); iterator.hasNext(); ) {
+            var code = iterator.next();
+            switch (code.code()) {
+                case JMP, BRANCH_FALSE, BRANCH_TRUE, BRANCH_POP_FALSE, FOR_ITER, FOR_NUM ->
+                        iterator.set(new Code(code.code(), labelTable.get(code.arg())));
+            }
+        }
+
         return new WenyanImmutableBytecode(
                 size(),
                 bytecode.stream().map(Code::code).mapToInt(WenyanCodes::ordinal).toArray(),
                 bytecode.stream().mapToInt(Code::arg).toArray(),
                 constTable.toArray(new IWenyanValue[0]),
                 identifierTable.toArray(new String[0]),
-                labelTable.stream().mapToInt(Integer::intValue).toArray(),
                 capturedValues,
                 debugTable,
                 sourceCode

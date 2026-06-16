@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public interface IWenyanBytecode {
+    /// @deprecated use getCodeOrdinal() and getArg instead
+    @Deprecated
     WenyanCodes getCode(int index);
 
     /// behave like getCode(index).ordinal(), but faster
@@ -40,14 +42,6 @@ public interface IWenyanBytecode {
      * @throws IndexOutOfBoundsException If the identifier is not found
      */
     @Nullable Context getContext(int index);
-
-    /**
-     * Gets the label value at the specified index.
-     *
-     * @param index The label index
-     * @return The label value
-     */
-    int getLabel(int index);
 
     /**
      * Returns the size of the bytecode.

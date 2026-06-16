@@ -66,7 +66,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         boolean value = runtime.getProcessStack().pop()
                                 .as(WenyanBoolean.TYPE).value();
                         if (!value) {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
@@ -75,7 +75,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         boolean value = runtime.getProcessStack().peek()
                                 .as(WenyanBoolean.TYPE).value();
                         if (!value) {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
@@ -84,12 +84,12 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         boolean value = runtime.getProcessStack().peek()
                                 .as(WenyanBoolean.TYPE).value();
                         if (value) {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
                     case 3 -> {
-                        runtime.setProgramCounter(bytecode.getLabel(args));
+                        runtime.setProgramCounter(args);
                         pcFlag = true;
                     }
                     case 4 -> {
@@ -290,7 +290,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                             runtime.getProcessStack().push(value);
                         } else {
                             runtime.getProcessStack().pop();
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
@@ -301,7 +301,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                             IWenyanValue value1 = WenyanValues.of((long) num - 1);
                             runtime.getProcessStack().push(value1);
                         } else {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }

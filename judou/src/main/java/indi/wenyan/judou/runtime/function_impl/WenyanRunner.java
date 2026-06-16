@@ -12,7 +12,9 @@ import org.jetbrains.annotations.NotNull;
 /// Represents a thread of execution in a Wenyan program.
 /// Manages its execution state and runtime stack.
 ///
-/// remain as legacy use [WenyanSwitchInlineRunner] instead
+/// @deprecated remain as legacy, use [WenyanSwitchInlineRunner] instead
+@SuppressWarnings("DeprecatedIsStillUsed")
+@Deprecated
 public class WenyanRunner<T extends IWenyanScheduler.IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter

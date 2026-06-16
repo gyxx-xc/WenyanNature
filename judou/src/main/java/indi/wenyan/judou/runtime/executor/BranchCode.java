@@ -18,7 +18,7 @@ public enum BranchCode {
         boolean value = runtime.getProcessStack().peek()
                 .as(WenyanBoolean.TYPE).value();
         if (value) {
-            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setProgramCounter(arg);
             runtime.setPCFlag(true);
         }
     }
@@ -29,7 +29,7 @@ public enum BranchCode {
         boolean value = runtime.getProcessStack().peek()
                 .as(WenyanBoolean.TYPE).value();
         if (!value) {
-            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setProgramCounter(arg);
             runtime.setPCFlag(true);
         }
     }
@@ -39,14 +39,14 @@ public enum BranchCode {
         boolean value = runtime.getProcessStack().pop()
                 .as(WenyanBoolean.TYPE).value();
         if (!value) {
-            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setProgramCounter(arg);
             runtime.setPCFlag(true);
         }
     }
 
     static void branch(int arg, IWenyanRunner thread) throws WenyanUnreachedException {
         WenyanFrame runtime = thread.getCurrentRuntime();
-        runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+        runtime.setProgramCounter(arg);
         runtime.setPCFlag(true);
     }
 }

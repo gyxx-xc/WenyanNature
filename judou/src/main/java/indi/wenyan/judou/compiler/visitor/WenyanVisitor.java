@@ -36,8 +36,7 @@ public abstract class WenyanVisitor extends WenyanParserBaseVisitor<Boolean> {
     public Boolean visit(ParseTree tree) {
         Boolean result;
         if (tree instanceof ParserRuleContext ctx) {
-            bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
-                    ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+            bytecode.enterContext(ctx);
             if (bytecode.isDebug() && ctx instanceof WenyanParser.StatementContext) {
                 bytecode.add(WenyanCodes.BREAKPOINT);
             }
@@ -61,8 +60,7 @@ public abstract class WenyanVisitor extends WenyanParserBaseVisitor<Boolean> {
             ParseTree c = node.getChild(i);
             Boolean childResult;
             if (c instanceof ParserRuleContext ctx) {
-                bytecode.enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
-                        ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                bytecode.enterContext(ctx);
                 if (bytecode.isDebug() && ctx instanceof WenyanParser.StatementContext) {
                     bytecode.add(WenyanCodes.BREAKPOINT);
                 }
