@@ -7,10 +7,8 @@ import indi.wenyan.setup.definitions.WenyanBlocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Block for the blocking queue module.
- * Provides synchronization capabilities for multithreaded execution.
- */
+/// Block for the blocking queue module.
+/// Provides synchronization capabilities for multithreaded execution.
 public class BlockingQueueModuleBlock extends AbstractFuluBlock implements IModuleBlock {
     public static final String ID = "blocking_queue_module_block";
     

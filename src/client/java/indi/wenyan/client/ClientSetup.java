@@ -16,14 +16,10 @@ import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlers
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
-/**
- * Client-side event handler for registering renderers, screens, and particle providers
- */
+/// Client-side event handler for registering renderers, screens, and particle providers
 @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public enum ClientSetup {;
-    /**
-     * Registers entity and block entity renderers
-     */
+    /// Registers entity and block entity renderers
     @SubscribeEvent
     public static void registerRender(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(WenyanEntities.THROW_RUNNER_ENTITY.get(), ThrowRunnerRender::new);
@@ -39,18 +35,14 @@ public enum ClientSetup {;
         event.registerBlockEntityRenderer(WenyanBlocks.CREATIVE_POWER_BLOCK_ENTITY.get(), CreativePowerBlockRender::new);
     }
 
-    /**
-     * Registers menu screens
-     */
+    /// Registers menu screens
     @SubscribeEvent
     public static void registerScreen(RegisterMenuScreensEvent event) {
 //        event.register(WyRegistration.CRAFTING_CONTAINER.get(), CraftingBlockScreen::new);
         event.register(WyRegistration.LOGIC_FURNACE_MENU.get(), LogicFurnaceScreen::new);
     }
 
-    /**
-     * Registers particle providers
-     */
+    /// Registers particle providers
     @SubscribeEvent
     public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
 //        event.registerSpriteSet(WYRegistration.COMMUNICATION_PARTICLES.get(), CommunicationParticle.Provider::new);

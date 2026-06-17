@@ -74,14 +74,12 @@ public final class ImportRequest implements IBaseHandleableRequest {
 
     @FunctionalInterface
     public interface ImportFunction {
-        /**
-         * Retrieves a package by its name.
-         *
-         * @param context     the handling context, used to manage execution state
-         * @param packageName the name of the package to retrieve
-         * @return the requested package
-         * @throws WenyanException if the package cannot be found or accessed
-         */
+        /// Retrieves a package by its name.
+        ///
+        /// @param context     the handling context, used to manage execution state
+        /// @param packageName the name of the package to retrieve
+        /// @return the requested package
+        /// @throws WenyanException if the package cannot be found or accessed
         Either<WenyanPackage, String> getPackage(IHandleContext context, String packageName) throws WenyanException;
     }
 

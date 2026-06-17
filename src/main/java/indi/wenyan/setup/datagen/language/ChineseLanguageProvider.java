@@ -15,19 +15,15 @@ import static indi.wenyan.setup.language.ExceptionText.*;
 import static indi.wenyan.setup.language.GuiText.*;
 import static indi.wenyan.setup.language.TypeText.*;
 
-/**
- * Provider for generating Chinese language translations during data generation.
- * Contains all Chinese translations used in the mod.
- */
+/// Provider for generating Chinese language translations during data generation.
+/// Contains all Chinese translations used in the mod.
 public class ChineseLanguageProvider extends LanguageProvider {
 
-    /**
-     * Constructs a new Chinese language provider.
-     *
-     * @param output The pack output for language file generation
-     * @param modid  The mod ID
-     * @param locale The locale code (zh_cn)
-     */
+    /// Constructs a new Chinese language provider.
+    ///
+    /// @param output The pack output for language file generation
+    /// @param modid  The mod ID
+    /// @param locale The locale code (zh\_cn)
     public ChineseLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
     }

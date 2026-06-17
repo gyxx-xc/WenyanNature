@@ -3,16 +3,12 @@ package indi.wenyan.setup.datagen;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.data.ParticleDescriptionProvider;
 
-/**
- * Provider for generating particle descriptions during data generation.
- * Maps particle types to their texture resources.
- */
+/// Provider for generating particle descriptions during data generation.
+/// Maps particle types to their texture resources.
 public class ModParticleDescriptionProvider extends ParticleDescriptionProvider {
 
-    /**
-     * Constructs a new particle description provider.
-     * @param output The pack output for particle description generation
-     */
+    /// Constructs a new particle description provider.
+    /// @param output The pack output for particle description generation
     protected ModParticleDescriptionProvider(PackOutput output) {
         super(output);
     }

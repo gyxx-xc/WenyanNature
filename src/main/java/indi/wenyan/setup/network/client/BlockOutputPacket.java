@@ -9,20 +9,14 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Packet for sending output from a platform to the client
- */
+/// Packet for sending output from a platform to the client
 public record BlockOutputPacket(BlockPos pos, String output, IOutputAcceptor.OutputStyle style) implements CustomPacketPayload {
 
-    /**
-     * Packet type identifier
-     */
+    /// Packet type identifier
     public static final Type<BlockOutputPacket> TYPE =
             IWenyanPacketPayload.createType("platform_output");
 
-    /**
-     * Codec for serializing and deserializing the packet
-     */
+    /// Codec for serializing and deserializing the packet
     public static final StreamCodec<FriendlyByteBuf, BlockOutputPacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
@@ -37,9 +31,7 @@ public record BlockOutputPacket(BlockPos pos, String output, IOutputAcceptor.Out
                                 buffer.readEnum(IOutputAcceptor.OutputStyle.class))
             );
 
-    /**
-     * Handler for processing the packet
-     */
+    /// Handler for processing the packet
     public static final IPayloadHandler<BlockOutputPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());

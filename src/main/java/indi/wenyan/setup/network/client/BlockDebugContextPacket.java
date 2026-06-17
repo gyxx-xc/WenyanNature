@@ -9,20 +9,14 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Packet for sending output from a platform to the client
- */
+/// Packet for sending output from a platform to the client
 public record BlockDebugContextPacket(BlockPos pos, RunnerBlockEntity.DebugContext debugContext) implements CustomPacketPayload {
 
-    /**
-     * Packet type identifier
-     */
+    /// Packet type identifier
     public static final Type<BlockDebugContextPacket> TYPE =
             IWenyanPacketPayload.createType("block_debug_context");
 
-    /**
-     * Codec for serializing and deserializing the packet
-     */
+    /// Codec for serializing and deserializing the packet
     public static final StreamCodec<FriendlyByteBuf, BlockDebugContextPacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
@@ -37,9 +31,7 @@ public record BlockDebugContextPacket(BlockPos pos, RunnerBlockEntity.DebugConte
                         )
             );
 
-    /**
-     * Handler for processing the packet
-     */
+    /// Handler for processing the packet
     public static final IPayloadHandler<BlockDebugContextPacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());

@@ -11,16 +11,12 @@ import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.utils.WenyanDataParser;
 
-/**
- * Visitor for handling data expressions and literals in Wenyan language.
- * Responsible for compiling primitive values, identifiers, array access,
- * and object property access.
- */
+/// Visitor for handling data expressions and literals in Wenyan language.
+/// Responsible for compiling primitive values, identifiers, array access,
+/// and object property access.
 public class WenyanDataVisitor extends WenyanVisitor {
-    /**
-     * Constructs a data visitor with the given bytecode environment
-     * @param bytecode The compiler environment to emit bytecode to
-     */
+    /// Constructs a data visitor with the given bytecode environment
+    /// @param bytecode The compiler environment to emit bytecode to
     public WenyanDataVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }

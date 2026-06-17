@@ -19,10 +19,8 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * A built-in function implementation for Wenyan.
- * Represents a function created in Wenyan code.
- */
+/// A built-in function implementation for Wenyan.
+/// Represents a function created in Wenyan code.
 public record WenyanBuiltinFunction(
         IWenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args,
         @Nullable List<IWenyanValue> refs) implements IWenyanFunction, ICrossFunctionExecutable {
@@ -85,9 +83,7 @@ public record WenyanBuiltinFunction(
         return TYPE;
     }
 
-    /**
-     * Represents a function argument with a type and identifier.
-     */
+    /// Represents a function argument with a type and identifier.
     public record Arg(ParsableType type, String id) {
         @Override
         public @NotNull String toString() {

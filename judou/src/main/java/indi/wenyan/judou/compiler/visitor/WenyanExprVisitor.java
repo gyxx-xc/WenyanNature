@@ -18,22 +18,16 @@ import org.antlr.v4.runtime.Token;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Visitor for handling expressions in Wenyan language.
- * Processes variable declarations, assignments, function definitions and calls,
- * object creation and member access.
- */
+/// Visitor for handling expressions in Wenyan language.
+/// Processes variable declarations, assignments, function definitions and calls,
+/// object creation and member access.
 public class WenyanExprVisitor extends WenyanVisitor {
-    /**
-     * Delegate visitor for handling data expressions
-     */
+    /// Delegate visitor for handling data expressions
     private final WenyanDataVisitor dataVisitor = new WenyanDataVisitor(bytecode);
 
-    /**
-     * Constructs an expression visitor with the given bytecode environment
-     *
-     * @param bytecode The compiler environment to emit bytecode to
-     */
+    /// Constructs an expression visitor with the given bytecode environment
+    ///
+    /// @param bytecode The compiler environment to emit bytecode to
     public WenyanExprVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }

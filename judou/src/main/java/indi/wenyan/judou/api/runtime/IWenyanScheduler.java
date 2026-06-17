@@ -11,10 +11,8 @@ public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> exte
     /// return false if no longer able to accepts/run thread
     boolean isAvailable();
 
-    /**
-     * Allocates execution steps to the program.
-     * Not Thread-safe, should be only called from minecraft thread.
-     */
+    /// Allocates execution steps to the program.
+    /// Not Thread-safe, should be only called from minecraft thread.
     void step();
 
     IWenyanPlatform getPlatform();

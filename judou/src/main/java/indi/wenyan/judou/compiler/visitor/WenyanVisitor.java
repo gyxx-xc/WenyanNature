@@ -12,21 +12,15 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
-/**
- * Base visitor for Wenyan language that provides common functionality.
- * Handles context tracking and provides utilities for parsing Wenyan code.
- */
+/// Base visitor for Wenyan language that provides common functionality.
+/// Handles context tracking and provides utilities for parsing Wenyan code.
 public abstract class WenyanVisitor extends WenyanParserBaseVisitor<Boolean> {
-    /**
-     * The compiler environment used to emit bytecode
-     */
+    /// The compiler environment used to emit bytecode
     protected final WenyanCompilerEnvironment bytecode;
 
-    /**
-     * Constructs a visitor with the given bytecode environment
-     *
-     * @param bytecode The compiler environment to emit bytecode to
-     */
+    /// Constructs a visitor with the given bytecode environment
+    ///
+    /// @param bytecode The compiler environment to emit bytecode to
     protected WenyanVisitor(WenyanCompilerEnvironment bytecode) {
         this.bytecode = bytecode;
     }

@@ -9,10 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * Wrapper for builtin functions in the Wenyan interpreter.
- * Manages function execution and result handling.
- */
+/// Wrapper for builtin functions in the Wenyan interpreter.
+/// Manages function execution and result handling.
 public record WenyanInlineJavacall(WenyanValues.BuiltinFunction function) implements IJavacallHandler {
     @Override
     public void callWithReturn(@Nullable IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList,

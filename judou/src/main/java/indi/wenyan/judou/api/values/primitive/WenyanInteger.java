@@ -15,10 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
 
-/**
- * Represents an integer value in Wenyan language.
- * Supports arithmetic operations and comparisons.
- */
+/// Represents an integer value in Wenyan language.
+/// Supports arithmetic operations and comparisons.
 public final class WenyanInteger implements IWenyanComputable, IWenyanComparable, IWenyanNumber {
     private final BigInteger value;
 

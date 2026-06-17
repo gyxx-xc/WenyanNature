@@ -22,10 +22,8 @@ import java.util.Optional;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.*;
 
-/**
- * Provider for generating block states and models during data generation.
- * Defines the appearance of blocks in the game world.
- */
+/// Provider for generating block states and models during data generation.
+/// Defines the appearance of blocks in the game world.
 public class ModBlockStateProvider extends ModelSubProvider {
 
     public ModBlockStateProvider(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
@@ -77,11 +75,9 @@ public class ModBlockStateProvider extends ModelSubProvider {
         );
     }
 
-    /**
-     * Registers a module block with standardized models.
-     *
-     * @param block The module block to register
-     */
+    /// Registers a module block with standardized models.
+    ///
+    /// @param block The module block to register
     private void registerFuluBlock(Block block) {
         var template = new ModelTemplate(Optional.of(
                 Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block")),

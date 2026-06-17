@@ -18,10 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * Built-in object type implementation for Wenyan language.
- * Represents an object type created in Wenyan code.
- */
+/// Built-in object type implementation for Wenyan language.
+/// Represents an object type created in Wenyan code.
 public final class WenyanBuiltinObjectType implements IWenyanObjectType, ICrossFunctionExecutable {
     public static final WenyanType<WenyanBuiltinObjectType> TYPE = new WenyanType<>(JudouTypeText.DictObjectType.string(), WenyanBuiltinObjectType.class);
 

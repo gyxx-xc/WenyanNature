@@ -4,12 +4,10 @@ import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-/**
- * StarlightInkChecker verifies if the user correctly implemented a factorial
- * sum loop.
- * It provides a random integer n (1 <= n <= 50) and expects the sum of 1! + 2!
- * + ... + n!
- */
+/// StarlightInkChecker verifies if the user correctly implemented a factorial
+/// sum loop.
+/// It provides a random integer n (1 <= n <= 50) and expects the sum of 1! + 2!
+/// + ... + n!
 public class StarlightInkChecker extends ValueAnswerChecker {
     public StarlightInkChecker(RandomSource random) {
         super(random);

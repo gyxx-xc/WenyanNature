@@ -15,10 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-/**
- * Represents an item slot with position and capability information.
- * Used for interacting with inventory slots in the Minecraft environment.
- */
+/// Represents an item slot with position and capability information.
+/// Used for interacting with inventory slots in the Minecraft environment.
 public record WenyanCapabilitySlot(Vec3 pose, ResourceHandler<ItemResource> capabilities, int slot) implements IWenyanObject {
     public static final WenyanType<WenyanCapabilitySlot> TYPE = new WenyanType<>(TypeText.Itemslot.string(),
             WenyanCapabilitySlot.class);

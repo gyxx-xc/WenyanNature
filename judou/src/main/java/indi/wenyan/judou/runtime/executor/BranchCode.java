@@ -6,9 +6,7 @@ import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
-/**
- * Handles conditional branching operations in the Wenyan interpreter.
- */
+/// Handles conditional branching operations in the Wenyan interpreter.
 public enum BranchCode {
     ;
 

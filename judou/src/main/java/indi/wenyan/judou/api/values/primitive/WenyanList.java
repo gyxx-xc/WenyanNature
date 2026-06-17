@@ -1,6 +1,5 @@
 package indi.wenyan.judou.api.values.primitive;
 
-import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.JudouTypeText;
@@ -9,6 +8,7 @@ import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.IWenyanWarperValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,12 +17,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * A Wenyan array list implementation that wraps a Java List.
- * <p>
- * to make the list element mutable, use the left value as the element
- * to make the list immutable, use an immutable list as the value
- */
+/// A Wenyan array list implementation that wraps a Java List.
+///
+/// to make the list element mutable, use the left value as the element
+/// to make the list immutable, use an immutable list as the value
 public record WenyanList(List<IWenyanValue> value)
         implements IWenyanWarperValue<List<IWenyanValue>>, IWenyanObject {
     public static final WenyanType<WenyanList> TYPE = new WenyanType<>(JudouTypeText.List.string(), WenyanList.class);
@@ -31,23 +29,19 @@ public record WenyanList(List<IWenyanValue> value)
         this(new ArrayList<>());
     }
 
-    /**
-     * Adds a value to this list.
-     *
-     * @param wenyanValue the value to add
-     */
+    /// Adds a value to this list.
+    ///
+    /// @param wenyanValue the value to add
     public void add(IWenyanValue wenyanValue) {
         value.add(wenyanValue);
     }
 
-    /**
-     * Gets a value from this list at the specified index.
-     * Note: Wenyan uses 1-based indexing.
-     *
-     * @param index the 1-based index
-     * @return the value at the specified index
-     * @throws WenyanException if the index is out of bounds
-     */
+    /// Gets a value from this list at the specified index.
+    /// Note: Wenyan uses 1-based indexing.
+    ///
+    /// @param index the 1-based index
+    /// @return the value at the specified index
+    /// @throws WenyanException if the index is out of bounds
     public IWenyanValue get(int index) throws WenyanException {
         if (index < 1 || index > value.size())
             throw new WenyanException.WenyanDataException(JudouExceptionText.IndexOutOfBounds.string());
@@ -143,10 +137,8 @@ public record WenyanList(List<IWenyanValue> value)
         }).orElse(Boolean.FALSE).booleanValue();
     }
 
-    /**
-     * Wrapper for an iterator of Wenyan values.
-     * Used for iteration operations in the language.
-     */
+    /// Wrapper for an iterator of Wenyan values.
+    /// Used for iteration operations in the language.
     public static final class WenyanIterator
             implements IWenyanWarperValue<Iterator<IWenyanValue>> {
         public static final WenyanType<WenyanIterator> TYPE = new WenyanType<>(JudouTypeText.Iterator.string(), WenyanIterator.class);

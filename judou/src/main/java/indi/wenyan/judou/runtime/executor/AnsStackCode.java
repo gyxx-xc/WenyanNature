@@ -9,9 +9,7 @@ import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Handles operations related to the result stack in the Wenyan interpreter.
- */
+/// Handles operations related to the result stack in the Wenyan interpreter.
 public enum AnsStackCode {
     ;
 

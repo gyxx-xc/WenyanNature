@@ -10,19 +10,13 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Packet for sending block position range data
- */
+/// Packet for sending block position range data
 public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end, boolean found) implements CustomPacketPayload {
-    /**
-     * Packet type identifier
-     */
+    /// Packet type identifier
     public static final Type<BlockPosRangePacket> TYPE =
             IWenyanPacketPayload.createType("output_pos_text");
 
-    /**
-     * Codec for serializing and deserializing the packet
-     */
+    /// Codec for serializing and deserializing the packet
     public static final StreamCodec<FriendlyByteBuf, BlockPosRangePacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
@@ -39,9 +33,7 @@ public record BlockPosRangePacket(BlockPos pos, BlockPos start, BlockPos end, bo
                         return new BlockPosRangePacket(pos, start, end, found);
                     });
 
-    /**
-     * Handler for processing the packet
-     */
+    /// Handler for processing the packet
     public static final IPayloadHandler<BlockPosRangePacket> HANDLER = (packet, context) -> {
         if (context.flow().isClientbound()) {
             var entity = context.player().level().getBlockEntity(packet.pos());

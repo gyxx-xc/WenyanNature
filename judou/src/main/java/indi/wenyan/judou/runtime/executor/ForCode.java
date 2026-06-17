@@ -11,9 +11,7 @@ import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
 import java.util.Iterator;
 
-/**
- * Handles loop operations in the Wenyan interpreter.
- */
+/// Handles loop operations in the Wenyan interpreter.
 public enum ForCode {
     ;
 

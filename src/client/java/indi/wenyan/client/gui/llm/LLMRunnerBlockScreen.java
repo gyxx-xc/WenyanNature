@@ -45,7 +45,7 @@ public class LLMRunnerBlockScreen extends Screen {
     private CodeOutputWidget outputWindow;
 
     // ── AI panel ──
-    /** Toggleable AI code-generation panel; occupies the same area as outputWindow. */
+    /// Toggleable AI code-generation panel; occupies the same area as outputWindow.
     private final LLMGenerateScreenWidget llmGenerateScreen = new LLMGenerateScreenWidget();
     @SuppressWarnings("FieldCanBeLocal")
     private Button newMemoryButton;

@@ -15,20 +15,16 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-/**
- * Central handler for data generation.
- * Registers all data providers to be executed during data generation.
- */
+/// Central handler for data generation.
+/// Registers all data providers to be executed during data generation.
 @EventBusSubscriber(modid = WenyanProgramming.MODID)
 public enum ModDataGeneratorHandler {
     ;
 
-    /**
-     * Event handler for gathering data providers.
-     * Registers all necessary providers for mod assets and data.
-     *
-     * @param event The gather data event
-     */
+    /// Event handler for gathering data providers.
+    /// Registers all necessary providers for mod assets and data.
+    ///
+    /// @param event The gather data event
     @SubscribeEvent
     public static void gatherData(GatherDataEvent.Client event) {
         var registries = event.getLookupProvider();

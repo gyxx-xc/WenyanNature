@@ -10,10 +10,8 @@ import net.minecraft.util.RandomSource;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * HandRunner2Checker verifies if the user correctly implemented the score
- * calculation.
- */
+/// HandRunner2Checker verifies if the user correctly implemented the score
+/// calculation.
 public class HandRunner2Checker extends ValueAnswerChecker {
     private double expectedAvg;
 

@@ -38,11 +38,9 @@ import java.util.function.Supplier;
 
 import static indi.wenyan.judou.api.language.JudouExceptionText.ArgsNumWrong;
 
-/**
- * Entity for the blocking queue module.
- * Provides thread-safe queue operations for synchronization.
- * Uses manual blocking/unblocking mechanism similar to LockModuleEntity.
- */
+/// Entity for the blocking queue module.
+/// Provides thread-safe queue operations for synchronization.
+/// Uses manual blocking/unblocking mechanism similar to LockModuleEntity.
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class BlockingQueueModuleEntity extends AbstractModuleEntity implements ICommunicateHolder {
@@ -154,10 +152,8 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
         }
     }
 
-    /**
-     * Extracts value from request parameters.
-     * This is a simplified extraction - adjust based on actual request structure.
-     */
+    /// Extracts value from request parameters.
+    /// This is a simplified extraction - adjust based on actual request structure.
     private IWenyanValue extractSingleValueFromRequest(IArgsRequest request) throws WenyanException {
         if (request.args().size() != 1) throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
         return request.args().getFirst();

@@ -5,18 +5,14 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.exec_interface.ExecQueue;
 
 public interface IExecQueue {
-    /**
-     * Receives a JavacallContext request and adds it to the queue.
-     *
-     * @param request the JavacallContext request to be added to the queue
-     */
+    /// Receives a JavacallContext request and adds it to the queue.
+    ///
+    /// @param request the JavacallContext request to be added to the queue
     void receive(IHandleableRequest request) throws WenyanException;
 
-    /**
-     * Handles all queued requests in the current context.
-     *
-     * @param context the handling context, used to manage execution state
-     */
+    /// Handles all queued requests in the current context.
+    ///
+    /// @param context the handling context, used to manage execution state
     void handle(IHandleContext context);
 
     static IExecQueue create(IWenyanPlatform platform) {

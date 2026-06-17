@@ -9,9 +9,7 @@ import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.ParsableType;
 
-/**
- * Handles variable operations in the Wenyan interpreter.
- */
+/// Handles variable operations in the Wenyan interpreter.
 public enum VariableCode {
     ;
 

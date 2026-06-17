@@ -21,20 +21,16 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-/**
- * Builder for creating WenyanPackage values
- */
+/// Builder for creating WenyanPackage values
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class HandlerPackageBuilder {
     // with support of wenyan package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
     private final Map<String, Supplier<RawHandlerPackage.IRawRequest>> functions = new HashMap<>();
 
-    /**
-     * Creates a new package builder
-     *
-     * @return A new package builder instance
-     */
+    /// Creates a new package builder
+    ///
+    /// @return A new package builder instance
     @Contract(" -> new")
     public static @NotNull HandlerPackageBuilder create() {
         return new HandlerPackageBuilder();
@@ -45,23 +41,19 @@ public final class HandlerPackageBuilder {
         return this;
     }
 
-    /**
-     * Adds all variables from an existing environment
-     *
-     * @param environment Environment to include
-     * @return This builder
-     */
+    /// Adds all variables from an existing environment
+    ///
+    /// @param environment Environment to include
+    /// @return This builder
     @Contract("_ -> this")
     public HandlerPackageBuilder environment(@NotNull WenyanPackage environment) {
         variables.putAll(environment.variables());
         return this;
     }
 
-    /**
-     * Builds the package
-     *
-     * @return The built package
-     */
+    /// Builds the package
+    ///
+    /// @return The built package
     public RawHandlerPackage build() {
         return new RawHandlerPackage(variables, functions);
     }

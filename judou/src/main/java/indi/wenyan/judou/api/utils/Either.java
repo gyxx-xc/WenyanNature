@@ -1,8 +1,11 @@
 package indi.wenyan.judou.api.utils;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import java.util.Objects;
 import java.util.Optional;
 
+@ApiStatus.Internal
 public abstract class Either<L, R> {
     private static final class Left<L, R> extends Either<L, R> {
         private final L value;

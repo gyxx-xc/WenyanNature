@@ -37,9 +37,7 @@ import java.util.function.Supplier;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
-/**
- * Central registration class for all mod content
- */
+/// Central registration class for all mod content
 public enum WyRegistration {
     ;
 
@@ -49,9 +47,7 @@ public enum WyRegistration {
     public static final TagKey<Item> HAND_RUNNER_ITEM = TagKey.create(
             Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "hand_runner_item"));
 
-    /**
-     * Registers all content with the mod event bus
-     */
+    /// Registers all content with the mod event bus
     public static void register(IEventBus modEventBus) {
         MENU_TYPE.register(modEventBus);
         DATA.register(modEventBus);

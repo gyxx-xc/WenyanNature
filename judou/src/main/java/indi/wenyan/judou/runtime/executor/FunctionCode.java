@@ -11,9 +11,7 @@ import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Handles function calls in the Wenyan interpreter.
- */
+/// Handles function calls in the Wenyan interpreter.
 public enum FunctionCode {
     ;
 

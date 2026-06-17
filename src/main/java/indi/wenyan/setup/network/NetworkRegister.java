@@ -18,9 +18,7 @@ import static indi.wenyan.WenyanProgramming.MODID;
 public enum NetworkRegister {
     ;
 
-    /**
-     * Registers network packet handlers
-     */
+    /// Registers network packet handlers
     @SubscribeEvent
     public static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MODID);

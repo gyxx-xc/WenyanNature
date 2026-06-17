@@ -18,45 +18,35 @@ public interface IWenyanBytecode {
 
     int getArg(int index);
 
-    /**
-     * Retrieves a constant value from the constant table.
-     *
-     * @param index The constant index
-     * @return The constant value
-     */
+    /// Retrieves a constant value from the constant table.
+    ///
+    /// @param index The constant index
+    /// @return The constant value
     IWenyanValue getConst(int index);
 
-    /**
-     * Retrieves an identifier from the identifier table.
-     *
-     * @param index The identifier index
-     * @return The identifier string
-     */
+    /// Retrieves an identifier from the identifier table.
+    ///
+    /// @param index The identifier index
+    /// @return The identifier string
     String getIdentifier(int index);
 
-    /**
-     * Retrieves debug context information for a given index.
-     *
-     * @param index The code index
-     * @return The context information, or null if not found
-     * @throws IndexOutOfBoundsException If the identifier is not found
-     */
+    /// Retrieves debug context information for a given index.
+    ///
+    /// @param index The code index
+    /// @return The context information, or null if not found
+    /// @throws IndexOutOfBoundsException If the identifier is not found
     @Nullable Context getContext(int index);
 
-    /**
-     * Returns the size of the bytecode.
-     *
-     * @return Number of bytecode instructions
-     */
+    /// Returns the size of the bytecode.
+    ///
+    /// @return Number of bytecode instructions
     int size();
 
     List<WenyanCompileBytecode.CapturedValue> getCapturedValues();
 
     String getSourceCode();
 
-    /**
-     * Represents debug context information for a segment of bytecode.
-     */
+    /// Represents debug context information for a segment of bytecode.
     record Context(int line, int column,
                           int bytecodeStart, int bytecodeEnd,
                           int contentStart, int contentEnd) {

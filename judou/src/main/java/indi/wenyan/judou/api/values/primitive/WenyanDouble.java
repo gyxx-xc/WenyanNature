@@ -12,10 +12,8 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Represents a double-precision floating point value in Wenyan language.
- * Supports arithmetic operations and comparisons.
- */
+/// Represents a double-precision floating point value in Wenyan language.
+/// Supports arithmetic operations and comparisons.
 public record WenyanDouble(double value)
         implements IWenyanComputable, IWenyanComparable, IWenyanNumber {
     public static final WenyanType<WenyanDouble> TYPE = new WenyanType<>(JudouTypeText.Double.string(), WenyanDouble.class);

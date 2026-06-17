@@ -10,10 +10,8 @@ import net.minecraft.util.RandomSource;
 
 import java.util.function.Function;
 
-/**
- * Factory for creating different types of crafting answer checkers.
- * Contains constants for available checker types.
- */
+/// Factory for creating different types of crafting answer checkers.
+/// Contains constants for available checker types.
 public enum CheckerEnum implements ILocalizationEnum {
     PLUS_CHECKER(BambooPaperChecker::new),
     ECHO_CHECKER(EchoChecker::new),

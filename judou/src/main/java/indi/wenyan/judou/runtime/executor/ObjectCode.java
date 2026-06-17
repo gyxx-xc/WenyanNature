@@ -8,9 +8,7 @@ import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinObject;
 import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinObjectType;
 
-/**
- * Handles object-related operations in the Wenyan interpreter.
- */
+/// Handles object-related operations in the Wenyan interpreter.
 public enum ObjectCode {;
 
     static void loadAttr(int arg, IWenyanRunner thread, boolean isNotRemain) throws WenyanException {
