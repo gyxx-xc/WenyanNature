@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigInteger;
 import java.util.List;
 
+/// Factory for creating Wenyan values from Java values.
 public enum WenyanValues {;
     public static WenyanNull of() {
         return WenyanNull.NULL;
@@ -45,7 +46,7 @@ public enum WenyanValues {;
         return WenyanValues.of(List.of(l));
     }
 
-    /// The function must be **thread safe**, use {@link IRequestCallHandler} otherwise
+    /// @apiNote function must be **thread safe**; use {@link IRequestCallHandler} otherwise
     public static IWenyanFunction of(BuiltinFunction function) {
         return new WenyanInlineJavacall(function);
     }

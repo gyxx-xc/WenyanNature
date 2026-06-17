@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.util.Optional;
 
-/// Represents a variable that can assigned in Wenyan
+/// A variable (left value) in Wenyan. Wraps a value to make it assignable.
 public class WenyanLeftValue implements IWenyanValue {
     /// The actual value stored in this variable
     @Getter
@@ -19,10 +19,6 @@ public class WenyanLeftValue implements IWenyanValue {
         this.value = value;
     }
 
-    /// Creates a variable from a value if not already a variable
-    ///
-    /// @param value The value to wrap
-    /// @return A variable containing the value
     public static IWenyanValue varOf(IWenyanValue value) {
         if (value instanceof WenyanLeftValue leftValue) {
             return new WenyanLeftValue(leftValue.value);

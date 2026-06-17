@@ -3,6 +3,7 @@ package indi.wenyan.judou.api.values.exception;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.Nullable;
 
+/// Unchecked exception thrown when Wenyan compilation fails.
 public class WenyanCompileException extends RuntimeException {
     @Nullable
     final Throwable cause;

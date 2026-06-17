@@ -6,13 +6,12 @@ import indi.wenyan.judou.runtime.function_impl.IThreadHolder;
 import indi.wenyan.judou.runtime.function_impl.IWenyanThreadController;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 
+/// Scheduler for Wenyan coroutine threads. Steps them forward one tick at a time.
+/// Not thread-safe, must be called from the main Minecraft thread.
 // TODO: not use template here
 public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> extends IWenyanThreadController<T> {
-    /// return false if no longer able to accepts/run thread
     boolean isAvailable();
 
-    /// Allocates execution steps to the program.
-    /// Not Thread-safe, should be only called from minecraft thread.
     void step();
 
     IWenyanPlatform getPlatform();

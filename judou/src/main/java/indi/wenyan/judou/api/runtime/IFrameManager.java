@@ -4,6 +4,7 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import org.jetbrains.annotations.Nullable;
 
+/// Call frame stack for Wenyan function calls.
 public interface IFrameManager<T> {
     /// Adds a runtime environment to the top of the stack.
     ///

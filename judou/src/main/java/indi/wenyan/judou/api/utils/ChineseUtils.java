@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigInteger;
 import java.util.List;
 
+/// Number-to-Chinese conversion, simplified/traditional conversion, and bracket formatting.
 public enum ChineseUtils {
     ;
     public static final boolean DIRECT_NUMBER_CONVERT = false;
@@ -16,7 +17,7 @@ public enum ChineseUtils {
     public static @NotNull String toChinese(BigInteger i) {
         if (!DIRECT_NUMBER_CONVERT) {
             try {
-                return numberToChinese(i.intValueExact());
+                return NumberChineseFormatter.format(i.intValueExact());
             } catch (ArithmeticException ignored) { // go outward
             }
         }
@@ -31,10 +32,6 @@ public enum ChineseUtils {
             chinese.insert(0, "負");
         }
         return chinese.toString();
-    }
-
-    private static String numberToChinese(int i) {
-        return NumberChineseFormatter.format(i);
     }
 
     public static final List<String> WENYAN_FRACTIONS = List.of("分", "釐", "毫", "絲", "忽", "微", "纖", "沙", "塵");

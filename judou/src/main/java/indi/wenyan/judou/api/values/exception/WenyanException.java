@@ -20,7 +20,7 @@ public class WenyanException extends Exception {
         super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + e.getMessage());
     }
 
-    /// Exception for numerical errors
+    /// Exception for numerical errors (division by zero, overflow, etc.)
     public static class WenyanNumberException extends WenyanException {
         public WenyanNumberException(String message) {
             super(message);

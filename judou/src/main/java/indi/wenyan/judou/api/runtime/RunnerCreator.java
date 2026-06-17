@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
+/// Factory for creating Wenyan runners and threads from compiled bytecode.
 public enum RunnerCreator {
     ;
 

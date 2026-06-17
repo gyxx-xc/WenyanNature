@@ -2,6 +2,7 @@ package indi.wenyan.judou.api.language;
 
 import indi.wenyan.judou.api.utils.UtilManager;
 
+/// Provides translation key and convenience methods to fetch localized strings.
 public interface JudouLocalizationEnum {
     String getTranslationKey();
 

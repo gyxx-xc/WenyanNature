@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
+/// Creates requests for game-thread execution and blocks the Wenyan thread until complete.
 public interface IRequestCallHandler
         extends IJavacallHandler, ICrossFunctionExecutable {
     IHandleableRequest newRequest(IWenyanRunner thread, IWenyanValue self,

@@ -8,6 +8,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/// Batch registration of raw handlers and variables.
+///
+/// @param variables map of variable names to values
+/// @param functions map of function names to supplier of raw request handlers
 public record RawHandlerPackage
         (Map<String, IWenyanValue> variables,
          Map<String, Supplier<IRawRequest>> functions) {

@@ -3,10 +3,13 @@ package indi.wenyan.judou.api.compile;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.compiler.WenyanCompileBytecode;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/// Compiled Wenyan bytecode.
+@ApiStatus.Internal
 public interface IWenyanBytecode {
     /// @deprecated use getCodeOrdinal() and getArg instead
     @Deprecated

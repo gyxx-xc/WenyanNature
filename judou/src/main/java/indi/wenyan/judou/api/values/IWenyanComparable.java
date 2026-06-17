@@ -4,6 +4,7 @@ import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouTypeText;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 
+/// Interface for Wenyan values that support comparison operations.
 public interface IWenyanComparable extends IWenyanValue {
     WenyanType<IWenyanComparable> TYPE = new WenyanType<>(JudouTypeText.Comparable.string(), IWenyanComparable.class);
 

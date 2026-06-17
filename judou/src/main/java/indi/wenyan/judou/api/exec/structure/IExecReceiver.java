@@ -3,6 +3,7 @@ package indi.wenyan.judou.api.exec.structure;
 import indi.wenyan.judou.api.exec.request.IHandleableRequest;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 
+/// Can receive and process async requests (platforms, devices, etc.).
 public interface IExecReceiver {
     /// @return The execution queue for this device
     IExecQueue getExecQueue();

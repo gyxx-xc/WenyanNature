@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
+/// Global manager for logger, config, and language singletons.
 @SuppressWarnings("NonFinalFieldInEnum")
 public enum UtilManager {
     ;

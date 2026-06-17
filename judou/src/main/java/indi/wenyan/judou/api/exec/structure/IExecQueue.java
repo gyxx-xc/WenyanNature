@@ -4,6 +4,7 @@ import indi.wenyan.judou.api.exec.request.IHandleableRequest;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.exec_interface.ExecQueue;
 
+/// FIFO queue for processing async requests during game tick.
 public interface IExecQueue {
     /// Receives a JavacallContext request and adds it to the queue.
     ///

@@ -5,6 +5,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.Objects;
 import java.util.Optional;
 
+/// Internal container for a value of one of two types (Left or Right).
 @ApiStatus.Internal
 public abstract class Either<L, R> {
     private static final class Left<L, R> extends Either<L, R> {

@@ -6,7 +6,7 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
-/// a simplicity impl for IHandleableRequest
+/// Simpler {@link IHandleableRequest}: only implement {@link #handle}, error handling is automatic.
 public interface IBaseHandleableRequest extends IHandleableRequest {
     boolean handle(IHandleContext context) throws WenyanException;
 

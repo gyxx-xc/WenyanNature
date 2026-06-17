@@ -4,7 +4,7 @@ import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.IGlobalResolver;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
-/// Runner interface expose to thread
+/// Runner interface exposed to executing Wenyan threads.
 public interface IWenyanRunner extends IRunner {
     IGlobalResolver getGlobalResolver();
 
