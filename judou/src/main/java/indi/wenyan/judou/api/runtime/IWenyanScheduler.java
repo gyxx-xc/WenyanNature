@@ -2,12 +2,12 @@ package indi.wenyan.judou.api.runtime;
 
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.values.exception.WenyanException;
-import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.function_impl.IThreadHolder;
+import indi.wenyan.judou.runtime.function_impl.IWenyanThreadController;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 
 // TODO: not use template here
-public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> {
+public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> extends IWenyanThreadController<T> {
     /// return false if no longer able to accepts/run thread
     boolean isAvailable();
 
@@ -24,15 +24,6 @@ public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> {
     void stop();
 
     void create(IThreadHolder<T> runner) throws WenyanException;
-
-    void unblock(IThreadHolder<T> runner) throws WenyanUnreachedException;
-
-    // NOTE: not intend to call anywhere outside run(steps)
-    void block(IThreadHolder<T> runner) throws WenyanUnreachedException;
-
-    void yield(IThreadHolder<T> runner) throws WenyanUnreachedException;
-
-    void die(IThreadHolder<T> runner) throws WenyanUnreachedException;
 
     @SuppressWarnings("unchecked")
     static <T extends IWenyanScheduler.IWenyanThread> IWenyanScheduler<T> defaultImpl(IWenyanPlatform platform, int step) {

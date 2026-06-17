@@ -20,19 +20,16 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
     private final int maxThread = UtilManager.getConfig().getMaxThread();
     private final int watchdogTimeout = UtilManager.getConfig().getWatchdogTimeout();
 
-    /**
-     * Semaphore controlling execution steps across threads.
-     * Should be only read in wenyan thread.
-     */
+    /// Semaphore controlling execution steps across threads.
+    /// Should be only read in wenyan thread.
     private volatile int accumulatedSteps = 0;
     private final Semaphore stepLock = new Semaphore(0);
     private final int step;
 
-    /**
-     * used for given warning and give status to platform only, NOT ACCURATE.
-     * will monitor if there's idle (empty thread in pool or has thread but blocked)
-     * and remain the value until next step() is called
-     **/
+    /// used for given warning and give status to platform only, **NOT ACCURATE**.
+    ///
+    /// will monitor if there's idle (empty thread in pool or has thread but blocked)
+    /// and remain the value until next step() is called
     private boolean hasIdle = false;
 
     /// all thread = current running thread + ready queue threads + blocked threads (hold by ExecQueue)
@@ -41,9 +38,7 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
-    /**
-     * Platform-specific integration
-     */
+    /// Platform-specific integration
     @Getter
     public final IWenyanPlatform platform;
 
@@ -162,9 +157,7 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
         }
     }
 
-    /**
-     * only intend to be called when thread is ended (i.e. die, block)
-     */
+    /// only intend to be called when thread is ended (i.e. die, block)
     private void updateIdle() {
         if (executor.getQueue().isEmpty()) hasIdle = true;
     }
@@ -175,7 +168,7 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
             try {
                 if (accumulatedSteps <= 0) {
                     stepLock.acquire();
-                    stepLock.drainPermits(); // if permits > 1
+                    stepLock.drainPermits(); // if unknown reason cause permits > 1
                     accumulatedSteps = step;
                 } else {
                     if (stepLock.tryAcquire()) {
@@ -199,6 +192,10 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
     }
 
     private void startWatchdog(PCB thread) {
+        // watchdog has almost only one way to trigger, that is malicious
+        // operation cause one opcode run much longer than excepted, so we just
+        // stop the whole program, which is much easier to impl and enough for
+        // requirement.
         var f = WATCHDOG.schedule(() -> {
             try {
                 Logger logger = UtilManager.getLogger();
@@ -216,11 +213,11 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
     @Data
     public static class PCB implements IWenyanThread {
         final IThreadHolder<PCB> runner;
-        final IWenyanScheduler<PCB> program;
+        final IWenyanThreadController<PCB> program;
         State state = State.BLOCKED;
         ScheduledFuture<?> watchdog;
 
-        public PCB(IThreadHolder<PCB> runner, IWenyanScheduler<PCB> program) {
+        public PCB(IThreadHolder<PCB> runner, IWenyanThreadController<PCB> program) {
             this.runner = runner;
             this.program = program;
         }

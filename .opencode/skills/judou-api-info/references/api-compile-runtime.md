@@ -51,48 +51,6 @@ public interface IWenyanBytecode {
 
 ## runtime 包 — `indi.wenyan.judou.api.runtime`
 
-### IRunner（基础接口）
-
-不应直接使用。
-
-```java
-public interface IRunner {
-    IWenyanPlatform platform();          // 所属平台
-    void block() throws WenyanUnreachedException;    // 阻塞当前线程
-    void unblock() throws WenyanUnreachedException;  // 解除阻塞
-    void yield() throws WenyanUnreachedException;    // 让出执行权
-    void die() throws WenyanUnreachedException;      // 终止线程
-    <T extends IWenyanScheduler.IWenyanThread> void create(IThreadHolder<T> newThread);
-}
-```
-
-### IWenyanRunner（线程运行器）
-
-**路径**: `judou/src/main/java/indi/wenyan/judou/api/runtime/IWenyanRunner.java`
-
-```java
-public interface IWenyanRunner extends IRunner {
-    IGlobalResolver getGlobalResolver();           // 全局解析器（变量查找）
-    IFrameManager<WenyanFrame> getFrameManager();  // 帧栈管理器
-    WenyanFrame getCurrentRuntime();               // 当前栈帧（快捷方法）
-}
-```
-
-### IFrameManager
-
-**路径**: `judou/src/main/java/indi/wenyan/judou/api/runtime/IFrameManager.java`
-
-管理函数调用的帧栈。
-
-```java
-public interface IFrameManager<T> {
-    void call(T runtime);                           // 入栈（调用函数）
-    void ret() throws WenyanUnreachedException;     // 出栈（返回）
-    T getCurrentRuntimeException();                 // 取当前帧（无帧时报错）
-    @Nullable T getCurrentRuntime();                // 取当前帧（可能为 null）
-}
-```
-
 ### IWenyanScheduler
 
 **路径**: `judou/src/main/java/indi/wenyan/judou/api/runtime/IWenyanScheduler.java`
@@ -107,19 +65,13 @@ public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> {
     boolean isRunning();
     void stop();
     void create(IThreadHolder<T> runner); // 创建新线程
-    void block(IThreadHolder<T> runner);
-    void unblock(IThreadHolder<T> runner);
-    void yield(IThreadHolder<T> runner);
-    void die(IThreadHolder<T> runner);
 
     static <T extends IWenyanScheduler.IWenyanThread> IWenyanScheduler<T> defaultImpl(
         IWenyanPlatform platform, int step) { ... }
 }
 ```
 
-- `step()` — 每次调用推进一个 tick，是调度器的核心
-- 默认实现: `WenyanSchedularImpl`
-- `step` 参数控制每次分配多少条指令
+- `step()` — 每次调用推进一个 tick
 
 ### IEffectCapability
 
@@ -127,7 +79,7 @@ public interface IWenyanScheduler<T extends IWenyanScheduler.IWenyanThread> {
 
 ```java
 public interface IEffectCapability {
-    boolean remainSteps();  // 是否还有剩余步骤（不精确，仅用于 effect 判断）
+    boolean remainSteps();  // 是否还有剩余步骤（不精确，仅用于 visual effect 判断）
 }
 ```
 

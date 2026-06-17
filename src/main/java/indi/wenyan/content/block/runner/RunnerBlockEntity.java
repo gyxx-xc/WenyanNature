@@ -122,12 +122,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             // (both need const level op every tick)
 
             // error state will continue showed unless next step's change
-            if (runningState == RunnerBlock.RunningState.ERROR && newState == RunnerBlock.RunningState.NOT_RUNNING)
-                return;
-
-            if (runningState != newState) {
-                runningState = newState;
-                level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
+            if (runningState != RunnerBlock.RunningState.ERROR || newState != RunnerBlock.RunningState.NOT_RUNNING) {
+                if (runningState != newState) {
+                    runningState = newState;
+                    level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
+                }
             }
         } else {
             tickCommunicate();

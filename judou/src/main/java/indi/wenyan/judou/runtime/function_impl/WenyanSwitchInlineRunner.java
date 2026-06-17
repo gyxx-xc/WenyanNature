@@ -25,10 +25,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Represents a thread of execution in a Wenyan program.
- * Manages its execution state and runtime stack.
- */
+/// Represents a thread of execution in a Wenyan program.
+/// Manages its execution state and runtime stack.
 public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter
