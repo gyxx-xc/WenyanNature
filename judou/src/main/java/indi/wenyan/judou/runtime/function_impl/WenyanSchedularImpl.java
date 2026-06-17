@@ -213,11 +213,11 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
     @Data
     public static class PCB implements IWenyanThread {
         final IThreadHolder<PCB> runner;
-        final IWenyanThreadController<PCB> program;
+        final IWenyanScheduler<PCB> program;
         State state = State.BLOCKED;
         ScheduledFuture<?> watchdog;
 
-        public PCB(IThreadHolder<PCB> runner, IWenyanThreadController<PCB> program) {
+        public PCB(IThreadHolder<PCB> runner, IWenyanScheduler<PCB> program) {
             this.runner = runner;
             this.program = program;
         }
