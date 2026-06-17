@@ -65,6 +65,11 @@ public final class ArgsSpecBuilder {
             addToSpec();
             return new BooleanStep();
         }
+
+        public DummyStep<T> dummy() {
+            addToSpec();
+            return new DummyStep<>();
+        }
     }
 
     public class DummyStep<T> extends Step<T> {
