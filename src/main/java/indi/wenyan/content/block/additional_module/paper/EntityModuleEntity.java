@@ -29,7 +29,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.EntityModule$inspectRange.string())
+            .description(FunctionMetaText.EntityModuleInspectRange.string())
             .handler(WenyanSymbol.EntityModule$inspectRange, request -> {
                 assert getLevel() != null;
                 Vec3 start = request.args().getFirst().as(WenyanVec3.TYPE).value();
@@ -39,7 +39,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                 // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
                 return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
             })
-            .description(FunctionMetaText.EntityModule$nearby.string())
+            .description(FunctionMetaText.EntityModuleNearby.string())
             .handler(WenyanSymbol.EntityModule$nearby, request -> {
                 assert getLevel() != null;
                 double radius = request.args().getFirst().as(WenyanDouble.TYPE).value();
@@ -49,7 +49,7 @@ public class EntityModuleEntity extends AbstractModuleEntity {
                 // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
                 return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
             })
-            .description(FunctionMetaText.EntityModule$lineOfSight.string())
+            .description(FunctionMetaText.EntityModuleLineOfSight.string())
             .handler(WenyanSymbol.EntityModule$lineOfSight, request -> {
                 var origin = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 var look = request.args().getLast().as(WenyanVec3.TYPE).value();

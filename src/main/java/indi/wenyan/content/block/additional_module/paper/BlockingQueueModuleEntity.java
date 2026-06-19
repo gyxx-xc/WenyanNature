@@ -59,19 +59,19 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.BlockingQueueModule$put.string())
+            .description(FunctionMetaText.BlockingQueueModulePut.string())
             .handler(WenyanSymbol.BlockingQueueModule$put, this::putHandler)
-            .description(FunctionMetaText.BlockingQueueModule$take.string())
+            .description(FunctionMetaText.BlockingQueueModuleTake.string())
             .handler(WenyanSymbol.BlockingQueueModule$take, this::takeHandler)
-            .description(FunctionMetaText.BlockingQueueModule$offer.string())
+            .description(FunctionMetaText.BlockingQueueModuleOffer.string())
             .handler(WenyanSymbol.BlockingQueueModule$offer, this::offerHandler)
-            .description(FunctionMetaText.BlockingQueueModule$poll.string())
+            .description(FunctionMetaText.BlockingQueueModulePoll.string())
             .handler(WenyanSymbol.BlockingQueueModule$poll, this::pollHandler)
-            .description(FunctionMetaText.BlockingQueueModule$peek.string())
+            .description(FunctionMetaText.BlockingQueueModulePeek.string())
             .handler(WenyanSymbol.BlockingQueueModule$peek, _ -> queue.isEmpty() ? WenyanNull.NULL : queue.peek())
-            .description(FunctionMetaText.BlockingQueueModule$size.string())
+            .description(FunctionMetaText.BlockingQueueModuleSize.string())
             .handler(WenyanSymbol.BlockingQueueModule$size, _ -> WenyanValues.of(queue.size()))
-            .description(FunctionMetaText.BlockingQueueModule$clear.string())
+            .description(FunctionMetaText.BlockingQueueModuleClear.string())
             .handler(WenyanSymbol.BlockingQueueModule$clear, _ -> {
                 if (queue.isEmpty())
                     return WenyanNull.NULL;

@@ -27,7 +27,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.ItemModule$transfer.string())
+            .description(FunctionMetaText.ItemModuleTransfer.string())
             .handler(WenyanSymbol.ItemModule$transfer, request -> {
                 var capability = getItemHandlerCapability();
                 var from = request.args().getFirst().as(WenyanCapabilitySlot.TYPE);
@@ -36,7 +36,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
                 from.getStack().setCount(remaining.getCount());
                 return WenyanNull.NULL;
             })
-            .description(FunctionMetaText.ItemModule$read.string())
+            .description(FunctionMetaText.ItemModuleRead.string())
             .handler(WenyanSymbol.ItemModule$read, request -> {
                 var capability = getItemHandlerCapability();
                 if (capability == null) {

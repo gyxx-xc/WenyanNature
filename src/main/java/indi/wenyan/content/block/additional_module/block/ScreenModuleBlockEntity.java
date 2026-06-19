@@ -40,7 +40,7 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements IOu
 
     @Getter
     public final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.PRINT.string())
+            .description(FunctionMetaText.Print.string())
             .handler(WenyanSymbol.PRINT, (ignore, request) -> {
                 StringBuilder result = new StringBuilder();
                 for (IWenyanValue arg : request.args()) {

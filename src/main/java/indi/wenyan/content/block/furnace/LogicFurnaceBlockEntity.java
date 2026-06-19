@@ -81,7 +81,7 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
     };
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.FURNACE_BURN.string())
+            .description(FunctionMetaText.FurnaceBurn.string())
             .handler(WenyanSymbol.FURNACE_BURN, request -> {
                 checkArgsAndRecipe(request);
                 progress = Math.min(progress + 1, maxProgress);
@@ -89,7 +89,7 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
                     processOutput();
                 return WenyanNull.NULL;
             })
-            .description(FunctionMetaText.FURNACE_DOUBLE_BURN.string())
+            .description(FunctionMetaText.FurnaceDoubleBurn.string())
             .handler(WenyanSymbol.FURNACE_DOUBLE_BURN, request -> {
                 checkArgsAndRecipe(request);
                 // check int overflow
@@ -105,12 +105,12 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
                 }
                 return WenyanNull.NULL;
             })
-            .description(FunctionMetaText.FURNACE_GET_PROGRESS.string())
+            .description(FunctionMetaText.FurnaceGetProgress.string())
             .handler(WenyanSymbol.FURNACE_GET_PROGRESS, request -> {
                 checkArgsAndRecipe(request);
                 return WenyanValues.of(progress);
             })
-            .description(FunctionMetaText.FURNACE_GET_MAX_PROGRESS.string())
+            .description(FunctionMetaText.FurnaceGetMaxProgress.string())
             .handler(WenyanSymbol.FURNACE_GET_MAX_PROGRESS, request -> {
                 checkArgsAndRecipe(request);
                 return WenyanValues.of(maxProgress);

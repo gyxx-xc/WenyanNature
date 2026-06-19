@@ -34,12 +34,12 @@ public class CreativePowerBlockEntity extends AbstractModuleEntity {
 
     @Getter
     public RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.POWER_UP.string())
+            .description(FunctionMetaText.PowerUp.string())
             .handler(WenyanSymbol.POWER_UP, request -> {
                 power = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 return WenyanNull.NULL;
             })
-            .description(FunctionMetaText.POWER_ANS.string())
+            .description(FunctionMetaText.PowerAns.string())
             .handler(WenyanSymbol.POWER_ANS, request -> {
                 power = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 return WenyanNull.NULL;

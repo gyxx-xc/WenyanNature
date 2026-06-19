@@ -34,19 +34,19 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     // redstone get/set, show text, entity detection
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.WorldModule$signalStrength.string())
+            .description(FunctionMetaText.WorldModuleSignalStrength.string())
             .handler(WenyanSymbol.WorldModule$signalStrength, _ -> {
                 int value = getLevel() != null ? getLevel().getBestNeighborSignal(getBlockPos()) : 0;
                 return WenyanValues.of(value);
             })
-            .description(FunctionMetaText.WorldModule$emitSignal.string())
+            .description(FunctionMetaText.WorldModuleEmitSignal.string())
             .handler(WenyanSymbol.WorldModule$emitSignal, request -> {
                 signal = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 assert getLevel() != null;
                 WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
                 return WenyanNull.NULL;
             })
-            .description(FunctionMetaText.WorldModule$changeWeather.string())
+            .description(FunctionMetaText.WorldModuleChangeWeather.string())
             .handler(WenyanSymbol.WorldModule$changeWeather, 5, (_, request) -> {
                 if (!(getLevel() instanceof ServerLevel serverLevel))
                     throw new WenyanUnreachedException();

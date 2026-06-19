@@ -46,9 +46,9 @@ public class PistonModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.PISTON_PUSH.string())
+            .description(FunctionMetaText.PistonPush.string())
             .handler(WenyanSymbol.PISTON_PUSH, () -> new PistonRequest(true))
-            .description(FunctionMetaText.PISTON_PULL.string())
+            .description(FunctionMetaText.PistonPull.string())
             .handler(WenyanSymbol.PISTON_PULL, () -> new PistonRequest(false))
             .build();
 

@@ -16,6 +16,7 @@ import lombok.Data;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,9 +74,9 @@ public final class HandlerPackageBuilder {
     }
 
     public HandlerPackageBuilder handler(String name, Supplier<RawHandlerPackage.IRawRequest> function) {
-        if (pendingMetadata != null) {
+        if (pendingMetadata.getDescription() != null) {
             this.metadata.put(name, pendingMetadata.toImmutable());
-            pendingMetadata = null;
+            pendingMetadata = new MutableWenyanMetadata();
         }
         switch (WenyanConfig.getJudouConfigProvider().symbolConversion()) {
             case TRADITIONAL -> functions.put(name, function);
@@ -164,7 +165,8 @@ public final class HandlerPackageBuilder {
     private static class MutableWenyanMetadata {
         String description;
 
-        WenyanMetadata toImmutable() {
+        @Nullable WenyanMetadata toImmutable() {
+            if (description == null) return null;
             return new WenyanMetadata(description);
         }
 

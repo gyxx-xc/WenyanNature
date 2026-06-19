@@ -75,13 +75,13 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.CRAFTING_ARGS.string())
+            .description(FunctionMetaText.CraftingArgs.string())
             .handler(WenyanSymbol.CRAFTING_ARGS, request -> {
                 if (!request.args().isEmpty())
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
                 return getChecker().getArgs();
             })
-            .description(FunctionMetaText.PRINT.string())
+            .description(FunctionMetaText.Print.string())
             .handler(WenyanSymbol.PRINT, request -> {
                 getChecker().accept(request.args());
                 IAnsweringChecker.ResultStatus checkerResult = checker.getResult();

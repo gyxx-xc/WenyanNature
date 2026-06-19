@@ -34,9 +34,9 @@ public class LockModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .description(FunctionMetaText.SemaphoreModule$acquire.string())
+            .description(FunctionMetaText.SemaphoreModuleAcquire.string())
             .handler(WenyanSymbol.SemaphoreModule$acquire, this::acquireSemaphoreHandler)
-            .description(FunctionMetaText.SemaphoreModule$release.string())
+            .description(FunctionMetaText.SemaphoreModuleRelease.string())
             .handler(WenyanSymbol.SemaphoreModule$release, this::releaseSemaphore)
             .build();
 
