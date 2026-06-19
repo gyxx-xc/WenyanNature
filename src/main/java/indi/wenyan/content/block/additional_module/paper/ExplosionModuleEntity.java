@@ -10,6 +10,7 @@ import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,6 +39,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
     // lighting fire heat harm
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.ExplosionLightning.string())
             .handler(WenyanSymbol.ExplosionModule$lightning, _ -> {
                 if (!(getLevel() instanceof ServerLevel sl))
                     throw new WenyanUnreachedException();

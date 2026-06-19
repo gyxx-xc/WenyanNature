@@ -15,7 +15,7 @@ public final class ArgsSpecBuilder {
     List<ArgExtractor<?>> argExtractors;
 
     private ArgsSpecBuilder(List<ArgExtractor<?>> argExtractors) {
-        this.argExtractors = argExtractors;
+        this.argExtractors = new ArrayList<>(argExtractors);
     }
 
     ArgsSpecBuilder() {
@@ -43,7 +43,7 @@ public final class ArgsSpecBuilder {
         }
 
         public Step<T> copy() {
-            return new ArgsSpecBuilder().first();
+            return new ArgsSpecBuilder(argExtractors).first();
         }
 
         public IntStep int_() {

@@ -1,9 +1,8 @@
 ---
 name: judou-api-info
 description: >
-  judou（文言编译器）API 参考。提供 judou 模块所有公开接口的签名、用途、使用示例。
-  当用户问 "judou API"、"文言编译器接口"、"Wenyan API"、"judou 怎么用"、"如何在 Java 中调用文言"等时触发。
-  不用于普通 Minecraft Mod 业务逻辑开发。
+  judou（编译器）API 参考。提供 judou 模块公开接口的签名、用途。
+  当思考提及 "judou"、"文言编译器接口"、"Wenyan"、"judou 怎么用"、"调用文言"等时触发。
 ---
 
 # Judou API Info Skill

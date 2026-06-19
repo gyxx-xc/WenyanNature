@@ -211,8 +211,7 @@ public class LLMRunnerBlockScreen extends Screen {
         llmGenerateScreen.render(guiGraphics);
 
         // tooltips
-        snippetWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
-        packageWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
+        snippetWidget.getTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
     }
 
     public void renderSnippetTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,

@@ -12,7 +12,6 @@ import indi.wenyan.client.gui.llm.LLMRunnerBlockScreen;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.ICodeOutputHolder;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.ChineseUtils;
 import indi.wenyan.judou.api.values.IWenyanFunction;
@@ -52,10 +51,11 @@ public enum RunnerBlockBehaviour {
         List<PackageSnippet> packageSnippets = new ArrayList<>();
         BlockPos attached = pos.relative(
                 AbstractFuluBlock.getConnectedDirection(state).getOpposite());
-        if (level.getBlockEntity(attached) instanceof IWenyanBlockDevice device)
-            packageSnippets.add(packageSnippet(device.getExecPackage(),
-                    device.blockState().getCloneItemStack(pos, level, false, player),
-                    device.getPackageName()));
+        var attachedExecutor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, attached);
+        if (attachedExecutor != null)
+            packageSnippets.add(packageSnippet(attachedExecutor.getExecPackage(),
+                    attachedExecutor.blockState().getCloneItemStack(pos, level, false, player),
+                    attachedExecutor.getPackageName()));
 
         int range = WenyanConfig.getRunnerRange();
         for (BlockPos b : BlockPos.betweenClosed(
@@ -129,14 +129,14 @@ public enum RunnerBlockBehaviour {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
         execPackage.variables().forEach((k, v) -> {
             if (v.is(IWenyanObjectType.TYPE))
-                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.CLASS));
+                members.add(new PackageSnippetWidget.Member(k, null, PackageSnippetWidget.MemberType.CLASS));
             else if (v.is(IWenyanFunction.TYPE))
-                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD));
+                members.add(new PackageSnippetWidget.Member(k, null, PackageSnippetWidget.MemberType.METHOD));
             else
-                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.FIELD));
+                members.add(new PackageSnippetWidget.Member(k, null, PackageSnippetWidget.MemberType.FIELD));
         });
         execPackage.functions().forEach((k, _) ->
-                members.add(new PackageSnippetWidget.Member(k, PackageSnippetWidget.MemberType.METHOD)));
+                members.add(new PackageSnippetWidget.Member(k, execPackage.metadata().get(k), PackageSnippetWidget.MemberType.METHOD)));
         return new PackageSnippet(itemStack, name, members);
     }
 
