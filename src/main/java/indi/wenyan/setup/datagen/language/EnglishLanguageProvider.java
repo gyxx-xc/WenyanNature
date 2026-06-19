@@ -15,20 +15,16 @@ import static indi.wenyan.setup.language.ExceptionText.*;
 import static indi.wenyan.setup.language.GuiText.*;
 import static indi.wenyan.setup.language.TypeText.*;
 
-/**
- * Provider for generating English language translations during data generation.
- * Contains all English translations used in the mod, keeping transliteration
- * for item names.
- */
+/// Provider for generating English language translations during data generation.
+/// Contains all English translations used in the mod, keeping transliteration
+/// for item names.
 public class EnglishLanguageProvider extends LanguageProvider {
 
-    /**
-     * Constructs a new English language provider.
-     *
-     * @param output The pack output for language file generation
-     * @param modid  The mod ID
-     * @param locale The locale code (en_us)
-     */
+    /// Constructs a new English language provider.
+    ///
+    /// @param output The pack output for language file generation
+    /// @param modid  The mod ID
+    /// @param locale The locale code (en\_us)
     public EnglishLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
     }

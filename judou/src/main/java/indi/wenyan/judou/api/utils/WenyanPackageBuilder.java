@@ -1,12 +1,10 @@
-package indi.wenyan.judou.api;
+package indi.wenyan.judou.api.utils;
 
 import indi.wenyan.judou.api.language.JudouExceptionText;
-import indi.wenyan.judou.api.utils.ChineseUtils;
-import indi.wenyan.judou.api.utils.UtilManager;
-import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanPackage;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
@@ -18,40 +16,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Builder for creating WenyanPackage values
- */
+/// Builder for creating WenyanPackage values
 public final class WenyanPackageBuilder {
-    /**
-     * Map of variables to include in the package
-     */
+    /// Map of variables to include in the package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
 
-    /**
-     * Creates a new package builder
-     *
-     * @return A new package builder instance
-     */
+    /// Creates a new package builder
+    ///
+    /// @return A new package builder instance
     public static WenyanPackageBuilder create() {
         return new WenyanPackageBuilder();
     }
 
-    /**
-     * Adds all variables from an existing environment
-     *
-     * @param environment Environment to include
-     * @return This builder
-     */
+    /// Adds all variables from an existing environment
+    ///
+    /// @param environment Environment to include
+    /// @return This builder
     public WenyanPackageBuilder environment(WenyanPackage environment) {
         variables.putAll(environment.variables());
         return this;
     }
 
-    /**
-     * Builds the package
-     *
-     * @return The built package
-     */
+    /// Builds the package
+    ///
+    /// @return The built package
     public WenyanPackage build() {
         return new WenyanPackage(Map.copyOf(variables));
     }
@@ -67,25 +55,21 @@ public final class WenyanPackageBuilder {
         }
     }
 
-    /**
-     * Adds a constant to the package
-     *
-     * @param name  Name of the constant
-     * @param value Value of the constant
-     * @return This builder
-     */
+    /// Adds a constant to the package
+    ///
+    /// @param name  Name of the constant
+    /// @param value Value of the constant
+    /// @return This builder
     public WenyanPackageBuilder constant(String name, IWenyanValue value) {
         putConvertedValue(name, value);
         return this;
     }
 
-    /**
-     * Adds a function that operates on doubles
-     *
-     * @param name     Function name
-     * @param function The function implementation
-     * @return This builder
-     */
+    /// Adds a function that operates on doubles
+    ///
+    /// @param name     Function name
+    /// @param function The function implementation
+    /// @return This builder
     public WenyanPackageBuilder
     doubleFunction(String name, ThrowFunction<List<Double>, Double> function) {
         return function(name, (_, args) -> {
@@ -97,13 +81,11 @@ public final class WenyanPackageBuilder {
         });
     }
 
-    /**
-     * Adds a function that operates on integers
-     *
-     * @param name     Function name
-     * @param function The function implementation
-     * @return This builder
-     */
+    /// Adds a function that operates on integers
+    ///
+    /// @param name     Function name
+    /// @param function The function implementation
+    /// @return This builder
     public WenyanPackageBuilder
     intFunction(String name, ThrowFunction<List<Integer>, Integer> function) {
         return function(name, (_, args) -> {
@@ -115,24 +97,20 @@ public final class WenyanPackageBuilder {
         });
     }
 
-    /**
-     * Adds a builtin function to the package
-     *
-     * @param name     Function name
-     * @param function The function implementation
-     * @return This builder
-     */
+    /// Adds a builtin function to the package
+    ///
+    /// @param name     Function name
+    /// @param function The function implementation
+    /// @return This builder
     public WenyanPackageBuilder function(String name, WenyanValues.BuiltinFunction function) {
         return function(name, new WenyanInlineJavacall(function));
     }
 
-    /**
-     * Adds the same function under multiple names
-     *
-     * @param name     Array of function names
-     * @param function The function implementation
-     * @return This builder
-     */
+    /// Adds the same function under multiple names
+    ///
+    /// @param name     Array of function names
+    /// @param function The function implementation
+    /// @return This builder
     public WenyanPackageBuilder function(String[] name, WenyanValues.BuiltinFunction function) {
         for (String n : name) {
             function(n, function);
@@ -140,36 +118,30 @@ public final class WenyanPackageBuilder {
         return this;
     }
 
-    /**
-     * Adds a Java-implemented function with argument type constraints
-     *
-     * @param name     Function name
-     * @param javacall The handler implementation
-     * @return This builder
-     */
+    /// Adds a Java-implemented function with argument type constraints
+    ///
+    /// @param name     Function name
+    /// @param javacall The handler implementation
+    /// @return This builder
     public WenyanPackageBuilder function(String name, IJavacallHandler javacall) {
         putConvertedValue(name, javacall);
         return this;
     }
 
-    /**
-     * Adds an object type to the package
-     *
-     * @param name       Object name
-     * @param objectType The object type implementation
-     * @return This builder
-     */
+    /// Adds an object type to the package
+    ///
+    /// @param name       Object name
+    /// @param objectType The object type implementation
+    /// @return This builder
     public WenyanPackageBuilder object(String name, IWenyanObjectType objectType) {
         putConvertedValue(name, objectType);
         return this;
     }
 
-    /**
-     * Creates a function that reduces a list of arguments using a binary operation
-     *
-     * @param function The binary operation to apply
-     * @return A builtin function that reduces arguments
-     */
+    /// Creates a function that reduces a list of arguments using a binary operation
+    ///
+    /// @param function The binary operation to apply
+    /// @return A builtin function that reduces arguments
     public static WenyanValues.BuiltinFunction reduceWith(ReduceFunction function) {
         return (_, args) -> {
             if (args.size() <= 1)
@@ -182,12 +154,10 @@ public final class WenyanPackageBuilder {
         };
     }
 
-    /**
-     * Creates a function that applies a binary boolean operation
-     *
-     * @param function The binary boolean operation
-     * @return A builtin function that applies the operation
-     */
+    /// Creates a function that applies a binary boolean operation
+    ///
+    /// @param function The binary boolean operation
+    /// @return A builtin function that applies the operation
     public static WenyanValues.BuiltinFunction boolBinaryOperation(ThrowBiFunction<Boolean, Boolean, Boolean> function) {
         return (_, args) -> {
             if (args.size() != 2)
@@ -197,12 +167,10 @@ public final class WenyanPackageBuilder {
         };
     }
 
-    /**
-     * Creates a function that compares two values
-     *
-     * @param function The comparison function
-     * @return A builtin function that compares values
-     */
+    /// Creates a function that compares two values
+    ///
+    /// @param function The comparison function
+    /// @return A builtin function that compares values
     public static WenyanValues.BuiltinFunction compareOperation(CompareFunction function) {
         return (_, args) -> {
             if (args.size() != 2)
@@ -211,17 +179,13 @@ public final class WenyanPackageBuilder {
         };
     }
 
-    /**
-     * Functional interface for binary operations on Wenyan values
-     */
+    /// Functional interface for binary operations on Wenyan values
     @FunctionalInterface
     public interface ReduceFunction {
         IWenyanValue apply(IWenyanValue a, IWenyanValue b) throws WenyanException;
     }
 
-    /**
-     * Functional interface for comparing Wenyan values
-     */
+    /// Functional interface for comparing Wenyan values
     @FunctionalInterface
     public interface CompareFunction {
         boolean apply(IWenyanValue a, IWenyanValue b) throws WenyanException;

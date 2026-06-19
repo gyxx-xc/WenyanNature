@@ -1,5 +1,6 @@
 package indi.wenyan.judou.api.language;
 
+/// Translation keys for Wenyan type names.
 public enum JudouTypeText implements JudouLocalizationEnum {
     JavacallHandler,
     Comparable,

@@ -13,10 +13,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
+@SuppressWarnings("unused")
 public class RecipeUtilities {
 
     /*
@@ -38,9 +39,7 @@ public class RecipeUtilities {
     回答配方 (Answering)：
         支持自动或手动指定名称
      */
-    /**
-     * 适用于各种 2 物品, 2 行配方。
-     */
+    /// 适用于各种 2 物品, 2 行配方。
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -57,9 +56,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 2 物品, 3 行配方 (全为 ItemLike)。
-     */
+    /// 适用于 2 物品, 3 行配方 (全为 ItemLike)。
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -77,9 +74,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 2 物品, 3 行配方 (全为 ItemLike)，指定模组命名空间下的配方名称。
-     */
+    /// 适用于 2 物品, 3 行配方 (全为 ItemLike)，指定模组命名空间下的配方名称。
     public static void newModShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                           HolderGetter<Item> items, RecipeCategory category, String recipeName,
                                           ItemLike outputItem, int count,
@@ -97,9 +92,7 @@ public class RecipeUtilities {
                 .save(output, modRecipeKey(recipeName));
     }
 
-    /**
-     * 适用于 3 物品, 3 行配方 (全为 ItemLike)。
-     */
+    /// 适用于 3 物品, 3 行配方 (全为 ItemLike)。
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -119,9 +112,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 1 物品, 3 行配方 (全为 ItemLike)。
-     */
+    /// 适用于 1 物品, 3 行配方 (全为 ItemLike)。
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -137,9 +128,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 2 symbol 3 行配方，symbol1 为 ItemTag，自动推导 has_<tag> unlock key。
-     */
+    /// 适用于 2 symbol 3 行配方，symbol1 为 ItemTag，自动推导 has\_<tag> unlock key。</tag>
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -157,9 +146,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 2 symbol 3 行配方，symbol1 为 ItemTag，unlockKey1 由调用方手动提供。
-     */
+    /// 适用于 2 symbol 3 行配方，symbol1 为 ItemTag，unlockKey1 由调用方手动提供。
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -177,9 +164,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 3 symbol 3 行配方，symbol1 为 ItemTag，symbol2/3 为 ItemLike，自动推导 has_<tag> unlock key。
-     */
+    /// 适用于 3 symbol 3 行配方，symbol1 为 ItemTag，symbol2/3 为 ItemLike，自动推导 has\_<tag> unlock key。</tag>
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -199,9 +184,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 3 symbol 3 行配方，支持混合 Tag 和 ItemLike，unlockBy 由调用方手动提供。
-     */
+    /// 适用于 3 symbol 3 行配方，支持混合 Tag 和 ItemLike，unlockBy 由调用方手动提供。
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -221,9 +204,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于 3 symbol 3 行配方，symbol1/2 为 ItemTag，symbol3 为 ItemLike，自动推导 has_<tag> unlock key。
-     */
+    /// 适用于 3 symbol 3 行配方，symbol1/2 为 ItemTag，symbol3 为 ItemLike，自动推导 has\_<tag> unlock key。</tag>
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -242,10 +223,8 @@ public class RecipeUtilities {
         addItemUnlocks(provider, builder, item3)
                 .save(output);
     }
-    /**
-     * 适用于 2 symbol 3 行配方，symbol1 为 Ingredient，symbol2 为 ItemLike。
-     * 用于如 Throw Module 这类包含复杂组成的配方。
-     */
+    /// 适用于 2 symbol 3 行配方，symbol1 为 Ingredient，symbol2 为 ItemLike。
+    /// 用于如 Throw Module 这类包含复杂组成的配方。
     public static void newShapedRecipe(CheckerRecipeProvider provider, RecipeOutput output,
                                        HolderGetter<Item> items, RecipeCategory category,
                                        ItemLike outputItem, int count,
@@ -263,9 +242,7 @@ public class RecipeUtilities {
                 .save(output);
     }
 
-    /**
-     * 适用于无序配方 (Shapeless)。
-     */
+    /// 适用于无序配方 (Shapeless)。
     public static void newShapelessRecipe(CheckerRecipeProvider provider, HolderGetter<Item> items, RecipeOutput output,
                                           RecipeCategory category, ItemLike outputItem, int count,
                                           ItemLike... inputs) {
@@ -274,9 +251,7 @@ public class RecipeUtilities {
         builder.save(output);
     }
 
-    /**
-     * 适用于无序配方 (Shapeless)，指定配方名称。
-     */
+    /// 适用于无序配方 (Shapeless)，指定配方名称。
     public static void newShapelessRecipe(CheckerRecipeProvider provider, HolderGetter<Item> items, RecipeOutput output,
                                           RecipeCategory category, String recipeName,
                                           ItemLike outputItem, int count,
@@ -286,9 +261,7 @@ public class RecipeUtilities {
         builder.save(output, recipeName);
     }
 
-    /**
-     * 适用于无序配方 (Shapeless)，指定模组命名空间下的配方名称。
-     */
+    /// 适用于无序配方 (Shapeless)，指定模组命名空间下的配方名称。
     public static void newModShapelessRecipe(CheckerRecipeProvider provider, HolderGetter<Item> items, RecipeOutput output,
                                              RecipeCategory category, String recipeName,
                                              ItemLike outputItem, int count,
@@ -298,9 +271,7 @@ public class RecipeUtilities {
         builder.save(output, modRecipeKey(recipeName));
     }
 
-    /**
-     * 适用于 AnsweringRecipe，自动使用物品名称。
-     */
+    /// 适用于 AnsweringRecipe，自动使用物品名称。
     public static void newAnsweringRecipe(RecipeOutput output, ItemLike outputItem, int count,
                                           CheckerEnum question, int round,
                                           ItemLike... inputs) {
@@ -313,9 +284,7 @@ public class RecipeUtilities {
         builder.save(output, itemName(outputItem));
     }
 
-    /**
-     * 适用于 AnsweringRecipe，指定配方名称。
-     */
+    /// 适用于 AnsweringRecipe，指定配方名称。
     public static void newAnsweringRecipe(RecipeOutput output, String recipeName,
                                           ItemLike outputItem, int count,
                                           CheckerEnum question, int round,
@@ -329,7 +298,7 @@ public class RecipeUtilities {
         builder.save(output, recipeName);
     }
 
-    /** 从 ItemLike 的注册 ID 中提取路径部分，用于 unlockedBy 的 has_<id> 命名。 */
+    /// 从 ItemLike 的注册 ID 中提取路径部分，用于 unlockedBy 的 has\_<id> 命名。 </id>
     private static String itemName(ItemLike item) {
         return BuiltInRegistries.ITEM.getKey(item.asItem()).getPath();
     }
@@ -365,7 +334,7 @@ public class RecipeUtilities {
         }
     }
 
-    /** 从 TagKey 的 location 中提取路径部分，用于 unlockedBy 的 has_<tag> 命名。 */
+    /// 从 TagKey 的 location 中提取路径部分，用于 unlockedBy 的 has\_<tag> 命名。 </tag>
     private static String tagName(TagKey<Item> tag) {
         return tag.location().getPath();
     }

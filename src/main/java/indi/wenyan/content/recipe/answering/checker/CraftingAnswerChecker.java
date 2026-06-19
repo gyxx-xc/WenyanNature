@@ -1,10 +1,10 @@
 package indi.wenyan.content.recipe.answering.checker;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.language.TypeText;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,23 +14,19 @@ import net.minecraft.util.RandomSource;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Base class for checkers that validate answers in crafting recipes.
- * Manages the checking process and result status.
- */
+/// Base class for checkers that validate answers in crafting recipes.
+/// Manages the checking process and result status.
 public abstract class CraftingAnswerChecker implements IAnsweringChecker {
-    /** Random source for generating test cases */
+    /// Random source for generating test cases
     protected final RandomSource random;
     @Getter @Setter(AccessLevel.PROTECTED)
     private ResultStatus result;
     @Getter
     private CheckerWenyanObject args = null;
 
-    /**
-     * Creates a new checker with the specified random source.
-     *
-     * @param random the random source for test cases
-     */
+    /// Creates a new checker with the specified random source.
+    ///
+    /// @param random the random source for test cases
     protected CraftingAnswerChecker(RandomSource random) {
         this.random = random;
     }
@@ -40,33 +36,29 @@ public abstract class CraftingAnswerChecker implements IAnsweringChecker {
         result = ResultStatus.RUNNING;
     }
 
-    /**
-     * Sets a variable in the program environment using the default naming scheme.
-     *
-     * @param i the index of the variable (0-9)
-     * @param value the value to set
-     * @throws IllegalStateException if the program is not initialized
-     */
+    /// Sets a variable in the program environment using the default naming scheme.
+    ///
+    /// @param i the index of the variable (0-9)
+    /// @param value the value to set
+    /// @throws IllegalStateException if the program is not initialized
     protected void setVariable(int i, IWenyanValue value) {
         if (args == null)
             throw new IllegalStateException("Program is not initialized");
         args.addAttribute(DEFAULT_INPUT_NAME[i], value);
     }
 
-    /**
-     * Sets a named variable in the program environment.
-     *
-     * @param name the name of the variable
-     * @param value the value to set
-     * @throws IllegalStateException if the program is not initialized
-     */
+    /// Sets a named variable in the program environment.
+    ///
+    /// @param name the name of the variable
+    /// @param value the value to set
+    /// @throws IllegalStateException if the program is not initialized
     protected void setAttribute(String name, IWenyanValue value) {
         if (args == null)
             throw new IllegalStateException("Program is not initialized");
         args.addAttribute(name, value);
     }
 
-    /** Default variable names used for inputs */
+    /// Default variable names used for inputs
     private static final String[] DEFAULT_INPUT_NAME =
             {"「甲」", "「乙」", "「丙」", "「丁」", "「戊」", "「己」", "「庚」", "「辛」", "「壬」", "「癸」"};
 

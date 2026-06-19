@@ -19,9 +19,7 @@ import static indi.wenyan.WenyanProgramming.MODID;
 public enum WyCapabilities {
     ;
 
-    /**
-     * Registers capabilities for mod blocks and entities
-     */
+    /// Registers capabilities for mod blocks and entities
     @SubscribeEvent
     public static void registerCapabilities(@NonNull RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(

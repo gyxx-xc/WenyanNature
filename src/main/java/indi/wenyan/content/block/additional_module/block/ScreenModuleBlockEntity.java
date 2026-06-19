@@ -9,6 +9,7 @@ import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.network.client.BlockOutputPacket;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
@@ -39,7 +40,8 @@ public class ScreenModuleBlockEntity extends AbstractModuleEntity implements IOu
 
     @Getter
     public final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.PRINT, (HandlerPackageBuilder.HandlerReturnFunction) (ignore, request) -> {
+            .description(FunctionMetaText.Print.string())
+            .handler(WenyanSymbol.PRINT, (ignore, request) -> {
                 StringBuilder result = new StringBuilder();
                 for (IWenyanValue arg : request.args()) {
                     result.append(result.isEmpty() ? "" : " ").append(arg.as(WenyanString.TYPE));

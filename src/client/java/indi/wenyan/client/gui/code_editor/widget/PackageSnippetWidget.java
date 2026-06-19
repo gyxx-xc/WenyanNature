@@ -5,24 +5,35 @@ import indi.wenyan.client.gui.Utils;
 import indi.wenyan.client.gui.code_editor.backend.PackageSnippet;
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
-import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
+import indi.wenyan.judou.api.exec.structure.WenyanMetadata;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Setter;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 // although it is not a text area,
@@ -65,8 +76,11 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
     @Setter
     private Runnable resetFocus = null;
 
-    public Optional<SnippetSet.Snippet> getRenderingSnippetTooltip() {
-        return Optional.empty();
+    @Nullable
+    private Member renderingMemberTooltip = null;
+
+    public Optional<Member> getTooltip() {
+        return Optional.ofNullable(renderingMemberTooltip);
     }
 
     public PackageSnippetWidget(Font font, RunnerBlockBackend backend, int x, int y, int width, int height) {
@@ -87,6 +101,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
         int currentY = getY() + innerPadding();
         setScrollAmount(scrollAmount()); // clamp scroll amount
         int offsetMouseY = mouseY + (int) scrollAmount();
+        renderingMemberTooltip = null;
         for (var pack : backend.getPackages()) {
             renderDir(guiGraphics, mouseX, offsetMouseY, currentY, pack);
             currentY += DIR_HEIGHT;
@@ -121,6 +136,10 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
             guiGraphics.text(font, text,
                     getX() + innerPadding() + entryPadding.left(), currentY + entryPadding.top(),
                     0xFFFFFFFF, false);
+
+            if (buttonHovered) {
+                renderingMemberTooltip = member;
+            }
         }
     }
 
@@ -208,6 +227,28 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
                 backend.getPackages().size() * DIR_HEIGHT;
     }
 
+    public static void renderSnippetTooltip(@NotNull GuiGraphicsExtractor guiGraphics, Font font, int mouseX, int mouseY,
+                                            Member member) {
+        // TODO: 需要从 member.metadata 获取更多元数据信息（如参数列表、返回值类型）以丰富详细提示
+        List<ClientTooltipComponent> tooltip = new ArrayList<>();
+        tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(member.name(), Style.EMPTY)));
+        boolean hasShiftDown = Minecraft.getInstance().hasShiftDown();
+        if (!hasShiftDown) {
+            tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
+                    GuiText.HoldShift.string(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
+        } else {
+            if (member.metadata() != null && !member.metadata().description().isEmpty()) {
+                tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
+                        member.metadata().description(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
+            }
+            tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
+                    member.type().name(), Style.EMPTY.withColor(ChatFormatting.DARK_GRAY))));
+        }
+        guiGraphics.tooltip(font, tooltip, mouseX, mouseY,
+                DefaultTooltipPositioner.INSTANCE,
+                ItemStack.EMPTY.get(DataComponents.TOOLTIP_STYLE));
+    }
+
     private void insertId(String id) {
         if (resetFocus != null) resetFocus.run();
         backend.insertText(id);
@@ -221,7 +262,7 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
         }
     }
 
-    public record Member(String name, MemberType type) {
+    public record Member(String name, @Nullable WenyanMetadata metadata, MemberType type) {
     }
 
     public enum MemberType {

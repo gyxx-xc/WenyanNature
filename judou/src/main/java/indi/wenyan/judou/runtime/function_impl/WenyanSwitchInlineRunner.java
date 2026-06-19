@@ -1,14 +1,13 @@
 package indi.wenyan.judou.runtime.function_impl;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.language.JudouExceptionText;
-import indi.wenyan.judou.api.runtime.IThreadHolder;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.runtime.IWenyanScheduler;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.*;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.judou.api.values.primitive.WenyanList;
@@ -26,10 +25,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Represents a thread of execution in a Wenyan program.
- * Manages its execution state and runtime stack.
- */
+/// Represents a thread of execution in a Wenyan program.
+/// Manages its execution state and runtime stack.
 public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> implements IWenyanRunner, IThreadHolder<T> {
     @Getter
     @Setter
@@ -67,7 +64,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         boolean value = runtime.getProcessStack().pop()
                                 .as(WenyanBoolean.TYPE).value();
                         if (!value) {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
@@ -76,7 +73,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         boolean value = runtime.getProcessStack().peek()
                                 .as(WenyanBoolean.TYPE).value();
                         if (!value) {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
@@ -85,12 +82,12 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                         boolean value = runtime.getProcessStack().peek()
                                 .as(WenyanBoolean.TYPE).value();
                         if (value) {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
                     case 3 -> {
-                        runtime.setProgramCounter(bytecode.getLabel(args));
+                        runtime.setProgramCounter(args);
                         pcFlag = true;
                     }
                     case 4 -> {
@@ -291,7 +288,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                             runtime.getProcessStack().push(value);
                         } else {
                             runtime.getProcessStack().pop();
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
@@ -302,7 +299,7 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
                             IWenyanValue value1 = WenyanValues.of((long) num - 1);
                             runtime.getProcessStack().push(value1);
                         } else {
-                            runtime.setProgramCounter(bytecode.getLabel(args));
+                            runtime.setProgramCounter(args);
                             pcFlag = true;
                         }
                     }
@@ -318,10 +315,10 @@ public class WenyanSwitchInlineRunner<T extends IWenyanScheduler.IWenyanThread> 
             this.yield();
             return step;
         } catch (WenyanException e) {
-            IWenyanRunner.dieWithException(this, e);
+            WenyanFrame.dieWithException(this, e);
             return i + 1; // might i here, but it's not a big deal
         } catch (RuntimeException e) { // for any other missing exceptions
-            IWenyanRunner.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
+            WenyanFrame.dieWithException(this, new WenyanUnreachedException.WenyanUnexceptedException(e));
             return i + 1;
         }
     }

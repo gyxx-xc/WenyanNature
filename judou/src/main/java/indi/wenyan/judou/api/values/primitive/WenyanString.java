@@ -1,20 +1,18 @@
 package indi.wenyan.judou.api.values.primitive;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
+import indi.wenyan.judou.api.language.JudouExceptionText;
+import indi.wenyan.judou.api.language.JudouTypeText;
+import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanComputable;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.IWenyanWarperValue;
-import indi.wenyan.judou.api.utils.WenyanValues;
-import indi.wenyan.judou.api.language.JudouExceptionText;
-import indi.wenyan.judou.api.language.JudouTypeText;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Represents a string value in Wenyan language.
- * Supports concatenation through addition operation.
- */
+/// Represents a string value in Wenyan language.
+/// Supports concatenation through addition operation.
 public record WenyanString(String value)
         implements IWenyanWarperValue<String>, IWenyanComputable {
     public static final WenyanType<WenyanString> TYPE = new WenyanType<>(JudouTypeText.String.string(), WenyanString.class);

@@ -6,10 +6,11 @@ import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.args.WenyanArgsResolver;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,12 +39,14 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
     // lighting fire heat harm
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.ExplosionModuleLightning.string())
             .handler(WenyanSymbol.ExplosionModule$lightning, _ -> {
                 if (!(getLevel() instanceof ServerLevel sl))
                     throw new WenyanUnreachedException();
                 EntityType.LIGHTNING_BOLT.spawn(sl, getBlockPos(), EntitySpawnReason.COMMAND);
                 return WenyanNull.NULL;
             })
+            .description(FunctionMetaText.ExplosionModuleExplode.string())
             .handler(WenyanSymbol.ExplosionModule$explode, argsRequest -> {
                 var args = WenyanArgsResolver.build()
                         .int_().rangeThrow(0, 1000).range(0, 10)
@@ -54,8 +57,9 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                         args.get(0), true, Level.ExplosionInteraction.BLOCK);
                 return WenyanNull.NULL;
             })
+            .description(FunctionMetaText.ExplosionModuleIgnite.string())
             .handler(WenyanSymbol.ExplosionModule$ignite, request -> {
-                var offset = request.args().getFirst().as(WenyanVec3.TYPE).value(); 
+                var offset = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 BlockPos pos = getBlockPos().offset((int) offset.x, (int) offset.y, (int) offset.z);
                 if (!(getLevel() instanceof ServerLevel serverLevel)) {
                     throw new WenyanUnreachedException();
@@ -68,6 +72,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                         new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
                 return WenyanNull.NULL;
             })
+            .description(FunctionMetaText.ExplosionModuleFireball.string())
             .handler(WenyanSymbol.ExplosionModule$fireball, request -> {
                 var speed = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 if (!(getLevel() instanceof ServerLevel sl))

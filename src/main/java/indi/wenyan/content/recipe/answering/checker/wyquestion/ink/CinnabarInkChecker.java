@@ -4,12 +4,10 @@ import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-/**
- * CinnabarInkChecker verifies if the user correctly implemented a halving loop.
- * It provides a random integer and expects the number of days until the length
- * reaches 1
- * when it is halved daily.
- */
+/// CinnabarInkChecker verifies if the user correctly implemented a halving loop.
+/// It provides a random integer and expects the number of days until the length
+/// reaches 1
+/// when it is halved daily.
 public class CinnabarInkChecker extends ValueAnswerChecker {
     public CinnabarInkChecker(RandomSource random) {
         super(random);

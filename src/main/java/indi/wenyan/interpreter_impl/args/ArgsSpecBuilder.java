@@ -1,7 +1,7 @@
 package indi.wenyan.interpreter_impl.args;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
@@ -15,7 +15,7 @@ public final class ArgsSpecBuilder {
     List<ArgExtractor<?>> argExtractors;
 
     private ArgsSpecBuilder(List<ArgExtractor<?>> argExtractors) {
-        this.argExtractors = argExtractors;
+        this.argExtractors = new ArrayList<>(argExtractors);
     }
 
     ArgsSpecBuilder() {
@@ -43,7 +43,7 @@ public final class ArgsSpecBuilder {
         }
 
         public Step<T> copy() {
-            return new ArgsSpecBuilder().first();
+            return new ArgsSpecBuilder(argExtractors).first();
         }
 
         public IntStep int_() {
@@ -64,6 +64,11 @@ public final class ArgsSpecBuilder {
         public BooleanStep boolean_() {
             addToSpec();
             return new BooleanStep();
+        }
+
+        public DummyStep<T> dummy() {
+            addToSpec();
+            return new DummyStep<>();
         }
     }
 

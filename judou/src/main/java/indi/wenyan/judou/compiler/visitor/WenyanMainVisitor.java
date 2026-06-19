@@ -1,19 +1,13 @@
 package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanParser;
-import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
-import indi.wenyan.judou.runtime.executor.WenyanCodes;
 
-/**
- * Main visitor for Wenyan language that orchestrates other specialized visitors.
- * Delegates to appropriate visitor implementations based on statement type.
- */
+/// Main visitor for Wenyan language that orchestrates other specialized visitors.
+/// Delegates to appropriate visitor implementations based on statement type.
 public class WenyanMainVisitor extends WenyanVisitor {
-    /**
-     * Constructs a main visitor with the given bytecode environment
-     * @param bytecode The compiler environment to emit bytecode to
-     */
+    /// Constructs a main visitor with the given bytecode environment
+    /// @param bytecode The compiler environment to emit bytecode to
     public WenyanMainVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }
@@ -37,11 +31,7 @@ public class WenyanMainVisitor extends WenyanVisitor {
     @Override
     public Boolean visitProgram(WenyanParser.ProgramContext ctx) {
         visit(ctx.statements());
-        bytecode.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
-                ctx.getStop().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-        bytecode.add(WenyanCodes.PUSH, WenyanNull.NULL);
-        bytecode.add(WenyanCodes.RET);
-        bytecode.exitContext();
+        bytecode.addAutoReturn(ctx);
         return true;
     }
 }

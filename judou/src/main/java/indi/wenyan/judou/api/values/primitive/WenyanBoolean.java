@@ -7,10 +7,8 @@ import indi.wenyan.judou.api.values.IWenyanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Represents a boolean value in Wenyan language.
- * Values are represented as "陽" (true) and "陰" (false).
- */
+/// Represents a boolean value in Wenyan language.
+/// Values are represented as "陽" (true) and "陰" (false).
 public enum WenyanBoolean implements IWenyanValue {
     TRUE(true),
     FALSE(false);

@@ -8,27 +8,23 @@ import indi.wenyan.setup.datagen.model.ModBlockStateProvider;
 import indi.wenyan.setup.datagen.model.ModItemModelProvider;
 import indi.wenyan.setup.datagen.model.SubedModelProvider;
 import indi.wenyan.setup.datagen.recipe.CheckerRecipeProvider;
-import indi.wenyan.setup.datagen.tags.WyIntergrationTagProvider;
+import indi.wenyan.setup.datagen.tags.WyBlockTagProvider;
 import indi.wenyan.setup.datagen.tags.WyItemTagProvider;
 import indi.wenyan.setup.datagen.tags.WyPoiTagProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-/**
- * Central handler for data generation.
- * Registers all data providers to be executed during data generation.
- */
+/// Central handler for data generation.
+/// Registers all data providers to be executed during data generation.
 @EventBusSubscriber(modid = WenyanProgramming.MODID)
 public enum ModDataGeneratorHandler {
     ;
 
-    /**
-     * Event handler for gathering data providers.
-     * Registers all necessary providers for mod assets and data.
-     *
-     * @param event The gather data event
-     */
+    /// Event handler for gathering data providers.
+    /// Registers all necessary providers for mod assets and data.
+    ///
+    /// @param event The gather data event
     @SubscribeEvent
     public static void gatherData(GatherDataEvent.Client event) {
         var registries = event.getLookupProvider();
@@ -46,7 +42,7 @@ public enum ModDataGeneratorHandler {
                 AdvancementProvider.createSubProviders()));
         generator.addProvider(packOutput -> new WyItemTagProvider(packOutput, registries));
         generator.addProvider(packOutput -> new WyPoiTagProvider(packOutput, registries));
-        generator.addProvider(packOutput -> new WyIntergrationTagProvider(packOutput, registries));
+        generator.addProvider(packOutput -> new WyBlockTagProvider(packOutput, registries));
         generator.addProvider(p -> new WenyanLootTableProvider(p, registries));
     }
 

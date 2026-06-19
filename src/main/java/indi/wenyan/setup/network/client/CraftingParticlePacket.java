@@ -9,9 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-/**
- * Packet for transmitting particle crafting data (String + BlockPos) between server and client
- */
+/// Packet for transmitting particle crafting data (String + BlockPos) between server and client
 public record CraftingParticlePacket(@NonNull BlockPos from,
                                      @NonNull String data) implements CustomPacketPayload {
 

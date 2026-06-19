@@ -6,8 +6,6 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.content.block.runner.BlockRequest;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
 import indi.wenyan.judou.api.exec.request.IHandleableRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
@@ -16,8 +14,11 @@ import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.network.client.CommunicationLocationPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -38,11 +39,9 @@ import java.util.function.Supplier;
 
 import static indi.wenyan.judou.api.language.JudouExceptionText.ArgsNumWrong;
 
-/**
- * Entity for the blocking queue module.
- * Provides thread-safe queue operations for synchronization.
- * Uses manual blocking/unblocking mechanism similar to LockModuleEntity.
- */
+/// Entity for the blocking queue module.
+/// Provides thread-safe queue operations for synchronization.
+/// Uses manual blocking/unblocking mechanism similar to LockModuleEntity.
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class BlockingQueueModuleEntity extends AbstractModuleEntity implements ICommunicateHolder {
@@ -60,12 +59,19 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.BlockingQueueModulePut.string())
             .handler(WenyanSymbol.BlockingQueueModule$put, this::putHandler)
+            .description(FunctionMetaText.BlockingQueueModuleTake.string())
             .handler(WenyanSymbol.BlockingQueueModule$take, this::takeHandler)
+            .description(FunctionMetaText.BlockingQueueModuleOffer.string())
             .handler(WenyanSymbol.BlockingQueueModule$offer, this::offerHandler)
+            .description(FunctionMetaText.BlockingQueueModulePoll.string())
             .handler(WenyanSymbol.BlockingQueueModule$poll, this::pollHandler)
+            .description(FunctionMetaText.BlockingQueueModulePeek.string())
             .handler(WenyanSymbol.BlockingQueueModule$peek, _ -> queue.isEmpty() ? WenyanNull.NULL : queue.peek())
+            .description(FunctionMetaText.BlockingQueueModuleSize.string())
             .handler(WenyanSymbol.BlockingQueueModule$size, _ -> WenyanValues.of(queue.size()))
+            .description(FunctionMetaText.BlockingQueueModuleClear.string())
             .handler(WenyanSymbol.BlockingQueueModule$clear, _ -> {
                 if (queue.isEmpty())
                     return WenyanNull.NULL;
@@ -154,12 +160,11 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
         }
     }
 
-    /**
-     * Extracts value from request parameters.
-     * This is a simplified extraction - adjust based on actual request structure.
-     */
+    /// Extracts value from request parameters.
+    /// This is a simplified extraction - adjust based on actual request structure.
     private IWenyanValue extractSingleValueFromRequest(IArgsRequest request) throws WenyanException {
-        if (request.args().size() != 1) throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
+        if (request.args().size() != 1)
+            throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
         return request.args().getFirst();
     }
 

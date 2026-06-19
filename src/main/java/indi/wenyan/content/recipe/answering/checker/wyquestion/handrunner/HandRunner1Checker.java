@@ -4,11 +4,9 @@ import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-/**
- * HandRunner1Checker verifies if the user correctly implemented a conditional.
- * It provides a random integer and expects true if it is greater than 5, false
- * otherwise.
- */
+/// HandRunner1Checker verifies if the user correctly implemented a conditional.
+/// It provides a random integer and expects true if it is greater than 5, false
+/// otherwise.
 public class HandRunner1Checker extends ValueAnswerChecker {
     public HandRunner1Checker(RandomSource random) {
         super(random);

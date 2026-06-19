@@ -1,6 +1,5 @@
 package indi.wenyan.judou.structure.builtin_type;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.exec.ICrossFunctionExecutable;
 import indi.wenyan.judou.api.language.JudouExceptionText;
@@ -9,6 +8,7 @@ import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * Built-in object type implementation for Wenyan language.
- * Represents an object type created in Wenyan code.
- */
+/// Built-in object type implementation for Wenyan language.
+/// Represents an object type created in Wenyan code.
 public final class WenyanBuiltinObjectType implements IWenyanObjectType, ICrossFunctionExecutable {
     public static final WenyanType<WenyanBuiltinObjectType> TYPE = new WenyanType<>(JudouTypeText.DictObjectType.string(), WenyanBuiltinObjectType.class);
 

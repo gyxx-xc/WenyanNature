@@ -4,10 +4,8 @@ import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import net.minecraft.util.RandomSource;
 
-/**
- * CloudPaperChecker verifies if the user correctly implemented the NOIP2015
- * knight coin problem.
- */
+/// CloudPaperChecker verifies if the user correctly implemented the NOIP2015
+/// knight coin problem.
 public class CloudPaperChecker extends ValueAnswerChecker {
     public CloudPaperChecker(RandomSource random) {
         super(random);

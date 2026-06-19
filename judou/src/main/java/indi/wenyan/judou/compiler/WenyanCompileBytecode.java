@@ -9,11 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents the bytecode structure for the Wenyan interpreter.
- * Manages code instructions, constant values, identifiers, labels, and debug information.
- */
-public class WenyanBytecode {
+/// Represents the bytecode structure for the Wenyan interpreter.
+/// Manages code instructions, constant values, identifiers, labels, and debug information.
+public class WenyanCompileBytecode {
     private final List<Code> bytecode = new ArrayList<>();
     private final List<IWenyanValue> constTable = new ArrayList<>();
     private final List<String> identifierTable = new ArrayList<>();
@@ -23,37 +21,31 @@ public class WenyanBytecode {
     @Getter private final List<CapturedValue> capturedValues = new ArrayList<>();
     @Getter private final String sourceCode;
 
-    public WenyanBytecode(String sourceCode) {
+    public WenyanCompileBytecode(String sourceCode) {
         this.sourceCode = sourceCode;
     }
 
-    /**
-     * Adds a new bytecode instruction.
-     *
-     * @param code The operation code
-     * @param arg  The argument value
-     */
+    /// Adds a new bytecode instruction.
+    ///
+    /// @param code The operation code
+    /// @param arg  The argument value
     public void add(WenyanCodes code, int arg) {
         bytecode.add(new Code(code, arg));
     }
 
-    /**
-     * Adds a value to the constant table.
-     *
-     * @param value The value to add
-     * @return The index of the added constant
-     */
+    /// Adds a value to the constant table.
+    ///
+    /// @param value The value to add
+    /// @return The index of the added constant
     public int addConst(IWenyanValue value) {
         constTable.add(value);
         return constTable.size() - 1;
     }
 
-    /**
-     * Adds an identifier to the identifier table.
-     *
-     * @param identifier The identifier to add
-     * @return The index of the added identifier
-     */
+    /// Adds an identifier to the identifier table.
+    ///
+    /// @param identifier The identifier to add
+    /// @return The index of the added identifier
     public int addIdentifier(String identifier) {
         identifierTable.add(identifier);
         return identifierTable.size() - 1;
@@ -64,26 +56,22 @@ public class WenyanBytecode {
         return labelTable.size() - 1;
     }
 
-    /**
-     * Adds debug context information.
-     *
-     * @param line         Line number
-     * @param column       Column number
-     * @param start        Start index
-     * @param end          End index
-     * @param contentStart Start index of source content
-     * @param contentEnd   End index of source content
-     */
+    /// Adds debug context information.
+    ///
+    /// @param line         Line number
+    /// @param column       Column number
+    /// @param start        Start index
+    /// @param end          End index
+    /// @param contentStart Start index of source content
+    /// @param contentEnd   End index of source content
     public void addContext(int line, int column, int start, int end, int contentStart, int contentEnd) {
         debugTable.add(new IWenyanBytecode.Context(line, column, start, end, contentStart, contentEnd));
     }
 
-    /**
-     * Sets a label value at the specified index.
-     *
-     * @param index The label index
-     * @param label The label value
-     */
+    /// Sets a label value at the specified index.
+    ///
+    /// @param index The label index
+    /// @param label The label value
     public void setLabel(int index, int label) {
         labelTable.set(index, label);
     }
@@ -98,13 +86,21 @@ public class WenyanBytecode {
     }
 
     public IWenyanBytecode toImmutable() {
+        // const label table
+        for (var iterator = bytecode.listIterator(); iterator.hasNext(); ) {
+            var code = iterator.next();
+            switch (code.code()) {
+                case JMP, BRANCH_FALSE, BRANCH_TRUE, BRANCH_POP_FALSE, FOR_ITER, FOR_NUM ->
+                        iterator.set(new Code(code.code(), labelTable.get(code.arg())));
+            }
+        }
+
         return new WenyanImmutableBytecode(
                 size(),
                 bytecode.stream().map(Code::code).mapToInt(WenyanCodes::ordinal).toArray(),
                 bytecode.stream().mapToInt(Code::arg).toArray(),
                 constTable.toArray(new IWenyanValue[0]),
                 identifierTable.toArray(new String[0]),
-                labelTable.stream().mapToInt(Integer::intValue).toArray(),
                 capturedValues,
                 debugTable,
                 sourceCode
@@ -128,9 +124,7 @@ public class WenyanBytecode {
         return sb.toString();
     }
 
-    /**
-     * Represents a bytecode instruction with its operation code and argument.
-     */
+    /// Represents a bytecode instruction with its operation code and argument.
     public record Code(WenyanCodes code, int arg) {
         @Override
         public @NotNull String toString() {

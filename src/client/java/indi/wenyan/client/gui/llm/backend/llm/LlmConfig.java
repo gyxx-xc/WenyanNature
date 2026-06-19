@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Reads AI model configuration from {@code config/WenyanNature/.env}.
- */
+/// Reads AI model configuration from `config/WenyanNature/.env`.
 public final class LlmConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LlmConfig.class);
@@ -28,7 +26,7 @@ public final class LlmConfig {
     private LlmConfig() {
     }
 
-    /** Reloads properties from .env */
+    /// Reloads properties from .env
     public static void reload() {
         ENV_CACHE.clear();
         loaded = true;

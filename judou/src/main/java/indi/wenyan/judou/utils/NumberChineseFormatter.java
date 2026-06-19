@@ -132,23 +132,21 @@ package indi.wenyan.judou.utils;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * 数字转中文类<br>
- * 包括：
- * <pre>
- * 1. 数字转中文大写形式，比如一百二十一
- * 2. 数字转金额用的大写形式，比如：壹佰贰拾壹
- * 3. 转金额形式，比如：壹佰贰拾壹整
- * </pre>
- *
- * @author fanqun, looly
- **/
+/// 数字转中文类
+///
+/// 包括：
+/// <pre>
+/// 1. 数字转中文大写形式，比如一百二十一
+/// 2. 数字转金额用的大写形式，比如：壹佰贰拾壹
+/// 3. 转金额形式，比如：壹佰贰拾壹整
+/// </pre>
+///
+/// @author fanqun, looly
 public class NumberChineseFormatter {
 
-    /**
-     * 中文形式，奇数位置是简体，偶数位置是记账繁体，0共用<br>
-     * 使用混合数组提高效率和数组复用
-     **/
+    /// 中文形式，奇数位置是简体，偶数位置是记账繁体，0共用
+    ///
+    /// 使用混合数组提高效率和数组复用
     public static final char[] DIGITS = {'零', '一', '二', '三', '四', '五', '六', '七', '八', '九'};
 
     public static final String[] CHINESE_UNIT_NAME = {"", "十", "百", "千"};
@@ -157,13 +155,11 @@ public class NumberChineseFormatter {
     public static final String WAN = "萬";
     public static final String YI = "億";
 
-    /**
-     * 阿拉伯数字（支持正负整数）转换成中文
-     *
-     * @param amount 数字
-     * @return 中文
-     * @since 5.7.17
-     */
+    /// 阿拉伯数字（支持正负整数）转换成中文
+    ///
+    /// @param amount 数字
+    /// @return 中文
+    /// @since 5.7.17
     public static String format(int amount) {
 
         if (0 == amount) {
@@ -182,12 +178,10 @@ public class NumberChineseFormatter {
         return chineseStr.toString();
     }
 
-    /**
-     * 阿拉伯数字整数部分转换成中文，只支持正数
-     *
-     * @param amount 数字
-     * @return 中文
-     */
+    /// 阿拉伯数字整数部分转换成中文，只支持正数
+    ///
+    /// @param amount 数字
+    /// @return 中文
     private static String longToChinese(long amount) {
         //将数字以万为单位分为多份
         int[] parts = new int[4];
@@ -266,12 +260,10 @@ public class NumberChineseFormatter {
         return chineseStr.toString();
     }
 
-    /**
-     * 把一个 0~9999 之间的整数转换为汉字的字符串，如果是 0 则返回 ""
-     *
-     * @param amountPart 数字部分
-     * @return 转换后的汉字
-     */
+    /// 把一个 0\~9999 之间的整数转换为汉字的字符串，如果是 0 则返回 ""
+    ///
+    /// @param amountPart 数字部分
+    /// @return 转换后的汉字
     private static String thousandToChinese(int amountPart) {
         if (amountPart == 0) {
             // issue#I4R92H@Gitee

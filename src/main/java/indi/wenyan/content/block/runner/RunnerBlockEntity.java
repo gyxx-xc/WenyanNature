@@ -4,8 +4,6 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.*;
 import indi.wenyan.interpreter_impl.ImportRequest;
 import indi.wenyan.interpreter_impl.SimpleRequest;
-import indi.wenyan.judou.api.WenyanCompileException;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.compile.WenyanCompiler;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
@@ -14,12 +12,16 @@ import indi.wenyan.judou.api.exec.structure.IExecQueue;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
 import indi.wenyan.judou.api.language.Symbol;
-import indi.wenyan.judou.api.runtime.*;
+import indi.wenyan.judou.api.runtime.IEffectCapability;
+import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.runtime.IWenyanScheduler;
+import indi.wenyan.judou.api.runtime.RunnerCreator;
 import indi.wenyan.judou.api.utils.ChineseUtils;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.WenyanPackage;
-import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -120,12 +122,11 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             // (both need const level op every tick)
 
             // error state will continue showed unless next step's change
-            if (runningState == RunnerBlock.RunningState.ERROR && newState == RunnerBlock.RunningState.NOT_RUNNING)
-                return;
-
-            if (runningState != newState) {
-                runningState = newState;
-                level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
+            if (runningState != RunnerBlock.RunningState.ERROR || newState != RunnerBlock.RunningState.NOT_RUNNING) {
+                if (runningState != newState) {
+                    runningState = newState;
+                    level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
+                }
             }
         } else {
             tickCommunicate();
@@ -225,15 +226,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         IWenyanBytecode bytecode;
         try {
             bytecode = new WenyanCompiler().compile(pages).bytecode();
-        } catch (WenyanCompileException e) {
-            handleError(e.getMessage());
-            return false;
-        }
-        try {
-            IThreadHolder<WenyanSchedularImpl.PCB> runner =
-                    RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), this.initEnvironment());
-            lazyProgram.createOrGet().create(runner);
-        } catch (WenyanException e) {
+            RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
+        } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
             return false;
         }
@@ -262,15 +256,8 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         IWenyanBytecode bytecode;
         try {
             bytecode = new WenyanCompiler(true).compile(titleCodeOutput.getCode()).bytecode();
-        } catch (WenyanCompileException e) {
-            handleError(e.getMessage());
-            return;
-        }
-        try {
-            IThreadHolder<WenyanSchedularImpl.PCB> runner =
-                    RunnerCreator.newRunner(WenyanFrame.ofCode(bytecode), this.initEnvironment());
-            lazyProgram.createOrGet().create(runner);
-        } catch (WenyanException e) {
+            RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
+        } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
         }
     }

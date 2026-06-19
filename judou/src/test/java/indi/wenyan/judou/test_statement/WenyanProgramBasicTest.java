@@ -1,9 +1,9 @@
 package indi.wenyan.judou.test_statement;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.compile.WenyanCompiler;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.test_utils.TestPlatform;
 import indi.wenyan.judou.test_utils.generated_WenyanProgramTestData;
 import org.junit.jupiter.api.Test;

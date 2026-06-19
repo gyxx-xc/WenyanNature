@@ -1,19 +1,17 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanFunction;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Handles function calls in the Wenyan interpreter.
- */
+/// Handles function calls in the Wenyan interpreter.
 public enum FunctionCode {
     ;
 

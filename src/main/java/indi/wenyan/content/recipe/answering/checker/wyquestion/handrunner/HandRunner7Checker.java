@@ -2,9 +2,9 @@ package indi.wenyan.content.recipe.answering.checker.wyquestion.handrunner;
 
 import com.google.common.math.IntMath;
 import indi.wenyan.content.recipe.answering.checker.CraftingAnswerChecker;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import net.minecraft.util.RandomSource;
 

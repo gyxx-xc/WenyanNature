@@ -1,22 +1,22 @@
 package indi.wenyan.judou.compiler;
 
-import indi.wenyan.judou.api.WenyanCompileException;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import lombok.Getter;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-/**
- * Environment for the Wenyan compiler that manages bytecode generation,
- * constant tables, identifier tables, and control flow structures.
- */
+/// Environment for the Wenyan compiler that manages bytecode generation,
+/// constant tables, identifier tables, and control flow structures.
 public class WenyanCompilerEnvironment {
     public static final int FUNCTION_ARGS_MAX = 100;
-    private final WenyanBytecode bytecode;
+    private final WenyanCompileBytecode bytecode;
     @Nullable
     private final WenyanCompilerEnvironment parent;
     private final HashMap<IWenyanValue, Integer> constTable = new HashMap<>();
@@ -29,11 +29,9 @@ public class WenyanCompilerEnvironment {
     private int localVariableCounter = 0;
     @Getter private final boolean debug;
 
-    /**
-     * Gets exported values from the largest scope.
-     *
-     * @return List of exported variable names ordered by their indices
-     */
+    /// Gets exported values from the largest scope.
+    ///
+    /// @return List of exported variable names ordered by their indices
     public List<String> getExportedValues() {
         if (scopeStack.isEmpty()) {
             return new ArrayList<>();
@@ -48,12 +46,10 @@ public class WenyanCompilerEnvironment {
         return result;
     }
 
-    /**
-     * Creates a new compiler environment with the specified bytecode.
-     */
+    /// Creates a new compiler environment with the specified bytecode.
     public WenyanCompilerEnvironment(String code, @Nullable WenyanCompilerEnvironment parent, List<String> argv, boolean debug) {
         this.parent = parent;
-        this.bytecode = new WenyanBytecode(code);
+        this.bytecode = new WenyanCompileBytecode(code);
         this.debug = debug;
         var scope = new Scope(0);
         scopeStack.push(scope);
@@ -64,31 +60,37 @@ public class WenyanCompilerEnvironment {
         }
     }
 
-    /**
-     * Adds a bytecode instruction with a value argument.
-     *
-     * @param code  The operation code
-     * @param value The value argument
-     */
+    /// Adds a bytecode instruction with a value argument.
+    ///
+    /// @param code  The operation code
+    /// @param value The value argument
     public void add(WenyanCodes code, IWenyanValue value) {
         int index = getConstIndex(value);
         add(code, index);
     }
 
-    /**
-     * Adds a bytecode instruction with an identifier argument.
-     *
-     * @param code       The operation code
-     * @param identifier The identifier argument
-     */
+    /// Adds a bytecode instruction with an identifier argument.
+    ///
+    /// @param code       The operation code
+    /// @param identifier The identifier argument
     public void add(WenyanCodes code, String identifier) {
-        int index = getIdentifierIndex(identifier);
+        int index = code == WenyanCodes.STORE ? getStoreIndex(identifier) : getIdentifierIndex(identifier);
         add(code, index);
     }
 
-    public void addStoreCode(String identifier) {
-        int index = getStoreIndex(identifier);
-        add(WenyanCodes.STORE, index);
+    /// Adds a bytecode instruction with an integer argument.
+    ///
+    /// @param code The operation code
+    /// @param arg  The integer argument
+    public void add(WenyanCodes code, int arg) {
+        bytecode.add(code, arg);
+    }
+
+    /// Adds a bytecode instruction with no argument.
+    ///
+    /// @param code The operation code
+    public void add(WenyanCodes code) {
+        bytecode.add(code, 0);
     }
 
     public int getStoreIndex(String identifier) {
@@ -117,101 +119,73 @@ public class WenyanCompilerEnvironment {
         }
     }
 
-    /**
-     * Adds a bytecode instruction with an integer argument.
-     *
-     * @param code The operation code
-     * @param arg  The integer argument
-     */
-    public void add(WenyanCodes code, int arg) {
-        bytecode.add(code, arg);
+    public void addAutoReturn(ParserRuleContext ctx) {
+        enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
+                ctx.getStop().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+        // STUB: add a return null at end in case no return
+        add(WenyanCodes.PUSH, WenyanNull.NULL);
+        add(WenyanCodes.RET);
+        exitContext();
     }
 
-    /**
-     * Adds a bytecode instruction with no argument.
-     *
-     * @param code The operation code
-     */
-    public void add(WenyanCodes code) {
-        bytecode.add(code, 0);
-    }
-
-    /**
-     * Creates a new label in the bytecode.
-     *
-     * @return The index of the new label
-     */
+    /// Creates a new label in the bytecode.
+    ///
+    /// @return The index of the new label
     public int getNewLabel() {
         return bytecode.getNewLabel();
     }
 
-    /**
-     * Sets the current bytecode position as the target for a label.
-     *
-     * @param label The label index
-     */
+    /// Sets the current bytecode position as the target for a label.
+    ///
+    /// @param label The label index
     public void setLabel(int label) {
         bytecode.setLabel(label, bytecode.size());
     }
 
-    /**
-     * Enters a new for-loop context.
-     */
+    /// Enters a new for-loop context.
     public void enterFor() {
         int forEndLabel = bytecode.getNewLabel();
         int progEndLabel = bytecode.getNewLabel();
         forStack.push(new ForEnvironment(forEndLabel, progEndLabel));
     }
 
-    /**
-     * Gets the label for the current for-loop end.
-     *
-     * @return The for-loop end label
-     */
+    /// Gets the label for the current for-loop end.
+    ///
+    /// @return The for-loop end label
     public int getForEndLabel() {
         assert forStack.peek() != null;
         return forStack.peek().forEndLabel;
     }
 
-    /**
-     * Gets the label for the current program end.
-     *
-     * @return The program end label
-     */
+    /// Gets the label for the current program end.
+    ///
+    /// @return The program end label
     public int getProgEndLabel() {
         assert forStack.peek() != null;
         return forStack.peek().progEndLabel;
     }
 
-    /**
-     * Sets the current bytecode position as the target for the program end label.
-     */
+    /// Sets the current bytecode position as the target for the program end label.
     public void setProgEndLabel() {
         assert forStack.peek() != null;
         bytecode.setLabel(forStack.peek().progEndLabel, bytecode.size());
     }
 
-    /**
-     * Sets the current bytecode position as the target for the for-loop end label.
-     */
+    /// Sets the current bytecode position as the target for the for-loop end label.
     public void setForEndLabel() {
         assert forStack.peek() != null;
         bytecode.setLabel(forStack.peek().forEndLabel, bytecode.size());
     }
 
-    /**
-     * Exits the current for-loop context.
-     */
+    /// Exits the current for-loop context.
     public void exitFor() {
         forStack.pop();
     }
 
-    /**
-     * Gets the identifier index for a string, adding it if not present.
-     *
-     * @param identifier The identifier to look up
-     * @return The index of the identifier
-     */
+    /// Gets the identifier index for a string, adding it if not present.
+    ///
+    /// @param identifier The identifier to look up
+    /// @return The index of the identifier
     public int getIdentifierIndex(String identifier) {
         return identifierTable.computeIfAbsent(identifier, bytecode::addIdentifier);
     }
@@ -221,28 +195,14 @@ public class WenyanCompilerEnvironment {
         return bytecode.getSourceCode();
     }
 
-    /**
-     * Enters a new debug context.
-     *
-     * @param line         Line number
-     * @param column       Column number
-     * @param contentStart Start index
-     * @param contentEnd   End index
-     */
-    public void enterContext(int line, int column, int contentStart, int contentEnd) {
-        if (!debugContextStack.isEmpty()) {
-            Context curContext = debugContextStack.peek();
-            if (bytecode.size() != lastContextStart)
-                bytecode.addContext(curContext.line, curContext.column, lastContextStart,
-                        bytecode.size(), curContext.contentStart, curContext.contentEnd);
-        }
-        lastContextStart = bytecode.size();
-        debugContextStack.push(new Context(line, column, contentStart, contentEnd));
+    // PLAN: use context listener setter and hide this method for unwanted call
+    /// Enters a new debug context.
+    public void enterContext(ParserRuleContext ctx) {
+        enterContext(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine(),
+                ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
     }
 
-    /**
-     * Exits the current debug context.
-     */
+    /// Exits the current debug context.
     public void exitContext() {
         if (!debugContextStack.isEmpty()) {
             Context curContext = debugContextStack.pop();
@@ -265,12 +225,10 @@ public class WenyanCompilerEnvironment {
         return bytecode.toImmutable();
     }
 
-    /**
-     * Gets the constant index for a value, adding it if not present.
-     *
-     * @param value The value to look up
-     * @return The index of the constant
-     */
+    /// Gets the constant index for a value, adding it if not present.
+    ///
+    /// @param value The value to look up
+    /// @return The index of the constant
     private int getConstIndex(IWenyanValue value) {
         return constTable.computeIfAbsent(value, bytecode::addConst);
     }
@@ -280,7 +238,7 @@ public class WenyanCompilerEnvironment {
             if (locals.variables.containsKey(identifier)) {
                 int index = locals.variables.get(identifier);
                 return new ScopedValueHelper(new ScopedValue(index, this.bytecode),
-                        new WenyanBytecode.CapturedValue(index, true));
+                        new WenyanCompileBytecode.CapturedValue(index, true));
             }
         }
         // reach global, not found, stop
@@ -291,7 +249,18 @@ public class WenyanCompilerEnvironment {
         if (scoped == null) return null;
         int index = capturedValueTable.computeIfAbsent(scoped.scopedValue(), ignore -> bytecode.addCapturedValue(scoped.capturedValue));
         return new ScopedValueHelper(scoped.scopedValue,
-                new WenyanBytecode.CapturedValue(index, false));
+                new WenyanCompileBytecode.CapturedValue(index, false));
+    }
+
+    private void enterContext(int line, int column, int contentStart, int contentEnd) {
+        if (!debugContextStack.isEmpty()) {
+            Context curContext = debugContextStack.peek();
+            if (bytecode.size() != lastContextStart)
+                bytecode.addContext(curContext.line, curContext.column, lastContextStart,
+                        bytecode.size(), curContext.contentStart, curContext.contentEnd);
+        }
+        lastContextStart = bytecode.size();
+        debugContextStack.push(new Context(line, column, contentStart, contentEnd));
     }
 
     private static class Scope {
@@ -303,23 +272,19 @@ public class WenyanCompilerEnvironment {
         }
     }
 
-    /**
-     * Represents a for-loop environment with its end labels.
-     */
+    /// Represents a for-loop environment with its end labels.
     private record ForEnvironment(int forEndLabel, int progEndLabel) {
     }
 
-    /**
-     * Represents a debug context with source location information.
-     */
+    /// Represents a debug context with source location information.
     private record Context(int line, int column, int contentStart, int contentEnd) {
     }
 
     // if from local null, means it's local
-    private record ScopedValue(int index, WenyanBytecode from) {
+    private record ScopedValue(int index, WenyanCompileBytecode from) {
     }
 
     private record ScopedValueHelper(ScopedValue scopedValue,
-                                     WenyanBytecode.CapturedValue capturedValue) {
+                                     WenyanCompileBytecode.CapturedValue capturedValue) {
     }
 }

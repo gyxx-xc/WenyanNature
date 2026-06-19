@@ -5,13 +5,7 @@ import indi.wenyan.setup.definitions.RunnerTier;
 import indi.wenyan.setup.definitions.WenyanItems;
 import indi.wenyan.setup.definitions.WyRegistration;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
 import org.jspecify.annotations.NonNull;
 

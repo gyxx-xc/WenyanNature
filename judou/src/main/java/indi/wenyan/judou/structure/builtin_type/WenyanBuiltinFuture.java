@@ -1,10 +1,10 @@
 package indi.wenyan.judou.structure.builtin_type;
 
 import indi.wenyan.judou.api.WenyanType;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.language.JudouTypeText;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

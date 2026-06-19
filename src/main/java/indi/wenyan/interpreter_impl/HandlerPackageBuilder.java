@@ -2,18 +2,21 @@ package indi.wenyan.interpreter_impl;
 
 import indi.wenyan.content.block.power.PowerBlockEntity;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanPackageBuilder;
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
+import indi.wenyan.judou.api.exec.structure.WenyanMetadata;
 import indi.wenyan.judou.api.utils.ChineseUtils;
+import indi.wenyan.judou.api.utils.WenyanPackageBuilder;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanPackage;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.config.WenyanConfig;
+import lombok.Data;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,20 +24,18 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-/**
- * Builder for creating WenyanPackage values
- */
+/// Builder for creating WenyanPackage values
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class HandlerPackageBuilder {
     // with support of wenyan package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
     private final Map<String, Supplier<RawHandlerPackage.IRawRequest>> functions = new HashMap<>();
+    private final Map<String, WenyanMetadata> metadata = new HashMap<>();
+    private MutableWenyanMetadata pendingMetadata = new MutableWenyanMetadata();
 
-    /**
-     * Creates a new package builder
-     *
-     * @return A new package builder instance
-     */
+    /// Creates a new package builder
+    ///
+    /// @return A new package builder instance
     @Contract(" -> new")
     public static @NotNull HandlerPackageBuilder create() {
         return new HandlerPackageBuilder();
@@ -45,28 +46,38 @@ public final class HandlerPackageBuilder {
         return this;
     }
 
-    /**
-     * Adds all variables from an existing environment
-     *
-     * @param environment Environment to include
-     * @return This builder
-     */
+    /// Adds all variables from an existing environment
+    ///
+    /// @param environment Environment to include
+    /// @return This builder
     @Contract("_ -> this")
     public HandlerPackageBuilder environment(@NotNull WenyanPackage environment) {
         variables.putAll(environment.variables());
         return this;
     }
 
-    /**
-     * Builds the package
-     *
-     * @return The built package
-     */
+    /// Builds the package
+    ///
+    /// @return The built package
     public RawHandlerPackage build() {
-        return new RawHandlerPackage(variables, functions);
+        return new RawHandlerPackage(variables, functions, metadata);
+    }
+
+    public HandlerPackageBuilder meta(WenyanMetadata metadata) {
+        pendingMetadata.fromImmutable(metadata);
+        return this;
+    }
+
+    public HandlerPackageBuilder description(String description) {
+        pendingMetadata.description = description;
+        return this;
     }
 
     public HandlerPackageBuilder handler(String name, Supplier<RawHandlerPackage.IRawRequest> function) {
+        if (pendingMetadata.getDescription() != null) {
+            this.metadata.put(name, pendingMetadata.toImmutable());
+            pendingMetadata = new MutableWenyanMetadata();
+        }
         switch (WenyanConfig.getJudouConfigProvider().symbolConversion()) {
             case TRADITIONAL -> functions.put(name, function);
             case SIMPLIFIED -> functions.put(ChineseUtils.toSimplifiedVar(name), function);
@@ -148,5 +159,20 @@ public final class HandlerPackageBuilder {
     @FunctionalInterface
     public interface HandlerSimpleFunction {
         IWenyanValue handle(@NotNull IArgsRequest request) throws WenyanException;
+    }
+
+    @Data
+    private static class MutableWenyanMetadata {
+        String description;
+
+        @Nullable WenyanMetadata toImmutable() {
+            if (description == null) return null;
+            return new WenyanMetadata(description);
+        }
+
+        MutableWenyanMetadata fromImmutable(WenyanMetadata metadata) {
+            this.description = metadata.description();
+            return this;
+        }
     }
 }

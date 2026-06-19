@@ -8,16 +8,17 @@ import indi.wenyan.content.recipe.answering.AnsweringRecipeInput;
 import indi.wenyan.content.recipe.answering.checker.IAnsweringChecker;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.network.client.CraftClearParticlePacket;
 import indi.wenyan.setup.network.client.CraftingParticlePacket;
 import lombok.Getter;
@@ -74,11 +75,13 @@ public class CraftingBlockEntity extends AbstractModuleEntity implements MenuPro
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.CraftingArgs.string())
             .handler(WenyanSymbol.CRAFTING_ARGS, request -> {
                 if (!request.args().isEmpty())
                     throw new WenyanException.WenyanVarException(JudouExceptionText.ArgsNumWrong.string(0, request.args().size()));
                 return getChecker().getArgs();
             })
+            .description(FunctionMetaText.Print.string())
             .handler(WenyanSymbol.PRINT, request -> {
                 getChecker().accept(request.args());
                 IAnsweringChecker.ResultStatus checkerResult = checker.getResult();

@@ -3,14 +3,15 @@ package indi.wenyan.content.block.additional_module.block;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IHandleableRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +34,9 @@ public class LockModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.SemaphoreModuleAcquire.string())
             .handler(WenyanSymbol.SemaphoreModule$acquire, this::acquireSemaphoreHandler)
+            .description(FunctionMetaText.SemaphoreModuleRelease.string())
             .handler(WenyanSymbol.SemaphoreModule$release, this::releaseSemaphore)
             .build();
 

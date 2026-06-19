@@ -1,26 +1,22 @@
 package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanParser;
-import indi.wenyan.judou.api.WenyanCompileException;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.utils.WenyanDataParser;
 
-/**
- * Visitor for handling data expressions and literals in Wenyan language.
- * Responsible for compiling primitive values, identifiers, array access,
- * and object property access.
- */
+/// Visitor for handling data expressions and literals in Wenyan language.
+/// Responsible for compiling primitive values, identifiers, array access,
+/// and object property access.
 public class WenyanDataVisitor extends WenyanVisitor {
-    /**
-     * Constructs a data visitor with the given bytecode environment
-     * @param bytecode The compiler environment to emit bytecode to
-     */
+    /// Constructs a data visitor with the given bytecode environment
+    /// @param bytecode The compiler environment to emit bytecode to
     public WenyanDataVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }

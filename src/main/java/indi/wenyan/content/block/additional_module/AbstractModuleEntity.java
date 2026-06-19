@@ -21,10 +21,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
-/**
- * Base class for module entities that can execute Wenyan code.
- * Implements IWenyanDevice for integration with the Wenyan interpreter.
- */
+/// Base class for module entities that can execute Wenyan code.
+/// Implements IWenyanDevice for integration with the Wenyan interpreter.
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class AbstractModuleEntity extends DataBlockEntity implements IRenamable {
@@ -42,20 +40,16 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IR
         super(type, pos, blockState);
     }
 
-    /**
-     * Gets the default package name for this module entity.
-     *
-     * @return the base package name
-     */
+    /// Gets the default package name for this module entity.
+    ///
+    /// @return the base package name
     public abstract String getBasePackageName();
 
     public abstract RawHandlerPackage getExecPackage();
 
-    /**
-     * Sets the package name for this module entity.
-     *
-     * @param packageName the new package name, or null to use the base package name
-     */
+    /// Sets the package name for this module entity.
+    ///
+    /// @param packageName the new package name, or null to use the base package name
     public void setPackageName(@Nullable String packageName) {
         this.packageName = packageName;
         setChanged();
@@ -85,9 +79,7 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IR
             setPackageName(ChineseUtils.bracketOf(name.getString()));
     }
 
-    /**
-     * Called every tick to handle execution requests.
-     */
+    /// Called every tick to handle execution requests.
     public void tick(Level level, BlockPos pos, BlockState state) {
     }
 

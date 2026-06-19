@@ -9,8 +9,7 @@ import indi.wenyan.content.item.throw_runner.FuContainerComponent;
 import indi.wenyan.interpreter_impl.ImportRequest;
 import indi.wenyan.interpreter_impl.SimpleRequest;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.api.WenyanCompileException;
-import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.compile.WenyanCompiler;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.exec.structure.IExecQueue;
@@ -23,8 +22,9 @@ import indi.wenyan.judou.api.runtime.RunnerCreator;
 import indi.wenyan.judou.api.utils.Either;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.WenyanPackage;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
-import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.RunnerTier;
@@ -125,8 +125,8 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     private void startProgram(@NonNull ItemStack itemStack, ICodeHolder code) {
         setRemainingFireTicks(1);
         try {
-            lazyProgram.createOrGet().create(RunnerCreator.newRunner(WenyanFrame
-                    .ofCode(new WenyanCompiler().compile(code.getCode()).bytecode()), this.initEnvironment()));
+            IWenyanBytecode bytecode = new WenyanCompiler().compile(code.getCode()).bytecode();
+            RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
         } catch (WenyanException | WenyanCompileException e) {
             handleError(e.getMessage());
             // add will show this message and kill itself at tick

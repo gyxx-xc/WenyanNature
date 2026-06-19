@@ -1,12 +1,12 @@
 package indi.wenyan.content.recipe.answering.checker.wyquestion.paper;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.language.TypeText;
 import net.minecraft.util.RandomSource;
 

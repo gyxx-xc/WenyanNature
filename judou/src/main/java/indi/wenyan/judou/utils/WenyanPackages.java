@@ -1,7 +1,7 @@
 package indi.wenyan.judou.utils;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanPackageBuilder;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.utils.WenyanPackageBuilder;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.values.IWenyanValue;

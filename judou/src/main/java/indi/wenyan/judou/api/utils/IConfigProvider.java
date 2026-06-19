@@ -1,5 +1,6 @@
 package indi.wenyan.judou.api.utils;
 
+/// Wenyan runtime configuration.
 public interface IConfigProvider {
     int getMaxThread();
     int getMaxSlice();

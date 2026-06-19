@@ -1,28 +1,14 @@
 package indi.wenyan.client.gui.code_editor;
 
 import indi.wenyan.client.gui.code_editor.backend.RunnerBlockBackend;
-import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.widget.*;
-import indi.wenyan.setup.language.GuiText;
 import lombok.Getter;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RunnerBlockScreen extends Screen {
 
@@ -92,46 +78,8 @@ public class RunnerBlockScreen extends Screen {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
-        snippetWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
-        packageWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
-    }
-
-    public void renderSnippetTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
-                                     SnippetSet.Snippet snippet) {
-        List<ClientTooltipComponent> tooltip = Lists.newArrayList();
-        tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(snippet.title(), Style.EMPTY)));
-        // same as ClientTooltipFlag
-        boolean hasShiftDown = Minecraft.getInstance().hasShiftDown();
-        if (!hasShiftDown) {
-            tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
-                    GuiText.HoldShift.string(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
-        } else {
-            int curInsert = 0;
-            for (int row = 0; row < snippet.lines().size(); row++) {
-                String line = snippet.lines().get(row);
-                int curColum = 0;
-                List<FormattedCharSequence> lineComp = new ArrayList<>();
-                while (curInsert < snippet.insert().size() &&
-                        snippet.insert().get(curInsert).row() == row) {
-                    var placeholder = snippet.insert().get(curInsert++);
-
-                    var textComp = FormattedCharSequence.forward(line.substring(curColum, placeholder.colum()),
-                            Style.EMPTY.withColor(ChatFormatting.GRAY));
-                    var placeholderComp = FormattedCharSequence.forward(placeholder.context().getValue(),
-                            Style.EMPTY.withColor(placeholder.context().getColor()));
-                    lineComp.add(textComp);
-                    lineComp.add(placeholderComp);
-                    curColum = placeholder.colum();
-                }
-                var textComp = FormattedCharSequence.forward(line.substring(curColum),
-                        Style.EMPTY.withColor(ChatFormatting.GRAY));
-                lineComp.add(textComp);
-                tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.composite(lineComp)));
-            }
-        }
-        guiGraphics.tooltip(font, tooltip, mouseX, mouseY,
-                DefaultTooltipPositioner.INSTANCE,
-                ItemStack.EMPTY.get(DataComponents.TOOLTIP_STYLE));
+        snippetWidget.getTooltip().ifPresent(s -> SnippetWidget.renderSnippetTooltip(guiGraphics, font, mouseX, mouseY, s));
+        packageWidget.getTooltip().ifPresent(m -> PackageSnippetWidget.renderSnippetTooltip(guiGraphics, font, mouseX, mouseY, m));
     }
 
     @Override

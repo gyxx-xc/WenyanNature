@@ -8,10 +8,11 @@ import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanBlock;
 import indi.wenyan.interpreter_impl.value.WenyanCapabilitySlot;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.network.client.BlockPosRangePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -37,10 +38,13 @@ public class BlockModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private RenderRange renderRange;
-    public record RenderRange(Vec3 start, Vec3 end, boolean found) {}
+
+    public record RenderRange(Vec3 start, Vec3 end, boolean found) {
+    }
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.BlockModuleSearch.string())
             .handler(WenyanSymbol.BlockModule$search, request -> {
                 Vec3 s = request.args().get(0).as(WenyanVec3.TYPE).value();
                 BlockPos start = new BlockPos((int) s.x, (int) s.y, (int) s.z);
@@ -84,6 +88,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                             new BlockPosRangePacket(getBlockPos(), start, end, found));
                 return WenyanValues.of(found);
             })
+            .description(FunctionMetaText.BlockModuleGet.string())
             .handler(WenyanSymbol.BlockModule$get, request -> {
                 Vec3 p = request.args().getFirst().as(WenyanVec3.TYPE).value();
                 BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
@@ -91,6 +96,7 @@ public class BlockModuleEntity extends AbstractModuleEntity {
                 BlockState state = level.getBlockState(pos);
                 return WenyanMinecraftValues.of(state);
             })
+            .description(FunctionMetaText.BlockModuleAttach.string())
             .handler(WenyanSymbol.BlockModule$attach, _ -> {
                 Direction attachedDirection = AbstractFuluBlock
                         .getConnectedDirection(getBlockState()).getOpposite();

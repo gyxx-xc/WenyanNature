@@ -1,17 +1,15 @@
 package indi.wenyan.content.recipe.answering.checker.wyquestion;
 
 import indi.wenyan.content.recipe.answering.checker.ValueAnswerChecker;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import net.minecraft.util.RandomSource;
 
-/**
- * EchoChecker is a simple checker that verifies if the input matches a randomly generated integer.
- * It initializes a random integer as the answer and checks if the input matches this value.
- * <p>
- * output var0
- */
+/// EchoChecker is a simple checker that verifies if the input matches a randomly generated integer.
+/// It initializes a random integer as the answer and checks if the input matches this value.
+///
+/// output var0
 public class EchoChecker extends ValueAnswerChecker {
     private IWenyanValue ans;
 

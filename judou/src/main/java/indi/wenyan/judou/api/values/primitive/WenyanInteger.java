@@ -1,6 +1,5 @@
 package indi.wenyan.judou.api.values.primitive;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.JudouTypeText;
@@ -10,15 +9,14 @@ import indi.wenyan.judou.api.values.IWenyanComparable;
 import indi.wenyan.judou.api.values.IWenyanComputable;
 import indi.wenyan.judou.api.values.IWenyanNumber;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
 
-/**
- * Represents an integer value in Wenyan language.
- * Supports arithmetic operations and comparisons.
- */
+/// Represents an integer value in Wenyan language.
+/// Supports arithmetic operations and comparisons.
 public final class WenyanInteger implements IWenyanComputable, IWenyanComparable, IWenyanNumber {
     private final BigInteger value;
 

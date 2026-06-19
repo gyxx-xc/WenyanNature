@@ -22,19 +22,25 @@ public record BlockPackageGetter(Consumer<BlockPos> communicateConsumer) {
         for (BlockPos pos : BlockPos.betweenClosed(
                 blockPos.offset(range, -range, range),
                 blockPos.offset(-range, range, -range))) {
-            if (pos.equals(blockPos)) continue;
+            Either<WenyanPackage, String> either = getWenyanPackageEither(level, blockPos, pos, packageName);
+            if (either != null) return either;
+        }
+        return null;
+    }
 
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof RunnerBlockEntity platform && platform.getPlatformName().equals(packageName)) {
-                communicateConsumer.accept(pos);
-                return Either.right(platform.getCode());
-            }
+    private @Nullable Either<WenyanPackage, String> getWenyanPackageEither(Level level, BlockPos blockPos, BlockPos pos, String packageName) {
+        if (pos.equals(blockPos)) return null;
 
-            var executor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, pos);
-            if (executor != null && executor.getPackageName().equals(packageName)) {
-                communicateConsumer.accept(pos);
-                return Either.left(processPackage(executor.getExecPackage(), executor));
-            }
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof RunnerBlockEntity platform && platform.getPlatformName().equals(packageName)) {
+            communicateConsumer.accept(pos);
+            return Either.right(platform.getCode());
+        }
+
+        var executor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, pos);
+        if (executor != null && executor.getPackageName().equals(packageName)) {
+            communicateConsumer.accept(pos);
+            return Either.left(processPackage(executor.getExecPackage(), executor));
         }
         return null;
     }

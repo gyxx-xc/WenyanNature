@@ -1,10 +1,11 @@
-package indi.wenyan.judou.api;
+package indi.wenyan.judou.api.values.exception;
 
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 
+/// Thrown when theoretically unreachable code is reached (indicates a bug).
 public class WenyanUnreachedException extends WenyanException {
     public WenyanUnreachedException() {
         super("unreached");
@@ -14,6 +15,7 @@ public class WenyanUnreachedException extends WenyanException {
         super(message);
     }
 
+    /// Wraps an unexpected throwable that caused thread death.
     public static class WenyanUnexceptedException extends WenyanUnreachedException {
         public final Throwable cause;
 

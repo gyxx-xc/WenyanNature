@@ -4,14 +4,15 @@ import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -34,6 +35,17 @@ import java.util.Optional;
 @ParametersAreNonnullByDefault
 public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
     @Getter
+    private final ItemStacksResourceHandler output = new ItemStacksResourceHandler(1) {
+        @Override
+        protected void onContentsChanged(int index, ItemStack previousContents) {
+            super.onContentsChanged(index, previousContents);
+            updateBlock();
+        }
+    };
+    @Getter
+    private final String basePackageName = WenyanSymbol.LOGIC_FURNACE;
+    private boolean resetProgress = false;
+    @Getter
     private final ItemStacksResourceHandler input = new ItemStacksResourceHandler(1) {
         @Override
         protected void onContentsChanged(int index, ItemStack previousContents) {
@@ -43,16 +55,9 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
             resetProgress = true;
         }
     };
-
-    @Getter
-    private final ItemStacksResourceHandler output = new ItemStacksResourceHandler(1) {
-        @Override
-        protected void onContentsChanged(int index, ItemStack previousContents) {
-            super.onContentsChanged(index, previousContents);
-            updateBlock();
-        }
-    };
-
+    private ResourceKey<Recipe<?>> lastRecipe;
+    private int progress = -1;
+    private int maxProgress = -1;
     @Getter
     private final ContainerData data = new ContainerData() {
         @Override
@@ -74,12 +79,47 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
             return 2;
         }
     };
-
     @Getter
-    private final String basePackageName = WenyanSymbol.LOGIC_FURNACE;
+    private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.FurnaceBurn.string())
+            .handler(WenyanSymbol.FURNACE_BURN, request -> {
+                checkArgsAndRecipe(request);
+                progress = Math.min(progress + 1, maxProgress);
+                if (progress == maxProgress)
+                    processOutput();
+                return WenyanNull.NULL;
+            })
+            .description(FunctionMetaText.FurnaceDoubleBurn.string())
+            .handler(WenyanSymbol.FURNACE_DOUBLE_BURN, request -> {
+                checkArgsAndRecipe(request);
+                // check int overflow
+                if (progress >= Integer.MAX_VALUE / 2) {
+                    throw new WenyanException(JudouExceptionText.IntegerOverflow.string());
+                }
+                progress *= 2;
 
-    private boolean resetProgress = false;
-    private ResourceKey<Recipe<?>> lastRecipe;
+                if (progress == maxProgress) {
+                    processOutput();
+                } else if (progress > maxProgress) {
+                    ResourceHandlerUtil.extractFirst(input, _ -> true, Integer.MAX_VALUE, null);
+                }
+                return WenyanNull.NULL;
+            })
+            .description(FunctionMetaText.FurnaceGetProgress.string())
+            .handler(WenyanSymbol.FURNACE_GET_PROGRESS, request -> {
+                checkArgsAndRecipe(request);
+                return WenyanValues.of(progress);
+            })
+            .description(FunctionMetaText.FurnaceGetMaxProgress.string())
+            .handler(WenyanSymbol.FURNACE_GET_MAX_PROGRESS, request -> {
+                checkArgsAndRecipe(request);
+                return WenyanValues.of(maxProgress);
+            })
+            .build();
+
+    public LogicFurnaceBlockEntity(BlockPos pos, BlockState blockState) {
+        super(WenyanBlocks.LOGIC_FURNACE_ENTITY.get(), pos, blockState);
+    }
 
     private Optional<RecipeHolder<? extends AbstractCookingRecipe>> getRecipeFor(SingleRecipeInput input, ServerLevel level) {
         RecipeManager recipeManager = level.recipeAccess();
@@ -105,47 +145,6 @@ public class LogicFurnaceBlockEntity extends AbstractModuleEntity {
         }
 
         return Optional.empty();
-    }
-
-    private int progress = -1;
-    private int maxProgress = -1;
-
-    @Getter
-    private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
-            .handler(WenyanSymbol.FURNACE_BURN, request -> {
-                checkArgsAndRecipe(request);
-                progress = Math.min(progress + 1, maxProgress);
-                if (progress == maxProgress)
-                    processOutput();
-                return WenyanNull.NULL;
-            })
-            .handler(WenyanSymbol.FURNACE_DOUBLE_BURN, request -> {
-                checkArgsAndRecipe(request);
-                // check int overflow
-                if (progress >= Integer.MAX_VALUE / 2) {
-                    throw new WenyanException(JudouExceptionText.IntegerOverflow.string());
-                }
-                progress *= 2;
-
-                if (progress == maxProgress) {
-                    processOutput();
-                } else if (progress > maxProgress) {
-                    ResourceHandlerUtil.extractFirst(input, _ -> true, Integer.MAX_VALUE, null);
-                }
-                return WenyanNull.NULL;
-            })
-            .handler(WenyanSymbol.FURNACE_GET_PROGRESS, request -> {
-                checkArgsAndRecipe(request);
-                return WenyanValues.of(progress);
-            })
-            .handler(WenyanSymbol.FURNACE_GET_MAX_PROGRESS, request -> {
-                checkArgsAndRecipe(request);
-                return WenyanValues.of(maxProgress);
-            })
-            .build();
-
-    public LogicFurnaceBlockEntity(BlockPos pos, BlockState blockState) {
-        super(WenyanBlocks.LOGIC_FURNACE_ENTITY.get(), pos, blockState);
     }
 
     public void tick(ServerLevel level, BlockPos pos, BlockState state, RandomSource random) {

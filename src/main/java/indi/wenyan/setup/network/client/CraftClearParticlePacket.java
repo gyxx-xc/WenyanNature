@@ -9,9 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-/**
- * Packet for clearing particle data at a specific position
- */
+/// Packet for clearing particle data at a specific position
 public record CraftClearParticlePacket(@NonNull BlockPos pos) implements CustomPacketPayload {
 
     public static final Type<CraftClearParticlePacket> TYPE =

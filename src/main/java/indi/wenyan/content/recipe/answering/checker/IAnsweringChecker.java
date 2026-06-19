@@ -1,26 +1,20 @@
 package indi.wenyan.content.recipe.answering.checker;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import org.jspecify.annotations.NonNull;
 
-/**
- * Interface for checkers that validate answers in Wenyan programs.
- * Handles initialization, value acceptance, and result reporting.
- */
+/// Interface for checkers that validate answers in Wenyan programs.
+/// Handles initialization, value acceptance, and result reporting.
 public interface IAnsweringChecker {
-    /**
-     * Initializes the checker with a Wenyan program.
-     */
+    /// Initializes the checker with a Wenyan program.
     void init();
 
-    /**
-     * Processes a value for checking.
-     *
-     * @param value the value to check
-     * @throws WenyanException.WenyanCheckerError if a checking error occurs
-     */
+    /// Processes a value for checking.
+    ///
+    /// @param value the value to check
+    /// @throws WenyanException.WenyanCheckerError if a checking error occurs
     void accept(IWenyanValue value) throws WenyanException;
 
     default void accept(@NonNull Iterable<IWenyanValue> value) throws WenyanException {
@@ -30,16 +24,12 @@ public interface IAnsweringChecker {
 
     IWenyanObject getArgs();
 
-    /**
-     * Gets the current result status of the checker.
-     *
-     * @return the result status
-     */
+    /// Gets the current result status of the checker.
+    ///
+    /// @return the result status
     ResultStatus getResult();
 
-    /**
-     * Possible result states for an answer checker.
-     */
+    /// Possible result states for an answer checker.
     enum ResultStatus {
         RUNNING,
         ANSWER_CORRECT,

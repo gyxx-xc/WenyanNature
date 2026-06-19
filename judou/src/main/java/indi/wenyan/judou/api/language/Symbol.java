@@ -1,5 +1,6 @@
 package indi.wenyan.judou.api.language;
 
+/// Wenyan language symbol names.
 public enum Symbol {
     ;
     public static final String LIST_REMOVE_ID = "「移除」";

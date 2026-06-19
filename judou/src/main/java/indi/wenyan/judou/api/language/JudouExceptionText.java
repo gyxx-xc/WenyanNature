@@ -1,5 +1,6 @@
 package indi.wenyan.judou.api.language;
 
+/// Translation keys for Wenyan exception messages.
 public enum JudouExceptionText implements JudouLocalizationEnum {
     ArgsNumWrong,                       // 謬：參數數需%d得%d
     ArgsNumWrongRange,                  // 謬：參數數需%d至%d得%d

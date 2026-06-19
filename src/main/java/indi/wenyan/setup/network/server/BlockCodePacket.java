@@ -10,19 +10,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Packet for sending code to a runner block
- */
+/// Packet for sending code to a runner block
 public record BlockCodePacket(BlockPos pos, String code) implements IServersidePacket {
-    /**
-     * Packet type identifier
-     */
+    /// Packet type identifier
     public static final Type<BlockCodePacket> TYPE =
             IWenyanPacketPayload.createType("block_code");
 
-    /**
-     * Codec for serializing and deserializing the packet
-     */
+    /// Codec for serializing and deserializing the packet
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockCodePacket> STREAM_CODEC =
             StreamCodec.of(
                     (buffer, packet) -> {
@@ -35,9 +29,7 @@ public record BlockCodePacket(BlockPos pos, String code) implements IServersideP
                         return new BlockCodePacket(pos1, output);
                     });
 
-    /**
-     * Handler for processing the packet
-     */
+    /// Handler for processing the packet
     @Override
     public void handleOnServer(ServerPlayer player) {
         var entity = player.level().getBlockEntity(pos());

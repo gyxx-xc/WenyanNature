@@ -1,13 +1,11 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
-/**
- * Handles stack operations in the Wenyan interpreter.
- */
+/// Handles stack operations in the Wenyan interpreter.
 public enum StackCode {
     ;
 

@@ -1,19 +1,17 @@
 package indi.wenyan.judou.runtime.executor;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.judou.api.values.primitive.WenyanList;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
 import java.util.Iterator;
 
-/**
- * Handles loop operations in the Wenyan interpreter.
- */
+/// Handles loop operations in the Wenyan interpreter.
 public enum ForCode {
     ;
 
@@ -25,7 +23,7 @@ public enum ForCode {
             IWenyanValue value1 = WenyanValues.of((long) num - 1);
             runtime.getProcessStack().push(value1);
         } else {
-            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setProgramCounter(arg);
             runtime.setPCFlag(true);
         }
     }
@@ -40,7 +38,7 @@ public enum ForCode {
             runtime.getProcessStack().push(value);
         } else {
             runtime.getProcessStack().pop();
-            runtime.setProgramCounter(runtime.getBytecode().getLabel(arg));
+            runtime.setProgramCounter(arg);
             runtime.setPCFlag(true);
         }
     }

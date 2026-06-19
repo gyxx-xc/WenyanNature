@@ -12,22 +12,19 @@ import static indi.wenyan.judou.api.language.JudouExceptionText.*;
 import static indi.wenyan.judou.api.language.JudouTypeText.*;
 import static indi.wenyan.setup.language.ConfigText.*;
 import static indi.wenyan.setup.language.ExceptionText.*;
+import static indi.wenyan.setup.language.FunctionMetaText.*;
 import static indi.wenyan.setup.language.GuiText.*;
 import static indi.wenyan.setup.language.TypeText.*;
 
-/**
- * Provider for generating Chinese language translations during data generation.
- * Contains all Chinese translations used in the mod.
- */
+/// Provider for generating Chinese language translations during data generation.
+/// Contains all Chinese translations used in the mod.
 public class ChineseLanguageProvider extends LanguageProvider {
 
-    /**
-     * Constructs a new Chinese language provider.
-     *
-     * @param output The pack output for language file generation
-     * @param modid  The mod ID
-     * @param locale The locale code (zh_cn)
-     */
+    /// Constructs a new Chinese language provider.
+    ///
+    /// @param output The pack output for language file generation
+    /// @param modid  The mod ID
+    /// @param locale The locale code (zh\_cn)
     public ChineseLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
     }
@@ -203,6 +200,41 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(CELESTIAL_INK_CHECKER.getTranslationKey(), "這是CELESTIAL INK的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
         add(HAND_RUNNER_6_CHECKER.getTranslationKey(), "這是HAND_RUNNER_6的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
         add(DRAGON_PAPER_CHECKER.getTranslationKey(), "這是DRAGON_PAPER的題目描述，但是我也不知道題目是什麼，因爲題目的類名跟題目沒有一點關係");
+
+        add(BlockingQueueModulePut.getTranslationKey(), "将元素加入队列（队列满时阻塞）");
+        add(BlockingQueueModuleTake.getTranslationKey(), "从队列取出元素（队列空时阻塞）");
+        add(BlockingQueueModuleOffer.getTranslationKey(), "尝试将元素加入队列（不阻塞）");
+        add(BlockingQueueModulePoll.getTranslationKey(), "尝试从队列取出元素（不阻塞）");
+        add(BlockingQueueModulePeek.getTranslationKey(), "查看队列头部元素但不取出");
+        add(BlockingQueueModuleSize.getTranslationKey(), "获取队列当前大小");
+        add(BlockingQueueModuleClear.getTranslationKey(), "清空队列并唤醒等待的生产者");
+        add(BlockModuleSearch.getTranslationKey(), "在指定范围内搜索是否存在匹配的方块");
+        add(BlockModuleGet.getTranslationKey(), "获取指定位置的方块状态");
+        add(BlockModuleAttach.getTranslationKey(), "获取与此符相邻的方块");
+        add(Print.getTranslationKey(), "打印一行");
+        add(EntityModuleInspectRange.getTranslationKey(), "检测指定区域内的所有实体");
+        add(EntityModuleNearby.getTranslationKey(), "检测符咒周围指定半径内的所有实体");
+        add(EntityModuleLineOfSight.getTranslationKey(), "检测从起点到终点的视线上的方块（射线追踪）");
+        add(ExplosionModuleLightning.getTranslationKey(), "在符咒位置召唤闪电");
+        add(ExplosionModuleExplode.getTranslationKey(), "在符咒位置产生爆炸（半径 3.0）");
+        add(ExplosionModuleIgnite.getTranslationKey(), "点燃指定位置的方块");
+        add(ExplosionModuleFireball.getTranslationKey(), "发射一个大火球");
+        add(CoreStart.getTranslationKey(), "启动指定名称的符");
+        add(CoreJoin.getTranslationKey(), "等待所有已启动的可戴符执行完毕");
+        add(CoreStatus.getTranslationKey(), "查询指定可戴符的运行状态");
+        add(ItemModuleTransfer.getTranslationKey(), "将物品传输到相邻的物品处理器");
+        add(ItemModuleRead.getTranslationKey(), "读取相邻物品处理器指定槽位的物品");
+        add(SemaphoreModuleAcquire.getTranslationKey(), "获取锁");
+        add(SemaphoreModuleRelease.getTranslationKey(), "释放锁");
+        add(FurnaceBurn.getTranslationKey(), "逐次增加一点进度");
+        add(FurnaceDoubleBurn.getTranslationKey(), "将当前进度翻倍");
+        add(FurnaceGetProgress.getTranslationKey(), "获取当前进度值");
+        add(FurnaceGetMaxProgress.getTranslationKey(), "获取烧炼所需的总进度值");
+        add(PistonPush.getTranslationKey(), "推动指定位置的方块结构");
+        add(PistonPull.getTranslationKey(), "拉动指定位置的方块结构");
+        add(WorldModuleSignalStrength.getTranslationKey(), "检测周围最强的红石信号强度");
+        add(WorldModuleEmitSignal.getTranslationKey(), "输出指定强度的红石信号");
+        add(WorldModuleChangeWeather.getTranslationKey(), "改变天气");
 
         add(Judou.getTranslationKey(), "句读（程序运行）");
         add(SliceStep.getTranslationKey(), "线程切换长度");

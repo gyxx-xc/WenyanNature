@@ -1,13 +1,13 @@
 package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanParser;
-import indi.wenyan.judou.api.WenyanCompileException;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.ParsableType;
@@ -18,22 +18,16 @@ import org.antlr.v4.runtime.Token;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Visitor for handling expressions in Wenyan language.
- * Processes variable declarations, assignments, function definitions and calls,
- * object creation and member access.
- */
+/// Visitor for handling expressions in Wenyan language.
+/// Processes variable declarations, assignments, function definitions and calls,
+/// object creation and member access.
 public class WenyanExprVisitor extends WenyanVisitor {
-    /**
-     * Delegate visitor for handling data expressions
-     */
+    /// Delegate visitor for handling data expressions
     private final WenyanDataVisitor dataVisitor = new WenyanDataVisitor(bytecode);
 
-    /**
-     * Constructs an expression visitor with the given bytecode environment
-     *
-     * @param bytecode The compiler environment to emit bytecode to
-     */
+    /// Constructs an expression visitor with the given bytecode environment
+    ///
+    /// @param bytecode The compiler environment to emit bytecode to
     public WenyanExprVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }
@@ -114,7 +108,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
             bytecode.addLoadCode(ctx.SELF().getText());
             bytecode.add(WenyanCodes.STORE_ATTR, ctx.IDENTIFIER().getText());
         } else {
-            bytecode.addStoreCode(ctx.IDENTIFIER().getText());
+            bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER().getText());
         }
         return true;
     }
@@ -148,6 +142,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size() - 1).getText())) {
             throw new WenyanCompileException(JudouExceptionText.FunctionNameDoesNotMatch.string(), ctx);
         }
+        // FIXME: a impl dependency here
         int index = bytecode.getStoreIndex(ctx.IDENTIFIER(0).getText());
         visitFunction_define_body(ctx.function_define_body(), false);
         bytecode.add(WenyanCodes.CREATE_FUNCTION, index);
@@ -183,13 +178,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
         for (var arg : argsType) argv.add(arg.id());
         WenyanCompilerEnvironment functionEnvironment = new WenyanCompilerEnvironment(bytecode.getSourceCode(), bytecode, argv, bytecode.isDebug());
         new WenyanMainVisitor(functionEnvironment).visit(ctx.statements());
-
-        functionEnvironment.enterContext(ctx.getStop().getLine(), ctx.getStop().getCharPositionInLine(),
-                ctx.getStop().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-        // STUB: add a return null at end in case no return
-        functionEnvironment.add(WenyanCodes.PUSH, WenyanNull.NULL);
-        functionEnvironment.add(WenyanCodes.RET);
-        functionEnvironment.exitContext();
+        functionEnvironment.addAutoReturn(ctx);
 
         bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(functionEnvironment.produceBytecode(), argsType, null));
     }
@@ -321,7 +310,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
                 bytecode.add(WenyanCodes.STORE_FUNCTION_ATTR, func.IDENTIFIER(0).getText());
         }
 
-        bytecode.addStoreCode(ctx.IDENTIFIER(0).getText());
+        bytecode.add(WenyanCodes.STORE, ctx.IDENTIFIER(0).getText());
         return true;
     }
 
@@ -342,13 +331,13 @@ public class WenyanExprVisitor extends WenyanVisitor {
         bytecode.addLoadCode(Symbol.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, 1);
         if (ctx.prop.isEmpty()) {
-            bytecode.addStoreCode(ctx.name.getText());
+            bytecode.add(WenyanCodes.STORE, ctx.name.getText());
             return true;
         }
         // stack: id1, id2, ..., package, import
         for (Token id : ctx.prop) {
             bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, id.getText());
-            bytecode.addStoreCode(id.getText());
+            bytecode.add(WenyanCodes.STORE, id.getText());
         }
         bytecode.add(WenyanCodes.POP);
         return true;

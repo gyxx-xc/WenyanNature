@@ -26,6 +26,7 @@ import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
@@ -37,21 +38,11 @@ import java.util.function.Supplier;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
-/**
- * Central registration class for all mod content
- */
+/// Central registration class for all mod content
 public enum WyRegistration {
     ;
 
-    public static final TagKey<Item> RUNNER_PAPER_ITEM = TagKey.create(
-            Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "runner_paper_item"));
-
-    public static final TagKey<Item> HAND_RUNNER_ITEM = TagKey.create(
-            Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "hand_runner_item"));
-
-    /**
-     * Registers all content with the mod event bus
-     */
+    /// Registers all content with the mod event bus
     public static void register(IEventBus modEventBus) {
         MENU_TYPE.register(modEventBus);
         DATA.register(modEventBus);
@@ -134,6 +125,16 @@ public enum WyRegistration {
     public static final TagKey<Item> PAPER_MODULE_ITEM = TagKey.create(
             Registries.ITEM,
             Identifier.fromNamespaceAndPath(MODID, "paper_module_item"));
+
+    public static final TagKey<Block> RUNNABLE_BLOCK = TagKey.create(
+            Registries.BLOCK,
+            Identifier.fromNamespaceAndPath(MODID, "runnable_block"));
+
+    public static final TagKey<Item> RUNNER_PAPER_ITEM = TagKey.create(
+            Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "runner_paper_item"));
+
+    public static final TagKey<Item> HAND_RUNNER_ITEM = TagKey.create(
+            Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, "hand_runner_item"));
 
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BambooInk.NoFireEffect>> NO_FIRE_EFFECT = CONSUME_EFFECT
             .register("no_fire_effect",

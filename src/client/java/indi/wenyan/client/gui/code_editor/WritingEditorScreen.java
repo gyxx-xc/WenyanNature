@@ -74,7 +74,7 @@ public class WritingEditorScreen extends Screen {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
-        snippetWidget.getRenderingSnippetTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
+        snippetWidget.getTooltip().ifPresent(s -> renderSnippetTooltip(guiGraphics, mouseX, mouseY, s));
     }
 
     public void renderSnippetTooltip(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,

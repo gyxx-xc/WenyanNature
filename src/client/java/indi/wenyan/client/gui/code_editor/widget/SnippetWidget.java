@@ -7,18 +7,27 @@ import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Setter;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractTextAreaWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemStack;
+import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -54,7 +63,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
     @Nullable
     private SnippetSet.Snippet renderingSnippetTooltip = null;
 
-    public Optional<SnippetSet.Snippet> getRenderingSnippetTooltip() {
+    public Optional<SnippetSet.Snippet> getTooltip() {
         return Optional.ofNullable(renderingSnippetTooltip);
     }
 
@@ -230,6 +239,44 @@ public class SnippetWidget extends AbstractTextAreaWidget {
                 backend.setSelectCursor(backend.getCursor());
             }
         }
+    }
+
+    public static void renderSnippetTooltip(@NotNull GuiGraphicsExtractor guiGraphics, Font font, int mouseX, int mouseY,
+                                            SnippetSet.Snippet snippet) {
+        List<ClientTooltipComponent> tooltip = Lists.newArrayList();
+        tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(snippet.title(), Style.EMPTY)));
+        // same as ClientTooltipFlag
+        boolean hasShiftDown = Minecraft.getInstance().hasShiftDown();
+        if (!hasShiftDown) {
+            tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
+                    GuiText.HoldShift.string(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
+        } else {
+            int curInsert = 0;
+            for (int row = 0; row < snippet.lines().size(); row++) {
+                String line = snippet.lines().get(row);
+                int curColum = 0;
+                List<FormattedCharSequence> lineComp = new ArrayList<>();
+                while (curInsert < snippet.insert().size() &&
+                        snippet.insert().get(curInsert).row() == row) {
+                    var placeholder = snippet.insert().get(curInsert++);
+
+                    var textComp = FormattedCharSequence.forward(line.substring(curColum, placeholder.colum()),
+                            Style.EMPTY.withColor(ChatFormatting.GRAY));
+                    var placeholderComp = FormattedCharSequence.forward(placeholder.context().getValue(),
+                            Style.EMPTY.withColor(placeholder.context().getColor()));
+                    lineComp.add(textComp);
+                    lineComp.add(placeholderComp);
+                    curColum = placeholder.colum();
+                }
+                var textComp = FormattedCharSequence.forward(line.substring(curColum),
+                        Style.EMPTY.withColor(ChatFormatting.GRAY));
+                lineComp.add(textComp);
+                tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.composite(lineComp)));
+            }
+        }
+        guiGraphics.tooltip(font, tooltip, mouseX, mouseY,
+                DefaultTooltipPositioner.INSTANCE,
+                ItemStack.EMPTY.get(DataComponents.TOOLTIP_STYLE));
     }
 
     @Override

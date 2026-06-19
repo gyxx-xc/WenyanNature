@@ -10,10 +10,8 @@ import net.minecraft.world.item.Item;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-/**
- * Provider for generating item models during data generation.
- * Defines the appearance of items in inventory and when held.
- */
+/// Provider for generating item models during data generation.
+/// Defines the appearance of items in inventory and when held.
 @ParametersAreNonnullByDefault
 public class ModItemModelProvider extends ModelSubProvider {
     public ModItemModelProvider(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {

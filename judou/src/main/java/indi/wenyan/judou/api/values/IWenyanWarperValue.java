@@ -1,17 +1,13 @@
 package indi.wenyan.judou.api.values;
 
-import indi.wenyan.judou.api.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 
-/**
- * Interface for Wenyan values that wrap a Java value.
- *
- * @param <T> the type of the wrapped Java value
- */
+/// Interface for Wenyan values that wrap a Java value.
+///
+/// @param <T> the type of the wrapped Java value
 public interface IWenyanWarperValue<T> extends IWenyanValue {
-    /**
-     * Gets the wrapped Java value.
-     *
-     * @return the wrapped value
-     */
+    /// Gets the wrapped Java value.
+    ///
+    /// @return the wrapped value
     T value() throws WenyanException;
 }

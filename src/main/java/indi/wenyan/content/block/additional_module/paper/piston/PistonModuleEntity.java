@@ -6,14 +6,15 @@ import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.exec.request.IArgsRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.network.client.PistonMovePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -45,7 +46,9 @@ public class PistonModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.PistonPush.string())
             .handler(WenyanSymbol.PISTON_PUSH, () -> new PistonRequest(true))
+            .description(FunctionMetaText.PistonPull.string())
             .handler(WenyanSymbol.PISTON_PULL, () -> new PistonRequest(false))
             .build();
 

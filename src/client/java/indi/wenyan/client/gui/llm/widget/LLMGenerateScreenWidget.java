@@ -20,23 +20,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
-/**
- * Embedded AI code-generation panel that occupies the same space as
- * {@link CodeOutputWidget}.
- *
- * <p>Not a real Minecraft {@code Screen}; it registers its child widgets into
- * the owning {@link net.minecraft.client.gui.screens.Screen} via a consumer
- * and handles visibility as a single logical unit.
- *
- * <p>The panel shows:
- * <ul>
- *   <li>A single-line black background</li>
- *   <li>A prefix prompt text</li>
- *   <li>A prompt {@link EditBox}</li>
- *   <li>A suffix string</li>
- *   <li>A "✨制符" {@link Button} attached to the right</li>
- * </ul>
- */
+/// Embedded AI code-generation panel that occupies the same space as
+/// [CodeOutputWidget].
+///
+/// Not a real Minecraft `Screen`; it registers its child widgets into
+/// the owning [net.minecraft.client.gui.screens.Screen] via a consumer
+/// and handles visibility as a single logical unit.
+///
+/// The panel shows:
+///
+///   - A single-line black background
+///   - A prefix prompt text
+///   - A prompt [EditBox]
+///   - A suffix string
+///   - A "✨制符" [Button] attached to the right
 public class LLMGenerateScreenWidget {
 
     private static final int STATUS_COLOR     = 0xFFFFD700; // gold
@@ -83,20 +80,18 @@ public class LLMGenerateScreenWidget {
     // Lifecycle
     // -----------------------------------------------------------------------
 
-    /**
-     * Called by the owning screen's {@code init()} on every resize.
-     * Creates fresh widgets at the new coordinates and registers them via
-     * {@code addWidget}. The previous {@link #visible} and
-     * {@link #statusMessage} state are preserved.
-     *
-     * @param font      Font renderer
-     * @param backend   The full runner backend (for code overwriting and console output access)
-     * @param x         Left edge of the panel (same as CodeOutputWidget)
-     * @param y         Top edge
-     * @param width     Panel width
-     * @param height    Panel height
-     * @param addWidget Consumer that registers a widget into the owning screen
-     */
+    /// Called by the owning screen's `init()` on every resize.
+    /// Creates fresh widgets at the new coordinates and registers them via
+    /// `addWidget`. The previous [#visible] and
+    /// [#statusMessage] state are preserved.
+    ///
+    /// @param font      Font renderer
+    /// @param backend   The full runner backend (for code overwriting and console output access)
+    /// @param x         Left edge of the panel (same as CodeOutputWidget)
+    /// @param y         Top edge
+    /// @param width     Panel width
+    /// @param height    Panel height
+    /// @param addWidget Consumer that registers a widget into the owning screen
     public void init(Font font, RunnerBlockBackend backend,
                      CodeEditorWidget codeEditorWidget,
                      int x, int y, int width, int height,
@@ -346,10 +341,8 @@ public class LLMGenerateScreenWidget {
     // Visibility
     // -----------------------------------------------------------------------
 
-    /**
-     * Shows or hides this panel and all its child widgets.
-     * Hiding also clears any displayed status message.
-     */
+    /// Shows or hides this panel and all its child widgets.
+    /// Hiding also clears any displayed status message.
     public void setVisible(boolean v) {
         this.visible = v;
         if (!v) {
@@ -361,7 +354,7 @@ public class LLMGenerateScreenWidget {
         applyVisibility();
     }
 
-    /** @return whether this panel is currently visible */
+    /// @return whether this panel is currently visible
     public boolean isVisible() {
         return visible;
     }
@@ -398,12 +391,11 @@ public class LLMGenerateScreenWidget {
     // Rendering
     // -----------------------------------------------------------------------
 
-    /**
-     * Renders the panel's background and status text.
-     * The child widgets render themselves automatically via the screen's
-     * renderable list.
-     * <p>Call this from the owning screen's {@code extractRenderState}.
-     */
+    /// Renders the panel's background and status text.
+    /// The child widgets render themselves automatically via the screen's
+    /// renderable list.
+    ///
+    /// Call this from the owning screen's `extractRenderState`.
     public void render(GuiGraphicsExtractor g) {
         if (!visible || font == null) return;
 

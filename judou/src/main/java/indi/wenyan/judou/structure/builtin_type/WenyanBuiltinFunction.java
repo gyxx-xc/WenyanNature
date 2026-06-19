@@ -1,6 +1,5 @@
 package indi.wenyan.judou.structure.builtin_type;
 
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.compile.IWenyanBytecode;
 import indi.wenyan.judou.api.exec.ICrossFunctionExecutable;
@@ -10,6 +9,7 @@ import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanFunction;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanLeftValue;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.ParsableType;
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +19,8 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * A built-in function implementation for Wenyan.
- * Represents a function created in Wenyan code.
- */
+/// A built-in function implementation for Wenyan.
+/// Represents a function created in Wenyan code.
 public record WenyanBuiltinFunction(
         IWenyanBytecode bytecode, List<WenyanBuiltinFunction.Arg> args,
         @Nullable List<IWenyanValue> refs) implements IWenyanFunction, ICrossFunctionExecutable {
@@ -85,9 +83,7 @@ public record WenyanBuiltinFunction(
         return TYPE;
     }
 
-    /**
-     * Represents a function argument with a type and identifier.
-     */
+    /// Represents a function argument with a type and identifier.
     public record Arg(ParsableType type, String id) {
         @Override
         public @NotNull String toString() {

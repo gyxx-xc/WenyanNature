@@ -91,9 +91,7 @@ public class LlmSession {
         history.clear();
     }
 
-    /**
-     * Sends a prompt, appending it to the history array.
-     */
+    /// Sends a prompt, appending it to the history array.
     public void generateCode(String userPrompt, String currentCode,
                              Consumer<String> onSuccess, Consumer<String> onError) {
         processRequest(LlmPromptBuilder.buildGeneratePrompt(userPrompt, currentCode), onSuccess, onError);

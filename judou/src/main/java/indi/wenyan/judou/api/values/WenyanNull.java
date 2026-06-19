@@ -3,6 +3,7 @@ package indi.wenyan.judou.api.values;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.language.JudouTypeText;
 
+/// The null value in Wenyan language.
 public enum WenyanNull implements IWenyanValue {
     NULL;
 

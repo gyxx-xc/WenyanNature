@@ -1,4 +1,4 @@
-package indi.wenyan.judou.api;
+package indi.wenyan.judou.api.values.exception;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.Nullable;
@@ -6,9 +6,7 @@ import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 
-/**
- * Base exception class for Wenyan interpreter errors
- */
+/// Base exception class for Wenyan interpreter errors
 public class WenyanException extends Exception {
     public WenyanException(String message) {
         super(message);
@@ -22,45 +20,35 @@ public class WenyanException extends Exception {
         super(ctx.getStart().getLine() + ":" + ctx.getStart().getCharPositionInLine() + " " + ctx.getText() + "\n" + e.getMessage());
     }
 
-    /**
-     * Exception for numerical errors
-     */
+    /// Exception for numerical errors (division by zero, overflow, etc.)
     public static class WenyanNumberException extends WenyanException {
         public WenyanNumberException(String message) {
             super(message);
         }
     }
 
-    /**
-     * Exception for data handling errors
-     */
+    /// Exception for data handling errors
     public static class WenyanDataException extends WenyanException {
         public WenyanDataException(String message) {
             super(message);
         }
     }
 
-    /**
-     * Exception for variable errors
-     */
+    /// Exception for variable errors
     public static class WenyanVarException extends WenyanException {
         public WenyanVarException(String message) {
             super(message);
         }
     }
 
-    /**
-     * Exception for type errors
-     */
+    /// Exception for type errors
     public static class WenyanTypeException extends WenyanException {
         public WenyanTypeException(String message) {
             super(message);
         }
     }
 
-    /**
-     * Exception for code validation errors
-     */
+    /// Exception for code validation errors
     public static class WenyanCheckerError extends WenyanException {
         public WenyanCheckerError(String message) {
             super(message);

@@ -3,15 +3,16 @@ package indi.wenyan.content.block.additional_module.paper;
 import indi.wenyan.content.block.additional_module.AbstractModuleEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.WenyanNull;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -33,16 +34,19 @@ public class WorldModuleEntity extends AbstractModuleEntity {
     // redstone get/set, show text, entity detection
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.WorldModuleSignalStrength.string())
             .handler(WenyanSymbol.WorldModule$signalStrength, _ -> {
                 int value = getLevel() != null ? getLevel().getBestNeighborSignal(getBlockPos()) : 0;
                 return WenyanValues.of(value);
             })
+            .description(FunctionMetaText.WorldModuleEmitSignal.string())
             .handler(WenyanSymbol.WorldModule$emitSignal, request -> {
                 signal = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 assert getLevel() != null;
                 WorldModuleBlock.updateNeighbors(getBlockState(), getLevel(), getBlockPos());
                 return WenyanNull.NULL;
             })
+            .description(FunctionMetaText.WorldModuleChangeWeather.string())
             .handler(WenyanSymbol.WorldModule$changeWeather, 5, (_, request) -> {
                 if (!(getLevel() instanceof ServerLevel serverLevel))
                     throw new WenyanUnreachedException();

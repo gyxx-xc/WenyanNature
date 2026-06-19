@@ -13,24 +13,22 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
     private final int size;
     private final int[] codes;
     private final int[] args;
-    private final int[] labelTable;
     private final String[] identifierTable;
     private final IWenyanValue[] constTable;
 
     @Getter
-    private final List<WenyanBytecode.CapturedValue> capturedValues;
+    private final List<WenyanCompileBytecode.CapturedValue> capturedValues;
     private final List<Context> debugTable;
 
     @Getter
     private final String sourceCode;
 
-    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, int[] labelTable, List<WenyanBytecode.CapturedValue> capturedValues, List<Context> debugTable, String sourceCode) {
+    public WenyanImmutableBytecode(int size, int[] codes, int[] args, IWenyanValue[] constTable, String[] identifierTable, List<WenyanCompileBytecode.CapturedValue> capturedValues, List<Context> debugTable, String sourceCode) {
         this.size = size;
         this.codes = codes;
         this.args = args;
         this.constTable = constTable;
         this.identifierTable = identifierTable;
-        this.labelTable = labelTable;
         this.capturedValues = capturedValues;
         this.debugTable = debugTable;
         this.sourceCode = sourceCode;
@@ -73,11 +71,6 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
     }
 
     @Override
-    public int getLabel(int index) {
-        return labelTable[index];
-    }
-
-    @Override
     public int size() {
         return size;
     }
@@ -87,7 +80,6 @@ public class WenyanImmutableBytecode implements IWenyanBytecode {
         StringBuilder sb = new StringBuilder();
         sb.append("constTable=").append(Arrays.toString(constTable)).append("\n");
         sb.append("identifierTable=").append(Arrays.toString(identifierTable)).append("\n");
-        sb.append("labelTable=").append(Arrays.toString(labelTable)).append("\n");
         int j = 0;
         for (int i = 0; i < size(); i++) {
             if (j < debugTable.size() && i >= debugTable.get(j).bytecodeStart()) {

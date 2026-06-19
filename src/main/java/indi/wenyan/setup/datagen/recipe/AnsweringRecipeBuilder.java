@@ -14,10 +14,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Builder for creating answering recipes.
- * Follows the builder pattern for convenient recipe creation.
- */
+/// Builder for creating answering recipes.
+/// Follows the builder pattern for convenient recipe creation.
 @SuppressWarnings("unused")
 public final class AnsweringRecipeBuilder {
     private final List<Ingredient> input = new ArrayList<>();
@@ -25,11 +23,9 @@ public final class AnsweringRecipeBuilder {
     private CheckerEnum question;
     private int round = 1;
 
-    /**
-     * Private constructor to enforce use of factory methods.
-     *
-     * @param output The output ItemStack produced by the recipe
-     */
+    /// Private constructor to enforce use of factory methods.
+    ///
+    /// @param output The output ItemStack produced by the recipe
     private AnsweringRecipeBuilder(ItemStackTemplate output) {
         this.output = output;
     }
@@ -38,22 +34,18 @@ public final class AnsweringRecipeBuilder {
         return new AnsweringRecipeBuilder(new ItemStackTemplate(output, count));
     }
 
-    /**
-     * Creates a new builder for a recipe with the specified item as output.
-     *
-     * @param output The output item
-     * @return A new builder instance
-     */
+    /// Creates a new builder for a recipe with the specified item as output.
+    ///
+    /// @param output The output item
+    /// @return A new builder instance
     public static AnsweringRecipeBuilder create(Item output) {
         return new AnsweringRecipeBuilder(new ItemStackTemplate(output));
     }
 
-    /**
-     * Adds an ingredient to the recipe inputs.
-     *
-     * @param ingredient The ingredient to add
-     * @return This builder for chaining
-     */
+    /// Adds an ingredient to the recipe inputs.
+    ///
+    /// @param ingredient The ingredient to add
+    /// @return This builder for chaining
     public AnsweringRecipeBuilder addInput(Ingredient ingredient) {
         input.add(ingredient);
         if (input.size() > 4) {
@@ -62,13 +54,11 @@ public final class AnsweringRecipeBuilder {
         return this;
     }
 
-    /**
-     * Adds multiple instances of an item to the recipe inputs.
-     *
-     * @param item  The item to add
-     * @param count The number of instances to add
-     * @return This builder for chaining
-     */
+    /// Adds multiple instances of an item to the recipe inputs.
+    ///
+    /// @param item  The item to add
+    /// @param count The number of instances to add
+    /// @return This builder for chaining
     public AnsweringRecipeBuilder addInput(Item item, int count) {
         for (int i = 0; i < count; i++) {
             addInput(item);
@@ -76,22 +66,18 @@ public final class AnsweringRecipeBuilder {
         return this;
     }
 
-    /**
-     * Adds an item to the recipe inputs.
-     *
-     * @param item The item to add
-     * @return This builder for chaining
-     */
+    /// Adds an item to the recipe inputs.
+    ///
+    /// @param item The item to add
+    /// @return This builder for chaining
     public AnsweringRecipeBuilder addInput(Item item) {
         return addInput(Ingredient.of(item));
     }
 
-    /**
-     * Adds multiple items to the recipe inputs.
-     *
-     * @param items The items to add
-     * @return This builder for chaining
-     */
+    /// Adds multiple items to the recipe inputs.
+    ///
+    /// @param items The items to add
+    /// @return This builder for chaining
     public AnsweringRecipeBuilder addInput(Iterable<Item> items) {
         for (Item item : items) {
             addInput(item);
@@ -99,12 +85,10 @@ public final class AnsweringRecipeBuilder {
         return this;
     }
 
-    /**
-     * Sets the question for the answering recipe.
-     *
-     * @param question The question string
-     * @return This builder for chaining
-     */
+    /// Sets the question for the answering recipe.
+    ///
+    /// @param question The question string
+    /// @return This builder for chaining
     public AnsweringRecipeBuilder question(CheckerEnum question) {
         this.question = question;
         return this;
@@ -115,12 +99,10 @@ public final class AnsweringRecipeBuilder {
         return this;
     }
 
-    /**
-     * Saves the recipe to the recipe output with the given name.
-     *
-     * @param recipeOutput The recipe output to save to
-     * @param recipeName   The name for the recipe
-     */
+    /// Saves the recipe to the recipe output with the given name.
+    ///
+    /// @param recipeOutput The recipe output to save to
+    /// @param recipeName   The name for the recipe
     public void save(RecipeOutput recipeOutput, String recipeName) {
         Identifier id = Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, recipeName);
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id),

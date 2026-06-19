@@ -10,24 +10,16 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
-/**
- * Main mod class for Wenyan Programming
- */
+/// Main mod class for Wenyan Programming
 @Mod(WenyanProgramming.MODID)
 public class WenyanProgramming {
-    /**
-     * Mod identifier
-     */
+    /// Mod identifier
     public static final String MODID = "wenyan_programming";
 
-    /**
-     * Logger instance for the mod
-     */
+    /// Logger instance for the mod
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    /**
-     * Constructor initializes the mod
-     */
+    /// Constructor initializes the mod
     public WenyanProgramming(IEventBus modEventBus, ModContainer modContainer) {
         UtilManager.setLanguage(new MinecraftLanguageProvider());
         UtilManager.setLogger(LOGGER);

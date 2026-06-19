@@ -1,33 +1,27 @@
 package indi.wenyan.judou.compiler.visitor;
 
 import indi.wenyan.judou.antlr.WenyanParser;
-import indi.wenyan.judou.api.WenyanCompileException;
-import indi.wenyan.judou.api.WenyanException;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.utils.WenyanValues;
+import indi.wenyan.judou.api.values.exception.WenyanCompileException;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.compiler.WenyanCompilerEnvironment;
 import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.utils.WenyanDataParser;
 
-/**
- * Visitor for handling candy statements in the Wenyan language.
- * Deals with special syntactic sugar constructs such as combined declarations
- * with write operations and boolean algebra.
- */
+/// Visitor for handling candy statements in the Wenyan language.
+/// Deals with special syntactic sugar constructs such as combined declarations
+/// with write operations and boolean algebra.
 public class WenyanCandyVisitor extends WenyanVisitor {
 
-    /**
-     * Expression visitor for evaluating expressions within candy statements
-     */
+    /// Expression visitor for evaluating expressions within candy statements
     private final WenyanExprVisitor exprVisitor = new WenyanExprVisitor(bytecode);
 
-    /**
-     * Constructs a candy visitor with the given bytecode environment
-     *
-     * @param bytecode The compiler environment to emit bytecode to
-     */
+    /// Constructs a candy visitor with the given bytecode environment
+    ///
+    /// @param bytecode The compiler environment to emit bytecode to
     public WenyanCandyVisitor(WenyanCompilerEnvironment bytecode) {
         super(bytecode);
     }

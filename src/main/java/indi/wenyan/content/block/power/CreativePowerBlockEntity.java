@@ -8,6 +8,7 @@ import indi.wenyan.judou.api.utils.ChineseUtils;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -33,10 +34,12 @@ public class CreativePowerBlockEntity extends AbstractModuleEntity {
 
     @Getter
     public RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.PowerUp.string())
             .handler(WenyanSymbol.POWER_UP, request -> {
                 power = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 return WenyanNull.NULL;
             })
+            .description(FunctionMetaText.PowerAns.string())
             .handler(WenyanSymbol.POWER_ANS, request -> {
                 power = request.args().getFirst().as(WenyanInteger.TYPE).value();
                 return WenyanNull.NULL;

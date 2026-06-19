@@ -1,12 +1,12 @@
 package indi.wenyan.judou.api.exec.request;
 
-import indi.wenyan.judou.api.WenyanException;
-import indi.wenyan.judou.api.WenyanUnreachedException;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.IWenyanPlatform;
-import indi.wenyan.judou.api.runtime.IWenyanRunner;
+import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 
-/// a simplicity impl for IHandleableRequest
+/// Simpler {@link IHandleableRequest}: only implement {@link #handle}, error handling is automatic.
 public interface IBaseHandleableRequest extends IHandleableRequest {
     boolean handle(IHandleContext context) throws WenyanException;
 
@@ -15,10 +15,10 @@ public interface IBaseHandleableRequest extends IHandleableRequest {
         try {
             return handle(context);
         } catch (WenyanException e) {
-            IWenyanRunner.dieWithException(thread(), e);
+            WenyanFrame.dieWithException(thread(), e);
             return true;
         } catch (RuntimeException e) {
-            IWenyanRunner.dieWithException(thread(), new WenyanUnreachedException.WenyanUnexceptedException(e));
+            WenyanFrame.dieWithException(thread(), new WenyanUnreachedException.WenyanUnexceptedException(e));
             return true;
         }
     }
