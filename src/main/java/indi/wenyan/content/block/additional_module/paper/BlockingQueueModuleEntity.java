@@ -18,6 +18,7 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.network.client.CommunicationLocationPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -58,12 +59,19 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.BlockingQueueModule$put.string())
             .handler(WenyanSymbol.BlockingQueueModule$put, this::putHandler)
+            .description(FunctionMetaText.BlockingQueueModule$take.string())
             .handler(WenyanSymbol.BlockingQueueModule$take, this::takeHandler)
+            .description(FunctionMetaText.BlockingQueueModule$offer.string())
             .handler(WenyanSymbol.BlockingQueueModule$offer, this::offerHandler)
+            .description(FunctionMetaText.BlockingQueueModule$poll.string())
             .handler(WenyanSymbol.BlockingQueueModule$poll, this::pollHandler)
+            .description(FunctionMetaText.BlockingQueueModule$peek.string())
             .handler(WenyanSymbol.BlockingQueueModule$peek, _ -> queue.isEmpty() ? WenyanNull.NULL : queue.peek())
+            .description(FunctionMetaText.BlockingQueueModule$size.string())
             .handler(WenyanSymbol.BlockingQueueModule$size, _ -> WenyanValues.of(queue.size()))
+            .description(FunctionMetaText.BlockingQueueModule$clear.string())
             .handler(WenyanSymbol.BlockingQueueModule$clear, _ -> {
                 if (queue.isEmpty())
                     return WenyanNull.NULL;
@@ -155,7 +163,8 @@ public class BlockingQueueModuleEntity extends AbstractModuleEntity implements I
     /// Extracts value from request parameters.
     /// This is a simplified extraction - adjust based on actual request structure.
     private IWenyanValue extractSingleValueFromRequest(IArgsRequest request) throws WenyanException {
-        if (request.args().size() != 1) throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
+        if (request.args().size() != 1)
+            throw new WenyanException(ArgsNumWrong.string(1, request.args().size()));
         return request.args().getFirst();
     }
 

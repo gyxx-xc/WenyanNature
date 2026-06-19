@@ -14,6 +14,7 @@ import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.network.client.PistonMovePacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -45,7 +46,9 @@ public class PistonModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.PISTON_PUSH.string())
             .handler(WenyanSymbol.PISTON_PUSH, () -> new PistonRequest(true))
+            .description(FunctionMetaText.PISTON_PULL.string())
             .handler(WenyanSymbol.PISTON_PULL, () -> new PistonRequest(false))
             .build();
 

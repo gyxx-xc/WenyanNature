@@ -18,6 +18,7 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import indi.wenyan.setup.language.TypeText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -54,6 +55,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.CORE_START.string())
             .handler(WenyanSymbol.CORE_START, request -> {
                 for (var arg : request.args()) {
                     String platformName = arg.as(WenyanString.TYPE).value();
@@ -66,8 +68,10 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 }
                 return WenyanNull.NULL;
             })
+            .description(FunctionMetaText.CORE_STATUS.string())
             .handler(WenyanSymbol.CORE_STATUS, request -> {
-                if (request.args().size() != 1) throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(1, request.args().size()));
+                if (request.args().size() != 1)
+                    throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(1, request.args().size()));
                 String name = request.args().getFirst().as(WenyanString.TYPE).value();
                 String runnerName = ChineseUtils.bracketOf(name);
                 var block = getStartedRunner(runnerName);
@@ -75,6 +79,7 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 var state = block.getBlockState().getValueOrElse(RunnerBlock.RUNNING_STATE, RunnerBlock.RunningState.NOT_RUNNING);
                 return new WenyanRunningState(state);
             })
+            .description(FunctionMetaText.CORE_JOIN.string())
             .handler(WenyanSymbol.CORE_JOIN, (_, request, onReturn) -> {
                 boolean running = false;
                 var iter = startedPlatforms.entrySet().iterator();

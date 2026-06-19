@@ -11,6 +11,7 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.ExceptionText;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +27,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.ItemModule$transfer.string())
             .handler(WenyanSymbol.ItemModule$transfer, request -> {
                 var capability = getItemHandlerCapability();
                 var from = request.args().getFirst().as(WenyanCapabilitySlot.TYPE);
@@ -34,6 +36,7 @@ public class ItemModuleEntity extends AbstractModuleEntity {
                 from.getStack().setCount(remaining.getCount());
                 return WenyanNull.NULL;
             })
+            .description(FunctionMetaText.ItemModule$read.string())
             .handler(WenyanSymbol.ItemModule$read, request -> {
                 var capability = getItemHandlerCapability();
                 if (capability == null) {

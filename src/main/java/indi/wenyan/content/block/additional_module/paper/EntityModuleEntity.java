@@ -11,6 +11,7 @@ import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import indi.wenyan.setup.definitions.WenyanBlocks;
+import indi.wenyan.setup.language.FunctionMetaText;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -28,32 +29,35 @@ public class EntityModuleEntity extends AbstractModuleEntity {
 
     @Getter
     private final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
+            .description(FunctionMetaText.EntityModule$inspectRange.string())
             .handler(WenyanSymbol.EntityModule$inspectRange, request -> {
-                    assert getLevel() != null;
-                    Vec3 start = request.args().getFirst().as(WenyanVec3.TYPE).value();
-                    Vec3 end = request.args().getLast().as(WenyanVec3.TYPE).value();
-                    List<Entity> entities = getLevel().getEntities((Entity) null,
-                            new AABB(start, end), EntitySelector.NO_SPECTATORS);
-                    // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
-                    return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
-                })
+                assert getLevel() != null;
+                Vec3 start = request.args().getFirst().as(WenyanVec3.TYPE).value();
+                Vec3 end = request.args().getLast().as(WenyanVec3.TYPE).value();
+                List<Entity> entities = getLevel().getEntities((Entity) null,
+                        new AABB(start, end), EntitySelector.NO_SPECTATORS);
+                // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
+                return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
+            })
+            .description(FunctionMetaText.EntityModule$nearby.string())
             .handler(WenyanSymbol.EntityModule$nearby, request -> {
-                    assert getLevel() != null;
-                    double radius = request.args().getFirst().as(WenyanDouble.TYPE).value();
-                    BlockPos pos = getBlockPos();
-                    List<Entity> entities = getLevel().getEntities((Entity) null,
-                            new AABB(pos).inflate(radius), EntitySelector.NO_SPECTATORS);
-                    // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
-                    return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
-                })
+                assert getLevel() != null;
+                double radius = request.args().getFirst().as(WenyanDouble.TYPE).value();
+                BlockPos pos = getBlockPos();
+                List<Entity> entities = getLevel().getEntities((Entity) null,
+                        new AABB(pos).inflate(radius), EntitySelector.NO_SPECTATORS);
+                // convert to WenyanList[WenyanEntity, WenyanEntity, WenyanEntity]
+                return WenyanValues.of(entities.stream().<IWenyanValue>map(WenyanEntity::new).toList());
+            })
+            .description(FunctionMetaText.EntityModule$lineOfSight.string())
             .handler(WenyanSymbol.EntityModule$lineOfSight, request -> {
-                    var origin = request.args().getFirst().as(WenyanVec3.TYPE).value();
-                    var look = request.args().getLast().as(WenyanVec3.TYPE).value();
-                    assert getLevel() != null;
-                    var result = getLevel().clip(new ClipContext(origin, look,
-                            ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, (Entity) null));
-                    return new WenyanBlock(getLevel().getBlockState(result.getBlockPos()));
-                })
+                var origin = request.args().getFirst().as(WenyanVec3.TYPE).value();
+                var look = request.args().getLast().as(WenyanVec3.TYPE).value();
+                assert getLevel() != null;
+                var result = getLevel().clip(new ClipContext(origin, look,
+                        ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, (Entity) null));
+                return new WenyanBlock(getLevel().getBlockState(result.getBlockPos()));
+            })
             .build();
 
     public EntityModuleEntity(BlockPos pos, BlockState blockState) {
