@@ -38,7 +38,9 @@ public enum ChineseUtils {
     public static final List<String> WENYAN_FRACTIONS = List.of("分", "釐", "毫", "絲", "忽", "微", "纖", "沙", "塵");
 
     public static @NotNull String toChinese(double value) {
-        StringBuilder number = new StringBuilder(toChinese(new BigInteger(String.valueOf((long) value))));
+        StringBuilder number = new StringBuilder();
+        if (value < 0) number.append("負");
+        number.append(toChinese (new BigInteger(String.valueOf(Math.abs((long) value)))));
         String digit = String.format("%.9f", value).split("\\.")[1];
         if ("000000000".equals(digit))
             return number.toString();
