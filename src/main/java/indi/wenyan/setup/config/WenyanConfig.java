@@ -2,6 +2,7 @@ package indi.wenyan.setup.config;
 
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.judou.api.utils.ChineseUtils;
+import indi.wenyan.judou.api.utils.ChineseUtils.SymbolFormat.EnumWarper;
 import indi.wenyan.judou.api.utils.IConfigProvider;
 import indi.wenyan.judou.api.utils.UtilManager;
 import indi.wenyan.setup.language.ConfigText;
@@ -113,9 +114,9 @@ public final class WenyanConfig {
 
         @Override
         public ChineseUtils.SymbolFormat symbolConversion() {
-            return ChineseUtils.SymbolFormat.TRADITIONAL;
+            return ChineseUtils.SymbolFormat.EnumWarper.TRADITIONAL.getSymbolFormat();
             // FIXME: has static vars depends on this (before config loaded).
-//            return instance().common.symbolConversion.get();
+//            return instance().common.symbolConversion.get().getSymbolFormat();
         }
     };
 
@@ -138,7 +139,7 @@ public final class WenyanConfig {
         public final IntValue maxRecursionDepth;
         public final BooleanValue useLegacyRunner;
         public final BooleanValue useTraditionalConversion;
-        public final EnumValue<ChineseUtils.SymbolFormat> symbolConversion;
+        public final EnumValue<EnumWarper> symbolConversion;
         public final IntValue maxQueueSize;
         public final IntValue maxQueueSizePerTick;
 
@@ -164,7 +165,7 @@ public final class WenyanConfig {
             useLegacyRunner = define(builder, ConfigText.UseLegacyRunner.getName(), false);
             useTraditionalConversion = define(builder, ConfigText.UseTraditionalConversion.getName(), false);
             builder.gameRestart();
-            symbolConversion = defineEnum(builder, ConfigText.SymbolConversion.getName(), ChineseUtils.SymbolFormat.TRADITIONAL,
+            symbolConversion = defineEnum(builder, ConfigText.SymbolConversion.getName(), ChineseUtils.SymbolFormat.EnumWarper.TRADITIONAL,
                     "symbol inside 「」");
             maxQueueSize = define(builder, ConfigText.MaxQueueSize.getName(), 50, 30, 100);
             maxQueueSizePerTick = define(builder, ConfigText.MaxQueueSizePerTick.getName(), 20, 10, 50);

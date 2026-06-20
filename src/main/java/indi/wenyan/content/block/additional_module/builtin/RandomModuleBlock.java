@@ -8,6 +8,7 @@ import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.setup.language.FunctionMetaText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,14 +25,19 @@ public class RandomModuleBlock extends AbstractFuluBlock {
     public static final Random RANDOM = new Random();
     public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
+                    .description(FunctionMetaText.RandomModuleNextInt.string())
                     .intFunction(WenyanSymbol.RandomModule$nextInt, args -> switch (args.size()) {
                         case 0 -> RANDOM.nextInt();
                         case 1 -> RANDOM.nextInt(args.getFirst());
                         case 2 -> RANDOM.nextInt(args.get(0), args.get(1));
-                        default -> throw new WenyanException(ArgsNumWrongRange.string(0, 2, args.size()));
+                        default ->
+                                throw new WenyanException(ArgsNumWrongRange.string(0, 2, args.size()));
                     })
+                    .description(FunctionMetaText.RandomModuleNextDouble.string())
                     .doubleFunction(WenyanSymbol.RandomModule$nextDouble, _ -> RANDOM.nextDouble())
+                    .description(FunctionMetaText.RandomModuleNextTriangle.string())
                     .doubleFunction(WenyanSymbol.RandomModule$nextTriangle, args -> RANDOM.nextDouble(args.getFirst() - args.get(1), args.getFirst() + args.get(1)))
+                    .description(FunctionMetaText.RandomModuleNextBoolean.string())
                     .function(WenyanSymbol.RandomModule$nextBoolean, (IWenyanValue _, List<IWenyanValue> _) -> WenyanValues.of(RANDOM.nextBoolean())))
             .build();
 

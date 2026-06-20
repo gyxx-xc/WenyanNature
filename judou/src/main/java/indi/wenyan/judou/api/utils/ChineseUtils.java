@@ -2,6 +2,7 @@ package indi.wenyan.judou.api.utils;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import indi.wenyan.judou.utils.NumberChineseFormatter;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
@@ -65,10 +66,40 @@ public enum ChineseUtils {
     }
 
 
+    public sealed interface SymbolFormat permits SymbolFormat.Both, SymbolFormat.Simplified, SymbolFormat.Traditional {
+        enum EnumWarper {
+            BOTH(new SymbolFormat.Both()),
+            SIMPLIFIED(new SymbolFormat.Simplified()),
+            TRADITIONAL(new SymbolFormat.Traditional());
 
-    public enum SymbolFormat {
-        TRADITIONAL,
-        SIMPLIFIED,
-        BOTH
+            @Getter final SymbolFormat symbolFormat;
+
+            EnumWarper(SymbolFormat symbolFormat) {
+                this.symbolFormat = symbolFormat;
+            }
+        }
+
+        List<String> names(String name, String simplifiedName);
+
+        record Traditional() implements SymbolFormat {
+            @Override
+            public List<String> names(String name, String simplifiedName) {
+                return List.of(name);
+            }
+        }
+
+        record Both() implements SymbolFormat {
+            @Override
+            public List<String> names(String name, String simplifiedName) {
+                return List.of(name, simplifiedName);
+            }
+        }
+
+        record Simplified() implements SymbolFormat {
+            @Override
+            public List<String> names(String name, String simplifiedName) {
+                return List.of(simplifiedName);
+            }
+        }
     }
 }
