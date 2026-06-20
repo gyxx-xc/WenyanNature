@@ -39,3 +39,4 @@ __pycache__
 .profileconfig.json
 *.jfr
 /src/client/java/indi/wenyan/client/gui/code_editor/_generator_py/py_map.json
+/.opencode-trace/

@@ -1,5 +1,6 @@
 package indi.wenyan.judou.api.utils;
 
+import indi.wenyan.judou.api.exec.structure.WenyanMetadata;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.values.IWenyanObjectType;
 import indi.wenyan.judou.api.values.IWenyanValue;
@@ -17,9 +18,20 @@ import java.util.List;
 import java.util.Map;
 
 /// Builder for creating WenyanPackage values
+@SuppressWarnings("unused")
 public final class WenyanPackageBuilder {
     /// Map of variables to include in the package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
+
+    private final MetadataBuilder<WenyanPackageBuilder> metadataBuilder = new MetadataBuilder<>(this);
+
+    public WenyanPackageBuilder meta(WenyanMetadata metadata) {
+        return metadataBuilder.meta(metadata);
+    }
+
+    public WenyanPackageBuilder description(String description) {
+        return metadataBuilder.description(description);
+    }
 
     /// Creates a new package builder
     ///
@@ -45,14 +57,12 @@ public final class WenyanPackageBuilder {
     }
 
     private void putConvertedValue(String name, IWenyanValue value) {
-        switch (UtilManager.getConfig().symbolConversion()) {
-            case ChineseUtils.SymbolFormat.TRADITIONAL -> variables.put(name, value);
-            case ChineseUtils.SymbolFormat.SIMPLIFIED -> variables.put(ChineseUtils.toSimplifiedVar(name), value);
-            case ChineseUtils.SymbolFormat.BOTH -> {
-                variables.put(name, value);
-                variables.put(ChineseUtils.toSimplifiedVar(name), value);
-            }
-        }
+        UtilManager.getConfig().symbolConversion()
+                .names(name, ChineseUtils.toSimplifiedVar(name))
+                .forEach(symbol -> {
+                    metadataBuilder.withCurrentMetadata(symbol);
+                    variables.put(symbol, value);
+                });
     }
 
     /// Adds a constant to the package

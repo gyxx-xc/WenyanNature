@@ -51,6 +51,6 @@ public class DefaultConfig implements IConfigProvider {
 
     @Override
     public ChineseUtils.SymbolFormat symbolConversion() {
-        return ChineseUtils.SymbolFormat.TRADITIONAL;
+        return ChineseUtils.SymbolFormat.EnumWarper.TRADITIONAL.getSymbolFormat();
     }
 }

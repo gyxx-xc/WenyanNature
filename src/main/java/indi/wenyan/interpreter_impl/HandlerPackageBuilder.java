@@ -7,16 +7,15 @@ import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.exec.structure.WenyanMetadata;
 import indi.wenyan.judou.api.utils.ChineseUtils;
+import indi.wenyan.judou.api.utils.MetadataBuilder;
 import indi.wenyan.judou.api.utils.WenyanPackageBuilder;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.config.WenyanConfig;
-import lombok.Data;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +29,16 @@ public final class HandlerPackageBuilder {
     // with support of wenyan package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
     private final Map<String, Supplier<RawHandlerPackage.IRawRequest>> functions = new HashMap<>();
-    private final Map<String, WenyanMetadata> metadata = new HashMap<>();
-    private MutableWenyanMetadata pendingMetadata = new MutableWenyanMetadata();
+
+    private final MetadataBuilder<HandlerPackageBuilder> metadataBuilder = new MetadataBuilder<>(this);
+
+    public HandlerPackageBuilder meta(WenyanMetadata metadata) {
+        return metadataBuilder.meta(metadata);
+    }
+
+    public HandlerPackageBuilder description(String description) {
+        return metadataBuilder.description(description);
+    }
 
     /// Creates a new package builder
     ///
@@ -60,32 +67,16 @@ public final class HandlerPackageBuilder {
     ///
     /// @return The built package
     public RawHandlerPackage build() {
-        return new RawHandlerPackage(variables, functions, metadata);
-    }
-
-    public HandlerPackageBuilder meta(WenyanMetadata metadata) {
-        pendingMetadata.fromImmutable(metadata);
-        return this;
-    }
-
-    public HandlerPackageBuilder description(String description) {
-        pendingMetadata.description = description;
-        return this;
+        return new RawHandlerPackage(variables, functions, metadataBuilder.getMetadata());
     }
 
     public HandlerPackageBuilder handler(String name, Supplier<RawHandlerPackage.IRawRequest> function) {
-        if (pendingMetadata.getDescription() != null) {
-            this.metadata.put(name, pendingMetadata.toImmutable());
-            pendingMetadata = new MutableWenyanMetadata();
-        }
-        switch (WenyanConfig.getJudouConfigProvider().symbolConversion()) {
-            case TRADITIONAL -> functions.put(name, function);
-            case SIMPLIFIED -> functions.put(ChineseUtils.toSimplifiedVar(name), function);
-            case BOTH -> {
-                functions.put(name, function);
-                functions.put(ChineseUtils.toSimplifiedVar(name), function);
-            }
-        }
+        WenyanConfig.getJudouConfigProvider().symbolConversion()
+                .names(name, ChineseUtils.toSimplifiedVar(name))
+                .forEach(symbol -> {
+                    metadataBuilder.withCurrentMetadata(symbol);
+                    functions.put(symbol, function);
+                });
         return this;
     }
 
@@ -161,18 +152,4 @@ public final class HandlerPackageBuilder {
         IWenyanValue handle(@NotNull IArgsRequest request) throws WenyanException;
     }
 
-    @Data
-    private static class MutableWenyanMetadata {
-        String description;
-
-        @Nullable WenyanMetadata toImmutable() {
-            if (description == null) return null;
-            return new WenyanMetadata(description);
-        }
-
-        MutableWenyanMetadata fromImmutable(WenyanMetadata metadata) {
-            this.description = metadata.description();
-            return this;
-        }
-    }
 }
