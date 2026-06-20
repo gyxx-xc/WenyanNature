@@ -3,7 +3,7 @@ name: Auto-merge feature into develop
 on:
   push:
     branches:
-      - 26.1-port
+      - feature/26.1-port
 
 jobs:
   merge:
