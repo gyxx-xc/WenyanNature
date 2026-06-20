@@ -1,0 +1,31 @@
+name: Auto-merge feature into develop
+
+on:
+  push:
+    branches:
+      - 26.1-port
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Merge feature → develop
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git fetch origin teacon2026
+          git checkout teacon2026
+          git merge origin/feature/26.1-port --no-edit
+          git push origin teacon2026
+
+      - name: Create PR if merge failed
+        if: steps.merge.outcome == 'failure'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: teacon2026
+          branch: feature/26.1-port
+          title: "Auto-merge failed – manual resolution needed"
+          body: "Merge conflict detected between `feature/26.1-port` and `teacon2026`. Please resolve manually."
