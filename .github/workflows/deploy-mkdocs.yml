@@ -3,7 +3,7 @@ name: Deploy MKDocs to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - feature/26.1-port
     paths:
       - 'docs/mkdocs/**'
   workflow_dispatch:

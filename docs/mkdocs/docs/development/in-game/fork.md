@@ -15,4 +15,4 @@ make it able to run the function at other's fu
 1. import behavior of import fu will not return package now. return a fu's object
    fu's object will overwrite getAttr to make turn to package lazy, transparent to user
    fu's content will contain a blockPos?
-2. to exec, we need the other's fu's block entity
+2. to exec, we need the other's fu's block entity, maybe blockpos?
