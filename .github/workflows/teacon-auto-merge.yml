@@ -5,6 +5,9 @@ on:
     branches:
       - feature/26.1-port
 
+permissions:
+  contents: write
+
 jobs:
   merge:
     runs-on: ubuntu-latest
