@@ -2201,10 +2201,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        requirement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#impl" class="md-nav__link">
     <span class="md-ellipsis">
       
         impl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        note
       
     </span>
   </a>
@@ -3056,10 +3078,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        requirement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#impl" class="md-nav__link">
     <span class="md-ellipsis">
       
         impl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        note
       
     </span>
   </a>
@@ -3084,9 +3128,11 @@
 
 
 <h1 id="exec-function">exec function</h1>
-<p>a poc method for rpc</p>
-<p>make it able to run the function at other's fu</p>
+<p>make it able to run the function(async) at other's fu</p>
 <h2 id="design">design</h2>
+<p>User-facing API: new exec function in FormationCoreModuleEntity, other not change
+function exec(fu, function) → future</p>
+<h2 id="requirement">requirement</h2>
 <ol>
 <li>reference other fu, better to use current impled import, import(fu) → obj fu</li>
 <li>give a function exec(fu, function) → future to run</li>
@@ -3097,7 +3143,199 @@
 <li>import behavior of import fu will not return package now. return a fu's object
    fu's object will overwrite getAttr to make turn to package lazy, transparent to user
    fu's content will contain a blockPos?</li>
-<li>to exec, we need the other's fu's block entity, need to check the exec flow</li>
+<li>to exec, we need the other's fu's block entity
+   need IWenyanScheduler.create() (also isRemoved()), blockpos for communication request</li>
+<li>the future, can directly use current future</li>
+</ol>
+<h2 id="note">note</h2>
+<ol>
+<li>fu's object: WenyanCodeWithExecutor warper of <code>IWenyanXxx super RunnerBlockEntity</code>, the getAttr
+   will lazy call the current import's behavior</li>
+<li>import xxx, current use getPackage: Either<Package, String> → import function
+   to getPackage: IWenyanObject (impl by WenyanPackage/WenyanCodeWithExecutor), current import handler
+   might no need anymore</li>
+<li>RunnerBlockEntity should only be changed for a new newThread(IWenyanBytecode), with same logic</li>
+</ol>
+<h1 id="detail">detail</h1>
+<hr />
+<h3 id="overview">Overview</h3>
+<p>The <code>exec</code> feature enables a pool (眼/FormationCore) to run functions on a remote fu (符/RunnerBlockEntity) and get a future result.</p>
+<p><strong>User-facing API:</strong></p>
+<pre><code>fu = import(&quot;otherFu&quot;)       // → WenyanCodeWithExecutor (new)
+result = 眼.exec(fu, &quot;func&quot;)  // → IWenyanValue (future)
+await(result)                 // wait for completion
+</code></pre>
+<hr />
+<h3 id="file-1-create-iwenyanpackageablejava">File 1: CREATE <code>IWenyanPackageable.java</code></h3>
+<p><strong>Location:</strong> <code>src/main/java/indi/wenyan/content/block/runner/IWenyanPackageable.java</code></p>
+<p><strong>Role:</strong> A interface for <code>WenyanCodeWithExecutor</code>, impled by <code>RunnerBlockEntity</code></p>
+<pre><code class="language-java">public interface IWenyanPackageable {
+    String code();
+    void newThread(IWenyanBytecode bytecode);
+   ...
+}
+</code></pre>
+<h3 id="file-1-create-wenyancodewithexecutorjava">File 1: CREATE <code>WenyanCodeWithExecutor.java</code></h3>
+<p><strong>Location:</strong> <code>src/main/java/indi/wenyan/interpreter_impl/value/WenyanCodeWithExecutor.java</code></p>
+<p><strong>Role:</strong> A lazy wrapper around a remote <code>RunnerBlockEntity</code>, implementing <code>IWenyanObject</code>. This is what <code>import("fuName")</code> returns instead of a compiled <code>WenyanPackage</code>.</p>
+<p><strong>Design:</strong>
+- <code>public record WenyanCodeWithExecutor(IWenyanPackageable packageable)</code> implementing <code>IWenyanObject</code>
+- Has a static <code>WenyanType&lt;WenyanCodeWithExecutor&gt; TYPE</code>
+- <code>getAttribute(String name)</code> lazily looks up the <code>RunnerBlockEntity</code> at <code>blockPos</code>, gets its code, returns a function reference that when called, executes on the target fu's scheduler via <code>IWenyanScheduler.create()</code>
+- The <code>platformName</code> is for display/debugging
+- Follows the same pattern as <code>WenyanEntity</code>/<code>WenyanBlock</code> (record, <code>IWenyanObject</code>)
+- Stores a "future result" that can be polled by the <code>exec</code> handler later</p>
+<p>Key structure:</p>
+<pre><code class="language-java">public record WenyanCodeWithExecutor(IWenyanPackageable packageable)
+        implements IWenyanObject {
+    public static final WenyanType&lt;WenyanCodeWithExecutor&gt; TYPE = ...;
+
+    @Override public WenyanType&lt;?&gt; type() { return TYPE; }
+
+    @Override
+    public IWenyanValue getAttribute(String name) throws WenyanException {
+        // Lazy: look up RunnerBlockEntity, compile its code,
+        // return the exported value/function as a wrapper
+    }
+}
+</code></pre>
+<hr />
+<h3 id="file-2-modify-blockpackagegetterjava">File 2: MODIFY <code>BlockPackageGetter.java</code></h3>
+<p><strong>Path:</strong> <code>src/main/java/indi/wenyan/content/block/runner/BlockPackageGetter.java</code></p>
+<p><strong>Changes:</strong>
+1. <strong><code>getPackage()</code> return type</strong> (line 20): <code>Either&lt;WenyanPackage, String&gt;</code> → <code>IWenyanObject</code>
+   <code>java
+   public @Nullable IWenyanObject getPackage(Level level, BlockPos blockPos, String packageName)</code></p>
+<ol>
+<li>
+<p><strong><code>getWenyanPackageEither()</code></strong> (line 31): When target is a <code>RunnerBlockEntity</code> (line 35-37), return a <code>WenyanCodeWithExecutor</code> instead of <code>Either.right(code)</code>:
+   <code>java
+   // OLD: return Either.right(platform.getCode());
+   // NEW:
+   return new WenyanCodeWithExecutor(level, pos, platform.getPlatformName());</code></p>
+</li>
+<li>
+<p><strong>Return type usages</strong> updated throughout: <code>Either</code> import might no longer be needed for return type (mark Deprecated).</p>
+</li>
+</ol>
+<hr />
+<h3 id="file-3-modify-importrequestjava">File 3: MODIFY <code>ImportRequest.java</code></h3>
+<p><strong>Path:</strong> <code>src/main/java/indi/wenyan/interpreter_impl/ImportRequest.java</code></p>
+<p><strong>Changes:</strong>
+1. <strong><code>ImportFunction</code> interface</strong> (line 76-83): Return type change
+   <code>java
+   // OLD:
+   Either&lt;WenyanPackage, String&gt; getPackage(IHandleContext context, String packageName) throws WenyanException;
+   // NEW:
+   IWenyanObject getPackage(IHandleContext context, String packageName) throws WenyanException;</code></p>
+<ol>
+<li><strong><code>handle()</code> method</strong> (line 47-69): Simplify — remove the compilation+execution branch entirely, since <code>WenyanCodeWithExecutor</code> handles lazy compilation:
+   <code>java
+   public boolean handle(IHandleContext context) throws WenyanException {
+       var result = getPackage.getPackage(context, packageName);
+       if (result != null) {
+           onReturn.accept(result);
+       } else {
+           throw new WenyanException(...);
+       }
+       thread().unblock();
+       return true;
+   }</code>
+   This means <code>WenyanCompiler</code>, <code>WenyanFrame</code>, and related compilation imports can be removed from this file.</li>
+</ol>
+<hr />
+<h3 id="file-4-modify-runnerblockentityjava">File 4: MODIFY <code>RunnerBlockEntity.java</code></h3>
+<p><strong>Path:</strong> <code>src/main/java/indi/wenyan/content/block/runner/RunnerBlockEntity.java</code></p>
+<p><strong>Changes:</strong>
+1. <strong>Add <code>newThread(IWenyanBytecode)</code> overload</strong> (after line 235): Same logic as <code>newThread(String)</code> but skips compilation:
+   <code>java
+   public boolean newThread(IWenyanBytecode bytecode) {
+       try {
+           RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
+       } catch (WenyanException e) {
+           handleError(e.getMessage());
+           return false;
+       }
+       return true;
+   }</code></p>
+<ol>
+<li><strong>Update <code>initEnvironment()</code> import handler</strong> (line 139-143): Since <code>blockPackageGetter.getPackage()</code> now returns <code>IWenyanObject</code> directly, the handler lambda changes from:
+   <code>java
+   ImportRequest.handlerOf((_, name) -&gt; {
+       var either = blockPackageGetter.getPackage(level, getBlockPos(), name);
+       ...
+       return either;
+   })</code>
+   to returning <code>IWenyanObject</code> directly (no <code>Either</code> wrapping).</li>
+</ol>
+<hr />
+<h3 id="file-5-modify-formationcoremoduleentityjava">File 5: MODIFY <code>FormationCoreModuleEntity.java</code></h3>
+<p><strong>Path:</strong> <code>src/main/java/indi/wenyan/content/block/additional_module/block/FormationCoreModuleEntity.java</code></p>
+<p><strong>Changes:</strong>
+1. <strong>Add <code>exec</code> handler</strong> in the <code>execPackage</code> builder chain (after the <code>CORE_JOIN</code> handler at line 106):
+   <code>java
+   .description(FunctionMetaText.CoreExec.string())
+   .handler(WenyanSymbol.CORE_EXEC, (_, request, onReturn) -&gt; {
+       // args: [fu_obj (WenyanCodeWithExecutor), functionName (WenyanString)]
+       // 1. Validate args (size == 2)
+       // 2. Extract WenyanCodeWithExecutor and function name
+       // 3. Look up RunnerBlockEntity from the stored BlockPos
+       // 4. Get the fu's code, compile the function, create a thread
+       // 5. Track the started execution (like startedPlatforms) for future polling
+       // 6. Return false to indicate not done yet; return true + onReturn when done
+   })</code></p>
+<ol>
+<li>
+<p><strong>New field</strong> for tracking exec futures: The handler needs to track running exec tasks. This could be a new <code>Map&lt;String, FutureTask&gt;</code> similar to <code>startedPlatforms</code>.</p>
+</li>
+<li>
+<p><strong>New imports</strong>: <code>WenyanCodeWithExecutor</code>, <code>IWenyanBytecode</code>, <code>WenyanCompiler</code>, <code>RunnerCreator</code></p>
+</li>
+</ol>
+<hr />
+<h3 id="file-6-modify-wenyansymboljava">File 6: MODIFY <code>WenyanSymbol.java</code></h3>
+<p><strong>Path:</strong> <code>src/main/java/indi/wenyan/interpreter_impl/WenyanSymbol.java</code></p>
+<p><strong>Changes:</strong>
+1. <strong>Add new symbol</strong> after <code>CORE_JOIN</code> (line 8):
+   <code>java
+   public static final String CORE_EXEC = "「執」";</code></p>
+<hr />
+<h3 id="file-7-modify-functionmetatextjava">File 7: MODIFY <code>FunctionMetaText.java</code></h3>
+<p><strong>Path:</strong> <code>src/main/java/indi/wenyan/setup/language/FunctionMetaText.java</code></p>
+<p><strong>Changes:</strong>
+1. <strong>Add <code>CoreExec</code></strong> to the enum (line 16):
+   <code>java
+   CoreStart, CoreJoin, CoreStatus, CoreExec,</code></p>
+<hr />
+<h3 id="file-8-potentially-modify-exceptiontextjava">File 8: POTENTIALLY MODIFY <code>ExceptionText.java</code></h3>
+<p><strong>Path:</strong> <code>src/main/java/indi/wenyan/setup/language/ExceptionText.java</code></p>
+<p>If needed, add a new error message for exec failures (e.g., target fu not found at stored position).</p>
+<hr />
+<h3 id="dependency-flow">Dependency flow</h3>
+<pre><code>WenyanCodeWithExecutor (new)
+    ↑ uses
+BlockPackageGetter (modified to return WenyanCodeWithExecutor for fu targets)
+    ↑ called by
+ImportRequest (simplified - no more compilation)
+RunnerBlockEntity.initEnvironment() (calls BlockPackageGetter)
+
+FormationCoreModuleEntity (adds exec handler that uses WenyanCodeWithExecutor)
+RunnerBlockEntity (adds newThread(IWenyanBytecode))
+</code></pre>
+<h3 id="key-design-points">Key design points</h3>
+<ol>
+<li>
+<p><strong>Lazy compilation</strong>: <code>WenyanCodeWithExecutor.getAttribute()</code> compiles the fu's code on first access, not at import time. The "current import handler (compilation branch)" moves into <code>WenyanCodeWithExecutor</code>.</p>
+</li>
+<li>
+<p><strong>No <code>Either</code> return type</strong>: <code>ImportFunction.getPackage()</code> returns <code>IWenyanObject</code> directly since <code>WenyanPackage</code> already implements <code>IWenyanObject</code> (via <code>IWenyanObjectType extends IWenyanObject</code>).</p>
+</li>
+<li>
+<p><strong>Async exec pattern</strong>: Uses the same return-<code>false</code>-until-complete pattern as <code>CORE_JOIN</code>. The <code>exec</code> handler stores a reference to the started thread and polls <code>isRunning()</code> on subsequent ticks.</p>
+</li>
+<li>
+<p><strong>Future mechanism</strong>: Leverages the existing request-blocking infrastructure — the calling thread blocks (<code>request.thread().block()</code>) and gets unblocked when the remote execution completes.</p>
+</li>
 </ol>
 
 
