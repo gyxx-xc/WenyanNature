@@ -1,5 +1,7 @@
 # AGENTS.md — Wenyan Nature
 
+> 激进的使用skill, 有很多有用的其他信息
+
 ## 项目概览
 Minecraft NeoForge 模组，让玩家用文言文语言在游戏中编写魔法程序。
 - **Mod ID**: `wenyan_programming`  |  **Group**: `indi.wenyan`
@@ -59,7 +61,6 @@ local-server_build_project(filesToRebuild=["path/to/ChangedFile.java"])
 
 ## 关键陷阱
 
-- 激进的使用skill
 - **严禁使用 `bash` 工具执行 `./gradlew`**。所有构建必须通过 MCP 工具（`local-server_build_project`、`local-server_execute_run_configuration`）。
 - `judou` 使用 ANTLR 生成语法解析器——生成源码在 `build/generated-src/antlr/`。IDE 报错时先用 MCP 构建 `judou` 模块（`local-server_build_project(filesToRebuild=["judou/"])`）。
 - 客户端源码集（`src/client`）依赖 `main` 编译输出。`main` 编译不过则 `client` 也会失败。
