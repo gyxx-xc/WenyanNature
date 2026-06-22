@@ -42,8 +42,7 @@ public enum WenyanBlocks {
     public static final List<DeferredRegister<?>> ALL_DR = List.of(DR, DR_ENTITY);
 
     public static final RunnerTier.TieredBlockRegistrator<RunnerBlock> RUNNER_BLOCK = RunnerTier.TieredBlockRegistrator
-            .registerTieredBlock(
-                    RunnerItem.ID, RunnerBlock::new);
+            .registerTieredBlock(RunnerItem.ID, RunnerBlock::new);
 
     public static final Supplier<BlockEntityType<RunnerBlockEntity>> RUNNER_BLOCK_ENTITY = WenyanBlocks.DR_ENTITY
             .register(RunnerBlockEntity.ID, () -> new BlockEntityType<>(RunnerBlockEntity::new,

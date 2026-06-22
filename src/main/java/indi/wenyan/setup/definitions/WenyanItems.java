@@ -38,11 +38,9 @@ public enum WenyanItems {
 
     // Hand Runner items
     public static final RunnerTier.TieredItemRegistrator<BlockItem> HAND_RUNNER = RunnerTier.TieredItemRegistrator
-            .registerTieredItem(RunnerItem.ID,
-                    RunnerItem::new);
+            .registerTieredItem(RunnerItem.ID, RunnerItem::new);
     public static final RunnerTier.TieredItemRegistrator<Item> THROW_RUNNER = RunnerTier.TieredItemRegistrator
-            .registerTieredItem(ThrowRunnerItem.ID,
-                    ThrowRunnerItem::new);
+            .registerTieredItem(ThrowRunnerItem.ID, ThrowRunnerItem::new);
 
     // Items and Tools
     public static final DeferredItem<Item> THROW_MODULE = DR.registerItem(ThrowModule.ID, ThrowModule::new);

@@ -4,6 +4,7 @@ import indi.wenyan.client.gui.LogicFurnaceScreen;
 import indi.wenyan.client.gui.ScreenOpenerFactory;
 import indi.wenyan.client.renderer.block.*;
 import indi.wenyan.client.renderer.entity.ThrowRunnerRender;
+import indi.wenyan.content.item.ITooltipAppendable;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WenyanEntities;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -13,6 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import static indi.wenyan.WenyanProgramming.MODID;
 
@@ -72,5 +74,12 @@ public enum ClientSetup {;
     public static void clientLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
         // Clear the stored recipes on world log out
         WenyanProgrammingClient.ALL_ANSWERING_RECIPES.clear();
+    }
+
+    @SubscribeEvent
+    public static void onTooltip(ItemTooltipEvent event) {
+        if (event.getItemStack().getItem() instanceof ITooltipAppendable tooltipAppendable)
+            event.getToolTip().addAll(1,
+                    tooltipAppendable.getTooltip(event.getFlags(), event.getItemStack(), event.getContext(), event.getEntity()));
     }
 }

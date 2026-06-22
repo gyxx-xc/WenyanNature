@@ -6,11 +6,11 @@ import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanFuture;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
-import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFuture;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +29,8 @@ public enum AwaitCallHandler implements IJavacallHandler, ICrossFunctionExecutab
             // wait n tick, use request(need tick information)
             thread.platform().receive(new AwaitRequest(thread, onReturn, argsList.getFirst().as(WenyanInteger.TYPE).value()));
             thread.block();
-        } else if (argsList.getFirst().is(WenyanBuiltinFuture.TYPE)) {
-            WenyanBuiltinFuture future = argsList.getFirst().as(WenyanBuiltinFuture.TYPE);
+        } else if (argsList.getFirst().is(WenyanFuture.TYPE)) {
+            WenyanFuture future = argsList.getFirst().as(WenyanFuture.TYPE);
             if (future.getReturnValue() != null) onReturn.accept(future.getReturnValue());
             else {
                 thread.block();

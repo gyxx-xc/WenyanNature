@@ -6,6 +6,7 @@ import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.runtime.RunnerCreator;
 import indi.wenyan.judou.api.values.IWenyanFunction;
 import indi.wenyan.judou.api.values.IWenyanValue;
+import indi.wenyan.judou.api.values.WenyanFuture;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.runtime.function_impl.IThreadHolder;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
@@ -21,7 +22,7 @@ public record WenyanBuiltinAsyncFunction(WenyanBuiltinFunction func) implements 
 
     @Override
     public void callWithReturn(@Nullable IWenyanValue self, IWenyanRunner thread, List<IWenyanValue> argsList, Consumer<IWenyanValue> onReturn) throws WenyanException {
-        var future = new WenyanBuiltinFuture();
+        var future = new WenyanFuture();
         WenyanFrame newRuntime = func.getNewRuntime(self, argsList, null, future::onRunnerReturn);
         IThreadHolder<WenyanSchedularImpl.PCB> newThread =
                 RunnerCreator.newRunner(newRuntime, thread.getGlobalResolver());
