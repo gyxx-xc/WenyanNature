@@ -63,7 +63,7 @@ public class FuContainerComponent implements TooltipProvider {
                              Consumer<Component> consumer,
                              TooltipFlag tooltipFlag,
                              DataComponentGetter dataComponentGetter) {
-        // FIXME: not work for unknow reason
+        // FIXME: to neoforge -> this not work
     }
 
     @Override

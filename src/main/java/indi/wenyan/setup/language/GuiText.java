@@ -17,7 +17,7 @@ public enum GuiText implements ILocalizationEnum {
     AiGenerating,     // shown while waiting for DeepSeek response
     AiError,          // shown when DeepSeek call fails
     LlmPanelToggle,   // toggle button label: switch to AI panel
-    LlmPanelBack;     // toggle button label: switch back to output
+    LlmPanelBack, ThrowTooltip, ThrowModule, BlockRunnerTooltip;     // toggle button label: switch back to output
 
     @Override
     public String getTranslationKey() {

@@ -170,6 +170,9 @@ public class EnglishLanguageProvider extends LanguageProvider {
         add(CreativeTabTitle.getTranslationKey(), "吾有一術");
         add(EnterToInput.getTranslationKey(), "按Enter以输入");
         add(FuNamePrompt.getTranslationKey(), "符名：");
+        add(ThrowTooltip.getTranslationKey(), "§o§f右键§r§8使用，在§f刻印台§r§8编辑");
+        add(ThrowModule.getTranslationKey(), "包含：");
+        add(BlockRunnerTooltip.getTranslationKey(), "§o§f右键§r§8使用，§o§fShift+右键§r§8编辑");
         add(FurnaceTitle.getTranslationKey(), "熔炉");
         add(JeiAnswerTitle.getTranslationKey(), "解题");
         add(AiPromptLabel.getTranslationKey(), "指示大儒之事：");
