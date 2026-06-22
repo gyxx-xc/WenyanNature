@@ -65,15 +65,14 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     @Getter private final IExecQueue execQueue = IExecQueue.create(this);
     @Getter private final List<CommunicationEffect> communicates = new ArrayList<>();
 
-    @Nullable
-    private final Player player;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
     private final LazyProgram<IWenyanScheduler<WenyanSchedularImpl.PCB>> lazyProgram;
     private final Map<String, IWenyanDevice> packages = new HashMap<>();
     private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(_ -> {
     });
 
-    private int life = 0;
+    @Getter @Nullable private final Player player;
+    @Getter private int life = 0;
 
     public ThrowRunnerEntity(EntityType<ThrowRunnerEntity> entityType, Level level) {
         super(entityType, level);
@@ -178,7 +177,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
                     .filter(IWenyanScheduler::isRunning)
                     .ifPresentOrElse(program -> {
                         program.step();
-                        handle(getContext());
+                        handle(new ThrowEntityContext(this));
                     }, this::discard);
         }
 
@@ -231,10 +230,6 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
     public void setRemainingFireTicks(int ignore) {
         // HACK: make it continuous on fire
         super.setRemainingFireTicks(1);
-    }
-
-    private @NonNull ThrowEntityContext getContext() {
-        return new ThrowEntityContext();
     }
 
     private Either<WenyanPackage, String> getPackage(IHandleContext iHandleContext, String s) throws WenyanException {
