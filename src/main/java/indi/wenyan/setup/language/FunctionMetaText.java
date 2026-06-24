@@ -13,7 +13,7 @@ public enum FunctionMetaText implements ILocalizationEnum {
 
     ExplosionModuleLightning, ExplosionModuleExplode, ExplosionModuleIgnite, ExplosionModuleFireball,
 
-    CoreStart, CoreJoin, CoreStatus,
+    CoreStart, CoreJoin, CoreStatus, CoreExec,
 
     ItemModuleTransfer, ItemModuleRead,
 

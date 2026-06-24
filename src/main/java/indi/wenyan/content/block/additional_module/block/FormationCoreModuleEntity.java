@@ -7,6 +7,7 @@ import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
+import indi.wenyan.interpreter_impl.value.WenyanCodeWithExecutor;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.language.JudouExceptionText;
@@ -16,6 +17,7 @@ import indi.wenyan.judou.api.values.IWenyanWarperValue;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
+import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFunction;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.language.FunctionMetaText;
@@ -103,6 +105,22 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                     return true;
                 }
                 return false;
+            })
+            .description(FunctionMetaText.CoreExec.string())
+            .handler(WenyanSymbol.CORE_EXEC, request -> {
+                var args = request.args();
+                if (args.size() != 2)
+                    throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(2, args.size()));
+                var fuObj = args.get(0).as(WenyanCodeWithExecutor.TYPE);
+                var function = args.get(1).as(WenyanBuiltinFunction.TYPE);
+                var packageable = fuObj.packageable();
+                if (packageable.isRemoved())
+                    throw new WenyanException(NotFindFu.string());
+                if (level instanceof ServerLevel serverLevel)
+                    ICommunicateHolder.blockAddCommunicateServer(serverLevel, getBlockPos(),
+                            packageable.getBlockPos().subtract(getBlockPos()));
+                packageable.newThread(function.bytecode());
+                return WenyanNull.NULL;
             })
             .build();
 

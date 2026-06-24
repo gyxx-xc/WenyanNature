@@ -226,8 +226,18 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         IWenyanBytecode bytecode;
         try {
             bytecode = new WenyanCompiler().compile(pages).bytecode();
+            return newThread(bytecode);
+        } catch (WenyanCompileException e) {
+            handleError(e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean newThread(IWenyanBytecode bytecode) {
+        try {
             RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
-        } catch (WenyanException | WenyanCompileException e) {
+        } catch (WenyanException e) {
             handleError(e.getMessage());
             return false;
         }
