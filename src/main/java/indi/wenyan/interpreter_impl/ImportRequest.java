@@ -8,6 +8,7 @@ import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.utils.Either;
+import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.judou.api.values.exception.WenyanException;
@@ -80,7 +81,7 @@ public final class ImportRequest implements IBaseHandleableRequest {
         /// @param packageName the name of the package to retrieve
         /// @return the requested package
         /// @throws WenyanException if the package cannot be found or accessed
-        Either<WenyanPackage, String> getPackage(IHandleContext context, String packageName) throws WenyanException;
+        Either<IWenyanObject, String> getPackage(IHandleContext context, String packageName) throws WenyanException;
     }
 
     private record Handler(ImportFunction getPackage) implements IRequestCallHandler {

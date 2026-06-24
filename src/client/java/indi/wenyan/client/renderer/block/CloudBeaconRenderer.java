@@ -97,7 +97,7 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
                         RenderTypes.beaconBeam(BEAM_LOCATION, false),
                         (pose, buffer) -> renderPart(
                                 pose, buffer,
-                                0xFFDDFFDD,
+                                0xFF99FFAA,
                                 pos, pos + 1,
                                 0.0F, rad, rad, 0.0F,
                                 -rad, 0.0F, 0.0F, -rad,

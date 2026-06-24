@@ -1,9 +1,12 @@
 package indi.wenyan.content.block.runner;
 
+import indi.wenyan.content.block.ICodeHolder;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
+import indi.wenyan.interpreter_impl.value.WenyanCodeWithExecutor;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.Either;
+import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.setup.config.WenyanConfig;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -17,22 +20,29 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public record BlockPackageGetter(Consumer<BlockPos> communicateConsumer) {
-    public @Nullable Either<WenyanPackage, String> getPackage(Level level, BlockPos blockPos, String packageName) {
+    public @Nullable Either<IWenyanObject, String> getPackage(Level level, BlockPos blockPos, String packageName) {
         int range = WenyanConfig.getRunnerRange();
         for (BlockPos pos : BlockPos.betweenClosed(
                 blockPos.offset(range, -range, range),
                 blockPos.offset(-range, range, -range))) {
-            Either<WenyanPackage, String> either = getWenyanPackageEither(level, blockPos, pos, packageName);
+            Either<IWenyanObject, String> either = getWenyanPackageEither(level, blockPos, pos, packageName);
             if (either != null) return either;
         }
         return null;
     }
 
-    private @Nullable Either<WenyanPackage, String> getWenyanPackageEither(Level level, BlockPos blockPos, BlockPos pos, String packageName) {
+    private @Nullable Either<IWenyanObject, String> getWenyanPackageEither(Level level, BlockPos blockPos, BlockPos pos, String packageName) {
         if (pos.equals(blockPos)) return null;
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof RunnerBlockEntity platform && platform.getPlatformName().equals(packageName)) {
+        // If able to run, return Executor first
+        if (blockEntity instanceof IWenyanPackageable packageable && packageable.getPlatformName().equals(packageName)) {
+            communicateConsumer.accept(pos);
+            return Either.left(new WenyanCodeWithExecutor(packageable));
+        }
+
+        // Then if not able to run, return as code package
+        if (blockEntity instanceof ICodeHolder platform && platform.getPlatformName().equals(packageName)) {
             communicateConsumer.accept(pos);
             return Either.right(platform.getCode());
         }

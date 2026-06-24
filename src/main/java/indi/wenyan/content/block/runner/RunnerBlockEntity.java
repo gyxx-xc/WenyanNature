@@ -56,7 +56,7 @@ import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform, ICommunicateHolder, ICodeOutputHolder {
+public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform, ICommunicateHolder, ICodeOutputHolder, IWenyanPackageable {
     public static final String PAGES_ID = "pages";
     public static final String PLATFORM_NAME_ID = "platformName";
     public static final String ID = "runner_block_entity";
