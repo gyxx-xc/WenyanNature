@@ -234,8 +234,8 @@ public class PackageSnippetWidget extends AbstractTextAreaWidget {
         tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(member.name(), Style.EMPTY)));
         boolean hasShiftDown = Minecraft.getInstance().hasShiftDown();
         if (!hasShiftDown) {
-            tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
-                    GuiText.HoldShift.string(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
+            tooltip.add(ClientTooltipComponent.create(Language.getInstance().getVisualOrder(
+                    GuiText.HoldShift.text().withStyle(ChatFormatting.GRAY))));
         } else {
             if (member.metadata() != null && !member.metadata().description().isEmpty()) {
                 tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(

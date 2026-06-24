@@ -73,7 +73,7 @@ public class ThrowModuleRecipe extends CustomRecipe {
                 if (this.target.test(stack)) {
                     result = stack.copy();
                 } else {
-                    modules.add(stack);
+                    modules.add(stack.copyWithCount(1));
                 }
             }
         }

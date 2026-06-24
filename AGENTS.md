@@ -59,6 +59,44 @@ local-server_build_project(filesToRebuild=["path/to/ChangedFile.java"])
 - **命名**：标准英文，标识符中不含拼音/中文
 - **包结构**：按功能领域划分（compiler, runtime, utils），而非技术分层
 
+## 查 API
+
+目标：搞清楚 `Either` 怎么用，有哪些方法，签名是什么。
+
+```
+SnippetWidget 里 import 了 Either，行3列38。
+让我查一下这玩意儿的定义：
+
+local-server_get_symbol_info(filePath="SnippetWidget.java", line=3, column=38)
+
+→ 返回了 abstract class Either<L, R>，在 datafixerupper 的 sources jar 里。
+  好的，直接读完整源码看看都有什么方法：
+
+local-server_read_file(file_path=".../datafixerupper-9.0.19-sources.jar!/com/mojang/datafixers/util/Either.java")
+
+→ 248 行，看到了。
+  抽象方法有：map(), ifLeft(), ifRight(), left(), right(), mapBoth()
+  默认方法有：mapLeft(), mapRight(), swap(), flatMap(), orThrow()
+  静态工厂有：left(), right()
+  还有个 static unwrap() 可以把 Either<U,U> 拆成 U
+
+  最关键的是 map():
+    <T> T map(Function<L, T> l, Function<R, T> r)
+  两边射成同一个类型——这就是 Either 的 fold 操作。
+
+  ifLeft / ifRight 返回 this，可以链式调用。
+  left() / right() 返回 Optional，不想用 Consumer 的话可以直接取值。
+
+现在我想看看 Either 实现的 App 接口是什么：
+local-server_search_symbol(q="com.mojang.datafixers.kinds.App")
+
+→ 找到了，去看一眼。
+
+如果后续开发中我只想快速确认 ifRight 的签名：
+local-server_search_symbol(q="Either.ifRight")
+→ 定位到方法声明。
+```
+
 ## 关键陷阱
 
 - **严禁使用 `bash` 工具执行 `./gradlew`**。所有构建必须通过 MCP 工具（`local-server_build_project`、`local-server_execute_run_configuration`）。

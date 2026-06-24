@@ -162,7 +162,8 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(Iterator.getTranslationKey(), "迭代器");
         add(String.getTranslationKey(), "言");
 
-        add(HoldShift.getTranslationKey(), "（按住Shift以顯示詳情）");
+        add(HoldShift.getTranslationKey(), "按住§fShift§r以顯示詳情");
+        add(PressRight.getTranslationKey(), "长按§f右键§r打开文档");
         add(NarrateEditBox.getTranslationKey(), "编辑");
         add(NarrateSnippet.getTranslationKey(), "代码片段");
         add(FloatNoteName.getTranslationKey(), "浮点笔记");
