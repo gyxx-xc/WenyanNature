@@ -7,6 +7,7 @@ import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.interpreter_impl.value.WenyanVec3;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.setup.language.FunctionMetaText;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class Vec3ModuleBlock extends AbstractFuluBlock {
@@ -14,7 +15,8 @@ public class Vec3ModuleBlock extends AbstractFuluBlock {
 
     public static final MapCodec<Vec3ModuleBlock> CODEC = simpleCodec(Vec3ModuleBlock::new);
     public static final String DEVICE_NAME = WenyanSymbol.Vec3Module;
-    public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
+    @Getter(lazy = true)
+    private static final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .description(FunctionMetaText.Vec3ModuleObject.string())
                     .object(WenyanSymbol.Vec3Module$object, WenyanVec3.Vec3ObjectType.INSTANCE))

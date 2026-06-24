@@ -11,6 +11,7 @@ import indi.wenyan.judou.api.values.primitive.WenyanDouble;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.judou.exec_interface.handler.IJavacallHandler;
 import indi.wenyan.judou.exec_interface.handler.WenyanInlineJavacall;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public final class WenyanPackageBuilder {
     /// Map of variables to include in the package
     private final Map<String, IWenyanValue> variables = new HashMap<>();
 
+    @Getter
     private final MetadataBuilder<WenyanPackageBuilder> metadataBuilder = new MetadataBuilder<>(this);
 
     public WenyanPackageBuilder meta(WenyanMetadata metadata) {
@@ -63,6 +65,7 @@ public final class WenyanPackageBuilder {
                     metadataBuilder.withCurrentMetadata(symbol);
                     variables.put(symbol, value);
                 });
+        metadataBuilder.flush();
     }
 
     /// Adds a constant to the package

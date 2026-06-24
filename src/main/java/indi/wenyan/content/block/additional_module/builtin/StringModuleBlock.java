@@ -10,6 +10,7 @@ import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.primitive.WenyanInteger;
 import indi.wenyan.judou.api.values.primitive.WenyanString;
 import indi.wenyan.setup.language.FunctionMetaText;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -20,7 +21,8 @@ public class StringModuleBlock extends AbstractFuluBlock {
 
     public static final MapCodec<StringModuleBlock> CODEC = simpleCodec(StringModuleBlock::new);
     public static final String DEVICE_NAME = WenyanSymbol.StringModule;
-    public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
+    @Getter(lazy = true)
+    private static final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .description(FunctionMetaText.StringModuleLength.string())
                     .function(WenyanSymbol.StringModule$length,

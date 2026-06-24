@@ -129,11 +129,11 @@ public enum RunnerBlockBehaviour {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
         execPackage.variables().forEach((k, v) -> {
             if (v.is(IWenyanObjectType.TYPE))
-                members.add(new PackageSnippetWidget.Member(k, null, PackageSnippetWidget.MemberType.CLASS));
+                members.add(new PackageSnippetWidget.Member(k, execPackage.metadata().get(k), PackageSnippetWidget.MemberType.CLASS));
             else if (v.is(IWenyanFunction.TYPE))
-                members.add(new PackageSnippetWidget.Member(k, null, PackageSnippetWidget.MemberType.METHOD));
+                members.add(new PackageSnippetWidget.Member(k, execPackage.metadata().get(k), PackageSnippetWidget.MemberType.METHOD));
             else
-                members.add(new PackageSnippetWidget.Member(k, null, PackageSnippetWidget.MemberType.FIELD));
+                members.add(new PackageSnippetWidget.Member(k, execPackage.metadata().get(k), PackageSnippetWidget.MemberType.FIELD));
         });
         execPackage.functions().forEach((k, _) ->
                 members.add(new PackageSnippetWidget.Member(k, execPackage.metadata().get(k), PackageSnippetWidget.MemberType.METHOD)));

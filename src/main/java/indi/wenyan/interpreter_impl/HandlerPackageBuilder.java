@@ -48,8 +48,10 @@ public final class HandlerPackageBuilder {
         return new HandlerPackageBuilder();
     }
 
-    public HandlerPackageBuilder nativeVariables(UnaryOperator<WenyanPackageBuilder> builder) {
-        variables.putAll(builder.apply(WenyanPackageBuilder.create()).build().variables());
+    public HandlerPackageBuilder nativeVariables(UnaryOperator<WenyanPackageBuilder> builderOperator) {
+        WenyanPackageBuilder packageBuilder = builderOperator.apply(WenyanPackageBuilder.create());
+        metadataBuilder.combine(packageBuilder.getMetadataBuilder());
+        variables.putAll(packageBuilder.build().variables());
         return this;
     }
 
@@ -77,6 +79,7 @@ public final class HandlerPackageBuilder {
                     metadataBuilder.withCurrentMetadata(symbol);
                     functions.put(symbol, function);
                 });
+        metadataBuilder.flush();
         return this;
     }
 
