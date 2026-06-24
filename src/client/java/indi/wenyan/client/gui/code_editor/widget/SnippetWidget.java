@@ -1,10 +1,13 @@
 package indi.wenyan.client.gui.code_editor.widget;
 
+import com.mojang.datafixers.util.Either;
 import indi.wenyan.WenyanProgramming;
 import indi.wenyan.client.gui.Utils;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.CodeField;
 import indi.wenyan.client.gui.code_editor.backend.behaviour.SnippetSet;
 import indi.wenyan.client.gui.code_editor.backend.interfaces.CodeEditBackend;
+import indi.wenyan.client.gui.code_editor.backend.interfaces.ITickableWidget;
+import indi.wenyan.client.gui.doc.DummyDocScreen;
 import indi.wenyan.setup.language.GuiText;
 import lombok.Setter;
 import net.minecraft.ChatFormatting;
@@ -25,6 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.compress.utils.Lists;
@@ -36,8 +40,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-public class SnippetWidget extends AbstractTextAreaWidget {
+public class SnippetWidget extends AbstractTextAreaWidget implements ITickableWidget {
     private final Font font;
     private final CodeEditBackend backend;
 
@@ -62,6 +67,19 @@ public class SnippetWidget extends AbstractTextAreaWidget {
 
     @Nullable
     private SnippetSet.Snippet renderingSnippetTooltip = null;
+
+    private static final int LONG_PRESS_TICK_THRESHOLD = 20;
+    private static final int VISUAL_FEEDBACK_TICK_THRESHOLD = 2;
+
+    private int rightButtonHoldCounter = 0;
+    private boolean rightButtonPressed = false;
+    @Nullable
+    private SnippetSet.Snippet longPressTarget = null;
+
+    @Setter
+    private Consumer<SnippetSet.Snippet> openTutorial = _ ->
+            // TODO
+            Minecraft.getInstance().setScreen(new DummyDocScreen(Component.empty()));
 
     public Optional<SnippetSet.Snippet> getTooltip() {
         return Optional.ofNullable(renderingSnippetTooltip);
@@ -105,16 +123,28 @@ public class SnippetWidget extends AbstractTextAreaWidget {
     }
 
     private void renderEntry(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int currentY,
-                           String title, @Nullable SnippetSet.Snippet tooltip, boolean isUnfold) {
+                             String title, @Nullable SnippetSet.Snippet tooltip, boolean isUnfold) {
         if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
                     mouseY >= currentY && mouseY < currentY + DIR_HEIGHT;
+            boolean showFeedback = (tooltip == longPressTarget && rightButtonPressed
+                    && rightButtonHoldCounter >= VISUAL_FEEDBACK_TICK_THRESHOLD);
+
             guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                     ENTRY_SPRITES.get(isUnfold, buttonHovered),
                     getX() + innerPadding(), currentY,
                     this.getWidth() - totalInnerPadding(), DIR_HEIGHT
             );
+
+            if (showFeedback) {
+                float progress = (float) (rightButtonHoldCounter - VISUAL_FEEDBACK_TICK_THRESHOLD)
+                        / (LONG_PRESS_TICK_THRESHOLD - VISUAL_FEEDBACK_TICK_THRESHOLD);
+                int barWidth = (int) ((this.getWidth() - totalInnerPadding()) * progress);
+                guiGraphics.fill(getX() + innerPadding(), currentY,
+                        getX() + innerPadding() + barWidth, currentY + DIR_HEIGHT,
+                        ARGB.multiplyAlpha(0xFFFFFFFF, Math.clamp(progress + 0.2f, 0.3f, 1f)));
+            }
 
             var text = Language.getInstance().getVisualOrder(
                     font.ellipsize(FormattedText.of(title),
@@ -130,7 +160,7 @@ public class SnippetWidget extends AbstractTextAreaWidget {
     }
 
     private void renderDir(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int currentY,
-                         String title, boolean isUnfold) {
+                           String title, boolean isUnfold) {
         if (withinContentAreaTopBottom(currentY, currentY + DIR_HEIGHT)) {
             boolean buttonHovered = mouseX >= getX() + innerPadding() &&
                     mouseX < getX() + getWidth() - innerPadding() &&
@@ -155,41 +185,106 @@ public class SnippetWidget extends AbstractTextAreaWidget {
         double mouseX = event.x();
         double mouseY = event.y();
         int button = event.button();
-        var result = clickEntry(mouseX, mouseY, button);
+        boolean result = false;
+        if (button == 1) result = rightClick(mouseX, mouseY);
+        else if (button == 0) result = clickEntry(mouseX, mouseY);
         return super.mouseClicked(event, doubleClick) || result;
     }
 
-    private boolean clickEntry(double mouseX, double mouseY, int button) {
-        if (button == 0 && isMouseOver(mouseX, mouseY)) {
-            boolean buttonHoveredX = mouseX >= getX() + innerPadding() &&
-                    mouseX < getX() + getWidth() - innerPadding();
-            if (!buttonHoveredX)
-                return false;
-            double y = mouseY - getY() - innerPadding() + scrollAmount();
-            double currentY = 0;
-            for (SnippetSet set : backend.getCurSnippets()) {
-                if (y >= currentY && y < currentY + DIR_HEIGHT) {
-                    // clicked on directory
-                    if (set.snippets().size() == 1) { // if only one snippet, dir is the snippet
-                        insertSnippet(set.snippets().getFirst());
-                    } else {
-                        set.fold(!set.fold());
-                    }
-                    return true;
-                }
-                currentY += DIR_HEIGHT;
-                if (set.snippets().size() == 1 || set.fold()) continue;
-                for (SnippetSet.Snippet s : set.snippets()) {
-                    if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
-                        // clicked on snippet
-                        insertSnippet(s);
-                        return true;
-                    }
-                    currentY += ENTRY_HEIGHT;
-                }
-            }
+    private boolean rightClick(double mouseX, double mouseY) {
+        @Nullable Either<SnippetSet, SnippetSet.Snippet> target = getSnippetAt(mouseX, mouseY);
+        if (target != null) {
+            return target.map(_ -> false, snippet -> {
+                longPressTarget = snippet;
+                rightButtonPressed = true;
+                rightButtonHoldCounter = 0;
+                return true;
+            });
         }
         return false;
+    }
+
+    private boolean clickEntry(double mouseX, double mouseY) {
+        Either<SnippetSet, SnippetSet.Snippet> target = getSnippetAt(mouseX, mouseY);
+        if (target == null) return false;
+        target.ifLeft(set -> set.fold(!set.fold()));
+        target.ifRight(this::insertSnippet);
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        boolean result = false;
+        if (event.button() == 1 && rightButtonPressed) {
+            Either<SnippetSet, SnippetSet.Snippet> target = getSnippetAt(event.x(), event.y());
+            SnippetSet.Snippet current = target == null ? null : target.right().orElse(null);
+            if (current != longPressTarget) {
+                // reset all tracking state
+                rightButtonPressed = false;
+                rightButtonHoldCounter = 0;
+                longPressTarget = null;
+            }
+            result = true;
+        }
+        return super.mouseDragged(event, dx, dy) || result;
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        boolean result = false;
+        if (event.button() == 1) {
+            rightButtonPressed = false;
+            rightButtonHoldCounter = 0;
+            longPressTarget = null;
+            result = true;
+        }
+        return super.mouseReleased(event) || result;
+    }
+
+    @Override
+    public void tick() {
+        if (rightButtonPressed) {
+            rightButtonHoldCounter++;
+            if (rightButtonHoldCounter >= LONG_PRESS_TICK_THRESHOLD) {
+                if (longPressTarget != null && openTutorial != null) {
+                    openTutorial.accept(longPressTarget);
+                }
+                rightButtonPressed = false;
+                rightButtonHoldCounter = 0;
+                longPressTarget = null;
+            }
+        }
+    }
+
+    @Nullable
+    private Either<SnippetSet, SnippetSet.Snippet> getSnippetAt(double mouseX, double mouseY) {
+        // PLAN: cached entry height
+        if (!isMouseOver(mouseX, mouseY))
+            return null;
+        boolean buttonHoveredX = mouseX >= getX() + innerPadding() &&
+                mouseX < getX() + getWidth() - innerPadding();
+        if (!buttonHoveredX)
+            return null;
+        double y = mouseY - getY() - innerPadding() + scrollAmount();
+        double currentY = 0;
+        for (SnippetSet set : backend.getCurSnippets()) {
+            if (y >= currentY && y < currentY + DIR_HEIGHT) {
+                // on directory row
+                if (set.snippets().size() == 1) {
+                    return Either.right(set.snippets().getFirst()); // single-entry dir -> snippet
+                }
+                return Either.left(set); // multi-entry dir -> not a snippet
+            }
+            currentY += DIR_HEIGHT;
+            if (set.snippets().size() == 1 || set.fold()) continue;
+            for (SnippetSet.Snippet s : set.snippets()) {
+                if (y >= currentY && y < currentY + ENTRY_HEIGHT) {
+                    return Either.right(s); // child entry -> snippet
+                }
+                currentY += ENTRY_HEIGHT;
+            }
+        }
+        return null;
     }
 
     public void insertSnippet(SnippetSet.Snippet snippet) {
@@ -248,8 +343,10 @@ public class SnippetWidget extends AbstractTextAreaWidget {
         // same as ClientTooltipFlag
         boolean hasShiftDown = Minecraft.getInstance().hasShiftDown();
         if (!hasShiftDown) {
-            tooltip.add(ClientTooltipComponent.create(FormattedCharSequence.forward(
-                    GuiText.HoldShift.string(), Style.EMPTY.withColor(ChatFormatting.GRAY))));
+            tooltip.add(ClientTooltipComponent.create(Language.getInstance().getVisualOrder(
+                    GuiText.HoldShift.text().withStyle(ChatFormatting.GRAY))));
+            tooltip.add(ClientTooltipComponent.create(Language.getInstance().getVisualOrder(
+                    GuiText.PressRight.text().withStyle(ChatFormatting.GRAY))));
         } else {
             int curInsert = 0;
             for (int row = 0; row < snippet.lines().size(); row++) {

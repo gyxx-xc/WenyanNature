@@ -6,9 +6,11 @@ import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class RunnerBlockScreen extends Screen {
 
@@ -74,7 +76,7 @@ public class RunnerBlockScreen extends Screen {
 
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics,
-                       int mouseX, int mouseY, float partialTick) {
+                                   int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // tooltips
@@ -87,10 +89,29 @@ public class RunnerBlockScreen extends Screen {
         extractTransparentBackground(guiGraphics);
     }
 
+    // HACK: mojang's mysterious code pass release and drag only for left button
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (event.button() == 0 && this.isDragging()) {
+            this.setDragging(false);
+        }
+        if (this.getFocused() != null) {
+            return this.getFocused().mouseReleased(event);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(@NonNull MouseButtonEvent event, double dx, double dy) {
+        return this.getFocused() != null && this.getFocused().mouseDragged(event, dx, dy);
+    }
+
     @Override
     public void tick() {
         super.tick();
         backend.tick();
+        snippetWidget.tick();
     }
 
     @Override

@@ -2,6 +2,7 @@ package indi.wenyan.setup.language;
 
 public enum GuiText implements ILocalizationEnum {
     HoldShift,
+    PressRight,
     NarrateEditBox, // narrator
     NarrateSnippet,
     FloatNoteName,
