@@ -2555,6 +2555,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        class
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3038,6 +3049,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        class
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3068,15 +3090,42 @@ a lot fu once.</p>
    string to get one. but the fu is more behavior like a object (like other
    module), so it's much better to use var to import.</li>
 <li>do we need to remain the way of import using string also?</li>
-<li>user want to exec remotely more than locally, cause that's much more 
-   efficient. however, exec locally is also a very important function to 
-   reduce code redundancy, we might need to keep both of the two method to 
+<li>user want to exec remotely more than locally, cause that's much more
+   efficient. however, exec locally is also a very important function to
+   reduce code redundancy, we might need to keep both of the two method to
    import.</li>
 </ol>
-<p>import:
-1. device: same
-2. runner0: current code import
-3. runner n: import as device</p>
+<p>import:</p>
+<ol>
+<li>device: same</li>
+<li>runner0 (not impl yet): current code import(String)</li>
+<li>runner n: import as device(WenyanCodeWithExecutor)</li>
+</ol>
+<hr />
+<h2 id="class">class</h2>
+<ul>
+<li>CREATE <code>IWenyanPackageable.java</code></li>
+<li>CREATE <code>WenyanCodeWithExecutor.java</code>
+  Key structure:</li>
+</ul>
+<pre><code class="language-java">public record WenyanCodeWithExecutor(IWenyanPackageable packageable)
+        implements IWenyanObject {
+    public static final WenyanType&lt;WenyanCodeWithExecutor&gt; TYPE = ...;
+
+    @Override
+    public WenyanType&lt;?&gt; type() {
+        return TYPE;
+    }
+
+    @Override
+    public IWenyanValue getAttribute(String name) throws WenyanException {
+        // NOT IMPLEMENT IN THIS DESIGN
+    }
+}
+</code></pre>
+<ul>
+<li>MODIFY <code>BlockPackageGetter.java</code></li>
+</ul>
 
 
 
