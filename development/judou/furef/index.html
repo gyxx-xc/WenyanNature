@@ -79,6 +79,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#user-story" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -2491,6 +2496,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Furef
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -2507,6 +2530,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#user-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user story
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2970,6 +3021,25 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#user-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        user story
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2988,8 +3058,25 @@
   <h1>Furef</h1>
 
 <p>add a new import statement</p>
-<p>for importing the fu as a variable, for better communication for distributed computing</p>
-<p>this import should be async, since the user might need to import a lot fu once.</p>
+<p>for importing the fu as a variable, for better communication for distributed
+computing. this import should be async, since the user might need to import
+a lot fu once.</p>
+<h3 id="user-story">user story</h3>
+<ol>
+<li>they want to run a program through another device(fu), however, current
+   has no good way for them to get a fu that is remote. they can only use
+   string to get one. but the fu is more behavior like a object (like other
+   module), so it's much better to use var to import.</li>
+<li>do we need to remain the way of import using string also?</li>
+<li>user want to exec remotely more than locally, cause that's much more 
+   efficient. however, exec locally is also a very important function to 
+   reduce code redundancy, we might need to keep both of the two method to 
+   import.</li>
+</ol>
+<p>import:
+1. device: same
+2. runner0: current code import
+3. runner n: import as device</p>
 
 
 
