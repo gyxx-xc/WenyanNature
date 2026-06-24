@@ -24,7 +24,7 @@ logoFile = "title.png" #optional
 #credits="" #optional
 
 authors = "gyxx_xc, ugnjhjf"
-description = '''A Minecraft mod that inspired by the Wenyan language. \nUsing Wenyan language to create wonderful magic by handling complex logic of the magic.'''
+description = '''A Minecraft mod that inspired by the Wenyan language. \nUsing Wenyan language to create wonderful magic by handling complex logic of the magic.\n\n礦藝之莈，洵具夏文譯化之孚。'''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
 #[[mixins]]
