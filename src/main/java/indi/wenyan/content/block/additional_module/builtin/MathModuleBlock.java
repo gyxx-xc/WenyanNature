@@ -7,6 +7,7 @@ import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.setup.language.FunctionMetaText;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class MathModuleBlock extends AbstractFuluBlock {
@@ -14,7 +15,8 @@ public class MathModuleBlock extends AbstractFuluBlock {
 
     public static final MapCodec<MathModuleBlock> CODEC = simpleCodec(MathModuleBlock::new);
     public static final String DEVICE_NAME = WenyanSymbol.MathModule;
-    public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
+    @Getter(lazy = true)
+    private static final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .description(FunctionMetaText.MathModulePI.string())
                     .constant(WenyanSymbol.MathModule$PI, WenyanValues.of(Math.PI))

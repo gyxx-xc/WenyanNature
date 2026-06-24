@@ -114,9 +114,7 @@ public final class WenyanConfig {
 
         @Override
         public ChineseUtils.SymbolFormat symbolConversion() {
-            return ChineseUtils.SymbolFormat.EnumWarper.TRADITIONAL.getSymbolFormat();
-            // FIXME: has static vars depends on this (before config loaded).
-//            return instance().common.symbolConversion.get().getSymbolFormat();
+            return instance().common.symbolConversion.get().getSymbolFormat();
         }
     };
 

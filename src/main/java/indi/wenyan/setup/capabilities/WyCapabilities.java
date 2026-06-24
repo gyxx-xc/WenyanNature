@@ -48,21 +48,21 @@ public enum WyCapabilities {
     }
 
     private static void registerItemDevice(DeviceCapabilityRegisterer registerer) {
-        registerer.registerToItem(_ -> BitModuleBlock.PACKAGE, BitModuleBlock.DEVICE_NAME, WenyanItems.BIT_MODULE_BLOCK_ITEM);
-        registerer.registerToItem(_ -> MathModuleBlock.PACKAGE, MathModuleBlock.DEVICE_NAME, WenyanItems.MATH_MODULE_BLOCK_ITEM);
-        registerer.registerToItem(_ -> RandomModuleBlock.PACKAGE, RandomModuleBlock.DEVICE_NAME, WenyanItems.RANDOM_MODULE_BLOCK_ITEM);
-        registerer.registerToItem(_ -> Vec3ModuleBlock.PACKAGE, Vec3ModuleBlock.DEVICE_NAME, WenyanItems.VEC3_MODULE_BLOCK_ITEM);
-        registerer.registerToItem(_ -> CollectionModuleBlock.PACKAGE, CollectionModuleBlock.DEVICE_NAME, WenyanItems.COLLECTION_MODULE_BLOCK_ITEM);
-        registerer.registerToItem(_ -> StringModuleBlock.PACKAGE, StringModuleBlock.DEVICE_NAME, WenyanItems.STRING_MODULE_BLOCK_ITEM);
+        registerer.registerToItem(_ -> BitModuleBlock.getExecPackage(), BitModuleBlock.DEVICE_NAME, WenyanItems.BIT_MODULE_BLOCK_ITEM);
+        registerer.registerToItem(_ -> MathModuleBlock.getExecPackage(), MathModuleBlock.DEVICE_NAME, WenyanItems.MATH_MODULE_BLOCK_ITEM);
+        registerer.registerToItem(_ -> RandomModuleBlock.getExecPackage(), RandomModuleBlock.DEVICE_NAME, WenyanItems.RANDOM_MODULE_BLOCK_ITEM);
+        registerer.registerToItem(_ -> Vec3ModuleBlock.getExecPackage(), Vec3ModuleBlock.DEVICE_NAME, WenyanItems.VEC3_MODULE_BLOCK_ITEM);
+        registerer.registerToItem(_ -> CollectionModuleBlock.getExecPackage(), CollectionModuleBlock.DEVICE_NAME, WenyanItems.COLLECTION_MODULE_BLOCK_ITEM);
+        registerer.registerToItem(_ -> StringModuleBlock.getExecPackage(), StringModuleBlock.DEVICE_NAME, WenyanItems.STRING_MODULE_BLOCK_ITEM);
     }
 
     private static void registerDevice(DeviceCapabilityRegisterer registerer) {
-        registerer.registerToBlock((_, _) -> BitModuleBlock.PACKAGE, BitModuleBlock.DEVICE_NAME, WenyanBlocks.BIT_MODULE_BLOCK.get());
-        registerer.registerToBlock((_, _) -> MathModuleBlock.PACKAGE, MathModuleBlock.DEVICE_NAME, WenyanBlocks.MATH_MODULE_BLOCK.get());
-        registerer.registerToBlock((_, _) -> RandomModuleBlock.PACKAGE, RandomModuleBlock.DEVICE_NAME, WenyanBlocks.RANDOM_MODULE_BLOCK.get());
-        registerer.registerToBlock((_, _) -> Vec3ModuleBlock.PACKAGE, Vec3ModuleBlock.DEVICE_NAME, WenyanBlocks.VEC3_MODULE_BLOCK.get());
-        registerer.registerToBlock((_, _) -> CollectionModuleBlock.PACKAGE, CollectionModuleBlock.DEVICE_NAME, WenyanBlocks.COLLECTION_MODULE_BLOCK.get());
-        registerer.registerToBlock((_, _) -> StringModuleBlock.PACKAGE, StringModuleBlock.DEVICE_NAME, WenyanBlocks.STRING_MODULE_BLOCK.get());
+        registerer.registerToBlock((_, _) -> BitModuleBlock.getExecPackage(), BitModuleBlock.DEVICE_NAME, WenyanBlocks.BIT_MODULE_BLOCK.get());
+        registerer.registerToBlock((_, _) -> MathModuleBlock.getExecPackage(), MathModuleBlock.DEVICE_NAME, WenyanBlocks.MATH_MODULE_BLOCK.get());
+        registerer.registerToBlock((_, _) -> RandomModuleBlock.getExecPackage(), RandomModuleBlock.DEVICE_NAME, WenyanBlocks.RANDOM_MODULE_BLOCK.get());
+        registerer.registerToBlock((_, _) -> Vec3ModuleBlock.getExecPackage(), Vec3ModuleBlock.DEVICE_NAME, WenyanBlocks.VEC3_MODULE_BLOCK.get());
+        registerer.registerToBlock((_, _) -> CollectionModuleBlock.getExecPackage(), CollectionModuleBlock.DEVICE_NAME, WenyanBlocks.COLLECTION_MODULE_BLOCK.get());
+        registerer.registerToBlock((_, _) -> StringModuleBlock.getExecPackage(), StringModuleBlock.DEVICE_NAME, WenyanBlocks.STRING_MODULE_BLOCK.get());
 
         registerer.registerToModule(WenyanBlocks.BLOCKING_QUEUE_MODULE_ENTITY.get());
         registerer.registerToModule(WenyanBlocks.EXPLOSION_MODULE_ENTITY.get());

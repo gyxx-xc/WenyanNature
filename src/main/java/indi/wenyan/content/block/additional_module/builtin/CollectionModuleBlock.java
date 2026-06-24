@@ -12,6 +12,7 @@ import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.api.values.primitive.WenyanList;
 import indi.wenyan.setup.language.FunctionMetaText;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ public class CollectionModuleBlock extends AbstractFuluBlock {
 
     public static final MapCodec<CollectionModuleBlock> CODEC = simpleCodec(CollectionModuleBlock::new);
     public static final String DEVICE_NAME = WenyanSymbol.CollectionModule;
-    public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
+    @Getter(lazy = true)
+    private static final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .description(FunctionMetaText.CollectionModuleDisjoint.string())
                     .function(WenyanSymbol.CollectionModule$disjoint,

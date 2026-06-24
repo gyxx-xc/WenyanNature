@@ -6,14 +6,16 @@ import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.setup.language.FunctionMetaText;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class BitModuleBlock extends AbstractFuluBlock {
     public static final String ID = "bit_module_block";
 
     public static final MapCodec<BitModuleBlock> CODEC = simpleCodec(BitModuleBlock::new);
+    @Getter(lazy = true)
     @SuppressWarnings("UnnecessaryBoxing") // better performance
-    public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
+    private static final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .description(FunctionMetaText.BitModuleLeftShift.string())
                     .intFunction(WenyanSymbol.BitModule$leftShift, args -> Integer.valueOf(args.getFirst() << args.get(1)))

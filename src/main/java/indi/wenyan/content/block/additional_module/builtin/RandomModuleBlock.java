@@ -9,6 +9,7 @@ import indi.wenyan.judou.api.utils.WenyanValues;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.setup.language.FunctionMetaText;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -23,7 +24,8 @@ public class RandomModuleBlock extends AbstractFuluBlock {
     public static final MapCodec<RandomModuleBlock> CODEC = simpleCodec(RandomModuleBlock::new);
     public static final String DEVICE_NAME = WenyanSymbol.RandomModule;
     public static final Random RANDOM = new Random();
-    public static final RawHandlerPackage PACKAGE = HandlerPackageBuilder.create()
+    @Getter(lazy = true)
+    private static final RawHandlerPackage execPackage = HandlerPackageBuilder.create()
             .nativeVariables(builder -> builder
                     .description(FunctionMetaText.RandomModuleNextInt.string())
                     .intFunction(WenyanSymbol.RandomModule$nextInt, args -> switch (args.size()) {

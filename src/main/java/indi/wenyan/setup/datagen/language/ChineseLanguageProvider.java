@@ -226,6 +226,7 @@ public class ChineseLanguageProvider extends LanguageProvider {
         add(CoreStart.getTranslationKey(), "启动指定名称的符");
         add(CoreJoin.getTranslationKey(), "等待所有已启动的可戴符执行完毕");
         add(CoreStatus.getTranslationKey(), "查询指定可戴符的运行状态");
+        add(CoreExec.getTranslationKey(), "在指定符上执行函数");
         add(ItemModuleTransfer.getTranslationKey(), "将物品传输到相邻的物品处理器");
         add(ItemModuleRead.getTranslationKey(), "读取相邻物品处理器指定槽位的物品");
         add(SemaphoreModuleAcquire.getTranslationKey(), "获取锁");

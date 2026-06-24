@@ -6,6 +6,7 @@ public enum WenyanSymbol {;
     public static final String CORE_START = "「啓」";
     public static final String CORE_STATUS = "「狀」";
     public static final String CORE_JOIN = "「歸」";
+    public static final String CORE_EXEC = "「執」";
     public static final String PRINT = "書";
     public static final String SCREEN = "";
     public static final String PISTON = "「移」";

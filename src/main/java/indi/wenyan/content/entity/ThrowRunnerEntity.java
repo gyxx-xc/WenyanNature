@@ -20,6 +20,7 @@ import indi.wenyan.judou.api.language.Symbol;
 import indi.wenyan.judou.api.runtime.IWenyanScheduler;
 import indi.wenyan.judou.api.runtime.RunnerCreator;
 import indi.wenyan.judou.api.utils.Either;
+import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.judou.api.values.exception.WenyanCompileException;
@@ -232,7 +233,7 @@ public class ThrowRunnerEntity extends ThrowableItemProjectile
         super.setRemainingFireTicks(1);
     }
 
-    private Either<WenyanPackage, String> getPackage(IHandleContext iHandleContext, String s) throws WenyanException {
+    private Either<IWenyanObject, String> getPackage(IHandleContext iHandleContext, String s) throws WenyanException {
         // check local first
         var localDevice = packages.get(s);
         if (localDevice != null)

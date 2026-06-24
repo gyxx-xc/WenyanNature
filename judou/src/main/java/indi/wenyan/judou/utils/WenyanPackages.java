@@ -1,25 +1,27 @@
 package indi.wenyan.judou.utils;
 
-import indi.wenyan.judou.api.values.exception.WenyanException;
-import indi.wenyan.judou.api.utils.WenyanPackageBuilder;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.Symbol;
+import indi.wenyan.judou.api.utils.WenyanPackageBuilder;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanLeftValue;
 import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.WenyanPackage;
+import indi.wenyan.judou.api.values.exception.WenyanException;
 import indi.wenyan.judou.api.values.primitive.WenyanBoolean;
 import indi.wenyan.judou.api.values.primitive.WenyanList;
 import indi.wenyan.judou.exec_interface.handler.AwaitCallHandler;
 import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinAsyncFunction;
 import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFunction;
+import lombok.Getter;
 
 import java.util.List;
 
 public enum WenyanPackages {
     ;
 
-    public static final WenyanPackage WENYAN_BASIC_PACKAGES = WenyanPackageBuilder.create()
+    @Getter(lazy = true)
+    private static final WenyanPackage WenyanBasicPackage = WenyanPackageBuilder.create()
             .function(Symbol.PLUS_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::add))
             .function(Symbol.SUB_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::sub))
             .function(Symbol.MUL_ID, WenyanPackageBuilder.reduceWith(IWenyanValue::mul))

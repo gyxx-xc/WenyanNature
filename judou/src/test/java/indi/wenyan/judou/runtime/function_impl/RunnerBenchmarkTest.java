@@ -25,7 +25,7 @@ public class RunnerBenchmarkTest {
                 施「a 」以零
                 """;
         IWenyanBytecode bytecode = new WenyanCompiler().compile(code).bytecode();
-        IThreadHolder<NoScheProgram.SimpleThread> runner = new WenyanSwitchInlineRunner<>(WenyanFrame.ofCode(bytecode), WenyanPackages.WENYAN_BASIC_PACKAGES);
+        IThreadHolder<NoScheProgram.SimpleThread> runner = new WenyanSwitchInlineRunner<>(WenyanFrame.ofCode(bytecode), WenyanPackages.getWenyanBasicPackage());
         var prog = new NoScheProgram();
         runner.setThread(prog.getThread());
 

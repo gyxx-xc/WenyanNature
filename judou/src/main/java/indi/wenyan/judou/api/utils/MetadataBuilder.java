@@ -18,6 +18,14 @@ public final class MetadataBuilder<T> implements IMetadataBuilder<T> {
         this.parentBuilder = parentBuilder;
     }
 
+    public void combine(MetadataBuilder<?> other) {
+        metadata.putAll(other.metadata);
+    }
+
+    public void flush() {
+        pendingMetadata = new MutableWenyanMetadata();
+    }
+
     @Override
     public T meta(WenyanMetadata metadata) {
         pendingMetadata.fromImmutable(metadata);
@@ -33,7 +41,6 @@ public final class MetadataBuilder<T> implements IMetadataBuilder<T> {
     public void withCurrentMetadata(String name) {
         if (pendingMetadata.getDescription() != null) {
             getMetadata().put(name, pendingMetadata.toImmutable());
-            pendingMetadata = new MutableWenyanMetadata();
         }
     }
 
