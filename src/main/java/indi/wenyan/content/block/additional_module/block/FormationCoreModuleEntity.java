@@ -7,7 +7,7 @@ import indi.wenyan.content.block.runner.RunnerBlock;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.interpreter_impl.HandlerPackageBuilder;
 import indi.wenyan.interpreter_impl.WenyanSymbol;
-import indi.wenyan.interpreter_impl.value.WenyanCodeWithExecutor;
+import indi.wenyan.interpreter_impl.value.WenyanBlockRunnerValue;
 import indi.wenyan.judou.api.WenyanType;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.language.JudouExceptionText;
@@ -111,9 +111,9 @@ public class FormationCoreModuleEntity extends AbstractModuleEntity implements I
                 var args = request.args();
                 if (args.size() != 2)
                     throw new WenyanException(JudouExceptionText.ArgsNumWrong.string(2, args.size()));
-                var fuObj = args.get(0).as(WenyanCodeWithExecutor.TYPE);
+                var fuObj = args.get(0).as(WenyanBlockRunnerValue.TYPE);
                 var function = args.get(1).as(WenyanBuiltinFunction.TYPE);
-                var packageable = fuObj.packageable();
+                var packageable = fuObj.entity();
                 if (packageable.isRemoved())
                     throw new WenyanException(NotFindFu.string());
                 if (level instanceof ServerLevel serverLevel)

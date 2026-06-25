@@ -2,7 +2,7 @@ package indi.wenyan.content.block.runner;
 
 import indi.wenyan.content.block.ICodeHolder;
 import indi.wenyan.interpreter_impl.IWenyanBlockDevice;
-import indi.wenyan.interpreter_impl.value.WenyanCodeWithExecutor;
+import indi.wenyan.interpreter_impl.value.WenyanBlockRunnerValue;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.Either;
@@ -36,9 +36,9 @@ public record BlockPackageGetter(Consumer<BlockPos> communicateConsumer) {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         // If able to run, return Executor first
-        if (blockEntity instanceof IWenyanPackageable packageable && packageable.getPlatformName().equals(packageName)) {
+        if (blockEntity instanceof RunnerBlockEntity entity && entity.getPlatformName().equals(packageName)) {
             communicateConsumer.accept(pos);
-            return Either.left(new WenyanCodeWithExecutor(packageable));
+            return Either.left(new WenyanBlockRunnerValue(entity));
         }
 
         // Then if not able to run, return as code package

@@ -22,6 +22,7 @@ import indi.wenyan.judou.api.values.WenyanNull;
 import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.judou.api.values.exception.WenyanCompileException;
 import indi.wenyan.judou.api.values.exception.WenyanException;
+import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.runtime.function_impl.WenyanSchedularImpl;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -56,7 +57,7 @@ import static indi.wenyan.content.block.runner.RunnerBlock.RUNNING_STATE;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform, ICommunicateHolder, ICodeOutputHolder, IWenyanPackageable {
+public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatform, ICommunicateHolder, ICodeOutputHolder {
     public static final String PAGES_ID = "pages";
     public static final String PLATFORM_NAME_ID = "platformName";
     public static final String ID = "runner_block_entity";
@@ -233,10 +234,19 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
     }
 
-    @Override
     public boolean newThread(IWenyanBytecode bytecode) {
         try {
             RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
+        } catch (WenyanException e) {
+            handleError(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean newThread(WenyanFrame frame) {
+        try {
+            RunnerCreator.createThread(lazyProgram, frame, this.initEnvironment());
         } catch (WenyanException e) {
             handleError(e.getMessage());
             return false;
