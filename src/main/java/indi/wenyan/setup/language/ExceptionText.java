@@ -16,8 +16,8 @@ public enum ExceptionText implements ILocalizationEnum {
     NoConnectDirection,    // 謬：無連向
     AlreadyRun,            // 謬：已運行
     PackageAlreadyRegistered,//Warning: package %s is already registered
-    NoRecipeFound          // No valid recipe found for the current pedestal items.
-    ;
+    NoRecipeFound,         // No valid recipe found for the current pedestal items.
+    OutOfRange;
 
     @Override
     public String getTranslationKey() {

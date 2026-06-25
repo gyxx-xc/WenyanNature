@@ -56,9 +56,13 @@ public record WenyanBuiltinFunction(
             newRuntime.setLocal(i++, self.as(WenyanBuiltinObject.TYPE).getObjectType().getParent());
         }
         int size = argsList.size();
-        for (; i < size; i++)
-            newRuntime.setLocal(i, WenyanLeftValue.varOf(
-                    argsList.get(i).as(args().get(i).type().getType())));
+        for (; i < size; i++) {
+            ParsableType type = args().get(i).type();
+            if (type != null) newRuntime.setLocal(i, WenyanLeftValue.varOf(
+                    argsList.get(i).as(type.getType())));
+            else newRuntime.setLocal(i, WenyanLeftValue.varOf(
+                    argsList.get(i)));
+        }
         return newRuntime;
     }
 
@@ -84,10 +88,10 @@ public record WenyanBuiltinFunction(
     }
 
     /// Represents a function argument with a type and identifier.
-    public record Arg(ParsableType type, String id) {
+    public record Arg(@Nullable ParsableType type, String id) {
         @Override
         public @NotNull String toString() {
-            return id + ":" + type.toString();
+            return id + (type == null ? "" : ":" + type);
         }
     }
 }

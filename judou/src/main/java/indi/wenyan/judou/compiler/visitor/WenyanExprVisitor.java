@@ -13,6 +13,7 @@ import indi.wenyan.judou.runtime.executor.WenyanCodes;
 import indi.wenyan.judou.structure.ParsableType;
 import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFunction;
 import indi.wenyan.judou.utils.WenyanDataParser;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ public class WenyanExprVisitor extends WenyanVisitor {
     }
 
     @Override
-    public Boolean visitFunction_define_statement(WenyanParser.Function_define_statementContext ctx) {
+    public Boolean visitNamed_function_define(WenyanParser.Named_function_defineContext ctx) {
         if (!ctx.IDENTIFIER(0).getText().equals(ctx.IDENTIFIER(ctx.IDENTIFIER().size() - 1).getText())) {
             throw new WenyanCompileException(JudouExceptionText.FunctionNameDoesNotMatch.string(), ctx);
         }
@@ -151,6 +152,29 @@ public class WenyanExprVisitor extends WenyanVisitor {
             bytecode.add(WenyanCodes.CALL, 1);
         }
         bytecode.add(WenyanCodes.STORE, index);
+        return true;
+    }
+
+    @Override
+    public Boolean visitDeclared_lambda_function(WenyanParser.Declared_lambda_functionContext ctx) {
+        visitLambda_function(ctx.lambda_function_body());
+        // STUB: args stands for self's index for recursion
+        //   add a -1 make itself never added to itself's scope
+        bytecode.add(WenyanCodes.CREATE_FUNCTION, -1);
+        if (ctx.declare.getType() == WenyanParser.ASYNC_DECLARE_OP) {
+            bytecode.addLoadCode(Symbol.CREATE_ASYNC_ID);
+            bytecode.add(WenyanCodes.CALL, 1);
+        }
+        bytecode.add(WenyanCodes.PUSH_ANS);
+        return true;
+    }
+
+    @Override
+    public Boolean visitSimple_lambda_function(WenyanParser.Simple_lambda_functionContext ctx) {
+        visitLambda_function(ctx.lambda_function_body());
+        // STUB: see visitDeclared_lambda_function
+        bytecode.add(WenyanCodes.CREATE_FUNCTION, -1);
+        bytecode.add(WenyanCodes.PUSH_ANS);
         return true;
     }
 
@@ -170,6 +194,26 @@ public class WenyanExprVisitor extends WenyanVisitor {
             }
         }
 
+        addFunction(isObject, argsType, ctx.statements(), ctx);
+    }
+
+    private void visitLambda_function(WenyanParser.Lambda_function_bodyContext ctx) {
+        ArrayList<WenyanBuiltinFunction.Arg> argsType = new ArrayList<>();
+        for (int i = 0; i < ctx.id.size(); i++) {
+            try {
+                ParsableType type = null;
+                if (!ctx.t.isEmpty()) type = WenyanDataParser.parseType(ctx.t.get(i).getText());
+                argsType.add(new WenyanBuiltinFunction.Arg(type, ctx.id.get(i).getText()));
+            } catch (WenyanException e) {
+                throw new WenyanCompileException(e.getMessage(), ctx);
+            }
+        }
+
+        addFunction(false, argsType, ctx.statements(), ctx);
+    }
+
+    private void addFunction(boolean isObject, ArrayList<WenyanBuiltinFunction.Arg> argsType,
+                             WenyanParser.StatementsContext statements, ParserRuleContext body) {
         List<String> argv = new ArrayList<>();
         if (isObject) {
             argv.add(Symbol.SELF_ID);
@@ -177,8 +221,8 @@ public class WenyanExprVisitor extends WenyanVisitor {
         }
         for (var arg : argsType) argv.add(arg.id());
         WenyanCompilerEnvironment functionEnvironment = new WenyanCompilerEnvironment(bytecode.getSourceCode(), bytecode, argv, bytecode.isDebug());
-        new WenyanMainVisitor(functionEnvironment).visit(ctx.statements());
-        functionEnvironment.addAutoReturn(ctx);
+        new WenyanMainVisitor(functionEnvironment).visit(statements);
+        functionEnvironment.addAutoReturn(body);
 
         bytecode.add(WenyanCodes.PUSH, new WenyanBuiltinFunction(functionEnvironment.produceBytecode(), argsType, null));
     }

@@ -30,6 +30,10 @@ public enum RunnerCreator {
     }
 
     public static <T extends IWenyanScheduler.IWenyanThread> void createThread(Supplier<IWenyanScheduler<T>> scheduler, IWenyanBytecode mainRuntime, IGlobalResolver globalResolver) throws WenyanException {
-        scheduler.get().create(newRunner(WenyanFrame.ofCode(mainRuntime), globalResolver));
+        createThread(scheduler, WenyanFrame.ofCode(mainRuntime), globalResolver);
+    }
+
+    public static <T extends IWenyanScheduler.IWenyanThread> void createThread(Supplier<IWenyanScheduler<T>> scheduler, WenyanFrame mainRuntime, IGlobalResolver globalResolver) throws WenyanException {
+        scheduler.get().create(newRunner(mainRuntime, globalResolver));
     }
 }
