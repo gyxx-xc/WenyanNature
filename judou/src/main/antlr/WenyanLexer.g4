@@ -54,6 +54,7 @@ LOCAL_DECLARE_OP         : '吾有' ;
 GLOBAL_DECLARE_OP        : '今有' ;
 ASYNC_DECLARE_OP         : '同有' ;
 DEFINE_CLOSURE           : '是謂' ;
+NEED                     : '需' ;
 
 FOR_IF_END               : '云云' | '是也' | '也' ;
 

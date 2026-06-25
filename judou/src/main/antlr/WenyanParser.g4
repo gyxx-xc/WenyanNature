@@ -82,11 +82,15 @@ mod_math_statement          : DIV data pp=(PREPOSITION_LEFT|PREPOSITION_RIGHT) d
 boolean_algebra_statement   : FU data data op=(AND_STMT | OR_STMT) ;
 assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGHT_END   # assign_data_statement
                             | ASSIGN_LEFT data ZHE (ASSIGN_RIGHT)? ASSIGN_RIGHT_NULL    # assign_null_statement
-                            | ASSIGNING data                                               # assign_simple_statement
+                            | ASSIGNING data                                            # assign_simple_statement
                             ;
 
 function_define_statement   : t=(LOCAL_DECLARE_OP|ASYNC_DECLARE_OP) INT_NUM FUNCTION_TYPE NAMING YUE IDENTIFIER
-                              function_define_body DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END ;
+                              function_define_body DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END  # named_function_define
+                            | declare=(LOCAL_DECLARE_OP|ASYNC_DECLARE_OP) INT_NUM FUNCTION_TYPE
+                              lambda_function_body FUNCTION_DEFINE_END                            # declared_lambda_function
+                            | DECLARE_HAVE FUNCTION_TYPE lambda_function_body FUNCTION_DEFINE_END # simple_lambda_function
+                            ;
 
 function_call_statement     : ((call= (CALLING_FUNCTION|CREATE_OBJECT) data) | key_function)
                               (preposition (args+=data))?
@@ -125,6 +129,9 @@ import_statement            : IMPORT_START name=IDENTIFIER IMPORT_PACKAGE (FROM_
 function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
                               (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
                               (YUE id+=IDENTIFIER)+)+)? FUNCTION_BODY_START statements ;
+
+lambda_function_body        : (NEED (t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
+                              YUE id+=IDENTIFIER)+)? statements ;
 
 if_logic_op                 : op=(EQ|NEQ|LTE|GTE|GT|LT) ;
 
