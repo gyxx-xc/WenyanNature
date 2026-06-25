@@ -176,6 +176,7 @@
   "metadata.wenyan_programming.CollectionModuleMin": "求列表中的最小元素",
   "metadata.wenyan_programming.CollectionModuleReverse": "反转列表中的元素顺序",
   "metadata.wenyan_programming.CollectionModuleSort": "对列表进行排序（要求元素可比较）",
+  "metadata.wenyan_programming.CoreExec": "在指定符上执行函数",
   "metadata.wenyan_programming.CoreJoin": "等待所有已启动的可戴符执行完毕",
   "metadata.wenyan_programming.CoreStart": "启动指定名称的符",
   "metadata.wenyan_programming.CoreStatus": "查询指定可戴符的运行状态",
