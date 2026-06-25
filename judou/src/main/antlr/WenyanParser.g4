@@ -86,7 +86,7 @@ assign_statement            : ASSIGN_LEFT data ZHE ASSIGN_RIGHT data ASSIGN_RIGH
                             ;
 
 function_define_statement   : t=(LOCAL_DECLARE_OP|ASYNC_DECLARE_OP) INT_NUM FUNCTION_TYPE NAMING YUE IDENTIFIER
-                              function_define_body IDENTIFIER FUNCTION_DEFINE_END ;
+                              function_define_body DEFINE_CLOSURE IDENTIFIER FUNCTION_DEFINE_END ;
 
 function_call_statement     : ((call= (CALLING_FUNCTION|CREATE_OBJECT) data) | key_function)
                               (preposition (args+=data))?
@@ -116,7 +116,7 @@ object_statement            : LOCAL_DECLARE_OP INT_NUM OBJECT_TYPE (EXTENDS data
                               OBJECT_BODY_START (object_property_define | object_method_define)*
                               DEFINE_CLOSURE IDENTIFIER OBJECT_DEFINE_END ;
 object_method_define        : OBJECT_STATIC_DECLARE (IDENTIFIER | CREATE_OBJECT) ZHE FUNCTION_TYPE
-                              function_define_body (IDENTIFIER | CREATE_OBJECT) FUNCTION_DEFINE_END ;
+                              function_define_body DEFINE_CLOSURE (IDENTIFIER | CREATE_OBJECT) FUNCTION_DEFINE_END ;
 object_property_define      : OBJECT_STATIC_DECLARE IDENTIFIER ZHE type (YUE data)? ;
 
 import_as_statement         : IMPORT_START name=IDENTIFIER IMPORT_PACKAGE define_statement ;
@@ -124,7 +124,7 @@ import_statement            : IMPORT_START name=IDENTIFIER IMPORT_PACKAGE (FROM_
 
 function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
                               (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
-                              (YUE id+=IDENTIFIER)+)+)? FUNCTION_BODY_START statements DEFINE_CLOSURE ;
+                              (YUE id+=IDENTIFIER)+)+)? FUNCTION_BODY_START statements ;
 
 if_logic_op                 : op=(EQ|NEQ|LTE|GTE|GT|LT) ;
 
