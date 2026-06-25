@@ -199,9 +199,10 @@ public class WenyanExprVisitor extends WenyanVisitor {
 
     private void visitLambda_function(WenyanParser.Lambda_function_bodyContext ctx) {
         ArrayList<WenyanBuiltinFunction.Arg> argsType = new ArrayList<>();
-        for (int i = 0; i < ctx.t.size(); i++) {
+        for (int i = 0; i < ctx.id.size(); i++) {
             try {
-                ParsableType type = WenyanDataParser.parseType(ctx.t.get(i).getText());
+                ParsableType type = null;
+                if (!ctx.t.isEmpty()) type = WenyanDataParser.parseType(ctx.t.get(i).getText());
                 argsType.add(new WenyanBuiltinFunction.Arg(type, ctx.id.get(i).getText()));
             } catch (WenyanException e) {
                 throw new WenyanCompileException(e.getMessage(), ctx);

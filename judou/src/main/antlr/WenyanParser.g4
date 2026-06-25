@@ -130,8 +130,11 @@ function_define_body        : (FUNCTION_ARGS_START FUNCTION_ARGS_GET
                               (args+=INT_NUM t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
                               (YUE id+=IDENTIFIER)+)+)? FUNCTION_BODY_START statements ;
 
-lambda_function_body        : (NEED (t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
-                              YUE id+=IDENTIFIER)+)? statements ;
+lambda_function_body        : (NEED (
+                              (t+=(NUM_TYPE|LIST_TYPE|STRING_TYPE|BOOL_TYPE|OBJECT_TYPE|FUNCTION_TYPE)
+                              YUE id+=IDENTIFIER)+ | // typed
+                              (id+=IDENTIFIER)+ // or no typed at all
+                              ))? statements ;
 
 if_logic_op                 : op=(EQ|NEQ|LTE|GTE|GT|LT) ;
 
