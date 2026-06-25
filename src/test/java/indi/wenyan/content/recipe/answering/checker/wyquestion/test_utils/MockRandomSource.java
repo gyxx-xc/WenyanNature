@@ -1,6 +1,5 @@
 package indi.wenyan.content.recipe.answering.checker.wyquestion.test_utils;
 
-import indi.wenyan.judou.api.utils.Either;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 import org.jspecify.annotations.Nullable;
@@ -15,9 +14,9 @@ import java.util.List;
  * <p>
  * use {@link InputBuilder} to create the sequence of inputs.
  */
-@SuppressWarnings({"NullableProblems", "OptionalGetWithoutIsPresent"})
+@SuppressWarnings({"NullableProblems"})
 public class MockRandomSource implements RandomSource {
-    private final List<Either<Long, Double>> outputSequence;
+    private final List<Double> outputSequence;
     private int outputCounter = 0;
 
     /**
@@ -25,7 +24,7 @@ public class MockRandomSource implements RandomSource {
      *
      * @param outputSequence the predefined sequence of random values to return
      */
-    private MockRandomSource(List<Either<Long, Double>> outputSequence) {
+    private MockRandomSource(List<Double> outputSequence) {
         this.outputSequence = outputSequence;
     }
 
@@ -60,7 +59,7 @@ public class MockRandomSource implements RandomSource {
 
     @Override
     public long nextLong() {
-        return outputSequence.get(outputCounter++).left().get();
+        return outputSequence.get(outputCounter++).longValue();
     }
 
     @Override
@@ -75,7 +74,7 @@ public class MockRandomSource implements RandomSource {
 
     @Override
     public double nextDouble() {
-        return outputSequence.get(outputCounter++).right().get();
+        return outputSequence.get(outputCounter++);
     }
 
     @Override
@@ -104,14 +103,14 @@ public class MockRandomSource implements RandomSource {
      */
     @SuppressWarnings({"UnusedReturnValue", "unused"})
     public static class InputBuilder {
-        private final List<Either<Long, Double>> outputSequence;
+        private final List<Double> outputSequence;
 
         /**
          * Constructs a new InputBuilder with an empty output sequence.
          *
          * @param outputSequence the list to store predefined random values
          */
-        private InputBuilder(List<Either<Long, Double>> outputSequence) {
+        private InputBuilder(List<Double> outputSequence) {
             this.outputSequence = outputSequence;
         }
 
@@ -131,7 +130,7 @@ public class MockRandomSource implements RandomSource {
          * @return this builder for method chaining
          */
         public InputBuilder addLong(long l) {
-            outputSequence.add(Either.left(l));
+            outputSequence.add((double) l);
             return this;
         }
 
@@ -143,7 +142,7 @@ public class MockRandomSource implements RandomSource {
          * @return this builder for method chaining
          */
         public InputBuilder addBoolean(boolean b) {
-            outputSequence.add(Either.left(b ? 1L : 0L));
+            outputSequence.add(b ? 1d : 0d);
             return this;
         }
 
@@ -154,7 +153,7 @@ public class MockRandomSource implements RandomSource {
          * @return this builder for method chaining
          */
         public InputBuilder addDouble(double d) {
-            outputSequence.add(Either.right(d));
+            outputSequence.add(d);
             return this;
         }
 

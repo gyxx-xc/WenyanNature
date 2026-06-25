@@ -1,5 +1,7 @@
 package indi.wenyan.interpreter_impl;
 
+import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.interpreter_impl.value.WenyanBlockRunnerValue;
 import indi.wenyan.judou.api.compile.WenyanCompiler;
 import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.exec.request.IBaseHandleableRequest;
@@ -7,8 +9,6 @@ import indi.wenyan.judou.api.exec.request.IHandleableRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
 import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
-import indi.wenyan.judou.api.utils.Either;
-import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanPackage;
 import indi.wenyan.judou.api.values.exception.WenyanException;
@@ -46,27 +46,49 @@ public final class ImportRequest implements IBaseHandleableRequest {
 
     @Override
     public boolean handle(IHandleContext context) throws WenyanException {
-        var packageOrCode = getPackage.getPackage(context, packageName);
-        if (packageOrCode.left().isPresent())
-            onReturn.accept(packageOrCode.left().get());
-        if (packageOrCode.right().isPresent()) {
-            var bytecode = new WenyanCompiler().compile(packageOrCode.right().get());
-            List<String> exportedIdentifier = bytecode.exportedValues();
-            WenyanFrame returnRuntime = thread.getCurrentRuntime();
-            thread().getFrameManager().call(new WenyanFrame(bytecode.bytecode(), Collections.emptyList(), returnRuntime,
-                    (runner, _) -> {
-                        int exportSize = exportedIdentifier.size();
-                        Map<String, IWenyanValue> result = new HashMap<>(exportSize);
-                        WenyanFrame currentRuntime = runner.getCurrentRuntime();
-                        for (int i = 0; i < exportSize; i++) {
-                            result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
-                        }
-                        runner.getFrameManager().ret();
-                        onReturn.accept(new WenyanPackage(result));
-                    }));
+        switch (getPackage.getPackage(context, packageName)) {
+            case IWenyanPackageable.Package(WenyanPackage wenyanPackage) -> {
+                onReturn.accept(wenyanPackage);
+                thread().unblock();
+                return true;
+            }
+            case IWenyanPackageable.Code(String code) -> {
+                var bytecode = new WenyanCompiler().compile(code);
+                List<String> exportedIdentifier = bytecode.exportedValues();
+                WenyanFrame returnRuntime = thread.getCurrentRuntime();
+                thread().getFrameManager().call(new WenyanFrame(bytecode.bytecode(), Collections.emptyList(), returnRuntime,
+                        (runner, _) -> {
+                            int exportSize = exportedIdentifier.size();
+                            Map<String, IWenyanValue> result = new HashMap<>(exportSize);
+                            WenyanFrame currentRuntime = runner.getCurrentRuntime();
+                            for (int i = 0; i < exportSize; i++) {
+                                result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
+                            }
+                            runner.getFrameManager().ret();
+                            onReturn.accept(new WenyanPackage(result));
+                        }));
+                thread().unblock();
+                return true;
+            }
+            case IWenyanPackageable.Executor(RunnerBlockEntity entity) -> {
+                var bytecode = new WenyanCompiler().compile(entity.getCode());
+                List<String> exportedIdentifier = bytecode.exportedValues();
+                entity.newThread(new WenyanFrame(bytecode.bytecode(), Collections.emptyList(), null,
+                        (runner, _) -> {
+                            int exportSize = exportedIdentifier.size();
+                            Map<String, IWenyanValue> result = new HashMap<>(exportSize);
+                            WenyanFrame currentRuntime = runner.getCurrentRuntime();
+                            for (int i = 0; i < exportSize; i++) {
+                                result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
+                            }
+                            runner.getFrameManager().ret();
+                            onReturn.accept(new WenyanBlockRunnerValue(entity, result));
+                            thread().unblock();
+                        }));
+
+                return true;
+            }
         }
-        thread().unblock();
-        return true;
     }
 
     public static IRequestCallHandler handlerOf(ImportFunction getPackage) {
@@ -81,13 +103,24 @@ public final class ImportRequest implements IBaseHandleableRequest {
         /// @param packageName the name of the package to retrieve
         /// @return the requested package
         /// @throws WenyanException if the package cannot be found or accessed
-        Either<IWenyanObject, String> getPackage(IHandleContext context, String packageName) throws WenyanException;
+        IWenyanPackageable getPackage(IHandleContext context, String packageName) throws WenyanException;
     }
 
     private record Handler(ImportFunction getPackage) implements IRequestCallHandler {
         @Override
         public IHandleableRequest newRequest(IWenyanRunner thread, IWenyanValue self, List<IWenyanValue> args, Consumer<IWenyanValue> onReturn) throws WenyanException {
             return new ImportRequest(thread, getPackage, args, onReturn);
+        }
+    }
+
+    public sealed interface IWenyanPackageable {
+        record Code(String code) implements IWenyanPackageable {
+        }
+
+        record Package(WenyanPackage wenyanPackage) implements IWenyanPackageable {
+        }
+
+        record Executor(RunnerBlockEntity entity) implements IWenyanPackageable {
         }
     }
 }
