@@ -10,13 +10,13 @@ import indi.wenyan.judou.api.exec.IRequestCallHandler;
 import indi.wenyan.judou.api.exec.request.IBaseHandleableRequest;
 import indi.wenyan.judou.api.exec.request.IHandleableRequest;
 import indi.wenyan.judou.api.exec.structure.IHandleContext;
+import indi.wenyan.judou.api.language.JudouExceptionText;
 import indi.wenyan.judou.api.language.JudouTypeText;
 import indi.wenyan.judou.api.runtime.IWenyanRunner;
 import indi.wenyan.judou.api.values.IWenyanObject;
 import indi.wenyan.judou.api.values.IWenyanValue;
 import indi.wenyan.judou.api.values.WenyanFuture;
 import indi.wenyan.judou.api.values.exception.WenyanException;
-import indi.wenyan.judou.api.values.exception.WenyanUnreachedException;
 import indi.wenyan.judou.runtime.function_impl.WenyanFrame;
 import indi.wenyan.judou.structure.builtin_type.WenyanBuiltinFunction;
 import indi.wenyan.setup.config.WenyanConfig;
@@ -25,16 +25,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static indi.wenyan.setup.language.ExceptionText.NotFindFu;
 
-public record WenyanBlockRunnerValue(RunnerBlockEntity entity) implements IWenyanObject, IRequestCallHandler {
+public record WenyanBlockRunnerValue(RunnerBlockEntity entity, Map<String, IWenyanValue>  attributes) implements IWenyanObject, IRequestCallHandler {
     public static final WenyanType<WenyanBlockRunnerValue> TYPE = new WenyanType<>(JudouTypeText.CodeExecutor.string(), WenyanBlockRunnerValue.class);
 
     @Override
     public IWenyanValue getAttribute(String name) throws WenyanException {
-        throw new WenyanUnreachedException();
+        if (attributes.containsKey(name)) return attributes.get(name);
+        throw new WenyanException(JudouExceptionText.NoAttribute.string(name));
     }
 
     @Override
