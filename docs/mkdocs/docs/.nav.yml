@@ -1,5 +1,6 @@
 nav:
-  - README.md
+  - 吾有一术: README.md
+  - 快速入门: tutorial
   - 文言语法: usage
   - 游戏内容: in_game
   - 模块索引: modules

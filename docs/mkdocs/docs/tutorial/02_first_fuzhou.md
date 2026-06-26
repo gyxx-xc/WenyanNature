@@ -13,7 +13,7 @@ weight: 3
 
 
 # 合成第一个符咒
-![02_first_fuzhou_crafting.png](../../../../public/img/tutorial/02_first_fuzhou/02_first_fuzhou_crafting.png)
+![02_first_fuzhou_crafting.png](../img/tutorial/02_first_fuzhou/02_first_fuzhou_crafting.png)
 
 合成第一个符咒，你需要下列材料：
 ```
@@ -33,11 +33,11 @@ weight: 3
 
 其中 `書` 可以先理解成“写出来”或“显示出来”。
 
-![02_first_fuzhou_command.png](../../../../public/img/tutorial/02_first_fuzhou/02_first_fuzhou_command.png)
+![02_first_fuzhou_command.png](../img/tutorial/02_first_fuzhou/02_first_fuzhou_command.png)
 *书写内容*
-![02_first_fuzhou_running.png](../../../../public/img/tutorial/02_first_fuzhou/02_first_fuzhou_running.png)
+![02_first_fuzhou_running.png](../img/tutorial/02_first_fuzhou/02_first_fuzhou_running.png)
 *符咒正常运行中*
-![02_first_fuzhou_output.png](../../../../public/img/tutorial/02_first_fuzhou/02_first_fuzhou_output.png)
+![02_first_fuzhou_output.png](../img/tutorial/02_first_fuzhou/02_first_fuzhou_output.png)
 *成功输出*
 
 # 完成第一个符咒
