@@ -8,16 +8,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@Deprecated
-@SuppressWarnings("ALL")
 public class GlobalPackageManager {
     private static GlobalPackageManager INSTANCE = null;
-    private Map<String, Set<Entry>> byStr = new HashMap<>();
-    private Map<BlockPos, Set<Entry>> byBeacon = new HashMap<>();
+    private final Map<String, Set<Entry>> byStr = new HashMap<>();
+    private final Map<BlockPos, Set<Entry>> byBeacon = new HashMap<>();
 
     private GlobalPackageManager() {}
 
     public static GlobalPackageManager getInstance() {
+        // called inside tick, no need synchronized
         if (INSTANCE == null) INSTANCE = new GlobalPackageManager();
         return INSTANCE;
     }
@@ -32,6 +31,7 @@ public class GlobalPackageManager {
 
     public void unregister(BlockPos beacon) {
         Set<Entry> entries = byBeacon.remove(beacon);
+        if (entries == null) return;
         for (var e : entries) {
             var strEntries = byStr.get(e.packageName);
             strEntries.remove(e);

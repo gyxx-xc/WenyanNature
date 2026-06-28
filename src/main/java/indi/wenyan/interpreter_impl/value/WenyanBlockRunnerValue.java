@@ -30,7 +30,8 @@ import java.util.function.Consumer;
 
 import static indi.wenyan.setup.language.ExceptionText.NotFindFu;
 
-public record WenyanBlockRunnerValue(RunnerBlockEntity entity, Map<String, IWenyanValue>  attributes) implements IWenyanObject, IRequestCallHandler {
+public record WenyanBlockRunnerValue(RunnerBlockEntity entity, Map<String, IWenyanValue> attributes,
+                                     boolean globalPos) implements IWenyanObject, IRequestCallHandler {
     public static final WenyanType<WenyanBlockRunnerValue> TYPE = new WenyanType<>(JudouTypeText.CodeExecutor.string(), WenyanBlockRunnerValue.class);
 
     @Override
@@ -57,7 +58,7 @@ public record WenyanBlockRunnerValue(RunnerBlockEntity entity, Map<String, IWeny
             public boolean handle(IHandleContext context) throws WenyanException {
                 if (entity.isRemoved())
                     throw new WenyanException(ExceptionText.DeviceRemoved.string());
-                switch (context) {
+                if (!globalPos) switch (context) {
                     case BlockRequest.BlockContext(_, BlockPos pos1, _) -> {
                         if (pos1.distChessboard(entity.getBlockPos()) > WenyanConfig.getRunnerRange())
                             throw new WenyanException(ExceptionText.OutOfRange.string());
@@ -67,20 +68,23 @@ public record WenyanBlockRunnerValue(RunnerBlockEntity entity, Map<String, IWeny
                                 WenyanConfig.getRunnerRange())
                             throw new WenyanException(ExceptionText.OutOfRange.string());
                     }
-                    default -> {}
+                    default -> {
+                    }
                 }
 
                 var function = argsList.getFirst().as(WenyanBuiltinFunction.TYPE);
                 if (entity.isRemoved())
                     throw new WenyanException(NotFindFu.string());
-                if (entity.getLevel() instanceof ServerLevel serverLevel && context instanceof BlockRequest.BlockContext(_, BlockPos pos, _))
+                if (entity.getLevel() instanceof ServerLevel serverLevel &&
+                        context instanceof BlockRequest.BlockContext(_, BlockPos pos, _)) {
                     ICommunicateHolder.blockAddCommunicateServer(serverLevel, pos,
-                            entity.getBlockPos().subtract(pos));
+                            globalPos ? new BlockPos(0, 2048 - entity.getBlockPos().getY(), 0) :
+                                    entity.getBlockPos().subtract(pos));
+                }
                 var future = new WenyanFuture();
                 WenyanFrame newRuntime = function.getNewRuntime(self, argsList.subList(1, argsList.size()), null, future::onRunnerReturn);
                 if (!entity.newThread(newRuntime))
                     throw new WenyanException(ExceptionText.CantStart.string(entity.getPlatformName()));
-
 
                 onReturn.accept(future);
                 thread.unblock();

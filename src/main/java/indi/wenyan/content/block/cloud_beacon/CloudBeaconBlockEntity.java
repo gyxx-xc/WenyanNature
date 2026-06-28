@@ -19,11 +19,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
 
-// TODO: write until rpc done
-@Deprecated
-@SuppressWarnings("ALL")
 public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconRenderable {
     @Getter
     private int transmitAnimationTime = 0;
@@ -33,34 +29,57 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
     private int litUpAnimationTime;
 
     private int checkingY;
+    private final List<Pair<BlockPos, String>> cloudedModule = new ArrayList<>();
+    private final List<Pair<BlockPos, String>> checkingCloudedModule = new ArrayList<>();
 
     public CloudBeaconBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(WenyanBlocks.CLOUD_BEACON_ENTITY.get(), worldPosition, blockState);
     }
 
+    @SuppressWarnings("unused")
     public void tick(ServerLevel sl, BlockPos blockPos, BlockState blockState1, RandomSource random) {
-        List<Pair<BlockPos, String>> cloudedModule = new ArrayList<>();
-        checkBlocked(blockPos, (pos, state) -> {
-            if (litUpAnimationTime >= 0) {
-                if (state.is(WyRegistration.RUNNABLE_BLOCK)) {
-                    BlockEntity blockEntity = sl.getBlockEntity(pos);
-                    if (blockEntity instanceof RunnerBlockEntity platform)
-                        cloudedModule.add(Pair.of(pos, platform.getPlatformName()));
+        checkBlocked(blockPos, new BeaconListHelper() {
+            @Override
+            public void init() {
+                checkingCloudedModule.clear();
+            }
+
+            @Override
+            public boolean add(BlockPos pos, BlockState state) {
+                if (litUpAnimationTime >= 0) {
+                    if (state.is(WyRegistration.RUNNABLE_BLOCK)) {
+                        BlockEntity blockEntity = sl.getBlockEntity(pos);
+                        if (blockEntity instanceof RunnerBlockEntity platform)
+                            checkingCloudedModule.add(Pair.of(pos, platform.getPlatformName()));
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public void finish() {
+                if (litUpAnimationTime >= 0) {
+                    // hashcode of list(pair(pos, string)) all permits, can check
+                    if (checkingCloudedModule.hashCode() != cloudedModule.hashCode()) {
+                        cloudedModule.clear();
+                        cloudedModule.addAll(checkingCloudedModule);
+
+                        var manager = GlobalPackageManager.getInstance();
+                        manager.unregister(blockPos);
+                        cloudedModule.forEach(pair -> manager.register(blockPos, pair.first, pair.second));
+                    }
                 }
             }
-            return true;
         });
 
         if (litUpAnimationTime >= 0) {
             if (sl.getGameTime() % 80L == 0L) {
                 sl.playSound(null, blockPos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
-
-            var manager = GlobalPackageManager.getInstance();
-            cloudedModule.forEach(pair -> manager.register(blockPos, pair.first, pair.second));
         }
     }
 
+    @SuppressWarnings("unused")
     public void tickClient(BlockPos blockPos, BlockState blockState1, RandomSource random) {
         checkBlocked(blockPos, (_, _) -> true);
 
@@ -77,11 +96,14 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
         }
     }
 
-    private void checkBlocked(BlockPos blockPos, BiFunction<BlockPos, BlockState, Boolean> extraChecker) {
+    private void checkBlocked(BlockPos blockPos, BeaconListHelper helper) {
         int x = blockPos.getX();
         int y = blockPos.getY();
         int z = blockPos.getZ();
-        if (checkingY <= y) checkingY = y + 1;
+        if (checkingY <= y) {
+            checkingY = y + 1;
+            helper.init();
+        }
 
         assert level != null;
         int maxHeight = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
@@ -89,7 +111,7 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
         for (int i = 0; i < 10 && checkingY < maxHeight; i++) {
             BlockPos pos = new BlockPos(x, checkingY, z);
             BlockState state = level.getBlockState(pos);
-            if (extraChecker.apply(pos, state) && state.getLightDampening() >= 15 && !state.is(Blocks.BEDROCK)) {
+            if (helper.add(pos, state) && state.getLightDampening() >= 15 && !state.is(Blocks.BEDROCK)) {
                 checkingY = y;
                 litUpAnimationTime = -1;
                 break;
@@ -98,6 +120,8 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
         }
 
         if (checkingY >= maxHeight) {
+            helper.finish();
+            helper.init();
             checkingY = y + 1;
             if (litUpAnimationTime < 0) {
                 litUpAnimationTime = 0;
@@ -112,5 +136,15 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
     public void setLevel(@NonNull Level level) {
         super.setLevel(level);
         this.checkingY = level.getMinY() - 1;
+    }
+
+    private interface BeaconListHelper {
+        default void init() {
+        }
+
+        boolean add(BlockPos pos, BlockState state);
+
+        default void finish() {
+        }
     }
 }

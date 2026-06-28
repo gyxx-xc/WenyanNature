@@ -54,7 +54,7 @@ public class ExplosionModuleEntity extends AbstractModuleEntity {
                 assert level != null;
                 level.explode(null,
                         getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5,
-                        args.get(0), true, Level.ExplosionInteraction.BLOCK);
+                        (float) (int) args.get(0), true, Level.ExplosionInteraction.BLOCK);
                 return WenyanNull.NULL;
             })
             .description(FunctionMetaText.ExplosionModuleIgnite.string())

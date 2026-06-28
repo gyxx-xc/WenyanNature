@@ -70,7 +70,7 @@ public final class ImportRequest implements IBaseHandleableRequest {
                 thread().unblock();
                 return true;
             }
-            case IWenyanPackageable.Executor(RunnerBlockEntity entity) -> {
+            case IWenyanPackageable.Executor(RunnerBlockEntity entity, boolean globalPos) -> {
                 var bytecode = new WenyanCompiler().compile(entity.getCode());
                 List<String> exportedIdentifier = bytecode.exportedValues();
                 entity.newThread(new WenyanFrame(bytecode.bytecode(), Collections.emptyList(), null,
@@ -82,7 +82,7 @@ public final class ImportRequest implements IBaseHandleableRequest {
                                 result.put(exportedIdentifier.get(i), currentRuntime.getLocals().get(i));
                             }
                             runner.getFrameManager().ret();
-                            onReturn.accept(new WenyanBlockRunnerValue(entity, result));
+                            onReturn.accept(new WenyanBlockRunnerValue(entity, result, globalPos));
                             thread().unblock();
                         }));
 
@@ -120,7 +120,7 @@ public final class ImportRequest implements IBaseHandleableRequest {
         record Package(WenyanPackage wenyanPackage) implements IWenyanPackageable {
         }
 
-        record Executor(RunnerBlockEntity entity) implements IWenyanPackageable {
+        record Executor(RunnerBlockEntity entity, boolean globalPos) implements IWenyanPackageable {
         }
     }
 }
