@@ -374,16 +374,12 @@ public class WenyanExprVisitor extends WenyanVisitor {
         bytecode.add(WenyanCodes.PUSH, WenyanValues.of(ctx.name.getText()));
         bytecode.addLoadCode(Symbol.IMPORT_ID);
         bytecode.add(WenyanCodes.CALL, 1);
-        if (ctx.prop.isEmpty()) {
-            bytecode.add(WenyanCodes.STORE, ctx.name.getText());
-            return true;
-        }
         // stack: id1, id2, ..., package, import
         for (Token id : ctx.prop) {
             bytecode.add(WenyanCodes.LOAD_ATTR_REMAIN, id.getText());
             bytecode.add(WenyanCodes.STORE, id.getText());
         }
-        bytecode.add(WenyanCodes.POP);
+        bytecode.add(WenyanCodes.STORE, ctx.name.getText());
         return true;
     }
 
