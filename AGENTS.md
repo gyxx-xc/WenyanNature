@@ -59,7 +59,7 @@ local-server_build_project(filesToRebuild=["path/to/ChangedFile.java"])
 - **命名**：标准英文，标识符中不含拼音/中文
 - **包结构**：按功能领域划分（compiler, runtime, utils），而非技术分层
 
-## 查 API
+## 所有查 Neoforge/Minecraft 代码
 
 目标：搞清楚 `Either` 怎么用，有哪些方法，签名是什么。
 
