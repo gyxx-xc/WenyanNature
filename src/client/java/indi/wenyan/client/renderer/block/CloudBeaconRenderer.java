@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
 @NotNullByDefault
 public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable> implements BlockEntityRenderer<T, CloudBeaconRenderer.CloudBeaconRenderState> {
     public static final Identifier BEAM_LOCATION = Identifier.withDefaultNamespace("textures/entity/beacon/beacon_beam.png");
-    public static final int MAX_RENDER_Y = 2048;
+    public static final int MAX_RENDER_Y = 75;
     private static final float BEAM_SCALE_THRESHOLD = 64F;
     public static final float SOLID_BEAM_RADIUS = 0.2F;
     public static final float BEAM_GLOW_RADIUS = 0.25F;
@@ -157,7 +157,7 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
     @Override
     public net.minecraft.world.phys.AABB getRenderBoundingBox(T blockEntity) {
         net.minecraft.core.BlockPos pos = blockEntity.getBlockPos();
-        return new net.minecraft.world.phys.AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, MAX_RENDER_Y, pos.getZ() + 1.0);
+        return new net.minecraft.world.phys.AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, 2048, pos.getZ() + 1.0);
     }
 
     public static class CloudBeaconRenderState extends BlockEntityRenderState {
