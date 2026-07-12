@@ -25,7 +25,7 @@ public record BlockPackageGetter(Consumer<BlockPos> communicateConsumer) {
         if (packagePos != null) {
             ImportRequest.IWenyanPackageable either = getWenyanPackageEither(level, blockPos, packagePos, packageName, true);
             if (either != null) {
-                communicateConsumer.accept(new BlockPos(blockPos.getX(), 2048, blockPos.getZ()));
+                communicateConsumer.accept(new BlockPos(blockPos.getX(), 1024, blockPos.getZ()));
                 return either;
             }
         }

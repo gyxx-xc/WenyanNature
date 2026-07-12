@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
 public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable> implements BlockEntityRenderer<T, CloudBeaconRenderer.CloudBeaconRenderState> {
     public static final Identifier BEAM_LOCATION = Identifier.withDefaultNamespace("textures/entity/beacon/beacon_beam.png");
     public static final int MAX_RENDER_Y = 75;
-    private static final float BEAM_SCALE_THRESHOLD = 64F;
+    private static final float BEAM_SCALE_THRESHOLD = 128F;
     public static final float SOLID_BEAM_RADIUS = 0.2F;
     public static final float BEAM_GLOW_RADIUS = 0.25F;
 
@@ -60,8 +60,9 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
         }
         poseStack.translate(0.5, 0.0, 0.5);
         poseStack.scale(beamRadiusScale, beamRadiusScale, beamRadiusScale);
+        int beamLength = MAX_RENDER_Y - state.blockPos.getY();
         float offset = -Mth.frac(animationTime / 5);
-        float distanceScale = MAX_RENDER_Y / 2f; // /2 for scale the texture in longer
+        float distanceScale = beamLength / 2f; // /2 for scale the texture in longer
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees((float) (animationTime * 2.25F - 45.0F + disturbance(state.signalPos))));
         submitNodeCollector.submitCustomGeometry(
@@ -70,7 +71,7 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
                 (pose, buffer) -> renderPart(
                         pose, buffer,
                         -1,
-                        0, MAX_RENDER_Y,
+                        0, beamLength,
                         0.0F, SOLID_BEAM_RADIUS, SOLID_BEAM_RADIUS, 0.0F,
                         -SOLID_BEAM_RADIUS, 0.0F, 0.0F, -SOLID_BEAM_RADIUS,
                         0.0F, 1.0F,
@@ -115,7 +116,7 @@ public class CloudBeaconRenderer<T extends BlockEntity & ICloudBeaconRenderable>
                 (pose, buffer) -> renderPart(
                         pose, buffer,
                         ARGB.color(32, -1),
-                        0, MAX_RENDER_Y,
+                        0, beamLength,
                         -BEAM_GLOW_RADIUS, -BEAM_GLOW_RADIUS, BEAM_GLOW_RADIUS, -BEAM_GLOW_RADIUS,
                         -BEAM_GLOW_RADIUS, BEAM_GLOW_RADIUS, BEAM_GLOW_RADIUS, BEAM_GLOW_RADIUS,
                         0.0F, 1.0F,

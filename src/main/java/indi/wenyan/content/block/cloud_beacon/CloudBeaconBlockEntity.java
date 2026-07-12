@@ -1,6 +1,7 @@
 package indi.wenyan.content.block.cloud_beacon;
 
 import com.ibm.icu.impl.Pair;
+import indi.wenyan.WenyanProgramming;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
@@ -42,6 +43,7 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
             @Override
             public void init() {
                 checkingCloudedModule.clear();
+                WenyanProgramming.LOGGER.warn("tick cloud beacon init");
             }
 
             @Override
@@ -51,6 +53,7 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
                         BlockEntity blockEntity = sl.getBlockEntity(pos);
                         if (blockEntity instanceof RunnerBlockEntity platform)
                             checkingCloudedModule.add(Pair.of(pos, platform.getPlatformName()));
+                        WenyanProgramming.LOGGER.warn("add block");
                     }
                 }
                 return true;
@@ -58,9 +61,11 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
 
             @Override
             public void finish() {
+                WenyanProgramming.LOGGER.warn("end scan");
                 if (litUpAnimationTime >= 0) {
                     // hashcode of list(pair(pos, string)) all permits, can check
                     if (checkingCloudedModule.hashCode() != cloudedModule.hashCode()) {
+                        WenyanProgramming.LOGGER.warn("change list with: {}", checkingCloudedModule);
                         cloudedModule.clear();
                         cloudedModule.addAll(checkingCloudedModule);
 
