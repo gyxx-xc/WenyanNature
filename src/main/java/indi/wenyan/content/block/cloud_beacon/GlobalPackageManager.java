@@ -3,17 +3,15 @@ package indi.wenyan.content.block.cloud_beacon;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GlobalPackageManager {
     private static GlobalPackageManager INSTANCE = null;
     private final Map<String, Set<Entry>> byStr = new HashMap<>();
     private final Map<BlockPos, Set<Entry>> byBeacon = new HashMap<>();
 
-    private GlobalPackageManager() {}
+    private GlobalPackageManager() {
+    }
 
     public static GlobalPackageManager getInstance() {
         // called inside tick, no need synchronized
@@ -47,5 +45,10 @@ public class GlobalPackageManager {
         return entries.stream().findFirst().map(Entry::module).orElse(null);
     }
 
-    public record Entry(BlockPos beacon, String packageName, BlockPos module){}
+    public List<BlockPos> getAll() {
+        return byStr.values().stream().flatMap(Set::stream).map(Entry::module).toList();
+    }
+
+    public record Entry(BlockPos beacon, String packageName, BlockPos module) {
+    }
 }
