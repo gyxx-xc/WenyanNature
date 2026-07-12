@@ -11,6 +11,7 @@ import indi.wenyan.client.gui.code_editor.widget.PackageSnippetWidget;
 import indi.wenyan.client.gui.llm.LLMRunnerBlockScreen;
 import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.ICodeOutputHolder;
+import indi.wenyan.content.block.cloud_beacon.GlobalPackageManager;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.ChineseUtils;
@@ -32,9 +33,7 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public enum RunnerBlockBehaviour {
     ;
@@ -49,34 +48,52 @@ public enum RunnerBlockBehaviour {
     private static @NonNull List<PackageSnippet> getPackageSnippets(BlockPos pos, Player player, Level level) {
         BlockState state = level.getBlockState(pos);
         List<PackageSnippet> packageSnippets = new ArrayList<>();
+        Set<BlockPos> added = new HashSet<>();
+        added.add(pos);
+
         BlockPos attached = pos.relative(
                 AbstractFuluBlock.getConnectedDirection(state).getOpposite());
         var attachedExecutor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, attached);
-        if (attachedExecutor != null)
+        if (attachedExecutor != null) {
             packageSnippets.add(packageSnippet(attachedExecutor.getExecPackage(),
                     attachedExecutor.blockState().getCloneItemStack(pos, level, false, player),
                     attachedExecutor.getPackageName()));
+            added.add(attached);
+        }
+
+        var manager = GlobalPackageManager.getInstance();
+        var packagePos = manager.getAll();
+        for (var entry : packagePos) {
+            if (added.contains(entry)) continue;
+            addSnippets(player, level, entry, packageSnippets, added);
+        }
 
         int range = WenyanConfig.getRunnerRange();
         for (BlockPos b : BlockPos.betweenClosed(
                 pos.offset(range, -range, range),
                 pos.offset(-range, range, -range))) {
-            if (b.equals(pos)) continue;
-
-            BlockEntity blockEntity = level.getBlockEntity(b);
-            if (blockEntity instanceof RunnerBlockEntity platform) {
-                packageSnippets.add(new PackageSnippet(platform.getBlockState().getCloneItemStack(level, b, true),
-                        platform.getPlatformName(), List.of()));
-            }
-
-            var executor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, b);
-            if (executor != null) {
-                packageSnippets.add(packageSnippet(executor.getExecPackage(),
-                        executor.blockState().getCloneItemStack(b, level, false, player),
-                        executor.getPackageName()));
-            }
+            addSnippets(player, level, b, packageSnippets, added);
         }
         return packageSnippets;
+    }
+
+    private static void addSnippets(Player player, Level level, BlockPos b, List<PackageSnippet> packageSnippets, Set<BlockPos> added) {
+        if (added.contains(b)) return;
+
+        BlockEntity blockEntity = level.getBlockEntity(b);
+        if (blockEntity instanceof RunnerBlockEntity platform) {
+            packageSnippets.add(new PackageSnippet(platform.getBlockState().getCloneItemStack(level, b, true),
+                    platform.getPlatformName(), List.of()));
+            added.add(b);
+        }
+
+        var executor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, b);
+        if (executor != null) {
+            packageSnippets.add(packageSnippet(executor.getExecPackage(),
+                    executor.blockState().getCloneItemStack(b, level, false, player),
+                    executor.getPackageName()));
+            added.add(b);
+        }
     }
 
     private static @NotNull RunnerBlockBackend getCodeEditorBackend(ICodeOutputHolder runner, BlockPos pos,

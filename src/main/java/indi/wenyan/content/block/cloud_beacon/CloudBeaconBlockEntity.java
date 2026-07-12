@@ -6,7 +6,6 @@ import indi.wenyan.setup.definitions.WenyanBlocks;
 import indi.wenyan.setup.definitions.WyRegistration;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -37,8 +36,9 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
     }
 
     @SuppressWarnings("unused")
-    public void tick(ServerLevel sl, BlockPos blockPos, BlockState blockState1, RandomSource random) {
-        checkBlocked(blockPos, new BeaconListHelper() {
+    public void tick(Level level, BlockPos blockPos, BlockState blockState1, RandomSource random) {
+        // hashcode of list(pair(pos, string)) all permits, can check
+        BeaconListHelper helper = new BeaconListHelper() {
             @Override
             public void init() {
                 checkingCloudedModule.clear();
@@ -48,7 +48,7 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
             public boolean add(BlockPos pos, BlockState state) {
                 if (litUpAnimationTime >= 0) {
                     if (state.is(WyRegistration.RUNNABLE_BLOCK)) {
-                        BlockEntity blockEntity = sl.getBlockEntity(pos);
+                        BlockEntity blockEntity = level.getBlockEntity(pos);
                         if (blockEntity instanceof RunnerBlockEntity platform)
                             checkingCloudedModule.add(Pair.of(pos, platform.getPlatformName()));
                     }
@@ -70,33 +70,7 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
                     }
                 }
             }
-        });
-
-        if (litUpAnimationTime >= 0) {
-            if (sl.getGameTime() % 80L == 0L) {
-                sl.playSound(null, blockPos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 1.0F, 1.0F);
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void tickClient(BlockPos blockPos, BlockState blockState1, RandomSource random) {
-        checkBlocked(blockPos, (_, _) -> true);
-
-        if (litUpAnimationTime >= 0) {
-            if (litUpAnimationTime < 20) {
-                litUpAnimationTime++;
-            } else {
-                transmitAnimationTime++;
-                if (transmitAnimationTime > nextTransmitTime) {
-                    transmitAnimationTime = random.nextInt(2) != 0 ? 0 : -40;
-                    nextTransmitTime = random.nextInt(30) + 30;
-                }
-            }
-        }
-    }
-
-    private void checkBlocked(BlockPos blockPos, BeaconListHelper helper) {
+        };
         int x = blockPos.getX();
         int y = blockPos.getY();
         int z = blockPos.getZ();
@@ -105,12 +79,12 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
             helper.init();
         }
 
-        assert level != null;
-        int maxHeight = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
+        assert this.level != null;
+        int maxHeight = this.level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
 
         for (int i = 0; i < 10 && checkingY < maxHeight; i++) {
             BlockPos pos = new BlockPos(x, checkingY, z);
-            BlockState state = level.getBlockState(pos);
+            BlockState state = this.level.getBlockState(pos);
             if (helper.add(pos, state) && state.getLightDampening() >= 15 && !state.is(Blocks.BEDROCK)) {
                 checkingY = y;
                 litUpAnimationTime = -1;
@@ -128,8 +102,24 @@ public class CloudBeaconBlockEntity extends BlockEntity implements ICloudBeaconR
                 transmitAnimationTime = 0;
             }
         }
-    }
 
+        if (litUpAnimationTime >= 0) {
+            if (litUpAnimationTime < 20) {
+                litUpAnimationTime++;
+            } else {
+                transmitAnimationTime++;
+                if (transmitAnimationTime > nextTransmitTime) {
+                    transmitAnimationTime = random.nextInt(2) != 0 ? 0 : -40;
+                    nextTransmitTime = random.nextInt(30) + 30;
+                }
+            }
+            if (!level.isClientSide()) {
+                if (level.getGameTime() % 80L == 0L) {
+                    level.playSound(null, blockPos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 1.0F, 1.0F);
+                }
+            }
+        }
+    }
 
     // copy from BeaconBlockEntity, if bug, ask mojang
     @Override
