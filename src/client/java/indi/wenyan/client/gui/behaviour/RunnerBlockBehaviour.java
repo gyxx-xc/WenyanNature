@@ -141,6 +141,51 @@ public enum RunnerBlockBehaviour {
         return new RunnerBlockBackend(packageSnippets, synchronizer);
     }
 
+    private static @NotNull RunnerBlockBackend getCodeEditorBackendRo(ICodeOutputHolder runner,
+                                                                      List<PackageSnippet> packageSnippets) {
+        var synchronizer = new CodeEditorBackendSynchronizer() {
+            @Override
+            public void sendContent(String content) {
+//                runner.setCode(content);
+//                ClientPacketDistributor.sendToServer(new BlockCodePacket(pos, content));
+            }
+
+
+            @Override
+            public String getContent() {
+                return runner.getCode();
+            }
+
+            @Override
+            public void sendTitle(String title) {
+//                String wrappedTitle = ChineseUtils.bracketOf(title);
+//                runner.setPlatformName(wrappedTitle);
+//                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, wrappedTitle));
+            }
+
+            @Override
+            public String getTitle() {
+                var title = runner.getPlatformName();
+
+                if (title.length() < 2) {
+                    return "";
+                }
+                return title.substring(1, title.length() - 1);
+            }
+
+            @Override
+            public Deque<Component> getOutput() {
+                return runner.getOutputQueue();
+            }
+
+            @Override
+            public boolean isOutputChanged() {
+                return runner.isOutputChanged();
+            }
+        };
+        return new RunnerBlockBackend(packageSnippets, synchronizer);
+    }
+
     private static PackageSnippet packageSnippet(RawHandlerPackage execPackage, ItemStack itemStack,
                                                  String name) {
         List<PackageSnippetWidget.Member> members = new ArrayList<>();
@@ -192,5 +237,12 @@ public enum RunnerBlockBehaviour {
         if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
         List<PackageSnippet> packageSnippets = getPackageSnippets(pos, player, level);
         Minecraft.getInstance().setScreen(new LLMRunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
+    }
+
+    public static void openGuiRo(BlockPos pos, Player player) {
+        var level = player.level();
+        if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
+        List<PackageSnippet> packageSnippets = getPackageSnippets(pos, player, level);
+        Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackendRo(runner, packageSnippets)));
     }
 }
