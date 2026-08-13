@@ -45,6 +45,7 @@
   "error.wenyan_programming.NoConnectDirection": "謬：無連向",
   "error.wenyan_programming.NoRecipeFound": "謬：未尋配方",
   "error.wenyan_programming.NotFindFu": "謬：不識此符",
+  "error.wenyan_programming.OutOfRange": "錯：超出範圍",
   "error.wenyan_programming.PackageAlreadyRegistered": "謬：已有此包名%s",
   "error.wenyan_programming.judou.ArgsNumWrong": "謬：參數數需%d得%d",
   "error.wenyan_programming.judou.ArgsNumWrongRange": "謬：參數數需%d至%d得%d",

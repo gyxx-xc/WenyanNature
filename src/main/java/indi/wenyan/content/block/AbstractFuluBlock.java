@@ -89,17 +89,17 @@ public abstract class AbstractFuluBlock extends FaceAttachedHorizontalDirectiona
     }
 
     static {
-        FLOOR_NORTH_AABB = box(6, 0, 3, 11, 1, 13);
-        FLOOR_SOUTH_AABB = box(5, 0, 3, 10, 1, 13);
-        FLOOR_WEST_AABB = box(3, 0, 5, 13, 1, 10);
-        FLOOR_EAST_AABB = box(3, 0, 6, 13, 1, 11);
-        CEILING_NORTH_AABB = box(5, 15, 3, 10, 16, 13);
-        CEILING_SOUTH_AABB = box(6, 15, 3, 11, 16, 13);
-        CEILING_WEST_AABB = box(3, 15, 6, 13, 16, 11);
-        CEILING_EAST_AABB = box(3, 15, 5, 13, 16, 10);
-        NORTH_AABB = box(6, 3, 15, 11, 13, 16);
-        SOUTH_AABB = box(5, 3, 0, 10, 13, 1);
-        WEST_AABB = box(15, 3, 5, 16, 13, 10);
-        EAST_AABB = box(0, 3, 6, 1, 13, 11);
+        FLOOR_NORTH_AABB = box(4, 0, 0, 12, 1, 16);
+        FLOOR_SOUTH_AABB = box(4, 0, 0, 12, 1, 16);
+        FLOOR_WEST_AABB = box(0, 0, 4, 16, 1, 12);
+        FLOOR_EAST_AABB = box(0, 0, 4, 16, 1, 12);
+        CEILING_NORTH_AABB = box(4, 15, 0, 12, 16, 16);
+        CEILING_SOUTH_AABB = box(4, 15, 0, 12, 16, 16);
+        CEILING_WEST_AABB = box(0, 15, 4, 16, 16, 12);
+        CEILING_EAST_AABB = box(0, 15, 4, 16, 16, 12);
+        NORTH_AABB = box(4, 0, 15, 12, 16, 16);
+        SOUTH_AABB = box(4, 0, 0, 12, 16, 1);
+        WEST_AABB = box(15, 0, 4, 16, 16, 12);
+        EAST_AABB = box(0, 0, 4, 1, 16, 12);
     }
 }
