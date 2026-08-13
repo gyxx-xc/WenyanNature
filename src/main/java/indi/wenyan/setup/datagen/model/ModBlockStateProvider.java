@@ -46,8 +46,8 @@ public class ModBlockStateProvider extends ModelSubProvider {
         decorativePistonHeads();
         creativePowerBlock();
 
-        for (var block : WenyanBlocks.RUNNER_BLOCK.getBlocks()){
-            registerFuluBlock(block);
+        for (var block : WenyanBlocks.RUNNER_BLOCK.getBlocks()) {
+            registerFuluBlock(block, "block/template_hand_runner");
         }
 
         registerFuluBlock(WenyanBlocks.EXPLOSION_MODULE_BLOCK.get());
@@ -79,13 +79,30 @@ public class ModBlockStateProvider extends ModelSubProvider {
     ///
     /// @param block The module block to register
     private void registerFuluBlock(Block block) {
+        registerFuluBlock(block, "block/template_runner_block");
+    }
+
+    private void registerFuluBlock(Block block, String templateName) {
         var template = new ModelTemplate(Optional.of(
-                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, "block/template_runner_block")),
+                Identifier.fromNamespaceAndPath(WenyanProgramming.MODID, templateName)),
                 Optional.empty(),
                 TextureSlot.TEXTURE);
         MultiVariant model = plainVariant((new TexturedModel(TextureMapping.defaultTexture(block), template)).create(block, blockModels.modelOutput));
         // copy from lever
-        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model).with(PropertyDispatch.modify(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING).select(AttachFace.CEILING, Direction.NORTH, X_ROT_180.then(Y_ROT_180)).select(AttachFace.CEILING, Direction.EAST, X_ROT_180.then(Y_ROT_270)).select(AttachFace.CEILING, Direction.SOUTH, X_ROT_180).select(AttachFace.CEILING, Direction.WEST, X_ROT_180.then(Y_ROT_90)).select(AttachFace.FLOOR, Direction.NORTH, NOP).select(AttachFace.FLOOR, Direction.EAST, Y_ROT_90).select(AttachFace.FLOOR, Direction.SOUTH, Y_ROT_180).select(AttachFace.FLOOR, Direction.WEST, Y_ROT_270).select(AttachFace.WALL, Direction.NORTH, X_ROT_90).select(AttachFace.WALL, Direction.EAST, X_ROT_90.then(Y_ROT_90)).select(AttachFace.WALL, Direction.SOUTH, X_ROT_90.then(Y_ROT_180)).select(AttachFace.WALL, Direction.WEST, X_ROT_90.then(Y_ROT_270))));
+        var rotations = PropertyDispatch.modify(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING)
+                .select(AttachFace.CEILING, Direction.NORTH, X_ROT_180.then(Y_ROT_180))
+                .select(AttachFace.CEILING, Direction.EAST, X_ROT_180.then(Y_ROT_270))
+                .select(AttachFace.CEILING, Direction.SOUTH, X_ROT_180)
+                .select(AttachFace.CEILING, Direction.WEST, X_ROT_180.then(Y_ROT_90))
+                .select(AttachFace.FLOOR, Direction.NORTH, NOP)
+                .select(AttachFace.FLOOR, Direction.EAST, Y_ROT_90)
+                .select(AttachFace.FLOOR, Direction.SOUTH, Y_ROT_180)
+                .select(AttachFace.FLOOR, Direction.WEST, Y_ROT_270)
+                .select(AttachFace.WALL, Direction.NORTH, X_ROT_90)
+                .select(AttachFace.WALL, Direction.EAST, X_ROT_90.then(Y_ROT_90))
+                .select(AttachFace.WALL, Direction.SOUTH, X_ROT_90.then(Y_ROT_180))
+                .select(AttachFace.WALL, Direction.WEST, X_ROT_90.then(Y_ROT_270));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model).with(rotations));
     }
 
     public void writingBlock() {
