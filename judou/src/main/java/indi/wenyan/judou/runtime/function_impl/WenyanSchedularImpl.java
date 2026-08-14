@@ -55,7 +55,8 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public void step() {
-        if (executor.isShutdown()) return;
+        if (!available) return;
+
         if (accumulatedSteps > 0) {
             if (!hasIdle)
                 UtilManager.getLogger().warn(
@@ -80,6 +81,8 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public void block(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
+        if (!available) return;
+
         var thread = runner.getThread();
         if (thread.getState() == State.READY && allThreads.contains(thread)) {
             thread.setState(State.BLOCKED);
@@ -92,6 +95,8 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public void unblock(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
+        if (!available) return;
+
         var thread = runner.getThread();
         if (thread.getState() == State.BLOCKED && allThreads.contains(thread)) {
             thread.setState(State.READY);
@@ -103,6 +108,8 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public void yield(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
+        if (!available) return;
+
         var thread = runner.getThread();
         if (thread.getState() == State.READY && allThreads.contains(thread)) {
             submitThread(runner);
@@ -114,6 +121,8 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public void die(IThreadHolder<PCB> runner) throws WenyanUnreachedException {
+        if (!available) return;
+
         var thread = runner.getThread();
         if (thread.getState() == State.DYING || !allThreads.contains(thread))
             throw new WenyanUnreachedException();
@@ -128,6 +137,8 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public void stop() {
+        if (!available) return;
+
         allThreads.forEach(thread -> {
             thread.getRunner().pause();
             if (thread.getWatchdog() != null)
@@ -140,6 +151,8 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public void create(IThreadHolder<PCB> runner) throws WenyanException {
+        if (!available) return;
+
         if (allThreads.size() + 1 > maxThread) {
             throw new WenyanException.WenyanVarException(JudouExceptionText.TooManyThreads.string());
         }

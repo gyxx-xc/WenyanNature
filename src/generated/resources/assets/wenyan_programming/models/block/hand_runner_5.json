@@ -1,5 +1,5 @@
 {
-  "parent": "wenyan_programming:block/template_runner_block",
+  "parent": "wenyan_programming:block/template_hand_runner",
   "textures": {
     "texture": "wenyan_programming:block/hand_runner_5"
   }
