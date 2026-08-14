@@ -9,6 +9,7 @@ import indi.wenyan.judou.api.utils.ChineseUtils;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -75,8 +76,17 @@ public abstract class AbstractModuleEntity extends DataBlockEntity implements IR
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
         Component name = components.get(DataComponents.CUSTOM_NAME);
-        if (name != null)
-            setPackageName(ChineseUtils.bracketOf(name.getString()));
+        if (name != null) {
+            if (name.getString().charAt(0) != '「')
+                setPackageName(ChineseUtils.bracketOf(name.getString()));
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        if (this.packageName != null)
+            components.set(DataComponents.CUSTOM_NAME, Component.literal(this.packageName));
     }
 
     /// Called every tick to handle execution requests.
