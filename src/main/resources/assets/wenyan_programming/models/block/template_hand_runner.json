@@ -1,0 +1,56 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"texture": "wenyan_programming:block/hand_runner_0",
+		"particle": "wenyan_programming:block/runner_block_particle"
+	},
+	"elements": [
+		{
+			"from": [4, 0, 0],
+			"to": [12, 1, 16],
+			"faces": {
+				"north": {"uv": [8, 1, 12, 1.5], "texture": "#texture"},
+				"east": {"uv": [8, 0, 16, 0.5], "texture": "#texture"},
+				"south": {"uv": [8, 0.5, 12, 1], "texture": "#texture"},
+				"west": {"uv": [0, 8, 8, 8.5], "texture": "#texture"},
+				"up": {"uv": [4, 8, 0, 0], "texture": "#texture"},
+				"down": {"uv": [8, 0, 4, 8], "texture": "#texture"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [90, 0, 0],
+			"translation": [0, 4, 4.5],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [90, 0, 0],
+			"translation": [0, 4, 4.5],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [90, 0, 0],
+			"translation": [0.75, 6, 4],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"rotation": [90, 0, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [90, 0, 0]
+		},
+		"fixed": {
+			"rotation": [90, 0, 0],
+			"translation": [0, 0, 8]
+		},
+		"on_shelf": {
+			"rotation": [90, 0, 0],
+			"translation": [0, 0, 3.75]
+		}
+	}
+
+}
