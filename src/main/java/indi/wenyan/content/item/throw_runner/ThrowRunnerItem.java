@@ -44,12 +44,13 @@ public class ThrowRunnerItem extends Item implements ProjectileItem, ITooltipApp
 
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (level instanceof ServerLevel serverLevel) {
-            Projectile.spawnProjectileFromRotation(throwRunnerEntityFromTier(),
-                    serverLevel, itemStack, player, 0.5F, 0.1F, 5.0F);
-        }
-
-        itemStack.consume(1, player);
+        if (player.isCreative()) {
+            if (level instanceof ServerLevel serverLevel)
+                Projectile.spawnProjectileFromRotation(throwRunnerEntityFromTier(),
+                        serverLevel, itemStack, player, 0.5F, 0.1F, 5.0F);
+            itemStack.consume(1, player);
+        } else
+            player.sendSystemMessage(Component.literal("请使用展馆内的投掷器"));
         return InteractionResult.SUCCESS;
     }
 
