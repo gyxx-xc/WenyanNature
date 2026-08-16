@@ -35,8 +35,6 @@ import lombok.experimental.Delegate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -73,17 +71,17 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
     private final LazyProgram<IWenyanScheduler<WenyanSchedularImpl.PCB>> lazyProgram;
     private final Deque<String> errors = new ConcurrentLinkedDeque<>();
     private RunnerBlock.RunningState runningState;
-    private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(this::safeAddCommunicate);
+    private final BlockPackageGetter blockPackageGetter = new BlockPackageGetter(blockPos -> {
+        if (getLevel() instanceof ServerLevel sl)
+            ICommunicateHolder.blockAddCommunicateServer(sl, getBlockPos(), blockPos.subtract(getBlockPos()));
+    });
 
     public RunnerBlockEntity(BlockPos pos, BlockState blockState) {
         super(WenyanBlocks.RUNNER_BLOCK_ENTITY.get(), pos, blockState);
         titleCodeOutput = new TitleCodeOutputData("",
                 ChineseUtils.bracketOf(blockState.getBlock().getName().getString()));
         titleCodeOutput.setOnChanged(this::setChanged);
-        int steps;
-        if (blockState.getBlock() instanceof RunnerBlock block)
-            steps = block.getTier().getStepSpeed();
-        else steps = 1;
+        int steps = blockState.getBlock() instanceof RunnerBlock block ? block.getTier().getStepSpeed() : 1;
         lazyProgram = new LazyProgram<>(() -> IWenyanScheduler.defaultImpl(this, steps));
         runningState = blockState.getValue(RUNNING_STATE);
     }
@@ -92,10 +90,10 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         if (!level.isClientSide()) {
             if (!errors.isEmpty()) {
                 for (String error : errors) {
-                    runningState = RunnerBlock.RunningState.ERROR;
-                    level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
                     addOutputBothSide(error, IOutputAcceptor.OutputStyle.ERROR);
                 }
+                runningState = RunnerBlock.RunningState.ERROR;
+                level.setBlock(getBlockPos(), getBlockState().setValue(RUNNING_STATE, runningState), Block.UPDATE_CLIENTS);
                 errors.clear();
             }
 
@@ -168,8 +166,12 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
                         if (i == 0) {
                             var runtimeContext = thread.getCurrentRuntime().getBytecode().getContext(
                                     thread.getCurrentRuntime().getProgramCounter() - 1);
-                            changeContextBothSide(runtimeContext == null ? new DebugContext(0, 0) :
-                                    new DebugContext(runtimeContext.contentStart(), runtimeContext.contentEnd()));
+                            debugContext = runtimeContext == null ? new DebugContext(0, 0) :
+                                    new DebugContext(runtimeContext.contentStart(), runtimeContext.contentEnd());
+                            if (getLevel() instanceof ServerLevel sl)
+                                PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
+                                        new BlockDebugContextPacket(getBlockPos(), debugContext));
+                            setDebugContext(debugContext);
                         }
                         if (++i < 2) return false;
                         thread.unblock();
@@ -199,30 +201,26 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
 
     @Override
     protected void saveData(ValueOutput tag) {
-        tag.putString(PAGES_ID, titleCodeOutput.getCode());
-        tag.putString(PLATFORM_NAME_ID, titleCodeOutput.getPlatformName());
+        titleCodeOutput.saveData(tag);
     }
 
     @Override
     protected void loadData(ValueInput tag) {
-        tag.getString(PAGES_ID).ifPresent(titleCodeOutput::setCode);
-        tag.getString(PLATFORM_NAME_ID).ifPresent(titleCodeOutput::setPlatformName);
+        titleCodeOutput.loadData(tag);
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
-        super.applyImplicitComponents(components);
-        titleCodeOutput.setCode(components.getOrDefault(WyRegistration.PROGRAM_CODE_DATA.get(), ""));
-        titleCodeOutput.setPlatformName(components.getOrDefault(DataComponents.CUSTOM_NAME, Component.literal(titleCodeOutput.getPlatformName())).getString());
+        titleCodeOutput.applyImplicitComponents(components);
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-        components.set(WyRegistration.PROGRAM_CODE_DATA.get(), titleCodeOutput.getCode());
-        components.set(DataComponents.CUSTOM_NAME, Component.literal(titleCodeOutput.getPlatformName()));
+        titleCodeOutput.collectImplicitComponents(components);
     }
 
+    // TODO: newThread need refactor
+    // used by FormationCoreModuleEntity, PlayerRun
     public boolean newThread(String pages) {
         IWenyanBytecode bytecode;
         try {
@@ -234,6 +232,7 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
         }
     }
 
+    // used by FormationCoreModuleEntity
     public boolean newThread(IWenyanBytecode bytecode) {
         try {
             RunnerCreator.createThread(lazyProgram, bytecode, this.initEnvironment());
@@ -288,18 +287,6 @@ public class RunnerBlockEntity extends DataBlockEntity implements IWenyanPlatfor
             PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
                     new BlockOutputPacket(getBlockPos(), error, style));
         addOutput(error, style);
-    }
-
-    private void changeContextBothSide(DebugContext context) {
-        if (getLevel() instanceof ServerLevel sl)
-            PacketDistributor.sendToPlayersTrackingChunk(sl, ChunkPos.containing(getBlockPos()),
-                    new BlockDebugContextPacket(getBlockPos(), context));
-        setDebugContext(context);
-    }
-
-    private void safeAddCommunicate(BlockPos blockPos) {
-        if (getLevel() instanceof ServerLevel sl)
-            ICommunicateHolder.blockAddCommunicateServer(sl, getBlockPos(), blockPos.subtract(getBlockPos()));
     }
 
     public record DebugContext(int start, int end) {
