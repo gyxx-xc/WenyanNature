@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -25,6 +26,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
@@ -186,12 +188,20 @@ public class LLMRunnerBlockScreen extends Screen {
     private void updatePanelButtons() {
         boolean isLlm = llmGenerateScreen.isVisible();
         if (btnLlmPanel == null) return;
-        btnLlmPanel.active = !isLlm;
+        boolean hasGoldIngot = hasGoldIngotInInventory();
+        btnLlmPanel.active = !isLlm && hasGoldIngot;
+        btnLlmPanel.setTooltip(hasGoldIngot ? null
+                : Tooltip.create(Component.translatable(GuiText.LlmNeedGoldIngot.getTranslationKey())));
         btnOutputPanel.active = isLlm;
         if (newMemoryButton != null) {
             newMemoryButton.visible = isLlm;
         }
         updateModelTierButton();
+    }
+
+    private boolean hasGoldIngotInInventory() {
+        var player = Minecraft.getInstance().player;
+        return player != null && player.getInventory().countItem(Items.GOLD_INGOT) > 0;
     }
 
     private void updateModelTierButton() {

@@ -33,7 +33,7 @@ public class CodeOutputWidget extends AbstractTextAreaWidget {
 
         if (clearW > 0) {
             clearButton = net.minecraft.client.gui.components.Button.builder(
-                            Component.literal("清空"),
+                            Component.literal("清空输出"),
                             _ -> backend.clearOutput())
                     .bounds(clearX, clearY, clearW, clearH)
                     .build();

@@ -70,12 +70,10 @@ public class RunnerBlock extends AbstractFuluBlock implements EntityBlock {
         }
         if (!level.isClientSide() && player instanceof ServerPlayer sp) { // server player always true
             if (player.isShiftKeyDown()) {
-                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.RUNNER_BLOCK));
+                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.LLM_BLOCK));
             } else if (stack.is(Items.RAW_GOLD)) {
                 PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.RUNNER_BLOCK_DEBUG));
                 runner.playerDebugRun();
-            } else if (stack.is(Items.GOLD_INGOT)) {
-                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.LLM_BLOCK));
             } else {
                 runner.playerRun();
             }
