@@ -71,7 +71,7 @@ public class WenyanSchedularImpl implements IWenyanScheduler<WenyanSchedularImpl
 
     @Override
     public boolean remainSteps() {
-        return accumulatedSteps > 0 && hasIdle;
+        return stepLock.availablePermits() > 0 && hasIdle;
     }
 
     @Override
