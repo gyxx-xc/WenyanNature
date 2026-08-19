@@ -13,6 +13,7 @@ import indi.wenyan.content.block.AbstractFuluBlock;
 import indi.wenyan.content.block.ICodeOutputHolder;
 import indi.wenyan.content.block.cloud_beacon.GlobalPackageManager;
 import indi.wenyan.content.block.runner.RunnerBlockEntity;
+import indi.wenyan.content.block.writing_block.WritingBlockEntity;
 import indi.wenyan.judou.api.exec.structure.RawHandlerPackage;
 import indi.wenyan.judou.api.utils.ChineseUtils;
 import indi.wenyan.judou.api.values.IWenyanFunction;
@@ -51,15 +52,17 @@ public enum RunnerBlockBehaviour {
         Set<BlockPos> added = new HashSet<>();
         added.add(pos);
 
-        BlockPos attached = pos.relative(
-                AbstractFuluBlock.getConnectedDirection(state).getOpposite());
-        var attachedExecutor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, attached);
-        if (attachedExecutor != null) {
-            packageSnippets.add(packageSnippet(attachedExecutor.getExecPackage(),
-                    attachedExecutor.blockState().getCloneItemStack(pos, level, false, player),
-                    attachedExecutor.getPackageName()));
-            added.add(attached);
-        }
+        try {
+            BlockPos attached = pos.relative(
+                    AbstractFuluBlock.getConnectedDirection(state).getOpposite());
+            var attachedExecutor = level.getCapability(WyRegistration.WENYAN_BLOCK_DEVICE_CAPABILITY, attached);
+            if (attachedExecutor != null) {
+                packageSnippets.add(packageSnippet(attachedExecutor.getExecPackage(),
+                        attachedExecutor.blockState().getCloneItemStack(pos, level, false, player),
+                        attachedExecutor.getPackageName()));
+                added.add(attached);
+            }
+        } catch (IllegalArgumentException _) {}
 
         var manager = GlobalPackageManager.getInstance();
         var packagePos = manager.getAll();
@@ -153,7 +156,7 @@ public enum RunnerBlockBehaviour {
 
             @Override
             public String getContent() {
-                return runner.getCode();
+                return runner.getViewCode();
             }
 
             @Override
@@ -161,6 +164,47 @@ public enum RunnerBlockBehaviour {
 //                String wrappedTitle = ChineseUtils.bracketOf(title);
 //                runner.setPlatformName(wrappedTitle);
 //                ClientPacketDistributor.sendToServer(new BlockRenamePacket(pos, wrappedTitle));
+            }
+
+            @Override
+            public String getTitle() {
+                var title = runner.getPlatformName();
+
+                if (title.length() < 2) {
+                    return "";
+                }
+                return title.substring(1, title.length() - 1);
+            }
+
+            @Override
+            public Deque<Component> getOutput() {
+                return runner.getOutputQueue();
+            }
+
+            @Override
+            public boolean isOutputChanged() {
+                return runner.isOutputChanged();
+            }
+        };
+        return new RunnerBlockBackend(packageSnippets, synchronizer);
+    }
+
+    private static @NotNull RunnerBlockBackend getCodeEditorBackendView(ICodeOutputHolder runner, BlockPos pos,
+                                                                        List<PackageSnippet> packageSnippets) {
+        var synchronizer = new CodeEditorBackendSynchronizer() {
+            @Override
+            public void sendContent(String content) {
+                runner.setViewCode(content);
+                ClientPacketDistributor.sendToServer(new BlockCodePacket(pos, content, BlockCodePacket.CodeTarget.VIEW));
+            }
+
+            @Override
+            public String getContent() {
+                return runner.getViewCode();
+            }
+
+            @Override
+            public void sendTitle(String title) {
             }
 
             @Override
@@ -234,7 +278,7 @@ public enum RunnerBlockBehaviour {
 
     public static void openLLMGui(BlockPos pos, Player player) {
         var level = player.level();
-        if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
+        if (!(level.getBlockEntity(pos) instanceof WritingBlockEntity runner)) return;
         List<PackageSnippet> packageSnippets = getPackageSnippets(pos, player, level);
         Minecraft.getInstance().setScreen(new LLMRunnerBlockScreen(getCodeEditorBackend(runner, pos, packageSnippets)));
     }
@@ -244,5 +288,12 @@ public enum RunnerBlockBehaviour {
         if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
         List<PackageSnippet> packageSnippets = getPackageSnippets(pos, player, level);
         Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackendRo(runner, packageSnippets)));
+    }
+
+    public static void openGuiView(BlockPos pos, Player player) {
+        var level = player.level();
+        if (!(level.getBlockEntity(pos) instanceof ICodeOutputHolder runner)) return;
+        List<PackageSnippet> packageSnippets = getPackageSnippets(pos, player, level);
+        Minecraft.getInstance().setScreen(new RunnerBlockScreen(getCodeEditorBackendView(runner, pos, packageSnippets)));
     }
 }

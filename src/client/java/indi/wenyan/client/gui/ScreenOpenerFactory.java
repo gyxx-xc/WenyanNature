@@ -13,6 +13,7 @@ public enum ScreenOpenerFactory {;
             switch (packet.screenId()) {
                 case RUNNER_BLOCK -> RunnerBlockBehaviour.openGui(packet.pos(), context.player());
                 case RUNNER_BLOCK_RO -> RunnerBlockBehaviour.openGuiRo(packet.pos(), context.player());
+                case RUNNER_BLOCK_VIEW -> RunnerBlockBehaviour.openGuiView(packet.pos(), context.player());
                 case WRITING_BLOCK -> WritingBlockBehaviour.openGui(packet.pos(), context.player());
                 case RUNNER_BLOCK_DEBUG -> RunnerBlockBehaviour.openDebugGui(packet.pos(), context.player());
                 case LLM_BLOCK -> RunnerBlockBehaviour.openLLMGui(packet.pos(), context.player());

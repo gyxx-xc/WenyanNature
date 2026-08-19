@@ -2,4 +2,8 @@ package indi.wenyan.content.block;
 
 public interface ICodeOutputHolder extends ICodeHolder, IOutputAcceptor {
     boolean isOutputChanged();
+
+    String getViewCode();
+
+    void setViewCode(String viewCode);
 }

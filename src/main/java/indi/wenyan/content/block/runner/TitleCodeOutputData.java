@@ -24,6 +24,7 @@ public class TitleCodeOutputData implements ICodeOutputHolder {
     public static final int MAX_OUTPUT_SHOWING_SIZE = 32;
     @Getter private String code;
     @Getter private String platformName;
+    @Getter private String viewCode = "";
     @Getter private final Deque<Component> outputQueue = new ArrayDeque<>();
     private boolean outputChanged = false;
     @Setter @Nullable private Runnable onChanged = null;
@@ -62,6 +63,13 @@ public class TitleCodeOutputData implements ICodeOutputHolder {
     }
 
     @Override
+    public void setViewCode(String viewCode) {
+        this.viewCode = viewCode;
+        if (onChanged != null)
+            onChanged.run();
+    }
+
+    @Override
     public void setPlatformName(String platformName) {
         this.platformName = platformName;
         if (onChanged != null)
@@ -81,10 +89,12 @@ public class TitleCodeOutputData implements ICodeOutputHolder {
     public void saveData(ValueOutput tag) {
         tag.putString(PAGES_ID, code);
         tag.putString(PLATFORM_NAME_ID, platformName);
+        tag.putString("viewCode", viewCode);
     }
 
     public void loadData(ValueInput tag) {
         tag.getString(PAGES_ID).ifPresent(this::setCode);
         tag.getString(PLATFORM_NAME_ID).ifPresent(this::setPlatformName);
+        tag.getString("viewCode").ifPresent(this::setViewCode);
     }
 }

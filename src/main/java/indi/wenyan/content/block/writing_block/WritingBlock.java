@@ -41,7 +41,7 @@ public class WritingBlock extends Block implements EntityBlock {
     protected InteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (player.isShiftKeyDown()) {
             if (!world.isClientSide() && player instanceof ServerPlayer sp)
-                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.WRITING_BLOCK));
+                PacketDistributor.sendToPlayer(sp, new BlockSetScreenPacket(pos, ScreenEnum.LLM_BLOCK));
             return InteractionResult.SUCCESS;
         }
         if (handIn != InteractionHand.MAIN_HAND)
