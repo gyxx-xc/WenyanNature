@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -25,6 +26,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,8 +69,11 @@ public class LLMRunnerBlockScreen extends Screen {
 
         int titleBarHeight = 15;
         int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
-        int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
         int btnH = font.lineHeight + 6;
+        // Reserve vertical space for the three right-column button rows so they
+        // never overflow the bottom of the screen at larger GUI scales.
+        int rightButtonRowsHeight = btnH * 3 + 12;
+        int textFileHeight = Mth.clamp(height - titleBarHeight - rightButtonRowsHeight, 0, CodeEditorWidget.HEIGH);
         textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, titleBarHeight,
                 textFieldWidth, textFileHeight);
@@ -125,7 +130,7 @@ public class LLMRunnerBlockScreen extends Screen {
                 startX, extraBtnY, extraBtnW, btnH,
                 this::addRenderableWidget);
 
-        if (extraBtnW > 0) {
+        if (extraBtnW > 0 && btnW > 0) {
             int tierRowY = extraBtnY + btnH + 4;
             newMemoryButton = Button.builder(
                             Component.literal("新记忆"),
@@ -153,7 +158,7 @@ public class LLMRunnerBlockScreen extends Screen {
         }
 
         // ── Mode selection buttons: right column, just below packageSnippetWidget ────────
-        if (packageSnippetWidth > 0) {
+        if (packageSnippetWidth > 0 && btnW > 0) {
             btnOutputPanel = Button.builder(
                             Component.translatable(GuiText.LlmPanelBack.getTranslationKey()),
                             _ -> setPanelMode(false))
@@ -186,12 +191,20 @@ public class LLMRunnerBlockScreen extends Screen {
     private void updatePanelButtons() {
         boolean isLlm = llmGenerateScreen.isVisible();
         if (btnLlmPanel == null) return;
-        btnLlmPanel.active = !isLlm;
+        boolean hasGoldIngot = hasGoldIngotInInventory();
+        btnLlmPanel.active = !isLlm && hasGoldIngot;
+        btnLlmPanel.setTooltip(hasGoldIngot ? null
+                : Tooltip.create(Component.translatable(GuiText.LlmNeedGoldIngot.getTranslationKey())));
         btnOutputPanel.active = isLlm;
         if (newMemoryButton != null) {
             newMemoryButton.visible = isLlm;
         }
         updateModelTierButton();
+    }
+
+    private boolean hasGoldIngotInInventory() {
+        var player = Minecraft.getInstance().player;
+        return player != null && player.getInventory().countItem(Items.GOLD_INGOT) > 0;
     }
 
     private void updateModelTierButton() {

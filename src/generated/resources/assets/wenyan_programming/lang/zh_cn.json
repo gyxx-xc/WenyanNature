@@ -93,6 +93,7 @@
   "gui.wenyan_programming.FurnaceTitle": "熔炉",
   "gui.wenyan_programming.HoldShift": "按住§fShift§r以顯示詳情",
   "gui.wenyan_programming.JeiAnswerTitle": "解题",
+  "gui.wenyan_programming.LlmNeedGoldIngot": "需要携带金锭才能使用大儒",
   "gui.wenyan_programming.LlmPanelBack": "◄输出",
   "gui.wenyan_programming.LlmPanelToggle": "✨大儒",
   "gui.wenyan_programming.Lock": "鎖定",
