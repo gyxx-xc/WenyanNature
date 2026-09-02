@@ -36,7 +36,8 @@ public class RunnerBlockScreen extends Screen {
     @Override
     protected void init() {
         int titleBarHeight = 15;
-        int textFieldWidth = Mth.clamp(width / 2, 50, CodeEditorWidget.WIDTH);
+        int snippetMaxWidth = 280;
+        int textFieldWidth = Math.max(Math.max(width / 2, 50), width - snippetMaxWidth * 2);
         int textFileHeight = Math.min(height - 30, CodeEditorWidget.HEIGH);
         textFieldWidget = new CodeEditorWidget(font, backend,
                 (width - textFieldWidth) / 2, titleBarHeight,
@@ -44,22 +45,21 @@ public class RunnerBlockScreen extends Screen {
         addRenderableWidget(textFieldWidget);
 
         // -4 is spacing
-        int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 140);
+        int snippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, snippetMaxWidth);
         snippetWidget = new SnippetWidget(font, backend,
-                0, 15,
-                snippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+                0, titleBarHeight,
+                snippetWidth, textFileHeight);
         snippetWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(snippetWidget);
 
-        int packageSnippetWidth = Mth.clamp((width - textFieldWidth) / 2 - 4, 0, 280);
         packageWidget = new PackageSnippetWidget(font, backend,
-                width - packageSnippetWidth, 15,
-                packageSnippetWidth, Math.min(height - 30, CodeEditorWidget.HEIGH));
+                width - snippetWidth, titleBarHeight,
+                snippetWidth, textFileHeight);
         packageWidget.setResetFocus(() -> setFocused(textFieldWidget));
         addRenderableWidget(packageWidget);
 
         titleBar = new FuzhouNameWidget(font, snippetWidth + 4, 2,
-                width - (snippetWidth + 4) - (packageSnippetWidth + 4), titleBarHeight,
+                width - (snippetWidth + 4) * 2, titleBarHeight,
                 Component.literal(""), backend);
         titleBar.setTextColor(-1);
         titleBar.setBordered(false);

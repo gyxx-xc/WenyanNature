@@ -13,6 +13,6 @@ public class DummyDocScreen extends Screen {
     @Override
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractRenderState(graphics, mouseX, mouseY, a);
-        graphics.text(font, "骗你的，根本没有文档", 10, 10, 0xFFFFFFFF);
+        graphics.text(font, "施工中", 10, 10, 0xFFFFFFFF);
     }
 }

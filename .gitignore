@@ -34,9 +34,14 @@ project
 
 pyvenv
 __pycache__
-/.lingma/
 .run
 .profileconfig.json
 *.jfr
 /src/client/java/indi/wenyan/client/gui/code_editor/_generator_py/py_map.json
 /.opencode-trace/
+
+# agents
+.claude
+.opencode
+.lingma
+.dsh
