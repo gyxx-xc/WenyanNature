@@ -38,7 +38,6 @@ import java.util.ListIterator;
 
 // copy from net.minecraft.client.gui.components.MultiLineEditBox
 public class CodeEditorWidget extends AbstractTextAreaWidget {
-    // todo: make it larger (sprite)
     public static final int WIDTH = 256;
     public static final int HEIGH = 192;
 
@@ -362,13 +361,15 @@ public class CodeEditorWidget extends AbstractTextAreaWidget {
 
     @Override
     protected void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics) {
+        int w = Math.max(width + outerPadding.horizontal(), WIDTH);
+        int h = HEIGH * (w / WIDTH); // keep ratio h/H = w/W
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                 BACKGROUND,
                 getX() - outerPadding.left(), getY() - outerPadding.top(),
                 0, (int) scrollAmount(),
                 width + outerPadding.horizontal(),
                 height + outerPadding.vertical(),
-                WIDTH, HEIGH);
+                w, h);
     }
 
     // scrolling
